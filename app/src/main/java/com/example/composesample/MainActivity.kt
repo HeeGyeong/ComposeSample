@@ -73,11 +73,11 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+            SetSystemUI()
             ComposeSampleTheme {
-                // A surface container using the 'background' color from the theme
                 Surface(modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background) {
-                    ListTest(itemList)
+                    AppbarSample(itemList)
                 }
             }
         }
@@ -125,9 +125,245 @@ val itemList = listOf(
 data class Message(val head: String, val body: String)
 
 @Composable
+fun SetSystemUI() {
+    // Gradle .. implementation "com.google.accompanist:accompanist-systemuicontroller:0.17.0"
+    val systemUiController = rememberSystemUiController()
+
+    // Top + Bottom System UI
+//    systemUiController.setSystemBarsColor(Color.Blue)
+    // Top System UI
+    systemUiController.setStatusBarColor(Color.Black)
+    // Bottom System UI
+    systemUiController.setNavigationBarColor(Color.Yellow)
+}
+
+@Composable
+fun AppbarSample(itemList: List<Message>) {
+    val scaffoldState = rememberScaffoldState()
+    val scope = rememberCoroutineScope()
+
+    val result = remember { mutableStateOf("") }
+    val expanded = remember { mutableStateOf(false) }
+    val liked = remember { mutableStateOf(true) }
+
+    Scaffold(
+        scaffoldState = scaffoldState,
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(text = "Top app bar")
+                },
+
+                navigationIcon = {
+                    // show drawer icon
+                    IconButton(
+                        onClick = {
+                            result.value = "Drawer icon clicked"
+                            scope.launch {
+                                scaffoldState.drawerState.apply {
+                                    if (isClosed) open() else close()
+                                }
+                            }
+                        }
+                    ) {
+                        Icon(Icons.Filled.Menu, contentDescription = "")
+                    }
+                },
+
+                actions = {
+                    IconButton(onClick = {
+                        result.value = " Play icon clicked"
+                    }) {
+                        Icon(Icons.Filled.Home, contentDescription = "")
+                    }
+
+                    IconToggleButton(
+                        checked = liked.value,
+                        onCheckedChange = {
+                            liked.value = it
+                            if (liked.value) {
+                                result.value = "Liked"
+                            } else {
+                                result.value = "Unliked"
+                            }
+                        }
+                    ) {
+                        val tint by animateColorAsState(
+                            if (liked.value) Color(0xFF7BB661)
+                            else Color.LightGray
+                        )
+                        Icon(
+                            Icons.Filled.Favorite,
+                            contentDescription = "Localized description",
+                            tint = tint
+                        )
+                    }
+
+                    Box(
+                        Modifier
+                            .wrapContentSize(Alignment.TopEnd)
+                    ) {
+                        IconButton(onClick = {
+                            expanded.value = true
+                            result.value = "More icon clicked"
+                        }) {
+                            Icon(
+                                Icons.Filled.MoreVert,
+                                contentDescription = "Localized description"
+                            )
+                        }
+
+                        DropdownMenu(
+                            expanded = expanded.value,
+                            onDismissRequest = { expanded.value = false },
+                        ) {
+                            DropdownMenuItem(onClick = {
+                                expanded.value = false
+                                result.value = "First item clicked"
+                            }) {
+                                Text("First Item")
+                            }
+
+                            DropdownMenuItem(onClick = {
+                                expanded.value = false
+                                result.value = "Second item clicked"
+                            }) {
+                                Text("Second item")
+                            }
+
+                            Divider()
+
+                            DropdownMenuItem(onClick = {
+                                expanded.value = false
+                                result.value = "Third item clicked"
+                            }) {
+                                Text("Third item")
+                            }
+
+                            Divider()
+
+                            DropdownMenuItem(onClick = {
+                                expanded.value = false
+                                result.value = "Fourth item clicked"
+                            }) {
+                                Text("Fourth item")
+                            }
+                        }
+                    }
+                },
+
+                backgroundColor = Color(0xFDCD7F32),
+                elevation = AppBarDefaults.TopAppBarElevation
+            )
+        },
+        bottomBar = {
+            BottomAppBar(
+                cutoutShape = MaterialTheme.shapes.small.copy(
+                    CornerSize(percent = 50)
+                ),
+                backgroundColor = Color.DarkGray
+            ) { }
+        },
+        content = {
+            Box(
+                Modifier
+                    .background(Color(0XFFE3DAC9))
+                    .padding(16.dp)
+                    .fillMaxSize(),
+            ) {
+                Text(
+                    text = result.value,
+                    fontSize = 22.sp,
+                    fontFamily = FontFamily.Serif,
+                    modifier = Modifier.align(Alignment.Center)
+                )
+            }
+        },
+        floatingActionButton = {
+            // Empty Floating Button
+            /*FloatingActionButton(
+                onClick = {
+                    Log.d("logggggggging", "floating~")
+                }
+            ) {
+
+            }*/
+
+            // Make SnackBar Floating Button
+            /*ExtendedFloatingActionButton(
+                text = { Text("Show snackbar") },
+                onClick = {
+                    scope.launch {
+                        val result = scaffoldState.snackbarHostState
+                            .showSnackbar(
+                                message = "Snackbar",
+                                actionLabel = "Action",
+                                // Defaults to SnackbarDuration.Short
+                                duration = SnackbarDuration.Short
+                            )
+                        when (result) {
+                            SnackbarResult.ActionPerformed -> {
+                                Log.d("logggggggging", "ActionPerformed~")
+                            }
+                            SnackbarResult.Dismissed -> {
+                                Log.d("logggggggging", "Dismissed~")
+                            }
+                        }
+                    }
+                }
+            )*/
+
+            // Navi Drawer Open Floating Button
+            ExtendedFloatingActionButton(
+                text = { Text("Open or close drawer") },
+                onClick = {
+                    scope.launch {
+                        scaffoldState.drawerState.apply {
+                            if (isClosed) open() else close()
+                        }
+                    }
+                }
+            )
+        },
+        // floating Button 위치.
+        //floatingActionButtonPosition = FabPosition.Center,
+        // button이 bottom과 겹치는지 여부
+        isFloatingActionButtonDocked = true,
+        // Navi Drawer Layout
+        drawerContent = {
+            Row {
+                IconButton(
+                    onClick = {
+                        scope.launch {
+                            scaffoldState.drawerState.apply {
+                                if (isClosed) open() else close()
+                            }
+                        }
+                    },
+                ) {
+                    Row {
+                        Icon(
+                            imageVector = Icons.Filled.Close,
+                            contentDescription = "",
+                            tint = Color.Black
+                        )
+                    }
+                }
+                Text("Drawer title", modifier = Modifier.padding(11.5.dp))
+            }
+            Divider()
+        },
+        // Navi Drag 가능 여부.
+        drawerGesturesEnabled = false
+        // Top, Bottom 사이에 들어갈 item
+//        content = { ListTest(itemList) }
+    )
+}
+
+@Composable
 fun TestButton(text: String) {
     Button(
-        onClick = { Log.d("logggggggging", "click test Button") },
+        onClick = { Log.d("ComposeLog", "click test Button") },
         contentPadding = PaddingValues(
             start = 20.dp,
             top = 12.dp,
@@ -182,12 +418,14 @@ fun CardView(msg: Message) {
             if (isExpanded) MaterialTheme.colors.primary else MaterialTheme.colors.surface,
         )
 
-        Column(modifier = Modifier.clickable {
-            coroutineScope.launch {
-                isExpanded = !isExpanded
-                Log.d("logggggggging", "isExpanded ? $isExpanded")
+        Column(modifier = Modifier
+            .clickable {
+                coroutineScope.launch {
+                    isExpanded = !isExpanded
+                    Log.d("ComposeLog", "isExpanded ? $isExpanded")
+                }
             }
-        }.fillMaxWidth()
+            .fillMaxWidth()
         ) {
             Text(
                 text = msg.head,
@@ -225,6 +463,6 @@ fun CardView(msg: Message) {
 @Composable
 fun DefaultPreview() {
     ComposeSampleTheme {
-        ListTest(itemList)
+        AppbarSample(itemList)
     }
 }
