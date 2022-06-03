@@ -20,6 +20,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".sub.SubActivity"
+            android:theme="@style/Theme.ComposeSample"/>
+
+        <activity android:name=".progress.ProgressActivity"
+            android:theme="@style/Theme.ComposeSample"/>
+
+        <activity android:name=".cal.CalActivity"
+            android:theme="@style/Theme.ComposeSample"/>
+
     </application>
 
 </manifest>

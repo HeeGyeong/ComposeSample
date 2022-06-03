@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Gradle: androidx.activity:activity-compose:1.4.0@aar">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../AppUnifyKotlin_Android/AppUnifyKotlin/gradle/caches/transforms-3/77cf8f9b099c3a05ded79dea19e98ead/transformed/activity-compose-1.4.0/jars/classes.jar!/" />
+      <root url="file://$PROJECT_DIR$/../AppUnifyKotlin_Android/AppUnifyKotlin/gradle/caches/transforms-3/77cf8f9b099c3a05ded79dea19e98ead/transformed/activity-compose-1.4.0/res" />
+      <root url="file://$PROJECT_DIR$/../AppUnifyKotlin_Android/AppUnifyKotlin/gradle/caches/transforms-3/77cf8f9b099c3a05ded79dea19e98ead/transformed/activity-compose-1.4.0/AndroidManifest.xml" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/../AppUnifyKotlin_Android/AppUnifyKotlin/gradle/caches/modules-2/files-2.1/androidx.activity/activity-compose/1.4.0/ce6628b757aa19fcb753d19404e709a95dd5757e/activity-compose-1.4.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

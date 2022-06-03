@@ -1,0 +1,16 @@
+<component name="libraryTable">
+  <library name="Gradle: androidx.room:room-runtime:2.4.2@aar">
+    <ANNOTATIONS>
+      <root url="jar://$PROJECT_DIR$/../AppUnifyKotlin_Android/AppUnifyKotlin/gradle/caches/transforms-3/dcdb7dd77b75e9320f5672ae68bc9ab5/transformed/room-runtime-2.4.2/annotations.zip!/" />
+    </ANNOTATIONS>
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../AppUnifyKotlin_Android/AppUnifyKotlin/gradle/caches/transforms-3/dcdb7dd77b75e9320f5672ae68bc9ab5/transformed/room-runtime-2.4.2/jars/classes.jar!/" />
+      <root url="file://$PROJECT_DIR$/../AppUnifyKotlin_Android/AppUnifyKotlin/gradle/caches/transforms-3/dcdb7dd77b75e9320f5672ae68bc9ab5/transformed/room-runtime-2.4.2/res" />
+      <root url="file://$PROJECT_DIR$/../AppUnifyKotlin_Android/AppUnifyKotlin/gradle/caches/transforms-3/dcdb7dd77b75e9320f5672ae68bc9ab5/transformed/room-runtime-2.4.2/AndroidManifest.xml" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/../AppUnifyKotlin_Android/AppUnifyKotlin/gradle/caches/modules-2/files-2.1/androidx.room/room-runtime/2.4.2/2c9eecfcf43be2af702d4ec1de12eddf475ec7fe/room-runtime-2.4.2-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

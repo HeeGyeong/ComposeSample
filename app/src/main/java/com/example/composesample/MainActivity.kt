@@ -1,15 +1,17 @@
 package com.example.composesample
 
+import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -29,11 +31,14 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.material.AppBarDefaults
 import androidx.compose.material.BottomAppBar
+import androidx.compose.material.BottomNavigation
+import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Button
 import androidx.compose.material.Divider
 import androidx.compose.material.DropdownMenu
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.ExtendedFloatingActionButton
+import androidx.compose.material.FabPosition
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.IconToggleButton
@@ -48,7 +53,7 @@ import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -59,16 +64,22 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import com.example.composesample.cal.CalActivity
+import com.example.composesample.progress.ProgressActivity
+import com.example.composesample.sub.SubActivity
 import com.example.composesample.ui.theme.ComposeSampleTheme
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import kotlinx.coroutines.launch
 
+@ExperimentalAnimationApi
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -84,45 +95,50 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-val itemList = listOf(
+var itemList = listOf(
     Message("A1",
-        "b1 app:layout_constraintBottom_toBottomOf=\"parent\" app:layout_constraintBottom_toBottomOf=\"parent\" app:layout_constraintBottom_toBottomOf=\"parent\" app:layout_constraintBottom_toBottomOf=\"parent\""),
+        "b1 app:layout_constraintBottom_toBottomOf=\"parent\" app:layout_constraintBottom_toBottomOf=\"parent\" " +
+                "app:layout_constraintBottom_toBottomOf=\"parent\" app:layout_constraintBottom_toBottomOf=\"parent\"", true),
     Message("A2",
-        "b1 app:layout_constraintBottom_toBottomOf=\"parent\" app:layout_constraintBottom_toBottomOf=\"parent\" app:layout_constraintBottom_toBottomOf=\"parent\" app:layout_constraintBottom_toBottomOf=\"parent\""),
+        "b1 app:layout_constraintBottom_toBottomOf=\"parent\" app:layout_constraintBottom_toBottomOf=\"parent\" " +
+                "app:layout_constraintBottom_toBottomOf=\"parent\" app:layout_constraintBottom_toBottomOf=\"parent\"", true),
     Message("A3",
-        "b1 app:layout_constraintBottom_toBottomOf=\"parent\" app:layout_constraintBottom_toBottomOf=\"parent\" app:layout_constraintBottom_toBottomOf=\"parent\" app:layout_constraintBottom_toBottomOf=\"parent\""),
-    Message("A4", "b4"),
-    Message("A5", "b5"),
-    Message("A6", "b6"),
-    Message("A7", "b7"),
-    Message("A8", "b8"),
-    Message("A9", "b9"),
-    Message("A0", "b0"),
-    Message("A1", "b1"),
+        "b1 app:layout_constraintBottom_toBottomOf=\"parent\" app:layout_constraintBottom_toBottomOf=\"parent\" " +
+                "app:layout_constraintBottom_toBottomOf=\"parent\" app:layout_constraintBottom_toBottomOf=\"parent\"", false),
+    Message("A4", "b4", false),
+    Message("A5", "b5", false),
+    Message("A6", "b6", false),
+    Message("A7", "b7", false),
+    Message("A8", "b8", false),
+    Message("A9", "b9", false),
+    Message("A0", "b0", false),
+    Message("A1", "b1", false),
     Message("A2",
-        "b1 app:layout_constraintBottom_toBottomOf=\"parent\" app:layout_constraintBottom_toBottomOf=\"parent\" app:layout_constraintBottom_toBottomOf=\"parent\" app:layout_constraintBottom_toBottomOf=\"parent\""),
-    Message("A3", "b3"),
-    Message("A4", "b4"),
-    Message("A5", "b5"),
-    Message("A6", "b6"),
-    Message("A7", "b7"),
-    Message("A8", "b8"),
-    Message("A9", "b9"),
+        "b1 app:layout_constraintBottom_toBottomOf=\"parent\" app:layout_constraintBottom_toBottomOf=\"parent\" " +
+                "app:layout_constraintBottom_toBottomOf=\"parent\" app:layout_constraintBottom_toBottomOf=\"parent\"", false),
+    Message("A3", "b3", false),
+    Message("A4", "b4", false),
+    Message("A5", "b5", false),
+    Message("A6", "b6", false),
+    Message("A7", "b7", false),
+    Message("A8", "b8", false),
+    Message("A9", "b9", false),
     Message("A0",
-        "b1 app:layout_constraintBottom_toBottomOf=\"parent\" app:layout_constraintBottom_toBottomOf=\"parent\" app:layout_constraintBottom_toBottomOf=\"parent\" app:layout_constraintBottom_toBottomOf=\"parent\""),
-    Message("A1", "b1"),
-    Message("A2", "b2"),
-    Message("A3", "b3"),
-    Message("A4", "b4"),
-    Message("A5", "b5"),
-    Message("A6", "b6"),
-    Message("A7", "b7"),
-    Message("A8", "b8"),
-    Message("A9", "b9"),
-    Message("A0", "b0"),
+        "b1 app:layout_constraintBottom_toBottomOf=\"parent\" app:layout_constraintBottom_toBottomOf=\"parent\" " +
+                "app:layout_constraintBottom_toBottomOf=\"parent\" app:layout_constraintBottom_toBottomOf=\"parent\"", true),
+    Message("A1", "b1", false),
+    Message("A2", "b2", false),
+    Message("A3", "b3", false),
+    Message("A4", "b4", false),
+    Message("A5", "b5", false),
+    Message("A6", "b6", false),
+    Message("A7", "b7", false),
+    Message("A8", "b8", false),
+    Message("A9", "b9", false),
+    Message("A0", "b0", false),
 )
 
-data class Message(val head: String, val body: String)
+data class Message(val head: String, val body: String, var open: Boolean)
 
 @Composable
 fun SetSystemUI() {
@@ -137,14 +153,18 @@ fun SetSystemUI() {
     systemUiController.setNavigationBarColor(Color.Yellow)
 }
 
+@ExperimentalAnimationApi
 @Composable
 fun AppbarSample(itemList: List<Message>) {
+    val context = LocalContext.current
+
     val scaffoldState = rememberScaffoldState()
     val scope = rememberCoroutineScope()
 
     val result = remember { mutableStateOf("") }
     val expanded = remember { mutableStateOf(false) }
     val liked = remember { mutableStateOf(true) }
+    val selectedItem = remember { mutableStateOf("upload") }
 
     Scaffold(
         scaffoldState = scaffoldState,
@@ -153,7 +173,6 @@ fun AppbarSample(itemList: List<Message>) {
                 title = {
                     Text(text = "Top app bar")
                 },
-
                 navigationIcon = {
                     // show drawer icon
                     IconButton(
@@ -169,7 +188,6 @@ fun AppbarSample(itemList: List<Message>) {
                         Icon(Icons.Filled.Menu, contentDescription = "")
                     }
                 },
-
                 actions = {
                     IconButton(onClick = {
                         result.value = " Play icon clicked"
@@ -220,15 +238,24 @@ fun AppbarSample(itemList: List<Message>) {
                             DropdownMenuItem(onClick = {
                                 expanded.value = false
                                 result.value = "First item clicked"
+
+                                context.startActivity(
+                                    Intent().run {
+                                        this.putExtra("sample", "data")
+                                        setClass(context, SubActivity::class.java)
+                                    }
+                                )
                             }) {
-                                Text("First Item")
+                                Text("SubActivity")
                             }
 
                             DropdownMenuItem(onClick = {
                                 expanded.value = false
                                 result.value = "Second item clicked"
+
+                                context.startActivity(Intent(context, ProgressActivity::class.java))
                             }) {
-                                Text("Second item")
+                                Text("ProgressActivity")
                             }
 
                             Divider()
@@ -236,11 +263,13 @@ fun AppbarSample(itemList: List<Message>) {
                             DropdownMenuItem(onClick = {
                                 expanded.value = false
                                 result.value = "Third item clicked"
+
+                                context.startActivity(Intent(context, CalActivity::class.java))
                             }) {
-                                Text("Third item")
+                                Text("CalActivity")
                             }
 
-                            Divider()
+                            Divider(thickness = 10.dp)
 
                             DropdownMenuItem(onClick = {
                                 expanded.value = false
@@ -251,7 +280,6 @@ fun AppbarSample(itemList: List<Message>) {
                         }
                     }
                 },
-
                 backgroundColor = Color(0xFDCD7F32),
                 elevation = AppBarDefaults.TopAppBarElevation
             )
@@ -261,11 +289,70 @@ fun AppbarSample(itemList: List<Message>) {
                 cutoutShape = MaterialTheme.shapes.small.copy(
                     CornerSize(percent = 50)
                 ),
-                backgroundColor = Color.DarkGray
-            ) { }
+                backgroundColor = Color.DarkGray,
+                content = {
+                    BottomNavigation() {
+                        BottomNavigationItem(
+                            icon = {
+                                Icon(Icons.Filled.Favorite, "")
+                            },
+                            label = { Text(text = "Favorite") },
+                            selected = selectedItem.value == "favorite",
+                            onClick = {
+                                result.value = "Favorite icon clicked"
+                                selectedItem.value = "favorite"
+                            },
+                            alwaysShowLabel = false
+                        )
+
+                        BottomNavigationItem(
+                            icon = {
+                                Icon(Icons.Filled.Home, "")
+                            },
+                            label = { Text(text = "Home") },
+                            selected = selectedItem.value == "Home",
+                            onClick = {
+                                result.value = "Home icon clicked"
+                                selectedItem.value = "Home"
+                            },
+                            alwaysShowLabel = false
+                        )
+
+                        BottomNavigationItem(
+                            icon = {
+                                Icon(Icons.Filled.Menu, "")
+                            },
+
+
+                            label = { Text(text = "Menu") },
+                            selected = selectedItem.value == "Menu",
+                            onClick = {
+                                result.value = "Menu icon clicked"
+                                selectedItem.value = "Menu"
+                            },
+                            alwaysShowLabel = false
+                        )
+
+                        BottomNavigationItem(
+                            icon = {
+                                Icon(Icons.Filled.MoreVert, "")
+                            },
+                            label = { Text(text = "MoreVert") },
+                            selected = selectedItem.value == "MoreVert",
+                            onClick = {
+                                result.value = "MoreVert icon clicked"
+                                selectedItem.value = "MoreVert"
+                            },
+                            alwaysShowLabel = false
+                        )
+                    }
+                }
+            )
         },
+        // Top, Bottom 사이에 들어갈 item
         content = {
-            Box(
+            ListTest(itemList, "data")
+            /*Box(
                 Modifier
                     .background(Color(0XFFE3DAC9))
                     .padding(16.dp)
@@ -277,7 +364,7 @@ fun AppbarSample(itemList: List<Message>) {
                     fontFamily = FontFamily.Serif,
                     modifier = Modifier.align(Alignment.Center)
                 )
-            }
+            }*/
         },
         floatingActionButton = {
             // Empty Floating Button
@@ -315,7 +402,7 @@ fun AppbarSample(itemList: List<Message>) {
 
             // Navi Drawer Open Floating Button
             ExtendedFloatingActionButton(
-                text = { Text("Open or close drawer") },
+                text = { Text("A") },
                 onClick = {
                     scope.launch {
                         scaffoldState.drawerState.apply {
@@ -326,7 +413,7 @@ fun AppbarSample(itemList: List<Message>) {
             )
         },
         // floating Button 위치.
-        //floatingActionButtonPosition = FabPosition.Center,
+        floatingActionButtonPosition = FabPosition.Center,
         // button이 bottom과 겹치는지 여부
         isFloatingActionButtonDocked = true,
         // Navi Drawer Layout
@@ -335,9 +422,7 @@ fun AppbarSample(itemList: List<Message>) {
                 IconButton(
                     onClick = {
                         scope.launch {
-                            scaffoldState.drawerState.apply {
-                                if (isClosed) open() else close()
-                            }
+                            scaffoldState.drawerState.close()
                         }
                     },
                 ) {
@@ -352,18 +437,40 @@ fun AppbarSample(itemList: List<Message>) {
                 Text("Drawer title", modifier = Modifier.padding(11.5.dp))
             }
             Divider()
+
+            Row(modifier = Modifier
+                .clickable {
+                    scope.launch {
+                        scaffoldState.drawerState.close()
+                        result.value = "Refresh clicked"
+                    }
+                }
+                .fillMaxWidth()
+                .padding(8.dp)
+                .padding(start = 16.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Icon(Icons.Filled.Refresh, contentDescription = "")
+                Text(
+                    text = "Refresh",
+                    fontWeight = FontWeight.Bold
+                )
+            }
         },
         // Navi Drag 가능 여부.
         drawerGesturesEnabled = false
-        // Top, Bottom 사이에 들어갈 item
-//        content = { ListTest(itemList) }
     )
 }
 
+@ExperimentalAnimationApi
 @Composable
 fun TestButton(text: String) {
+    val context = LocalContext.current
     Button(
-        onClick = { Log.d("ComposeLog", "click test Button") },
+        onClick = {
+            Log.d("ComposeLog", "click test Button")
+            context.startActivity(Intent(context, MainActivity::class.java))
+        },
         contentPadding = PaddingValues(
             start = 20.dp,
             top = 12.dp,
@@ -376,8 +483,9 @@ fun TestButton(text: String) {
     }
 }
 
+@ExperimentalAnimationApi
 @Composable
-fun ListTest(itemList: List<Message>) {
+fun ListTest(itemList: List<Message>, data: String) {
     // 스크롤의 position의 상태를 저장.
     val scrollState = rememberLazyListState()
 
@@ -388,7 +496,7 @@ fun ListTest(itemList: List<Message>) {
     ) {
         itemsIndexed(itemList) { index, item ->
             if (index == 3) {
-                TestButton("Sample")
+                TestButton(data)
             } else {
                 CardView(item)
             }
@@ -398,7 +506,6 @@ fun ListTest(itemList: List<Message>) {
 
 @Composable
 fun CardView(msg: Message) {
-
     val coroutineScope = rememberCoroutineScope()
 
     Row(modifier = Modifier.padding(all = 8.dp)) {
@@ -408,21 +515,30 @@ fun CardView(msg: Message) {
             modifier = Modifier
                 .size(40.dp)
                 .clip(CircleShape)
-                .border(1.5.dp, MaterialTheme.colors.secondary, CircleShape)
+                .border(1.5.dp, MaterialTheme.colors.secondary, CircleShape),
+            colorFilter = ColorFilter.tint(
+                Color.Yellow,
+                BlendMode.ColorBurn
+            )
         )
 
         Spacer(modifier = Modifier.width(8.dp))
 
-        var isExpanded by remember { mutableStateOf(false) }
+        var isExpanded by remember { mutableStateOf(msg.open) }
         val surfaceColor by animateColorAsState(
             if (isExpanded) MaterialTheme.colors.primary else MaterialTheme.colors.surface,
+        )
+
+        val animatedColor = animateColorAsState(
+            if (isExpanded) Color.Green else Color.White
         )
 
         Column(modifier = Modifier
             .clickable {
                 coroutineScope.launch {
-                    isExpanded = !isExpanded
-                    Log.d("ComposeLog", "isExpanded ? $isExpanded")
+                    msg.open = !msg.open
+                    isExpanded = msg.open
+                    Log.d("ComposeLog", "isExpanded ? ${msg.open}")
                 }
             }
             .fillMaxWidth()
@@ -438,7 +554,7 @@ fun CardView(msg: Message) {
             Surface(
                 shape = MaterialTheme.shapes.medium,
                 elevation = 10.dp,
-                color = surfaceColor,
+                color = animatedColor.value,
             ) {
                 Text(
                     text = msg.body,
@@ -451,6 +567,7 @@ fun CardView(msg: Message) {
     }
 }
 
+@ExperimentalAnimationApi
 @Preview(
     name = "Light Mode",
     showBackground = true
