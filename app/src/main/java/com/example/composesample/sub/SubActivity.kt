@@ -3,6 +3,7 @@ package com.example.composesample.sub
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -17,15 +18,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.Button
-import androidx.compose.material.Card
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
-import androidx.compose.material.TextField
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.material.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -33,98 +27,39 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.composesample.ui.base.BottomBar
+import com.example.composesample.ui.base.DrawerItem
+import com.example.composesample.ui.base.SetSystemUI
+import com.example.composesample.ui.base.TopBar
 import java.util.*
 
+@ExperimentalAnimationApi
 class SubActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContent {
-            MainContent()
-        }
-    }
-}
+            SetSystemUI()
 
-@Composable
-fun MainContent() {
-    val model = viewModel<SubActivityViewModel>()
-    val textState = remember { mutableStateOf("") }
-    val list = model.search(textState.value).collectAsState(initial = emptyList())
+            val scaffoldState = rememberScaffoldState()
+            val scope = rememberCoroutineScope()
 
-    Column(
-        modifier = Modifier.padding(12.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            Button(onClick = {
-                for (i in 1..100) {
-                    model.insert(
-                        ItemDTO(
-                            null, UUID.randomUUID().toString()
-                        )
-                    )
-                }
-            }) { Text(text = "Add 100 items") }
-
-            Button(onClick = { model.clear() }) {
-                Text(text = "Clear")
-            }
-        }
-
-        Text(
-            text = if (textState.value.trim().isEmpty()) {
-                "ItemDTO"
-            } else {
-                "ItemDTO start with (${textState.value.trim()})"
-            } +
-                    " ${list.value.size}",
-            fontWeight = FontWeight.Bold
-        )
-
-        Row {
-            TextField(
-                value = textState.value,
-                onValueChange = { textState.value = it },
-                modifier = Modifier.fillMaxWidth(),
-                placeholder = { Text(text = "Search ItemDTO") }
+            Scaffold(
+                scaffoldState = scaffoldState,
+                topBar = {
+                    TopBar("SubActivity", scaffoldState, scope)
+                },
+                bottomBar = {
+                    BottomBar()
+                },
+                content = {
+                    MainContent()
+                },
+                drawerContent = {
+                    DrawerItem(scaffoldState, scope)
+                },
+                drawerGesturesEnabled = false
             )
-        }
-
-        LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-            contentPadding = PaddingValues(vertical = 12.dp)
-        ) {
-            itemsIndexed(list.value) { index, item ->
-                Card(
-                    modifier = Modifier.fillMaxWidth(),
-                    backgroundColor = Color(0xFFDCE2C9)
-                ) {
-                    Row(
-                        modifier = Modifier.padding(12.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-
-                        Box(
-                            Modifier.size(48.dp).clip(CircleShape)
-                                .background(Color(0xFF8DB600)),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Text(
-                                text = "${item.id}",
-                                style = MaterialTheme.typography.h6
-                            )
-                        }
-
-                        Spacer(modifier = Modifier.width(12.dp))
-                        Text(
-                            text = item.uniqueId.take(12),
-                            style = MaterialTheme.typography.h6
-                        )
-                    }
-                }
-            }
         }
     }
 }

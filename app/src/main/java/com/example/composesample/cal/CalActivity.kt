@@ -3,52 +3,42 @@ package com.example.composesample.cal
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Button
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.material.Scaffold
+import androidx.compose.material.rememberScaffoldState
+import androidx.compose.runtime.rememberCoroutineScope
+import com.example.composesample.ui.base.BottomBar
+import com.example.composesample.ui.base.DrawerItem
+import com.example.composesample.ui.base.SetSystemUI
+import com.example.composesample.ui.base.TopBar
 
+@ExperimentalAnimationApi
 class CalActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContent {
-            AddCounter()
-        }
-    }
-}
+            SetSystemUI()
 
-@Composable
-fun AddCounter() {
-    val viewModel = viewModel<CalViewModel>()
-    val counter = viewModel.counter.collectAsState()
+            val scaffoldState = rememberScaffoldState()
+            val scope = rememberCoroutineScope()
 
-    Column(
-        Modifier.fillMaxSize().padding(24.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(text = "${counter.value}", fontSize = 40.sp)
-        Button(onClick = { viewModel.addCounter() }) {
-            Text(text = "Add Counter")
-        }
-        Button(onClick = { viewModel.minusCounter() }) {
-            Text(text = "Minus Counter")
-        }
-        Button(onClick = { viewModel.multiCounter() }) {
-            Text(text = "*2 Counter")
-        }
-        Button(onClick = { viewModel.divCounter() }) {
-            Text(text = "/2 Counter")
+            Scaffold(
+                scaffoldState = scaffoldState,
+                topBar = {
+                    TopBar("CalActivity", scaffoldState, scope)
+                },
+                bottomBar = {
+                    BottomBar()
+                },
+                content = {
+                    AddCounter()
+                },
+                drawerContent = {
+                    DrawerItem(scaffoldState, scope)
+                },
+                drawerGesturesEnabled = false
+            )
         }
     }
 }
