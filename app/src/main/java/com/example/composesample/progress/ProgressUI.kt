@@ -71,9 +71,6 @@ fun Progress() {
                 )
             }
         }
-        /*if (isVisible.value) {
-
-        }*/
 
         Spacer(modifier = Modifier.requiredHeight(16.dp))
         Text(

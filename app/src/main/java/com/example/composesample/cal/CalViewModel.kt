@@ -9,7 +9,6 @@ class CalViewModel: ViewModel() {
     private val _counter = MutableStateFlow(0)
     val counter = _counter.asStateFlow()
 
-
     fun addCounter() {
         _counter.value += 1
     }

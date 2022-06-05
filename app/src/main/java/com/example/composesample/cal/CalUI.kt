@@ -15,8 +15,8 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
-fun AddCounter() {
-    val viewModel = viewModel<CalViewModel>()
+fun AddCounter(viewModel: CalViewModel) {
+//    val viewModel = viewModel<CalViewModel>()
     val counter = viewModel.counter.collectAsState()
 
     Column(
