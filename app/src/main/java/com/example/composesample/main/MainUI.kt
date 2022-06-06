@@ -173,7 +173,6 @@ fun CardView(msg: Message) {
                 coroutineScope.launch {
                     msg.open = !msg.open
                     isExpanded = msg.open
-                    Log.d("ComposeLog", "isExpanded ? ${msg.open}")
                 }
             }
             .fillMaxWidth()

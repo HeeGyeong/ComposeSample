@@ -91,7 +91,7 @@ fun TopBar(title: String, scaffoldState: ScaffoldState, scope: CoroutineScope) {
                 )
                 Icon(
                     Icons.Filled.Favorite,
-                    contentDescription = "Localized description",
+                    contentDescription = "Favorite description",
                     tint = tint
                 )
             }
@@ -105,7 +105,7 @@ fun TopBar(title: String, scaffoldState: ScaffoldState, scope: CoroutineScope) {
                 }) {
                     Icon(
                         Icons.Filled.MoreVert,
-                        contentDescription = "Localized description"
+                        contentDescription = "TopEnd description"
                     )
                 }
 

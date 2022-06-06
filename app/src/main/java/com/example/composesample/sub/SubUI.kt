@@ -69,7 +69,7 @@ fun MainContent() {
             verticalArrangement = Arrangement.spacedBy(8.dp),
             contentPadding = PaddingValues(vertical = 12.dp)
         ) {
-            itemsIndexed(list.value) { index, item ->
+            itemsIndexed(list.value) { _, item ->
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     backgroundColor = Color(0xFFDCE2C9)

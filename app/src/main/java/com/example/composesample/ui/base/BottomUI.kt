@@ -19,7 +19,7 @@ import androidx.compose.ui.graphics.Color
 
 @Composable
 fun BottomBar() {
-    val selectedItem = remember { mutableStateOf("upload") }
+    val selectedItem = remember { mutableStateOf("") }
 
     BottomAppBar(
         cutoutShape = MaterialTheme.shapes.small.copy(
