@@ -32,22 +32,28 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.example.composesample.main.MainActivity
 import com.example.composesample.cal.CalActivity
+import com.example.composesample.main.MainActivity
 import com.example.composesample.progress.ProgressActivity
+import com.example.composesample.scope.ScopeActivity
 import com.example.composesample.sub.SubActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @ExperimentalAnimationApi
 @Composable
-fun TopBar(title: String, scaffoldState: ScaffoldState, scope: CoroutineScope) {
+fun TopBar(
+    title: String,
+    scaffoldState: ScaffoldState,
+    scope: CoroutineScope = rememberCoroutineScope(), // 인자가 안넘어오면 생성. 안정성을 위해 추가.
+) {
     val context = LocalContext.current as Activity
 
     val expanded = remember { mutableStateOf(false) }
@@ -151,6 +157,9 @@ fun TopBar(title: String, scaffoldState: ScaffoldState, scope: CoroutineScope) {
 
                     DropdownMenuItem(onClick = {
                         expanded.value = false
+
+                        context.startActivity(Intent(context, ScopeActivity::class.java))
+                        context.finish()
                     }) {
                         Text("Fourth item")
                     }

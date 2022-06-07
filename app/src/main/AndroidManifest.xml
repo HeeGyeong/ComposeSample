@@ -30,6 +30,15 @@
         <activity android:name=".cal.CalActivity"
             android:theme="@style/Theme.ComposeSample"/>
 
+        <activity android:name=".scope.ScopeActivity"
+            android:theme="@style/Theme.ComposeSample"/>
+
+        <activity android:name=".scope.sub.RememberCoroutineActivity"
+            android:theme="@style/Theme.ComposeSample"/>
+
+        <activity android:name=".scope.sub.LaunchedEffectActivity"
+            android:theme="@style/Theme.ComposeSample"/>
+
     </application>
 
 </manifest>
