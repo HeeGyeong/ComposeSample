@@ -2,29 +2,30 @@ package com.example.composesample.scope
 
 import android.app.Activity
 import android.content.Intent
+import android.util.Log
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Button
 import androidx.compose.material.ScaffoldState
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.example.composesample.scope.sub.LaunchedEffectActivity
 import com.example.composesample.scope.sub.LaunchedEffectViewModel
+import com.example.composesample.scope.sub.ProduceStateActivity
 import com.example.composesample.scope.sub.RememberCoroutineActivity
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 
@@ -64,6 +65,22 @@ fun GoSubActivity() {
             modifier = Modifier.padding(top = 8.dp, bottom = 8.dp)
         ) {
             Text("Go LaunchedEffect Activity")
+        }
+
+        Button(
+            onClick = {
+                context.startActivity(Intent(context, ProduceStateActivity::class.java))
+                context.finish()
+            },
+            contentPadding = PaddingValues(
+                start = 20.dp,
+                top = 12.dp,
+                end = 20.dp,
+                bottom = 12.dp
+            ),
+            modifier = Modifier.padding(top = 8.dp, bottom = 8.dp)
+        ) {
+            Text("Go ProduceState Activity")
         }
     }
 }
@@ -129,7 +146,7 @@ fun CoroutineTempScreen() {
 @Composable
 fun LaunchedScreen(viewModel: LaunchedEffectViewModel) {
 
-    var textState by remember { mutableStateOf("") }
+    var textState by remember { mutableStateOf("Default") }
 
     Column(modifier = Modifier.padding(16.dp)) {
         TextField(
@@ -140,5 +157,55 @@ fun LaunchedScreen(viewModel: LaunchedEffectViewModel) {
             },
             label = { Text("Input go") }
         )
+
+        RememberUpdateTestText(textState)
+    }
+}
+
+@Composable
+fun RememberUpdateTestText(text: String) {
+    val rememberText by remember { mutableStateOf(text) }
+        .apply {
+            value = text
+        }
+    val rememberUpdatedText by rememberUpdatedState(text)
+
+    Text("RememberText : $rememberText")
+    Text("UpdatedText : $rememberUpdatedText")
+}
+
+@Composable
+fun ProduceStateScreen(scope: CoroutineScope = rememberCoroutineScope()) {
+    var isTimer by remember { mutableStateOf(false) }
+
+    val timer by produceState(initialValue = 0, isTimer) {
+        var job: Job? = null
+        Log.d("composeLog", "ProduceState .. $value")
+        if (isTimer) {
+            job = scope.launch {
+                while (true) {
+                    delay(1000)
+                    value++
+                }
+            }
+        }
+
+        // 종료 시 호출
+        awaitDispose {
+            Log.d("composeLog", "ProduceState in awaitDispose .. $value")
+            job?.cancel()
+        }
+    }
+
+    Box(modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center) {
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Text("Time $timer")
+            Button(onClick = {
+                isTimer = !isTimer
+            }) {
+                Text(if (isTimer) "Stop" else "Start")
+            }
+        }
     }
 }

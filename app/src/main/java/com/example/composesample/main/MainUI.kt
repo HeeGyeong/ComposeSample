@@ -8,35 +8,13 @@ import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.Button
-import androidx.compose.material.ExtendedFloatingActionButton
-import androidx.compose.material.FabPosition
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
-import androidx.compose.material.SnackbarDuration
-import androidx.compose.material.SnackbarResult
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.material.rememberScaffoldState
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
+import androidx.compose.material.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -146,19 +124,45 @@ fun TestButton(text: String) {
 @ExperimentalAnimationApi
 @Composable
 fun ListTest(itemList: List<Message>, data: String) {
-    // 스크롤의 position의 상태를 저장.
-    val scrollState = rememberLazyListState()
+    Box(modifier = Modifier.fillMaxSize()) {
+        // 스크롤의 position의 상태를 저장.
+        val scrollState = rememberLazyListState()
 
-    LazyColumn(
-        state = scrollState,
-        modifier = Modifier.padding(bottom = 50.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        itemsIndexed(itemList) { index, item ->
-            if (index == 3) {
-                TestButton(data)
-            } else {
-                CardView(item)
+        LazyColumn(
+            state = scrollState,
+            modifier = Modifier.padding(bottom = 50.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            itemsIndexed(itemList) { index, item ->
+                if (index == 3) {
+                    TestButton(data)
+                } else {
+                    CardView(item)
+                }
+            }
+        }
+
+        val showButton by remember {
+            derivedStateOf {
+                Log.d("composeLog" , "call derivedStateOf ~ ${scrollState.firstVisibleItemIndex}")
+                scrollState.firstVisibleItemIndex > 0
+            }
+        }
+
+        if (showButton) {
+            val coroutineScope = rememberCoroutineScope()
+            FloatingActionButton(
+                backgroundColor = MaterialTheme.colors.primary,
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(end = 5.dp, bottom = 60.dp),
+                onClick = {
+                    coroutineScope.launch {
+                        scrollState.scrollToItem(0)
+                    }
+                }
+            ) {
+                Text("Top")
             }
         }
     }

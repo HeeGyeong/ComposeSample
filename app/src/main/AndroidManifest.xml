@@ -39,6 +39,9 @@
         <activity android:name=".scope.sub.LaunchedEffectActivity"
             android:theme="@style/Theme.ComposeSample"/>
 
+        <activity android:name=".scope.sub.ProduceStateActivity"
+            android:theme="@style/Theme.ComposeSample"/>
+
     </application>
 
 </manifest>
