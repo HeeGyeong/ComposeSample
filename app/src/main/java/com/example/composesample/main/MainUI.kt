@@ -30,6 +30,10 @@ import com.example.composesample.ui.base.BottomBar
 import com.example.composesample.ui.base.DrawerItem
 import com.example.composesample.ui.base.TopBar
 import com.example.composesample.ui.theme.ComposeSampleTheme
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 
@@ -142,14 +146,24 @@ fun ListTest(itemList: List<Message>, data: String) {
             }
         }
 
+        // scrollState.firstVisibleItemIndex > 0 값이 변경될 때 재구성.
         val showButton by remember {
             derivedStateOf {
-                Log.d("composeLog" , "call derivedStateOf ~ ${scrollState.firstVisibleItemIndex}")
                 scrollState.firstVisibleItemIndex > 0
             }
         }
 
-        if (showButton) {
+        var flowShowButton by remember { mutableStateOf(false) }
+        LaunchedEffect(scrollState) {
+            snapshotFlow { scrollState.firstVisibleItemIndex }
+                .map { index -> index > 0 }
+                .distinctUntilChanged() // 값이 변경 될 때 수집
+                .collect {
+                    flowShowButton = it
+                }
+        }
+
+        if (/*showButton*/flowShowButton) {
             val coroutineScope = rememberCoroutineScope()
             FloatingActionButton(
                 backgroundColor = MaterialTheme.colors.primary,
