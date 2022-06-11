@@ -2,6 +2,7 @@ package com.example.composesample.scope
 
 import android.app.Activity
 import android.content.Intent
+import android.text.format.DateFormat
 import android.util.Log
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.Box
@@ -9,16 +10,25 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Button
 import androidx.compose.material.ScaffoldState
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.produceState
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.composesample.scope.sub.LaunchedEffectActivity
 import com.example.composesample.scope.sub.LaunchedEffectViewModel
 import com.example.composesample.scope.sub.ProduceStateActivity
@@ -26,7 +36,9 @@ import com.example.composesample.scope.sub.RememberCoroutineActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
+import java.util.*
 
 
 @ExperimentalAnimationApi
@@ -34,7 +46,24 @@ import kotlinx.coroutines.launch
 fun GoSubActivity() {
     val context = LocalContext.current as Activity
 
+    fun getTime(): String {
+        return DateFormat.format("hh:mm:ss",
+            Date(System.currentTimeMillis())).toString()
+    }
+
+    val timerFlow = flow {
+        delay(1000)
+        emit(getTime())
+    }
+
+    val currentTime = timerFlow.collectAsState(initial = getTime())
+
     Column {
+        Text(
+            text = currentTime.value,
+            style = TextStyle(fontSize = 40.sp)
+        )
+
         Button(
             onClick = {
                 context.startActivity(Intent(context, RememberCoroutineActivity::class.java))

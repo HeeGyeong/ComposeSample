@@ -31,7 +31,7 @@ class ScopeActivity : ComponentActivity() {
             Scaffold(
                 scaffoldState = scaffoldState,
                 topBar = {
-                    TopBar("ProgressActivity", scaffoldState, scope)
+                    TopBar("Scope Activity", scaffoldState, scope)
                 },
                 bottomBar = {
                     BottomBar()

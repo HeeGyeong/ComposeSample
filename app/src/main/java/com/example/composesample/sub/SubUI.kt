@@ -16,9 +16,14 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Button
 import androidx.compose.material.Card
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
@@ -91,7 +96,6 @@ fun MainContent() {
                         modifier = Modifier.padding(12.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-
                         Box(
                             Modifier
                                 .size(48.dp)
@@ -110,6 +114,30 @@ fun MainContent() {
                             text = item.uniqueId.take(12),
                             style = MaterialTheme.typography.h6
                         )
+
+                        Spacer(modifier = Modifier.weight(1F))
+                        IconButton(onClick = {
+                            val updatedItem = ItemDTO(
+                                item.id, UUID.randomUUID().toString()
+                            )
+                            model.update(updatedItem)
+                        }) {
+                            Icon(
+                                imageVector = Icons.Default.Edit,
+                                contentDescription = ""
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.weight(1F))
+                        IconButton(onClick = {
+                            model.delete(item)
+                        }) {
+                            Icon(
+                                imageVector = Icons.Default.Delete,
+                                contentDescription = "",
+                                tint = Color(0xFFD3212D)
+                            )
+                        }
                     }
                 }
             }

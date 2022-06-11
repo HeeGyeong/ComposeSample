@@ -38,7 +38,7 @@ class LaunchedEffectActivity : ComponentActivity() {
             Scaffold(
                 scaffoldState = scaffoldState,
                 topBar = {
-                    TopBar("ProgressActivity", scaffoldState, scope)
+                    TopBar("Launched Activity", scaffoldState, scope)
                 },
                 bottomBar = {
                     BottomBar()

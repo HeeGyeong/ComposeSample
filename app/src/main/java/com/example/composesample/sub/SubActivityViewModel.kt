@@ -21,6 +21,18 @@ class SubActivityViewModel(application: Application) : AndroidViewModel(applicat
         }
     }
 
+    fun update(item: ItemDTO) {
+        viewModelScope.launch(Dispatchers.IO) {
+            db.itemDao().update(item)
+        }
+    }
+
+    fun delete(item: ItemDTO) {
+        viewModelScope.launch(Dispatchers.IO) {
+            db.itemDao().delete(item)
+        }
+    }
+
     fun clear() {
         viewModelScope.launch(Dispatchers.IO) {
             db.itemDao().clear()
