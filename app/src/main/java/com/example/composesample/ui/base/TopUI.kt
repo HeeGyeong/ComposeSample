@@ -2,37 +2,15 @@ package com.example.composesample.ui.base
 
 import android.app.Activity
 import android.content.Intent
+import android.widget.Toast
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.material.AppBarDefaults
-import androidx.compose.material.Divider
-import androidx.compose.material.DropdownMenu
-import androidx.compose.material.DropdownMenuItem
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.IconToggleButton
-import androidx.compose.material.ScaffoldState
-import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.filled.Refresh
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.material.icons.filled.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -41,6 +19,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.composesample.cal.CalActivity
 import com.example.composesample.main.MainActivity
+import com.example.composesample.movie.MovieActivity
 import com.example.composesample.progress.ProgressActivity
 import com.example.composesample.scope.ScopeActivity
 import com.example.composesample.sub.SubActivity
@@ -89,10 +68,14 @@ fun TopBar(
                 checked = liked.value,
                 onCheckedChange = {
                     liked.value = it
+
+                    scope.launch {
+                        Toast.makeText(context, "click Toggle", Toast.LENGTH_SHORT).show()
+                    }
                 }
             ) {
                 val tint by animateColorAsState(
-                    if (liked.value) Color(0xFF7BB661)
+                    if (liked.value) Color.Red
                     else Color.LightGray
                 )
                 Icon(
@@ -153,7 +136,7 @@ fun TopBar(
                         Text("CalActivity")
                     }
 
-                    Divider(thickness = 10.dp)
+                    Divider(thickness = 4.dp)
 
                     DropdownMenuItem(onClick = {
                         expanded.value = false
@@ -161,7 +144,18 @@ fun TopBar(
                         context.startActivity(Intent(context, ScopeActivity::class.java))
                         context.finish()
                     }) {
-                        Text("Fourth item")
+                        Text("Scope Activity")
+                    }
+
+                    Divider(thickness = 8.dp)
+
+                    DropdownMenuItem(onClick = {
+                        expanded.value = false
+
+                        context.startActivity(Intent(context, MovieActivity::class.java))
+                        context.finish()
+                    }) {
+                        Text("Movie Activity")
                     }
                 }
             }
@@ -171,8 +165,11 @@ fun TopBar(
     )
 }
 
+@ExperimentalAnimationApi
 @Composable
 fun DrawerItem(scaffoldState: ScaffoldState, scope: CoroutineScope) {
+    val context = LocalContext.current as Activity
+
     Row {
         IconButton(
             onClick = {
@@ -189,7 +186,7 @@ fun DrawerItem(scaffoldState: ScaffoldState, scope: CoroutineScope) {
                 )
             }
         }
-        Text("Drawer title", modifier = Modifier.padding(11.5.dp))
+        Text("Navigation Drawer", modifier = Modifier.padding(top = 13.5.dp))
     }
     Divider()
 
@@ -197,6 +194,8 @@ fun DrawerItem(scaffoldState: ScaffoldState, scope: CoroutineScope) {
         .clickable {
             scope.launch {
                 scaffoldState.drawerState.close()
+                context.startActivity(Intent(context, ScopeActivity::class.java))
+                context.finish()
             }
         }
         .fillMaxWidth()
@@ -206,7 +205,27 @@ fun DrawerItem(scaffoldState: ScaffoldState, scope: CoroutineScope) {
     ) {
         Icon(Icons.Filled.Refresh, contentDescription = "")
         Text(
-            text = "Refresh",
+            text = "Go to Scope Activity",
+            fontWeight = FontWeight.Bold
+        )
+    }
+
+    Row(modifier = Modifier
+        .clickable {
+            scope.launch {
+                context.startActivity(Intent(context, ProgressActivity::class.java))
+                context.finish()
+                scaffoldState.drawerState.close()
+            }
+        }
+        .fillMaxWidth()
+        .padding(8.dp)
+        .padding(start = 16.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        Icon(Icons.Filled.Call, contentDescription = "")
+        Text(
+            text = "Go to progress Activity",
             fontWeight = FontWeight.Bold
         )
     }

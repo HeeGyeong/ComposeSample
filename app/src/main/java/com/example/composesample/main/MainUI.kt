@@ -10,6 +10,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
@@ -30,7 +31,9 @@ import com.example.composesample.ui.base.BottomBar
 import com.example.composesample.ui.base.DrawerItem
 import com.example.composesample.ui.base.TopBar
 import com.example.composesample.ui.theme.ComposeSampleTheme
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
@@ -141,6 +144,10 @@ fun ListTest(itemList: List<Message>, data: String) {
                 } else {
                     CardView(item)
                 }
+            }
+
+            items(itemList) { item ->
+                item.body
             }
         }
 
