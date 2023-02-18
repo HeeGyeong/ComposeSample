@@ -48,6 +48,8 @@
         <activity android:name=".movie.MovieActivity"
             android:theme="@style/Theme.ComposeSample"/>
 
+        <activity android:name=".hash.HashTagActivity"
+            android:theme="@style/Theme.ComposeSample"/>
     </application>
 
 </manifest>

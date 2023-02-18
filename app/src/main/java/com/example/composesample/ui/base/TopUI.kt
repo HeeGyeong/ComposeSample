@@ -18,6 +18,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.composesample.cal.CalActivity
+import com.example.composesample.hash.HashTagActivity
 import com.example.composesample.main.MainActivity
 import com.example.composesample.movie.MovieActivity
 import com.example.composesample.progress.ProgressActivity
@@ -156,6 +157,17 @@ fun TopBar(
                         context.finish()
                     }) {
                         Text("Movie Activity")
+                    }
+
+                    Divider(thickness = 8.dp)
+
+                    DropdownMenuItem(onClick = {
+                        expanded.value = false
+
+                        context.startActivity(Intent(context, HashTagActivity::class.java))
+                        context.finish()
+                    }) {
+                        Text("HashTag Activity")
                     }
                 }
             }
