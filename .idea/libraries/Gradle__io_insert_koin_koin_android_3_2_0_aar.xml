@@ -1,8 +1,8 @@
 <component name="libraryTable">
   <library name="Gradle: io.insert-koin:koin-android:3.2.0@aar">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/../AppUnifyKotlin_Android/AppUnifyKotlin/gradle/caches/transforms-3/867cef02ebe796d9e5b0b018a6b169ff/transformed/koin-android-3.2.0/jars/classes.jar!/" />
-      <root url="file://$PROJECT_DIR$/../AppUnifyKotlin_Android/AppUnifyKotlin/gradle/caches/transforms-3/867cef02ebe796d9e5b0b018a6b169ff/transformed/koin-android-3.2.0/AndroidManifest.xml" />
+      <root url="jar://$PROJECT_DIR$/../AppUnifyKotlin_Android/AppUnifyKotlin/gradle/caches/transforms-3/810e8170eb3db2a51accc8a675b52e86/transformed/koin-android-3.2.0/jars/classes.jar!/" />
+      <root url="file://$PROJECT_DIR$/../AppUnifyKotlin_Android/AppUnifyKotlin/gradle/caches/transforms-3/810e8170eb3db2a51accc8a675b52e86/transformed/koin-android-3.2.0/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://$PROJECT_DIR$/../AppUnifyKotlin_Android/AppUnifyKotlin/gradle/caches/modules-2/files-2.1/io.insert-koin/koin-android/3.2.0/7d1772c2c1225aded7d5113f16c8f9e651a74543/koin-android-3.2.0-javadoc.jar!/" />

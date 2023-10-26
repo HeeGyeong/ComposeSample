@@ -1,12 +1,12 @@
 <component name="libraryTable">
   <library name="Gradle: androidx.fragment:fragment:1.4.1@aar">
     <ANNOTATIONS>
-      <root url="jar://$PROJECT_DIR$/../AppUnifyKotlin_Android/AppUnifyKotlin/gradle/caches/transforms-3/dd78b9db2ef43ca2633bde98ad290cb5/transformed/fragment-1.4.1/annotations.zip!/" />
+      <root url="jar://$PROJECT_DIR$/../AppUnifyKotlin_Android/AppUnifyKotlin/gradle/caches/transforms-3/e4b963d34505d9b282ce98d799a189ce/transformed/fragment-1.4.1/annotations.zip!/" />
     </ANNOTATIONS>
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/../AppUnifyKotlin_Android/AppUnifyKotlin/gradle/caches/transforms-3/dd78b9db2ef43ca2633bde98ad290cb5/transformed/fragment-1.4.1/jars/classes.jar!/" />
-      <root url="file://$PROJECT_DIR$/../AppUnifyKotlin_Android/AppUnifyKotlin/gradle/caches/transforms-3/dd78b9db2ef43ca2633bde98ad290cb5/transformed/fragment-1.4.1/res" />
-      <root url="file://$PROJECT_DIR$/../AppUnifyKotlin_Android/AppUnifyKotlin/gradle/caches/transforms-3/dd78b9db2ef43ca2633bde98ad290cb5/transformed/fragment-1.4.1/AndroidManifest.xml" />
+      <root url="file://$PROJECT_DIR$/../AppUnifyKotlin_Android/AppUnifyKotlin/gradle/caches/transforms-3/e4b963d34505d9b282ce98d799a189ce/transformed/fragment-1.4.1/AndroidManifest.xml" />
+      <root url="jar://$PROJECT_DIR$/../AppUnifyKotlin_Android/AppUnifyKotlin/gradle/caches/transforms-3/e4b963d34505d9b282ce98d799a189ce/transformed/fragment-1.4.1/jars/classes.jar!/" />
+      <root url="file://$PROJECT_DIR$/../AppUnifyKotlin_Android/AppUnifyKotlin/gradle/caches/transforms-3/e4b963d34505d9b282ce98d799a189ce/transformed/fragment-1.4.1/res" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>

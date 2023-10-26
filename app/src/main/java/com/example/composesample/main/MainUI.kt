@@ -27,6 +27,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.composesample.R
+import com.example.composesample.example.BlogExampleActivity
 import com.example.composesample.ui.base.BottomBar
 import com.example.composesample.ui.base.DrawerItem
 import com.example.composesample.ui.base.TopBar
@@ -43,6 +44,7 @@ import kotlinx.coroutines.launch
 fun AppbarSample(title: String) {
     val scaffoldState = rememberScaffoldState()
     val scope = rememberCoroutineScope()
+    val context = LocalContext.current
 
     Scaffold(
         scaffoldState = scaffoldState,
@@ -64,14 +66,15 @@ fun AppbarSample(title: String) {
                     scope.launch {
                         val result = scaffoldState.snackbarHostState
                             .showSnackbar(
-                                message = "Snackbar",
-                                actionLabel = "Action",
+                                message = "Go to Blog Example Screen",
+                                actionLabel = "Go",
                                 // Defaults to SnackbarDuration.Short
                                 duration = SnackbarDuration.Short
                             )
                         when (result) {
                             SnackbarResult.ActionPerformed -> {
                                 Log.d("FloatingButton", "ActionPerformed~")
+                                context.startActivity(Intent(context, BlogExampleActivity::class.java))
                             }
                             SnackbarResult.Dismissed -> {
                                 Log.d("FloatingButton", "Dismissed~")

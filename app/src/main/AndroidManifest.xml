@@ -50,6 +50,10 @@
 
         <activity android:name=".hash.HashTagActivity"
             android:theme="@style/Theme.ComposeSample"/>
+
+        <activity android:name=".example.BlogExampleActivity"
+            android:theme="@style/Theme.ComposeSample"
+            android:windowSoftInputMode="adjustResize" />
     </application>
 
 </manifest>
