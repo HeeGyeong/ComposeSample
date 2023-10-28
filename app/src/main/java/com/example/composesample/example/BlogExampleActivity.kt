@@ -31,7 +31,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.composesample.example.ui.clickevent.ClickEventUI
 import com.example.composesample.example.ui.lazycolumn.LazyColumnIssueUI
+import com.example.composesample.example.util.ConstValue.Companion.ClickEventExample
 import com.example.composesample.example.util.ConstValue.Companion.Dummy
 import com.example.composesample.example.util.ConstValue.Companion.LazyColumnExample
 import com.example.composesample.ui.base.SetSystemUI
@@ -60,8 +62,8 @@ fun BlogExampleCase() {
             )
 
             ExampleButton(
-                buttonText = "Dummy",
-                type = Dummy,
+                buttonText = "Click Event",
+                type = ClickEventExample,
                 exampleType = exampleType
             )
         }
@@ -130,6 +132,10 @@ fun ExampleCaseUI(
             when (exampleType.value) {
                 LazyColumnExample -> {
                     LazyColumnIssueUI(onBackEvent)
+                }
+
+                ClickEventExample -> {
+                    ClickEventUI(onBackEvent)
                 }
 
                 else -> {
