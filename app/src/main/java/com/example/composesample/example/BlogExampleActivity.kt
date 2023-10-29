@@ -32,9 +32,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.composesample.example.ui.clickevent.ClickEventUI
+import com.example.composesample.example.ui.flexbox.FlexBoxUI
 import com.example.composesample.example.ui.lazycolumn.LazyColumnIssueUI
 import com.example.composesample.example.util.ConstValue.Companion.ClickEventExample
-import com.example.composesample.example.util.ConstValue.Companion.Dummy
+import com.example.composesample.example.util.ConstValue.Companion.FlexBoxLayoutExample
 import com.example.composesample.example.util.ConstValue.Companion.LazyColumnExample
 import com.example.composesample.ui.base.SetSystemUI
 
@@ -64,6 +65,12 @@ fun BlogExampleCase() {
             ExampleButton(
                 buttonText = "Click Event",
                 type = ClickEventExample,
+                exampleType = exampleType
+            )
+
+            ExampleButton(
+                buttonText = "FlexBox Layout Example",
+                type = FlexBoxLayoutExample,
                 exampleType = exampleType
             )
         }
@@ -136,6 +143,10 @@ fun ExampleCaseUI(
 
                 ClickEventExample -> {
                     ClickEventUI(onBackEvent)
+                }
+
+                FlexBoxLayoutExample -> {
+                    FlexBoxUI(onBackEvent)
                 }
 
                 else -> {

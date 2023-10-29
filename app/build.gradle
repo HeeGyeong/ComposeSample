@@ -62,6 +62,9 @@ dependencies {
 
     implementation "com.google.accompanist:accompanist-systemuicontroller:0.17.0"
 
+    // Glide
+    implementation "com.github.bumptech.glide:compose:1.0.0-alpha.1"
+
     // koin
     implementation "io.insert-koin:koin-android:3.2.0"
     //rxjava

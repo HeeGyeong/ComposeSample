@@ -4,6 +4,6 @@ class ConstValue {
     companion object {
         const val LazyColumnExample = "lazyColumnExample"
         const val ClickEventExample = "clickEventExample"
-        const val Dummy = "dummy"
+        const val FlexBoxLayoutExample = "flexBoxLayoutExample"
     }
 }
