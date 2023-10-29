@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
+import kotlin.random.Random
 
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalGlideComposeApi::class)
@@ -73,6 +74,11 @@ fun FlexBoxUI(onBackButtonClick: () -> Unit) {
             val minHeight = 30
             val contentHeight = remember { mutableStateOf(minHeight.dp) }
 
+            val itemList = listOf(
+                "123", "1452313123", "13123123", "123", "1464565465645646462", "1",
+                "123", "12313123", "13123123", "123", "12", "12312234233123131"
+            )
+
             Box(
                 modifier = Modifier
                     .wrapContentHeight()
@@ -86,12 +92,23 @@ fun FlexBoxUI(onBackButtonClick: () -> Unit) {
                     contentHeight = contentHeight,
                     minHeight = minHeight,
                 ) {
+                    /*for (item in itemList) {
+                        Row(modifier = Modifier.padding(vertical = 5.dp)) {
+                            Spacer(modifier = Modifier.width(widthMargin))
+                            Text(
+                                modifier = Modifier
+                                    .height(20.dp),
+                                text = "#$item"
+                            )
+                            Spacer(modifier = Modifier.width(widthMargin))
+                        }
+                    }*/
                     repeat(40) {
                         Row(modifier = Modifier.padding(vertical = 5.dp)) {
                             Spacer(modifier = Modifier.width(widthMargin))
                             GlideImage(
                                 modifier = Modifier
-                                    .width(20.dp)
+                                    .width(Random.nextInt(20, 120).dp)
                                     .height(20.dp)
                                     .border(width = 1.dp, color = Color.Blue, shape = CircleShape)
                                     .clip(CircleShape),
@@ -135,40 +152,40 @@ fun flexBoxLayoutMeasurePolicy(contentHeight: MutableState<Dp>, minHeight: Int) 
             val placeables = measurables.map { measurable ->
                 measurable.measure(constraints)
             }
-            var yPos = 0
-            var xPos = 0
-            var maxY = 0
+            var yPosition = 0
+            var xPosition = 0
+            var itemHeightSize = 0
             placeables.forEach { placeable ->
                 // 아이템을 추가했을 때 초대 너비를 넘어가면
-                if (xPos + placeable.width >
+                if (xPosition + placeable.width >
                     constraints.maxWidth
                 ) {
-                    xPos = 0
-                    yPos += maxY // y 포지션 값을 더한다.
-                    maxY = 0
+                    xPosition = 0
+                    yPosition += itemHeightSize // y 포지션 값을 더한다.
+                    itemHeightSize = 0
                 }
 
                 // 해당 x,y 값에 아이템을 추가한다.
                 placeable.placeRelative(
-                    x = xPos,
-                    y = yPos
+                    x = xPosition,
+                    y = yPosition
                 )
 
                 // 아이템을 추가했으면, 아이템의 크기만큼 x 좌표를 옮긴다
-                xPos += placeable.width
+                xPosition += placeable.width
 
                 // 아이템의 크기가 추가할 아이템의 높이보다 작으면, 아이템의 크기로 설정해준다.
-                if (maxY < placeable.height) {
-                    maxY = placeable.height
+                if (itemHeightSize < placeable.height) {
+                    itemHeightSize = placeable.height
                 }
             }
 
-            if (tempHeight != yPos) {
-                tempHeight = yPos
+            if (tempHeight != yPosition) {
+                tempHeight = yPosition
 
                 // 라인이 추가되는 타이밍에만 maxY 값이 yPos 값에 추가되는데, 라인이 넘어가지 않으면
                 // 마지막 라인에 대한 height 값이 추가되지 않으므로 추가해준다.
-                contentHeight.value = tempHeight.toDp() + maxY.toDp()
+                contentHeight.value = tempHeight.toDp() + itemHeightSize.toDp()
             }
         }
     }
