@@ -16,6 +16,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
+import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
@@ -92,7 +93,7 @@ fun FlexBoxUI(onBackButtonClick: () -> Unit) {
                     contentHeight = contentHeight,
                     minHeight = minHeight,
                 ) {
-                    /*for (item in itemList) {
+                    for (item in itemList) {
                         Row(modifier = Modifier.padding(vertical = 5.dp)) {
                             Spacer(modifier = Modifier.width(widthMargin))
                             Text(
@@ -102,7 +103,8 @@ fun FlexBoxUI(onBackButtonClick: () -> Unit) {
                             )
                             Spacer(modifier = Modifier.width(widthMargin))
                         }
-                    }*/
+                    }
+
                     repeat(40) {
                         Row(modifier = Modifier.padding(vertical = 5.dp)) {
                             Spacer(modifier = Modifier.width(widthMargin))
@@ -156,7 +158,7 @@ fun flexBoxLayoutMeasurePolicy(contentHeight: MutableState<Dp>, minHeight: Int) 
             var xPosition = 0
             var itemHeightSize = 0
             placeables.forEach { placeable ->
-                // 아이템을 추가했을 때 초대 너비를 넘어가면
+                // 아이템을 추가했을 때 최대 너비를 넘어가면
                 if (xPosition + placeable.width >
                     constraints.maxWidth
                 ) {
