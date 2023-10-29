@@ -135,7 +135,7 @@ fun FlexBoxLayout(
     minHeight: Int,
     content: @Composable () -> Unit,
 ) {
-    // 아이템이 추가 될 위치를 동적으로 파악하기 위해 measurePolicy를 선언하여 구현한다.
+    // layout 정책을 커스텀하기 위해 measurePolicy를 선언하여 구현한다.
     val measurePolicy = flexBoxLayoutMeasurePolicy(contentHeight, minHeight)
 
     Layout(
