@@ -1,6 +1,5 @@
 package com.example.composesample.example.ui.flexbox
 
-import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -61,7 +60,6 @@ fun FlexBoxUI(onBackButtonClick: () -> Unit) {
         item {
             // Device Width, Height Size
             val configuration = LocalConfiguration.current
-            val screenHeight = configuration.screenHeightDp.dp
             val screenWidth = configuration.screenWidthDp.dp
 
             // Item Margin 값을 Device에 따라 다르게 설정.
