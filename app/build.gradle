@@ -62,6 +62,9 @@ dependencies {
 
     implementation "com.google.accompanist:accompanist-systemuicontroller:0.17.0"
 
+    // Compose WebView
+    implementation "com.google.accompanist:accompanist-webview:0.24.13-rc"
+
     // Glide
     implementation "com.github.bumptech.glide:compose:1.0.0-alpha.1"
 

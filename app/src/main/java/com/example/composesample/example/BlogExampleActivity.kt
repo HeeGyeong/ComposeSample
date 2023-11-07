@@ -34,9 +34,11 @@ import androidx.compose.ui.unit.sp
 import com.example.composesample.example.ui.clickevent.ClickEventUI
 import com.example.composesample.example.ui.flexbox.FlexBoxUI
 import com.example.composesample.example.ui.lazycolumn.LazyColumnIssueUI
+import com.example.composesample.example.ui.webview.WebViewIssueUI
 import com.example.composesample.example.util.ConstValue.Companion.ClickEventExample
 import com.example.composesample.example.util.ConstValue.Companion.FlexBoxLayoutExample
 import com.example.composesample.example.util.ConstValue.Companion.LazyColumnExample
+import com.example.composesample.example.util.ConstValue.Companion.WebViewIssueExample
 import com.example.composesample.ui.base.SetSystemUI
 
 @ExperimentalAnimationApi
@@ -71,6 +73,12 @@ fun BlogExampleCase() {
             ExampleButton(
                 buttonText = "FlexBox Layout Example",
                 type = FlexBoxLayoutExample,
+                exampleType = exampleType
+            )
+
+            ExampleButton(
+                buttonText = "Youtube WebView Issue Example",
+                type = WebViewIssueExample,
                 exampleType = exampleType
             )
         }
@@ -147,6 +155,10 @@ fun ExampleCaseUI(
 
                 FlexBoxLayoutExample -> {
                     FlexBoxUI(onBackEvent)
+                }
+
+                WebViewIssueExample -> {
+                    WebViewIssueUI(onBackEvent)
                 }
 
                 else -> {

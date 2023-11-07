@@ -5,5 +5,6 @@ class ConstValue {
         const val LazyColumnExample = "lazyColumnExample"
         const val ClickEventExample = "clickEventExample"
         const val FlexBoxLayoutExample = "flexBoxLayoutExample"
+        const val WebViewIssueExample = "webViewIssueExample"
     }
 }
