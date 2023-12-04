@@ -34,10 +34,12 @@ import androidx.compose.ui.unit.sp
 import com.example.composesample.example.ui.clickevent.ClickEventUI
 import com.example.composesample.example.ui.flexbox.FlexBoxUI
 import com.example.composesample.example.ui.lazycolumn.LazyColumnIssueUI
+import com.example.composesample.example.ui.text.TextStyleUI
 import com.example.composesample.example.ui.webview.WebViewIssueUI
 import com.example.composesample.example.util.ConstValue.Companion.ClickEventExample
 import com.example.composesample.example.util.ConstValue.Companion.FlexBoxLayoutExample
 import com.example.composesample.example.util.ConstValue.Companion.LazyColumnExample
+import com.example.composesample.example.util.ConstValue.Companion.TextStyleExample
 import com.example.composesample.example.util.ConstValue.Companion.WebViewIssueExample
 import com.example.composesample.ui.base.SetSystemUI
 
@@ -79,6 +81,12 @@ fun BlogExampleCase() {
             ExampleButton(
                 buttonText = "Youtube WebView Issue Example",
                 type = WebViewIssueExample,
+                exampleType = exampleType
+            )
+
+            ExampleButton(
+                buttonText = "Text Style Example",
+                type = TextStyleExample,
                 exampleType = exampleType
             )
         }
@@ -159,6 +167,10 @@ fun ExampleCaseUI(
 
                 WebViewIssueExample -> {
                     WebViewIssueUI(onBackEvent)
+                }
+
+                TextStyleExample -> {
+                    TextStyleUI(onBackEvent)
                 }
 
                 else -> {
