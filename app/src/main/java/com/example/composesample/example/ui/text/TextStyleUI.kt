@@ -124,17 +124,21 @@ fun TextStyleUI(onBackButtonClick: () -> Unit) {
                 )
 
                 Spacer(modifier = Modifier.height(10.dp))
+
+                val exampleText = "이것은 실 사용 예시입니다. 띄어쓰기와 줄바꿈을 수행하는 텍스트는 이렇게 나오게 됩니다."
+
                 Text(
                     modifier = Modifier
                         .wrapContentSize(),
-                    text = "이것은 실 사용 예시입니다. 띄어쓰기와 줄바꿈을 수행하는 텍스트는 이렇게 나오게 됩니다.",
+                    text = exampleText,
                 )
 
                 Spacer(modifier = Modifier.height(10.dp))
+
                 Text(
                     modifier = Modifier
                         .wrapContentSize(),
-                    text = "이것은 실 사용 예시입니다. 띄어쓰기와 줄바꿈을 수행하는 텍스트는 이렇게 나오게 됩니다.",
+                    text = exampleText,
                     letterSpacing = -(0.02).em,
                     lineHeight = 1.5.em,
                 )
