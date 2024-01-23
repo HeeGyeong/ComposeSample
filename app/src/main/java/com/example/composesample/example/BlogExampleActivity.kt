@@ -1,8 +1,12 @@
 package com.example.composesample.example
 
+import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.result.ActivityResultCallback
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.AnimationConstants
@@ -32,11 +36,15 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.composesample.example.ui.clickevent.ClickEventUI
+import com.example.composesample.example.ui.ffmpeg.FfmpegEncodingUI
+import com.example.composesample.example.ui.ffmpeg.executeCommand
+import com.example.composesample.example.ui.ffmpeg.getRealPathFromURI
 import com.example.composesample.example.ui.flexbox.FlexBoxUI
 import com.example.composesample.example.ui.lazycolumn.LazyColumnIssueUI
 import com.example.composesample.example.ui.text.TextStyleUI
 import com.example.composesample.example.ui.webview.WebViewIssueUI
 import com.example.composesample.example.util.ConstValue.Companion.ClickEventExample
+import com.example.composesample.example.util.ConstValue.Companion.FfmpegExample
 import com.example.composesample.example.util.ConstValue.Companion.FlexBoxLayoutExample
 import com.example.composesample.example.util.ConstValue.Companion.LazyColumnExample
 import com.example.composesample.example.util.ConstValue.Companion.TextStyleExample
@@ -47,15 +55,34 @@ import com.example.composesample.ui.base.SetSystemUI
 class BlogExampleActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val contract =
+            ActivityResultContracts.GetContent()
+
+        val callback = ActivityResultCallback<Uri?> { uri ->
+            uri?.let {
+                val inputVideoPath = getRealPathFromURI(uri, this)
+                inputVideoPath?.let {
+                    this.executeCommand(inputVideoPath)
+                }
+            }
+        }
+
+        val launcher = registerForActivityResult(contract, callback)
+
         setContent {
             SetSystemUI()
-            BlogExampleCase()
+            BlogExampleCase(
+                launcher = launcher
+            )
         }
     }
 }
 
 @Composable
-fun BlogExampleCase() {
+fun BlogExampleCase(
+    launcher: ActivityResultLauncher<String>
+) {
     val exampleType = remember { mutableStateOf("") }
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -89,10 +116,17 @@ fun BlogExampleCase() {
                 type = TextStyleExample,
                 exampleType = exampleType
             )
+
+            ExampleButton(
+                buttonText = "Video Encoding Example",
+                type = FfmpegExample,
+                exampleType = exampleType
+            )
         }
 
         ExampleCaseUI(
             exampleType = exampleType,
+            launcher = launcher,
         ) {
             exampleType.value = ""
         }
@@ -103,7 +137,7 @@ fun BlogExampleCase() {
 fun ColumnScope.ExampleButton(
     buttonText: String,
     type: String,
-    exampleType:  MutableState<String>,
+    exampleType: MutableState<String>,
     onButtonClick: () -> Unit = {
         exampleType.value = type
     }
@@ -130,6 +164,7 @@ fun ColumnScope.ExampleButton(
 @Composable
 fun ExampleCaseUI(
     exampleType: MutableState<String>,
+    launcher: ActivityResultLauncher<String>,
     onBackEvent: () -> Unit
 ) {
     AnimatedVisibility(
@@ -171,6 +206,13 @@ fun ExampleCaseUI(
 
                 TextStyleExample -> {
                     TextStyleUI(onBackEvent)
+                }
+
+                FfmpegExample -> {
+                    FfmpegEncodingUI(
+                        launcher = launcher,
+                        onBackButtonClick = onBackEvent,
+                    )
                 }
 
                 else -> {

@@ -7,5 +7,6 @@ class ConstValue {
         const val FlexBoxLayoutExample = "flexBoxLayoutExample"
         const val WebViewIssueExample = "webViewIssueExample"
         const val TextStyleExample = "textStyleExample"
+        const val FfmpegExample = "ffmpegExample"
     }
 }

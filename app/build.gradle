@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId "com.example.composesample"
-        minSdk 23
+        minSdk 24
         targetSdk 33
         versionCode 1
         versionName "1.0"
@@ -86,6 +86,9 @@ dependencies {
     implementation 'androidx.room:room-ktx:2.4.3'
     implementation "androidx.room:room-runtime:2.4.3"
     kapt "androidx.room:room-compiler:2.4.3"
+
+    // Ffmpeg Library
+    implementation "com.arthenica:ffmpeg-kit-full:5.1"
 
     // Test
     testImplementation 'junit:junit:4.13.2'
