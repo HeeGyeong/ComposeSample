@@ -18,7 +18,7 @@ import java.util.Date
  */
 @SuppressLint("SimpleDateFormat")
 fun Context.executeCommand(inputFilePath: String) {
-    val suffixData = SimpleDateFormat("HH-mm-ss").format(Date())
+    val suffixData = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
     val outputFile = File(getExternalFilesDir(null), "compose-sample-output-$suffixData.mp4")
     val outPutFilePath = outputFile.absolutePath
 
