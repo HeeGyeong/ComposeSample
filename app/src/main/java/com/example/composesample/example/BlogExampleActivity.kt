@@ -56,8 +56,7 @@ class BlogExampleActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val contract =
-            ActivityResultContracts.GetContent()
+        val contract = ActivityResultContracts.GetContent()
 
         val callback = ActivityResultCallback<Uri?> { uri ->
             uri?.let {
