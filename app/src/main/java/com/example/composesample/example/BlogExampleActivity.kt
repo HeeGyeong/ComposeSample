@@ -41,8 +41,10 @@ import com.example.composesample.example.ui.ffmpeg.executeCommand
 import com.example.composesample.example.ui.ffmpeg.getRealPathFromURI
 import com.example.composesample.example.ui.flexbox.FlexBoxUI
 import com.example.composesample.example.ui.lazycolumn.LazyColumnIssueUI
+import com.example.composesample.example.ui.recode.AudioRecodeUI
 import com.example.composesample.example.ui.text.TextStyleUI
 import com.example.composesample.example.ui.webview.WebViewIssueUI
+import com.example.composesample.example.util.ConstValue.Companion.AudioRecodeExample
 import com.example.composesample.example.util.ConstValue.Companion.ClickEventExample
 import com.example.composesample.example.util.ConstValue.Companion.FfmpegExample
 import com.example.composesample.example.util.ConstValue.Companion.FlexBoxLayoutExample
@@ -212,6 +214,10 @@ fun ExampleCaseUI(
                         launcher = launcher,
                         onBackButtonClick = onBackEvent,
                     )
+                }
+
+                AudioRecodeExample -> {
+                    AudioRecodeUI(onBackEvent)
                 }
 
                 else -> {

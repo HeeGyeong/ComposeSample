@@ -8,5 +8,6 @@ class ConstValue {
         const val WebViewIssueExample = "webViewIssueExample"
         const val TextStyleExample = "textStyleExample"
         const val FfmpegExample = "ffmpegExample"
+        const val AudioRecodeExample = "audioRecodeExample"
     }
 }
