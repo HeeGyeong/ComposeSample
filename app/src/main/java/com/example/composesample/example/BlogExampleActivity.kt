@@ -123,6 +123,12 @@ fun BlogExampleCase(
                 type = FfmpegExample,
                 exampleType = exampleType
             )
+
+            ExampleButton(
+                buttonText = "Audio Recode Example",
+                type = AudioRecodeExample,
+                exampleType = exampleType
+            )
         }
 
         ExampleCaseUI(

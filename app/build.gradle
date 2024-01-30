@@ -91,8 +91,8 @@ dependencies {
     implementation "com.arthenica:ffmpeg-kit-full:5.1"
 
     // WorkManager
-    implementation "androidx.work:work-runtime:2.9.0"
-    implementation "androidx.work:work-runtime-ktx:2.9.0"
+    implementation "androidx.work:work-runtime:2.7.1"
+    implementation "androidx.work:work-runtime-ktx:2.7.1"
 
     // Test
     testImplementation 'junit:junit:4.13.2'
