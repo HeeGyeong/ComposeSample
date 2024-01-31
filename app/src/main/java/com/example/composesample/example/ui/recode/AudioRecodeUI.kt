@@ -121,6 +121,8 @@ fun AudioRecodeUI(
                                 .noRippleSingleClickable {
                                     // 이미 저장 된 파일이 있으면 파일 제거
                                     if (outputFile.value != null) {
+                                        outputFile.value!!.deleteOnExit()
+
                                         outputFile.value = null
                                         isRecoding.value = false
                                         isPlaying.value = false
