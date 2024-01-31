@@ -13,7 +13,21 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
+fun pauseMediaRecorde(
+    mediaRecorder: MutableState<MediaRecorder?>,
+) {
+    mediaRecorder.value?.apply {
+        pause()
+    }
+}
 
+fun resumeMediaRecorde(
+    mediaRecorder: MutableState<MediaRecorder?>,
+) {
+    mediaRecorder.value?.apply {
+        resume()
+    }
+}
 fun finishMediaRecorde(
     mediaRecorder: MutableState<MediaRecorder?>,
 ) {

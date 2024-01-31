@@ -23,6 +23,7 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Call
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.runtime.Composable
@@ -48,6 +49,7 @@ fun AudioRecordeUI(
     val mediaPlayer = remember { mutableStateOf<MediaPlayer?>(null) }
     val outputFile = remember { mutableStateOf<File?>(null) }
     val isPlaying = remember { mutableStateOf(false) }
+    val isPause = remember { mutableStateOf(false) }
 
     LazyColumn(modifier = Modifier.padding(horizontal = 20.dp)) {
         stickyHeader {
@@ -138,6 +140,49 @@ fun AudioRecordeUI(
                             contentDescription = ""
                         )
                     }
+                }
+
+                if (isRecoding.value) {
+                    Spacer(modifier = Modifier.height(20.dp))
+
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = if (isPause.value) {
+                                "녹음 재개"
+                            } else {
+                                "녹음 일시 정지"
+                            }
+                        )
+
+                        Spacer(modifier = Modifier.width(10.dp))
+
+                        Icon(
+                            modifier = Modifier
+                                .size(36.dp)
+                                .noRippleSingleClickable {
+                                    if (isPause.value) {
+                                        isPause.value = false
+                                        resumeMediaRecorde(
+                                            mediaRecorder = mediaRecorder
+                                        )
+                                    } else {
+                                        isPause.value = true
+                                        pauseMediaRecorde(
+                                            mediaRecorder = mediaRecorder
+                                        )
+                                    }
+                                },
+                            imageVector = if (isPause.value) {
+                                Icons.Filled.PlayArrow
+                            } else {
+                                Icons.Filled.Edit
+                            },
+                            contentDescription = ""
+                        )
+                    }
+
                 }
 
                 Spacer(modifier = Modifier.height(20.dp))
