@@ -66,7 +66,7 @@ fun AppbarSample(title: String) {
                     scope.launch {
                         val result = scaffoldState.snackbarHostState
                             .showSnackbar(
-                                message = "Go to Blog Example Screen",
+                                message = "Go to Blog Example List Screen",
                                 actionLabel = "Go",
                                 // Defaults to SnackbarDuration.Short
                                 duration = SnackbarDuration.Short
@@ -116,7 +116,7 @@ fun TestButton(text: String) {
     Button(
         onClick = {
             Log.d("ComposeLog", "click test Button")
-            context.startActivity(Intent(context, MainActivity::class.java))
+            context.startActivity(Intent(context, BlogExampleActivity::class.java))
         },
         contentPadding = PaddingValues(
             start = 20.dp,
@@ -125,7 +125,7 @@ fun TestButton(text: String) {
             bottom = 12.dp
         ),
     ) {
-        Text("Like : $text")
+        Text("Go to Blog Example List Screen")
     }
 }
 
