@@ -50,10 +50,6 @@ import com.example.composesample.example.util.noRippleClickable
 import com.example.composesample.example.util.noRippleSingleClickable
 import java.io.File
 
-
-/**
- * 작업 예정
- */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun AudioRecodeUI(
