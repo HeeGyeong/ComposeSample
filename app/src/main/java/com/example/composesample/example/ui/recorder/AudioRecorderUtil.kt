@@ -1,4 +1,4 @@
-package com.example.composesample.example.ui.recorde
+package com.example.composesample.example.ui.recorder
 
 import android.content.Context
 import android.media.AudioAttributes
@@ -13,7 +13,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-fun pauseMediaRecorde(
+fun pauseMediaRecorder(
     mediaRecorder: MutableState<MediaRecorder?>,
 ) {
     mediaRecorder.value?.apply {
@@ -21,14 +21,14 @@ fun pauseMediaRecorde(
     }
 }
 
-fun resumeMediaRecorde(
+fun resumeMediaRecorder(
     mediaRecorder: MutableState<MediaRecorder?>,
 ) {
     mediaRecorder.value?.apply {
         resume()
     }
 }
-fun finishMediaRecorde(
+fun finishMediaRecorder(
     mediaRecorder: MutableState<MediaRecorder?>,
 ) {
     mediaRecorder.value?.apply {
@@ -39,7 +39,7 @@ fun finishMediaRecorde(
     }
 }
 
-fun startMediaRecorde(
+fun startMediaRecorder(
     context: Context,
     outputFile: MutableState<File?>,
     mediaRecorder: MutableState<MediaRecorder?>,

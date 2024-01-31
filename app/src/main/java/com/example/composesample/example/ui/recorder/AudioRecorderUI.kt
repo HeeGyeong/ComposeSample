@@ -1,4 +1,4 @@
-package com.example.composesample.example.ui.recorde
+package com.example.composesample.example.ui.recorder
 
 import android.media.MediaPlayer
 import android.media.MediaRecorder
@@ -40,7 +40,7 @@ import java.io.File
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun AudioRecordeUI(
+fun AudioRecorderUI(
     onBackButtonClick: () -> Unit
 ) {
     val context = LocalContext.current
@@ -96,7 +96,7 @@ fun AudioRecordeUI(
                                 .size(36.dp)
                                 .noRippleSingleClickable {
                                     isRecoding.value = false
-                                    finishMediaRecorde(mediaRecorder)
+                                    finishMediaRecorder(mediaRecorder)
                                 },
                             imageVector = Icons.Filled.Check,
                             contentDescription = ""
@@ -117,7 +117,7 @@ fun AudioRecordeUI(
                                         isPlaying.value = false
 
                                         // 녹음 종료
-                                        finishMediaRecorde(mediaRecorder)
+                                        finishMediaRecorder(mediaRecorder)
 
                                         // 플레이어 종료.
                                         closeMediaPlayer(mediaPlayer)
@@ -125,7 +125,7 @@ fun AudioRecordeUI(
                                         // 권한 체크 필요함.
                                         isRecoding.value = true
 
-                                        startMediaRecorde(
+                                        startMediaRecorder(
                                             context = context,
                                             mediaRecorder = mediaRecorder,
                                             outputFile = outputFile
@@ -164,12 +164,12 @@ fun AudioRecordeUI(
                                 .noRippleSingleClickable {
                                     if (isPause.value) {
                                         isPause.value = false
-                                        resumeMediaRecorde(
+                                        resumeMediaRecorder(
                                             mediaRecorder = mediaRecorder
                                         )
                                     } else {
                                         isPause.value = true
-                                        pauseMediaRecorde(
+                                        pauseMediaRecorder(
                                             mediaRecorder = mediaRecorder
                                         )
                                     }

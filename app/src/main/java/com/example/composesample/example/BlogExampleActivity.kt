@@ -41,10 +41,10 @@ import com.example.composesample.example.ui.ffmpeg.executeCommand
 import com.example.composesample.example.ui.ffmpeg.getRealPathFromURI
 import com.example.composesample.example.ui.flexbox.FlexBoxUI
 import com.example.composesample.example.ui.lazycolumn.LazyColumnIssueUI
-import com.example.composesample.example.ui.recorde.AudioRecordeUI
+import com.example.composesample.example.ui.recorder.AudioRecorderUI
 import com.example.composesample.example.ui.text.TextStyleUI
 import com.example.composesample.example.ui.webview.WebViewIssueUI
-import com.example.composesample.example.util.ConstValue.Companion.AudioRecordeExample
+import com.example.composesample.example.util.ConstValue.Companion.AudioRecorderExample
 import com.example.composesample.example.util.ConstValue.Companion.ClickEventExample
 import com.example.composesample.example.util.ConstValue.Companion.FfmpegExample
 import com.example.composesample.example.util.ConstValue.Companion.FlexBoxLayoutExample
@@ -125,8 +125,8 @@ fun BlogExampleCase(
             )
 
             ExampleButton(
-                buttonText = "Audio Recorde Example",
-                type = AudioRecordeExample,
+                buttonText = "Audio Recorder Example",
+                type = AudioRecorderExample,
                 exampleType = exampleType
             )
         }
@@ -222,8 +222,8 @@ fun ExampleCaseUI(
                     )
                 }
 
-                AudioRecordeExample -> {
-                    AudioRecordeUI(onBackEvent)
+                AudioRecorderExample -> {
+                    AudioRecorderUI(onBackEvent)
                 }
 
                 else -> {
