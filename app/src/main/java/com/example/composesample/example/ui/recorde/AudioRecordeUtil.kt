@@ -1,4 +1,4 @@
-package com.example.composesample.example.ui.recode
+package com.example.composesample.example.ui.recorde
 
 import android.content.Context
 import android.media.AudioAttributes
@@ -14,7 +14,7 @@ import java.util.Date
 import java.util.Locale
 
 
-fun finishMediaRecode(
+fun finishMediaRecorde(
     mediaRecorder: MutableState<MediaRecorder?>,
 ) {
     mediaRecorder.value?.apply {
@@ -25,7 +25,7 @@ fun finishMediaRecode(
     }
 }
 
-fun startMediaRecode(
+fun startMediaRecorde(
     context: Context,
     outputFile: MutableState<File?>,
     mediaRecorder: MutableState<MediaRecorder?>,
