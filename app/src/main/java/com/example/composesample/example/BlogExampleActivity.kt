@@ -44,6 +44,7 @@ import com.example.composesample.example.ui.lazycolumn.LazyColumnIssueUI
 import com.example.composesample.example.ui.recorder.AudioRecorderUI
 import com.example.composesample.example.ui.text.TextStyleUI
 import com.example.composesample.example.ui.webview.WebViewIssueUI
+import com.example.composesample.example.ui.workmanager.WorkManagerUI
 import com.example.composesample.example.util.ConstValue.Companion.AudioRecorderExample
 import com.example.composesample.example.util.ConstValue.Companion.ClickEventExample
 import com.example.composesample.example.util.ConstValue.Companion.FfmpegExample
@@ -51,6 +52,7 @@ import com.example.composesample.example.util.ConstValue.Companion.FlexBoxLayout
 import com.example.composesample.example.util.ConstValue.Companion.LazyColumnExample
 import com.example.composesample.example.util.ConstValue.Companion.TextStyleExample
 import com.example.composesample.example.util.ConstValue.Companion.WebViewIssueExample
+import com.example.composesample.example.util.ConstValue.Companion.WorkManagerExample
 import com.example.composesample.ui.base.SetSystemUI
 
 @ExperimentalAnimationApi
@@ -127,6 +129,12 @@ fun BlogExampleCase(
             ExampleButton(
                 buttonText = "Audio Recorder Example",
                 type = AudioRecorderExample,
+                exampleType = exampleType
+            )
+
+            ExampleButton(
+                buttonText = "Work Manager Example",
+                type = WorkManagerExample,
                 exampleType = exampleType
             )
         }
@@ -224,6 +232,10 @@ fun ExampleCaseUI(
 
                 AudioRecorderExample -> {
                     AudioRecorderUI(onBackEvent)
+                }
+
+                WorkManagerExample -> {
+                    WorkManagerUI(onBackEvent)
                 }
 
                 else -> {

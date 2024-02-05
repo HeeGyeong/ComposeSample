@@ -9,5 +9,6 @@ class ConstValue {
         const val TextStyleExample = "textStyleExample"
         const val FfmpegExample = "ffmpegExample"
         const val AudioRecorderExample = "audioRecorderExample"
+        const val WorkManagerExample = "workManagerExample"
     }
 }
