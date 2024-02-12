@@ -42,6 +42,7 @@ import com.example.composesample.example.ui.ffmpeg.getRealPathFromURI
 import com.example.composesample.example.ui.flexbox.FlexBoxUI
 import com.example.composesample.example.ui.lazycolumn.LazyColumnIssueUI
 import com.example.composesample.example.ui.recorder.AudioRecorderUI
+import com.example.composesample.example.ui.refresh.PullToRefreshUI
 import com.example.composesample.example.ui.text.TextStyleUI
 import com.example.composesample.example.ui.webview.WebViewIssueUI
 import com.example.composesample.example.ui.workmanager.WorkManagerUI
@@ -50,6 +51,7 @@ import com.example.composesample.example.util.ConstValue.Companion.ClickEventExa
 import com.example.composesample.example.util.ConstValue.Companion.FfmpegExample
 import com.example.composesample.example.util.ConstValue.Companion.FlexBoxLayoutExample
 import com.example.composesample.example.util.ConstValue.Companion.LazyColumnExample
+import com.example.composesample.example.util.ConstValue.Companion.PullToRefreshExample
 import com.example.composesample.example.util.ConstValue.Companion.TextStyleExample
 import com.example.composesample.example.util.ConstValue.Companion.WebViewIssueExample
 import com.example.composesample.example.util.ConstValue.Companion.WorkManagerExample
@@ -135,6 +137,12 @@ fun BlogExampleCase(
             ExampleButton(
                 buttonText = "Work Manager Example",
                 type = WorkManagerExample,
+                exampleType = exampleType
+            )
+
+            ExampleButton(
+                buttonText = "Pull to Refresh example",
+                type = PullToRefreshExample,
                 exampleType = exampleType
             )
         }
@@ -236,6 +244,10 @@ fun ExampleCaseUI(
 
                 WorkManagerExample -> {
                     WorkManagerUI(onBackEvent)
+                }
+
+                PullToRefreshExample -> {
+                    PullToRefreshUI(onBackEvent)
                 }
 
                 else -> {

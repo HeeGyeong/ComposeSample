@@ -10,5 +10,6 @@ class ConstValue {
         const val FfmpegExample = "ffmpegExample"
         const val AudioRecorderExample = "audioRecorderExample"
         const val WorkManagerExample = "workManagerExample"
+        const val PullToRefreshExample = "pullToRefreshExample"
     }
 }
