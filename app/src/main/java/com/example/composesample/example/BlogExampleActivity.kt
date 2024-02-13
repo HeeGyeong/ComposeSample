@@ -22,6 +22,7 @@ import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.Text
@@ -41,6 +42,7 @@ import com.example.composesample.example.ui.ffmpeg.executeCommand
 import com.example.composesample.example.ui.ffmpeg.getRealPathFromURI
 import com.example.composesample.example.ui.flexbox.FlexBoxUI
 import com.example.composesample.example.ui.lazycolumn.LazyColumnIssueUI
+import com.example.composesample.example.ui.pager.PullScreenPagerUI
 import com.example.composesample.example.ui.recorder.AudioRecorderUI
 import com.example.composesample.example.ui.refresh.PullToRefreshUI
 import com.example.composesample.example.ui.text.TextStyleUI
@@ -51,6 +53,7 @@ import com.example.composesample.example.util.ConstValue.Companion.ClickEventExa
 import com.example.composesample.example.util.ConstValue.Companion.FfmpegExample
 import com.example.composesample.example.util.ConstValue.Companion.FlexBoxLayoutExample
 import com.example.composesample.example.util.ConstValue.Companion.LazyColumnExample
+import com.example.composesample.example.util.ConstValue.Companion.PullScreenPager
 import com.example.composesample.example.util.ConstValue.Companion.PullToRefreshExample
 import com.example.composesample.example.util.ConstValue.Companion.TextStyleExample
 import com.example.composesample.example.util.ConstValue.Companion.WebViewIssueExample
@@ -91,60 +94,73 @@ fun BlogExampleCase(
     val exampleType = remember { mutableStateOf("") }
 
     Box(modifier = Modifier.fillMaxSize()) {
-        Column(modifier = Modifier.fillMaxWidth()) {
-            ExampleButton(
-                buttonText = "Lazy Column Keyboard Issue",
-                type = LazyColumnExample,
-                exampleType = exampleType
-            )
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+        ) {
+            item {
+                Column(modifier = Modifier.fillMaxWidth()) {
+                    ExampleButton(
+                        buttonText = "Lazy Column Keyboard Issue",
+                        type = LazyColumnExample,
+                        exampleType = exampleType
+                    )
 
-            ExampleButton(
-                buttonText = "Click Event",
-                type = ClickEventExample,
-                exampleType = exampleType
-            )
+                    ExampleButton(
+                        buttonText = "Click Event",
+                        type = ClickEventExample,
+                        exampleType = exampleType
+                    )
 
-            ExampleButton(
-                buttonText = "FlexBox Layout Example",
-                type = FlexBoxLayoutExample,
-                exampleType = exampleType
-            )
+                    ExampleButton(
+                        buttonText = "FlexBox Layout Example",
+                        type = FlexBoxLayoutExample,
+                        exampleType = exampleType
+                    )
 
-            ExampleButton(
-                buttonText = "Youtube WebView Issue Example",
-                type = WebViewIssueExample,
-                exampleType = exampleType
-            )
+                    ExampleButton(
+                        buttonText = "Youtube WebView Issue Example",
+                        type = WebViewIssueExample,
+                        exampleType = exampleType
+                    )
 
-            ExampleButton(
-                buttonText = "Text Style Example",
-                type = TextStyleExample,
-                exampleType = exampleType
-            )
+                    ExampleButton(
+                        buttonText = "Text Style Example",
+                        type = TextStyleExample,
+                        exampleType = exampleType
+                    )
 
-            ExampleButton(
-                buttonText = "Video Encoding Example",
-                type = FfmpegExample,
-                exampleType = exampleType
-            )
+                    ExampleButton(
+                        buttonText = "Video Encoding Example",
+                        type = FfmpegExample,
+                        exampleType = exampleType
+                    )
 
-            ExampleButton(
-                buttonText = "Audio Recorder Example",
-                type = AudioRecorderExample,
-                exampleType = exampleType
-            )
+                    ExampleButton(
+                        buttonText = "Audio Recorder Example",
+                        type = AudioRecorderExample,
+                        exampleType = exampleType
+                    )
 
-            ExampleButton(
-                buttonText = "Work Manager Example",
-                type = WorkManagerExample,
-                exampleType = exampleType
-            )
+                    ExampleButton(
+                        buttonText = "Work Manager Example",
+                        type = WorkManagerExample,
+                        exampleType = exampleType
+                    )
 
-            ExampleButton(
-                buttonText = "Pull to Refresh example",
-                type = PullToRefreshExample,
-                exampleType = exampleType
-            )
+                    ExampleButton(
+                        buttonText = "Pull to Refresh example",
+                        type = PullToRefreshExample,
+                        exampleType = exampleType
+                    )
+
+                    ExampleButton(
+                        buttonText = "Pull screen pager example",
+                        type = PullScreenPager,
+                        exampleType = exampleType
+                    )
+                }
+            }
         }
 
         ExampleCaseUI(
@@ -248,6 +264,10 @@ fun ExampleCaseUI(
 
                 PullToRefreshExample -> {
                     PullToRefreshUI(onBackEvent)
+                }
+
+                PullScreenPager -> {
+                    PullScreenPagerUI(onBackEvent)
                 }
 
                 else -> {

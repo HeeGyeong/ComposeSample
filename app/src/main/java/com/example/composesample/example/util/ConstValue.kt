@@ -11,5 +11,6 @@ class ConstValue {
         const val AudioRecorderExample = "audioRecorderExample"
         const val WorkManagerExample = "workManagerExample"
         const val PullToRefreshExample = "pullToRefreshExample"
+        const val PullScreenPager = "pullScreenPager"
     }
 }
