@@ -1,5 +1,6 @@
 package com.example.composesample.example
 
+import android.app.Activity
 import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -15,6 +16,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -33,6 +35,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -58,6 +61,7 @@ import com.example.composesample.example.util.ConstValue.Companion.PullToRefresh
 import com.example.composesample.example.util.ConstValue.Companion.TextStyleExample
 import com.example.composesample.example.util.ConstValue.Companion.WebViewIssueExample
 import com.example.composesample.example.util.ConstValue.Companion.WorkManagerExample
+import com.example.composesample.main.MainHeader
 import com.example.composesample.ui.base.SetSystemUI
 
 @ExperimentalAnimationApi
@@ -87,10 +91,12 @@ class BlogExampleActivity : ComponentActivity() {
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun BlogExampleCase(
     launcher: ActivityResultLauncher<String>
 ) {
+    val context = LocalContext.current
     val exampleType = remember { mutableStateOf("") }
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -98,6 +104,15 @@ fun BlogExampleCase(
             modifier = Modifier
                 .fillMaxSize()
         ) {
+            stickyHeader {
+                MainHeader(
+                    title = "Compose Function Sample",
+                    onBackIconClicked = {
+                        (context as Activity).finish()
+                    }
+                )
+            }
+
             item {
                 Column(modifier = Modifier.fillMaxWidth()) {
                     ExampleButton(

@@ -8,14 +8,43 @@ import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.material.Button
+import androidx.compose.material.ExtendedFloatingActionButton
+import androidx.compose.material.FabPosition
+import androidx.compose.material.FloatingActionButton
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
+import androidx.compose.material.SnackbarDuration
+import androidx.compose.material.SnackbarResult
+import androidx.compose.material.Surface
+import androidx.compose.material.Text
+import androidx.compose.material.rememberScaffoldState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -32,16 +61,17 @@ import com.example.composesample.ui.base.BottomBar
 import com.example.composesample.ui.base.DrawerItem
 import com.example.composesample.ui.base.TopBar
 import com.example.composesample.ui.theme.ComposeSampleTheme
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 
 @ExperimentalAnimationApi
 @Composable
-fun AppbarSample(title: String) {
+fun AppbarSample(
+    title: String,
+    isViewLegacyPage: MutableState<Boolean>
+) {
     val scaffoldState = rememberScaffoldState()
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
@@ -56,7 +86,11 @@ fun AppbarSample(title: String) {
         },
         // Top, Bottom 사이에 들어갈 item
         content = {
-            ListTest(itemList, "data")
+            ListTest(
+                itemList = itemList,
+                data = "data",
+                isViewLegacyPage = isViewLegacyPage
+            )
         },
         floatingActionButton = {
             // Make SnackBar Floating Button
@@ -74,8 +108,14 @@ fun AppbarSample(title: String) {
                         when (result) {
                             SnackbarResult.ActionPerformed -> {
                                 Log.d("FloatingButton", "ActionPerformed~")
-                                context.startActivity(Intent(context, BlogExampleActivity::class.java))
+                                context.startActivity(
+                                    Intent(
+                                        context,
+                                        BlogExampleActivity::class.java
+                                    )
+                                )
                             }
+
                             SnackbarResult.Dismissed -> {
                                 Log.d("FloatingButton", "Dismissed~")
                             }
@@ -111,12 +151,14 @@ fun AppbarSample(title: String) {
 
 @ExperimentalAnimationApi
 @Composable
-fun TestButton(text: String) {
-    val context = LocalContext.current
+fun TestButton(
+    text: String,
+    isViewLegacyPage: MutableState<Boolean>
+) {
     Button(
         onClick = {
             Log.d("ComposeLog", "click test Button")
-            context.startActivity(Intent(context, BlogExampleActivity::class.java))
+            isViewLegacyPage.value = false
         },
         contentPadding = PaddingValues(
             start = 20.dp,
@@ -131,7 +173,11 @@ fun TestButton(text: String) {
 
 @ExperimentalAnimationApi
 @Composable
-fun ListTest(itemList: List<Message>, data: String) {
+fun ListTest(
+    itemList: List<Message>,
+    data: String,
+    isViewLegacyPage: MutableState<Boolean>
+) {
     Box(modifier = Modifier.fillMaxSize()) {
         // 스크롤의 position의 상태를 저장.
         val scrollState = rememberLazyListState()
@@ -143,7 +189,10 @@ fun ListTest(itemList: List<Message>, data: String) {
         ) {
             itemsIndexed(itemList) { index, item ->
                 if (index == 3) {
-                    TestButton(data)
+                    TestButton(
+                        text = data,
+                        isViewLegacyPage = isViewLegacyPage
+                    )
                 } else {
                     CardView(item)
                 }
