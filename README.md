@@ -12,6 +12,8 @@ JetPack Compose를 사용해보기 위해 만든 Sample과 BlogExample을 쉽게
 
 Permission을 위한 로직 등 기본적인 로직이 들어있는 프로젝트라면, 해당 로직을 그대로 가져다 사용해도 사용할 수는 있게 코드를 작성하고 있습니다.
 
-실무를 진행하면서 Compose에 대한 스터디를 진행하고 있으며, 관련된 내용들은 필요시 마다 정리하여 블로그에 작성하고 있습니다.
+실무를 진행하면서 Compose에 대한 스터디를 진행하고 있으며, 관련된 내용들은 필요시 마다 코드를 작성하고 정리하여 블로그에 작성하고 있습니다.
+
+해당 샘플을 통해서 쉽게 예제를 확인하고, 블로그 글을 통해 이해할 수 있도록 노력중입니다.
 
 [Tistory Blog - Compose](https://heegs.tistory.com/category/Android/Jetpack "JetPack Compose")
