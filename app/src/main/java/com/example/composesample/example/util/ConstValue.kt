@@ -12,5 +12,6 @@ class ConstValue {
         const val WorkManagerExample = "workManagerExample"
         const val PullToRefreshExample = "pullToRefreshExample"
         const val PullScreenPager = "pullScreenPager"
+        const val BottomSheetExample = "bottomSheetExample"
     }
 }

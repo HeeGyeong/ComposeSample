@@ -39,6 +39,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.composesample.example.ui.bottomsheet.BottomSheetUI
 import com.example.composesample.example.ui.clickevent.ClickEventUI
 import com.example.composesample.example.ui.ffmpeg.FfmpegEncodingUI
 import com.example.composesample.example.ui.ffmpeg.executeCommand
@@ -52,6 +53,7 @@ import com.example.composesample.example.ui.text.TextStyleUI
 import com.example.composesample.example.ui.webview.WebViewIssueUI
 import com.example.composesample.example.ui.workmanager.WorkManagerUI
 import com.example.composesample.example.util.ConstValue.Companion.AudioRecorderExample
+import com.example.composesample.example.util.ConstValue.Companion.BottomSheetExample
 import com.example.composesample.example.util.ConstValue.Companion.ClickEventExample
 import com.example.composesample.example.util.ConstValue.Companion.FfmpegExample
 import com.example.composesample.example.util.ConstValue.Companion.FlexBoxLayoutExample
@@ -115,6 +117,7 @@ fun BlogExampleCase(
 
             item {
                 Column(modifier = Modifier.fillMaxWidth()) {
+                    // Button UI 변경 및 Button 아래 해당 Blog, Github Code에 관련한 Link 추가.
                     ExampleButton(
                         buttonText = "Lazy Column Keyboard Issue",
                         type = LazyColumnExample,
@@ -172,6 +175,12 @@ fun BlogExampleCase(
                     ExampleButton(
                         buttonText = "Pull screen pager example",
                         type = PullScreenPager,
+                        exampleType = exampleType
+                    )
+
+                    ExampleButton(
+                        buttonText = "Bottom Sheet Example",
+                        type = BottomSheetExample,
                         exampleType = exampleType
                     )
                 }
@@ -283,6 +292,10 @@ fun ExampleCaseUI(
 
                 PullScreenPager -> {
                     PullScreenPagerUI(onBackEvent)
+                }
+
+                BottomSheetExample -> {
+                    BottomSheetUI(onBackEvent)
                 }
 
                 else -> {
