@@ -55,8 +55,7 @@ fun BottomSheetUI(
                 ExpandedBottomSheet()
 
                 CollapsedBottomSheet( // 닫혀있을 때 UI
-                    isCollapsed = scaffoldState.bottomSheetState.isCollapsed,
-                    currentFraction = scaffoldState.bottomSheetState.progress == 1f,
+                    currentFraction = scaffoldState.currentFraction,
                     onSheetClick = {
                         coroutineScope.launch {
                             if (scaffoldState.bottomSheetState.isCollapsed) {
@@ -107,6 +106,9 @@ fun BottomSheetDebugScreen(
             Text(text = "Expanded / Collapsed BS Button")
         }
 
+        Text("scaffoldState.bottomSheetState.targetValue = ${scaffoldState.bottomSheetState.targetValue}")
+        Text("scaffoldState.currentFraction = ${scaffoldState.currentFraction}")
+
         Text("scaffoldState.bottomSheetState.isCollapsed = ${scaffoldState.bottomSheetState.isCollapsed}")
         Text("scaffoldState.bottomSheetState.isExpanded = ${scaffoldState.bottomSheetState.isExpanded}")
 
@@ -122,3 +124,18 @@ fun BottomSheetDebugScreen(
 
     }
 }
+
+@OptIn(ExperimentalMaterialApi::class)
+val BottomSheetScaffoldState.currentFraction: Float
+    get() {
+        val fraction = bottomSheetState.progress
+        val targetValue = bottomSheetState.targetValue
+        val currentValue = bottomSheetState.currentValue
+
+        return when {
+            currentValue == BottomSheetValue.Collapsed && targetValue == BottomSheetValue.Collapsed -> 0f
+            currentValue == BottomSheetValue.Expanded && targetValue == BottomSheetValue.Expanded -> 1f
+            currentValue == BottomSheetValue.Collapsed && targetValue == BottomSheetValue.Expanded -> fraction
+            else -> 1f - fraction
+        }
+    }

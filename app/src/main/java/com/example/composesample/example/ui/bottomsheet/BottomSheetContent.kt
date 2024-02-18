@@ -97,8 +97,7 @@ fun ExpandedBottomSheet() {
 
 @Composable
 fun CollapsedBottomSheet(
-    isCollapsed: Boolean,
-    currentFraction: Boolean,
+    currentFraction: Float,
     onSheetClick: () -> Unit,
 ) {
     Row(
@@ -106,9 +105,7 @@ fun CollapsedBottomSheet(
             .fillMaxWidth()
             .height(72.dp) // sheetPeekHeight 과 동일하다.
             .background(MaterialTheme.colors.primary)
-            .graphicsLayer(
-                alpha = if (currentFraction && isCollapsed) 1f else 0f
-            )
+            .graphicsLayer(alpha = 1f - currentFraction)
             .noRippleClickable(
                 onClick = onSheetClick,
             ),

@@ -75,13 +75,18 @@ fun HorizontalTextPager() {
         "index : 5",
     )
 
-    val pagerState = rememberPagerState()
+    val pagerState = rememberPagerState(pageCount = {
+        textList.size
+    })
     var scrollLastPage by remember { mutableStateOf(false) }
     var scrollFirstPage by remember { mutableStateOf(false) }
 
     // index : last -> first
     LaunchedEffect(key1 = pagerState.isScrollInProgress) {
-        Log.d("isScrollInProgress", "pagerState.currentPageOffsetFraction : ${pagerState.currentPageOffsetFraction}")
+        Log.d(
+            "isScrollInProgress",
+            "pagerState.currentPageOffsetFraction : ${pagerState.currentPageOffsetFraction}"
+        )
         if (pagerState.currentPage == textList.size - 1
             && pagerState.isScrollInProgress
             && pagerState.currentPageOffsetFraction == 0f
@@ -112,7 +117,6 @@ fun HorizontalTextPager() {
 
     Box(modifier = Modifier.fillMaxSize()) {
         HorizontalPager(
-            pageCount = textList.size,
             state = pagerState
         ) {
             TextPager(text = textList[pagerState.currentPage])
@@ -136,11 +140,12 @@ fun DifferentScreenPager() {
     )
 
 
-    val pagerState = rememberPagerState()
+    val pagerState = rememberPagerState(pageCount = {
+        exampleScreenList.size
+    })
 
     Box(modifier = Modifier.fillMaxSize()) {
         HorizontalPager(
-            pageCount = exampleScreenList.size,
             state = pagerState
         ) {
             exampleScreenList[pagerState.currentPage].display()
