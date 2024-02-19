@@ -1,5 +1,11 @@
 package com.example.composesample.example.ui.bottomsheet
 
+import android.util.Log
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.AnimationConstants
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -7,6 +13,9 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -19,10 +28,22 @@ import kotlinx.coroutines.launch
 fun BottomSheetUI(
     onBackButtonClick: () -> Unit
 ) {
+    val visibleBs = remember { mutableStateOf(false) }
+    val heightSample = remember { mutableStateOf(0.dp) }
     val coroutineScope = rememberCoroutineScope()
     val scaffoldState = rememberBottomSheetScaffoldState(
         bottomSheetState = rememberBottomSheetState(BottomSheetValue.Collapsed)
     )
+
+    //scaffoldState.bottomSheetState.targetValue
+    LaunchedEffect(key1 = scaffoldState.bottomSheetState.targetValue) {
+        Log.d("dataCheck", "scaffoldState.bottomSheetState.targetValue = ${scaffoldState.bottomSheetState.targetValue}")
+        if (scaffoldState.bottomSheetState.targetValue == BottomSheetValue.Collapsed) {
+            visibleBs.value = false
+            heightSample.value = 0.dp
+            scaffoldState.bottomSheetState.collapse()
+        }
+    }
 
     BottomSheetScaffold(
         modifier = Modifier.fillMaxSize(),
@@ -51,33 +72,53 @@ fun BottomSheetUI(
                     .fillMaxWidth()
                     .fillMaxHeight(fraction = 0.8f)
             ) {
-                // 열려있을 때 UI
-                ExpandedBottomSheet()
+                Column {
+                    AnimatedVisibility(
+                        visible = visibleBs.value,
+                        enter = fadeIn(),
+                        exit = fadeOut()
+                    ) {
+                        // 열려있을 때 UI
+                        ExpandedBottomSheet(
+                            scaffoldState = scaffoldState,
+                            visible = visibleBs
+                        )
 
-                CollapsedBottomSheet( // 닫혀있을 때 UI
-                    currentFraction = scaffoldState.currentFraction,
-                    onSheetClick = {
-                        coroutineScope.launch {
-                            if (scaffoldState.bottomSheetState.isCollapsed) {
-                                scaffoldState.bottomSheetState.expand()
-                            } else {
-                                scaffoldState.bottomSheetState.collapse()
+                        CollapsedBottomSheet( // 닫혀있을 때 UI
+                            currentFraction = scaffoldState.currentFraction,
+                            onSheetClick = {
+                                coroutineScope.launch {
+                                    if (scaffoldState.bottomSheetState.isCollapsed) {
+                                        scaffoldState.bottomSheetState.expand()
+                                    } else {
+                                        visibleBs.value = false
+                                        scaffoldState.bottomSheetState.collapse()
+                                        heightSample.value = 0.dp
+                                    }
+                                }
                             }
-                        }
+                        )
                     }
-                )
+                }
             }
         },
-        sheetPeekHeight = 72.dp // default Height
+        sheetPeekHeight = heightSample.value // default Height
     ) {
         BottomSheetDebugScreen(
             scaffoldState = scaffoldState,
             onToggle = {
-                coroutineScope.launch {
-                    if (scaffoldState.bottomSheetState.isCollapsed) {
-                        scaffoldState.bottomSheetState.expand()
-                    } else {
-                        scaffoldState.bottomSheetState.collapse()
+                if (!visibleBs.value) {
+                    visibleBs.value = true
+                    heightSample.value = 500.dp//72.dp
+                } else {
+                    coroutineScope.launch {
+                        if (scaffoldState.bottomSheetState.isCollapsed) {
+                            scaffoldState.bottomSheetState.expand()
+                        } else {
+                            visibleBs.value = false
+                            scaffoldState.bottomSheetState.collapse()
+                            heightSample.value = 0.dp
+                        }
                     }
                 }
             },

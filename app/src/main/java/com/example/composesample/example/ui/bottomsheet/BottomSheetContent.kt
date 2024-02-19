@@ -1,20 +1,16 @@
 package com.example.composesample.example.ui.bottomsheet
 
 import android.util.Log
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.BottomSheetScaffoldState
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
@@ -23,23 +19,23 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.example.composesample.R
 import com.example.composesample.example.util.noRippleClickable
 import com.example.composesample.main.MainHeader
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun ExpandedBottomSheet() {
+fun ExpandedBottomSheet(
+    scaffoldState: BottomSheetScaffoldState,
+    visible: MutableState<Boolean>
+) {
     Surface {
         Column(modifier = Modifier.fillMaxSize()) {
             Box(
@@ -59,7 +55,7 @@ fun ExpandedBottomSheet() {
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
 
-                        repeat(10) {
+                        repeat(1) {
                             Text(
                                 modifier = Modifier
                                     .align(Alignment.CenterHorizontally)
@@ -67,6 +63,24 @@ fun ExpandedBottomSheet() {
                                 text = "BS Contents 채워넣기",
                                 textAlign = TextAlign.Center,
                             )
+
+                            if (visible.value) {
+                                Text("scaffoldState.bottomSheetState.targetValue = ${scaffoldState.bottomSheetState.targetValue}")
+                                Text("scaffoldState.currentFraction = ${scaffoldState.currentFraction}")
+
+                                Text("scaffoldState.bottomSheetState.isCollapsed = ${scaffoldState.bottomSheetState.isCollapsed}")
+                                Text("scaffoldState.bottomSheetState.isExpanded = ${scaffoldState.bottomSheetState.isExpanded}")
+
+                                Text("scaffoldState.bottomSheetState.requireOffset() = ${scaffoldState.bottomSheetState.requireOffset()}")
+                                Text("scaffoldState.bottomSheetState.requireOffset().dp = ${scaffoldState.bottomSheetState.requireOffset().dp}")
+
+                                Text("scaffoldState.bottomSheetState.progress = ${scaffoldState.bottomSheetState.progress}")
+                                Text("scaffoldState.bottomSheetState.progress.dp = ${scaffoldState.bottomSheetState.progress.dp}")
+
+                                Text("scaffoldState.bottomSheetState.currentValue = ${scaffoldState.bottomSheetState.currentValue}")
+                                Text("scaffoldState.bottomSheetState.currentValue.ordinal = ${scaffoldState.bottomSheetState.currentValue.ordinal}")
+                                Text("scaffoldState.bottomSheetState.currentValue.name = ${scaffoldState.bottomSheetState.currentValue.name}")
+                            }
                         }
                     }
                 }
