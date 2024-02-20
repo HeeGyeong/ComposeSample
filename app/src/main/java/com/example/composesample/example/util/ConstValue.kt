@@ -13,5 +13,6 @@ class ConstValue {
         const val PullToRefreshExample = "pullToRefreshExample"
         const val PullScreenPager = "pullScreenPager"
         const val BottomSheetExample = "bottomSheetExample"
+        const val ModalBottomSheetExample = "modalBottomSheetExample"
     }
 }

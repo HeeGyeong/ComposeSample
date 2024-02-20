@@ -40,6 +40,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.composesample.example.ui.bottomsheet.BottomSheetUI
+import com.example.composesample.example.ui.bottomsheet.ModalBottomSheetUI
 import com.example.composesample.example.ui.clickevent.ClickEventUI
 import com.example.composesample.example.ui.ffmpeg.FfmpegEncodingUI
 import com.example.composesample.example.ui.ffmpeg.executeCommand
@@ -58,6 +59,7 @@ import com.example.composesample.example.util.ConstValue.Companion.ClickEventExa
 import com.example.composesample.example.util.ConstValue.Companion.FfmpegExample
 import com.example.composesample.example.util.ConstValue.Companion.FlexBoxLayoutExample
 import com.example.composesample.example.util.ConstValue.Companion.LazyColumnExample
+import com.example.composesample.example.util.ConstValue.Companion.ModalBottomSheetExample
 import com.example.composesample.example.util.ConstValue.Companion.PullScreenPager
 import com.example.composesample.example.util.ConstValue.Companion.PullToRefreshExample
 import com.example.composesample.example.util.ConstValue.Companion.TextStyleExample
@@ -183,6 +185,12 @@ fun BlogExampleCase(
                         type = BottomSheetExample,
                         exampleType = exampleType
                     )
+
+                    ExampleButton(
+                        buttonText = "Modal Bottom Sheet Example",
+                        type = ModalBottomSheetExample,
+                        exampleType = exampleType
+                    )
                 }
             }
         }
@@ -296,6 +304,10 @@ fun ExampleCaseUI(
 
                 BottomSheetExample -> {
                     BottomSheetUI(onBackEvent)
+                }
+
+                ModalBottomSheetExample -> {
+                    ModalBottomSheetUI(onBackEvent)
                 }
 
                 else -> {

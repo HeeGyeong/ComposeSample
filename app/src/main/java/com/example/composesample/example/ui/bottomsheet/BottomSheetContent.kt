@@ -14,16 +14,24 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.layout.boundsInWindow
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -149,6 +157,82 @@ fun CollapsedBottomSheet(
                 imageVector = Icons.Filled.Favorite,
                 contentDescription = null
             )
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
+fun ModalExpandedBottomSheet(
+    bottomState: ModalBottomSheetState,
+) {
+    val localDensity = LocalDensity.current
+    var sheetContentHeight by remember { mutableStateOf(0f) }
+    Log.d("ModalBottomSheetUI", "ModalExpandedBottomSheet Call $sheetContentHeight")
+
+
+    Surface {
+        Column(modifier = Modifier
+            .fillMaxSize()
+            .onGloballyPositioned { coordinates -> // MaxSize라서 처음부터 다 그려둔다
+//                columnHeightPx = coordinates.size.height.toFloat()
+//                columnHeightDp = with(localDensity) { coordinates.size.height.toDp() }
+
+                Log.d( // 현재 보여지고 있는 BottomSheet의 Height.
+                    "ModalBottomSheetUI",
+                    "onGloballyPositioned ? :: ${coordinates.boundsInWindow().height}"
+                )
+                sheetContentHeight = coordinates.boundsInWindow().height
+            }
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(0.8f)
+                    .background(color = Color.DarkGray)
+            ) {
+                Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(top = 36.dp)
+                ) {
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+
+                        repeat(10) {
+                            Text(
+                                modifier = Modifier
+                                    .align(Alignment.CenterHorizontally)
+                                    .padding(horizontal = 20.dp),
+                                text = "BS Contents 채워넣기",
+                                textAlign = TextAlign.Center,
+                            )
+                        }
+                    }
+                }
+            }
+
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(0.2f)
+            ) {
+                Box(
+                    modifier = Modifier
+                        .padding(top = 36.dp)
+                        .fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    MainHeader(
+                        title = "Compose Example Project",
+                        onBackIconClicked = { },
+                        onLeftIconContent = { }
+                    )
+                }
+            }
         }
     }
 }

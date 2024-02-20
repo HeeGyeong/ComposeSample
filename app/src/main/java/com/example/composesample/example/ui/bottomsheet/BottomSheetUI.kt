@@ -2,10 +2,10 @@ package com.example.composesample.example.ui.bottomsheet
 
 import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.AnimationConstants
+import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -37,7 +37,10 @@ fun BottomSheetUI(
 
     //scaffoldState.bottomSheetState.targetValue
     LaunchedEffect(key1 = scaffoldState.bottomSheetState.targetValue) {
-        Log.d("dataCheck", "scaffoldState.bottomSheetState.targetValue = ${scaffoldState.bottomSheetState.targetValue}")
+        Log.d(
+            "dataCheck",
+            "scaffoldState.bottomSheetState.targetValue = ${scaffoldState.bottomSheetState.targetValue}"
+        )
         if (scaffoldState.bottomSheetState.targetValue == BottomSheetValue.Collapsed) {
             visibleBs.value = false
             heightSample.value = 0.dp
@@ -75,8 +78,22 @@ fun BottomSheetUI(
                 Column {
                     AnimatedVisibility(
                         visible = visibleBs.value,
-                        enter = fadeIn(),
-                        exit = fadeOut()
+                        enter = slideInVertically(
+                            initialOffsetY = { fullHeight -> fullHeight },
+                            animationSpec = tween(
+                                durationMillis = 300,
+                                easing = LinearOutSlowInEasing
+                            )
+                        ),
+                        exit = slideOutVertically(
+                            targetOffsetY = { fullHeight -> fullHeight },
+                            animationSpec = tween(
+                                durationMillis = 300,
+                                easing = LinearOutSlowInEasing
+                            )
+                        )
+                        /*enter = fadeIn(),
+                        exit = fadeOut()*/
                     ) {
                         // 열려있을 때 UI
                         ExpandedBottomSheet(
