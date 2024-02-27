@@ -29,7 +29,7 @@ fun BottomSheetUI(
     onBackButtonClick: () -> Unit
 ) {
     val visibleBs = remember { mutableStateOf(false) }
-    val heightSample = remember { mutableStateOf(0.dp) }
+    val heightSample = remember { mutableStateOf(30.dp) } // default Height
     val coroutineScope = rememberCoroutineScope()
     val scaffoldState = rememberBottomSheetScaffoldState(
         bottomSheetState = rememberBottomSheetState(BottomSheetValue.Collapsed)
@@ -43,7 +43,7 @@ fun BottomSheetUI(
         )
         if (scaffoldState.bottomSheetState.targetValue == BottomSheetValue.Collapsed) {
             visibleBs.value = false
-            heightSample.value = 0.dp
+            heightSample.value = 30.dp
             scaffoldState.bottomSheetState.collapse()
         }
     }
@@ -77,7 +77,7 @@ fun BottomSheetUI(
             ) {
                 Column {
                     AnimatedVisibility(
-                        visible = visibleBs.value,
+                        visible = true,
                         enter = slideInVertically(
                             initialOffsetY = { fullHeight -> fullHeight },
                             animationSpec = tween(
@@ -91,7 +91,7 @@ fun BottomSheetUI(
                                 durationMillis = 300,
                                 easing = LinearOutSlowInEasing
                             )
-                        )
+                        ),
                         /*enter = fadeIn(),
                         exit = fadeOut()*/
                     ) {
@@ -119,7 +119,7 @@ fun BottomSheetUI(
                 }
             }
         },
-        sheetPeekHeight = heightSample.value // default Height
+        sheetPeekHeight = heightSample.value, // default Height
     ) {
         BottomSheetDebugScreen(
             scaffoldState = scaffoldState,
@@ -134,7 +134,7 @@ fun BottomSheetUI(
                         } else {
                             visibleBs.value = false
                             scaffoldState.bottomSheetState.collapse()
-                            heightSample.value = 0.dp
+                            heightSample.value = 30.dp
                         }
                     }
                 }
