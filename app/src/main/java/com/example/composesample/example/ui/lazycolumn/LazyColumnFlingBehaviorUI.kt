@@ -8,7 +8,6 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.FlingBehavior
 import androidx.compose.foundation.gestures.ScrollScope
-import androidx.compose.foundation.gestures.snapping.rememberSnapFlingBehavior
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -39,7 +38,7 @@ import kotlin.math.abs
 @Composable
 fun LazyColumnFlingBehaviorExample(onBackButtonClick: () -> Unit) {
     val lazyListState = rememberLazyListState()
-    val repeatCount = 100
+    val repeatCount = 1000
 
     LazyColumn(
         state = lazyListState,
@@ -99,26 +98,26 @@ fun RepeatDummyItems(index: Int) {
 
 @Composable
 fun maxScrollSpeedFlingBehavior(): FlingBehavior {
-    val flingSpec = rememberSplineBasedDecay<Float>()
-    return remember(flingSpec) {
-        ScrollSpeedFlingBehavior(flingSpec)
+    val splineBasedDecay = rememberSplineBasedDecay<Float>()
+    return remember(splineBasedDecay) {
+        MaxScrollSpeedFlingBehavior(splineBasedDecay)
     }
 }
 
-private class ScrollSpeedFlingBehavior(
-    private val flingDecay: DecayAnimationSpec<Float>,
+private class MaxScrollSpeedFlingBehavior(
+    private val splineBasedDecay: DecayAnimationSpec<Float>,
 ) : FlingBehavior {
     override suspend fun ScrollScope.performFling(initialVelocity: Float): Float {
-        val newVelocity = if (initialVelocity > 0F) initialVelocity.coerceAtMost(2_000F)
+        val setVelocity = if (initialVelocity > 0F) initialVelocity.coerceAtMost(2_000F)
         else initialVelocity.coerceAtLeast(-2_000F)
 
-        return if (abs(newVelocity) > 1f) {
-            var velocityLeft = newVelocity
+        return if (abs(setVelocity) > 0f) {
+            var velocityLeft = setVelocity
             var lastValue = 0f
             AnimationState(
                 initialValue = 0f,
-                initialVelocity = newVelocity,
-            ).animateDecay(flingDecay) {
+                initialVelocity = setVelocity,
+            ).animateDecay(splineBasedDecay) {
                 val delta = value - lastValue
                 val consumed = scrollBy(delta)
                 lastValue = value
@@ -126,6 +125,6 @@ private class ScrollSpeedFlingBehavior(
                 if (abs(delta - consumed) > 0.5f) this.cancelAnimation()
             }
             velocityLeft
-        } else newVelocity
+        } else setVelocity
     }
 }
