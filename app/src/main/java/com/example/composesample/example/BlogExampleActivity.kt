@@ -46,6 +46,7 @@ import com.example.composesample.example.ui.ffmpeg.FfmpegEncodingUI
 import com.example.composesample.example.ui.ffmpeg.executeCommand
 import com.example.composesample.example.ui.ffmpeg.getRealPathFromURI
 import com.example.composesample.example.ui.flexbox.FlexBoxUI
+import com.example.composesample.example.ui.lazycolumn.LazyColumnFlingBehaviorExample
 import com.example.composesample.example.ui.lazycolumn.LazyColumnIssueUI
 import com.example.composesample.example.ui.pager.PullScreenPagerUI
 import com.example.composesample.example.ui.recorder.AudioRecorderUI
@@ -58,6 +59,7 @@ import com.example.composesample.example.util.ConstValue.Companion.BottomSheetEx
 import com.example.composesample.example.util.ConstValue.Companion.ClickEventExample
 import com.example.composesample.example.util.ConstValue.Companion.FfmpegExample
 import com.example.composesample.example.util.ConstValue.Companion.FlexBoxLayoutExample
+import com.example.composesample.example.util.ConstValue.Companion.FlingBehaviorExample
 import com.example.composesample.example.util.ConstValue.Companion.LazyColumnExample
 import com.example.composesample.example.util.ConstValue.Companion.ModalBottomSheetExample
 import com.example.composesample.example.util.ConstValue.Companion.PullScreenPager
@@ -191,6 +193,12 @@ fun BlogExampleCase(
                         type = ModalBottomSheetExample,
                         exampleType = exampleType
                     )
+
+                    ExampleButton(
+                        buttonText = "LazyColumn FlingBehavior Example",
+                        type = FlingBehaviorExample,
+                        exampleType = exampleType
+                    )
                 }
             }
         }
@@ -261,6 +269,10 @@ fun ExampleCaseUI(
             when (exampleType.value) {
                 LazyColumnExample -> {
                     LazyColumnIssueUI(onBackEvent)
+                }
+
+                FlingBehaviorExample -> {
+                    LazyColumnFlingBehaviorExample(onBackEvent)
                 }
 
                 ClickEventExample -> {
