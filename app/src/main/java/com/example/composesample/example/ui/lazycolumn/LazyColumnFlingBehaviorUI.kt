@@ -8,6 +8,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.FlingBehavior
 import androidx.compose.foundation.gestures.ScrollScope
+import androidx.compose.foundation.gestures.snapping.rememberSnapFlingBehavior
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -25,6 +26,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -40,12 +42,18 @@ fun LazyColumnFlingBehaviorExample(onBackButtonClick: () -> Unit) {
     val lazyListState = rememberLazyListState()
     val repeatCount = 1000
 
+    LaunchedEffect(key1 = lazyListState.isScrollInProgress) {
+        if (!lazyListState.isScrollInProgress) {
+            lazyListState.animateScrollToItem(lazyListState.firstVisibleItemIndex)
+        }
+    }
+
     LazyColumn(
         state = lazyListState,
         modifier = Modifier
             .fillMaxSize()
             .background(color = Color.White),
-        flingBehavior = maxScrollSpeedFlingBehavior()
+        flingBehavior = maxScrollSpeedFlingBehavior(),
 //        flingBehavior = rememberSnapFlingBehavior(lazyListState = lazyListState)
     ) {
         stickyHeader {
