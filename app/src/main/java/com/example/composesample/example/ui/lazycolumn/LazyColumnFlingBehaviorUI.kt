@@ -8,6 +8,8 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.FlingBehavior
 import androidx.compose.foundation.gestures.ScrollScope
+import androidx.compose.foundation.gestures.snapping.SnapLayoutInfoProvider
+import androidx.compose.foundation.gestures.snapping.SnapPosition
 import androidx.compose.foundation.gestures.snapping.rememberSnapFlingBehavior
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -31,6 +33,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -41,6 +44,36 @@ import kotlin.math.abs
 fun LazyColumnFlingBehaviorExample(onBackButtonClick: () -> Unit) {
     val lazyListState = rememberLazyListState()
     val repeatCount = 1000
+
+    val density = LocalDensity.current
+
+    val snappingLayout = remember(lazyListState, density) {
+        val snapPosition = object : SnapPosition {
+            override fun position(
+                layoutSize: Int,
+                itemSize: Int,
+                beforeContentPadding: Int,
+                afterContentPadding: Int,
+                itemIndex: Int,
+                itemCount: Int,
+            ): Int {
+                // 보이는 아이템의 index와 offset
+                if (lazyListState.layoutInfo.visibleItemsInfo.size > 1) {
+                    val firstIndex = lazyListState.layoutInfo.visibleItemsInfo[0].index
+                    val firstOffset = lazyListState.layoutInfo.visibleItemsInfo[0].offset
+                    val secondIndex = lazyListState.layoutInfo.visibleItemsInfo[1].index
+                    val secondOffset = lazyListState.layoutInfo.visibleItemsInfo[1].offset
+                }
+
+                return 0 // item의 움직일 포지션값
+            }
+        }
+        SnapLayoutInfoProvider(lazyListState, snapPosition)
+    }
+    // 기본적인 사용법
+//    val snappingLayout = remember(lazyListState) { SnapLayoutInfoProvider(lazyListState) }
+    val flingBehavior = rememberSnapFlingBehavior(snappingLayout)
+
 
     LaunchedEffect(key1 = lazyListState.isScrollInProgress) {
         if (!lazyListState.isScrollInProgress) {
@@ -53,8 +86,10 @@ fun LazyColumnFlingBehaviorExample(onBackButtonClick: () -> Unit) {
         modifier = Modifier
             .fillMaxSize()
             .background(color = Color.White),
-        flingBehavior = maxScrollSpeedFlingBehavior(),
-//        flingBehavior = rememberSnapFlingBehavior(lazyListState = lazyListState)
+        // flingBehavior의 다양한 사용 방법
+        flingBehavior = flingBehavior,
+//        flingBehavior = maxScrollSpeedFlingBehavior(), // custom
+//        flingBehavior = rememberSnapFlingBehavior(lazyListState = lazyListState) // defult
     ) {
         stickyHeader {
             Box(
