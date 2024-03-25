@@ -85,13 +85,15 @@ fun AppbarSample(
             BottomBar()
         },
         // Top, Bottom 사이에 들어갈 item
-        content = {
+        content = { padding ->
             ListTest(
+                modifier = Modifier.padding(padding),
                 itemList = itemList,
                 data = "data",
                 isViewLegacyPage = isViewLegacyPage
             )
         },
+        // floating Button
         floatingActionButton = {
             // Make SnackBar Floating Button
             ExtendedFloatingActionButton(
@@ -174,6 +176,7 @@ fun TestButton(
 @ExperimentalAnimationApi
 @Composable
 fun ListTest(
+    modifier: Modifier,
     itemList: List<Message>,
     data: String,
     isViewLegacyPage: MutableState<Boolean>

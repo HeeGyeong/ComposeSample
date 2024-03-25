@@ -121,7 +121,7 @@ fun BottomSheetUI(
         },
         sheetPeekHeight = heightSample.value, // default Height
     ) {
-        BottomSheetDebugScreen(
+        BottomSheetDataCheckUI(
             scaffoldState = scaffoldState,
             onToggle = {
                 if (!visibleBs.value) {
@@ -145,7 +145,7 @@ fun BottomSheetUI(
 
 @Composable
 @ExperimentalMaterialApi
-fun BottomSheetDebugScreen(
+fun BottomSheetDataCheckUI(
     scaffoldState: BottomSheetScaffoldState,
     onToggle: () -> Unit,
 ) {
