@@ -40,6 +40,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.composesample.example.ui.bottomsheet.BottomSheetUI
+import com.example.composesample.example.ui.bottomsheet.CustomBottomSheetUI
 import com.example.composesample.example.ui.bottomsheet.ModalBottomSheetUI
 import com.example.composesample.example.ui.clickevent.ClickEventUI
 import com.example.composesample.example.ui.ffmpeg.FfmpegEncodingUI
@@ -57,6 +58,7 @@ import com.example.composesample.example.ui.workmanager.WorkManagerUI
 import com.example.composesample.example.util.ConstValue.Companion.AudioRecorderExample
 import com.example.composesample.example.util.ConstValue.Companion.BottomSheetExample
 import com.example.composesample.example.util.ConstValue.Companion.ClickEventExample
+import com.example.composesample.example.util.ConstValue.Companion.CustomBottomSheetExample
 import com.example.composesample.example.util.ConstValue.Companion.FfmpegExample
 import com.example.composesample.example.util.ConstValue.Companion.FlexBoxLayoutExample
 import com.example.composesample.example.util.ConstValue.Companion.FlingBehaviorExample
@@ -183,6 +185,12 @@ fun BlogExampleCase(
                     )
 
                     ExampleButton(
+                        buttonText = "LazyColumn FlingBehavior Example",
+                        type = FlingBehaviorExample,
+                        exampleType = exampleType
+                    )
+
+                    ExampleButton(
                         buttonText = "Bottom Sheet Example",
                         type = BottomSheetExample,
                         exampleType = exampleType
@@ -195,8 +203,8 @@ fun BlogExampleCase(
                     )
 
                     ExampleButton(
-                        buttonText = "LazyColumn FlingBehavior Example",
-                        type = FlingBehaviorExample,
+                        buttonText = "Custom Bottom Sheet Example",
+                        type = CustomBottomSheetExample,
                         exampleType = exampleType
                     )
                 }
@@ -271,10 +279,6 @@ fun ExampleCaseUI(
                     LazyColumnIssueUI(onBackEvent)
                 }
 
-                FlingBehaviorExample -> {
-                    LazyColumnFlingBehaviorExample(onBackEvent)
-                }
-
                 ClickEventExample -> {
                     ClickEventUI(onBackEvent)
                 }
@@ -314,12 +318,20 @@ fun ExampleCaseUI(
                     PullScreenPagerUI(onBackEvent)
                 }
 
+                FlingBehaviorExample -> {
+                    LazyColumnFlingBehaviorExample(onBackEvent)
+                }
+
                 BottomSheetExample -> {
                     BottomSheetUI(onBackEvent)
                 }
 
                 ModalBottomSheetExample -> {
                     ModalBottomSheetUI(onBackEvent)
+                }
+
+                CustomBottomSheetExample -> {
+                    CustomBottomSheetUI(onBackEvent)
                 }
 
                 else -> {

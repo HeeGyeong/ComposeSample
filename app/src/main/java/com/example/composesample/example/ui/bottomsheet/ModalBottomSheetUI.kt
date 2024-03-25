@@ -16,6 +16,7 @@ import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material.ModalBottomSheetValue
+import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.rememberModalBottomSheetState
@@ -77,9 +78,7 @@ fun ModalBottomSheetUI(
 //                        .fillMaxWidth()
 //                        .fillMaxHeight(fraction = 0.8f) // Expanded 일때의 높이 제한.
                 ) {
-                    ModalExpandedBottomSheet(
-                        bottomState = bottomState,
-                    )
+                    ModalExpandedBottomSheet()
                 }
             },
         ) {
@@ -135,6 +134,7 @@ fun BackgroundScreen(
                         onButtonClick.invoke()
                     }
                 ) {
+                    Text(text = "BS State Change")
                 }
             }
         }

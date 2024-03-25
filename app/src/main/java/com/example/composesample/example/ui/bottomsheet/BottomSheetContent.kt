@@ -1,15 +1,30 @@
 package com.example.composesample.example.ui.bottomsheet
 
 import android.util.Log
+import androidx.activity.compose.BackHandler
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.core.AnimationConstants
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.BottomSheetScaffoldState
+import androidx.compose.material.Button
+import androidx.compose.material.Card
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -35,9 +50,14 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.composesample.example.util.noRippleClickable
+import com.example.composesample.example.util.noRippleSingleClickable
 import com.example.composesample.main.MainHeader
 
+/**
+ * BottomSheet Component
+ */
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ExpandedBottomSheet(
@@ -137,35 +157,18 @@ fun CollapsedBottomSheet(
             modifier = Modifier
                 .weight(1f)
                 .padding(start = 16.dp),
-            maxLines = 1,
+            maxLines = 2,
             overflow = TextOverflow.Ellipsis,
-            text = "BottomSheet를 올릴 수 있는 View 입니다. 클릭 해도 올라가도록 해두었어요.",
+            text = "This is a View where you can raise BottomSheet.\nIt goes up even if you click on it.",
         )
-
-        IconButton(
-            onClick = {
-                Log.d("IconButtonClick", "여기서 버튼도 클릭 가능합니다.")
-            },
-            modifier = Modifier.padding(
-                start = 8.dp,
-                top = 8.dp,
-                bottom = 8.dp,
-                end = 16.dp
-            )
-        ) {
-            Icon(
-                imageVector = Icons.Filled.Favorite,
-                contentDescription = null
-            )
-        }
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
+/**
+ * Modal BottomSheet Component
+ */
 @Composable
-fun ModalExpandedBottomSheet(
-    bottomState: ModalBottomSheetState,
-) {
+fun ModalExpandedBottomSheet() {
     val localDensity = LocalDensity.current
     var sheetContentHeight by remember { mutableStateOf(0f) }
     Log.d("ModalBottomSheetUI", "ModalExpandedBottomSheet Call $sheetContentHeight")
@@ -234,5 +237,90 @@ fun ModalExpandedBottomSheet(
                 }
             }
         }
+    }
+}
+
+/**
+ * Custom BottomSheet Component
+ */
+@OptIn(ExperimentalAnimationApi::class)
+@Composable
+fun BoxScope.CustomBottomSheetComponent(
+    visible: MutableState<Boolean>,
+) {
+    AnimatedVisibility(
+        visible = visible.value,
+        modifier = Modifier
+            .background(color = Color(0x33000000))
+            .fillMaxSize()
+            .noRippleSingleClickable {
+                visible.value = false
+            },
+        enter = fadeIn(),
+        exit = fadeOut(animationSpec = tween(durationMillis = AnimationConstants.DefaultDurationMillis / 2)),
+    ) {
+        Box {
+            Card(
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .animateEnterExit(
+                        enter = slideInVertically(
+                            initialOffsetY = { height -> height },
+                            animationSpec = tween()
+                        ),
+                        exit = slideOutVertically(
+                            targetOffsetY = { height -> height },
+                            animationSpec = tween(durationMillis = AnimationConstants.DefaultDurationMillis / 2)
+                        )
+                    ),
+                shape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp),
+                backgroundColor = Color.White
+            ) {
+                Row(modifier = Modifier.padding(horizontal = 20.dp)) {
+                    Column {
+                        Spacer(modifier = Modifier.height(24.dp))
+
+                        Text(
+                            modifier = Modifier.padding(vertical = 10.dp),
+                            text = "title",
+                            fontSize = 18.sp
+                        )
+
+                        Text(
+                            modifier = Modifier.padding(
+                                top = 6.dp,
+                                bottom = 10.dp,
+                            ),
+                            text = "subTitle",
+                            fontSize = 14.sp
+                        )
+
+                        Row(
+                            modifier = Modifier
+                                .height(88.dp),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Column(Modifier.weight(1f)) {
+                                Button(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .height(52.dp),
+                                    onClick = {
+                                        visible.value = false
+                                    }
+                                ) {
+                                    Text(text = "닫기")
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        BackHandler(enabled = true, onBack = {
+            visible.value = false
+        })
     }
 }
