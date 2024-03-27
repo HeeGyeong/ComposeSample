@@ -1,6 +1,7 @@
 package com.example.composesample.example
 
 import android.app.Activity
+import android.content.Context
 import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -21,12 +22,18 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
+import androidx.compose.material.Card
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -69,7 +76,10 @@ import com.example.composesample.example.util.ConstValue.Companion.PullToRefresh
 import com.example.composesample.example.util.ConstValue.Companion.TextStyleExample
 import com.example.composesample.example.util.ConstValue.Companion.WebViewIssueExample
 import com.example.composesample.example.util.ConstValue.Companion.WorkManagerExample
+import com.example.composesample.example.util.noRippleClickable
 import com.example.composesample.main.MainHeader
+import com.example.composesample.main.getTextStyle
+import com.example.composesample.main.openWebPage
 import com.example.composesample.ui.base.SetSystemUI
 
 @ExperimentalAnimationApi
@@ -123,6 +133,17 @@ fun BlogExampleCase(
 
             item {
                 Column(modifier = Modifier.fillMaxWidth()) {
+
+                    /*ExampleCardSection(
+                        context = context,
+                        exampleTitle = "Lazy Column Keyboard Issue",
+                        exampleDescription = "키보드 이슈 확인 중",
+                        exampleBlogUrl = "https://heegs.tistory.com/142",
+                        onButtonClick = {
+                            exampleType.value = LazyColumnExample
+                        }
+                    )*/
+
                     // Button UI 변경 및 Button 아래 해당 Blog, Github Code에 관련한 Link 추가.
                     ExampleButton(
                         buttonText = "Lazy Column Keyboard Issue",
@@ -244,6 +265,107 @@ fun ColumnScope.ExampleButton(
             textAlign = TextAlign.Center,
             fontSize = 14.sp,
         )
+    }
+}
+
+/**
+ * Example 관련 Sample 버튼 및 관련하여 정리한 Blog URL을 입력하기 위한 CardView
+ *
+ * 일괄적으로 블로그 글 찾아서 변경 할 예정.
+ */
+@Composable
+fun ExampleCardSection(
+    context: Context,
+    exampleTitle: String,
+    exampleDescription: String,
+    exampleBlogUrl: String,
+    onButtonClick: () -> Unit,
+) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentHeight()
+            .padding(horizontal = 20.dp, vertical = 10.dp),
+        shape = RoundedCornerShape(12.dp),
+        backgroundColor = Color.DarkGray,
+    ) {
+        Column(
+            modifier = Modifier.padding(20.dp)
+        ) {
+            Text(
+                modifier = Modifier.fillMaxWidth(),
+                text = exampleTitle,
+                color = Color.White,
+                style = getTextStyle(18)
+            )
+
+            Spacer(modifier = Modifier.height(4.dp))
+
+            Text(
+                modifier = Modifier.fillMaxWidth(),
+                text = exampleDescription,
+                style = getTextStyle(14),
+                color = Color.White,
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentHeight()
+                    .padding(horizontal = 10.dp)
+            ) {
+                // Move Sample Button
+                Card(
+                    modifier = Modifier
+                        .weight(1f)
+                        .noRippleClickable {
+                            onButtonClick.invoke()
+                        },
+                    shape = RoundedCornerShape(12.dp),
+                    backgroundColor = Color.White,
+                ) {
+                    Column {
+                        Text(
+                            modifier = Modifier
+                                .padding(horizontal = 10.dp, vertical = 5.dp)
+                                .align(Alignment.CenterHorizontally),
+                            text = "Sample UI",
+                            color = Color.Black,
+                            style = getTextStyle(18)
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.width(20.dp))
+
+                // Move Blog Button
+                Card(
+                    modifier = Modifier
+                        .weight(1f)
+                        .noRippleClickable {
+                            openWebPage(
+                                context = context,
+                                url = exampleBlogUrl
+                            )
+                        },
+                    shape = RoundedCornerShape(12.dp),
+                    backgroundColor = Color.White,
+                ) {
+                    Column {
+                        Text(
+                            modifier = Modifier
+                                .padding(horizontal = 10.dp, vertical = 5.dp)
+                                .align(Alignment.CenterHorizontally),
+                            text = "Explain Blog",
+                            color = Color.Black,
+                            style = getTextStyle(18)
+                        )
+                    }
+                }
+            }
+        }
     }
 }
 
