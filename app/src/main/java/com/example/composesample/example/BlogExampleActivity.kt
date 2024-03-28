@@ -21,7 +21,6 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -31,12 +30,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
 import androidx.compose.material.Card
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -46,6 +46,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.composesample.example.ui.bottomsheet.BottomSheetUI
 import com.example.composesample.example.ui.bottomsheet.CustomBottomSheetUI
 import com.example.composesample.example.ui.bottomsheet.ModalBottomSheetUI
@@ -76,6 +77,7 @@ import com.example.composesample.example.util.ConstValue.Companion.PullToRefresh
 import com.example.composesample.example.util.ConstValue.Companion.TextStyleExample
 import com.example.composesample.example.util.ConstValue.Companion.WebViewIssueExample
 import com.example.composesample.example.util.ConstValue.Companion.WorkManagerExample
+import com.example.composesample.example.util.Toast
 import com.example.composesample.example.util.noRippleClickable
 import com.example.composesample.main.MainHeader
 import com.example.composesample.main.getTextStyle
@@ -101,10 +103,16 @@ class BlogExampleActivity : ComponentActivity() {
         val launcher = registerForActivityResult(contract, callback)
 
         setContent {
+            val blogExampleViewModel = viewModel<BlogExampleViewModel>()
+            blogExampleViewModel.initExampleObject()
+
             SetSystemUI()
             BlogExampleCase(
-                launcher = launcher
+                launcher = launcher,
+                blogExampleViewModel = blogExampleViewModel
             )
+
+            Toast(stream = blogExampleViewModel.toast)
         }
     }
 }
@@ -112,10 +120,12 @@ class BlogExampleActivity : ComponentActivity() {
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun BlogExampleCase(
-    launcher: ActivityResultLauncher<String>
+    launcher: ActivityResultLauncher<String>,
+    blogExampleViewModel: BlogExampleViewModel
 ) {
     val context = LocalContext.current
     val exampleType = remember { mutableStateOf("") }
+    val exampleObjectList = blogExampleViewModel.exampleObjectList.collectAsState().value
 
     Box(modifier = Modifier.fillMaxSize()) {
         LazyColumn(
@@ -131,102 +141,19 @@ fun BlogExampleCase(
                 )
             }
 
-            item {
+            items(exampleObjectList) { exampleObject ->
                 Column(modifier = Modifier.fillMaxWidth()) {
-
-                    /*ExampleCardSection(
+                    ExampleCardSection(
                         context = context,
-                        exampleTitle = "Lazy Column Keyboard Issue",
-                        exampleDescription = "키보드 이슈 확인 중",
-                        exampleBlogUrl = "https://heegs.tistory.com/142",
+                        exampleTitle = exampleObject.title,
+                        exampleDescription = exampleObject.description,
+                        exampleBlogUrl = exampleObject.blogUrl,
                         onButtonClick = {
-                            exampleType.value = LazyColumnExample
+                            exampleType.value = exampleObject.exampleType
+                        },
+                        noBlogUrlEvent = {
+                            blogExampleViewModel.sendToastMessage("블로그 글이 존재하지 않는 샘플입니다.\n코드로 확인해주세요!")
                         }
-                    )*/
-
-                    // Button UI 변경 및 Button 아래 해당 Blog, Github Code에 관련한 Link 추가.
-                    ExampleButton(
-                        buttonText = "Lazy Column Keyboard Issue",
-                        type = LazyColumnExample,
-                        exampleType = exampleType
-                    )
-
-                    ExampleButton(
-                        buttonText = "Click Event",
-                        type = ClickEventExample,
-                        exampleType = exampleType
-                    )
-
-                    ExampleButton(
-                        buttonText = "FlexBox Layout Example",
-                        type = FlexBoxLayoutExample,
-                        exampleType = exampleType
-                    )
-
-                    ExampleButton(
-                        buttonText = "Youtube WebView Issue Example",
-                        type = WebViewIssueExample,
-                        exampleType = exampleType
-                    )
-
-                    ExampleButton(
-                        buttonText = "Text Style Example",
-                        type = TextStyleExample,
-                        exampleType = exampleType
-                    )
-
-                    ExampleButton(
-                        buttonText = "Video Encoding Example",
-                        type = FfmpegExample,
-                        exampleType = exampleType
-                    )
-
-                    ExampleButton(
-                        buttonText = "Audio Recorder Example",
-                        type = AudioRecorderExample,
-                        exampleType = exampleType
-                    )
-
-                    ExampleButton(
-                        buttonText = "Work Manager Example",
-                        type = WorkManagerExample,
-                        exampleType = exampleType
-                    )
-
-                    ExampleButton(
-                        buttonText = "Pull to Refresh example",
-                        type = PullToRefreshExample,
-                        exampleType = exampleType
-                    )
-
-                    ExampleButton(
-                        buttonText = "Pull screen pager example",
-                        type = PullScreenPager,
-                        exampleType = exampleType
-                    )
-
-                    ExampleButton(
-                        buttonText = "LazyColumn FlingBehavior Example",
-                        type = FlingBehaviorExample,
-                        exampleType = exampleType
-                    )
-
-                    ExampleButton(
-                        buttonText = "Bottom Sheet Example",
-                        type = BottomSheetExample,
-                        exampleType = exampleType
-                    )
-
-                    ExampleButton(
-                        buttonText = "Modal Bottom Sheet Example",
-                        type = ModalBottomSheetExample,
-                        exampleType = exampleType
-                    )
-
-                    ExampleButton(
-                        buttonText = "Custom Bottom Sheet Example",
-                        type = CustomBottomSheetExample,
-                        exampleType = exampleType
                     )
                 }
             }
@@ -242,49 +169,17 @@ fun BlogExampleCase(
 }
 
 @Composable
-fun ColumnScope.ExampleButton(
-    buttonText: String,
-    type: String,
-    exampleType: MutableState<String>,
-    onButtonClick: () -> Unit = {
-        exampleType.value = type
-    }
-) {
-    Button(
-        modifier = Modifier
-            .padding(vertical = 20.dp)
-            .align(Alignment.CenterHorizontally),
-        onClick = {
-            onButtonClick.invoke()
-
-        },
-        shape = RoundedCornerShape(6.dp),
-    ) {
-        Text(
-            text = buttonText,
-            textAlign = TextAlign.Center,
-            fontSize = 14.sp,
-        )
-    }
-}
-
-/**
- * Example 관련 Sample 버튼 및 관련하여 정리한 Blog URL을 입력하기 위한 CardView
- *
- * 일괄적으로 블로그 글 찾아서 변경 할 예정.
- */
-@Composable
 fun ExampleCardSection(
     context: Context,
     exampleTitle: String,
     exampleDescription: String,
     exampleBlogUrl: String,
     onButtonClick: () -> Unit,
+    noBlogUrlEvent: () -> Unit,
 ) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .wrapContentHeight()
             .padding(horizontal = 20.dp, vertical = 10.dp),
         shape = RoundedCornerShape(12.dp),
         backgroundColor = Color.DarkGray,
@@ -345,13 +240,21 @@ fun ExampleCardSection(
                     modifier = Modifier
                         .weight(1f)
                         .noRippleClickable {
-                            openWebPage(
-                                context = context,
-                                url = exampleBlogUrl
-                            )
+                            if (exampleBlogUrl.isNotEmpty()) {
+                                openWebPage(
+                                    context = context,
+                                    url = exampleBlogUrl
+                                )
+                            } else {
+                                noBlogUrlEvent.invoke()
+                            }
                         },
                     shape = RoundedCornerShape(12.dp),
-                    backgroundColor = Color.White,
+                    backgroundColor = if (exampleBlogUrl.isNotEmpty()) {
+                        Color.White
+                    } else {
+                        Color.LightGray
+                    },
                 ) {
                     Column {
                         Text(
@@ -359,7 +262,11 @@ fun ExampleCardSection(
                                 .padding(horizontal = 10.dp, vertical = 5.dp)
                                 .align(Alignment.CenterHorizontally),
                             text = "Explain Blog",
-                            color = Color.Black,
+                            color = if (exampleBlogUrl.isNotEmpty()) {
+                                Color.Black
+                            } else {
+                                Color.DarkGray
+                            },
                             style = getTextStyle(18)
                         )
                     }
