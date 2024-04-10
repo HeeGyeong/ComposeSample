@@ -8,6 +8,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 
 
+/**
+ * Example 추가 시 Data Update 필요
+ */
 class BlogExampleViewModel(application: Application) : AndroidViewModel(application) {
     val toast = MutableStateFlow("")
     fun sendToastMessage(message: String) {
@@ -152,6 +155,15 @@ class BlogExampleViewModel(application: Application) : AndroidViewModel(applicat
                 description = "다양한 방법으로 구현해보는 BottomSheet - CustomBottomSheet 예제",
                 blogUrl = "https://heegs.tistory.com/158",
                 exampleType = ConstValue.CustomBottomSheetExample
+            )
+        )
+
+        insertExampleObject.add(
+            ExampleObject(
+                title = "NavigationDraw Example",
+                description = "다양한 방법으로 구현해보는 NavigationDraw",
+                blogUrl = "",
+                exampleType = ConstValue.ScaffoldDrawExample
             )
         )
 

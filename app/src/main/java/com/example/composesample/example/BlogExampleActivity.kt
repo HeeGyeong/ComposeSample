@@ -51,6 +51,7 @@ import com.example.composesample.example.ui.bottomsheet.BottomSheetUI
 import com.example.composesample.example.ui.bottomsheet.CustomBottomSheetUI
 import com.example.composesample.example.ui.bottomsheet.ModalBottomSheetUI
 import com.example.composesample.example.ui.clickevent.ClickEventUI
+import com.example.composesample.example.ui.drawer.ScaffoldDrawerUI
 import com.example.composesample.example.ui.ffmpeg.FfmpegEncodingUI
 import com.example.composesample.example.ui.ffmpeg.executeCommand
 import com.example.composesample.example.ui.ffmpeg.getRealPathFromURI
@@ -72,6 +73,7 @@ import com.example.composesample.example.util.ConstValue.Companion.FlexBoxLayout
 import com.example.composesample.example.util.ConstValue.Companion.FlingBehaviorExample
 import com.example.composesample.example.util.ConstValue.Companion.LazyColumnExample
 import com.example.composesample.example.util.ConstValue.Companion.ModalBottomSheetExample
+import com.example.composesample.example.util.ConstValue.Companion.ScaffoldDrawExample
 import com.example.composesample.example.util.ConstValue.Companion.PullScreenPager
 import com.example.composesample.example.util.ConstValue.Companion.PullToRefreshExample
 import com.example.composesample.example.util.ConstValue.Companion.TextStyleExample
@@ -361,6 +363,10 @@ fun ExampleCaseUI(
 
                 CustomBottomSheetExample -> {
                     CustomBottomSheetUI(onBackEvent)
+                }
+
+                ScaffoldDrawExample -> {
+                    ScaffoldDrawerUI(onBackEvent)
                 }
 
                 else -> {
