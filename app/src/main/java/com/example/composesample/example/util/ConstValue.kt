@@ -17,5 +17,6 @@ class ConstValue {
         const val ModalBottomSheetExample = "modalBottomSheetExample"
         const val CustomBottomSheetExample = "customBottomSheetExample"
         const val ScaffoldDrawExample = "scaffoldDrawExample"
+        const val ModalDrawExample = "modalDrawExample"
     }
 }

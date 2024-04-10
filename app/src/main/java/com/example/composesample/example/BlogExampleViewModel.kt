@@ -160,10 +160,19 @@ class BlogExampleViewModel(application: Application) : AndroidViewModel(applicat
 
         insertExampleObject.add(
             ExampleObject(
-                title = "NavigationDraw Example",
-                description = "다양한 방법으로 구현해보는 NavigationDraw",
+                title = "ScaffoldDrawExample Example",
+                description = "다양한 방법으로 구현해보는 NavigationDraw - ScaffoldDrawExample",
                 blogUrl = "",
                 exampleType = ConstValue.ScaffoldDrawExample
+            )
+        )
+
+        insertExampleObject.add(
+            ExampleObject(
+                title = "ModalDrawExample Example",
+                description = "다양한 방법으로 구현해보는 NavigationDraw - ModalDrawExample",
+                blogUrl = "",
+                exampleType = ConstValue.ModalDrawExample
             )
         )
 
