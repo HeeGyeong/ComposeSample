@@ -1,5 +1,6 @@
 package com.example.composesample.example.ui.drawer
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -8,14 +9,17 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Scaffold
+import androidx.compose.material.SnackbarDuration
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.rememberScaffoldState
@@ -82,6 +86,32 @@ fun ScaffoldDrawerUI(
                     Text(
                         text = "Sample Contents"
                     )
+
+                    IconButton(
+                        onClick = {
+                            coroutineScope.launch {
+                                scaffoldState.drawerState.apply {
+                                    if (isClosed) open() else close()
+                                }
+                            }
+                        }
+                    ) {
+                        Icon(Icons.Filled.Menu, contentDescription = "drawerIcon")
+                    }
+
+                    IconButton(
+                        onClick = {
+                            coroutineScope.launch {
+                                scaffoldState.snackbarHostState.showSnackbar(
+                                    "ggg",
+                                    duration = SnackbarDuration.Short
+                                )
+                            }
+                        }
+                    ) {
+                        Icon(Icons.Filled.Edit, contentDescription = "snackBarIcon")
+                    }
+
                 }
             },
             drawerContent = {
@@ -93,11 +123,12 @@ fun ScaffoldDrawerUI(
                     }
                 )
             },
-            drawerGesturesEnabled = false
+            drawerGesturesEnabled = true
         )
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ColumnScope.DrawerContainer(
     onClickEvent: () -> Unit,
@@ -106,6 +137,21 @@ fun ColumnScope.DrawerContainer(
     DrawerContents(itemTitle = "other item", onClickEvent = onClickEvent)
     DrawerContents(itemTitle = "dummy item", onClickEvent = onClickEvent)
     DrawerContents(itemTitle = "last item", visibleDivider = false, onClickEvent = onClickEvent)
+
+    LazyColumn {
+        repeat(10) { index ->
+            item {
+                DrawerContents(itemTitle = "start item[$index]", onClickEvent = onClickEvent)
+                DrawerContents(itemTitle = "other item[$index]", onClickEvent = onClickEvent)
+                DrawerContents(itemTitle = "dummy item[$index]", onClickEvent = onClickEvent)
+                DrawerContents(
+                    itemTitle = "last item[$index]",
+                    visibleDivider = false,
+                    onClickEvent = onClickEvent
+                )
+            }
+        }
+    }
 }
 
 @Composable
