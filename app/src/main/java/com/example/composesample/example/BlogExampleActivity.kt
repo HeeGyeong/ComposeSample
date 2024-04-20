@@ -62,6 +62,7 @@ import com.example.composesample.example.ui.lazycolumn.LazyColumnIssueUI
 import com.example.composesample.example.ui.pager.PullScreenPagerUI
 import com.example.composesample.example.ui.recorder.AudioRecorderUI
 import com.example.composesample.example.ui.refresh.PullToRefreshUI
+import com.example.composesample.example.ui.swipe.SwipeToDismissUI
 import com.example.composesample.example.ui.text.TextStyleUI
 import com.example.composesample.example.ui.webview.WebViewIssueUI
 import com.example.composesample.example.ui.workmanager.WorkManagerUI
@@ -78,6 +79,7 @@ import com.example.composesample.example.util.ConstValue.Companion.ModalDrawExam
 import com.example.composesample.example.util.ConstValue.Companion.ScaffoldDrawExample
 import com.example.composesample.example.util.ConstValue.Companion.PullScreenPager
 import com.example.composesample.example.util.ConstValue.Companion.PullToRefreshExample
+import com.example.composesample.example.util.ConstValue.Companion.SwipeToDismissExample
 import com.example.composesample.example.util.ConstValue.Companion.TextStyleExample
 import com.example.composesample.example.util.ConstValue.Companion.WebViewIssueExample
 import com.example.composesample.example.util.ConstValue.Companion.WorkManagerExample
@@ -373,6 +375,10 @@ fun ExampleCaseUI(
 
                 ModalDrawExample -> {
                     ModalDrawerUI(onBackEvent)
+                }
+
+                SwipeToDismissExample -> {
+                    SwipeToDismissUI(onBackEvent)
                 }
 
                 else -> {

@@ -176,6 +176,15 @@ class BlogExampleViewModel(application: Application) : AndroidViewModel(applicat
             )
         )
 
+        insertExampleObject.add(
+            ExampleObject(
+                title = "Swipe to Dismiss Example",
+                description = "Swipe 하여 아이템을 제거할 수 있는 방법",
+                blogUrl = "",
+                exampleType = ConstValue.SwipeToDismissExample
+            )
+        )
+
         exampleObjectList.update { insertExampleObject }
     }
 }

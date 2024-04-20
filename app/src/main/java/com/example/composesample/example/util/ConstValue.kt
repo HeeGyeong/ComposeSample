@@ -18,5 +18,6 @@ class ConstValue {
         const val CustomBottomSheetExample = "customBottomSheetExample"
         const val ScaffoldDrawExample = "scaffoldDrawExample"
         const val ModalDrawExample = "modalDrawExample"
+        const val SwipeToDismissExample = "swipeToDismissExample"
     }
 }
