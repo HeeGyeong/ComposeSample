@@ -13,18 +13,26 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
+import androidx.compose.material.DismissDirection
 import androidx.compose.material.DismissValue
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.FractionalThreshold
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.SwipeToDismiss
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Done
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.rememberDismissState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
@@ -54,34 +62,80 @@ fun SwipeToDismissUI(
 
         item {
             repeat(3) { index ->
-                val dismissState = rememberDismissState()
+                val dismissState = rememberDismissState(
+                    confirmStateChange = {
+                        when (it) {
+                            DismissValue.DismissedToEnd -> {
+                                true
+                            }
+
+                            DismissValue.DismissedToStart -> {
+                                true
+                            }
+
+                            else -> {
+                                false
+                            }
+                        }
+                    }
+                )
 
                 val indexDefaultColor = listOf(
-                    Color.Green, Color.Blue, Color.Red
+                    Color.DarkGray, Color.Black, Color.LightGray
                 )
                 val indexDismissedToEndColor = listOf(
-                    Color.Blue, Color.Red, Color.Green,
+                    Color.Black, Color.LightGray, Color.DarkGray,
                 )
                 val indexDismissedToStartColor = listOf(
-                    Color.Red, Color.Green, Color.Blue,
-                )
-
-                val color by animateColorAsState(
-                    when (dismissState.targetValue) {
-                        DismissValue.Default -> indexDefaultColor[index]
-                        DismissValue.DismissedToEnd -> indexDismissedToEndColor[index]
-                        DismissValue.DismissedToStart -> indexDismissedToStartColor[index]
-                    }, label = ""
+                    Color.LightGray, Color.DarkGray, Color.Black,
                 )
 
                 SwipeToDismiss(
                     state = dismissState,
+                    directions = setOf(DismissDirection.EndToStart, DismissDirection.StartToEnd),
+                    /*dismissThresholds = { direction ->
+                        FractionalThreshold( // Deprecated
+                            if (direction == DismissDirection.StartToEnd) 0.20f else 0.20f
+                        )
+                    },*/
                     background = {
+                        val color by animateColorAsState(
+                            when (dismissState.targetValue) {
+                                DismissValue.Default -> indexDefaultColor[index]
+                                DismissValue.DismissedToEnd -> indexDismissedToEndColor[index]
+                                DismissValue.DismissedToStart -> indexDismissedToStartColor[index]
+                            }, label = ""
+                        )
+
+                        val alignment = when (dismissState.targetValue) {
+                            DismissValue.Default -> Alignment.Center
+                            DismissValue.DismissedToStart -> Alignment.CenterEnd
+                            DismissValue.DismissedToEnd -> Alignment.CenterStart
+                        }
+                        val icon = when (dismissState.targetValue) {
+                            DismissValue.Default -> Icons.Default.Home
+                            DismissValue.DismissedToStart -> Icons.Default.Delete
+                            DismissValue.DismissedToEnd -> Icons.Default.Done
+                        }
+
                         Box(
-                            modifier = Modifier
+                            Modifier
                                 .fillMaxSize()
                                 .background(color = color)
-                        )
+                                .padding(horizontal = 20.dp),
+                            contentAlignment = alignment
+                        ) {
+                            Icon(
+                                imageVector = icon,
+                                contentDescription = "Localized description",
+                                modifier = Modifier.scale(1f),
+                                tint = if (dismissState.targetValue == DismissValue.Default) {
+                                    Color.Transparent
+                                } else {
+                                    Color.White
+                                }
+                            )
+                        }
                     },
                     dismissContent = {
                         Card(
@@ -104,4 +158,9 @@ fun SwipeToDismissUI(
             }
         }
     }
+}
+
+enum class DragAnchors {
+    Start,
+    End,
 }
