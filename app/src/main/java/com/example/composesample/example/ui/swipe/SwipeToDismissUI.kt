@@ -1,6 +1,5 @@
 package com.example.composesample.example.ui.swipe
 
-import android.util.Log
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.Spring
@@ -22,6 +21,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -29,6 +29,7 @@ import androidx.compose.material.Card
 import androidx.compose.material.DismissDirection
 import androidx.compose.material.DismissValue
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.FractionalThreshold
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.SwipeToDismiss
@@ -72,8 +73,9 @@ fun SimpleSwipeToDismissUI(
     onBackButtonClick: () -> Unit
 ) {
     val coroutineScope = rememberCoroutineScope()
-    var lazyColumnWidth by remember { mutableStateOf(0f) }
-    val dismissEventRatio = 0.2f
+    var cardItemWidth by remember { mutableStateOf(0f) }
+    val startDismissEventRatio = 0.15f
+    val endDismissEventRatio = 0.60f
     val textData = "Swipe To Dismiss Item"
 
     // Scroll 이벤트를 확인하기 위한 Dummy Item
@@ -108,10 +110,6 @@ fun SimpleSwipeToDismissUI(
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .onGloballyPositioned { coordinates ->
-                // LazyColumn의 실제 너비를 측정하여 변수에 저장
-                lazyColumnWidth = coordinates.size.width.toFloat()
-            }
     ) {
         stickyHeader {
             Box(
@@ -133,10 +131,13 @@ fun SimpleSwipeToDismissUI(
 
         itemsIndexed(items) { index, data ->
             var isDismissItem by remember { mutableStateOf(false) }
+            var isFavoriteItem by remember { mutableStateOf(false) }
             val dismissState = rememberDismissState(
                 confirmStateChange = { dismissValue ->
                     when (dismissValue) {
                         DismissValue.DismissedToEnd -> {
+                            data.isFavorite = data.isFavorite.not()
+                            isFavoriteItem = data.isFavorite
                             false // Start to End Event는 무시한다.
                         }
 
@@ -144,13 +145,12 @@ fun SimpleSwipeToDismissUI(
                             coroutineScope.launch {
                                 // delay를 주지 않으면, Animation 도중에 view가 사라져서 어색함.
                                 delay(500L)
-
                                 val deleteItem = items.indexOfFirst {
                                     it.key == data.key
                                 }
 
                                 if (deleteItem != -1) {
-                                    items[deleteItem].isDismiss = true
+                                    data.isDismiss = true
                                     isDismissItem = true
                                 }
                             }
@@ -169,11 +169,15 @@ fun SimpleSwipeToDismissUI(
             }
 
             LaunchedEffect(key1 = Unit, block = {
+                // View에 보이지 않던 item이 다시 보일 때, re-composable이 발생하면서 View를 초기화 시키기 때문에, 다시 설정 필요함.
+                isFavoriteItem = data.isFavorite
+                isDismissItem = data.isDismiss
+
                 snapshotFlow { dismissState.offset.value }
                     .collect {
                         enableDismissDirection = when {
-                            it > lazyColumnWidth * dismissEventRatio -> DismissDirection.StartToEnd
-                            it < -lazyColumnWidth * dismissEventRatio -> DismissDirection.EndToStart
+                            it > cardItemWidth * startDismissEventRatio -> DismissDirection.StartToEnd
+                            it < -cardItemWidth * endDismissEventRatio -> DismissDirection.EndToStart
                             else -> null
                         }
                     }
@@ -181,9 +185,18 @@ fun SimpleSwipeToDismissUI(
 
             SwipeToDismiss(
                 state = dismissState,
+                dismissThresholds = { direction ->
+                    FractionalThreshold( // Deprecated
+                        if (direction == DismissDirection.StartToEnd) {
+                            startDismissEventRatio
+                        } else {
+                            endDismissEventRatio
+                        }
+                    )
+                },
                 directions = setOf(
-                    DismissDirection.EndToStart,
-                    DismissDirection.StartToEnd
+                    DismissDirection.StartToEnd,
+                    DismissDirection.EndToStart
                 ), // dismiss Animation이 가능한 부분 설정.
                 background = {
                     AnimatedContent(
@@ -272,7 +285,7 @@ fun SimpleSwipeToDismissUI(
                                                     Color(0xFFFFFF00)
                                                 }
                                             ),
-                                            contentDescription = "star icon"
+                                            contentDescription = "favorite icon"
                                         )
                                     }
 
@@ -297,7 +310,9 @@ fun SimpleSwipeToDismissUI(
                     }
                 },
                 dismissContent = {
-                    val cardModifier = if (items[index].isDismiss || isDismissItem) {
+                    // isDismissItem 만 사용하면 천천히 스크롤했을 때 이슈 발생.
+                    // recomposable이 발생할 때, false로 설정 후 true로 변경되면서 아래로 아이템 크기만큼 스크롤.
+                    val cardModifier = if (data.isDismiss || isDismissItem) {
                         Modifier
                             .fillMaxWidth()
                             .height(0.dp)
@@ -308,16 +323,34 @@ fun SimpleSwipeToDismissUI(
                     }
 
                     Card(
-                        modifier = cardModifier,
+                        modifier = cardModifier
+                            .onGloballyPositioned { coordinates ->
+                                // LazyColumn의 실제 너비를 측정하여 변수에 저장
+                                cardItemWidth = coordinates.size.width.toFloat()
+                            },
                         shape = RoundedCornerShape(12.dp)
                     ) {
                         Column(
                             modifier = Modifier.padding(10.dp),
                             verticalArrangement = Arrangement.Center,
                         ) {
-                            Text(
-                                text = "${data.item}[${data.key}]",
-                            )
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(
+                                    modifier = Modifier.padding(end = 12.dp),
+                                    text = "${data.item}[${data.key}]",
+                                )
+
+                                if (isFavoriteItem) {
+                                    Image(
+                                        modifier = Modifier.size(16.dp),
+                                        painter = rememberVectorPainter(image = Icons.Default.Star),
+                                        colorFilter = ColorFilter.tint(Color.Black),
+                                        contentDescription = "favorite icon"
+                                    )
+                                }
+                            }
                         }
                     }
                 }
@@ -329,5 +362,6 @@ fun SimpleSwipeToDismissUI(
 data class SwipeItem(
     val item: String,
     var key: Int,
+    var isFavorite: Boolean = false,
     var isDismiss: Boolean = false,
 )
