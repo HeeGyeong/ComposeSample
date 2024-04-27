@@ -269,7 +269,7 @@ fun SimpleSwipeToDismissUI(
                                         }
                                     )
                                     .fillMaxHeight()
-                                    .aspectRatio(1f)
+                                    .padding(horizontal = 20.dp)
                                     .scale(iconSize.value),
                                 contentAlignment = Alignment.Center
                             ) {
