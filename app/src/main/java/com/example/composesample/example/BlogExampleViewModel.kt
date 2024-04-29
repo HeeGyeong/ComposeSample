@@ -162,7 +162,7 @@ class BlogExampleViewModel(application: Application) : AndroidViewModel(applicat
             ExampleObject(
                 title = "ScaffoldDrawExample Example",
                 description = "다양한 방법으로 구현해보는 NavigationDraw - ScaffoldDrawExample",
-                blogUrl = "",
+                blogUrl = "https://heegs.tistory.com/160",
                 exampleType = ConstValue.ScaffoldDrawExample
             )
         )
@@ -171,7 +171,7 @@ class BlogExampleViewModel(application: Application) : AndroidViewModel(applicat
             ExampleObject(
                 title = "ModalDrawExample Example",
                 description = "다양한 방법으로 구현해보는 NavigationDraw - ModalDrawExample",
-                blogUrl = "",
+                blogUrl = "https://heegs.tistory.com/160",
                 exampleType = ConstValue.ModalDrawExample
             )
         )
@@ -180,7 +180,7 @@ class BlogExampleViewModel(application: Application) : AndroidViewModel(applicat
             ExampleObject(
                 title = "Swipe to Dismiss Example",
                 description = "Swipe 하여 아이템을 제거할 수 있는 방법",
-                blogUrl = "",
+                blogUrl = "https://heegs.tistory.com/161",
                 exampleType = ConstValue.SwipeToDismissExample
             )
         )
