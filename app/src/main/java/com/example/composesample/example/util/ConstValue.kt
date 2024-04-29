@@ -19,5 +19,6 @@ class ConstValue {
         const val ScaffoldDrawExample = "scaffoldDrawExample"
         const val ModalDrawExample = "modalDrawExample"
         const val SwipeToDismissExample = "swipeToDismissExample"
+        const val SideEffectExample = "sideEffectExample"
     }
 }

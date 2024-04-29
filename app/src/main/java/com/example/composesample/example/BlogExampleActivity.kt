@@ -53,6 +53,7 @@ import com.example.composesample.example.ui.bottomsheet.ModalBottomSheetUI
 import com.example.composesample.example.ui.clickevent.ClickEventUI
 import com.example.composesample.example.ui.drawer.ModalDrawerUI
 import com.example.composesample.example.ui.drawer.ScaffoldDrawerUI
+import com.example.composesample.example.ui.effect.SideEffectExampleUI
 import com.example.composesample.example.ui.ffmpeg.FfmpegEncodingUI
 import com.example.composesample.example.ui.ffmpeg.executeCommand
 import com.example.composesample.example.ui.ffmpeg.getRealPathFromURI
@@ -79,6 +80,7 @@ import com.example.composesample.example.util.ConstValue.Companion.ModalDrawExam
 import com.example.composesample.example.util.ConstValue.Companion.ScaffoldDrawExample
 import com.example.composesample.example.util.ConstValue.Companion.PullScreenPager
 import com.example.composesample.example.util.ConstValue.Companion.PullToRefreshExample
+import com.example.composesample.example.util.ConstValue.Companion.SideEffectExample
 import com.example.composesample.example.util.ConstValue.Companion.SwipeToDismissExample
 import com.example.composesample.example.util.ConstValue.Companion.TextStyleExample
 import com.example.composesample.example.util.ConstValue.Companion.WebViewIssueExample
@@ -379,6 +381,10 @@ fun ExampleCaseUI(
 
                 SwipeToDismissExample -> {
                     SwipeToDismissUI(onBackEvent)
+                }
+
+                SideEffectExample -> {
+                    SideEffectExampleUI(onBackEvent)
                 }
 
                 else -> {

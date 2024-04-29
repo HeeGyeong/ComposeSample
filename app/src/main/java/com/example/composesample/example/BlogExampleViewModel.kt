@@ -185,6 +185,15 @@ class BlogExampleViewModel(application: Application) : AndroidViewModel(applicat
             )
         )
 
+        insertExampleObject.add(
+            ExampleObject(
+                title = "Side Effect Example",
+                description = "다양한 Side Effect 함수와 그 차이를 확인하는 예제.",
+                blogUrl = "",
+                exampleType = ConstValue.SideEffectExample
+            )
+        )
+
         exampleObjectList.update { insertExampleObject }
     }
 }
