@@ -94,7 +94,7 @@ fun SideEffectExampleUI(
             /** Key 값이 변경될 때 마다 호출 된다. */
             LaunchedEffect(key1 = isChanged.value, block = {
                 Log.d(
-                    "SideEffectLog",
+                    "SVSideEffectLog",
                     "LaunchedEffect isChanged.value - isChanged.value 변경 시 마다 호출."
                 )
             })
@@ -115,11 +115,24 @@ fun SideEffectExampleUI(
 
             /**
              * 화면이 그려질 때 마다 호출 된다.
-             * recomposable이 발생하지 않으면, 최초 1회 호출하고 호출되지 않는다.
+             * recomposition이 발생하지 않으면, 최초 1회 호출하고 호출되지 않는다.
              */
             SideEffect {
                 Log.d("SideEffectLog", "SideEffect - reComposable이 성공적으로 완료될 때 마다 호출")
             }
+
+            /**
+             * snapshotFlow 를 통해 isChanged.value 의 상태를 관찰한다.
+             *
+             * Unit으로 선언하여 최초 한번 실행되지만, 명시적으로 수집을 취소하지 않거나 다른 Flow를 사용하지 않으면,
+             * 무기한 계속 관찰한다.
+             */
+            LaunchedEffect(key1 = Unit, block = {
+                snapshotFlow { isChanged.value }
+                    .collect {
+                        Log.d("SVSideEffectLog", "snapshotFlow $it")
+                    }
+            })
 
             // remember 관련 sideEffect Example
             UpdateRememberExample(
@@ -185,21 +198,6 @@ fun SideEffectExampleUI(
 
             Text(text = "derivedStateCheckData : $derivedStateCheckDataBy")
             Text(text = "derivedStateCheckData2 : ${derivedStateCheckData.value}")
-
-            /**
-             * snapshotFlow 를 통해 isChanged.value 의 상태를 관찰한다.
-             *
-             * Unit으로 선언하여 최초 한번 실행되지만, 명시적으로 수집을 취소하지 않거나 다른 Flow를 사용하지 않으면,
-             * 무기한 계속 관찰한다.
-             */
-            LaunchedEffect(key1 = Unit, block = {
-                snapshotFlow { isChanged.value } // isChanged 중 isChange의 Value가 변경되었을 때 호출.
-                    .map { timer > 0 && timer % 2 != 0 } // 호출 조건
-                    .distinctUntilChanged() // 이전의 값과 동일한 값이면 건너뛴다.
-                    .collect {
-                        Log.d("SideEffectLog", "snapshotFlow $it")
-                    }
-            })
         }
     }
 }
@@ -238,18 +236,44 @@ fun UpdateRememberExample(
 
 @Composable
 fun RememberUpdateTestText(text: String) {
-    val rememberTextBy by remember { mutableStateOf(text) }
+    SideEffect {
+        Log.d("SideEffectLog", "RememberUpdateTestText recomposition ")
+    }
+
+    var rememberTextBy by remember { mutableStateOf(text) }
     val rememberText = remember { mutableStateOf(text) }
 
     /** rememberUpdatedState를 확인 해보면 rememberTextByApply 와 동일한 것을 알 수 있다. */
     val rememberUpdatedText by rememberUpdatedState(text)
-    val rememberTextByApply by remember { mutableStateOf(text) }
+    var rememberTextByApply by remember { mutableStateOf(text) }
         .apply {
             value = text
         }
 
+    Text("text : $text")
     Text("rememberTextBy : $rememberTextBy")
     Text("rememberText : ${rememberText.value}")
     Text("rememberUpdatedText : $rememberUpdatedText")
     Text("rememberTextByApply : $rememberTextByApply")
+
+    TextField(
+        value = rememberTextBy,
+        onValueChange = { change ->
+            rememberTextBy = change
+        }
+    )
+
+    TextField(
+        value = rememberText.value,
+        onValueChange = { change ->
+            rememberText.value = change
+        }
+    )
+
+    TextField(
+        value = rememberTextByApply,
+        onValueChange = { change ->
+            rememberTextByApply = change
+        }
+    )
 }
