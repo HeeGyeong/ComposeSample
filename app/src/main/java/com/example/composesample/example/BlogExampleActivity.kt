@@ -19,6 +19,8 @@ import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -33,10 +35,13 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
+import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
+import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -77,9 +82,9 @@ import com.example.composesample.example.util.ConstValue.Companion.FlingBehavior
 import com.example.composesample.example.util.ConstValue.Companion.LazyColumnExample
 import com.example.composesample.example.util.ConstValue.Companion.ModalBottomSheetExample
 import com.example.composesample.example.util.ConstValue.Companion.ModalDrawExample
-import com.example.composesample.example.util.ConstValue.Companion.ScaffoldDrawExample
 import com.example.composesample.example.util.ConstValue.Companion.PullScreenPager
 import com.example.composesample.example.util.ConstValue.Companion.PullToRefreshExample
+import com.example.composesample.example.util.ConstValue.Companion.ScaffoldDrawExample
 import com.example.composesample.example.util.ConstValue.Companion.SideEffectExample
 import com.example.composesample.example.util.ConstValue.Companion.SwipeToDismissExample
 import com.example.composesample.example.util.ConstValue.Companion.TextStyleExample
@@ -134,6 +139,8 @@ fun BlogExampleCase(
     val context = LocalContext.current
     val exampleType = remember { mutableStateOf("") }
     val exampleObjectList = blogExampleViewModel.exampleObjectList.collectAsState().value
+    val searchText by blogExampleViewModel.searchText.collectAsState()
+    val searchExampleList = blogExampleViewModel.searchExampleList.collectAsState(listOf()).value
 
     Box(modifier = Modifier.fillMaxSize()) {
         LazyColumn(
@@ -147,22 +154,101 @@ fun BlogExampleCase(
                         (context as Activity).finish()
                     }
                 )
+                Column(
+                    modifier = Modifier.background(color = Color.LightGray),
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Spacer(modifier = Modifier.height(10.dp))
+
+                    Row(modifier = Modifier.padding(horizontal = 20.dp)) {
+                        OutlinedTextField(
+                            modifier = Modifier
+                                .height(52.dp)
+                                .weight(0.7f),
+                            value = searchText,
+                            onValueChange = {
+                                blogExampleViewModel.onSearchTextChange(it)
+                            },
+                            placeholder = {
+                                Text(text = "검색할 타이틀을 입력해주세요.", color = Color.Black)
+                            },
+                            shape = RoundedCornerShape(12.dp),
+                            colors = TextFieldDefaults.outlinedTextFieldColors(
+                                backgroundColor = Color.Transparent,
+                                cursorColor = Color.Red,
+                                placeholderColor = Color.LightGray,
+                                focusedBorderColor = Color.Black,
+                                unfocusedBorderColor = Color.Gray,
+                                errorBorderColor = Color.Red,
+                                textColor = Color.Black,
+                            ),
+                            singleLine = true,
+                        )
+
+                        Row(
+                            modifier = Modifier
+                                .height(52.dp)
+                                .weight(0.2f)
+                                .clickable {
+                                    blogExampleViewModel.reverseExampleList()
+                                },
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.End
+                        ) {
+                            Text(text = "정렬 변경")
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(10.dp))
+                }
             }
 
-            items(exampleObjectList) { exampleObject ->
-                Column(modifier = Modifier.fillMaxWidth()) {
-                    ExampleCardSection(
-                        context = context,
-                        exampleTitle = exampleObject.title,
-                        exampleDescription = exampleObject.description,
-                        exampleBlogUrl = exampleObject.blogUrl,
-                        onButtonClick = {
-                            exampleType.value = exampleObject.exampleType
-                        },
-                        noBlogUrlEvent = {
-                            blogExampleViewModel.sendToastMessage("블로그 글이 존재하지 않는 샘플입니다.\n코드로 확인해주세요!")
-                        }
-                    )
+            if (searchText.isEmpty()) {
+                items(exampleObjectList) { exampleObject ->
+                    Column(modifier = Modifier.fillMaxWidth()) {
+                        ExampleCardSection(
+                            context = context,
+                            exampleTitle = exampleObject.title,
+                            exampleDescription = exampleObject.description,
+                            exampleBlogUrl = exampleObject.blogUrl,
+                            onButtonClick = {
+                                exampleType.value = exampleObject.exampleType
+                            },
+                            noBlogUrlEvent = {
+                                blogExampleViewModel.sendToastMessage("블로그 글이 존재하지 않는 샘플입니다.\n코드로 확인해주세요!")
+                            }
+                        )
+                    }
+                }
+            } else if (searchExampleList.isNotEmpty()) {
+                items(searchExampleList) { exampleObject ->
+                    Column(modifier = Modifier.fillMaxWidth()) {
+                        ExampleCardSection(
+                            context = context,
+                            exampleTitle = exampleObject.title,
+                            exampleDescription = exampleObject.description,
+                            exampleBlogUrl = exampleObject.blogUrl,
+                            onButtonClick = {
+                                exampleType.value = exampleObject.exampleType
+                            },
+                            noBlogUrlEvent = {
+                                blogExampleViewModel.sendToastMessage("블로그 글이 존재하지 않는 샘플입니다.\n코드로 확인해주세요!")
+                            }
+                        )
+                    }
+                }
+            } else {
+                item {
+                    Column(modifier = Modifier.fillMaxWidth()) {
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(
+                            modifier = Modifier
+                                .fillMaxWidth(),
+                            text = "검색 결과가 없습니다.",
+                            textAlign = TextAlign.Center,
+                            fontSize = 20.sp
+                        )
+                    }
                 }
             }
         }

@@ -5,6 +5,8 @@ import androidx.lifecycle.AndroidViewModel
 import com.example.composesample.example.util.ConstValue
 import com.example.composesample.model.ExampleObject
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.update
 
 
@@ -195,5 +197,27 @@ class BlogExampleViewModel(application: Application) : AndroidViewModel(applicat
         )
 
         exampleObjectList.update { insertExampleObject }
+    }
+
+    private val _searchText = MutableStateFlow("")
+    val searchText = _searchText.asStateFlow()
+
+    fun onSearchTextChange(text: String) {
+        _searchText.value = text
+    }
+
+    val searchExampleList = searchText
+        .combine(exampleObjectList) { query, list ->
+            if (query.isBlank()) {
+                list
+            } else {
+                list.filter {
+                    it.title.contains(query, ignoreCase = true)
+                }
+            }
+        }
+
+    fun reverseExampleList() {
+        exampleObjectList.update { ArrayList(exampleObjectList.value.reversed()) }
     }
 }
