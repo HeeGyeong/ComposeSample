@@ -189,7 +189,7 @@ class BlogExampleViewModel(application: Application) : AndroidViewModel(applicat
             ExampleObject(
                 title = "Side Effect Example",
                 description = "다양한 Side Effect 함수와 그 차이를 확인하는 예제.",
-                blogUrl = "",
+                blogUrl = "https://heegs.tistory.com/162",
                 exampleType = ConstValue.SideEffectExample
             )
         )
