@@ -1,4 +1,4 @@
-package com.example.composesample.sub
+package com.example.composesample.data
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
@@ -11,4 +11,14 @@ data class ItemDTO (
 
     @ColumnInfo(name = "uuid")
     var uniqueId: String,
+)
+
+// DataCache Example Data Table
+@Entity(tableName = "exampleTable")
+data class UserData(
+    @PrimaryKey
+    val id: Long?,
+
+    @ColumnInfo(name = "user_name")
+    val userName: String
 )

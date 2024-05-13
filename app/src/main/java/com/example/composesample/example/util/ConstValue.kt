@@ -20,5 +20,6 @@ class ConstValue {
         const val ModalDrawExample = "modalDrawExample"
         const val SwipeToDismissExample = "swipeToDismissExample"
         const val SideEffectExample = "sideEffectExample"
+        const val DataCacheExample = "dataCacheExample"
     }
 }

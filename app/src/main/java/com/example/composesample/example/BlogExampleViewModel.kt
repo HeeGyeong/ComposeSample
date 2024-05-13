@@ -196,6 +196,15 @@ class BlogExampleViewModel(application: Application) : AndroidViewModel(applicat
             )
         )
 
+        insertExampleObject.add(
+            ExampleObject(
+                title = "Data Cache Example",
+                description = "Data Cache를 사용해보는 예제.",
+                blogUrl = "",
+                exampleType = ConstValue.DataCacheExample
+            )
+        )
+
         exampleObjectList.update { insertExampleObject }
     }
 

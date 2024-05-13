@@ -1,4 +1,4 @@
-package com.example.composesample.sub
+package com.example.composesample.data
 
 import androidx.room.Dao
 import androidx.room.Delete
@@ -25,4 +25,24 @@ interface ItemDao {
 
     @Query("DELETE FROM itemTable")
     suspend fun clear()
+}
+
+// DataCache Example Dao
+@Dao
+interface ExampleDao {
+    @Query("SELECT * FROM exampleTable WHERE user_name" +
+            " LIKE:searchName || '%' ORDER BY id DESC")
+    fun searchData(searchName: String): Flow<List<UserData>>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertData(item: UserData)
+
+    @Update(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun updateData(item: UserData)
+
+    @Delete
+    suspend fun deleteData(item: UserData)
+
+    @Query("DELETE FROM exampleTable")
+    suspend fun allDataDelete()
 }

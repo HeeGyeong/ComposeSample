@@ -55,6 +55,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.composesample.example.ui.bottomsheet.BottomSheetUI
 import com.example.composesample.example.ui.bottomsheet.CustomBottomSheetUI
 import com.example.composesample.example.ui.bottomsheet.ModalBottomSheetUI
+import com.example.composesample.example.ui.cache.DataCacheExampleUI
 import com.example.composesample.example.ui.clickevent.ClickEventUI
 import com.example.composesample.example.ui.drawer.ModalDrawerUI
 import com.example.composesample.example.ui.drawer.ScaffoldDrawerUI
@@ -76,6 +77,7 @@ import com.example.composesample.example.util.ConstValue.Companion.AudioRecorder
 import com.example.composesample.example.util.ConstValue.Companion.BottomSheetExample
 import com.example.composesample.example.util.ConstValue.Companion.ClickEventExample
 import com.example.composesample.example.util.ConstValue.Companion.CustomBottomSheetExample
+import com.example.composesample.example.util.ConstValue.Companion.DataCacheExample
 import com.example.composesample.example.util.ConstValue.Companion.FfmpegExample
 import com.example.composesample.example.util.ConstValue.Companion.FlexBoxLayoutExample
 import com.example.composesample.example.util.ConstValue.Companion.FlingBehaviorExample
@@ -471,6 +473,10 @@ fun ExampleCaseUI(
 
                 SideEffectExample -> {
                     SideEffectExampleUI(onBackEvent)
+                }
+
+                DataCacheExample -> {
+                    DataCacheExampleUI(onBackEvent)
                 }
 
                 else -> {
