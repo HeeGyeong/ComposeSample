@@ -39,6 +39,7 @@ import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -143,6 +144,10 @@ fun BlogExampleCase(
     val exampleObjectList = blogExampleViewModel.exampleObjectList.collectAsState().value
     val searchText by blogExampleViewModel.searchText.collectAsState()
     val searchExampleList = blogExampleViewModel.searchExampleList.collectAsState(listOf()).value
+
+    LaunchedEffect(key1 = Unit, block = {
+        blogExampleViewModel.reverseExampleList()
+    })
 
     Box(modifier = Modifier.fillMaxSize()) {
         LazyColumn(
