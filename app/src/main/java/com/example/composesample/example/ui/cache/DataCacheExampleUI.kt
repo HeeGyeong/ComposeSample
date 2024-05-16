@@ -17,7 +17,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Button
-import androidx.compose.material.Card
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
@@ -27,6 +26,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
@@ -84,7 +84,7 @@ fun DataCacheExampleUI(
                             Button(onClick = {
                                 dataCacheViewModel.insertUserData(
                                     UserData(
-                                        id = null,
+                                        id = null, // PrimaryKey 는 데이터가 없으면 오름차순으로 알아서 들어간다.
                                         userName = generateRandomString()
                                     )
                                 )
@@ -121,9 +121,10 @@ fun DataCacheExampleUI(
             }
         }
         itemsIndexed(userList.value) { _, item ->
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                backgroundColor = Color(0xFFDCE2C9)
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(color = Color(0xFFDCE2C9)),
             ) {
                 Row(
                     modifier = Modifier.padding(12.dp),
@@ -159,7 +160,7 @@ fun DataCacheExampleUI(
                         dataCacheViewModel.updateUserData(updatedItem)
                     }) {
                         Icon(
-                            imageVector = Icons.Default.Edit,
+                            imageVector = Icons.Default.Refresh,
                             contentDescription = ""
                         )
                     }
