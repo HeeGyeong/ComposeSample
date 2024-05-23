@@ -177,7 +177,7 @@ fun BlogExampleCase(
                                 blogExampleViewModel.onSearchTextChange(it)
                             },
                             placeholder = {
-                                Text(text = "검색할 타이틀을 입력해주세요.", color = Color.Black)
+                                Text(text = "검색할 제목을 입력해주세요.", color = Color.Black)
                             },
                             shape = RoundedCornerShape(12.dp),
                             colors = TextFieldDefaults.outlinedTextFieldColors(
@@ -202,7 +202,7 @@ fun BlogExampleCase(
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.End
                         ) {
-                            Text(text = "정렬 변경")
+                            Text(text = "정렬 기준 변경")
                         }
                     }
 
@@ -222,7 +222,7 @@ fun BlogExampleCase(
                                 exampleType.value = exampleObject.exampleType
                             },
                             noBlogUrlEvent = {
-                                blogExampleViewModel.sendToastMessage("블로그 글이 존재하지 않는 샘플입니다.\n코드로 확인해주세요!")
+                                blogExampleViewModel.sendToastMessage("블로그 글이 존재하지 않는 예제입니다.\n코드로 확인해주세요!")
                             }
                         )
                     }
@@ -239,7 +239,7 @@ fun BlogExampleCase(
                                 exampleType.value = exampleObject.exampleType
                             },
                             noBlogUrlEvent = {
-                                blogExampleViewModel.sendToastMessage("블로그 글이 존재하지 않는 샘플입니다.\n코드로 확인해주세요!")
+                                blogExampleViewModel.sendToastMessage("블로그 글이 존재하지 않는 예제입니다.\n코드로 확인해주세요!")
                             }
                         )
                     }
@@ -251,7 +251,7 @@ fun BlogExampleCase(
                         Text(
                             modifier = Modifier
                                 .fillMaxWidth(),
-                            text = "검색 결과가 없습니다.",
+                            text = "검색 결과와 일치하는 게시글이 없습니다.",
                             textAlign = TextAlign.Center,
                             fontSize = 20.sp
                         )
