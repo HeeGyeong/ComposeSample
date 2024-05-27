@@ -25,7 +25,7 @@ fun MovieScreen(
 ) {
 
     LaunchedEffect(key1 = Unit, block = {
-        viewModel.fetchUsers()
+        viewModel.fetchPosts()
     })
 
     var apiText by remember { mutableStateOf("null") }

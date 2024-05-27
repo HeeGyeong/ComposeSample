@@ -68,10 +68,11 @@ class MovieViewModel(
     }
 
 
+    // 해당 fetch Data 관련해서 Example로 옮겨서 작업하기.
     private val _posts = MutableLiveData<List<PostData>>()
     val posts: LiveData<List<PostData>> get() = _posts
 
-    fun fetchUsers() {
+    fun fetchPosts() {
         viewModelScope.launch {
             postApiInterface.getPosts().enqueue(object : Callback<List<PostData>> {
                 override fun onResponse(
