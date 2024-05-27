@@ -6,10 +6,17 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.example.composesample.api.ApiInterface
+import com.example.composesample.api.PostApiInterface
 import com.example.composesample.model.MovieEntity
+import com.example.composesample.model.PostData
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.launch
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 /**
  * 2024.04.10 기준
@@ -18,8 +25,11 @@ import io.reactivex.schedulers.Schedulers
  *
  * 해당 예제를 확인이 필요한 경우, 동작 가능한 Sample API와 그에 맞는 DTO로 변경만 해주시면 사용 가능합니다.
  */
-class MovieViewModel(application: Application, private val apiInterface: ApiInterface) :
-    AndroidViewModel(application) {
+class MovieViewModel(
+    application: Application,
+    private val apiInterface: ApiInterface,
+    private val postApiInterface: PostApiInterface,
+) : AndroidViewModel(application) {
 
     private val _data = MutableLiveData<List<MovieEntity>>()
     val data: LiveData<List<MovieEntity>> = _data
@@ -54,6 +64,31 @@ class MovieViewModel(application: Application, private val apiInterface: ApiInte
         } catch (e: Exception) {
             Log.d("ComposeLog", "Flow Error 2 !! $e")
             null
+        }
+    }
+
+
+    private val _posts = MutableLiveData<List<PostData>>()
+    val posts: LiveData<List<PostData>> get() = _posts
+
+    fun fetchUsers() {
+        viewModelScope.launch {
+            postApiInterface.getPosts().enqueue(object : Callback<List<PostData>> {
+                override fun onResponse(
+                    call: Call<List<PostData>>,
+                    response: Response<List<PostData>>
+                ) {
+                    if (response.isSuccessful) {
+                        Log.d("asdfasdfasdf", "onResponse : $call : res? $response")
+                        _posts.postValue(response.body())
+                    }
+                }
+
+                override fun onFailure(call: Call<List<PostData>>, t: Throwable) {
+                    // Handle error
+                    Log.d("asdfasdfasdf", "onFailure : $call : t? $t")
+                }
+            })
         }
     }
 }

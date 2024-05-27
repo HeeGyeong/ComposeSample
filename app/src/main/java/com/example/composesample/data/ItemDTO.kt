@@ -5,7 +5,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "itemTable")
-data class ItemDTO (
+data class ItemDTO(
     @PrimaryKey
     var id: Long?,
 
