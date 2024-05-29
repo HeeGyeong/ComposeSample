@@ -21,5 +21,6 @@ class ConstValue {
         const val SwipeToDismissExample = "swipeToDismissExample"
         const val SideEffectExample = "sideEffectExample"
         const val DataCacheExample = "dataCacheExample"
+        const val ApiDisconnectExample = "apiDisconnectExample"
     }
 }

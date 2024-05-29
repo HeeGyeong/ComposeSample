@@ -1,5 +1,6 @@
 package com.example.composesample.module
 
+import com.example.composesample.example.ui.api.ApiExampleViewModel
 import com.example.composesample.movie.MovieViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.module.Module
@@ -11,6 +12,12 @@ val viewModelModule: Module = module {
         MovieViewModel(
             get(),
             get(named("api")),
+        )
+    }
+
+    viewModel {
+        ApiExampleViewModel(
+            get(),
             get(named("post"))
         )
     }

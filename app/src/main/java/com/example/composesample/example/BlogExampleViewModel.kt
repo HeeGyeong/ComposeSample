@@ -205,6 +205,15 @@ class BlogExampleViewModel(application: Application) : AndroidViewModel(applicat
             )
         )
 
+        insertExampleObject.add(
+            ExampleObject(
+                title = "Api Disconnect Example",
+                description = "Api를 사용할 때, Network 문제가 발생했을 때 처리 하는 방법.",
+                blogUrl = "",
+                exampleType = ConstValue.ApiDisconnectExample
+            )
+        )
+
         exampleObjectList.update { insertExampleObject }
     }
 

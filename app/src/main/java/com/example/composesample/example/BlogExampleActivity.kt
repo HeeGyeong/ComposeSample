@@ -53,6 +53,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.composesample.example.ui.api.ApiDisconnectExampleUI
 import com.example.composesample.example.ui.bottomsheet.BottomSheetUI
 import com.example.composesample.example.ui.bottomsheet.CustomBottomSheetUI
 import com.example.composesample.example.ui.bottomsheet.ModalBottomSheetUI
@@ -74,6 +75,7 @@ import com.example.composesample.example.ui.swipe.SwipeToDismissUI
 import com.example.composesample.example.ui.text.TextStyleUI
 import com.example.composesample.example.ui.webview.WebViewIssueUI
 import com.example.composesample.example.ui.workmanager.WorkManagerUI
+import com.example.composesample.example.util.ConstValue.Companion.ApiDisconnectExample
 import com.example.composesample.example.util.ConstValue.Companion.AudioRecorderExample
 import com.example.composesample.example.util.ConstValue.Companion.BottomSheetExample
 import com.example.composesample.example.util.ConstValue.Companion.ClickEventExample
@@ -482,6 +484,10 @@ fun ExampleCaseUI(
 
                 DataCacheExample -> {
                     DataCacheExampleUI(onBackEvent)
+                }
+
+                ApiDisconnectExample -> {
+                    ApiDisconnectExampleUI(onBackEvent)
                 }
 
                 else -> {
