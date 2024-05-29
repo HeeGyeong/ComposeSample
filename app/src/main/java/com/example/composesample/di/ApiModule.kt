@@ -1,9 +1,10 @@
-package com.example.composesample.module
+package com.example.composesample.di
 
 import android.util.Log
 import com.example.composesample.api.ApiClient
 import com.example.composesample.api.ApiInterface
 import com.example.composesample.api.PostApiInterface
+import com.example.composesample.example.util.NetworkInterceptor
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -47,6 +48,7 @@ val apiModule: Module = module {
                 readTimeout(60, TimeUnit.SECONDS)
                 writeTimeout(60, TimeUnit.SECONDS)
                 addInterceptor(get<HttpLoggingInterceptor>())
+                addInterceptor(get<NetworkInterceptor>())
                 build()
             }
     }

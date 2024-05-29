@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.composesample.api.PostApiInterface
+import com.example.composesample.example.util.NetworkStatusLiveData
 import com.example.composesample.model.PostData
 import kotlinx.coroutines.launch
 import retrofit2.Call
@@ -17,8 +18,11 @@ class ApiExampleViewModel(
     application: Application,
     private val postApiInterface: PostApiInterface,
 ) : AndroidViewModel(application) {
+    // Network connect 관련 LiveData
+    private val networkStatusLiveData = NetworkStatusLiveData(application)
+    fun getNetworkStatus(): LiveData<Boolean> = networkStatusLiveData
 
-    // 해당 fetch Data 관련해서 Example로 옮겨서 작업하기.
+    // Api Data
     private val _posts = MutableLiveData<List<PostData>>()
     val posts: LiveData<List<PostData>> get() = _posts
 

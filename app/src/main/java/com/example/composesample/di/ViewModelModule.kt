@@ -1,4 +1,4 @@
-package com.example.composesample.module
+package com.example.composesample.di
 
 import com.example.composesample.example.ui.api.ApiExampleViewModel
 import com.example.composesample.movie.MovieViewModel
