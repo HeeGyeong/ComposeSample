@@ -204,7 +204,10 @@ fun BlogExampleCase(
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.End
                         ) {
-                            Text(text = "정렬 기준 변경")
+                            Text(
+                                text = "정렬 기준\n변경",
+                                textAlign = TextAlign.Center
+                            )
                         }
                     }
 
