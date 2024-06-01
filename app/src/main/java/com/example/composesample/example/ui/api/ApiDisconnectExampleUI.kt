@@ -23,11 +23,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import com.example.composesample.example.util.NetworkUtil
 import org.koin.androidx.compose.get
@@ -44,19 +48,30 @@ fun ApiDisconnectExampleUI(
     val posts by apiExampleViewModel.posts.observeAsState(initial = emptyList())
 
     val networkUtil: NetworkUtil = get()
+    val isConnectNetwork = remember { mutableStateOf(networkUtil.isNetworkAvailable()) }
+
+    Log.d("NetworkLog", "isConnectNetwork : ${isConnectNetwork.value}")
 
     // 네트워크 연결 정보를 옵저빙한다.
     apiExampleViewModel.getNetworkStatus()
         .observe(LocalLifecycleOwner.current) { isConnected ->
             if (isConnected) {
                 Log.d("NetworkLog", "isConnected")
+                isConnectNetwork.value = true
             } else {
                 Log.d("NetworkLog", "Network is lost")
+                isConnectNetwork.value = false
             }
         }
 
-    LaunchedEffect(key1 = Unit, block = {
-        apiExampleViewModel.fetchPosts()
+//    LaunchedEffect(key1 = Unit, block = {
+//        apiExampleViewModel.fetchPosts()
+//    })
+
+    LaunchedEffect(key1 = isConnectNetwork.value, block = {
+        if (isConnectNetwork.value) {
+            apiExampleViewModel.fetchPosts()
+        }
     })
 
     LazyColumn(
@@ -81,28 +96,26 @@ fun ApiDisconnectExampleUI(
                         }
                     }
 
-                    Spacer(modifier = Modifier.height(10.dp))
+                    if (!isConnectNetwork.value) {
+                        Column(
+                            modifier = Modifier.fillMaxWidth()
+                                .background(color = Color.Black),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center
+                        ) {
+                            Text(
+                                text = "The network is disconnected.\nPlease check the network status.",
+                                color = Color.White,
+                                textAlign = TextAlign.Center
+                            )
+                        }
+                    }
                 }
             }
         }
 
-        // view가 그려질 때 네트워크 여부를 체크하여 view를 그린다.
-        if (networkUtil.isNetworkAvailable()) {
-            itemsIndexed(posts) { index, item ->
-                Text(text = "[$index] : ${item.title}")
-            }
-        } else {
-            item {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(500.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
-                ) {
-                    Text(text = "Network connection is lost.")
-                }
-            }
+        itemsIndexed(posts) { index, item ->
+            Text(text = "[$index] : ${item.title}")
         }
     }
 }

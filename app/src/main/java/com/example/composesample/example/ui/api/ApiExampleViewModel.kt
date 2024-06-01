@@ -33,6 +33,7 @@ class ApiExampleViewModel(
                     call: Call<List<PostData>>,
                     response: Response<List<PostData>>
                 ) {
+                    Log.d("NetworkLog", "Api call Comp")
                     if (response.isSuccessful) {
                         _posts.postValue(response.body())
                     }
@@ -40,7 +41,7 @@ class ApiExampleViewModel(
 
                 override fun onFailure(call: Call<List<PostData>>, t: Throwable) {
                     // Handle error
-                    Log.d("postApiInterface", "onFailure : $call : t? $t")
+                    Log.d("NetworkLog", "onFailure : $call : t? $t")
                 }
             })
         }
