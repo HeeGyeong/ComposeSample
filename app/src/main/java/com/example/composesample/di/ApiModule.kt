@@ -42,11 +42,10 @@ val apiModule: Module = module {
     single {
         OkHttpClient.Builder()
             .run {
-                addInterceptor(get<Interceptor>()) // 하단에 선언한 Intercepter 를 주입
-
                 connectTimeout(60, TimeUnit.SECONDS)
                 readTimeout(60, TimeUnit.SECONDS)
                 writeTimeout(60, TimeUnit.SECONDS)
+                addInterceptor(get<Interceptor>())
                 addInterceptor(get<HttpLoggingInterceptor>())
                 addInterceptor(get<NetworkInterceptor>())
                 build()
