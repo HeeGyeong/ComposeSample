@@ -45,7 +45,7 @@ fun ApiDisconnectExampleUI(
     val posts by apiExampleViewModel.posts.observeAsState(initial = emptyList())
 
     val networkUtil: NetworkUtil = get()
-    val isConnectNetwork = remember { mutableStateOf(networkUtil.isNetworkAvailable()) }
+    val isConnectNetwork = remember { mutableStateOf(networkUtil.isNetworkConnected()) }
 
     Log.d("NetworkLog", "isConnectNetwork : ${isConnectNetwork.value}")
 

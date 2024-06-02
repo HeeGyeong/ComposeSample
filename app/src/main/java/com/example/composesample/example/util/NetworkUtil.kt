@@ -11,14 +11,14 @@ import okhttp3.Response
 import java.io.IOException
 
 class NetworkUtil(private val context: Context) {
-    fun isNetworkAvailable(): Boolean {
+    fun isNetworkConnected(): Boolean {
         val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            val network = connectivityManager.activeNetwork ?: return false
-            val activeNetwork = connectivityManager.getNetworkCapabilities(network) ?: return false
+            val activeNetwork = connectivityManager.activeNetwork ?: return false
+            val isActiveNetwork = connectivityManager.getNetworkCapabilities(activeNetwork) ?: return false
             return when {
-                activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
-                activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
+                isActiveNetwork.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
+                isActiveNetwork.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
                 else -> false
             }
         } else {
@@ -31,7 +31,7 @@ class NetworkUtil(private val context: Context) {
 class NetworkInterceptor(private val networkUtil: NetworkUtil) : Interceptor {
 
     override fun intercept(chain: Interceptor.Chain): Response {
-        if (!networkUtil.isNetworkAvailable()) {
+        if (!networkUtil.isNetworkConnected()) {
             throw IOException("Network connection is lost")
         }
         return chain.proceed(chain.request())
