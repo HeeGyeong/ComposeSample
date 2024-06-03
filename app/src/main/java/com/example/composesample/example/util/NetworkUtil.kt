@@ -39,7 +39,6 @@ class NetworkInterceptor(private val networkUtil: NetworkUtil) : Interceptor {
 }
 
 class NetworkStatusLiveData(context: Context) : LiveData<Boolean>() {
-
     private val connectivityManager =
         context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
     private val networkCallback = object : ConnectivityManager.NetworkCallback() {

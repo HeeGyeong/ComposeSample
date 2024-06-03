@@ -61,9 +61,15 @@ fun ApiDisconnectExampleUI(
             }
         }
 
-//    LaunchedEffect(key1 = Unit, block = {
+    LaunchedEffect(key1 = Unit, block = {
 //        apiExampleViewModel.fetchPosts()
-//    })
+
+        if (networkUtil.isNetworkConnected()) {
+            Log.d("NetworkLog", "isNetworkConnected")
+        } else {
+            Log.d("NetworkLog", "isNetworkDisConnected")
+        }
+    })
 
     LaunchedEffect(key1 = isConnectNetwork.value, block = {
         if (isConnectNetwork.value) {
