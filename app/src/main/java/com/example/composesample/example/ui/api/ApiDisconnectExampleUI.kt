@@ -61,9 +61,12 @@ fun ApiDisconnectExampleUI(
             }
         }
 
+    /**
+     * 최초 진입 시 동작을 확인하기 위한 로그.
+     * 불필요한 데이터 입니다.
+     */
     LaunchedEffect(key1 = Unit, block = {
 //        apiExampleViewModel.fetchPosts()
-
         if (networkUtil.isNetworkConnected()) {
             Log.d("NetworkLog", "isNetworkConnected")
         } else {
