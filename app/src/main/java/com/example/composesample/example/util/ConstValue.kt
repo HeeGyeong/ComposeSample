@@ -22,5 +22,6 @@ class ConstValue {
         const val SideEffectExample = "sideEffectExample"
         const val DataCacheExample = "dataCacheExample"
         const val ApiDisconnectExample = "apiDisconnectExample"
+        const val PowerSaveModeExample = "powerSaveModeExample"
     }
 }

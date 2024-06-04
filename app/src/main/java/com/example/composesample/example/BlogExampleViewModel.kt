@@ -214,6 +214,15 @@ class BlogExampleViewModel(application: Application) : AndroidViewModel(applicat
             )
         )
 
+        insertExampleObject.add(
+            ExampleObject(
+                title = "PowerSave Mode Example",
+                description = "절전 모드 활성화 시 고려해야 할 몇 가지 문제.",
+                blogUrl = "",
+                exampleType = ConstValue.PowerSaveModeExample
+            )
+        )
+
         exampleObjectList.update { insertExampleObject }
     }
 
