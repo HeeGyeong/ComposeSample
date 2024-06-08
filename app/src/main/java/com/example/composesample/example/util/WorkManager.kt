@@ -16,7 +16,7 @@ class BackGroundWorker(
         val workManagerData = inputData.getString("workManagerData") ?: ""
         Log.d("doWork", "in doWork() : start $workManagerData")
 
-        for (item in 0..10) {
+        for (item in 0..30) {
             Log.d("doWork", "doWork() time : $item")
             delay(1000L)
         }

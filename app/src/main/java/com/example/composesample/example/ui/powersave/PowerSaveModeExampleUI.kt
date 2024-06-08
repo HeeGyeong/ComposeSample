@@ -33,7 +33,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
+import androidx.work.Data
+import androidx.work.OneTimeWorkRequest
+import androidx.work.WorkManager
+import com.example.composesample.example.util.BackGroundWorker
 import com.example.composesample.example.util.OnLifecycleEvent
+import java.util.UUID
 
 private lateinit var powerSaveModeReceiver: BroadcastReceiver
 
@@ -45,10 +50,19 @@ fun PowerSaveModeExampleUI(
     val context = LocalContext.current
     val isPowerSaveMode = remember { mutableStateOf(false) }
 
+    val map = mapOf("workManagerData" to "workManagerData")
+    val data = Data.Builder().putAll(map).build()
+    val workerRequestId = remember { mutableStateOf<UUID?>(null) }
+
+    val uniqueWorkTag = "unique_work_tag"
+    val uniqueWorkRequest = OneTimeWorkRequest.Builder(BackGroundWorker::class.java)
+        .setInputData(data)
+        .addTag(uniqueWorkTag)
+        .build()
+
     OnLifecycleEvent { _, event ->
         when (event) {
             Lifecycle.Event.ON_CREATE -> {
-                Log.d("asdfasdfasdf", "ON_CREATE")
                 // 절전모드 체크
                 powerSaveModeReceiver = object : BroadcastReceiver() {
                     override fun onReceive(context: Context?, intent: Intent?) {
@@ -94,7 +108,6 @@ fun PowerSaveModeExampleUI(
             }
 
             Lifecycle.Event.ON_DESTROY -> {
-                Log.d("asdfasdfasdf", "ON_DESTROY")
                 context.unregisterReceiver(powerSaveModeReceiver)
             }
 
@@ -139,6 +152,16 @@ fun PowerSaveModeExampleUI(
                     modifier = Modifier.padding(top = 10.dp),
                     text = "Now PowerSaveMode : ${isPowerSaveMode.value}"
                 )
+
+
+                Button(
+                    modifier = Modifier.padding(top = 10.dp),
+                    onClick = {
+                        WorkManager.getInstance(context).enqueue(uniqueWorkRequest)
+                        workerRequestId.value = uniqueWorkRequest.id
+                    }) {
+                    Text(text = "Call Unique WorkManager")
+                }
             }
         }
     }
