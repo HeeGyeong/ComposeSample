@@ -157,8 +157,12 @@ fun PowerSaveModeExampleUI(
                 Button(
                     modifier = Modifier.padding(top = 10.dp),
                     onClick = {
-                        WorkManager.getInstance(context).enqueue(uniqueWorkRequest)
-                        workerRequestId.value = uniqueWorkRequest.id
+                        if (isPowerSaveMode.value) {
+                            WorkManager.getInstance(context).enqueue(uniqueWorkRequest)
+                            workerRequestId.value = uniqueWorkRequest.id
+                        } else {
+                            startBatterySaverSetting(context)
+                        }
                     }) {
                     Text(text = "Call Unique WorkManager")
                 }
