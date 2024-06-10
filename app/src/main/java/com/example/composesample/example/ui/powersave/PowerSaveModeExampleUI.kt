@@ -33,12 +33,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
-import androidx.work.Data
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkManager
 import com.example.composesample.example.util.BackGroundWorker
 import com.example.composesample.example.util.OnLifecycleEvent
-import java.util.UUID
 
 private lateinit var powerSaveModeReceiver: BroadcastReceiver
 
@@ -50,13 +48,8 @@ fun PowerSaveModeExampleUI(
     val context = LocalContext.current
     val isPowerSaveMode = remember { mutableStateOf(false) }
 
-    val map = mapOf("workManagerData" to "workManagerData")
-    val data = Data.Builder().putAll(map).build()
-    val workerRequestId = remember { mutableStateOf<UUID?>(null) }
-
     val uniqueWorkTag = "unique_work_tag"
     val uniqueWorkRequest = OneTimeWorkRequest.Builder(BackGroundWorker::class.java)
-        .setInputData(data)
         .addTag(uniqueWorkTag)
         .build()
 
@@ -159,7 +152,6 @@ fun PowerSaveModeExampleUI(
                     onClick = {
                         if (isPowerSaveMode.value) {
                             WorkManager.getInstance(context).enqueue(uniqueWorkRequest)
-                            workerRequestId.value = uniqueWorkRequest.id
                         } else {
                             startBatterySaverSetting(context)
                         }
@@ -185,11 +177,7 @@ fun checkPowerSaveMode(
     onResultCallBack: (Boolean) -> Unit,
 ) {
     val powerManager = context.getSystemService(Context.POWER_SERVICE) as PowerManager
-    val isPowerSaveMode = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-        powerManager.isPowerSaveMode
-    } else {
-        false
-    }
+    val isPowerSaveMode = powerManager.isPowerSaveMode
 
     if (isPowerSaveMode) {
         Log.d("checkPowerSaveMode", "Power Save Mode is ON")
@@ -205,11 +193,7 @@ fun checkDozeMode(
     onResultCallBack: (Boolean) -> Unit,
 ) {
     val powerManager = context.getSystemService(Context.POWER_SERVICE) as PowerManager
-    val isDozeMode = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-        powerManager.isDeviceIdleMode
-    } else {
-        false
-    }
+    val isDozeMode = powerManager.isDeviceIdleMode
 
     onResultCallBack.invoke(isDozeMode)
 }
