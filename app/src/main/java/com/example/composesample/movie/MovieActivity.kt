@@ -7,8 +7,6 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.material.Scaffold
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.composesample.api.ApiInterface
 import com.example.composesample.ui.base.BottomBar
 import com.example.composesample.ui.base.DrawerItem
 import com.example.composesample.ui.base.SetSystemUI

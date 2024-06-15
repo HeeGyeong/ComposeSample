@@ -16,7 +16,7 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.composesample.model.MovieEntity
+import com.example.domain.model.MovieEntity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 

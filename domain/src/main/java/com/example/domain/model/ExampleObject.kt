@@ -1,4 +1,4 @@
-package com.example.composesample.model
+package com.example.domain.model
 
 data class ExampleObject(
     val title: String,

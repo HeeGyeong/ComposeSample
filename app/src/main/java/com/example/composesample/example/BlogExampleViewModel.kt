@@ -3,7 +3,7 @@ package com.example.composesample.example
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import com.example.composesample.example.util.ConstValue
-import com.example.composesample.model.ExampleObject
+import com.example.domain.model.ExampleObject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine

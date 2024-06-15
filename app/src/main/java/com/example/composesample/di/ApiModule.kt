@@ -1,9 +1,9 @@
 package com.example.composesample.di
 
 import android.util.Log
-import com.example.composesample.api.ApiClient
-import com.example.composesample.api.ApiInterface
-import com.example.composesample.api.PostApiInterface
+import com.example.data.api.ApiClient
+import com.example.data.api.ApiInterface
+import com.example.data.api.PostApiInterface
 import com.example.composesample.example.util.NetworkInterceptor
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient

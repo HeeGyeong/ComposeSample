@@ -1,4 +1,4 @@
-package com.example.composesample.api
+package com.example.data.api
 
 object ApiClient {
     const val BASE_URL = "https://openapi.naver.com/"

@@ -1,4 +1,4 @@
-package com.example.composesample.data
+package com.example.data.db
 
 import androidx.room.Dao
 import androidx.room.Delete

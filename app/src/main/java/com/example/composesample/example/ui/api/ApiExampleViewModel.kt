@@ -6,9 +6,9 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.example.composesample.api.PostApiInterface
+import com.example.data.api.PostApiInterface
 import com.example.composesample.example.util.NetworkStatusLiveData
-import com.example.composesample.model.PostData
+import com.example.domain.model.PostData
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback

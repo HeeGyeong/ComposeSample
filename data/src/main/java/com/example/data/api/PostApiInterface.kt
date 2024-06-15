@@ -1,6 +1,6 @@
-package com.example.composesample.api
+package com.example.data.api
 
-import com.example.composesample.model.PostData
+import com.example.domain.model.PostData
 import retrofit2.Call
 import retrofit2.http.GET
 
