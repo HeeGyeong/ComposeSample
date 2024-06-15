@@ -17,13 +17,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.example.composesample.cal.CalActivity
-import com.example.composesample.hash.HashTagActivity
-import com.example.composesample.main.MainActivity
-import com.example.composesample.movie.MovieActivity
-import com.example.composesample.progress.ProgressActivity
-import com.example.composesample.scope.ScopeActivity
-import com.example.composesample.sub.SubActivity
+import com.example.composesample.presentation.cal.CalActivity
+import com.example.composesample.presentation.hash.HashTagActivity
+import com.example.composesample.presentation.main.MainActivity
+import com.example.composesample.presentation.movie.MovieActivity
+import com.example.composesample.presentation.progress.ProgressActivity
+import com.example.composesample.presentation.scope.ScopeActivity
+import com.example.composesample.presentation.sub.SubActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 

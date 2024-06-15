@@ -1,7 +1,7 @@
 package com.example.composesample.di
 
-import com.example.composesample.example.ui.api.ApiExampleViewModel
-import com.example.composesample.movie.MovieViewModel
+import com.example.composesample.presentation.example.ui.api.ApiExampleViewModel
+import com.example.composesample.presentation.movie.MovieViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.module.Module
 import org.koin.core.qualifier.named

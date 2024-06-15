@@ -15,7 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ComposeSample">
         <activity
-            android:name=".main.MainActivity"
+            android:name=".presentation.main.MainActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.ComposeSample">
@@ -26,34 +26,34 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".sub.SubActivity"
+        <activity android:name=".presentation.sub.SubActivity"
             android:theme="@style/Theme.ComposeSample"/>
 
-        <activity android:name=".progress.ProgressActivity"
+        <activity android:name=".presentation.progress.ProgressActivity"
             android:theme="@style/Theme.ComposeSample"/>
 
-        <activity android:name=".cal.CalActivity"
+        <activity android:name=".presentation.cal.CalActivity"
             android:theme="@style/Theme.ComposeSample"/>
 
-        <activity android:name=".scope.ScopeActivity"
+        <activity android:name=".presentation.scope.ScopeActivity"
             android:theme="@style/Theme.ComposeSample"/>
 
-        <activity android:name=".scope.sub.RememberCoroutineActivity"
+        <activity android:name=".presentation.scope.sub.RememberCoroutineActivity"
             android:theme="@style/Theme.ComposeSample"/>
 
-        <activity android:name=".scope.sub.LaunchedEffectActivity"
+        <activity android:name=".presentation.scope.sub.LaunchedEffectActivity"
             android:theme="@style/Theme.ComposeSample"/>
 
-        <activity android:name=".scope.sub.ProduceStateActivity"
+        <activity android:name=".presentation.scope.sub.ProduceStateActivity"
             android:theme="@style/Theme.ComposeSample"/>
 
-        <activity android:name=".movie.MovieActivity"
+        <activity android:name=".presentation.movie.MovieActivity"
             android:theme="@style/Theme.ComposeSample"/>
 
-        <activity android:name=".hash.HashTagActivity"
+        <activity android:name=".presentation.hash.HashTagActivity"
             android:theme="@style/Theme.ComposeSample"/>
 
-        <activity android:name=".example.BlogExampleActivity"
+        <activity android:name=".presentation.example.BlogExampleActivity"
             android:theme="@style/Theme.ComposeSample"
             android:windowSoftInputMode="adjustResize" />
 

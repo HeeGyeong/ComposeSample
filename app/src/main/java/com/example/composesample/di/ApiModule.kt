@@ -4,7 +4,7 @@ import android.util.Log
 import com.example.data.api.ApiClient
 import com.example.data.api.ApiInterface
 import com.example.data.api.PostApiInterface
-import com.example.composesample.example.util.NetworkInterceptor
+import com.example.composesample.util.NetworkInterceptor
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
