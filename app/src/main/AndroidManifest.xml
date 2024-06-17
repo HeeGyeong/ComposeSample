@@ -15,7 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ComposeSample">
         <activity
-            android:name=".presentation.main.MainActivity"
+            android:name=".presentation.MainActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.ComposeSample">
@@ -26,31 +26,31 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".presentation.sub.SubActivity"
+        <activity android:name=".presentation.legacy.sub.SubActivity"
             android:theme="@style/Theme.ComposeSample"/>
 
-        <activity android:name=".presentation.progress.ProgressActivity"
+        <activity android:name=".presentation.legacy.progress.ProgressActivity"
             android:theme="@style/Theme.ComposeSample"/>
 
-        <activity android:name=".presentation.cal.CalActivity"
+        <activity android:name=".presentation.legacy.cal.CalActivity"
             android:theme="@style/Theme.ComposeSample"/>
 
-        <activity android:name=".presentation.scope.ScopeActivity"
+        <activity android:name=".presentation.legacy.scope.ScopeActivity"
             android:theme="@style/Theme.ComposeSample"/>
 
-        <activity android:name=".presentation.scope.sub.RememberCoroutineActivity"
+        <activity android:name=".presentation.legacy.scope.sub.RememberCoroutineActivity"
             android:theme="@style/Theme.ComposeSample"/>
 
-        <activity android:name=".presentation.scope.sub.LaunchedEffectActivity"
+        <activity android:name=".presentation.legacy.scope.sub.LaunchedEffectActivity"
             android:theme="@style/Theme.ComposeSample"/>
 
-        <activity android:name=".presentation.scope.sub.ProduceStateActivity"
+        <activity android:name=".presentation.legacy.scope.sub.ProduceStateActivity"
             android:theme="@style/Theme.ComposeSample"/>
 
-        <activity android:name=".presentation.movie.MovieActivity"
+        <activity android:name=".presentation.legacy.movie.MovieActivity"
             android:theme="@style/Theme.ComposeSample"/>
 
-        <activity android:name=".presentation.hash.HashTagActivity"
+        <activity android:name=".presentation.legacy.hash.HashTagActivity"
             android:theme="@style/Theme.ComposeSample"/>
 
         <activity android:name=".presentation.example.BlogExampleActivity"
