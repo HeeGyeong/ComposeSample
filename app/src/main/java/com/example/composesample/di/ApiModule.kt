@@ -78,6 +78,7 @@ val apiModule: Module = module {
     }
 
     single<ApiInterface>(named("api")) { get<Retrofit>().create(ApiInterface::class.java) }
+
     single<PostApiInterface>(named("post")) {
         get<Retrofit>(named("jsonplaceholder")).create(
             PostApiInterface::class.java
