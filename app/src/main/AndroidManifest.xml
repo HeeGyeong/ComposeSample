@@ -26,6 +26,7 @@
             </intent-filter>
         </activity>
 
+        <!-- Legacy sample activity -->
         <activity android:name=".presentation.legacy.sub.SubActivity"
             android:theme="@style/Theme.ComposeSample"/>
 
@@ -53,6 +54,7 @@
         <activity android:name=".presentation.legacy.hash.HashTagActivity"
             android:theme="@style/Theme.ComposeSample"/>
 
+        <!-- Blog example activity -->
         <activity android:name=".presentation.example.BlogExampleActivity"
             android:theme="@style/Theme.ComposeSample"
             android:windowSoftInputMode="adjustResize" />

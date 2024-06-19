@@ -1,6 +1,7 @@
 package com.example.composesample.application
 
 import android.app.Application
+import com.example.composesample.di.CleanArchitectureAddModules
 import com.example.composesample.di.KoinModules
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.loadKoinModules
@@ -13,6 +14,7 @@ class BaseApplication : Application() {
         startKoin {
             androidContext(this@BaseApplication)
             loadKoinModules(KoinModules)
+            loadKoinModules(CleanArchitectureAddModules)
         }
     }
 }
