@@ -36,15 +36,18 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.data.db.UserData
+import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
+import com.example.composesample.db.UserData
+import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun DataCacheExampleUI(
     onBackButtonClick: () -> Unit
 ) {
-    val dataCacheViewModel = viewModel<DataCacheViewModel>()
+    val viewModelStoreOwner = checkNotNull(LocalViewModelStoreOwner.current)
+    val dataCacheViewModel =
+        koinViewModel<DataCacheViewModel>(owner = viewModelStoreOwner)
     val textState = remember { mutableStateOf("") }
     // 저장 된 데이터를 그대로 가져옴. textState의 default 값은 빈 문자열이므로, 전체를 가져온다.
     val userList =

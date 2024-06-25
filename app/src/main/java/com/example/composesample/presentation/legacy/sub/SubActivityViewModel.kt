@@ -3,15 +3,16 @@ package com.example.composesample.presentation.legacy.sub
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.data.db.ItemDTO
-import com.example.data.db.RoomSingleton
+import com.example.composesample.db.ItemDTO
+import com.example.composesample.db.RoomSingleton
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
-class SubActivityViewModel(application: Application) : AndroidViewModel(application) {
-
-    private val db: RoomSingleton = RoomSingleton.getInstance(application)
+class SubActivityViewModel(
+    application: Application,
+    private val db: RoomSingleton
+) : AndroidViewModel(application) {
 
     fun search(startsWith: String): Flow<List<ItemDTO>> {
         return db.itemDao().searchData(startsWith)

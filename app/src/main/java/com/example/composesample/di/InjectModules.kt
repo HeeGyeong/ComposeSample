@@ -10,5 +10,6 @@ val KoinModules = listOf(
 // Clean Architecture에 추가되는 Module
 val CleanArchitectureAddModules = listOf(
     RepositoryModule,
-    UseCaseModule
+    UseCaseModule,
+    databaseModule
 )

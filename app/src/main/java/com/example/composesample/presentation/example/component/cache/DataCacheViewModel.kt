@@ -3,15 +3,16 @@ package com.example.composesample.presentation.example.component.cache
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.data.db.RoomSingleton
-import com.example.data.db.UserData
+import com.example.composesample.db.RoomSingleton
+import com.example.composesample.db.UserData
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
-class DataCacheViewModel(application: Application) : AndroidViewModel(application) {
-
-    private val db: RoomSingleton = RoomSingleton.getInstance(application)
+class DataCacheViewModel(
+    application: Application,
+    private val db: RoomSingleton
+) : AndroidViewModel(application) {
 
     fun searchUserName(name: String): Flow<List<UserData>> {
         return db.exampleDao().searchData(name)
