@@ -72,15 +72,6 @@ fun exampleObjectList(): ArrayList<ExampleObject> {
 
     insertExampleObject.add(
         ExampleObject(
-            title = "Work Manager Example",
-            description = "WorkManager를 사용하여 Background에서 작업을 수행해보는 예제.",
-            blogUrl = "",
-            exampleType = ConstValue.WorkManagerExample
-        )
-    )
-
-    insertExampleObject.add(
-        ExampleObject(
             title = "Pull to Refresh example",
             description = "Compose 환경에서 Pull to Refresh를 구현해보는 예제",
             blogUrl = "https://heegs.tistory.com/154",
@@ -202,6 +193,15 @@ fun exampleObjectList(): ArrayList<ExampleObject> {
             description = "절전 모드 설정과 절전 모드 시 고려해야 할 몇 가지 문제.",
             blogUrl = "https://heegs.tistory.com/165",
             exampleType = ConstValue.PowerSaveModeExample
+        )
+    )
+
+    insertExampleObject.add(
+        ExampleObject(
+            title = "Work Manager Example",
+            description = "WorkManager를 사용하여 Background에서 작업을 수행해보는 예제.",
+            blogUrl = "",
+            exampleType = ConstValue.WorkManagerExample
         )
     )
 

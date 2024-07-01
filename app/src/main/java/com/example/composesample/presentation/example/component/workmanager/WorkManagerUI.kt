@@ -22,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.work.BackoffPolicy
 import androidx.work.Data
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequest
@@ -44,13 +45,23 @@ fun WorkManagerUI(
     val uniqueWorkTag = "unique_work_tag"
     val uniqueWorkRequest = OneTimeWorkRequest.Builder(BackGroundWorker::class.java)
         .setInputData(data)
+        .setBackoffCriteria(
+            BackoffPolicy.EXPONENTIAL,
+            OneTimeWorkRequest.MIN_BACKOFF_MILLIS,
+            TimeUnit.MILLISECONDS
+        )
         .addTag(uniqueWorkTag)
         .build()
 
     val uniqueReplaceWorkTag = "unique_replace_work_tag"
     val uniqueReplaceWorkRequest = OneTimeWorkRequest.Builder(BackGroundWorker::class.java)
         .setInputData(data)
-        .setInitialDelay(5, TimeUnit.SECONDS)
+        .setInitialDelay(2, TimeUnit.SECONDS)
+        .setBackoffCriteria(
+            BackoffPolicy.LINEAR,
+            OneTimeWorkRequest.MIN_BACKOFF_MILLIS,
+            TimeUnit.MILLISECONDS
+        )
         .addTag(uniqueReplaceWorkTag)
         .build()
 
@@ -107,6 +118,7 @@ fun WorkManagerUI(
             Button(onClick = {
                 WorkManager.getInstance(context).enqueueUniqueWork(
                     uniqueReplaceWorkTag,
+//                    ExistingWorkPolicy.KEEP,
                     ExistingWorkPolicy.REPLACE,
                     uniqueReplaceWorkRequest
                 )
