@@ -16,17 +16,22 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.work.BackoffPolicy
 import androidx.work.Data
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequest
 import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import com.example.composesample.util.BackGroundWorker
 import java.util.UUID
@@ -38,7 +43,8 @@ fun WorkManagerUI(
     onBackButtonClick: () -> Unit
 ) {
     val context = LocalContext.current
-    val map = mapOf("workManagerData" to "workManagerData")
+    val lifecycleContext = LocalLifecycleOwner.current
+    val map = mapOf("workManagerData" to "워커에서 사용할 데이터 입니다.")
     val data = Data.Builder().putAll(map).build()
     val workerRequestId = remember { mutableStateOf<UUID?>(null) }
 
@@ -64,6 +70,31 @@ fun WorkManagerUI(
         )
         .addTag(uniqueReplaceWorkTag)
         .build()
+
+    var workerResponseText by remember { mutableStateOf("Stop Worker") }
+
+    WorkManager.getInstance(context).getWorkInfoByIdLiveData(uniqueReplaceWorkRequest.id)
+        .observe(lifecycleContext) { workInfo ->
+            if (workInfo != null) {
+                when (workInfo.state) {
+                    WorkInfo.State.RUNNING -> {
+                        val progress = workInfo.progress.getInt("progress", 0)
+                        workerResponseText = "Progress: $progress"
+                    }
+                    WorkInfo.State.SUCCEEDED -> {
+                        val finalProgress = workInfo.outputData.getInt("finalProgress", 0)
+                        workerResponseText = "Work completed. Final progress: $finalProgress"
+                    }
+                    WorkInfo.State.FAILED -> {
+                        workerResponseText = "Work failed"
+                    }
+                    else -> {
+                        // 다른 상태 처리
+                        workerResponseText = "else  case"
+                    }
+                }
+            }
+        }
 
     LazyColumn(modifier = Modifier.padding(horizontal = 20.dp)) {
         stickyHeader {
@@ -125,6 +156,14 @@ fun WorkManagerUI(
             }) {
                 Text(text = "Call Unique Replace WorkManager")
             }
+
+            Spacer(modifier = Modifier.height(10.dp))
+
+            Text(
+                text = workerResponseText,
+                fontSize = 16.sp,
+                color = Color.White
+            )
         }
     }
 }

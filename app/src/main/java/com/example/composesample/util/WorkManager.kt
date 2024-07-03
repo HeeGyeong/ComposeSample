@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
+import androidx.work.workDataOf
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -17,72 +18,84 @@ class BackGroundWorker(
     override suspend fun doWork(): Result {
         // 백그라운드에서 수행할 작업을 여기에 작성
         val workManagerData = inputData.getString("workManagerData") ?: ""
-        Log.d("doWork", "in doWork() : start $workManagerData")
+        Log.d("doWork", "start doWork() : $workManagerData")
 
+        var totalProgress = 0
 
         // Thread Check Log
         Log.d("doWork", "Thread check 1 : ${Thread.currentThread().name}")
         for (item in 0..1) {
-            Log.d("doWork", "1 :: doWork() time : $item")
             delay(1000L)
+            totalProgress++
+            setProgressAsync(workDataOf("progress" to totalProgress))
         }
-        Log.d("doWork", "1 :: doWork() normal : fin")
+
+        totalProgress = 10
 
         withContext(Dispatchers.IO) {
             Log.d("doWork", "Thread check 2 : ${Thread.currentThread().name}")
             for (item in 0..1) {
-                Log.d("doWork", "2 :: doWork() withContext time : $item")
                 delay(1000L)
+                totalProgress++
+                setProgressAsync(workDataOf("progress" to totalProgress))
             }
-            Log.d("doWork", "2 :: doWork() withContext : fin")
+            totalProgress = 200
 
             launch {
                 Log.d("doWork", "Thread check 3 : ${Thread.currentThread().name}")
                 for (item in 0..1) {
-                    Log.d("doWork", "3 :: doWork() launch time : $item")
                     delay(1000L)
+                    totalProgress++
+                    setProgressAsync(workDataOf("progress" to totalProgress))
                 }
-                Log.d("doWork", "3 :: doWork() launch : fin")
+                totalProgress = 3000
             }
         }
 
         withContext(Dispatchers.IO) {
             Log.d("doWork", "Thread check 4 : ${Thread.currentThread().name}")
             for (item in 0..1) {
-                Log.d("doWork", "4 :: doWork() withContext time : $item")
                 delay(1000L)
+                totalProgress++
+                setProgressAsync(workDataOf("progress" to totalProgress))
             }
-            Log.d("doWork", "4 :: doWork() withContext : fin")
+            totalProgress = 40000
 
             launch {
                 Log.d("doWork", "Thread check 5 : ${Thread.currentThread().name}")
+
+                // 4의 for문
                 for (item in 0..1) {
-                    Log.d("doWork", "5 :: doWork() launch time : $item")
                     delay(1000L)
+                    totalProgress++
+                    setProgressAsync(workDataOf("progress" to totalProgress))
                 }
-                Log.d("doWork", "5 :: doWork() launch : fin")
+                totalProgress = 500000
             }
 
             withContext(Dispatchers.IO) {
                 Log.d("doWork", "Thread check 6 : ${Thread.currentThread().name}")
+
+                // 5의 for문
                 for (item in 0..1) {
-                    Log.d("doWork", "6 :: doWork() withContext time : $item")
                     delay(1000L)
+                    totalProgress++
+                    setProgressAsync(workDataOf("progress" to totalProgress))
                 }
-                Log.d("doWork", "6 :: doWork() withContext : fin")
+                totalProgress = 6000000
 
                 launch {
                     Log.d("doWork", "Thread check 7 : ${Thread.currentThread().name}")
                     for (item in 0..1) {
-                        Log.d("doWork", "7 :: doWork() launch time : $item")
                         delay(1000L)
+                        totalProgress++
+                        setProgressAsync(workDataOf("progress" to totalProgress))
                     }
-                    Log.d("doWork", "7 :: doWork() launch : fin")
                 }
             }
         }
 
-        Log.d("doWork", "doWork() : fin")
-        return Result.success()
+        // withContext(Dispatchers.IO) 안에 있는 launch 와 withContext(Dispatchers.IO)는 병렬로 수행된다.
+        return Result.success(workDataOf("finalProgress" to totalProgress))
     }
 }
