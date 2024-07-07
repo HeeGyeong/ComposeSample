@@ -79,7 +79,18 @@ fun WorkManagerUI(
                 when (workInfo.state) {
                     WorkInfo.State.RUNNING -> {
                         val progress = workInfo.progress.getInt("progress", 0)
-                        workerResponseText = "Progress: $progress"
+
+                        val progressText = when {
+                            progress < 10 -> "Normal : $progress"
+                            progress < 200 -> "first in IO : $progress"
+                            progress < 3000 -> "first in IO in launch : $progress"
+                            progress < 40000 -> "second in IO : $progress"
+                            progress < 500000 -> "second in IO in launch : $progress"
+                            progress < 6000000 -> "second in IO in IO : $progress"
+                            else -> "second in IO in IO in launch : $progress"
+                        }
+
+                        workerResponseText = "Progress: $progressText"
                     }
                     WorkInfo.State.SUCCEEDED -> {
                         val finalProgress = workInfo.outputData.getInt("finalProgress", 0)
