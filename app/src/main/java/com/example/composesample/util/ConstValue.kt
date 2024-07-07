@@ -23,5 +23,10 @@ class ConstValue {
         const val DataCacheExample = "dataCacheExample"
         const val ApiDisconnectExample = "apiDisconnectExample"
         const val PowerSaveModeExample = "powerSaveModeExample"
+
+        // SubCategory
+        const val FlingBehavior = "flingBehaviorExampleList"
+        const val BottomSheet = "bottomSheetExampleList"
+        const val NavigationDraw = "navigationDrawExampleList"
     }
 }

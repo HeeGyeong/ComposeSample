@@ -148,6 +148,7 @@ fun BlogExampleCase(
     val exampleObjectList = blogExampleViewModel.exampleObjectList.collectAsState().value
     val searchText by blogExampleViewModel.searchText.collectAsState()
     val searchExampleList = blogExampleViewModel.searchExampleList.collectAsState(listOf()).value
+    val subCategoryList = blogExampleViewModel.subCategoryList.collectAsState(listOf()).value
 
     LaunchedEffect(key1 = Unit, block = {
         blogExampleViewModel.reverseExampleList()
@@ -162,7 +163,13 @@ fun BlogExampleCase(
                 MainHeader(
                     title = "Compose Function Sample",
                     onBackIconClicked = {
-                        (context as Activity).finish()
+                        if (subCategoryList.isNotEmpty()) {
+                            blogExampleViewModel.setSubCategoryList(
+                                filter = ""
+                            )
+                        } else {
+                            (context as Activity).finish()
+                        }
                     }
                 )
                 Column(
@@ -217,16 +224,46 @@ fun BlogExampleCase(
                 }
             }
 
-            if (searchText.isEmpty()) {
-                items(exampleObjectList) { exampleObject ->
+            if (subCategoryList.isNotEmpty()) {
+                items(subCategoryList) { exampleObject ->
                     Column(modifier = Modifier.fillMaxWidth()) {
                         ExampleCardSection(
                             context = context,
+                            type = exampleObject.exampleType,
+                            subCategory = exampleObject.subCategory,
                             exampleTitle = exampleObject.title,
                             exampleDescription = exampleObject.description,
                             exampleBlogUrl = exampleObject.blogUrl,
                             onButtonClick = {
                                 exampleType.value = exampleObject.exampleType
+                                blogExampleViewModel.setSubCategoryList(
+                                    filter = exampleObject.subCategory
+                                )
+                            },
+                            noBlogUrlEvent = {
+                                blogExampleViewModel.sendToastMessage("블로그 글이 존재하지 않는 예제입니다.\n코드로 확인해주세요!")
+                            }
+                        )
+                    }
+                }
+            } else if (searchText.isEmpty()) {
+                items(exampleObjectList) { exampleObject ->
+                    Column(modifier = Modifier.fillMaxWidth()) {
+                        ExampleCardSection(
+                            context = context,
+                            type = exampleObject.exampleType,
+                            subCategory = exampleObject.subCategory,
+                            exampleTitle = exampleObject.title,
+                            exampleDescription = exampleObject.description,
+                            exampleBlogUrl = exampleObject.blogUrl,
+                            onButtonClick = {
+                                if (exampleObject.subCategory.isNotEmpty()) {
+                                    blogExampleViewModel.setSubCategoryList(
+                                        filter = exampleObject.subCategory
+                                    )
+                                } else {
+                                    exampleType.value = exampleObject.exampleType
+                                }
                             },
                             noBlogUrlEvent = {
                                 blogExampleViewModel.sendToastMessage("블로그 글이 존재하지 않는 예제입니다.\n코드로 확인해주세요!")
@@ -239,11 +276,19 @@ fun BlogExampleCase(
                     Column(modifier = Modifier.fillMaxWidth()) {
                         ExampleCardSection(
                             context = context,
+                            type = exampleObject.exampleType,
+                            subCategory = exampleObject.subCategory,
                             exampleTitle = exampleObject.title,
                             exampleDescription = exampleObject.description,
                             exampleBlogUrl = exampleObject.blogUrl,
                             onButtonClick = {
-                                exampleType.value = exampleObject.exampleType
+                                if (exampleObject.subCategory.isNotEmpty()) {
+                                    blogExampleViewModel.setSubCategoryList(
+                                        filter = exampleObject.subCategory
+                                    )
+                                } else {
+                                    exampleType.value = exampleObject.exampleType
+                                }
                             },
                             noBlogUrlEvent = {
                                 blogExampleViewModel.sendToastMessage("블로그 글이 존재하지 않는 예제입니다.\n코드로 확인해주세요!")
@@ -279,6 +324,8 @@ fun BlogExampleCase(
 @Composable
 fun ExampleCardSection(
     context: Context,
+    type: String,
+    subCategory: String,
     exampleTitle: String,
     exampleDescription: String,
     exampleBlogUrl: String,
@@ -334,7 +381,11 @@ fun ExampleCardSection(
                             modifier = Modifier
                                 .padding(horizontal = 10.dp, vertical = 5.dp)
                                 .align(Alignment.CenterHorizontally),
-                            text = "Sample UI",
+                            text = if (subCategory.isEmpty() || !subCategory.contains(type)) {
+                                "Sample UI"
+                            } else {
+                                "Sample List"
+                            },
                             color = Color.Black,
                             style = getTextStyle(18)
                         )

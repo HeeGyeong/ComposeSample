@@ -1,6 +1,7 @@
 package com.example.composesample.presentation.example
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import com.example.composesample.util.ConstValue
 import com.example.domain.model.ExampleObject
@@ -20,9 +21,24 @@ class BlogExampleViewModel(application: Application) : AndroidViewModel(applicat
     }
 
     val exampleObjectList = MutableStateFlow(listOf<ExampleObject>())
+    val subCategoryList = MutableStateFlow(listOf<ExampleObject>())
 
     fun initExampleObject() {
         exampleObjectList.update { exampleObjectList() }
+    }
+
+    fun setSubCategoryList(
+        filter: String,
+    ) {
+        Log.d("asdfasdfasdf", "before subList : ${subCategoryList.value}")
+        subCategoryList.update {
+            subCategoryList()
+                .filter {
+                    it.subCategory == filter
+                }
+        }
+
+        Log.d("asdfasdfasdf", "after subList : ${subCategoryList.value}")
     }
 
     private val _searchText = MutableStateFlow("")

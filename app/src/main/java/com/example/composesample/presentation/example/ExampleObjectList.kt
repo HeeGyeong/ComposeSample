@@ -90,64 +90,31 @@ fun exampleObjectList(): ArrayList<ExampleObject> {
 
     insertExampleObject.add(
         ExampleObject(
+            subCategory = ConstValue.FlingBehavior,
             title = "LazyColumn FlingBehavior Example",
             description = "LazyList에서 스크롤 이벤트를 커스텀하기 위해 FlingBehavior를 사용해보는 예제",
             blogUrl = "https://heegs.tistory.com/156",
-            exampleType = ConstValue.FlingBehaviorExample
+            exampleType = ConstValue.FlingBehavior
         )
     )
 
     insertExampleObject.add(
         ExampleObject(
-            title = "LazyColumn FlingBehavior Example",
-            description = "LazyList에서 스크롤 이벤트를 커스텀하기 위해 FlingBehavior를 사용해보는 예제",
+            subCategory = ConstValue.BottomSheet,
+            title = "BottomSheet Example",
+            description = "다양한 방법으로 구현해보는 BottomSheet 예제",
             blogUrl = "https://heegs.tistory.com/156",
-            exampleType = ConstValue.FlingBehaviorExample
+            exampleType = ConstValue.BottomSheet
         )
     )
 
     insertExampleObject.add(
         ExampleObject(
-            title = "BottomSheetScaffold Example",
-            description = "다양한 방법으로 구현해보는 BottomSheet - BottomSheetScaffold 예제",
-            blogUrl = "https://heegs.tistory.com/158",
-            exampleType = ConstValue.BottomSheetExample
-        )
-    )
-
-    insertExampleObject.add(
-        ExampleObject(
-            title = "Modal Bottom Sheet Example",
-            description = "다양한 방법으로 구현해보는 BottomSheet - ModalBottomSheetLayout 예제",
-            blogUrl = "https://heegs.tistory.com/158",
-            exampleType = ConstValue.ModalBottomSheetExample
-        )
-    )
-
-    insertExampleObject.add(
-        ExampleObject(
-            title = "Custom Bottom Sheet Example",
-            description = "다양한 방법으로 구현해보는 BottomSheet - CustomBottomSheet 예제",
-            blogUrl = "https://heegs.tistory.com/158",
-            exampleType = ConstValue.CustomBottomSheetExample
-        )
-    )
-
-    insertExampleObject.add(
-        ExampleObject(
-            title = "ScaffoldDrawExample Example",
-            description = "다양한 방법으로 구현해보는 NavigationDraw - ScaffoldDrawExample",
-            blogUrl = "https://heegs.tistory.com/160",
-            exampleType = ConstValue.ScaffoldDrawExample
-        )
-    )
-
-    insertExampleObject.add(
-        ExampleObject(
-            title = "ModalDrawExample Example",
-            description = "다양한 방법으로 구현해보는 NavigationDraw - ModalDrawExample",
-            blogUrl = "https://heegs.tistory.com/160",
-            exampleType = ConstValue.ModalDrawExample
+            subCategory = ConstValue.NavigationDraw,
+            title = "NavigationDraw Example",
+            description = "다양한 방법으로 구현해보는 NavigationDraw 예제",
+            blogUrl = "https://heegs.tistory.com/156",
+            exampleType = ConstValue.NavigationDraw
         )
     )
 
@@ -202,6 +169,83 @@ fun exampleObjectList(): ArrayList<ExampleObject> {
             description = "WorkManager를 사용하여 Background에서 작업을 수행해보는 예제.",
             blogUrl = "",
             exampleType = ConstValue.WorkManagerExample
+        )
+    )
+
+    return insertExampleObject
+}
+
+fun subCategoryList(): ArrayList<ExampleObject> {
+    val insertExampleObject = ArrayList<ExampleObject>()
+    insertExampleObject.clear()
+
+    insertExampleObject.add(
+        ExampleObject(
+            subCategory = ConstValue.FlingBehavior,
+            title = "LazyColumn FlingBehavior Example",
+            description = "LazyList에서 스크롤 이벤트를 커스텀하기 위해 FlingBehavior를 사용해보는 예제",
+            blogUrl = "https://heegs.tistory.com/156",
+            exampleType = ConstValue.FlingBehaviorExample
+        )
+    )
+
+    insertExampleObject.add(
+        ExampleObject(
+            subCategory = ConstValue.FlingBehavior,
+            title = "LazyColumn FlingBehavior Example",
+            description = "LazyList에서 스크롤 이벤트를 커스텀하기 위해 FlingBehavior를 사용해보는 예제",
+            blogUrl = "https://heegs.tistory.com/156",
+            exampleType = ConstValue.FlingBehaviorExample
+        )
+    )
+
+    insertExampleObject.add(
+        ExampleObject(
+            subCategory = ConstValue.BottomSheet,
+            title = "BottomSheetScaffold Example",
+            description = "다양한 방법으로 구현해보는 BottomSheet - BottomSheetScaffold 예제",
+            blogUrl = "https://heegs.tistory.com/158",
+            exampleType = ConstValue.BottomSheetExample
+        )
+    )
+
+    insertExampleObject.add(
+        ExampleObject(
+            subCategory = ConstValue.BottomSheet,
+            title = "Modal Bottom Sheet Example",
+            description = "다양한 방법으로 구현해보는 BottomSheet - ModalBottomSheetLayout 예제",
+            blogUrl = "https://heegs.tistory.com/158",
+            exampleType = ConstValue.ModalBottomSheetExample
+        )
+    )
+
+    insertExampleObject.add(
+        ExampleObject(
+            subCategory = ConstValue.BottomSheet,
+            title = "Custom Bottom Sheet Example",
+            description = "다양한 방법으로 구현해보는 BottomSheet - CustomBottomSheet 예제",
+            blogUrl = "https://heegs.tistory.com/158",
+            exampleType = ConstValue.CustomBottomSheetExample
+        )
+    )
+
+    insertExampleObject.add(
+        ExampleObject(
+            subCategory = ConstValue.NavigationDraw,
+            title = "ScaffoldDrawExample Example",
+            description = "다양한 방법으로 구현해보는 NavigationDraw - ScaffoldDrawExample",
+            blogUrl = "https://heegs.tistory.com/160",
+            exampleType = ConstValue.ScaffoldDrawExample
+        )
+    )
+
+    insertExampleObject.add(
+        ExampleObject(
+            subCategory = ConstValue.NavigationDraw,
+            title = "ModalDrawExample Example",
+            description = "다양한 방법으로 구현해보는 NavigationDraw - ModalDrawExample",
+            blogUrl = "https://heegs.tistory.com/160",
+            exampleType = ConstValue.ModalDrawExample
         )
     )
 
