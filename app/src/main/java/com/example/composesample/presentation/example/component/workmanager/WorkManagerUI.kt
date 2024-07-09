@@ -31,6 +31,8 @@ import androidx.work.Data
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequest
 import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.PeriodicWorkRequest
+import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import com.example.composesample.util.BackGroundWorker
@@ -58,6 +60,13 @@ fun WorkManagerUI(
         )
         .addTag(uniqueWorkTag)
         .build()
+
+    // 반복해서 작업을 수행하는 WorkRequest
+    val periodicWorkRequest =
+        PeriodicWorkRequestBuilder<BackGroundWorker>(
+            repeatInterval = 1,
+            repeatIntervalTimeUnit = TimeUnit.HOURS
+        ).build()
 
     val uniqueReplaceWorkTag = "unique_replace_work_tag"
     val uniqueReplaceWorkRequest = OneTimeWorkRequest.Builder(BackGroundWorker::class.java)

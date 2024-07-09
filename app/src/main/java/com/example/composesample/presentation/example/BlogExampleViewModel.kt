@@ -30,15 +30,12 @@ class BlogExampleViewModel(application: Application) : AndroidViewModel(applicat
     fun setSubCategoryList(
         filter: String,
     ) {
-        Log.d("asdfasdfasdf", "before subList : ${subCategoryList.value}")
         subCategoryList.update {
             subCategoryList()
                 .filter {
                     it.subCategory == filter
                 }
         }
-
-        Log.d("asdfasdfasdf", "after subList : ${subCategoryList.value}")
     }
 
     private val _searchText = MutableStateFlow("")
