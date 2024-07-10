@@ -160,6 +160,7 @@ fun WorkManagerUI(
 
             Button(onClick = {
                 workerRequestId.value?.let { WorkManager.getInstance(context).cancelWorkById(it) }
+//                WorkManager.getInstance(context).cancelAllWorkByTag(uniqueReplaceWorkTag)
             }) {
                 Text(text = "Stop Unique WorkManager")
             }
@@ -168,11 +169,11 @@ fun WorkManagerUI(
 
             Button(onClick = {
                 WorkManager.getInstance(context).enqueueUniqueWork(
-                    uniqueReplaceWorkTag,
-//                    ExistingWorkPolicy.KEEP,
+                    "uniqueWorkNameSample",
                     ExistingWorkPolicy.REPLACE,
                     uniqueReplaceWorkRequest
                 )
+//                WorkManager.getInstance(context).cancelUniqueWork("uniqueWorkNameSample")
             }) {
                 Text(text = "Call Unique Replace WorkManager")
             }
@@ -184,6 +185,15 @@ fun WorkManagerUI(
                 fontSize = 16.sp,
                 color = Color.White
             )
+
+            Button(onClick = {
+                WorkManager.getInstance(context)
+                    .beginWith(uniqueReplaceWorkRequest)
+                    .then(uniqueReplaceWorkRequest)
+                    .enqueue()
+            }) {
+                Text(text = "The operation has not been confirmed. This is just sample code.")
+            }
         }
     }
 }
