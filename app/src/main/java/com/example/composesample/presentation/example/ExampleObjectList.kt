@@ -165,9 +165,9 @@ fun exampleObjectList(): ArrayList<ExampleObject> {
 
     insertExampleObject.add(
         ExampleObject(
-            title = "Work Manager Example",
-            description = "WorkManager를 사용하여 Background에서 작업을 수행해보는 예제.",
-            blogUrl = "",
+            title = "WorkManager Example",
+            description = "WorkManager를 사용하는 방법과, 다양한 옵션에 대해 알아보기 위한 예제.",
+            blogUrl = "https://heegs.tistory.com/166",
             exampleType = ConstValue.WorkManagerExample
         )
     )
