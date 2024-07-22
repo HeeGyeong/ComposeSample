@@ -23,6 +23,7 @@ class ConstValue {
         const val DataCacheExample = "dataCacheExample"
         const val ApiDisconnectExample = "apiDisconnectExample"
         const val PowerSaveModeExample = "powerSaveModeExample"
+        const val DragAndDropExample = "dragAndDropExample"
 
         // SubCategory
         const val FlingBehavior = "flingBehaviorExampleList"

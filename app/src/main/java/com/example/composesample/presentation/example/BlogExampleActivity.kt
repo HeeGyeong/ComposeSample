@@ -100,9 +100,11 @@ import com.example.composesample.util.ConstValue.Companion.WorkManagerExample
 import com.example.composesample.util.Toast
 import com.example.composesample.util.noRippleClickable
 import com.example.composesample.presentation.MainHeader
+import com.example.composesample.presentation.example.component.drag.DragAndDropExampleUI
 import com.example.composesample.presentation.getTextStyle
 import com.example.composesample.presentation.openWebPage
 import com.example.composesample.presentation.legacy.base.SetSystemUI
+import com.example.composesample.util.ConstValue.Companion.DragAndDropExample
 
 @ExperimentalAnimationApi
 class BlogExampleActivity : ComponentActivity() {
@@ -548,6 +550,10 @@ fun ExampleCaseUI(
 
                 PowerSaveModeExample -> {
                     PowerSaveModeExampleUI(onBackEvent)
+                }
+
+                DragAndDropExample -> {
+                    DragAndDropExampleUI(onBackEvent)
                 }
 
                 else -> {
