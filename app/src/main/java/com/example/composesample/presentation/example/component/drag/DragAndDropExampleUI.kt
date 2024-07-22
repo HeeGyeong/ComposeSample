@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -30,6 +31,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import kotlin.math.sign
 
@@ -42,6 +44,9 @@ fun DragAndDropExampleUI(
     var draggedItemIndex by remember { mutableStateOf<Int?>(null) }
     var dragOffset by remember { mutableStateOf(0f) }
 
+    val density = LocalDensity.current
+    val itemHeight = 64.dp
+    val itemHeightPx = with(density) { itemHeight.toPx() }
 
     LazyColumn(
         modifier = Modifier
@@ -87,7 +92,7 @@ fun DragAndDropExampleUI(
                             add(targetIndex, removeAt(currentIndex))
                         }
                         draggedItemIndex = targetIndex
-                        dragOffset -= 220f * (targetIndex - currentIndex).sign // 아이템 높이에 따라 조정
+                        dragOffset -= itemHeightPx * (targetIndex - currentIndex).sign // 아이템 높이에 따라 조정
                     }
                 }
             )
@@ -106,6 +111,7 @@ fun DraggableItem(
     Card(
         modifier = Modifier
             .fillMaxWidth()
+            .height(64.dp)
             .padding(8.dp)
             .composed {
                 Modifier
