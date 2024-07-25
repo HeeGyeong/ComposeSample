@@ -89,21 +89,25 @@ fun DragAndDropExampleUI(
                     dragOffset = 0f
                 },
                 onDrag = { offset ->
-                    // offset에 따른 item index 변경 로직
                     dragOffset += offset.y
 
                     val firstVisibleItemIndex = listState.firstVisibleItemIndex
                     val lastVisibleItemIndex =
                         firstVisibleItemIndex + listState.layoutInfo.visibleItemsInfo.size - 1
+                    val centerIndex = (firstVisibleItemIndex + lastVisibleItemIndex) / 2
+
                     val currentIndex = draggedItemIndex ?: return@DraggableItem
                     val targetIndex =
                         (currentIndex + (dragOffset / itemHeightPx).toInt()).coerceIn(
                             0,
                             items.lastIndex
                         )
+
+                    // dragOffset의 변화량을 조절. itemHeightPx을 그대로 사용하기엔 변화량이 너무 크다.
                     val changeDragOffset =
                         (itemHeightPx - itemHeightPx / 10) * (targetIndex - currentIndex).sign
 
+                    // drag를 통해 index가 변화하면 list를 갱신한다.
                     if (targetIndex != currentIndex) {
                         items = items.toMutableList().apply {
                             add(targetIndex, removeAt(currentIndex))
@@ -112,18 +116,20 @@ fun DragAndDropExampleUI(
                         dragOffset -= changeDragOffset
                     }
 
-                    // 자동 스크롤 로직 -> 기본적인 자연스러운 스크롤. 최상단 아이템, 최하단 아이템에서 문제 발생
                     coroutineScope.launch {
                         if (draggedItemIndex != null) {
                             // 아래로 스크롤
                             if (dragOffset > 0) {
-                                if (draggedItemIndex!! >= (firstVisibleItemIndex + lastVisibleItemIndex) / 2) {
+                                // 아래로 스크롤을 시작하는 기준점
+                                if (draggedItemIndex!! >= centerIndex) {
+                                    // 스크롤되는 정도가 offset의 변화보다 작아야 더 자연스러운 애니메이션을 보여준다.
                                     listState.scrollBy(changeDragOffset / 2)
                                 }
                             }
                             // 위로 스크롤
                             else {
-                                if (draggedItemIndex!! <= (firstVisibleItemIndex + lastVisibleItemIndex) / 2) {
+                                // 위로 스크롤을 시작하는 기준점
+                                if (draggedItemIndex!! <= centerIndex) {
                                     listState.scrollBy(changeDragOffset / 2)
                                 }
                             }
