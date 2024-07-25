@@ -2,8 +2,6 @@ package com.example.composesample.presentation.example.component.drag
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.animateScrollBy
-import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.gestures.detectDragGesturesAfterLongPress
 import androidx.compose.foundation.gestures.scrollBy
 import androidx.compose.foundation.layout.Box
@@ -35,7 +33,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import kotlin.math.sign
@@ -52,7 +49,6 @@ fun DragAndDropExampleUI(
     val density = LocalDensity.current
     val itemHeight = 64.dp
     val itemHeightPx = with(density) { itemHeight.toPx() }
-    val moveHeight = 200
 
     val listState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
@@ -93,55 +89,46 @@ fun DragAndDropExampleUI(
                     dragOffset = 0f
                 },
                 onDrag = { offset ->
+                    // offset에 따른 item index 변경 로직
                     dragOffset += offset.y
 
-                    // offset에 따른 item index 변경 로직
+                    val firstVisibleItemIndex = listState.firstVisibleItemIndex
+                    val lastVisibleItemIndex =
+                        firstVisibleItemIndex + listState.layoutInfo.visibleItemsInfo.size - 1
                     val currentIndex = draggedItemIndex ?: return@DraggableItem
                     val targetIndex =
                         (currentIndex + (dragOffset / itemHeightPx).toInt()).coerceIn(
                             0,
                             items.lastIndex
                         )
+                    val changeDragOffset =
+                        (itemHeightPx - itemHeightPx / 10) * (targetIndex - currentIndex).sign
 
                     if (targetIndex != currentIndex) {
                         items = items.toMutableList().apply {
                             add(targetIndex, removeAt(currentIndex))
                         }
                         draggedItemIndex = targetIndex
-
-                        // 이동하는 offset 조정 필요함.
-                        dragOffset -= itemHeightPx * (targetIndex - currentIndex).sign
+                        dragOffset -= changeDragOffset
                     }
 
                     // 자동 스크롤 로직 -> 기본적인 자연스러운 스크롤. 최상단 아이템, 최하단 아이템에서 문제 발생
                     coroutineScope.launch {
-                        listState.scrollBy(offset.y / 2)
+                        if (draggedItemIndex != null) {
+                            // 아래로 스크롤
+                            if (dragOffset > 0) {
+                                if (draggedItemIndex!! >= (firstVisibleItemIndex + lastVisibleItemIndex) / 2) {
+                                    listState.scrollBy(changeDragOffset / 2)
+                                }
+                            }
+                            // 위로 스크롤
+                            else {
+                                if (draggedItemIndex!! <= (firstVisibleItemIndex + lastVisibleItemIndex) / 2) {
+                                    listState.scrollBy(changeDragOffset / 2)
+                                }
+                            }
+                        }
                     }
-
-                    // 자동 스크롤 로직 -> 부자연스러움.
-//                    coroutineScope.launch {
-//                        val firstVisibleItemIndex = listState.firstVisibleItemIndex
-//                        val lastVisibleItemIndex =
-//                            firstVisibleItemIndex + listState.layoutInfo.visibleItemsInfo.size - 1
-//
-//                        when {
-//                            targetIndex <= firstVisibleItemIndex + 1 -> {
-//                                // 위로 스크롤
-//                                if (targetIndex > 0) {
-//                                    listState.animateScrollBy((-moveHeight).dp.value)
-//                                    dragOffset -= moveHeight.dp.value
-//                                }
-//                            }
-//
-//                            targetIndex >= lastVisibleItemIndex - 3 -> {
-//                                // 아래로 스크롤
-//                                if (targetIndex < items.size - 1) {
-//                                    listState.animateScrollBy(moveHeight.dp.value)
-//                                    dragOffset += moveHeight.dp.value
-//                                }
-//                            }
-//                        }
-//                    }
                 }
             )
         }
