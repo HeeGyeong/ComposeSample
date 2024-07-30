@@ -37,6 +37,8 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import kotlin.math.sign
 
+val itemHeight = 64.dp
+
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun DragAndDropExampleUI(
@@ -47,7 +49,6 @@ fun DragAndDropExampleUI(
     var dragOffset by remember { mutableStateOf(0f) }
 
     val density = LocalDensity.current
-    val itemHeight = 64.dp
     val itemHeightPx = with(density) { itemHeight.toPx() }
 
     val listState = rememberLazyListState()
@@ -97,14 +98,15 @@ fun DragAndDropExampleUI(
                     val centerIndex = (firstVisibleItemIndex + lastVisibleItemIndex) / 2
 
                     val currentIndex = draggedItemIndex ?: return@DraggableItem
+
+                    // Drag 위치에 따라 targetIndex를 현재 위치 +-1 처리한다.
                     val targetIndex =
-                        (currentIndex + (dragOffset / itemHeightPx).toInt()).coerceIn(
-                            0,
-                            items.lastIndex
-                        )
+                        (currentIndex + (dragOffset / itemHeightPx).toInt())
+                            .coerceIn(0, items.lastIndex) // list의 index 범위를 넘어가면 범위 내로 조정한다.
+
 
                     // dragOffset의 변화량을 조절. itemHeightPx을 그대로 사용하기엔 변화량이 너무 크다.
-                    val changeDragOffset =
+                    val changeDragOffset = // 변경 수치 * +-1
                         (itemHeightPx - itemHeightPx / 10) * (targetIndex - currentIndex).sign
 
                     // drag를 통해 index가 변화하면 list를 갱신한다.
@@ -152,7 +154,7 @@ fun DraggableItem(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .height(64.dp)
+            .height(itemHeight)
             .padding(8.dp)
             .composed {
                 Modifier

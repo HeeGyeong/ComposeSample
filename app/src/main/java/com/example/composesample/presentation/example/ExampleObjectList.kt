@@ -174,7 +174,7 @@ fun exampleObjectList(): ArrayList<ExampleObject> {
 
     insertExampleObject.add(
         ExampleObject(
-            title = "DragAndDrop Example (작업 중인 예제. 오작동 할 수 있습니다.)",
+            title = "DragAndDrop Example",
             description = "DragAndDrop를 사용하는 방법에 대해 알아보기 위한 예제.",
             blogUrl = "",
             exampleType = ConstValue.DragAndDropExample
