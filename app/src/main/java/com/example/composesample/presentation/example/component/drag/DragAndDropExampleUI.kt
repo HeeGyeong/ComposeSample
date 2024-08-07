@@ -164,19 +164,16 @@ fun DraggableItem(
             .fillMaxWidth()
             .height(itemHeight)
             .padding(8.dp)
-            .composed {
-                Modifier
-                    .graphicsLayer(translationY = dragOffset)
-                    .pointerInput(Unit) {
-                        detectDragGesturesAfterLongPress(
-                            onDragStart = { onDragStart() },
-                            onDragEnd = { onDragEnd() },
-                            onDrag = { change, dragAmount ->
-                                change.consume()
-                                onDrag(dragAmount)
-                            }
-                        )
+            .graphicsLayer(translationY = dragOffset)
+            .pointerInput(Unit) {
+                detectDragGesturesAfterLongPress(
+                    onDragStart = { onDragStart() },
+                    onDragEnd = { onDragEnd() },
+                    onDrag = { change, dragAmount ->
+                        change.consume()
+                        onDrag(dragAmount)
                     }
+                )
             }
     ) {
         Text(
