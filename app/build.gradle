@@ -102,6 +102,12 @@ dependencies {
     implementation "androidx.work:work-runtime:2.7.1"
     implementation "androidx.work:work-runtime-ktx:2.7.1"
 
+    // Drag and Drop - Reorderable
+    // Scroll event 없음.
+    implementation("org.burnoutcrew.composereorderable:reorderable:0.9.6")
+    // Kotlin version issue로 사용하기 힘들다.
+//    implementation("sh.calvin.reorderable:reorderable:2.3.0")
+
     // Test
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
