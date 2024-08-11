@@ -176,7 +176,7 @@ fun exampleObjectList(): ArrayList<ExampleObject> {
         ExampleObject(
             title = "DragAndDrop Example",
             description = "DragAndDrop를 사용하는 방법에 대해 알아보기 위한 예제.",
-            blogUrl = "",
+            blogUrl = "https://heegs.tistory.com/168",
             exampleType = ConstValue.DragAndDropExample
         )
     )
