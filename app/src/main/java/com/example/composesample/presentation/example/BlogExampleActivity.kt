@@ -76,6 +76,7 @@ import com.example.composesample.presentation.example.component.recorder.AudioRe
 import com.example.composesample.presentation.example.component.refresh.PullToRefreshUI
 import com.example.composesample.presentation.example.component.swipe.SwipeToDismissUI
 import com.example.composesample.presentation.example.component.text.TextStyleUI
+import com.example.composesample.presentation.example.component.version.TargetSDK34Example
 import com.example.composesample.presentation.example.component.webview.WebViewIssueUI
 import com.example.composesample.presentation.example.component.workmanager.WorkManagerUI
 import com.example.composesample.presentation.getTextStyle
@@ -100,6 +101,7 @@ import com.example.composesample.util.ConstValue.Companion.PullToRefreshExample
 import com.example.composesample.util.ConstValue.Companion.ScaffoldDrawExample
 import com.example.composesample.util.ConstValue.Companion.SideEffectExample
 import com.example.composesample.util.ConstValue.Companion.SwipeToDismissExample
+import com.example.composesample.util.ConstValue.Companion.TargetSDK34PermissionExample
 import com.example.composesample.util.ConstValue.Companion.TextStyleExample
 import com.example.composesample.util.ConstValue.Companion.WebViewIssueExample
 import com.example.composesample.util.ConstValue.Companion.WorkManagerExample
@@ -554,6 +556,10 @@ fun ExampleCaseUI(
 
                 DragAndDropExample -> {
                     DragAndDropExampleUI(onBackEvent)
+                }
+
+                TargetSDK34PermissionExample -> {
+                    TargetSDK34Example(onBackEvent)
                 }
 
                 else -> {
