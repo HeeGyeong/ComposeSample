@@ -183,8 +183,8 @@ fun exampleObjectList(): ArrayList<ExampleObject> {
 
     insertExampleObject.add(
         ExampleObject(
-            title = "TargetSdk 34 - Permission",
-            description = "TargetSdk 34를 사용할 때 주의점 - Permission",
+            title = "TargetSdk 34 - Permission : 작업 중 입니다",
+            description = "TargetSdk 34를 사용할 때 주의점 - Permission\n작업중. 정상 동작하지 않습니다.",
             blogUrl = "",
             exampleType = ConstValue.TargetSDK34PermissionExample
         )
