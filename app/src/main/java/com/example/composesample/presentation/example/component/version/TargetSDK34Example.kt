@@ -1,9 +1,13 @@
 package com.example.composesample.presentation.example.component.version
 
+import android.Manifest
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.provider.Settings
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.result.launch
@@ -12,8 +16,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -24,8 +30,11 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -66,25 +75,16 @@ fun TargetSDK34Example(
         }
 
         item {
-            Button(onClick = {
-                context.startActivity(
-                    Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).setData(
-                        Uri.parse(
-                            "package:${context.packageName}"
-                        )
-                    )
-                )
-            }) {
-                Text(text = "Go to Permission Setting Screen")
-            }
+            PermissionButton(context = context)
         }
     }
 }
 
 @Composable
-fun PermissionButton() {
+fun PermissionButton(context: Context) {
     val permissionType = remember { mutableStateOf("") }
     val permissionDialog = remember { mutableStateOf(false) }
+    var selectPermission by rememberSaveable { mutableStateOf(false) }
 
     val addPhotoLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -93,6 +93,7 @@ fun PermissionButton() {
                     result.data?.data?.let { uri ->
                         uri.let {
                             // Logic
+                            Log.d("TargetSDK", "imageUri - selected : $uri")
                         }
                     } ?: run {
                         Unit
@@ -107,6 +108,7 @@ fun PermissionButton() {
         rememberLauncherForActivityResult(ActivityResultContracts.TakePicturePreview()) { bitmap ->
             bitmap?.let { _ ->
                 // logic
+                Log.d("TargetSDK", "photoBitmap - photo : $bitmap")
             } ?: run {
                 Unit
             }
@@ -118,6 +120,7 @@ fun PermissionButton() {
                 Activity.RESULT_OK -> {
                     result.data?.data?.let { uri ->
                         // logic
+                        Log.d("TargetSDK", "videoUri - selected : $uri")
                     }
                 }
 
@@ -129,7 +132,7 @@ fun PermissionButton() {
     val storagePermissionLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
     ) { isGranted ->
-        val isGrantedPermission = checkPermissionGranted(
+        val isGrantedPermission = checkPermissionTypeGranted(
             isGranted = isGranted,
             permissionType = permissionType.value
         )
@@ -151,5 +154,85 @@ fun PermissionButton() {
                 }
             }
         }
+    }
+
+    Column {
+        Button(onClick = {
+            context.startActivity(
+                Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).setData(
+                    Uri.parse(
+                        "package:${context.packageName}"
+                    )
+                )
+            )
+        }) {
+            Text(text = "Go to Permission Setting Screen")
+        }
+
+        Spacer(modifier = Modifier.height(20.dp))
+
+        Button(onClick = {
+            permissionType.value =
+                PermissionConstValue.Photo
+
+            selectPermission = checkMediaTypePermissionGranted(
+                context = context,
+                permissionType = PermissionType.IMAGE
+            )
+
+            if (selectPermission) {
+                addPhotoLauncher.launch(imageAlbumIntent)
+            } else {
+                storagePermissionLauncher.launch(
+                    ImagePermission.toTypedArray()
+                )
+            }
+        }) {
+            Text(text = "Photo")
+        }
+
+        Spacer(modifier = Modifier.height(20.dp))
+
+        Button(onClick = {
+            permissionType.value = PermissionConstValue.Camera
+            checkSinglePermissionGranted(
+                context,
+                Manifest.permission.CAMERA,
+                onDenied = {
+                    storagePermissionLauncher.launch(
+                        CameraPermission.toTypedArray()
+                    )
+                },
+                onGranted = {
+                    addCameraLauncher.launch()
+                }
+            )
+        }) {
+            Text(text = "Camera")
+        }
+
+        Spacer(modifier = Modifier.height(20.dp))
+
+        Button(onClick = {
+            permissionType.value =
+                PermissionConstValue.Video
+
+            selectPermission = checkMediaTypePermissionGranted(
+                context = context,
+                permissionType = PermissionType.VIDEO
+            )
+
+            if (selectPermission) {
+                videoLauncher.launch(videoAlbumIntent)
+            } else {
+                storagePermissionLauncher.launch(
+                    VideoPermission.toTypedArray()
+                )
+            }
+        }) {
+            Text(text = "Video")
+        }
+
+        Spacer(modifier = Modifier.height(20.dp))
     }
 }
