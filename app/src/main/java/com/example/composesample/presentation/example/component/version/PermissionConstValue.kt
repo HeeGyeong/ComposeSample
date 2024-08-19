@@ -5,7 +5,6 @@ class PermissionConstValue {
         const val Photo = "READ_MEDIA_IMAGES"
         const val Video = "READ_MEDIA_VIDEO"
         const val Camera = "CAMERA"
-        const val Media = "MIDEA"
         const val Record = "RECORD_AUDIO"
         const val MediaSelect = "READ_MEDIA_VISUAL_USER_SELECTED" // targetSDK 34
     }

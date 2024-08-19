@@ -2,13 +2,21 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.composesample">
 
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
-    <!-- targetSDK 32 이하 -->
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+    <uses-permission android:name="android.permission.CAMERA" />
 
-    <!-- targetSDK 33 이하 -->
+    <!-- targetSDK 32 이하 -->
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
+
+    <!-- targetSDK 33 부터 -->
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
     <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
 
@@ -36,35 +44,45 @@
         </activity>
 
         <!-- Legacy sample activity -->
-        <activity android:name=".presentation.legacy.sub.SubActivity"
-            android:theme="@style/Theme.ComposeSample"/>
+        <activity
+            android:name=".presentation.legacy.sub.SubActivity"
+            android:theme="@style/Theme.ComposeSample" />
 
-        <activity android:name=".presentation.legacy.progress.ProgressActivity"
-            android:theme="@style/Theme.ComposeSample"/>
+        <activity
+            android:name=".presentation.legacy.progress.ProgressActivity"
+            android:theme="@style/Theme.ComposeSample" />
 
-        <activity android:name=".presentation.legacy.cal.CalActivity"
-            android:theme="@style/Theme.ComposeSample"/>
+        <activity
+            android:name=".presentation.legacy.cal.CalActivity"
+            android:theme="@style/Theme.ComposeSample" />
 
-        <activity android:name=".presentation.legacy.scope.ScopeActivity"
-            android:theme="@style/Theme.ComposeSample"/>
+        <activity
+            android:name=".presentation.legacy.scope.ScopeActivity"
+            android:theme="@style/Theme.ComposeSample" />
 
-        <activity android:name=".presentation.legacy.scope.sub.RememberCoroutineActivity"
-            android:theme="@style/Theme.ComposeSample"/>
+        <activity
+            android:name=".presentation.legacy.scope.sub.RememberCoroutineActivity"
+            android:theme="@style/Theme.ComposeSample" />
 
-        <activity android:name=".presentation.legacy.scope.sub.LaunchedEffectActivity"
-            android:theme="@style/Theme.ComposeSample"/>
+        <activity
+            android:name=".presentation.legacy.scope.sub.LaunchedEffectActivity"
+            android:theme="@style/Theme.ComposeSample" />
 
-        <activity android:name=".presentation.legacy.scope.sub.ProduceStateActivity"
-            android:theme="@style/Theme.ComposeSample"/>
+        <activity
+            android:name=".presentation.legacy.scope.sub.ProduceStateActivity"
+            android:theme="@style/Theme.ComposeSample" />
 
-        <activity android:name=".presentation.legacy.movie.MovieActivity"
-            android:theme="@style/Theme.ComposeSample"/>
+        <activity
+            android:name=".presentation.legacy.movie.MovieActivity"
+            android:theme="@style/Theme.ComposeSample" />
 
-        <activity android:name=".presentation.legacy.hash.HashTagActivity"
-            android:theme="@style/Theme.ComposeSample"/>
+        <activity
+            android:name=".presentation.legacy.hash.HashTagActivity"
+            android:theme="@style/Theme.ComposeSample" />
 
         <!-- Blog example activity -->
-        <activity android:name=".presentation.example.BlogExampleActivity"
+        <activity
+            android:name=".presentation.example.BlogExampleActivity"
             android:theme="@style/Theme.ComposeSample"
             android:windowSoftInputMode="adjustResize" />
 
@@ -75,7 +93,7 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths"/>
+                android:resource="@xml/file_paths" />
         </provider>
     </application>
 
