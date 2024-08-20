@@ -149,9 +149,9 @@ fun PermissionButton(
     // sdk 34 permission Logic
     val storagePermissionLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
-    ) { isGranted ->
+    ) { grantedPermissionMap ->
         val isGrantedPermission = checkPermissionTypeGranted(
-            isGranted = isGranted,
+            isGranted = grantedPermissionMap,
             permissionType = permissionType.value
         )
 

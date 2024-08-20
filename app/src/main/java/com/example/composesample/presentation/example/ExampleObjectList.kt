@@ -185,7 +185,7 @@ fun exampleObjectList(): ArrayList<ExampleObject> {
         ExampleObject(
             title = "TargetSdk 34 - Permission",
             description = "TargetSdk 34를 사용할 때 주의점 - Permission",
-            blogUrl = "",
+            blogUrl = "https://heegs.tistory.com/169",
             exampleType = ConstValue.TargetSDK34PermissionExample
         )
     )
