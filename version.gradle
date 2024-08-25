@@ -1,0 +1,17 @@
+// build version
+ext {
+    compose_version = "1.5.2"
+    target_sdk = 34
+    min_sdk = 24
+    java_version = 17
+
+    build_version_code = 1
+    build_version_name = "1.0"
+}
+
+// library version
+ext {
+    room_version = "2.6.1"
+    koin_version = "3.2.2"
+    workManager_version = "2.7.1"
+}
