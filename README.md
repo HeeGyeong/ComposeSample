@@ -16,6 +16,8 @@ Permission을 위한 로직 등 기본적인 로직이 들어있는 프로젝트
 24년 6월 기준, Compose 환경에서 CleanArchitecture에 대한 적용을 해보기 위하여 ComposeSample 프로젝트의 일반적인 구조를 CleanArchitecture 구조로 변경하였습니다.
 실제로 필요하지 않는 부분이더라도 클린 아키텍처의 구조에 맞춰서 나누어서 정석대로 적용하였습니다.
 
+24년 8월 기준, Kotlin version 1.9.0, AGP version 8.5.2, java version 17, compose version 1.5.2 버전으로 Update 및 버전 대응하였습니다.
+
 실무를 진행하면서 Compose에 대한 스터디를 진행하고 있으며, 관련된 내용들은 필요시 마다 코드를 작성하고 정리하여 블로그에 작성하고 있습니다.
 블로그 글과 더불어 샘플 코드만 읽어도 쉽게 기능을 이해하고 사용할 수 있도록 구현하려 노력중입니다.
 
