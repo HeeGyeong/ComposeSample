@@ -24,7 +24,8 @@ class ConstValue {
         const val ApiDisconnectExample = "apiDisconnectExample"
         const val PowerSaveModeExample = "powerSaveModeExample"
         const val DragAndDropExample = "dragAndDropExample"
-        const val TargetSDK34PermissionExample = "TargetSDK34PermissionExample"
+        const val TargetSDK34PermissionExample = "targetSDK34PermissionExample"
+        const val PassingIntentDataExample = "passingIntentDataExample"
 
         // SubCategory
         const val FlingBehavior = "flingBehaviorExampleList"

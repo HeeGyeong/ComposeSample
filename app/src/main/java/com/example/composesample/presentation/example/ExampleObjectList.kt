@@ -190,6 +190,15 @@ fun exampleObjectList(): ArrayList<ExampleObject> {
         )
     )
 
+    insertExampleObject.add(
+        ExampleObject(
+            title = "Intent data passing example - 작업 중",
+            description = "Intent data를 전달하는 방법 - 작업 중",
+            blogUrl = "",
+            exampleType = ConstValue.PassingIntentDataExample
+        )
+    )
+
     return insertExampleObject
 }
 

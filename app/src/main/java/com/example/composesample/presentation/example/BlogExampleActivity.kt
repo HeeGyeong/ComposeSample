@@ -68,6 +68,7 @@ import com.example.composesample.presentation.example.component.ffmpeg.FfmpegEnc
 import com.example.composesample.presentation.example.component.ffmpeg.executeCommand
 import com.example.composesample.presentation.example.component.ffmpeg.getRealPathFromURI
 import com.example.composesample.presentation.example.component.flexbox.FlexBoxUI
+import com.example.composesample.presentation.example.component.intent.PassingIntentDataExample
 import com.example.composesample.presentation.example.component.lazycolumn.LazyColumnFlingBehaviorExample
 import com.example.composesample.presentation.example.component.lazycolumn.LazyColumnIssueUI
 import com.example.composesample.presentation.example.component.pager.PullScreenPagerUI
@@ -95,6 +96,7 @@ import com.example.composesample.util.ConstValue.Companion.FlingBehaviorExample
 import com.example.composesample.util.ConstValue.Companion.LazyColumnExample
 import com.example.composesample.util.ConstValue.Companion.ModalBottomSheetExample
 import com.example.composesample.util.ConstValue.Companion.ModalDrawExample
+import com.example.composesample.util.ConstValue.Companion.PassingIntentDataExample
 import com.example.composesample.util.ConstValue.Companion.PowerSaveModeExample
 import com.example.composesample.util.ConstValue.Companion.PullScreenPager
 import com.example.composesample.util.ConstValue.Companion.PullToRefreshExample
@@ -560,6 +562,10 @@ fun ExampleCaseUI(
 
                 TargetSDK34PermissionExample -> {
                     TargetSDK34Example(onBackEvent)
+                }
+
+                PassingIntentDataExample -> {
+                    PassingIntentDataExample(onBackEvent)
                 }
 
                 else -> {

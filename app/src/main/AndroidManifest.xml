@@ -84,6 +84,10 @@
             android:name=".presentation.example.BlogExampleActivity"
             android:theme="@style/Theme.ComposeSample"
             android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".presentation.example.component.intent.PassingIntentDataActivity"
+            android:theme="@style/Theme.ComposeSample"
+            android:windowSoftInputMode="adjustResize" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
