@@ -1,6 +1,7 @@
 package com.example.composesample.presentation.example
 
 import com.example.composesample.util.ConstValue
+import com.example.domain.model.ExampleMoveType
 import com.example.domain.model.ExampleObject
 
 fun exampleObjectList(): ArrayList<ExampleObject> {
@@ -192,10 +193,20 @@ fun exampleObjectList(): ArrayList<ExampleObject> {
 
     insertExampleObject.add(
         ExampleObject(
-            title = "Intent data passing example - 작업 중",
-            description = "Intent data를 전달하는 방법 - 작업 중",
+            title = "Intent data passing example",
+            description = "Intent data를 전달하는 방법",
             blogUrl = "",
             exampleType = ConstValue.PassingIntentDataExample
+        )
+    )
+
+    insertExampleObject.add(
+        ExampleObject(
+            title = "Bottom Navigation Example - 작업 중",
+            description = "Bottom Navigation을 사용하는 방법에 대해 알아보기 위한 예제. - 작업 중",
+            blogUrl = "",
+            moveType = ExampleMoveType.ACTIVITY,
+            exampleType = ConstValue.BottomNavigationExample
         )
     )
 

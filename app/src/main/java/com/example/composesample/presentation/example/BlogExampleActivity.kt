@@ -2,6 +2,7 @@ package com.example.composesample.presentation.example
 
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -68,9 +69,12 @@ import com.example.composesample.presentation.example.component.ffmpeg.FfmpegEnc
 import com.example.composesample.presentation.example.component.ffmpeg.executeCommand
 import com.example.composesample.presentation.example.component.ffmpeg.getRealPathFromURI
 import com.example.composesample.presentation.example.component.flexbox.FlexBoxUI
+import com.example.composesample.presentation.example.component.intent.ParcelableDataClass
+import com.example.composesample.presentation.example.component.intent.PassingIntentDataActivity
 import com.example.composesample.presentation.example.component.intent.PassingIntentDataExample
 import com.example.composesample.presentation.example.component.lazycolumn.LazyColumnFlingBehaviorExample
 import com.example.composesample.presentation.example.component.lazycolumn.LazyColumnIssueUI
+import com.example.composesample.presentation.example.component.navigation.BottomNavigationActivity
 import com.example.composesample.presentation.example.component.pager.PullScreenPagerUI
 import com.example.composesample.presentation.example.component.powersave.PowerSaveModeExampleUI
 import com.example.composesample.presentation.example.component.recorder.AudioRecorderUI
@@ -85,6 +89,7 @@ import com.example.composesample.presentation.legacy.base.SetSystemUI
 import com.example.composesample.presentation.openWebPage
 import com.example.composesample.util.ConstValue.Companion.ApiDisconnectExample
 import com.example.composesample.util.ConstValue.Companion.AudioRecorderExample
+import com.example.composesample.util.ConstValue.Companion.BottomNavigationExample
 import com.example.composesample.util.ConstValue.Companion.BottomSheetExample
 import com.example.composesample.util.ConstValue.Companion.ClickEventExample
 import com.example.composesample.util.ConstValue.Companion.CustomBottomSheetExample
@@ -109,6 +114,7 @@ import com.example.composesample.util.ConstValue.Companion.WebViewIssueExample
 import com.example.composesample.util.ConstValue.Companion.WorkManagerExample
 import com.example.composesample.util.Toast
 import com.example.composesample.util.noRippleClickable
+import com.example.domain.model.ExampleMoveType
 
 @ExperimentalAnimationApi
 class BlogExampleActivity : ComponentActivity() {
@@ -151,6 +157,7 @@ fun BlogExampleCase(
 ) {
     val context = LocalContext.current
     val exampleType = remember { mutableStateOf("") }
+    val exampleMoveType = remember { mutableStateOf(ExampleMoveType.UI) }
     val exampleObjectList = blogExampleViewModel.exampleObjectList.collectAsState().value
     val searchText by blogExampleViewModel.searchText.collectAsState()
     val searchExampleList = blogExampleViewModel.searchExampleList.collectAsState(listOf()).value
@@ -242,6 +249,7 @@ fun BlogExampleCase(
                             exampleBlogUrl = exampleObject.blogUrl,
                             onButtonClick = {
                                 exampleType.value = exampleObject.exampleType
+                                exampleMoveType.value = exampleObject.moveType
                                 blogExampleViewModel.setSubCategoryList(
                                     filter = exampleObject.subCategory
                                 )
@@ -269,6 +277,7 @@ fun BlogExampleCase(
                                     )
                                 } else {
                                     exampleType.value = exampleObject.exampleType
+                                    exampleMoveType.value = exampleObject.moveType
                                 }
                             },
                             noBlogUrlEvent = {
@@ -294,6 +303,7 @@ fun BlogExampleCase(
                                     )
                                 } else {
                                     exampleType.value = exampleObject.exampleType
+                                    exampleMoveType.value = exampleObject.moveType
                                 }
                             },
                             noBlogUrlEvent = {
@@ -320,6 +330,7 @@ fun BlogExampleCase(
 
         ExampleCaseUI(
             exampleType = exampleType,
+            exampleMoveType = exampleMoveType,
             launcher = launcher,
         ) {
             exampleType.value = ""
@@ -445,135 +456,160 @@ fun ExampleCardSection(
 @Composable
 fun ExampleCaseUI(
     exampleType: MutableState<String>,
+    exampleMoveType: MutableState<ExampleMoveType>,
     launcher: ActivityResultLauncher<String>,
     onBackEvent: () -> Unit
 ) {
-    AnimatedVisibility(
-        visible = exampleType.value.isNotEmpty(),
-        enter = fadeIn(),
-        exit = fadeOut(animationSpec = tween(durationMillis = AnimationConstants.DefaultDurationMillis / 2))
-    ) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(color = Color.DarkGray)
-                .animateEnterExit(
-                    enter = slideInVertically(
-                        initialOffsetY = { height -> height },
-                        animationSpec = tween()
-                    ),
-                    exit = slideOutVertically(
-                        targetOffsetY = { height -> height },
-                        animationSpec = tween(durationMillis = AnimationConstants.DefaultDurationMillis / 2)
-                    )
-                )
-        ) {
+    val context = LocalContext.current
+
+    when (exampleMoveType.value) {
+        ExampleMoveType.UI -> {
+            AnimatedVisibility(
+                visible = exampleType.value.isNotEmpty(),
+                enter = fadeIn(),
+                exit = fadeOut(animationSpec = tween(durationMillis = AnimationConstants.DefaultDurationMillis / 2))
+            ) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(color = Color.DarkGray)
+                        .animateEnterExit(
+                            enter = slideInVertically(
+                                initialOffsetY = { height -> height },
+                                animationSpec = tween()
+                            ),
+                            exit = slideOutVertically(
+                                targetOffsetY = { height -> height },
+                                animationSpec = tween(durationMillis = AnimationConstants.DefaultDurationMillis / 2)
+                            )
+                        )
+                ) {
+                    when (exampleType.value) {
+                        LazyColumnExample -> {
+                            LazyColumnIssueUI(onBackEvent)
+                        }
+
+                        ClickEventExample -> {
+                            ClickEventUI(onBackEvent)
+                        }
+
+                        FlexBoxLayoutExample -> {
+                            FlexBoxUI(onBackEvent)
+                        }
+
+                        WebViewIssueExample -> {
+                            WebViewIssueUI(onBackEvent)
+                        }
+
+                        TextStyleExample -> {
+                            TextStyleUI(onBackEvent)
+                        }
+
+                        FfmpegExample -> {
+                            FfmpegEncodingUI(
+                                launcher = launcher,
+                                onBackButtonClick = onBackEvent,
+                            )
+                        }
+
+                        AudioRecorderExample -> {
+                            AudioRecorderUI(onBackEvent)
+                        }
+
+                        WorkManagerExample -> {
+                            WorkManagerUI(onBackEvent)
+                        }
+
+                        PullToRefreshExample -> {
+                            PullToRefreshUI(onBackEvent)
+                        }
+
+                        PullScreenPager -> {
+                            PullScreenPagerUI(onBackEvent)
+                        }
+
+                        FlingBehaviorExample -> {
+                            LazyColumnFlingBehaviorExample(onBackEvent)
+                        }
+
+                        BottomSheetExample -> {
+                            BottomSheetUI(onBackEvent)
+                        }
+
+                        ModalBottomSheetExample -> {
+                            ModalBottomSheetUI(onBackEvent)
+                        }
+
+                        CustomBottomSheetExample -> {
+                            CustomBottomSheetUI(onBackEvent)
+                        }
+
+                        ScaffoldDrawExample -> {
+                            ScaffoldDrawerUI(onBackEvent)
+                        }
+
+                        ModalDrawExample -> {
+                            ModalDrawerUI(onBackEvent)
+                        }
+
+                        SwipeToDismissExample -> {
+                            SwipeToDismissUI(onBackEvent)
+                        }
+
+                        SideEffectExample -> {
+                            SideEffectExampleUI(onBackEvent)
+                        }
+
+                        DataCacheExample -> {
+                            DataCacheExampleUI(onBackEvent)
+                        }
+
+                        ApiDisconnectExample -> {
+                            ApiDisconnectExampleUI(onBackEvent)
+                        }
+
+                        PowerSaveModeExample -> {
+                            PowerSaveModeExampleUI(onBackEvent)
+                        }
+
+                        DragAndDropExample -> {
+                            DragAndDropExampleUI(onBackEvent)
+                        }
+
+                        TargetSDK34PermissionExample -> {
+                            TargetSDK34Example(onBackEvent)
+                        }
+
+                        PassingIntentDataExample -> {
+                            PassingIntentDataExample(onBackEvent)
+                        }
+
+                        else -> {
+                            Text(
+                                text = "Dummy",
+                                textAlign = TextAlign.Center,
+                                fontSize = 14.sp,
+                            )
+                        }
+                    }
+                }
+            }
+        }
+
+        ExampleMoveType.ACTIVITY -> {
+            // 해당 케이스는 Activity 호출이기 때문에 예외 처리
             when (exampleType.value) {
-                LazyColumnExample -> {
-                    LazyColumnIssueUI(onBackEvent)
-                }
-
-                ClickEventExample -> {
-                    ClickEventUI(onBackEvent)
-                }
-
-                FlexBoxLayoutExample -> {
-                    FlexBoxUI(onBackEvent)
-                }
-
-                WebViewIssueExample -> {
-                    WebViewIssueUI(onBackEvent)
-                }
-
-                TextStyleExample -> {
-                    TextStyleUI(onBackEvent)
-                }
-
-                FfmpegExample -> {
-                    FfmpegEncodingUI(
-                        launcher = launcher,
-                        onBackButtonClick = onBackEvent,
-                    )
-                }
-
-                AudioRecorderExample -> {
-                    AudioRecorderUI(onBackEvent)
-                }
-
-                WorkManagerExample -> {
-                    WorkManagerUI(onBackEvent)
-                }
-
-                PullToRefreshExample -> {
-                    PullToRefreshUI(onBackEvent)
-                }
-
-                PullScreenPager -> {
-                    PullScreenPagerUI(onBackEvent)
-                }
-
-                FlingBehaviorExample -> {
-                    LazyColumnFlingBehaviorExample(onBackEvent)
-                }
-
-                BottomSheetExample -> {
-                    BottomSheetUI(onBackEvent)
-                }
-
-                ModalBottomSheetExample -> {
-                    ModalBottomSheetUI(onBackEvent)
-                }
-
-                CustomBottomSheetExample -> {
-                    CustomBottomSheetUI(onBackEvent)
-                }
-
-                ScaffoldDrawExample -> {
-                    ScaffoldDrawerUI(onBackEvent)
-                }
-
-                ModalDrawExample -> {
-                    ModalDrawerUI(onBackEvent)
-                }
-
-                SwipeToDismissExample -> {
-                    SwipeToDismissUI(onBackEvent)
-                }
-
-                SideEffectExample -> {
-                    SideEffectExampleUI(onBackEvent)
-                }
-
-                DataCacheExample -> {
-                    DataCacheExampleUI(onBackEvent)
-                }
-
-                ApiDisconnectExample -> {
-                    ApiDisconnectExampleUI(onBackEvent)
-                }
-
-                PowerSaveModeExample -> {
-                    PowerSaveModeExampleUI(onBackEvent)
-                }
-
-                DragAndDropExample -> {
-                    DragAndDropExampleUI(onBackEvent)
-                }
-
-                TargetSDK34PermissionExample -> {
-                    TargetSDK34Example(onBackEvent)
-                }
-
-                PassingIntentDataExample -> {
-                    PassingIntentDataExample(onBackEvent)
+                BottomNavigationExample -> {
+                    val intent =
+                        Intent(
+                            context,
+                            BottomNavigationActivity::class.java
+                        ).apply { flags = Intent.FLAG_ACTIVITY_CLEAR_TOP }
+                    context.startActivity(intent)
                 }
 
                 else -> {
-                    Text(
-                        text = "Dummy",
-                        textAlign = TextAlign.Center,
-                        fontSize = 14.sp,
-                    )
+
                 }
             }
         }

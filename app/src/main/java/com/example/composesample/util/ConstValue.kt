@@ -26,6 +26,7 @@ class ConstValue {
         const val DragAndDropExample = "dragAndDropExample"
         const val TargetSDK34PermissionExample = "targetSDK34PermissionExample"
         const val PassingIntentDataExample = "passingIntentDataExample"
+        const val BottomNavigationExample = "bottomNavigationExample"
 
         // SubCategory
         const val FlingBehavior = "flingBehaviorExampleList"
