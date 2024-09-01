@@ -612,6 +612,10 @@ fun ExampleCaseUI(
 
                 }
             }
+
+            exampleMoveType.value = ExampleMoveType.EMPTY
         }
+
+        ExampleMoveType.EMPTY -> { Unit }
     }
 }
