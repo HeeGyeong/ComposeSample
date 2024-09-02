@@ -1,13 +1,16 @@
 package com.example.composesample.presentation.example.component.navigation
 
 import android.os.Bundle
+import android.view.inputmethod.InputMethodManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -20,19 +23,26 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.composesample.presentation.example.BlogExampleViewModel
 import com.example.composesample.presentation.legacy.base.SetSystemUI
+import com.example.composesample.util.noRippleClickable
 
 @ExperimentalAnimationApi
 class BottomNavigationActivity : ComponentActivity() {
@@ -41,6 +51,16 @@ class BottomNavigationActivity : ComponentActivity() {
 
         setContent {
             val navController = rememberNavController()
+            val blogExampleViewModel = viewModel<BlogExampleViewModel>()
+            val searchText by blogExampleViewModel.searchText.collectAsState()
+            val interactionSource = remember { MutableInteractionSource() }
+
+            val focusRequester = remember { FocusRequester() }
+            val keyboardController = LocalSoftwareKeyboardController.current
+
+            LaunchedEffect(key1 = Unit, block = {
+                blogExampleViewModel.initExampleObject()
+            })
 
             Scaffold(
                 modifier = Modifier.fillMaxSize(),
@@ -65,10 +85,27 @@ class BottomNavigationActivity : ComponentActivity() {
                     BottomNavigationBar(navController = navController)
                 }
             ) { innerPadding ->
-                MainContentComponent(
-                    navController = navController,
-                    modifier = Modifier.padding(innerPadding)
-                )
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(innerPadding)
+                ) {
+                    MainContentComponent(
+                        navController = navController,
+                        modifier = Modifier.padding(innerPadding)
+                    )
+
+                    Spacer(modifier = Modifier.weight(1f))
+
+                    Text(
+                        modifier = Modifier.noRippleClickable {
+                            val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+                            imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0)
+                        },
+                        text = "클릭하면 키보드가 올라갑니다.\n키보드를 올려서 위치를 확인하세요.",
+                        color = Color.Black
+                    )
+                }
             }
 
             SetSystemUI()
