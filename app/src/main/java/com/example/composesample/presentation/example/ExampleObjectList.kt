@@ -202,8 +202,8 @@ fun exampleObjectList(): ArrayList<ExampleObject> {
 
     insertExampleObject.add(
         ExampleObject(
-            title = "Bottom Navigation Example - 작업 중",
-            description = "Bottom Navigation을 사용하는 방법에 대해 알아보기 위한 예제. - 작업 중",
+            title = "Bottom Navigation Example - 글 작성 예정",
+            description = "Bottom Navigation을 사용하는 방법에 대해 알아보기 위한 예제. - 글 작성 예정",
             blogUrl = "",
             moveType = ExampleMoveType.ACTIVITY,
             exampleType = ConstValue.BottomNavigationExample

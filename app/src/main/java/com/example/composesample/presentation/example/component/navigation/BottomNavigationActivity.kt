@@ -1,7 +1,6 @@
 package com.example.composesample.presentation.example.component.navigation
 
 import android.os.Bundle
-import android.view.inputmethod.InputMethodManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.ExperimentalAnimationApi
@@ -12,9 +11,12 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
+import androidx.compose.material.Button
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Scaffold
@@ -29,7 +31,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
@@ -38,7 +42,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.composesample.presentation.example.BlogExampleViewModel
 import com.example.composesample.presentation.legacy.base.SetSystemUI
-import com.example.composesample.util.noRippleClickable
 
 @ExperimentalAnimationApi
 class BottomNavigationActivity : ComponentActivity() {
@@ -48,6 +51,8 @@ class BottomNavigationActivity : ComponentActivity() {
         setContent {
             val navController = rememberNavController()
             val blogExampleViewModel = viewModel<BlogExampleViewModel>()
+            val bottomNavigationBarIndex = remember { mutableStateOf(0) }
+            var navigationType by remember { mutableStateOf(false) }
 
             LaunchedEffect(key1 = Unit, block = {
                 blogExampleViewModel.initExampleObject()
@@ -69,11 +74,36 @@ class BottomNavigationActivity : ComponentActivity() {
                             ) {
                                 Icon(Icons.Filled.ArrowBack, contentDescription = "")
                             }
+
+                            Spacer(modifier = Modifier.width(20.dp))
+
+                            Button(
+                                onClick = {
+                                    navigationType = navigationType.not()
+                                }
+                            ) {
+                                Text(text = "Navigation Type Change")
+                            }
                         }
                     }
                 },
                 bottomBar = {
-                    BottomNavigationBar(navController = navController)
+                    if (navigationType) {
+                        CustomBottomNavigationComponent(
+                            clickTabIndex = bottomNavigationBarIndex,
+                            onClickHomeTab = {
+                                bottomNavigationBarIndex.value = 0
+                            },
+                            onClickAccountTab = {
+                                bottomNavigationBarIndex.value = 1
+                            },
+                            onClickSettingTab = {
+                                bottomNavigationBarIndex.value = 2
+                            }
+                        )
+                    } else {
+                        BottomNavigationBar(navController = navController)
+                    }
                 }
             ) { innerPadding ->
                 Column(
@@ -81,42 +111,77 @@ class BottomNavigationActivity : ComponentActivity() {
                         .fillMaxSize()
                         .padding(innerPadding)
                 ) {
-                    MainContentComponent(
-                        navController = navController,
-                        modifier = Modifier.padding(innerPadding)
-                    )
-
-                    Spacer(modifier = Modifier.weight(1f))
-
                     Text(
-                        modifier = Modifier.noRippleClickable {
-                            val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-                            imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0)
-                        },
-                        text = "클릭하면 키보드가 올라갑니다.\n키보드를 올려서 위치를 확인하세요.",
-                        color = Color.Black
+                        modifier = Modifier.fillMaxWidth(),
+                        text = "Now Navigation Type : ${
+                            if (!navigationType) {
+                                "Bottom Navigation API"
+                            } else {
+                                "Custom Bottom Navigation"
+                            }
+                        }",
+                        textAlign = TextAlign.Center,
+                        fontSize = 32.sp
                     )
+
+                    Spacer(modifier = Modifier.height(30.dp))
+
+                    if (navigationType) {
+                        when (bottomNavigationBarIndex.value) {
+                            0 -> {
+                                NavigationView1(
+                                    text = "CustomBottomNavi 1"
+                                )
+                            }
+
+                            1 -> {
+                                NavigationView2(
+                                    text = "CustomBottomNavi 2"
+                                )
+                            }
+
+                            2 -> {
+                                NavigationView3(
+                                    text = "CustomBottomNavi 3"
+                                )
+                            }
+                        }
+                    } else {
+                        BottomNavigationAPIComponent(
+                            context = this@BottomNavigationActivity,
+                            navController = navController,
+                        )
+                    }
                 }
             }
-
             SetSystemUI()
         }
     }
 }
 
+/**
+ * composable API를 사용하여 선언해둔 라우트에 연결.
+ *
+ * 연결 된 라우트에 선언 된 UI를 보여주게 된다.
+ *
+ * BottomNavigationBar의 navController.navigate(item.route) 선언한 Route 값이 존재해야한다.
+ */
 @Composable
-fun MainContentComponent(navController: NavHostController, modifier: Modifier) {
-    NavHost(navController = navController, startDestination = "home") {
-        composable("home") { NavigationView("home") }
-        composable("search") { NavigationView("search") }
-        composable("profile") { NavigationView("profile") }
-        composable("settings") { NavigationView("settings") }
+fun MainContentComponent(navController: NavHostController) {
+    NavHost(navController = navController, startDestination = NavigationType.HOME) {
+        composable(NavigationType.HOME) { NavigationView1("BottomNavi API 1") }
+        composable(NavigationType.SEARCH) { NavigationView2("BottomNavi API 2") }
+        composable(NavigationType.PROFILE) { NavigationView3("BottomNavi API 3") }
+        composable(NavigationType.SETTINGS) { NavigationView4("BottomNavi API 4") }
     }
 }
 
 @Composable
 fun BottomNavigationBar(navController: NavController) {
-    val items = listOf(
+    /**
+     * Navigation 가능한 tab List
+     */
+    val navigationTabList = listOf(
         BottomNavItem.Home,
         BottomNavItem.Search,
         BottomNavItem.Profile,
@@ -128,25 +193,25 @@ fun BottomNavigationBar(navController: NavController) {
         backgroundColor = Color.Gray,
         elevation = 8.dp
     ) {
-        items.forEachIndexed { index, item ->
+        navigationTabList.forEachIndexed { index, item ->
             BottomNavigationItem(
-                icon = { Icon(imageVector = item.icon, contentDescription = item.title) },
-                label = { Text(text = item.title) },
+                icon = {
+                    Icon(
+                        imageVector = item.icon,
+                        contentDescription = item.title
+                    )
+                },
+                label = {
+                    Text(text = item.title)
+                },
                 selected = selectedItem == index,
                 onClick = {
                     selectedItem = index
+
+                    // Tab에 따라서 UI를 변경하기 위해 사용
                     navController.navigate(item.route)
                 }
             )
         }
-    }
-}
-
-@Composable
-fun NavigationView(text: String) {
-    Column {
-        Text(
-            text = "Bottom Navigation : $text"
-        )
     }
 }
