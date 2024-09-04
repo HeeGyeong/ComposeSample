@@ -1,6 +1,9 @@
 package com.example.composesample.presentation.example.component.lottie
 
+import android.os.Build.VERSION.SDK_INT
+import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -17,13 +20,25 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImagePainter
+import coil.compose.AsyncImagePainter.State
+import coil.compose.rememberAsyncImagePainter
+import coil.decode.GifDecoder
+import coil.decode.ImageDecoderDecoder
+import coil.request.ImageRequest
+import coil.request.onAnimationEnd
+import coil.request.onAnimationStart
+import coil.request.repeatCount
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
@@ -35,6 +50,7 @@ import com.example.composesample.R
 fun LottieExampleUI(
     onBackButtonClick: () -> Unit
 ) {
+    val context = LocalContext.current
     var isPlaying by remember { mutableStateOf(true) }
     var isReplay by remember { mutableStateOf(false) }
 
@@ -46,6 +62,29 @@ fun LottieExampleUI(
         iterations = 1,
         speed = 1f,
         restartOnPlay = true
+    )
+
+    // Gif Value -> 내부 함수만으로는 클릭 시 재생이 안된다.
+    val painter = rememberAsyncImagePainter(
+        model = ImageRequest.Builder(context)
+            .data(R.drawable.gif_lottie_sample)
+            .repeatCount(0)
+            .crossfade(true)
+            .decoderFactory(
+                if (SDK_INT >= 28) {
+                    ImageDecoderDecoder.Factory()
+                } else {
+                    GifDecoder.Factory()
+                }
+            )
+            .build(),
+        transform = { data ->
+            if (data is State.Success) {
+                Log.d("CoilTransform", "result : ${data.result.request}")
+            }
+
+            data
+        }
     )
 
     LazyColumn(modifier = Modifier.padding(horizontal = 20.dp)) {
@@ -99,6 +138,14 @@ fun LottieExampleUI(
                         }
                         progress
                     },
+                )
+
+                Spacer(modifier = Modifier.height(20.dp))
+
+                Image(
+                    painter = painter,
+                    contentDescription = null,
+                    modifier = Modifier.size(100.dp),
                 )
             }
         }
