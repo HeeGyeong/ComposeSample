@@ -69,6 +69,13 @@ dependencies {
     implementation "androidx.work:work-runtime:$workManager_version"
     implementation "androidx.work:work-runtime-ktx:$workManager_version"
 
+    // Lottie
+    implementation "com.airbnb.android:lottie-compose:6.0.0"
+
+    // Coil
+    implementation "io.coil-kt:coil-compose:2.5.0"
+    implementation "io.coil-kt:coil-gif:2.6.0"
+
     // Drag and Drop - Reorderable
     // Scroll event 없음.
     implementation("org.burnoutcrew.composereorderable:reorderable:0.9.6")

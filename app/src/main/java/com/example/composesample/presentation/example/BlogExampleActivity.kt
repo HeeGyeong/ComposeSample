@@ -74,6 +74,7 @@ import com.example.composesample.presentation.example.component.intent.PassingIn
 import com.example.composesample.presentation.example.component.intent.PassingIntentDataExample
 import com.example.composesample.presentation.example.component.lazycolumn.LazyColumnFlingBehaviorExample
 import com.example.composesample.presentation.example.component.lazycolumn.LazyColumnIssueUI
+import com.example.composesample.presentation.example.component.lottie.LottieExampleUI
 import com.example.composesample.presentation.example.component.navigation.BottomNavigationActivity
 import com.example.composesample.presentation.example.component.pager.PullScreenPagerUI
 import com.example.composesample.presentation.example.component.powersave.PowerSaveModeExampleUI
@@ -99,6 +100,7 @@ import com.example.composesample.util.ConstValue.Companion.FfmpegExample
 import com.example.composesample.util.ConstValue.Companion.FlexBoxLayoutExample
 import com.example.composesample.util.ConstValue.Companion.FlingBehaviorExample
 import com.example.composesample.util.ConstValue.Companion.LazyColumnExample
+import com.example.composesample.util.ConstValue.Companion.LottieExample
 import com.example.composesample.util.ConstValue.Companion.ModalBottomSheetExample
 import com.example.composesample.util.ConstValue.Companion.ModalDrawExample
 import com.example.composesample.util.ConstValue.Companion.PassingIntentDataExample
@@ -582,6 +584,10 @@ fun ExampleCaseUI(
 
                         PassingIntentDataExample -> {
                             PassingIntentDataExample(onBackEvent)
+                        }
+
+                        LottieExample -> {
+                            LottieExampleUI(onBackEvent)
                         }
 
                         else -> {

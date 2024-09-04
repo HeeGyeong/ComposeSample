@@ -210,6 +210,16 @@ fun exampleObjectList(): ArrayList<ExampleObject> {
         )
     )
 
+    insertExampleObject.add(
+        ExampleObject(
+            title = "Lottie, Gif 사용 방법 - 작업 중",
+            description = "Lottie, Gif 사용 방법 - 작업 중",
+            blogUrl = "",
+            exampleType = ConstValue.LottieExample
+        )
+    )
+
+
     return insertExampleObject
 }
 
