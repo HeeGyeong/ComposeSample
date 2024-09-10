@@ -59,19 +59,29 @@ fun ColumnScope.BottomNavigationAPIComponent(
 }
 
 @Composable
-fun NavigationView1(text: String) {
-    Log.d("navigationLog", "composition Check - 1")
-    Column {
+fun NavigationView1(
+    text: String,
+    modifier: Modifier = Modifier
+) {
+    Log.d("navigationLog", "composition Check")
+    Column(
+        modifier = modifier
+    ) {
         Text(
-            text = "[First] Bottom Navigation : $text"
+            text = "Bottom Navigation : $text"
         )
     }
 }
 
 @Composable
-fun NavigationView2(text: String) {
+fun NavigationView2(
+    text: String,
+    modifier: Modifier = Modifier
+) {
     Log.d("navigationLog", "composition Check - 2")
-    Column {
+    Column(
+        modifier = modifier
+    ) {
         Text(
             text = "[Second] Bottom Navigation : $text"
         )
@@ -79,9 +89,14 @@ fun NavigationView2(text: String) {
 }
 
 @Composable
-fun NavigationView3(text: String) {
+fun NavigationView3(
+    text: String,
+    modifier: Modifier = Modifier
+) {
     Log.d("navigationLog", "composition Check - 3")
-    Column {
+    Column(
+        modifier = modifier
+    ) {
         Text(
             text = "[Third] Bottom Navigation : $text"
         )
@@ -89,9 +104,14 @@ fun NavigationView3(text: String) {
 }
 
 @Composable
-fun NavigationView4(text: String) {
+fun NavigationView4(
+    text: String,
+    modifier: Modifier = Modifier
+) {
     Log.d("navigationLog", "composition Check - 4")
-    Column {
+    Column(
+        modifier = modifier
+    ) {
         Text(
             text = "[Fourth] Bottom Navigation : $text"
         )

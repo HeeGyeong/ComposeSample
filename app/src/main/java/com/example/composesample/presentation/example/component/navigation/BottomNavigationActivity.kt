@@ -1,9 +1,19 @@
 package com.example.composesample.presentation.example.component.navigation
 
+import android.graphics.Rect
 import android.os.Bundle
+import android.view.ViewTreeObserver
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,6 +22,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.BottomNavigation
@@ -24,13 +35,17 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -106,51 +121,151 @@ class BottomNavigationActivity : ComponentActivity() {
                     }
                 }
             ) { innerPadding ->
+                val keyboard = keyboardAsState()
+                val isKeyboardOpened = remember { mutableStateOf(false) }
+                val offsetY = remember { Animatable(0f) }
+
+                LaunchedEffect(key1 = keyboard.value) {
+                    when (keyboard.value) {
+                        Keyboard.Opened -> {
+                            isKeyboardOpened.value = true
+                        }
+
+                        Keyboard.Closed -> {
+                            isKeyboardOpened.value = false
+                        }
+                    }
+                }
+
+                LaunchedEffect(isKeyboardOpened.value) {
+                    offsetY.animateTo(
+                        targetValue = if (isKeyboardOpened.value) {
+                            -20f
+                        } else {
+                            0f
+                        },
+                        animationSpec = tween(durationMillis = 300),
+                    )
+                }
+
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(innerPadding)
+                        .background(color = Color.Gray)
                 ) {
-                    Text(
-                        modifier = Modifier.fillMaxWidth(),
-                        text = "Now Navigation Type : ${
-                            if (!navigationType) {
-                                "Bottom Navigation API"
-                            } else {
-                                "Custom Bottom Navigation"
-                            }
-                        }",
-                        textAlign = TextAlign.Center,
-                        fontSize = 32.sp
-                    )
+                    AnimatedContent(
+                        targetState = navigationType,
+                        transitionSpec = {
+                            fadeIn(animationSpec = tween(2000, delayMillis = 90))
+                                .togetherWith(fadeOut(animationSpec = tween(200, delayMillis = 90)))
+                        },
+                        modifier = Modifier.background(color = Color.Yellow),
+                        label = "TitleAnimation"
+                    ) {
+                        Text(
+                            modifier = Modifier.fillMaxWidth(),
+                            text = "Now Navigation Type : ${
+                                if (!navigationType) {
+                                    "Bottom Navigation API"
+                                } else {
+                                    "Custom Bottom Navigation"
+                                }
+                            }",
+                            textAlign = TextAlign.Center,
+                            fontSize = 32.sp
+                        )
+                    }
 
-                    Spacer(modifier = Modifier.height(30.dp))
+                    Spacer(modifier = Modifier.height(20.dp))
+
+                    Column(
+                        modifier = Modifier
+                            .offset(y = offsetY.value.dp)
+                    ) {
+                        AnimatedVisibility(
+                            visible = keyboard.value != Keyboard.Opened,
+                            enter = fadeIn(tween(1000, delayMillis = 90)),
+                            exit = fadeOut(tween(1000, delayMillis = 1000))
+                        ) {
+                            Text(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(end = 20.dp),
+                                text = "123123123123123123123123123123123123123123123123123123123123123123123123123123123",
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.height(20.dp))
+
+                        Text(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(end = 20.dp),
+                            text = "456456456456456456456456456456456456456456456456456456456456456456456456456456456",
+                        )
+
+                        Spacer(modifier = Modifier.height(20.dp))
+
+                        Text(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(end = 20.dp),
+                            text = "789789789789789789789789789789789789789789789789789789789789789789789789789789789",
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.weight(1f))
 
                     if (navigationType) {
+                        val offsetY = animateDpAsState(
+                            targetValue = if (bottomNavigationBarIndex.value == 1) (-20).dp else 0.dp,
+                            animationSpec = tween(durationMillis = 500)
+                        )
+
                         when (bottomNavigationBarIndex.value) {
                             0 -> {
                                 NavigationView1(
-                                    text = "CustomBottomNavi 1"
+                                    text = "CustomBottomNavi 1",
+                                    modifier = Modifier
+//                                        .graphicsLayer {
+//                                            translationY = offsetY.value.toPx()
+//                                        }
+                                        .background(color = Color.Green)
                                 )
                             }
 
                             1 -> {
                                 NavigationView2(
-                                    text = "CustomBottomNavi 2"
+                                    text = "CustomBottomNavi 2",
+                                    modifier = Modifier
+                                        .graphicsLayer {
+                                            translationY = offsetY.value.toPx()
+                                        }
+                                        .background(color = Color.Green)
                                 )
                             }
 
                             2 -> {
                                 NavigationView3(
-                                    text = "CustomBottomNavi 3"
+                                    text = "CustomBottomNavi 3",
+                                    modifier = Modifier
+                                        .graphicsLayer {
+                                            translationY = offsetY.value.toPx()
+                                        }
+                                        .background(color = Color.Green)
                                 )
                             }
                         }
                     } else {
-                        BottomNavigationAPIComponent(
-                            context = this@BottomNavigationActivity,
-                            navController = navController,
-                        )
+                        Column(
+                            modifier = Modifier.background(color = Color.Red)
+                        ) {
+                            BottomNavigationAPIComponent(
+                                context = this@BottomNavigationActivity,
+                                navController = navController,
+                            )
+                        }
                     }
                 }
             }
@@ -214,4 +329,34 @@ fun BottomNavigationBar(navController: NavController) {
             )
         }
     }
+}
+
+enum class Keyboard {
+    Opened, Closed
+}
+
+@Composable
+fun keyboardAsState(): State<Keyboard> {
+    val keyboardState = remember { mutableStateOf(Keyboard.Closed) }
+    val view = LocalView.current
+    DisposableEffect(view) {
+        val onGlobalLayoutListener = ViewTreeObserver.OnGlobalLayoutListener {
+            val rect = Rect()
+            view.getWindowVisibleDisplayFrame(rect)
+            val screenHeight = view.rootView.height
+
+            val keypadHeight = screenHeight - rect.bottom
+            keyboardState.value = if (keypadHeight > screenHeight * 0.15) {
+                Keyboard.Opened
+            } else {
+                Keyboard.Closed
+            }
+        }
+        view.viewTreeObserver.addOnGlobalLayoutListener(onGlobalLayoutListener)
+
+        onDispose {
+            view.viewTreeObserver.removeOnGlobalLayoutListener(onGlobalLayoutListener)
+        }
+    }
+    return keyboardState
 }
