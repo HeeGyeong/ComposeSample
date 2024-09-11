@@ -212,8 +212,8 @@ fun exampleObjectList(): ArrayList<ExampleObject> {
 
     insertExampleObject.add(
         ExampleObject(
-            title = "Lottie, Gif 사용 방법 - 작업 중",
-            description = "Lottie, Gif 사용 방법 - 작업 중",
+            title = "Lottie, Gif 사용 방법 - 글 작성 예정",
+            description = "Lottie, Gif 사용 방법 - 글 작성 예정",
             blogUrl = "",
             exampleType = ConstValue.LottieExample
         )
