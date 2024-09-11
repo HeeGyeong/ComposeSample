@@ -20,9 +20,7 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -30,7 +28,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImagePainter
 import coil.compose.AsyncImagePainter.State
 import coil.compose.rememberAsyncImagePainter
 import coil.decode.GifDecoder
@@ -44,6 +41,7 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.example.composesample.R
+import com.example.composesample.util.noRippleClickable
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -65,10 +63,11 @@ fun LottieExampleUI(
     )
 
     // Gif Value -> 내부 함수만으로는 클릭 시 재생이 안된다.
-    val painter = rememberAsyncImagePainter(
-        model = ImageRequest.Builder(context)
+    var replayKey by remember { mutableStateOf(false) }
+    val imageRequest = remember(replayKey) {
+        ImageRequest.Builder(context)
             .data(R.drawable.gif_lottie_sample)
-            .repeatCount(0)
+            .repeatCount(0) // GIF를 한 번만 재생하도록 설정
             .crossfade(true)
             .decoderFactory(
                 if (SDK_INT >= 28) {
@@ -77,12 +76,31 @@ fun LottieExampleUI(
                     GifDecoder.Factory()
                 }
             )
-            .build(),
+            .onAnimationStart {
+                Log.d("CoilTransform", "onAnimationStart")
+            }
+            .onAnimationEnd {
+                Log.d("CoilTransform", "onAnimationEnd")
+            }
+            .build()
+    }
+
+    val painter = rememberAsyncImagePainter(
+        model = imageRequest,
         transform = { data ->
             if (data is State.Success) {
                 Log.d("CoilTransform", "result : ${data.result.request}")
             }
+            data
+        }
+    )
 
+    val painter2 = rememberAsyncImagePainter(
+        model = imageRequest,
+        transform = { data ->
+            if (data is State.Success) {
+                Log.d("CoilTransform", "result : ${data.result.request}")
+            }
             data
         }
     )
@@ -142,11 +160,27 @@ fun LottieExampleUI(
 
                 Spacer(modifier = Modifier.height(20.dp))
 
-                Image(
-                    painter = painter,
-                    contentDescription = null,
-                    modifier = Modifier.size(100.dp),
-                )
+                if (replayKey) {
+                    Image(
+                        painter = painter,
+                        contentDescription = null,
+                        modifier = Modifier
+                            .size(100.dp)
+                            .noRippleClickable {
+                                replayKey = !replayKey
+                            },
+                    )
+                } else {
+                    Image(
+                        painter = painter2,
+                        contentDescription = null,
+                        modifier = Modifier
+                            .size(100.dp)
+                            .noRippleClickable {
+                                replayKey = !replayKey
+                            },
+                    )
+                }
             }
         }
     }
