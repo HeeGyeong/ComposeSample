@@ -45,8 +45,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -122,8 +125,10 @@ class BottomNavigationActivity : ComponentActivity() {
                 }
             ) { innerPadding ->
                 val keyboard = keyboardAsState()
+                val density = LocalDensity.current
                 val isKeyboardOpened = remember { mutableStateOf(false) }
                 val offsetY = remember { Animatable(0f) }
+                var size by remember { mutableStateOf(IntSize.Zero) }
 
                 LaunchedEffect(key1 = keyboard.value) {
                     when (keyboard.value) {
@@ -140,7 +145,7 @@ class BottomNavigationActivity : ComponentActivity() {
                 LaunchedEffect(isKeyboardOpened.value) {
                     offsetY.animateTo(
                         targetValue = if (isKeyboardOpened.value) {
-                            -20f
+                            -with(density) { size.height.toDp() }.value
                         } else {
                             0f
                         },
@@ -179,46 +184,49 @@ class BottomNavigationActivity : ComponentActivity() {
 
                     Spacer(modifier = Modifier.height(20.dp))
 
-                    Column(
-                        modifier = Modifier
-                            .offset(y = offsetY.value.dp)
-                    ) {
+                    Column {
                         AnimatedVisibility(
                             visible = keyboard.value != Keyboard.Opened,
                             enter = fadeIn(tween(1000, delayMillis = 90)),
-                            exit = fadeOut(tween(1000, delayMillis = 1000))
+                            exit = fadeOut()
                         ) {
                             Text(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .padding(end = 20.dp),
+                                    .onSizeChanged {
+                                        size = it
+                                    },
                                 text = "123123123123123123123123123123123123123123123123123123123123123123123123123123123",
                             )
                         }
 
-                        Spacer(modifier = Modifier.height(20.dp))
+                        Column(
+                            modifier = Modifier.offset(y = offsetY.value.dp)
+                        ) {
+                            Spacer(modifier = Modifier.height(20.dp))
 
-                        Text(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(end = 20.dp),
-                            text = "456456456456456456456456456456456456456456456456456456456456456456456456456456456",
-                        )
+                            Text(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(end = 20.dp),
+                                text = "456456456456456456456456456456456456456456456456456456456456456456456456456456456",
+                            )
 
-                        Spacer(modifier = Modifier.height(20.dp))
+                            Spacer(modifier = Modifier.height(20.dp))
 
-                        Text(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(end = 20.dp),
-                            text = "789789789789789789789789789789789789789789789789789789789789789789789789789789789",
-                        )
+                            Text(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(end = 20.dp),
+                                text = "789789789789789789789789789789789789789789789789789789789789789789789789789789789",
+                            )
+                        }
                     }
 
                     Spacer(modifier = Modifier.weight(1f))
 
                     if (navigationType) {
-                        val offsetY = animateDpAsState(
+                        val navigationOffsetY = animateDpAsState(
                             targetValue = if (bottomNavigationBarIndex.value == 1) (-20).dp else 0.dp,
                             animationSpec = tween(durationMillis = 500)
                         )
@@ -240,7 +248,7 @@ class BottomNavigationActivity : ComponentActivity() {
                                     text = "CustomBottomNavi 2",
                                     modifier = Modifier
                                         .graphicsLayer {
-                                            translationY = offsetY.value.toPx()
+                                            translationY = navigationOffsetY.value.toPx()
                                         }
                                         .background(color = Color.Green)
                                 )
@@ -251,7 +259,7 @@ class BottomNavigationActivity : ComponentActivity() {
                                     text = "CustomBottomNavi 3",
                                     modifier = Modifier
                                         .graphicsLayer {
-                                            translationY = offsetY.value.toPx()
+                                            translationY = navigationOffsetY.value.toPx()
                                         }
                                         .background(color = Color.Green)
                                 )
