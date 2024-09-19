@@ -202,6 +202,15 @@ fun exampleObjectList(): ArrayList<ExampleObject> {
 
     insertExampleObject.add(
         ExampleObject(
+            title = "Lottie, Gif 사용 방법",
+            description = "Lottie, Gif 사용 방법",
+            blogUrl = "https://heegs.tistory.com/171",
+            exampleType = ConstValue.LottieExample
+        )
+    )
+
+    insertExampleObject.add(
+        ExampleObject(
             title = "Bottom Navigation Example - 글 작성 예정, 애니메이션 테스트 중",
             description = "Bottom Navigation을 사용하는 방법에 대해 알아보기 위한 예제. - 글 작성 예정",
             blogUrl = "",
@@ -209,16 +218,6 @@ fun exampleObjectList(): ArrayList<ExampleObject> {
             exampleType = ConstValue.BottomNavigationExample
         )
     )
-
-    insertExampleObject.add(
-        ExampleObject(
-            title = "Lottie, Gif 사용 방법 - 글 작성 예정",
-            description = "Lottie, Gif 사용 방법 - 글 작성 예정",
-            blogUrl = "",
-            exampleType = ConstValue.LottieExample
-        )
-    )
-
 
     return insertExampleObject
 }
