@@ -196,7 +196,7 @@ class BottomNavigationActivity : ComponentActivity() {
                                     .onSizeChanged {
                                         size = it
                                     },
-                                text = "123123123123123123123123123123123123123123123123123123123123123123123123123123123",
+                                text = "First Text Component - animation check",
                             )
                         }
 
@@ -209,7 +209,7 @@ class BottomNavigationActivity : ComponentActivity() {
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(end = 20.dp),
-                                text = "456456456456456456456456456456456456456456456456456456456456456456456456456456456",
+                                text = "Second Text Component",
                             )
 
                             Spacer(modifier = Modifier.height(20.dp))
@@ -218,7 +218,7 @@ class BottomNavigationActivity : ComponentActivity() {
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(end = 20.dp),
-                                text = "789789789789789789789789789789789789789789789789789789789789789789789789789789789",
+                                text = "Third Text Component",
                             )
                         }
                     }
