@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -28,6 +29,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -141,112 +143,78 @@ fun CustomBottomNavigationComponent(
                 .fillMaxSize()
                 .padding(horizontal = 20.dp, vertical = 4.dp)
         ) {
-            Column(
-                modifier = Modifier
-                    .weight(1f)
-                    .noRippleClickable {
-                        onClickHomeTab.invoke()
-                    },
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Icon(
-                    modifier = Modifier.size(24.dp),
-                    imageVector = Icons.Default.Home,
-                    contentDescription = "",
-                    tint = if (clickTabIndex.value == 0) {
-                        Color.Blue
-                    } else {
-                        Color.Gray
-                    }
-                )
-
-                Spacer(modifier = Modifier.height(6.dp))
-
-                Text(
-                    text = "홈",
-                    color = if (clickTabIndex.value == 0) {
-                        Color.Blue
-                    } else {
-                        Color.Gray
-                    },
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                )
-            }
+            CustomNavigationComponent(
+                clickTabIndex = clickTabIndex,
+                icon = Icons.Default.Home,
+                text = "홈",
+                onClickEvent = {
+                    onClickHomeTab.invoke()
+                }
+            )
 
             Spacer(modifier = Modifier.width(68.dp))
 
-            Column(
-                modifier = Modifier
-                    .weight(1f)
-                    .noRippleClickable {
-                        onClickAccountTab.invoke()
-                    },
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-
-                Icon(
-                    modifier = Modifier.size(24.dp),
-                    imageVector = Icons.Default.AccountBox,
-                    contentDescription = "",
-                    tint = if (clickTabIndex.value == 1) {
-                        Color.Blue
-                    } else {
-                        Color.Gray
-                    }
-                )
-
-                Spacer(modifier = Modifier.height(6.dp))
-
-                Text(
-                    text = "계정",
-                    color = if (clickTabIndex.value == 1) {
-                        Color.Blue
-                    } else {
-                        Color.Gray
-                    },
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                )
-            }
+            CustomNavigationComponent(
+                clickTabIndex = clickTabIndex,
+                icon = Icons.Default.AccountBox,
+                text = "계정",
+                onClickEvent = {
+                    onClickAccountTab.invoke()
+                }
+            )
 
             Spacer(modifier = Modifier.width(68.dp))
 
-            Column(
-                modifier = Modifier
-                    .weight(1f)
-                    .noRippleClickable {
-                        onClickSettingTab.invoke()
-                    },
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Icon(
-                    modifier = Modifier.size(24.dp),
-                    imageVector = Icons.Default.Settings,
-                    contentDescription = "",
-                    tint = if (clickTabIndex.value == 2) {
-                        Color.Blue
-                    } else {
-                        Color.Gray
-                    }
-                )
-
-                Spacer(modifier = Modifier.height(6.dp))
-
-                Text(
-                    text = "설정",
-                    color = if (clickTabIndex.value == 2) {
-                        Color.Blue
-                    } else {
-                        Color.Gray
-                    },
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                )
-            }
+            CustomNavigationComponent(
+                clickTabIndex = clickTabIndex,
+                icon = Icons.Default.Settings,
+                text = "설정",
+                onClickEvent = {
+                    onClickSettingTab.invoke()
+                }
+            )
         }
+    }
+}
+
+@Composable
+fun RowScope.CustomNavigationComponent(
+    clickTabIndex: MutableState<Int>,
+    icon: ImageVector,
+    text: String,
+    onClickEvent: () -> Unit,
+) {
+    Column(
+        modifier = Modifier
+            .weight(1f)
+            .noRippleClickable {
+                onClickEvent.invoke()
+            },
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Icon(
+            modifier = Modifier.size(24.dp),
+            imageVector = icon,
+            contentDescription = "",
+            tint = if (clickTabIndex.value == 2) {
+                Color.Blue
+            } else {
+                Color.Gray
+            }
+        )
+
+        Spacer(modifier = Modifier.height(6.dp))
+
+        Text(
+            text = text,
+            color = if (clickTabIndex.value == 2) {
+                Color.Blue
+            } else {
+                Color.Gray
+            },
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+        )
     }
 }
