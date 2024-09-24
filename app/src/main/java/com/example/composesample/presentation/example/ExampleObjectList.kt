@@ -213,7 +213,7 @@ fun exampleObjectList(): ArrayList<ExampleObject> {
         ExampleObject(
             title = "Bottom Navigation Example",
             description = "Bottom Navigation을 사용하는 방법에 대해 알아보기 위한 예제.",
-            blogUrl = "",
+            blogUrl = "https://heegs.tistory.com/172",
             moveType = ExampleMoveType.ACTIVITY,
             exampleType = ConstValue.BottomNavigationExample
         )
