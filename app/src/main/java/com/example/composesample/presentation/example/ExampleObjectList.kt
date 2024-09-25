@@ -224,7 +224,6 @@ fun exampleObjectList(): ArrayList<ExampleObject> {
             title = "Shimmer Example",
             description = "Shimmer를 사용하는 방법에 대해 알아보기 위한 예제.",
             blogUrl = "",
-            moveType = ExampleMoveType.ACTIVITY,
             exampleType = ConstValue.ShimmerExample
         )
     )
