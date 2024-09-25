@@ -80,6 +80,7 @@ import com.example.composesample.presentation.example.component.pager.PullScreen
 import com.example.composesample.presentation.example.component.powersave.PowerSaveModeExampleUI
 import com.example.composesample.presentation.example.component.recorder.AudioRecorderUI
 import com.example.composesample.presentation.example.component.refresh.PullToRefreshUI
+import com.example.composesample.presentation.example.component.shimmer.ShimmerExampleUI
 import com.example.composesample.presentation.example.component.swipe.SwipeToDismissUI
 import com.example.composesample.presentation.example.component.text.TextStyleUI
 import com.example.composesample.presentation.example.component.version.TargetSDK34Example
@@ -108,6 +109,7 @@ import com.example.composesample.util.ConstValue.Companion.PowerSaveModeExample
 import com.example.composesample.util.ConstValue.Companion.PullScreenPager
 import com.example.composesample.util.ConstValue.Companion.PullToRefreshExample
 import com.example.composesample.util.ConstValue.Companion.ScaffoldDrawExample
+import com.example.composesample.util.ConstValue.Companion.ShimmerExample
 import com.example.composesample.util.ConstValue.Companion.SideEffectExample
 import com.example.composesample.util.ConstValue.Companion.SwipeToDismissExample
 import com.example.composesample.util.ConstValue.Companion.TargetSDK34PermissionExample
@@ -588,6 +590,10 @@ fun ExampleCaseUI(
 
                         LottieExample -> {
                             LottieExampleUI(onBackEvent)
+                        }
+
+                        ShimmerExample -> {
+                            ShimmerExampleUI(onBackEvent)
                         }
 
                         else -> {

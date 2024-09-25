@@ -28,6 +28,7 @@ class ConstValue {
         const val PassingIntentDataExample = "passingIntentDataExample"
         const val BottomNavigationExample = "bottomNavigationExample"
         const val LottieExample = "lottieExample"
+        const val ShimmerExample = "ShimmerExample"
 
         // SubCategory
         const val FlingBehavior = "flingBehaviorExampleList"
