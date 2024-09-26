@@ -221,8 +221,8 @@ fun exampleObjectList(): ArrayList<ExampleObject> {
 
     insertExampleObject.add(
         ExampleObject(
-            title = "Shimmer Example",
-            description = "Shimmer를 사용하는 방법에 대해 알아보기 위한 예제.",
+            title = "Shimmer Example - 예제 작성 중",
+            description = "Shimmer를 사용하는 방법에 대해 알아보기 위한 예제. - 예제 작성 중",
             blogUrl = "",
             exampleType = ConstValue.ShimmerExample
         )
