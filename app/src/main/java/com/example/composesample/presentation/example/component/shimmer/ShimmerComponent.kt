@@ -45,7 +45,7 @@ fun ShimmerTestItem(
                 easing = FastOutSlowInEasing
             ),
             repeatMode = RepeatMode.Reverse
-        ), label = "Material3 Shimmer"
+        ), label = "Shimmer"
     )
 
     Card(
@@ -84,7 +84,7 @@ fun ShimmerItem() {
                 easing = FastOutSlowInEasing
             ),
             repeatMode = RepeatMode.Reverse
-        ), label = "Material3 Shimmer"
+        ), label = "Shimmer"
     )
 
     Card(
@@ -145,7 +145,7 @@ fun BackgroundShimmerItem() {
     }
 
     // shimmer가 보이지 않는다.
-    Card(
+    androidx.compose.material3.Card(
         modifier = Modifier
             .fillMaxWidth()
             .height(100.dp)
@@ -154,19 +154,6 @@ fun BackgroundShimmerItem() {
     ) {
         Spacer(modifier = Modifier.background(shimmerBrush()))
     }
-
-    val transition = rememberInfiniteTransition(label = "")
-    val translateAnim by transition.animateFloat(
-        initialValue = 0f,
-        targetValue = 1000f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(
-                durationMillis = 1200,
-                easing = FastOutSlowInEasing
-            ),
-            repeatMode = RepeatMode.Reverse
-        ), label = "Material3 Shimmer"
-    )
 
     // material card에 shimmer 적용한 샘플
     androidx.compose.material.Card(
@@ -179,7 +166,23 @@ fun BackgroundShimmerItem() {
         Spacer(
             modifier = Modifier
                 .clip(RoundedCornerShape(10.dp))
-                .shimmer(shimmerAnimation = translateAnim)
+                .defaultShimmerBrush()
+        )
+    }
+
+    androidx.compose.material3.Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(100.dp)
+            .padding(8.dp),
+        shape = RoundedCornerShape(14.dp)
+    ) {
+        Spacer(
+            modifier = Modifier
+//                .fillMaxWidth()
+//                .height(100.dp)
+                .clip(RoundedCornerShape(10.dp))
+                .defaultShimmerBrush()
         )
     }
 }
