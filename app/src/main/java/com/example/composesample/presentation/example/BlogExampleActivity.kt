@@ -69,6 +69,7 @@ import com.example.composesample.presentation.example.component.ffmpeg.FfmpegEnc
 import com.example.composesample.presentation.example.component.ffmpeg.executeCommand
 import com.example.composesample.presentation.example.component.ffmpeg.getRealPathFromURI
 import com.example.composesample.presentation.example.component.flexbox.FlexBoxUI
+import com.example.composesample.presentation.example.component.header.StickyHeaderExampleUI
 import com.example.composesample.presentation.example.component.intent.ParcelableDataClass
 import com.example.composesample.presentation.example.component.intent.PassingIntentDataActivity
 import com.example.composesample.presentation.example.component.intent.PassingIntentDataExample
@@ -111,6 +112,7 @@ import com.example.composesample.util.ConstValue.Companion.PullToRefreshExample
 import com.example.composesample.util.ConstValue.Companion.ScaffoldDrawExample
 import com.example.composesample.util.ConstValue.Companion.ShimmerExample
 import com.example.composesample.util.ConstValue.Companion.SideEffectExample
+import com.example.composesample.util.ConstValue.Companion.StickyHeaderExample
 import com.example.composesample.util.ConstValue.Companion.SwipeToDismissExample
 import com.example.composesample.util.ConstValue.Companion.TargetSDK34PermissionExample
 import com.example.composesample.util.ConstValue.Companion.TextStyleExample
@@ -594,6 +596,10 @@ fun ExampleCaseUI(
 
                         ShimmerExample -> {
                             ShimmerExampleUI(onBackEvent)
+                        }
+
+                        StickyHeaderExample -> {
+                            StickyHeaderExampleUI(onBackEvent)
                         }
 
                         else -> {

@@ -29,6 +29,7 @@ class ConstValue {
         const val BottomNavigationExample = "bottomNavigationExample"
         const val LottieExample = "lottieExample"
         const val ShimmerExample = "ShimmerExample"
+        const val StickyHeaderExample = "StickyHeaderExample"
 
         // SubCategory
         const val FlingBehavior = "flingBehaviorExampleList"
