@@ -47,8 +47,8 @@ fun StickyHeaderExampleUI(
     onBackButtonClick: () -> Unit
 ) {
     val listState = rememberLazyListState()
+    // scrollBehavior를 사용할 때 scroll 관련 api에 따라서 topBar가 다르게 동작한다.
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
-
 //    TopAppBarDefaults.pinnedScrollBehavior()
 //    TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 
@@ -72,7 +72,8 @@ fun StickyHeaderExampleUI(
     }
 
     Scaffold(
-        // LargeTopBar 사용할때만 nestedScroll 설정
+        // LargeTopBar 사용할때만 nestedScroll 설정. LargeTopBar는 scroll을 탐지하여 영역을 변경함.
+        // LargeTopBar가 없을 때 nestedScroll 사용 시, 스크롤이 안된다.
 //        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             CollapsedTopBar(
@@ -83,8 +84,10 @@ fun StickyHeaderExampleUI(
                 }
             )
 
+            // 가장 기본적인 TopBar
 //            TopAppBar(title = { Text("내 앱") }, scrollBehavior = scrollBehavior)
 
+            // 크기가 동적으로 변경되는 TopBar
 //            LargeTopBar(
 //                scrollBehavior = scrollBehavior,
 //                onBackButtonClick = {
@@ -100,14 +103,6 @@ fun StickyHeaderExampleUI(
                 .background(color = Color.DarkGray)
                 .padding(padding)
         ) {
-//            stickyHeader {
-//                StickyHeaderComponent(
-//                    onBackButtonClick = {
-//                        onBackButtonClick.invoke()
-//                    }
-//                )
-//            }
-
             item {
                 ExpandedTopBar(
                     onBackButtonClick = {
@@ -179,7 +174,7 @@ private fun CollapsedTopBar(
             Color.Green
         } else {
             Color.DarkGray
-        }
+        }, label = "collapsed color"
     )
 
     Box(
