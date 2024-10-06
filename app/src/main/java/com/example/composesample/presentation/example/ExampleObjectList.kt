@@ -223,7 +223,7 @@ fun exampleObjectList(): ArrayList<ExampleObject> {
         ExampleObject(
             title = "Shimmer Example - 글 작성 중",
             description = "Shimmer를 사용하는 방법에 대해 알아보기 위한 예제. - 글 작성 중",
-            blogUrl = "",
+            blogUrl = "https://heegs.tistory.com/174",
             exampleType = ConstValue.ShimmerExample
         )
     )
