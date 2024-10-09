@@ -59,4 +59,9 @@ class BlogExampleViewModel(application: Application) : AndroidViewModel(applicat
     fun reverseExampleList() {
         exampleObjectList.update { ArrayList(exampleObjectList.value.reversed()) }
     }
+
+    val previewExampleData = MutableStateFlow("")
+    fun setPreviewExampleData(message: String) {
+        previewExampleData.update { message }
+    }
 }

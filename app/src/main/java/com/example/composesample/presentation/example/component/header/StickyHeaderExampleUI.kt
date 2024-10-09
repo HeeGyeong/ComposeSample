@@ -40,6 +40,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
+import com.example.composesample.presentation.example.component.preview.ViewModelPreview4
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -109,6 +110,10 @@ fun StickyHeaderExampleUI(
                         onBackButtonClick.invoke()
                     }
                 )
+            }
+
+            item {
+                ViewModelPreview4()
             }
 
             item {
