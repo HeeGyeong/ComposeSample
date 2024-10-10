@@ -26,15 +26,13 @@ fun DynamicColor() {
     }
 }
 
-@Preview(
-    showBackground = true,
-)
+@Preview
 @Composable
 fun SquareComposablePreview() {
     MaterialTheme {
 //        DynamicColor()
-        ShimmerExampleUI(onBackButtonClick = {})
 //        ShimmerItem()
+        ShimmerExampleUI(onBackButtonClick = {})
     }
 }
 
@@ -74,9 +72,9 @@ data class CustomUser(
 
 class UserPreviewParameterProvider : PreviewParameterProvider<CustomUser> {
     override val values = sequenceOf(
-        CustomUser("Elise"),
-        CustomUser("Frank"),
-        CustomUser("Julia")
+        CustomUser("Heegs"),
+        CustomUser("Blog"),
+        CustomUser("Github")
     )
 }
 
@@ -95,10 +93,10 @@ fun UserProfilePreview(
     UserProfileComponent(user)
 }
 
-// val blogExampleViewModel = viewModel<BlogExampleViewModel>()
-
 /**
  * Preview에서 viewModel을 사용하는 방법 1
+ *
+ * viewModel을 인자로 받아서 사용하기
  */
 @Preview
 @Composable
@@ -120,6 +118,8 @@ fun ViewModelPreview1(
 
 /**
  * Preview에서 viewModel을 사용하는 방법 2
+ *
+ * viewModelProvider를 사용하기 : Compose 1.2.0 버전 이상에서만 사용 가능.
  */
 class PreviewViewModelProvider : PreviewParameterProvider<BlogExampleViewModel> {
     override val values = sequenceOf(
@@ -140,6 +140,8 @@ fun ViewModelPreview2(
 
 /**
  * Preview에서 viewModel을 사용하는 방법 3
+ *
+ * 수동으로 preview 내부에서 viewModel 인스턴스 생성하여 사용하기
  */
 @Preview
 @Composable
@@ -154,7 +156,9 @@ fun ViewModelPreview3() {
 
 
 /**
- * Preview에서 viewModel을 사용하는 방법 응용편
+ * Preview에서 viewModel을 사용하는 방법 응용
+ *
+ * CompositionLocalProvider를 사용하여 preview로 보여줄 UI를 분기처리하여 만들기.
  */
 val LocalPreviewMode = compositionLocalOf { false }
 
