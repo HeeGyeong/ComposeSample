@@ -221,8 +221,8 @@ fun exampleObjectList(): ArrayList<ExampleObject> {
 
     insertExampleObject.add(
         ExampleObject(
-            title = "Shimmer Example - 글 작성 중",
-            description = "Shimmer를 사용하는 방법에 대해 알아보기 위한 예제. - 글 작성 중",
+            title = "Shimmer Example",
+            description = "Shimmer를 사용하는 방법에 대해 알아보기 위한 예제.",
             blogUrl = "https://heegs.tistory.com/174",
             exampleType = ConstValue.ShimmerExample
         )
@@ -230,8 +230,8 @@ fun exampleObjectList(): ArrayList<ExampleObject> {
 
     insertExampleObject.add(
         ExampleObject(
-            title = "Sticky Header Example - 예제 작성 중",
-            description = "사용성 높은 Sticky Header를 만들어보기 위한 예제. - 예제 작성 중",
+            title = "Sticky Header Example - 글 작성 중",
+            description = "사용성 높은 Sticky Header를 만들어보기 위한 예제. - 글 작성 중",
             blogUrl = "",
             exampleType = ConstValue.StickyHeaderExample
         )
