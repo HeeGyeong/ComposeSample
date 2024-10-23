@@ -23,7 +23,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.rememberTopAppBarState
@@ -34,13 +33,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import com.example.composesample.presentation.example.component.preview.ViewModelPreview4
+
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -77,7 +75,7 @@ fun StickyHeaderExampleUI(
         // LargeTopBar가 없을 때 nestedScroll 사용 시, 스크롤이 안된다.
 //        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
-            CollapsedTopBar(
+            CollapsedHeaderUI(
                 modifier = Modifier.zIndex(2f),
                 isCollapsed = isCollapsed,
                 onBackButtonClick = {
@@ -104,8 +102,16 @@ fun StickyHeaderExampleUI(
                 .background(color = Color.DarkGray)
                 .padding(padding)
         ) {
+            stickyHeader {
+                ExpandedHeaderUI(
+                    onBackButtonClick = {
+                        onBackButtonClick.invoke()
+                    }
+                )
+            }
+
             item {
-                ExpandedTopBar(
+                ExpandedHeaderUI(
                     onBackButtonClick = {
                         onBackButtonClick.invoke()
                     }
@@ -118,7 +124,7 @@ fun StickyHeaderExampleUI(
 
             item {
                 repeat(30) { index ->
-                    Text (text = "Text View : $index", fontSize = 30.sp)
+                    Text(text = "Text View : $index", fontSize = 30.sp)
                 }
             }
         }
@@ -169,7 +175,7 @@ private fun LargeTopBar(
 )
 
 @Composable
-private fun CollapsedTopBar(
+private fun CollapsedHeaderUI(
     modifier: Modifier = Modifier,
     isCollapsed: Boolean,
     onBackButtonClick: () -> Unit,
@@ -202,7 +208,7 @@ private fun CollapsedTopBar(
 }
 
 @Composable
-private fun ExpandedTopBar(
+private fun ExpandedHeaderUI(
     onBackButtonClick: () -> Unit,
 ) {
     Box(
