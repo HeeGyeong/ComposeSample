@@ -23,6 +23,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.rememberTopAppBarState
@@ -33,6 +34,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -47,9 +49,10 @@ fun StickyHeaderExampleUI(
 ) {
     val listState = rememberLazyListState()
     // scrollBehavior를 사용할 때 scroll 관련 api에 따라서 topBar가 다르게 동작한다.
-    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
-//    TopAppBarDefaults.pinnedScrollBehavior()
-//    TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
+//    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
+//    TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
+//    TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
+//    TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
 
     // LargeTopBar를 사용하기 때문에 해당 변수는 사용하지 않아도 된다.
     // 하지만, Header가 변경되는 타이밍에 따라 처리해야하는 것이 있다면 해당 변수를 사용한다.
@@ -99,16 +102,20 @@ fun StickyHeaderExampleUI(
             state = listState,
             modifier = Modifier
                 .fillMaxSize()
-                .background(color = Color.DarkGray)
+                .background(color = Color.LightGray)
                 .padding(padding)
         ) {
-            stickyHeader {
-                ExpandedHeaderUI(
-                    onBackButtonClick = {
-                        onBackButtonClick.invoke()
-                    }
-                )
-            }
+//            item {
+//                ViewModelPreview4()
+//            }
+//
+//            stickyHeader {
+//                ExpandedHeaderUI(
+//                    onBackButtonClick = {
+//                        onBackButtonClick.invoke()
+//                    }
+//                )
+//            }
 
             item {
                 ExpandedHeaderUI(
