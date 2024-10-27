@@ -31,10 +31,10 @@ import androidx.work.Data
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequest
 import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.PeriodicWorkRequest
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
+import androidx.work.WorkRequest
 import com.example.composesample.util.BackGroundWorker
 import java.util.UUID
 import java.util.concurrent.TimeUnit
@@ -55,7 +55,7 @@ fun WorkManagerUI(
         .setInputData(data)
         .setBackoffCriteria(
             BackoffPolicy.EXPONENTIAL,
-            OneTimeWorkRequest.MIN_BACKOFF_MILLIS,
+            WorkRequest.MIN_BACKOFF_MILLIS,
             TimeUnit.MILLISECONDS
         )
         .addTag(uniqueWorkTag)
@@ -74,7 +74,7 @@ fun WorkManagerUI(
         .setInitialDelay(2, TimeUnit.SECONDS)
         .setBackoffCriteria(
             BackoffPolicy.LINEAR,
-            OneTimeWorkRequest.MIN_BACKOFF_MILLIS,
+            WorkRequest.MIN_BACKOFF_MILLIS,
             TimeUnit.MILLISECONDS
         )
         .addTag(uniqueReplaceWorkTag)
@@ -101,13 +101,16 @@ fun WorkManagerUI(
 
                         workerResponseText = "Progress: $progressText"
                     }
+
                     WorkInfo.State.SUCCEEDED -> {
                         val finalProgress = workInfo.outputData.getInt("finalProgress", 0)
                         workerResponseText = "Work completed. Final progress: $finalProgress"
                     }
+
                     WorkInfo.State.FAILED -> {
                         workerResponseText = "Work failed"
                     }
+
                     else -> {
                         // 다른 상태 처리
                         workerResponseText = "else  case"
