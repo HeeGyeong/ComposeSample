@@ -23,14 +23,12 @@ Jetpack Compose를 공부하고 실무에 적용하면서 발생했던 이슈와
 
 ## 프로젝트 구조
 
+```
 ComposeSample
-
 ├── app
-
 ├── data
-
 └── domain
-
+```
 
 ### 주요 컴포넌트
 - **MainActivity**: 가장 기본적인 Compose 사용 예제
