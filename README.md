@@ -37,8 +37,23 @@ Jetpack Compose를 공부하고 실무에 적용하면서 발생했던 이슈와
 ```
 ComposeSample
 ├── app
+│ ├── presentation # UI 레이어 (Activity, Compose UI)
+│ ├── di # 의존성 주입
+│ ├── db # 로컬 데이터베이스
+│ ├── util # 유틸리티 클래스
+│ └── model # UI 모델 클래스
+│
 ├── data
+│ ├── api # API 인터페이스
+│ ├── repository # Repository 구현체
+│ ├── di # Data 모듈 DI
+│ └── model # Data 모델
+│
 └── domain
+  ├── repository # Repository 인터페이스
+  ├── usecase # UseCase 정의
+  └── model # 도메인 모델
+ 
 ```
 
 ### 주요 컴포넌트
