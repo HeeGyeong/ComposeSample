@@ -1,5 +1,16 @@
 # ComposeSample
 
+## 목차
+- [프로젝트 소개](#프로젝트-소개)
+- [개발 환경](#개발-환경)
+- [주요 라이브러리](#주요-라이브러리)
+- [프로젝트 구조](#프로젝트-구조)
+- [주요 컴포넌트](#주요-컴포넌트)
+- [주요 기능](#주요-기능)
+- [컴포넌트 예제](#컴포넌트-예제)
+- [주의사항](#주의사항)
+- [더 자세한 내용](#더-자세한-내용)
+
 ## 프로젝트 소개
 Jetpack Compose를 공부하고 실무에 적용하면서 발생했던 이슈와 자주 사용되는 다양한 기능들의 샘플을 모아둔 프로젝트입니다.
 
@@ -57,6 +68,103 @@ ComposeSample
    - LazyColumn 최적화
    - 메모리 누수 방지
    - 리컴포지션 최소화
+
+## 컴포넌트 예제
+1. **api**: 
+- Retrofit을 사용한 API 호출과 UseCase 패턴 구현
+- 네트워크 연결 상태 모니터링 및 에러 처리
+
+2. **bottomsheet**: 
+- BottomSheet와 ModalBottomSheet 구현
+- 애니메이션과 상태 관리를 포함한 커스텀 BottomSheet
+
+3. **cache**: 
+- Room을 사용한 로컬 데이터 캐싱과 CRUD 구현
+- 실시간 검색 기능이 포함된 데이터 관리
+
+4. **drag**: 
+- LazyColumn에서의 드래그 앤 드롭 기능
+- 아이템 위치 변경 및 애니메이션 처리
+
+5. **drawer**: 
+- Navigation Drawer 구현
+- Modal Drawer와 스크린 전환 예제
+
+6. **effect**: 
+- Compose의 Side Effect 처리
+- LaunchedEffect, SideEffect 등 효과 관리
+
+7. **ffmpeg**: 
+- FFmpeg를 사용한 비디오/오디오 처리
+- 미디어 파일 인코딩/디코딩 예제
+
+8. **flexbox**: 
+- FlexBox 레이아웃 구현
+- 동적 크기 조절 및 반응형 레이아웃
+
+9. **header**: 
+- Sticky Header 구현
+- 스크롤에 따른 헤더 상태 변경
+
+10. **intent**: 
+- 안드로이드 Intent 처리
+- 앱 간 데이터 공유 및 딥링크 처리
+
+11. **lazycolumn**: 
+- LazyColumn 성능 최적화
+- FlingBehavior 커스터마이징
+
+12. **lottie**: 
+- Lottie 애니메이션 구현
+- 애니메이션 제어 및 상호작용
+
+13. **navigation**: 
+- Bottom Navigation 구현
+- Navigation Component 활용
+
+14. **pager**: 
+- ViewPager 구현
+- 페이지 전환 및 인디케이터
+
+15. **powersave**: 
+- 절전 모드 감지 및 대응
+- 배터리 최적화 처리
+
+16. **preview**: 
+- Compose Preview 기능
+- 다양한 Preview 옵션 활용
+
+17. **recorder**: 
+- 오디오/비디오 녹화 기능
+- 미디어 레코딩 상태 관리
+
+18. **refresh**: 
+- Pull-to-Refresh 구현
+- 새로고침 상태 및 애니메이션
+
+19. **shimmer**: 
+- 로딩 상태 Shimmer 효과
+- 커스텀 Shimmer 애니메이션
+
+20. **swipe**: 
+- Swipe to Dismiss 구현
+- 스와이프 제스처 처리
+
+21. **text**: 
+- 텍스트 스타일링
+- 다양한 텍스트 표현 방식
+
+22. **version**: 
+- Android SDK 버전 대응
+- 버전별 기능 처리
+
+23. **webview**: 
+- WebView 구현 및 설정
+- JavaScript 인터페이스 처리
+
+24. **workmanager**: 
+- WorkManager 백그라운드 작업
+- 작업 스케줄링 관리
 
 ## 주의사항
 - 일부 예제(예: Permission 관련)는 기본 설정이 필요할 수 있습니다
