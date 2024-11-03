@@ -14,6 +14,12 @@
 ## 프로젝트 소개
 Jetpack Compose를 공부하고 실무에 적용하면서 발생했던 이슈와 자주 사용되는 다양한 기능들의 샘플을 모아둔 프로젝트입니다.
 
+- **최신 업데이트**
+  - 2024.11: README.md 갱신, 도메인 별 READMD.md 작성
+  - 2024.08: Version Update 및 버전 대응
+  - 2024.06: Clean Architecture 구조로 전환
+  - 2024.04: 메인 화면 UI/UX 개선
+
 ## 개발 환경
 - Kotlin 1.9.0
 - Android Studio
