@@ -1,16 +1,16 @@
 # Domain Module
 
-이 문서는 `domain` 모듈에 대한 설명입니다.
+This document describes the `domain` module.
 
-이 모듈은 애플리케이션의 도메인 로직을 포함하고 있으며, Clean Architecture 원칙에 따라 설계되었습니다.
+This module contains the domain logic of the application and is designed according to Clean Architecture principles.
 
-## 구조
+## Structure
 
-### 1. 모델 (Model)
+### 1. Model
 
-- **설명**: 애플리케이션에서 사용하는 데이터 구조를 정의합니다.
+- **Description**: Defines the data structures used in the application.
 
-  - `MovieEntity`: 영화 정보를 담고 있는 데이터 클래스입니다.
+  - `MovieEntity`: A data class that holds movie information.
   
     ```kotlin
     package com.example.domain.model
@@ -27,7 +27,7 @@
     )
     ```
 
-  - `ExampleObject`: 예제 객체를 정의하는 데이터 클래스입니다.
+  - `ExampleObject`: A data class that defines an example object.
   
     ```kotlin
     package com.example.domain.model
@@ -48,7 +48,7 @@
     }
     ```
 
-  - `MovieResponse`: 영화 목록을 포함하는 응답 데이터 클래스입니다.
+  - `MovieResponse`: A data class that contains a list of movies.
   
     ```kotlin
     package com.example.domain.model
@@ -73,7 +73,7 @@
     )
     ```
 
-  - `PostData`: 포스트 정보를 담고 있는 데이터 클래스입니다.
+  - `PostData`: A data class that holds post information.
   
     ```kotlin
     package com.example.domain.model
@@ -88,11 +88,11 @@
     )
     ```
 
-### 2. 레포지토리 (Repository)
+### 2. Repository
 
-- **설명**: 데이터 소스와의 상호작용을 정의합니다. 이 레이어는 데이터의 출처(예: API, 데이터베이스 등)에 대한 추상화를 제공합니다.
+- **Description**: Defines interactions with data sources. This layer provides abstraction for the data sources (e.g., API, database).
 
-  - `PostRepository`: 포스트 데이터를 가져오는 메서드를 정의하는 인터페이스입니다.
+  - `PostRepository`: An interface that defines methods for fetching post data.
   
     ```kotlin
     package com.example.domain.repository
@@ -105,11 +105,11 @@
     }
     ```
 
-### 3. 유스케이스 (Use Cases)
+### 3. Use Cases
 
-- **설명**: 도메인 로직을 처리하는 유스케이스를 정의하는 레이어입니다. 이 레이어는 비즈니스 규칙을 구현하며, 레포지토리와 상호작용하여 데이터를 가져오고 가공합니다.
+- **Description**: Defines use cases that handle domain logic. This layer implements business rules and interacts with the repository to fetch and process data.
 
-  - `GetPostUseCase`: 포스트 데이터를 가져오는 유스케이스입니다.
+  - `GetPostUseCase`: A use case for fetching post data.
   
     ```kotlin
     package com.example.domain.useCase
@@ -123,8 +123,8 @@
     }
     ```
 
-## 사용 방법
+## Usage
 
-이 모듈을 사용하려면, 필요한 의존성을 추가하고, 정의된 데이터 모델 및 레포지토리를 활용하여 비즈니스 로직을 구현하면 됩니다.
+To use this module, add the necessary dependencies and implement business logic using the defined data models and repositories.
 
-Clean Architecture를 따르므로, 각 레이어 간의 의존성을 최소화하고, 테스트 가능성을 높이는 것이 중요합니다.
+Since it follows Clean Architecture, it is important to minimize dependencies between layers and enhance testability.

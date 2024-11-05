@@ -1,16 +1,16 @@
 # Data Module
 
-이 문서는 `data` 모듈에 대한 설명입니다.
+This document describes the `data` module.
 
-이 모듈은 애플리케이션의 데이터 계층을 포함하고 있으며, Clean Architecture 원칙에 따라 설계되었습니다.
+This module contains the data layer of the application and is designed according to Clean Architecture principles.
 
-## 구조
+## Structure
 
-### 1. API 인터페이스 (API Interfaces)
+### 1. API Interfaces
 
-- **설명**: 외부 API와의 통신을 위한 인터페이스를 정의합니다.
+- **Description**: Defines interfaces for communication with external APIs.
 
-  - `PostApiInterface`: 게시물 데이터를 가져오기 위한 API 인터페이스입니다.
+  - `PostApiInterface`: API interface for fetching post data.
   
     ```kotlin
     package com.example.data.api
@@ -25,11 +25,11 @@
     }
     ```
 
-### 2. 데이터 소스 (Data Sources)
+### 2. Data Sources
 
-- **설명**: 데이터 소스와의 상호작용을 정의합니다. 이 레이어는 API 호출을 통해 데이터를 가져오는 역할을 합니다.
+- **Description**: Defines interactions with data sources. This layer is responsible for fetching data through API calls.
 
-  - `PostDataSource`: 게시물 데이터를 가져오는 메서드를 정의하는 인터페이스입니다.
+  - `PostDataSource`: Interface defining methods for fetching post data.
   
     ```kotlin
     package com.example.data.repository.dataSource
@@ -42,7 +42,7 @@
     }
     ```
 
-  - `PostDataSourceImpl`: `PostDataSource` 인터페이스를 구현한 클래스입니다. API 인터페이스를 통해 게시물 데이터를 가져옵니다.
+  - `PostDataSourceImpl`: Class implementing the `PostDataSource` interface. It fetches post data through the API interface.
   
     ```kotlin
     package com.example.data.repository.dataSourceImpl
@@ -61,11 +61,11 @@
     }
     ```
 
-### 3. 리포지토리 (Repositories)
+### 3. Repositories
 
-- **설명**: 데이터 소스와 도메인 레이어 간의 상호작용을 관리합니다.
+- **Description**: Manages interactions between data sources and the domain layer.
 
-  - `PostRepositoryImpl`: 도메인 레이어의 `PostRepository` 인터페이스를 구현한 클래스입니다. 데이터 소스에서 게시물 데이터를 가져오는 기능을 제공합니다.
+  - `PostRepositoryImpl`: Class implementing the `PostRepository` interface from the domain layer. It provides functionality to fetch post data from the data source.
   
     ```kotlin
     package com.example.data.repository
@@ -82,8 +82,8 @@
     }
     ```
 
-## 사용 방법
+## Usage
 
-이 모듈을 사용하려면, 필요한 의존성을 추가하고, 정의된 API 인터페이스 및 리포지토리를 활용하여 데이터 계층을 구현하면 됩니다.
+To use this module, add the necessary dependencies and implement the data layer using the defined API interfaces and repositories.
 
-Clean Architecture를 따르므로, 각 레이어 간의 의존성을 최소화하고, 테스트 가능성을 높이는 것이 중요합니다.
+Since it follows Clean Architecture, it is important to minimize dependencies between layers and enhance testability.
