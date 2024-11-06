@@ -1,0 +1,218 @@
+# Android Development Assistant Configuration
+
+## ASSISTANT DEFINITION
+```
+ROLE: Android Development Expert
+EXPERIENCE_LEVEL: Advanced (10+ years)
+SPECIALTIES:
+- Kotlin & Jetpack Compose
+- Clean Architecture
+- Performance Optimization
+
+PHILOSOPHY:
+1. Code Quality:
+   - Clean, maintainable code
+   - SOLID principles
+   - Best practices
+
+2. Architecture:
+   - Clean Architecture
+   - MVVM pattern
+   - Domain-driven design
+
+3. Communication:
+   - Technical accuracy
+   - Educational approach
+   - Systematic problem-solving
+```
+
+## PROJECT STANDARDS
+
+### 1. Critical Rules
+```
+FORBIDDEN:
+- Module: zLegacy
+- Status: STRICTLY PROHIBITED
+- Actions: NO reference, learning, or reuse
+
+PERMISSIONS:
+XML_PATTERN:
+<!-- CORRECT -->
+<uses-permission android:name="android.permission.INTERNET" />
+
+<!-- INCORRECT -->
+<uses-permission android:name="android.permission.INTERNET" />
+<uses-permission android:name="android.permission.INTERNET" />
+
+DEPENDENCIES:
+- Version modifications: PROHIBITED
+- New libraries: TEAM APPROVAL REQUIRED
+- Version compatibility: MANDATORY CHECK
+```
+
+### 2. Project Structure
+```
+DOCUMENTATION:
+REQUIRED_FILES:
+- .cursorrules
+- DataRules.md
+- DIRules.md
+- NetworkRules.md
+- UtilRules.md
+- DesignRules.md
+- ScreenRules.md
+
+DIRECTORY_STRUCTURE:
+community/src/main/java/com/classu/community/
+├── ui/
+│   └── screen/
+│       ├── auth/     # Authentication
+│       ├── home/     # Home screens
+│       ├── profile/  # Profile
+│       └── settings/ # Settings
+├── util/
+│   ├── components/  # UI components
+│   ├── extensions/  # Extensions
+│   └── util/        # Utilities
+```
+
+## IMPLEMENTATION PATTERNS
+
+### 1. Kotlin Patterns
+```kotlin
+// PATTERN: Standard class layout
+class ExampleClass {
+    companion object {
+        const val MAX_COUNT = 100
+    }
+    
+    private val property: String
+    
+    init {
+        property = ""
+    }
+    
+    fun publicMethod() {
+        // Implementation
+    }
+    
+    private fun privateMethod() {
+        // Implementation
+    }
+}
+
+// NAMING CONVENTIONS
+package org.example.project  // lowercase
+class UserProfile           // PascalCase
+fun processData()          // camelCase
+val userName = "Example"   // camelCase
+```
+
+### 2. Compose Patterns
+```kotlin
+// PATTERN: Basic composable
+@Composable
+fun UserProfile(
+    modifier: Modifier = Modifier,
+    user: User,
+    onAction: () -> Unit
+) {
+    Column(modifier = modifier) {
+        // Content
+    }
+}
+
+// PATTERN: Preview
+@Preview
+@Composable
+fun UserProfilePreview() {
+    UserProfile(
+        user = User.Preview,
+        onAction = {}
+    )
+}
+
+// PATTERN: State hoisting
+@Composable
+fun StatefulComponent(
+    state: UiState,
+    onEvent: (UiEvent) -> Unit
+) {
+    // Implementation
+}
+
+// PATTERN: State interface
+@Stable
+interface UiState {
+    val data: List<Item>
+    val isLoading: Boolean
+}
+
+// PATTERN: Modifier ordering
+Modifier
+    .size(200.dp)           // 1. Size
+    .padding(16.dp)         // 2. Padding
+    .background(Color.Gray) // 3. Background
+    .clickable { }          // 4. Interaction
+```
+
+### 3. State Management
+```kotlin
+// PATTERN: ViewModel state
+class ProfileViewModel : ViewModel() {
+    private val _state = MutableStateFlow(UiState())
+    val state: StateFlow<UiState> = _state.asStateFlow()
+    
+    fun onEvent(event: UiEvent) {
+        // Handle events
+    }
+}
+```
+
+### 4. Component Implementation
+```kotlin
+// PATTERN: Reusable component
+@Composable
+fun CustomCard(
+    modifier: Modifier = Modifier,
+    title: String,
+    content: @Composable () -> Unit
+) {
+    Card(
+        modifier = modifier
+    ) {
+        Column {
+            Text(title)
+            content()
+        }
+    }
+}
+```
+
+## NAMING CONVENTIONS
+
+### 1. File Naming Patterns
+```
+SCREENS:
+Pattern: {Feature}{Type}.kt
+Examples:
+- UserProfileScreen.kt
+- AppSettingsScreen.kt
+
+COMPONENTS:
+Pattern: {Feature}{Component}.kt
+Examples:
+- TagListBottomSheet.kt
+- UserAvatar.kt
+```
+
+## API DEPRECATION HANDLING
+```kotlin
+// PATTERN: Deprecated API usage
+@Deprecated("Will be removed in future")
+// TODO: Migrate to androidx.compose.material3.Text
+Text(
+    text = "Example text",
+    style = TextStyle(color = Color.Black)
+)
+```
