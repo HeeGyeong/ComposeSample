@@ -30,6 +30,7 @@ class ConstValue {
         const val LottieExample = "lottieExample"
         const val ShimmerExample = "ShimmerExample"
         const val StickyHeaderExample = "StickyHeaderExample"
+        const val CursorIDEExample = "CursorIDEExample"
 
         // SubCategory
         const val FlingBehavior = "flingBehaviorExampleList"

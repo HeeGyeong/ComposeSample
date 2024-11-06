@@ -70,8 +70,6 @@ import com.example.composesample.presentation.example.component.ffmpeg.executeCo
 import com.example.composesample.presentation.example.component.ffmpeg.getRealPathFromURI
 import com.example.composesample.presentation.example.component.flexbox.FlexBoxUI
 import com.example.composesample.presentation.example.component.header.StickyHeaderExampleUI
-import com.example.composesample.presentation.example.component.intent.ParcelableDataClass
-import com.example.composesample.presentation.example.component.intent.PassingIntentDataActivity
 import com.example.composesample.presentation.example.component.intent.PassingIntentDataExample
 import com.example.composesample.presentation.example.component.lazycolumn.LazyColumnFlingBehaviorExample
 import com.example.composesample.presentation.example.component.lazycolumn.LazyColumnIssueUI
@@ -83,6 +81,7 @@ import com.example.composesample.presentation.example.component.recorder.AudioRe
 import com.example.composesample.presentation.example.component.refresh.PullToRefreshUI
 import com.example.composesample.presentation.example.component.shimmer.ShimmerExampleUI
 import com.example.composesample.presentation.example.component.swipe.SwipeToDismissUI
+import com.example.composesample.presentation.example.component.cursor.CursorIDEExample
 import com.example.composesample.presentation.example.component.text.TextStyleUI
 import com.example.composesample.presentation.example.component.version.TargetSDK34Example
 import com.example.composesample.presentation.example.component.webview.WebViewIssueUI
@@ -95,6 +94,7 @@ import com.example.composesample.util.ConstValue.Companion.AudioRecorderExample
 import com.example.composesample.util.ConstValue.Companion.BottomNavigationExample
 import com.example.composesample.util.ConstValue.Companion.BottomSheetExample
 import com.example.composesample.util.ConstValue.Companion.ClickEventExample
+import com.example.composesample.util.ConstValue.Companion.CursorIDEExample
 import com.example.composesample.util.ConstValue.Companion.CustomBottomSheetExample
 import com.example.composesample.util.ConstValue.Companion.DataCacheExample
 import com.example.composesample.util.ConstValue.Companion.DragAndDropExample
@@ -600,6 +600,10 @@ fun ExampleCaseUI(
 
                         StickyHeaderExample -> {
                             StickyHeaderExampleUI(onBackEvent)
+                        }
+
+                        CursorIDEExample -> {
+                            CursorIDEExample(onBackEvent)
                         }
 
                         else -> {
