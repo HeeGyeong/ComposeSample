@@ -5,6 +5,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
@@ -37,26 +39,27 @@ fun SquareComposablePreview() {
 }
 
 /**
- * Annotation 생성하여 사용
+ * FontScalePreviews 어노테이션
+ * 다양한 폰트 크기를 테스트하기 위한 미리보기 설정을 정의합니다.
  */
 @Preview(
     name = "small font",
     group = "font scales",
-    fontScale = 0.5f
+    fontScale = 0.5f // 작은 폰트 크기
 )
 @Preview(
     name = "medium font",
     group = "font scales",
-    fontScale = 1.0f
+    fontScale = 1.0f // 중간 폰트 크기
 )
 @Preview(
     name = "large font",
     group = "font scales",
-    fontScale = 1.5f
+    fontScale = 1.5f // 큰 폰트 크기
 )
 annotation class FontScalePreviews
 
-// Preview 가 아닌 생성한 Annotation 을 사용
+// FontScalePreviews 어노테이션을 사용하여 다양한 폰트 크기로 "Hello World" 텍스트를 미리보기합니다.
 @FontScalePreviews
 @Composable
 fun HelloWorldPreview() {
@@ -182,5 +185,39 @@ fun ViewModelPreview4() {
 fun MyScreenPreview() {
     CompositionLocalProvider(LocalPreviewMode provides true) {
         ViewModelPreview4()
+    }
+}
+
+/**
+ * LightThemePreview
+ * 밝은 테마의 UI 요소를 미리보기합니다.
+ */
+@Preview(name = "Light Theme", showBackground = true)
+@Composable
+fun LightThemePreview() {
+    MaterialTheme(colorScheme = lightColorScheme()) {
+        Column {
+            Text("Light Theme", style = MaterialTheme.typography.titleLarge)
+            Button(onClick = { /*TODO*/ }) {
+                Text("Click Me")
+            }
+        }
+    }
+}
+
+/**
+ * DarkThemePreview
+ * 어두운 테마의 UI 요소를 미리보기합니다.
+ */
+@Preview(name = "Dark Theme", showBackground = true)
+@Composable
+fun DarkThemePreview() {
+    MaterialTheme(colorScheme = darkColorScheme()) {
+        Column {
+            Text("Dark Theme", style = MaterialTheme.typography.titleLarge)
+            Button(onClick = { /*TODO*/ }) {
+                Text("Click Me")
+            }
+        }
     }
 }
