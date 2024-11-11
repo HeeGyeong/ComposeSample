@@ -1,6 +1,8 @@
 apply {
     plugin('com.android.library')
     plugin('org.jetbrains.kotlin.android')
+    plugin('kotlin-parcelize')
+    plugin('com.google.devtools.ksp')
 
     from('../version.gradle')
     from('../config.gradle')
@@ -13,5 +15,10 @@ android {
 
 dependencies {
     // Module
-    implementation project(':domain')
+    implementation(project(':domain'))
+
+    // Room
+    implementation("androidx.room:room-runtime:$room_version")
+    implementation("androidx.room:room-ktx:$room_version")
+    ksp("androidx.room:room-compiler:$room_version")
 }

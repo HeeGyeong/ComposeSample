@@ -1,8 +1,8 @@
 apply {
     plugin('com.android.application')
     plugin('org.jetbrains.kotlin.android')
-    plugin('kotlin-kapt')
     plugin('kotlin-parcelize')
+    plugin('com.google.devtools.ksp')
 
     from('../version.gradle')
     from('../config.gradle')
@@ -28,57 +28,55 @@ android {
 }
 
 dependencies {
-    // Module
-    implementation project(':domain')
-    implementation project(':data')
+    // Modules
+    implementation(project(':domain'))
+    implementation(project(':data'))
 
-    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.8.6'
-    implementation 'androidx.activity:activity-compose:1.5.1'
+    // AndroidX Core
+    implementation('androidx.lifecycle:lifecycle-runtime-ktx:2.8.6')
+    implementation('androidx.activity:activity-compose:1.5.1')
 
     // Compose
-    implementation "androidx.compose.ui:ui:$compose_version"
-    implementation "androidx.compose.ui:ui-tooling-preview:$compose_version"
-    implementation "androidx.compose.runtime:runtime-livedata:$compose_version"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$viewModel_version"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:$viewModel_version"
-    implementation "androidx.compose.material:material:$material_version"
-    implementation "androidx.compose.material3:material3:$material3_version"
+    implementation("androidx.compose.ui:ui:$compose_version")
+    implementation("androidx.compose.ui:ui-tooling-preview:$compose_version")
+    implementation("androidx.compose.runtime:runtime-livedata:$compose_version")
+    implementation("androidx.compose.material:material:$material_version")
+    implementation("androidx.compose.material3:material3:$material3_version")
 
-    implementation "com.google.accompanist:accompanist-systemuicontroller:0.32.0"
+    // ViewModel
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$viewModel_version")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$viewModel_version")
 
-    // Compose WebView
-    implementation "com.google.accompanist:accompanist-webview:0.24.13-rc"
+    // Accompanist
+    implementation("com.google.accompanist:accompanist-systemuicontroller:0.32.0")
+    implementation("com.google.accompanist:accompanist-webview:0.24.13-rc")
 
-    // Glide
-    implementation "com.github.bumptech.glide:compose:1.0.0-alpha.1"
+    // Image Loading
+    implementation("com.github.bumptech.glide:compose:1.0.0-alpha.1")
+    implementation("io.coil-kt:coil-compose:2.5.0")
+    implementation("io.coil-kt:coil-gif:2.6.0")
 
-    // koin
-    implementation "io.insert-koin:koin-core:$koin_version"
-    implementation "io.insert-koin:koin-android:$koin_version"
-    implementation "io.insert-koin:koin-androidx-compose:$koin_version"
+    // Dependency Injection
+    implementation("io.insert-koin:koin-core:$koin_version")
+    implementation("io.insert-koin:koin-android:$koin_version")
+    implementation("io.insert-koin:koin-androidx-compose:$koin_version")
 
-    //rxjava
-    implementation "io.reactivex.rxjava2:rxjava:2.2.17"
-    implementation "io.reactivex.rxjava2:rxandroid:2.1.1"
-    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.8.1'
-    implementation "io.reactivex.rxjava2:rxkotlin:2.3.0"
+    // Reactive
+    implementation("io.reactivex.rxjava2:rxjava:2.2.17")
+    implementation("io.reactivex.rxjava2:rxandroid:2.1.1")
+    implementation("io.reactivex.rxjava2:rxkotlin:2.3.0")
+    implementation('com.squareup.retrofit2:adapter-rxjava2:2.8.1')
 
-    // Ffmpeg Library
-    implementation "com.arthenica:ffmpeg-kit-full:5.1"
+    // Media
+    implementation("com.arthenica:ffmpeg-kit-full:5.1")
+    implementation("com.airbnb.android:lottie-compose:6.0.0")
 
     // WorkManager
-    implementation "androidx.work:work-runtime:$workManager_version"
-    implementation "androidx.work:work-runtime-ktx:$workManager_version"
+    implementation("androidx.work:work-runtime:$workManager_version")
+    implementation("androidx.work:work-runtime-ktx:$workManager_version")
 
-    // Lottie
-    implementation "com.airbnb.android:lottie-compose:6.0.0"
-
-    // Coil
-    implementation "io.coil-kt:coil-compose:2.5.0"
-    implementation "io.coil-kt:coil-gif:2.6.0"
-
-    // Drag and Drop - Reorderable
-    // Scroll event 없음.
+    // UI Components
+    // Drag and Drop
     implementation("org.burnoutcrew.composereorderable:reorderable:0.9.6")
     // Kotlin version issue로 사용하기 힘들다.
 //    implementation("sh.calvin.reorderable:reorderable:2.3.0")

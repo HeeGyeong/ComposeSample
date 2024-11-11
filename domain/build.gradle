@@ -1,6 +1,7 @@
 apply {
     plugin('com.android.library')
     plugin('org.jetbrains.kotlin.android')
+    plugin('kotlin-parcelize')
 
     from('../version.gradle')
     from('../config.gradle')
