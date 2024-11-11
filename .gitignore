@@ -183,6 +183,12 @@ obj/
 .idea/jarRepositories.xml
 .idea/navEditor.xml
 
+# XML 파일 제외
+*.xml
+
+# gradlew 파일 제외
+gradlew
+
 # Legacy Eclipse project files
 .classpath
 .project
