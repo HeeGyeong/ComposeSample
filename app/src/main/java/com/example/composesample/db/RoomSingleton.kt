@@ -11,9 +11,7 @@ import androidx.room.RoomDatabase
 @Database(entities = [ItemDTO::class, UserData::class], version = 2, exportSchema = false)
 abstract class RoomSingleton : RoomDatabase() {
 
-    // Legacy SubActivity Dao
-    abstract fun itemDao(): ItemDao
+    abstract fun itemDao(): ItemDao // 아이템 DAO
 
-    // DataCache Example Dao
-    abstract fun exampleDao(): ExampleDao
+    abstract fun exampleDao(): ExampleDao // 유저 데이터 DAO
 }

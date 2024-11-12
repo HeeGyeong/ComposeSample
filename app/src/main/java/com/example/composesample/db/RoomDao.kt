@@ -10,8 +10,7 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ItemDao {
-    @Query("SELECT * FROM itemTable WHERE uuid" +
-            " LIKE:startsWith || '%' ORDER BY id DESC")
+    @Query("SELECT * FROM itemTable WHERE uuid LIKE :startsWith || '%' ORDER BY id DESC")
     fun searchData(startsWith: String): Flow<List<ItemDTO>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -30,8 +29,7 @@ interface ItemDao {
 // DataCache Example Dao
 @Dao
 interface ExampleDao {
-    @Query("SELECT * FROM exampleTable WHERE user_name" +
-            " LIKE:searchName || '%' ORDER BY id DESC")
+    @Query("SELECT * FROM exampleTable WHERE user_name LIKE :searchName || '%' ORDER BY id DESC")
     fun searchData(searchName: String): Flow<List<UserData>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

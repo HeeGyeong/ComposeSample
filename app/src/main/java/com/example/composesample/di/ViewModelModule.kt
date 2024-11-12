@@ -11,37 +11,9 @@ import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
 val viewModelModule: Module = module {
-    viewModel {
-        MovieViewModel(
-            get(),
-            get(named("api")),
-        )
-    }
-
-    viewModel {
-        ApiExampleViewModel(
-            get(),
-            get(named("post"))
-        )
-    }
-
-    viewModel {
-        ApiExampleUseCaseViewModel(
-            get(),
-            get()
-        )
-    }
-
-    viewModel {
-        DataCacheViewModel(
-            get(),
-            get()
-        )
-    }
-    viewModel {
-        SubActivityViewModel(
-            get(),
-            get()
-        )
-    }
+    viewModel { MovieViewModel(get(), get(named("api"))) }
+    viewModel { ApiExampleViewModel(get(), get(named("post"))) }
+    viewModel { ApiExampleUseCaseViewModel(get(), get()) }
+    viewModel { DataCacheViewModel(get(), get()) }
+    viewModel { SubActivityViewModel(get(), get()) }
 }

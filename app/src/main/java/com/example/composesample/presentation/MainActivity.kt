@@ -40,9 +40,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import com.example.composesample.presentation.example.BlogExampleActivity
+import com.example.composesample.presentation.legacy.base.SetSystemUI
 import com.example.composesample.presentation.legacy.main.AppbarSample
 import com.example.composesample.util.noRippleClickable
-import com.example.composesample.presentation.legacy.base.SetSystemUI
 
 @ExperimentalAnimationApi
 class MainActivity : ComponentActivity() {
@@ -92,23 +92,8 @@ fun MainActivityScreen(
             item {
                 Spacer(modifier = Modifier.height(10.dp))
 
-                Text(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = 10.dp),
-                    text = "Sample code section",
-                    style = getTextStyle(20),
-                    color = Color.Black,
-                )
-
-                Spacer(modifier = Modifier.height(5.dp))
-
-                Divider(
-                    color = Color.Black,
-                    thickness = 1.dp,
-                )
-
-                Spacer(modifier = Modifier.height(20.dp))
+                // Sample code section
+                SectionTitle("Sample code section")
 
                 PageMoveCardViewContent(
                     cardTitle = "go to Compose Function Sample",
@@ -118,7 +103,7 @@ fun MainActivityScreen(
                     }
                 )
 
-                Spacer(modifier = Modifier.height(20.dp))
+                Spacer(modifier = Modifier.height(5.dp))
 
                 PageMoveCardViewContent(
                     cardTitle = "go to Legacy Compose Sample",
@@ -130,25 +115,10 @@ fun MainActivityScreen(
                     }
                 )
 
-                Spacer(modifier = Modifier.height(20.dp))
+                Spacer(modifier = Modifier.height(30.dp))
 
-                Text(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = 10.dp),
-                    text = "Developer Page section",
-                    style = getTextStyle(20),
-                    color = Color.Black,
-                )
-
-                Spacer(modifier = Modifier.height(5.dp))
-
-                Divider(
-                    color = Color.Black,
-                    thickness = 1.dp,
-                )
-
-                Spacer(modifier = Modifier.height(20.dp))
+                // Developer Page section
+                SectionTitle("Developer Page section")
 
                 UrlCardViewContent(
                     context = context,
@@ -158,7 +128,7 @@ fun MainActivityScreen(
                     cardUrl = "https://heegs.tistory.com"
                 )
 
-                Spacer(modifier = Modifier.height(20.dp))
+                Spacer(modifier = Modifier.height(5.dp))
 
                 UrlCardViewContent(
                     context = context,
@@ -173,6 +143,21 @@ fun MainActivityScreen(
             }
         }
     }
+}
+
+@Composable
+fun SectionTitle(title: String) {
+    Text(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 10.dp),
+        text = title,
+        style = getTextStyle(20),
+        color = Color.Black,
+    )
+    Spacer(modifier = Modifier.height(5.dp))
+    Divider(color = Color.Black, thickness = 1.dp)
+    Spacer(modifier = Modifier.height(20.dp))
 }
 
 @Composable

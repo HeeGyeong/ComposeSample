@@ -13,23 +13,18 @@ import java.io.IOException
 class NetworkUtil(private val context: Context) {
     fun isNetworkConnected(): Boolean {
         val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             val activeNetwork = connectivityManager.activeNetwork ?: return false
             val isActiveNetwork = connectivityManager.getNetworkCapabilities(activeNetwork) ?: return false
-            return when {
-                isActiveNetwork.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
-                isActiveNetwork.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
-                else -> false
-            }
+            isActiveNetwork.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) || isActiveNetwork.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)
         } else {
             val networkInfo = connectivityManager.activeNetworkInfo ?: return false
-            return networkInfo.isConnected
+            networkInfo.isConnected
         }
     }
 }
 
 class NetworkInterceptor(private val networkUtil: NetworkUtil) : Interceptor {
-
     override fun intercept(chain: Interceptor.Chain): Response {
         if (!networkUtil.isNetworkConnected()) {
             throw IOException("Network connection is lost")
@@ -39,8 +34,7 @@ class NetworkInterceptor(private val networkUtil: NetworkUtil) : Interceptor {
 }
 
 class NetworkStatusLiveData(context: Context) : LiveData<Boolean>() {
-    private val connectivityManager =
-        context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    private val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
     private val networkCallback = object : ConnectivityManager.NetworkCallback() {
         override fun onAvailable(network: android.net.Network) {
             postValue(true)

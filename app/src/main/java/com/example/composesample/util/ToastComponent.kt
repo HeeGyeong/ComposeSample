@@ -37,17 +37,12 @@ fun Toast(stream: MutableStateFlow<String>) {
 
     ToastComponent(
         text = message,
-        visibleChanged = {
-            stream.update { "" }
-        }
+        visibleChanged = { stream.update { "" } }
     )
 }
 
 @Composable
-fun ToastComponent(
-    text: String,
-    visibleChanged: () -> Unit = { }
-) {
+fun ToastComponent(text: String, visibleChanged: () -> Unit = {}) {
     val coroutineScope: CoroutineScope = rememberCoroutineScope()
     var visible by remember { mutableStateOf(true) }
 
