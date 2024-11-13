@@ -12,7 +12,13 @@ import org.koin.dsl.module
 
 val viewModelModule: Module = module {
     viewModel { MovieViewModel(get(), get(named("api"))) }
-    viewModel { ApiExampleViewModel(get(), get(named("post"))) }
+    viewModel {
+        ApiExampleViewModel(
+            get(),
+            get(named("post")),
+            get()
+        )
+    }
     viewModel { ApiExampleUseCaseViewModel(get(), get()) }
     viewModel { DataCacheViewModel(get(), get()) }
     viewModel { SubActivityViewModel(get(), get()) }

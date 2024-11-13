@@ -56,6 +56,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.composesample.presentation.MainHeader
 import com.example.composesample.presentation.example.component.api.ApiDisconnectExampleUI
+import com.example.composesample.presentation.example.component.api.KtorExampleUI
 import com.example.composesample.presentation.example.component.bottomsheet.BottomSheetUI
 import com.example.composesample.presentation.example.component.bottomsheet.CustomBottomSheetUI
 import com.example.composesample.presentation.example.component.bottomsheet.ModalBottomSheetUI
@@ -101,6 +102,7 @@ import com.example.composesample.util.ConstValue.Companion.DragAndDropExample
 import com.example.composesample.util.ConstValue.Companion.FfmpegExample
 import com.example.composesample.util.ConstValue.Companion.FlexBoxLayoutExample
 import com.example.composesample.util.ConstValue.Companion.FlingBehaviorExample
+import com.example.composesample.util.ConstValue.Companion.KtorExample
 import com.example.composesample.util.ConstValue.Companion.LazyColumnExample
 import com.example.composesample.util.ConstValue.Companion.LottieExample
 import com.example.composesample.util.ConstValue.Companion.ModalBottomSheetExample
@@ -604,6 +606,10 @@ fun ExampleCaseUI(
 
                         CursorIDEExample -> {
                             CursorIDEExample(onBackEvent)
+                        }
+
+                        KtorExample -> {
+                            KtorExampleUI(onBackEvent)
                         }
 
                         else -> {

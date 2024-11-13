@@ -246,6 +246,15 @@ fun exampleObjectList(): ArrayList<ExampleObject> {
         )
     )
 
+    insertExampleObject.add(
+        ExampleObject(
+            title = "Ktor API Example",
+            description = "Ktor을 사용하여 API를 호출하는 예제",
+            blogUrl = "",
+            exampleType = ConstValue.KtorExample
+        )
+    )
+
     return insertExampleObject
 }
 

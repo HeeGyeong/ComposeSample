@@ -4,7 +4,8 @@ package com.example.composesample.di
 val KoinModules = listOf(
     apiModule,
     viewModelModule,
-    networkModule
+    networkModule,
+    ktorModule
 )
 
 // Clean Architecture에 추가되는 Module
