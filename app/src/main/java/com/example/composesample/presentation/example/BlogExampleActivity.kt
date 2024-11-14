@@ -55,6 +55,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.composesample.presentation.MainHeader
+import com.example.composesample.presentation.example.component.animation.AnimationExampleUI
 import com.example.composesample.presentation.example.component.api.ApiDisconnectExampleUI
 import com.example.composesample.presentation.example.component.api.KtorExampleUI
 import com.example.composesample.presentation.example.component.bottomsheet.BottomSheetUI
@@ -90,6 +91,7 @@ import com.example.composesample.presentation.example.component.workmanager.Work
 import com.example.composesample.presentation.getTextStyle
 import com.example.composesample.presentation.legacy.base.SetSystemUI
 import com.example.composesample.presentation.openWebPage
+import com.example.composesample.util.ConstValue.Companion.AnimationExample
 import com.example.composesample.util.ConstValue.Companion.ApiDisconnectExample
 import com.example.composesample.util.ConstValue.Companion.AudioRecorderExample
 import com.example.composesample.util.ConstValue.Companion.BottomNavigationExample
@@ -610,6 +612,10 @@ fun ExampleCaseUI(
 
                         KtorExample -> {
                             KtorExampleUI(onBackEvent)
+                        }
+
+                        AnimationExample -> {
+                            AnimationExampleUI(onBackEvent)
                         }
 
                         else -> {

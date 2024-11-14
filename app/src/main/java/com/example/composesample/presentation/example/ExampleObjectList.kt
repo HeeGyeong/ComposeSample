@@ -255,6 +255,15 @@ fun exampleObjectList(): ArrayList<ExampleObject> {
         )
     )
 
+    insertExampleObject.add(
+        ExampleObject(
+            title = "Animation Example",
+            description = "Compose에서 다양한 애니메이션을 사용하는 방법에 대한 예제",
+            blogUrl = "",
+            exampleType = ConstValue.AnimationExample
+        )
+    )
+
     return insertExampleObject
 }
 
