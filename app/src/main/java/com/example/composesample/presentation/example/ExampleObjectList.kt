@@ -241,7 +241,7 @@ fun exampleObjectList(): ArrayList<ExampleObject> {
         ExampleObject(
             title = "Cursor IDE Example",
             description = "Cursor IDE를 사용하여 만들어본 예제 - 입력 된 텍스트 길이를 보여주는 예제",
-            blogUrl = "",
+            blogUrl = "https://heegs.tistory.com/177",
             exampleType = ConstValue.CursorIDEExample
         )
     )

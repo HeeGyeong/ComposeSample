@@ -122,7 +122,7 @@ fun MainActivityScreen(
 
                 UrlCardViewContent(
                     context = context,
-                    lastUpdate = "24년 10월",
+                    lastUpdate = "24년 11월",
                     cardTitle = "Tistory Blog",
                     cardDescription = "개발 경험을 기록하거나 공유하기 위하여 시작한 개발 블로그입니다.",
                     cardUrl = "https://heegs.tistory.com"
@@ -132,7 +132,7 @@ fun MainActivityScreen(
 
                 UrlCardViewContent(
                     context = context,
-                    lastUpdate = "24년 10월",
+                    lastUpdate = "24년 11월",
                     cardTitle = "Github",
                     cardDescription = "공부를 하며 작성한 코드를 나만의 레퍼런스로 만들기 위하여 만든 Github 입니다.\n" +
                             "실무에 적용했던 기능을 추후에도 쉽게 사용하기 위해 SampleCode를 만들어 올리고 있습니다.",
