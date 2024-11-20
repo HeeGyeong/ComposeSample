@@ -42,13 +42,17 @@ class BlogExampleViewModel(application: Application) : AndroidViewModel(applicat
 
     // UI Events
     fun initExampleObject() {
-        _exampleObjectList.update { ExampleListManager.getExampleList() }
+        _exampleObjectList.update { exampleObjectList() }
     }
 
-    fun setSubCategoryList(filter: String) {
+    fun setSubCategoryList(
+        filter: String,
+    ) {
         _subCategoryList.update {
-            ExampleListManager.getSubCategoryList()
-                .filter { it.subCategory == filter }
+            subCategoryList()
+                .filter {
+                    it.subCategory == filter
+                }
         }
     }
 
