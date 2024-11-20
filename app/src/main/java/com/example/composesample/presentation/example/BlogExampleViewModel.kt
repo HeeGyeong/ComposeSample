@@ -1,11 +1,10 @@
 package com.example.composesample.presentation.example
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
-import com.example.composesample.util.ConstValue
 import com.example.domain.model.ExampleObject
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.update
@@ -15,49 +14,53 @@ import kotlinx.coroutines.flow.update
  * Example 추가 시 Data Update 필요
  */
 class BlogExampleViewModel(application: Application) : AndroidViewModel(application) {
+    // toast는 그대로 유지
     val toast = MutableStateFlow("")
     fun sendToastMessage(message: String) {
         toast.update { message }
     }
 
-    val exampleObjectList = MutableStateFlow(listOf<ExampleObject>())
-    val subCategoryList = MutableStateFlow(listOf<ExampleObject>())
+    private val _exampleObjectList = MutableStateFlow<List<ExampleObject>>(emptyList())
+    val exampleObjectList: StateFlow<List<ExampleObject>> = _exampleObjectList.asStateFlow()
 
+    private val _subCategoryList = MutableStateFlow<List<ExampleObject>>(emptyList())
+    val subCategoryList: StateFlow<List<ExampleObject>> = _subCategoryList.asStateFlow()
+
+    private val _searchText = MutableStateFlow("")
+    val searchText: StateFlow<String> = _searchText.asStateFlow()
+
+    private val _previewExampleData = MutableStateFlow("")
+    val previewExampleData: StateFlow<String> = _previewExampleData.asStateFlow()
+
+    // Search results
+    val searchExampleList = searchText.combine(exampleObjectList) { query, list ->
+        when {
+            query.isBlank() -> list
+            else -> list.filter { it.title.contains(query, ignoreCase = true) }
+        }
+    }
+
+    // UI Events
     fun initExampleObject() {
-        exampleObjectList.update { ExampleListManager.getExampleList() }
+        _exampleObjectList.update { ExampleListManager.getExampleList() }
     }
 
     fun setSubCategoryList(filter: String) {
-        subCategoryList.update {
+        _subCategoryList.update {
             ExampleListManager.getSubCategoryList()
                 .filter { it.subCategory == filter }
         }
     }
 
-    private val _searchText = MutableStateFlow("")
-    val searchText = _searchText.asStateFlow()
-
     fun onSearchTextChange(text: String) {
         _searchText.value = text
     }
 
-    val searchExampleList = searchText
-        .combine(exampleObjectList) { query, list ->
-            if (query.isBlank()) {
-                list
-            } else {
-                list.filter {
-                    it.title.contains(query, ignoreCase = true)
-                }
-            }
-        }
-
     fun reverseExampleList() {
-        exampleObjectList.update { ArrayList(exampleObjectList.value.reversed()) }
+        _exampleObjectList.update { it.reversed() }
     }
 
-    val previewExampleData = MutableStateFlow("")
     fun setPreviewExampleData(message: String) {
-        previewExampleData.update { message }
+        _previewExampleData.update { message }
     }
 }
