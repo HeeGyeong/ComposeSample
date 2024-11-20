@@ -24,17 +24,13 @@ class BlogExampleViewModel(application: Application) : AndroidViewModel(applicat
     val subCategoryList = MutableStateFlow(listOf<ExampleObject>())
 
     fun initExampleObject() {
-        exampleObjectList.update { exampleObjectList() }
+        exampleObjectList.update { ExampleListManager.getExampleList() }
     }
 
-    fun setSubCategoryList(
-        filter: String,
-    ) {
+    fun setSubCategoryList(filter: String) {
         subCategoryList.update {
-            subCategoryList()
-                .filter {
-                    it.subCategory == filter
-                }
+            ExampleListManager.getSubCategoryList()
+                .filter { it.subCategory == filter }
         }
     }
 
