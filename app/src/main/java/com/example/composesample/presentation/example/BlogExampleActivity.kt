@@ -63,6 +63,7 @@ import com.example.composesample.presentation.example.component.bottomsheet.Cust
 import com.example.composesample.presentation.example.component.bottomsheet.ModalBottomSheetUI
 import com.example.composesample.presentation.example.component.cache.DataCacheExampleUI
 import com.example.composesample.presentation.example.component.clickevent.ClickEventUI
+import com.example.composesample.presentation.example.component.cursor.CursorIDEExample
 import com.example.composesample.presentation.example.component.drag.DragAndDropExampleUI
 import com.example.composesample.presentation.example.component.drawer.ModalDrawerUI
 import com.example.composesample.presentation.example.component.drawer.ScaffoldDrawerUI
@@ -83,7 +84,6 @@ import com.example.composesample.presentation.example.component.recorder.AudioRe
 import com.example.composesample.presentation.example.component.refresh.PullToRefreshUI
 import com.example.composesample.presentation.example.component.shimmer.ShimmerExampleUI
 import com.example.composesample.presentation.example.component.swipe.SwipeToDismissUI
-import com.example.composesample.presentation.example.component.cursor.CursorIDEExample
 import com.example.composesample.presentation.example.component.text.TextStyleUI
 import com.example.composesample.presentation.example.component.version.TargetSDK34Example
 import com.example.composesample.presentation.example.component.webview.WebViewIssueUI
@@ -125,6 +125,7 @@ import com.example.composesample.util.ConstValue.Companion.WorkManagerExample
 import com.example.composesample.util.Toast
 import com.example.composesample.util.noRippleClickable
 import com.example.domain.model.ExampleMoveType
+import com.example.domain.model.ExampleObject
 
 @ExperimentalAnimationApi
 class BlogExampleActivity : ComponentActivity() {
@@ -149,7 +150,7 @@ class BlogExampleActivity : ComponentActivity() {
             blogExampleViewModel.initExampleObject()
 
             SetSystemUI()
-            BlogExampleCase(
+            BlogExampleScreen(
                 launcher = launcher,
                 blogExampleViewModel = blogExampleViewModel
             )
@@ -161,7 +162,7 @@ class BlogExampleActivity : ComponentActivity() {
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun BlogExampleCase(
+fun BlogExampleScreen(
     launcher: ActivityResultLauncher<String>,
     blogExampleViewModel: BlogExampleViewModel
 ) {
@@ -173,178 +174,244 @@ fun BlogExampleCase(
     val searchExampleList = blogExampleViewModel.searchExampleList.collectAsState(listOf()).value
     val subCategoryList = blogExampleViewModel.subCategoryList.collectAsState(listOf()).value
 
-    LaunchedEffect(key1 = Unit, block = {
+    LaunchedEffect(Unit) {
         blogExampleViewModel.reverseExampleList()
-    })
+    }
 
     Box(modifier = Modifier.fillMaxSize()) {
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-        ) {
-            stickyHeader {
-                MainHeader(
-                    title = "Compose Function Sample",
-                    onBackIconClicked = {
-                        if (subCategoryList.isNotEmpty()) {
-                            blogExampleViewModel.setSubCategoryList(
-                                filter = ""
-                            )
-                        } else {
-                            (context as Activity).finish()
-                        }
-                    }
-                )
-                Column(
-                    modifier = Modifier.background(color = Color.LightGray),
-                    verticalArrangement = Arrangement.Center
-                ) {
-                    Spacer(modifier = Modifier.height(10.dp))
-
-                    Row(modifier = Modifier.padding(horizontal = 20.dp)) {
-                        OutlinedTextField(
-                            modifier = Modifier
-                                .height(52.dp)
-                                .weight(0.7f),
-                            value = searchText,
-                            onValueChange = {
-                                blogExampleViewModel.onSearchTextChange(it)
-                            },
-                            placeholder = {
-                                Text(text = "검색할 제목을 입력해주세요.", color = Color.Black)
-                            },
-                            shape = RoundedCornerShape(12.dp),
-                            colors = TextFieldDefaults.outlinedTextFieldColors(
-                                backgroundColor = Color.Transparent,
-                                cursorColor = Color.Red,
-                                placeholderColor = Color.LightGray,
-                                focusedBorderColor = Color.Black,
-                                unfocusedBorderColor = Color.Gray,
-                                errorBorderColor = Color.Red,
-                                textColor = Color.Black,
-                            ),
-                            singleLine = true,
-                        )
-
-                        Row(
-                            modifier = Modifier
-                                .height(52.dp)
-                                .weight(0.2f)
-                                .clickable {
-                                    blogExampleViewModel.reverseExampleList()
-                                },
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.End
-                        ) {
-                            Text(
-                                text = "정렬 기준\n변경",
-                                textAlign = TextAlign.Center
-                            )
-                        }
-                    }
-
-                    Spacer(modifier = Modifier.height(10.dp))
-                }
-            }
-
-            if (subCategoryList.isNotEmpty()) {
-                items(subCategoryList) { exampleObject ->
-                    Column(modifier = Modifier.fillMaxWidth()) {
-                        ExampleCardSection(
-                            context = context,
-                            type = exampleObject.exampleType,
-                            subCategory = exampleObject.subCategory,
-                            exampleTitle = exampleObject.title,
-                            exampleDescription = exampleObject.description,
-                            exampleBlogUrl = exampleObject.blogUrl,
-                            onButtonClick = {
-                                exampleType.value = exampleObject.exampleType
-                                exampleMoveType.value = exampleObject.moveType
-                                blogExampleViewModel.setSubCategoryList(
-                                    filter = exampleObject.subCategory
-                                )
-                            },
-                            noBlogUrlEvent = {
-                                blogExampleViewModel.sendToastMessage("블로그 글이 존재하지 않는 예제입니다.\n코드로 확인해주세요!")
-                            }
-                        )
-                    }
-                }
-            } else if (searchText.isEmpty()) {
-                items(exampleObjectList) { exampleObject ->
-                    Column(modifier = Modifier.fillMaxWidth()) {
-                        ExampleCardSection(
-                            context = context,
-                            type = exampleObject.exampleType,
-                            subCategory = exampleObject.subCategory,
-                            exampleTitle = exampleObject.title,
-                            exampleDescription = exampleObject.description,
-                            exampleBlogUrl = exampleObject.blogUrl,
-                            onButtonClick = {
-                                if (exampleObject.subCategory.isNotEmpty()) {
-                                    blogExampleViewModel.setSubCategoryList(
-                                        filter = exampleObject.subCategory
-                                    )
-                                } else {
-                                    exampleType.value = exampleObject.exampleType
-                                    exampleMoveType.value = exampleObject.moveType
-                                }
-                            },
-                            noBlogUrlEvent = {
-                                blogExampleViewModel.sendToastMessage("블로그 글이 존재하지 않는 예제입니다.\n코드로 확인해주세요!")
-                            }
-                        )
-                    }
-                }
-            } else if (searchExampleList.isNotEmpty()) {
-                items(searchExampleList) { exampleObject ->
-                    Column(modifier = Modifier.fillMaxWidth()) {
-                        ExampleCardSection(
-                            context = context,
-                            type = exampleObject.exampleType,
-                            subCategory = exampleObject.subCategory,
-                            exampleTitle = exampleObject.title,
-                            exampleDescription = exampleObject.description,
-                            exampleBlogUrl = exampleObject.blogUrl,
-                            onButtonClick = {
-                                if (exampleObject.subCategory.isNotEmpty()) {
-                                    blogExampleViewModel.setSubCategoryList(
-                                        filter = exampleObject.subCategory
-                                    )
-                                } else {
-                                    exampleType.value = exampleObject.exampleType
-                                    exampleMoveType.value = exampleObject.moveType
-                                }
-                            },
-                            noBlogUrlEvent = {
-                                blogExampleViewModel.sendToastMessage("블로그 글이 존재하지 않는 예제입니다.\n코드로 확인해주세요!")
-                            }
-                        )
-                    }
-                }
-            } else {
-                item {
-                    Column(modifier = Modifier.fillMaxWidth()) {
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Text(
-                            modifier = Modifier
-                                .fillMaxWidth(),
-                            text = "검색 결과와 일치하는 게시글이 없습니다.",
-                            textAlign = TextAlign.Center,
-                            fontSize = 20.sp
-                        )
-                    }
-                }
-            }
-        }
+        ExampleListContent(
+            searchText = searchText,
+            subCategoryList = subCategoryList,
+            exampleObjectList = exampleObjectList,
+            searchExampleList = searchExampleList,
+            blogExampleViewModel = blogExampleViewModel,
+            exampleType = exampleType,
+            exampleMoveType = exampleMoveType,
+            context = context
+        )
 
         ExampleCaseUI(
             exampleType = exampleType,
             exampleMoveType = exampleMoveType,
-            launcher = launcher,
+            launcher = launcher
         ) {
             exampleType.value = ""
         }
+    }
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+private fun ExampleListContent(
+    searchText: String,
+    subCategoryList: List<ExampleObject>,
+    exampleObjectList: List<ExampleObject>,
+    searchExampleList: List<ExampleObject>,
+    blogExampleViewModel: BlogExampleViewModel,
+    exampleType: MutableState<String>,
+    exampleMoveType: MutableState<ExampleMoveType>,
+    context: Context
+) {
+    LazyColumn(modifier = Modifier.fillMaxSize()) {
+        stickyHeader {
+            ExampleHeader(
+                searchText = searchText,
+                onSearchTextChange = blogExampleViewModel::onSearchTextChange,
+                onSortClick = blogExampleViewModel::reverseExampleList,
+                hasSubCategories = subCategoryList.isNotEmpty(),
+                onBackClick = {
+                    if (subCategoryList.isNotEmpty()) {
+                        blogExampleViewModel.setSubCategoryList("")
+                    } else {
+                        (context as? Activity)?.finish()
+                    }
+                }
+            )
+        }
+
+        when {
+            subCategoryList.isNotEmpty() -> {
+                items(subCategoryList) { exampleObject ->
+                    ExampleCardSection(
+                        context = context,
+                        type = exampleObject.exampleType,
+                        subCategory = exampleObject.subCategory,
+                        exampleTitle = exampleObject.title,
+                        exampleDescription = exampleObject.description,
+                        exampleBlogUrl = exampleObject.blogUrl,
+                        onButtonClick = {
+                            exampleType.value = exampleObject.exampleType
+                            exampleMoveType.value = exampleObject.moveType
+                            blogExampleViewModel.setSubCategoryList(exampleObject.subCategory)
+                        },
+                        noBlogUrlEvent = {
+                            blogExampleViewModel.sendToastMessage("블로그 글이 존재하지 않는 예제입니다.\n코드로 확인해주세요!")
+                        }
+                    )
+                }
+            }
+
+            searchText.isEmpty() -> {
+                items(exampleObjectList) { exampleObject ->
+                    ExampleCardSection(
+                        context = context,
+                        type = exampleObject.exampleType,
+                        subCategory = exampleObject.subCategory,
+                        exampleTitle = exampleObject.title,
+                        exampleDescription = exampleObject.description,
+                        exampleBlogUrl = exampleObject.blogUrl,
+                        onButtonClick = {
+                            if (exampleObject.subCategory.isNotEmpty()) {
+                                blogExampleViewModel.setSubCategoryList(exampleObject.subCategory)
+                            } else {
+                                exampleType.value = exampleObject.exampleType
+                                exampleMoveType.value = exampleObject.moveType
+                            }
+                        },
+                        noBlogUrlEvent = {
+                            blogExampleViewModel.sendToastMessage("블로그 글이 존재하지 않는 예제입니다.\n코드로 확인해주세요!")
+                        }
+                    )
+                }
+            }
+
+            searchExampleList.isNotEmpty() -> {
+                items(searchExampleList) { exampleObject ->
+                    ExampleCardSection(
+                        context = context,
+                        type = exampleObject.exampleType,
+                        subCategory = exampleObject.subCategory,
+                        exampleTitle = exampleObject.title,
+                        exampleDescription = exampleObject.description,
+                        exampleBlogUrl = exampleObject.blogUrl,
+                        onButtonClick = {
+                            if (exampleObject.subCategory.isNotEmpty()) {
+                                blogExampleViewModel.setSubCategoryList(exampleObject.subCategory)
+                            } else {
+                                exampleType.value = exampleObject.exampleType
+                                exampleMoveType.value = exampleObject.moveType
+                            }
+                        },
+                        noBlogUrlEvent = {
+                            blogExampleViewModel.sendToastMessage("블로그 글이 존재하지 않는 예제입니다.\n코드로 확인해주세요!")
+                        }
+                    )
+                }
+            }
+
+            else -> {
+                item { NoSearchResultsMessage() }
+            }
+        }
+    }
+}
+
+@Composable
+private fun ExampleHeader(
+    searchText: String,
+    onSearchTextChange: (String) -> Unit,
+    onSortClick: () -> Unit,
+    hasSubCategories: Boolean,
+    onBackClick: () -> Unit
+) {
+    Column(
+        modifier = Modifier.background(color = Color.LightGray)
+    ) {
+        MainHeader(
+            title = "Compose Function Sample",
+            onBackIconClicked = onBackClick
+        )
+
+        SearchAndSortSection(
+            searchText = searchText,
+            onSearchTextChange = onSearchTextChange,
+            onSortClick = onSortClick
+        )
+    }
+}
+
+@Composable
+private fun SearchAndSortSection(
+    searchText: String,
+    onSearchTextChange: (String) -> Unit,
+    onSortClick: () -> Unit
+) {
+    Column(modifier = Modifier.background(color = Color.LightGray)) {
+        Spacer(modifier = Modifier.height(10.dp))
+        Row(modifier = Modifier.padding(horizontal = 20.dp)) {
+            SearchTextField(
+                searchText = searchText,
+                onSearchTextChange = onSearchTextChange,
+                modifier = Modifier.weight(0.7f)
+            )
+
+            Spacer(modifier = Modifier.width(20.dp))
+
+            SortButton(
+                onClick = onSortClick,
+                modifier = Modifier.weight(0.2f)
+            )
+        }
+        Spacer(modifier = Modifier.height(10.dp))
+    }
+}
+
+@Composable
+private fun SearchTextField(
+    searchText: String,
+    onSearchTextChange: (String) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    OutlinedTextField(
+        modifier = modifier.height(52.dp),
+        value = searchText,
+        onValueChange = onSearchTextChange,
+        placeholder = {
+            Text(text = "검색할 제목을 입력해주세요.", color = Color.Black)
+        },
+        shape = RoundedCornerShape(12.dp),
+        colors = TextFieldDefaults.outlinedTextFieldColors(
+            backgroundColor = Color.Transparent,
+            cursorColor = Color.Red,
+            placeholderColor = Color.LightGray,
+            focusedBorderColor = Color.Black,
+            unfocusedBorderColor = Color.Gray,
+            errorBorderColor = Color.Red,
+            textColor = Color.Black,
+        ),
+        singleLine = true,
+    )
+}
+
+@Composable
+private fun SortButton(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = modifier
+            .height(52.dp)
+            .clickable(onClick = onClick),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.End
+    ) {
+        Text(
+            text = "정렬 기준\n변경",
+            textAlign = TextAlign.Center
+        )
+    }
+}
+
+@Composable
+private fun NoSearchResultsMessage() {
+    Column(modifier = Modifier.fillMaxWidth()) {
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(
+            modifier = Modifier.fillMaxWidth(),
+            text = "검색 결과와 일치하는 게시글이 없습니다.",
+            textAlign = TextAlign.Center,
+            fontSize = 20.sp
+        )
     }
 }
 
@@ -650,6 +717,8 @@ fun ExampleCaseUI(
             exampleMoveType.value = ExampleMoveType.EMPTY
         }
 
-        ExampleMoveType.EMPTY -> { Unit }
+        ExampleMoveType.EMPTY -> {
+            Unit
+        }
     }
 }
