@@ -126,6 +126,8 @@ import com.example.composesample.util.Toast
 import com.example.composesample.util.noRippleClickable
 import com.example.domain.model.ExampleMoveType
 import com.example.domain.model.ExampleObject
+import com.example.composesample.presentation.example.component.sse.SSEExampleUI
+import com.example.composesample.util.ConstValue.Companion.SSEExample
 
 @ExperimentalAnimationApi
 class BlogExampleActivity : ComponentActivity() {
@@ -683,6 +685,10 @@ fun ExampleCaseUI(
 
                         AnimationExample -> {
                             AnimationExampleUI(onBackEvent)
+                        }
+
+                        SSEExample -> {
+                            SSEExampleUI(onBackEvent)
                         }
 
                         else -> {

@@ -33,6 +33,7 @@ class ConstValue {
         const val CursorIDEExample = "CursorIDEExample"
         const val KtorExample = "KtorExample"
         const val AnimationExample = "animationExample"
+        const val SSEExample = "SSEExample"
 
         // SubCategory
         const val FlingBehavior = "flingBehaviorExampleList"
