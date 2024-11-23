@@ -248,8 +248,8 @@ fun exampleObjectList(): ArrayList<ExampleObject> {
 
     insertExampleObject.add(
         ExampleObject(
-            title = "Ktor API Example",
-            description = "Ktor을 사용하여 API를 호출하는 예제",
+            title = "Ktor API Example (작업 중)",
+            description = "Ktor을 사용하여 API를 호출하는 예제 (작업 중)",
             blogUrl = "",
             exampleType = ConstValue.KtorExample
         )
@@ -257,8 +257,8 @@ fun exampleObjectList(): ArrayList<ExampleObject> {
 
     insertExampleObject.add(
         ExampleObject(
-            title = "Animation Example",
-            description = "Compose에서 다양한 애니메이션을 사용하는 방법에 대한 예제",
+            title = "Animation Example (작업 중)",
+            description = "Compose에서 다양한 애니메이션을 사용하는 방법에 대한 예제 (작업 중)",
             blogUrl = "",
             exampleType = ConstValue.AnimationExample
         )
@@ -266,9 +266,9 @@ fun exampleObjectList(): ArrayList<ExampleObject> {
 
     insertExampleObject.add(
         ExampleObject(
-            title = "Server-Sent Events Example",
-            description = "SSE를 사용하여 서버로부터 실시간 업데이트를 받는 예제",
-            blogUrl = "https://heegs.tistory.com/sse-example",
+            title = "Server-Sent Events Example (작업 중)",
+            description = "SSE를 사용하여 서버로부터 실시간 업데이트를 받는 예제 (작업 중)",
+            blogUrl = "",
             exampleType = ConstValue.SSEExample
         )
     )

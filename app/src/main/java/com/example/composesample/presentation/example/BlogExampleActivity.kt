@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -688,7 +689,9 @@ fun ExampleCaseUI(
                         }
 
                         SSEExample -> {
-                            SSEExampleUI(onBackEvent)
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                SSEExampleUI(onBackEvent)
+                            }
                         }
 
                         else -> {
