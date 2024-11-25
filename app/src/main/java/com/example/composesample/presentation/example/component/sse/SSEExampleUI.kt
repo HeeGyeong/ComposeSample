@@ -23,29 +23,54 @@ import kotlinx.coroutines.withContext
 import java.net.URI
 import java.time.Duration
 
+/**
+ * SSE(Server-Sent Events) 연결 상태와 메시지를 관리하는 상태 클래스
+ * @property messageList 수신된 모든 메시지들의 리스트
+ * @property isConnected 현재 SSE 연결 상태
+ */
 private data class SSEUIState(
     val messageList: List<SSEMessage> = emptyList(),
     val isConnected: Boolean = false
 )
 
+/**
+ * SSE로부터 수신되는 다양한 타입의 메시지를 정의하는 sealed class
+ * - Connected: 연결 성공 메시지
+ * - Comment: 서버로부터 받은 주석 메시지
+ * - CollectedChars: 수집된 문자들을 표시하는 메시지 (각 연결 사이클마다 하나씩 존재)
+ * - Disconnected: 연결 종료 메시지
+ * - Error: 에러 메시지
+ */
 private sealed class SSEMessage {
     data class Connected(val message: String = "연결됨") : SSEMessage()
     data class Comment(val message: String) : SSEMessage()
-    data class CollectedChars(val chars: String) : SSEMessage()
+    data class CollectedChars(
+        val chars: String,
+        val cycleId: Int  // 각 연결 사이클을 구분하기 위한 ID
+    ) : SSEMessage()
     data class Disconnected(val message: String = "연결 종료") : SSEMessage()
     data class Error(val message: String) : SSEMessage()
 }
 
+/**
+ * SSE 예제의 메인 Composable 함수
+ * 위키피디아의 실시간 업데이트를 SSE를 통해 수신하고 표시
+ * @param onBackEvent 뒤로가기 버튼 클릭 시 호출될 콜백
+ */
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun SSEExampleUI(
-    onBackEvent: () -> Unit
-) {
+fun SSEExampleUI(onBackEvent: () -> Unit) {
+    // UI 상태 관리를 위한 상태 변수들
     val uiState = remember { mutableStateOf(SSEUIState()) }
-    val currentChars = remember { mutableStateOf("") }
-    val eventSourceHolder = remember { mutableStateOf<EventSource?>(null) }
+    val currentChars = remember { mutableStateOf("") }  // 현재 사이클에서 수집 중인 문자들
+    val cycleCount = remember { mutableStateOf(0) }     // 연결 사이클 카운터
+    val eventSourceHolder = remember { mutableStateOf<EventSource?>(null) }  // SSE 연결 객체
     val scope = rememberCoroutineScope()
 
+    /**
+     * SSE 연결을 종료하는 함수
+     * 안전하게 연결을 종료하고 예외 처리를 수행
+     */
     val closeConnection = remember {
         {
             scope.launch(Dispatchers.IO) {
@@ -59,8 +84,13 @@ fun SSEExampleUI(
         }
     }
 
+    /**
+     * SSE 이벤트를 처리하는 핸들러
+     * 각각의 이벤트 타입에 따라 적절한 처리를 수행
+     */
     val eventHandler = remember {
         object : EventHandler {
+            // 연결이 성공적으로 열렸을 때 호출
             override fun onOpen() {
                 scope.launch {
                     uiState.value = uiState.value.copy(
@@ -70,23 +100,38 @@ fun SSEExampleUI(
                 }
             }
 
+            // 연결이 종료되었을 때 호출
             override fun onClosed() {
                 scope.launch {
                     uiState.value = uiState.value.copy(
                         isConnected = false,
-                        messageList = uiState.value.messageList + 
-                            SSEMessage.CollectedChars(currentChars.value) +
-                            SSEMessage.Disconnected()
+                        messageList = uiState.value.messageList + SSEMessage.Disconnected()
                     )
                 }
             }
 
+            // 서버로부터 메시지를 수신했을 때 호출
             override fun onMessage(event: String, messageEvent: MessageEvent) {
                 scope.launch {
                     try {
+                        // 메시지에서 첫 글자만 추출
                         val firstChar = messageEvent.data.firstOrNull()?.toString() ?: ""
                         currentChars.value += firstChar
                         
+                        // 현재 사이클의 CollectedChars 메시지만 업데이트
+                        val updatedList = uiState.value.messageList.filterNot { 
+                            it is SSEMessage.CollectedChars && 
+                            it.cycleId == cycleCount.value 
+                        } + SSEMessage.CollectedChars(
+                            chars = currentChars.value,
+                            cycleId = cycleCount.value
+                        )
+                        
+                        uiState.value = uiState.value.copy(
+                            messageList = updatedList
+                        )
+                        
+                        // 10개 글자를 수집하면 연결 종료
                         if (currentChars.value.length >= 10) {
                             closeConnection.invoke()
                         }
@@ -99,6 +144,7 @@ fun SSEExampleUI(
                 }
             }
 
+            // 서버로부터 주석을 수신했을 때 호출
             override fun onComment(comment: String) {
                 scope.launch {
                     uiState.value = uiState.value.copy(
@@ -108,6 +154,7 @@ fun SSEExampleUI(
                 }
             }
 
+            // 에러가 발생했을 때 호출
             override fun onError(t: Throwable) {
                 scope.launch {
                     uiState.value = uiState.value.copy(
@@ -120,9 +167,14 @@ fun SSEExampleUI(
         }
     }
 
+    /**
+     * 새로운 SSE 연결을 시작하는 함수
+     * 위키피디아의 실시간 업데이트 스트림에 연결
+     */
     val startConnection = remember {
         {
-            currentChars.value = ""
+            currentChars.value = ""  // 문자 수집 초기화
+            cycleCount.value += 1    // 새로운 사이클 시작
             scope.launch(Dispatchers.IO) {
                 try {
                     eventSourceHolder.value = EventSource.Builder(
@@ -199,11 +251,13 @@ fun SSEExampleUI(
     }
 }
 
+/**
+ * 상태 메시지를 표시하는 카드 Composable
+ * @param message 표시할 메시지
+ * @param backgroundColor 카드의 배경색
+ */
 @Composable
-private fun StatusMessageCard(
-    message: String,
-    backgroundColor: Color
-) {
+private fun StatusMessageCard(message: String, backgroundColor: Color) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -220,6 +274,10 @@ private fun StatusMessageCard(
     }
 }
 
+/**
+ * 수집된 문자들을 표시하는 카드 Composable
+ * @param chars 수집된 문자열
+ */
 @Composable
 private fun CollectedCharsCard(chars: String) {
     Card(
@@ -237,13 +295,3 @@ private fun CollectedCharsCard(chars: String) {
         )
     }
 }
-
-@Composable
-private fun EmptyStateMessage() {
-    Text(
-        text = "연결 버튼을 눌러 위키피디아의 실시간 업데이트를 확인하세요",
-        modifier = Modifier.padding(16.dp),
-        textAlign = TextAlign.Center,
-        color = Color.Gray
-    )
-} 
