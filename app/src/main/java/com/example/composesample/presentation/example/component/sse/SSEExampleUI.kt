@@ -23,21 +23,26 @@ import kotlinx.coroutines.withContext
 import java.net.URI
 import java.time.Duration
 
+private data class SSEUIState(
+    val messageList: List<SSEMessage> = emptyList(),
+    val isConnected: Boolean = false
+)
+
+private sealed class SSEMessage {
+    data class Connected(val message: String = "연결됨") : SSEMessage()
+    data class Comment(val message: String) : SSEMessage()
+    data class CollectedChars(val chars: String) : SSEMessage()
+    data class Disconnected(val message: String = "연결 종료") : SSEMessage()
+    data class Error(val message: String) : SSEMessage()
+}
+
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun SSEExampleUI(
     onBackEvent: () -> Unit
 ) {
-    val uiState = remember {
-        mutableStateOf(
-            SSEUIState(
-                statusMessages = emptyList(),
-                collectedChars = "",
-                isConnected = false
-            )
-        )
-    }
-    
+    val uiState = remember { mutableStateOf(SSEUIState()) }
+    val currentChars = remember { mutableStateOf("") }
     val eventSourceHolder = remember { mutableStateOf<EventSource?>(null) }
     val scope = rememberCoroutineScope()
 
@@ -60,7 +65,7 @@ fun SSEExampleUI(
                 scope.launch {
                     uiState.value = uiState.value.copy(
                         isConnected = true,
-                        statusMessages = listOf("연결됨")
+                        messageList = uiState.value.messageList + SSEMessage.Connected()
                     )
                 }
             }
@@ -69,7 +74,9 @@ fun SSEExampleUI(
                 scope.launch {
                     uiState.value = uiState.value.copy(
                         isConnected = false,
-                        statusMessages = uiState.value.statusMessages + "연결 종료"
+                        messageList = uiState.value.messageList + 
+                            SSEMessage.CollectedChars(currentChars.value) +
+                            SSEMessage.Disconnected()
                     )
                 }
             }
@@ -78,20 +85,26 @@ fun SSEExampleUI(
                 scope.launch {
                     try {
                         val firstChar = messageEvent.data.firstOrNull()?.toString() ?: ""
-                        val newCollectedChars = uiState.value.collectedChars + firstChar
+                        currentChars.value += firstChar
                         
-                        uiState.value = uiState.value.copy(
-                            collectedChars = newCollectedChars
-                        )
-                        
-                        if (newCollectedChars.length >= 10) {
+                        if (currentChars.value.length >= 10) {
                             closeConnection.invoke()
                         }
                     } catch (e: Exception) {
                         uiState.value = uiState.value.copy(
-                            statusMessages = uiState.value.statusMessages + "파싱 에러: ${e.message}"
+                            messageList = uiState.value.messageList + 
+                                SSEMessage.Error("파싱 에러: ${e.message}")
                         )
                     }
+                }
+            }
+
+            override fun onComment(comment: String) {
+                scope.launch {
+                    uiState.value = uiState.value.copy(
+                        messageList = uiState.value.messageList + 
+                            SSEMessage.Comment("주석: $comment")
+                    )
                 }
             }
 
@@ -99,15 +112,8 @@ fun SSEExampleUI(
                 scope.launch {
                     uiState.value = uiState.value.copy(
                         isConnected = false,
-                        statusMessages = uiState.value.statusMessages + "에러: ${t.message}"
-                    )
-                }
-            }
-
-            override fun onComment(comment: String) {
-                scope.launch {
-                    uiState.value = uiState.value.copy(
-                        statusMessages = uiState.value.statusMessages + "주석: $comment"
+                        messageList = uiState.value.messageList + 
+                            SSEMessage.Error("에러: ${t.message}")
                     )
                 }
             }
@@ -116,14 +122,9 @@ fun SSEExampleUI(
 
     val startConnection = remember {
         {
+            currentChars.value = ""
             scope.launch(Dispatchers.IO) {
                 try {
-                    withContext(Dispatchers.Main) {
-                        uiState.value = uiState.value.copy(
-                            collectedChars = ""
-                        )
-                    }
-                    
                     eventSourceHolder.value = EventSource.Builder(
                         eventHandler,
                         URI.create("https://stream.wikimedia.org/v2/stream/recentchange")
@@ -135,7 +136,8 @@ fun SSEExampleUI(
                     Log.e("SSE", "Error starting connection: ${e.message}")
                     withContext(Dispatchers.Main) {
                         uiState.value = uiState.value.copy(
-                            statusMessages = uiState.value.statusMessages + "연결 시작 에러: ${e.message}"
+                            messageList = uiState.value.messageList + 
+                                SSEMessage.Error("연결 시작 에러: ${e.message}")
                         )
                     }
                 }
@@ -143,37 +145,6 @@ fun SSEExampleUI(
         }
     }
 
-    SSEContent(
-        uiState = uiState.value,
-        onBackEvent = {
-            closeConnection()
-            onBackEvent()
-        },
-        onConnectionToggle = {
-            if (!uiState.value.isConnected) {
-                startConnection()
-            } else {
-                closeConnection()
-                uiState.value = uiState.value.copy(collectedChars = "")
-            }
-        }
-    )
-}
-
-// UI 상태를 담는 데이터 클래스
-private data class SSEUIState(
-    val statusMessages: List<String>,
-    val collectedChars: String,
-    val isConnected: Boolean
-)
-
-// UI 컴포넌트를 별도 함수로 분리
-@Composable
-private fun SSEContent(
-    uiState: SSEUIState,
-    onBackEvent: () -> Unit,
-    onConnectionToggle: () -> Unit
-) {
     Column(modifier = Modifier.fillMaxSize()) {
         MainHeader(
             title = "SSE Example",
@@ -186,8 +157,13 @@ private fun SSEContent(
                 .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Button(onClick = onConnectionToggle) {
-                Text(if (uiState.isConnected) "연결 종료" else "위키피디아 실시간 업데이트 보기")
+            Button(
+                onClick = {
+                    if (!uiState.value.isConnected) startConnection()
+                    else closeConnection()
+                }
+            ) {
+                Text(if (uiState.value.isConnected) "연결 종료" else "위키피디아 실시간 업데이트 보기")
             }
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -197,44 +173,43 @@ private fun SSEContent(
                     .fillMaxWidth()
                     .weight(1f)
             ) {
-                // 연결 시작과 일반 메시지들
-                items(uiState.statusMessages.filter { !it.startsWith("연결 종료") }) { message ->
-                    StatusMessageCard(message = message)
-                }
-
-                // 수집된 글자들 표시
-                if (uiState.collectedChars.isNotEmpty()) {
-                    item {
-                        CollectedCharsCard(chars = uiState.collectedChars)
+                items(uiState.value.messageList) { message ->
+                    when (message) {
+                        is SSEMessage.Connected -> StatusMessageCard(
+                            message = message.message,
+                            backgroundColor = Color(0xFFE8F5E9)
+                        )
+                        is SSEMessage.Comment -> StatusMessageCard(
+                            message = message.message,
+                            backgroundColor = Color.White
+                        )
+                        is SSEMessage.CollectedChars -> CollectedCharsCard(chars = message.chars)
+                        is SSEMessage.Disconnected -> StatusMessageCard(
+                            message = message.message,
+                            backgroundColor = Color(0xFFFFF3E0)
+                        )
+                        is SSEMessage.Error -> StatusMessageCard(
+                            message = message.message,
+                            backgroundColor = Color(0xFFFFEBEE)
+                        )
                     }
                 }
-
-                // 연결 종료 메시지를 마지막에 표시
-                items(uiState.statusMessages.filter { it.startsWith("연결 종료") }) { message ->
-                    StatusMessageCard(message = message)
-                }
-            }
-
-            if (uiState.statusMessages.isEmpty() && uiState.collectedChars.isEmpty()) {
-                EmptyStateMessage()
             }
         }
     }
 }
 
 @Composable
-private fun StatusMessageCard(message: String) {
+private fun StatusMessageCard(
+    message: String,
+    backgroundColor: Color
+) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 4.dp),
         elevation = 4.dp,
-        backgroundColor = when {
-            message.startsWith("에러") -> Color(0xFFFFEBEE)
-            message.startsWith("연결됨") -> Color(0xFFE8F5E9)
-            message.startsWith("연결 종료") -> Color(0xFFFFF3E0)
-            else -> Color.White
-        }
+        backgroundColor = backgroundColor
     ) {
         Text(
             text = message,
