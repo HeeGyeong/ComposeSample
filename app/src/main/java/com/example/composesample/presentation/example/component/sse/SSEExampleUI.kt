@@ -28,7 +28,6 @@ import java.time.Duration
 fun SSEExampleUI(
     onBackEvent: () -> Unit
 ) {
-    // 상태를 remember로 감싸고 stable한 데이터 구조 사용
     val uiState = remember {
         mutableStateOf(
             SSEUIState(
@@ -39,11 +38,22 @@ fun SSEExampleUI(
         )
     }
     
-    // EventSource를 remember로 관리하여 불필요한 재생성 방지
     val eventSourceHolder = remember { mutableStateOf<EventSource?>(null) }
     val scope = rememberCoroutineScope()
 
-    // 이벤트 핸들러를 stable하게 유지
+    val closeConnection = remember {
+        {
+            scope.launch(Dispatchers.IO) {
+                try {
+                    eventSourceHolder.value?.close()
+                    eventSourceHolder.value = null
+                } catch (e: Exception) {
+                    Log.e("SSE", "Error closing connection: ${e.message}")
+                }
+            }
+        }
+    }
+
     val eventHandler = remember {
         object : EventHandler {
             override fun onOpen() {
@@ -59,7 +69,7 @@ fun SSEExampleUI(
                 scope.launch {
                     uiState.value = uiState.value.copy(
                         isConnected = false,
-                        statusMessages = listOf("연결 종료")
+                        statusMessages = uiState.value.statusMessages + "연결 종료"
                     )
                 }
             }
@@ -68,12 +78,18 @@ fun SSEExampleUI(
                 scope.launch {
                     try {
                         val firstChar = messageEvent.data.firstOrNull()?.toString() ?: ""
+                        val newCollectedChars = uiState.value.collectedChars + firstChar
+                        
                         uiState.value = uiState.value.copy(
-                            collectedChars = uiState.value.collectedChars + firstChar
+                            collectedChars = newCollectedChars
                         )
+                        
+                        if (newCollectedChars.length >= 10) {
+                            closeConnection.invoke()
+                        }
                     } catch (e: Exception) {
                         uiState.value = uiState.value.copy(
-                            statusMessages = listOf("파싱 에러: ${e.message}")
+                            statusMessages = uiState.value.statusMessages + "파싱 에러: ${e.message}"
                         )
                     }
                 }
@@ -83,7 +99,7 @@ fun SSEExampleUI(
                 scope.launch {
                     uiState.value = uiState.value.copy(
                         isConnected = false,
-                        statusMessages = listOf("에러: ${t.message}")
+                        statusMessages = uiState.value.statusMessages + "에러: ${t.message}"
                     )
                 }
             }
@@ -91,22 +107,8 @@ fun SSEExampleUI(
             override fun onComment(comment: String) {
                 scope.launch {
                     uiState.value = uiState.value.copy(
-                        statusMessages = listOf("주석: $comment")
+                        statusMessages = uiState.value.statusMessages + "주석: $comment"
                     )
-                }
-            }
-        }
-    }
-
-    // 연결 관련 함수들을 remember로 캐싱
-    val closeConnection = remember {
-        {
-            scope.launch(Dispatchers.IO) {
-                try {
-                    eventSourceHolder.value?.close()
-                    eventSourceHolder.value = null
-                } catch (e: Exception) {
-                    Log.e("SSE", "Error closing connection: ${e.message}")
                 }
             }
         }
@@ -116,6 +118,12 @@ fun SSEExampleUI(
         {
             scope.launch(Dispatchers.IO) {
                 try {
+                    withContext(Dispatchers.Main) {
+                        uiState.value = uiState.value.copy(
+                            collectedChars = ""
+                        )
+                    }
+                    
                     eventSourceHolder.value = EventSource.Builder(
                         eventHandler,
                         URI.create("https://stream.wikimedia.org/v2/stream/recentchange")
@@ -127,7 +135,7 @@ fun SSEExampleUI(
                     Log.e("SSE", "Error starting connection: ${e.message}")
                     withContext(Dispatchers.Main) {
                         uiState.value = uiState.value.copy(
-                            statusMessages = listOf("연결 시작 에러: ${e.message}")
+                            statusMessages = uiState.value.statusMessages + "연결 시작 에러: ${e.message}"
                         )
                     }
                 }
@@ -189,14 +197,21 @@ private fun SSEContent(
                     .fillMaxWidth()
                     .weight(1f)
             ) {
-                items(uiState.statusMessages) { message ->
+                // 연결 시작과 일반 메시지들
+                items(uiState.statusMessages.filter { !it.startsWith("연결 종료") }) { message ->
                     StatusMessageCard(message = message)
                 }
 
+                // 수집된 글자들 표시
                 if (uiState.collectedChars.isNotEmpty()) {
                     item {
                         CollectedCharsCard(chars = uiState.collectedChars)
                     }
+                }
+
+                // 연결 종료 메시지를 마지막에 표시
+                items(uiState.statusMessages.filter { it.startsWith("연결 종료") }) { message ->
+                    StatusMessageCard(message = message)
                 }
             }
 
