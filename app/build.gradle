@@ -91,5 +91,6 @@ dependencies {
     implementation("androidx.compose.ui:ui:1.7.5")
     implementation("androidx.compose.animation:animation:1.7.5")
 
+    // SSE
     implementation "com.launchdarkly:okhttp-eventsource:2.5.0"
 }
