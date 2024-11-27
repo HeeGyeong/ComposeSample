@@ -167,7 +167,7 @@ fun exampleObjectList(): ArrayList<ExampleObject> {
     insertExampleObject.add(
         ExampleObject(
             title = "WorkManager Example",
-            description = "WorkManager를 사용하는 방법과, 다양한 옵션에 대해 알아보기 위한 예제.",
+            description = "WorkManager를 사용하는 방법과, 다양한 옵션에 대해 ��아보기 위한 예제.",
             blogUrl = "https://heegs.tistory.com/166",
             exampleType = ConstValue.WorkManagerExample
         )
@@ -270,6 +270,15 @@ fun exampleObjectList(): ArrayList<ExampleObject> {
             description = "SSE를 사용하여 서버로부터 실시간 업데이트를 받는 예제 (작업 중)",
             blogUrl = "",
             exampleType = ConstValue.SSEExample
+        )
+    )
+
+    insertExampleObject.add(
+        ExampleObject(
+            title = "MVI Pattern Example",
+            description = "MVI 패턴을 사용하여 단방향 통신을 구현하는 예제",
+            blogUrl = "",
+            exampleType = ConstValue.MVIExample
         )
     )
 

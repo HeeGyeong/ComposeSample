@@ -129,6 +129,8 @@ import com.example.domain.model.ExampleMoveType
 import com.example.domain.model.ExampleObject
 import com.example.composesample.presentation.example.component.sse.SSEExampleUI
 import com.example.composesample.util.ConstValue.Companion.SSEExample
+import com.example.composesample.presentation.example.component.mvi.MVIExampleUI
+import com.example.composesample.util.ConstValue.Companion.MVIExample
 
 @ExperimentalAnimationApi
 class BlogExampleActivity : ComponentActivity() {
@@ -692,6 +694,10 @@ fun ExampleCaseUI(
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                                 SSEExampleUI(onBackEvent)
                             }
+                        }
+
+                        MVIExample -> {
+                            MVIExampleUI(onBackEvent)
                         }
 
                         else -> {
