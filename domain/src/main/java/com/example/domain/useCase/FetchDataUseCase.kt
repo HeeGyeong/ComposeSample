@@ -1,6 +1,6 @@
-package com.example.composesample.domain.usecase
+package com.example.domain.useCase
 
-import com.example.composesample.data.repository.MVIExampleRepository
+import com.example.domain.repository.MVIExampleRepository
 
 class FetchDataUseCase(private val repository: MVIExampleRepository) {
     fun execute(): String {

@@ -1,12 +1,9 @@
-package com.example.composesample.data.repository
+package com.example.data.repository
 
-interface MVIExampleRepository {
-    fun fetchData(): String
-}
+import com.example.domain.repository.MVIExampleRepository
 
 class MVIExampleRepositoryImpl : MVIExampleRepository {
     override fun fetchData(): String {
-        // Simulate API call
         return "Fetched Data from API"
     }
 } 

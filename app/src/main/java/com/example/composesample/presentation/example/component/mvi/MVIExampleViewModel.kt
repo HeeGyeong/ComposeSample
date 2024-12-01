@@ -1,7 +1,7 @@
 package com.example.composesample.presentation.example.component.mvi
 
 import androidx.lifecycle.ViewModel
-import com.example.composesample.domain.usecase.FetchDataUseCase
+import com.example.domain.useCase.FetchDataUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
@@ -15,7 +15,8 @@ sealed class MVIExampleEvent {
 
 data class MVIExampleState(
     val items: List<String> = listOf("Item 1", "Item 2", "Item 3", "Item 4"),
-    val apiData: String = ""
+    val apiData: String = "",
+    val counter: Int = 0
 )
 
 class MVIExampleViewModel(private val fetchDataUseCase: FetchDataUseCase) : ViewModel() {
@@ -38,8 +39,12 @@ class MVIExampleViewModel(private val fetchDataUseCase: FetchDataUseCase) : View
                 updatedItems[3] = "Item 4 Changed!"
             }
             is MVIExampleEvent.FetchData -> {
+                val newCounter = _state.value.counter + 1
                 val data = fetchDataUseCase.execute()
-                _state.value = _state.value.copy(apiData = data)
+                _state.value = _state.value.copy(
+                    apiData = "$data - Count: $newCounter",
+                    counter = newCounter
+                )
             }
         }
         _state.value = _state.value.copy(items = updatedItems)

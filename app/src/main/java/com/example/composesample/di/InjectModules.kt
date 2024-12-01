@@ -6,7 +6,6 @@ val KoinModules = listOf(
     viewModelModule,
     networkModule,
     ktorModule,
-    appModule
 )
 
 // Clean Architecture에 추가되는 Module
