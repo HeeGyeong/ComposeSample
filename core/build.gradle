@@ -1,0 +1,14 @@
+apply {
+    plugin('com.android.library')
+    plugin('org.jetbrains.kotlin.android')
+    plugin('kotlin-parcelize')
+    plugin('com.google.devtools.ksp')
+
+    from('../version.gradle')
+    from('../config.gradle')
+    from('../core-dependencies.gradle')
+}
+
+android {
+    namespace 'com.example.core'
+}

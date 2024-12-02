@@ -12,5 +12,6 @@ val KoinModules = listOf(
 val CleanArchitectureAddModules = listOf(
     RepositoryModule,
     UseCaseModule,
-    databaseModule
+    databaseModule,
+    navigationModule
 )
