@@ -1,7 +1,8 @@
 package com.example.composesample.presentation.example
 
 import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+import com.example.core.BaseViewModel
+import com.example.core.navigation.Navigation
 import com.example.domain.model.ExampleObject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -13,7 +14,10 @@ import kotlinx.coroutines.flow.update
 /**
  * Example 추가 시 Data Update 필요
  */
-class BlogExampleViewModel(application: Application) : AndroidViewModel(application) {
+class BlogExampleViewModel(
+    private val navigation: Navigation,
+    application: Application
+) : BaseViewModel(navigation, application) {
     // toast는 그대로 유지
     val toast = MutableStateFlow("")
     fun sendToastMessage(message: String) {

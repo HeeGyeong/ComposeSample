@@ -64,6 +64,7 @@ import com.example.composesample.presentation.example.component.bottomsheet.Cust
 import com.example.composesample.presentation.example.component.bottomsheet.ModalBottomSheetUI
 import com.example.composesample.presentation.example.component.cache.DataCacheExampleUI
 import com.example.composesample.presentation.example.component.clickevent.ClickEventUI
+import com.example.composesample.presentation.example.component.coordinator.CoordinatorExampleUI
 import com.example.composesample.presentation.example.component.cursor.CursorIDEExample
 import com.example.composesample.presentation.example.component.drag.DragAndDropExampleUI
 import com.example.composesample.presentation.example.component.drawer.ModalDrawerUI
@@ -130,7 +131,9 @@ import com.example.domain.model.ExampleObject
 import com.example.composesample.presentation.example.component.sse.SSEExampleUI
 import com.example.composesample.util.ConstValue.Companion.SSEExample
 import com.example.composesample.presentation.example.component.mvi.MVIExampleUI
+import com.example.composesample.util.ConstValue.Companion.CoordinatorExample
 import com.example.composesample.util.ConstValue.Companion.MVIExample
+import org.koin.androidx.compose.koinViewModel
 
 @ExperimentalAnimationApi
 class BlogExampleActivity : ComponentActivity() {
@@ -151,7 +154,7 @@ class BlogExampleActivity : ComponentActivity() {
         val launcher = registerForActivityResult(contract, callback)
 
         setContent {
-            val blogExampleViewModel = viewModel<BlogExampleViewModel>()
+            val blogExampleViewModel: BlogExampleViewModel = koinViewModel()
             blogExampleViewModel.initExampleObject()
 
             SetSystemUI()
@@ -165,7 +168,6 @@ class BlogExampleActivity : ComponentActivity() {
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun BlogExampleScreen(
     launcher: ActivityResultLauncher<String>,
@@ -698,6 +700,10 @@ fun ExampleCaseUI(
 
                         MVIExample -> {
                             MVIExampleUI(onBackEvent)
+                        }
+
+                        CoordinatorExample -> {
+                            CoordinatorExampleUI(onBackEvent)
                         }
 
                         else -> {

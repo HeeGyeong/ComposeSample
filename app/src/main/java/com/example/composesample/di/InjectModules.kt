@@ -13,5 +13,5 @@ val CleanArchitectureAddModules = listOf(
     RepositoryModule,
     UseCaseModule,
     databaseModule,
-    navigationModule
+    navigationInterfaceModule
 )

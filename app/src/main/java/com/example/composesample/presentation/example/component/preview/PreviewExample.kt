@@ -1,6 +1,8 @@
 package com.example.composesample.presentation.example.component.preview
 
 import android.app.Application
+import android.content.Context
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
@@ -17,6 +19,8 @@ import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import com.example.composesample.presentation.example.BlogExampleViewModel
 import com.example.composesample.presentation.example.component.shimmer.ShimmerExampleUI
 import com.example.composesample.presentation.legacy.cal.CalViewModel
+import com.example.core.navigation.Navigation
+import com.example.core.navigation.NavigationInterface
 
 /**
  * 가장 기본적인 Preview 사용 방법
@@ -101,11 +105,22 @@ fun UserProfilePreview(
  *
  * viewModel을 인자로 받아서 사용하기
  */
+private class MockNavigationInterface : NavigationInterface {
+    override fun changeActivity(context: Context, fromActivity: String?, data: Any?) {
+        Log.d("Preview", "preview Dummy changeActivity Call")
+    }
+}
+
+private val mockNavigation = Navigation(MockNavigationInterface())
+
 @Preview
 @Composable
 fun ViewModelPreview1(
     calViewModel: CalViewModel = CalViewModel(),
-    blogExampleViewModel: BlogExampleViewModel = BlogExampleViewModel(application = Application())
+    blogExampleViewModel: BlogExampleViewModel = BlogExampleViewModel(
+        navigation = mockNavigation,
+        application = Application()
+    )
 ) {
     calViewModel.addCounter()
     val counterData = calViewModel.counter.collectAsState().value
@@ -126,7 +141,10 @@ fun ViewModelPreview1(
  */
 class PreviewViewModelProvider : PreviewParameterProvider<BlogExampleViewModel> {
     override val values = sequenceOf(
-        BlogExampleViewModel(application = Application())
+        BlogExampleViewModel(
+            navigation = mockNavigation,
+            application = Application()
+        )
     )
 }
 
@@ -149,7 +167,10 @@ fun ViewModelPreview2(
 @Preview
 @Composable
 fun ViewModelPreview3() {
-    val blogExampleViewModel = BlogExampleViewModel(application = Application())
+    val blogExampleViewModel = BlogExampleViewModel(
+        navigation = mockNavigation,
+        application = Application()
+    )
 
     blogExampleViewModel.setPreviewExampleData("Sample Data3")
     val viewModelData = blogExampleViewModel.previewExampleData.collectAsState().value
@@ -167,7 +188,10 @@ val LocalPreviewMode = compositionLocalOf { false }
 
 @Composable
 fun ViewModelPreview4() {
-    val blogExampleViewModel = BlogExampleViewModel(application = Application())
+    val blogExampleViewModel = BlogExampleViewModel(
+        navigation = mockNavigation,
+        application = Application()
+    )
     val viewModelData = blogExampleViewModel.previewExampleData.collectAsState().value
     if (LocalPreviewMode.current) {
         // Preview 용 구현

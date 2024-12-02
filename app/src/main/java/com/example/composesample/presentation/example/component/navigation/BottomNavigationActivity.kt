@@ -71,7 +71,6 @@ class BottomNavigationActivity : ComponentActivity() {
             val blogExampleViewModel = viewModel<BlogExampleViewModel>()
             val bottomNavigationBarIndex = remember { mutableStateOf(0) }
             var navigationType by remember { mutableStateOf(false) }
-
             LaunchedEffect(key1 = Unit, block = {
                 blogExampleViewModel.initExampleObject()
             })

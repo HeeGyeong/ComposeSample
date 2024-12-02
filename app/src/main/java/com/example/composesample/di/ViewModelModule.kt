@@ -1,5 +1,6 @@
 package com.example.composesample.di
 
+import com.example.composesample.presentation.example.BlogExampleViewModel
 import com.example.composesample.presentation.example.component.api.ApiExampleUseCaseViewModel
 import com.example.composesample.presentation.example.component.api.ApiExampleViewModel
 import com.example.composesample.presentation.example.component.cache.DataCacheViewModel
@@ -12,6 +13,8 @@ import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
 val viewModelModule: Module = module {
+    viewModel { BlogExampleViewModel(get(), get()) }
+
     viewModel { MovieViewModel(get(), get(named("api"))) }
     viewModel {
         ApiExampleViewModel(

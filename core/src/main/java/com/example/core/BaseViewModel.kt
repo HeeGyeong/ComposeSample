@@ -4,15 +4,10 @@ import android.app.Application
 import android.content.Context
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
-import com.example.core.navigation.NavigationImpl
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.update
+import com.example.core.navigation.Navigation
 
-class BaseViewModel(
-    private val navigationImpl: NavigationImpl,
+open class BaseViewModel(
+    private val navigation: Navigation,
     application: Application
 ) : AndroidViewModel(application) {
 
@@ -23,6 +18,6 @@ class BaseViewModel(
             "changeToActivity",
             "baseActivity changeToActivity $context -> $fromActivity ::: data ? $data"
         )
-        navigationImpl(context, fromActivity, data)
+        navigation(context, fromActivity, data)
     }
 }
