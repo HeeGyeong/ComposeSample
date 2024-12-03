@@ -29,6 +29,7 @@ android {
 
 dependencies {
     // Modules
+    implementation(project(':coordinator'))
     implementation(project(':domain'))
     implementation(project(':data'))
     implementation(project(':core'))
