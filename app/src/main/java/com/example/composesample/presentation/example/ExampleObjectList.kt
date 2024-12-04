@@ -275,19 +275,19 @@ fun exampleObjectList(): ArrayList<ExampleObject> {
 
     insertExampleObject.add(
         ExampleObject(
-            title = "MVI Pattern Example (작업 중)",
-            description = "MVI 패턴을 사용하여 단방향 통신을 구현하는 예제 (작업 중)",
+            title = "Coordinator Example (작업 중)",
+            description = "간단한 Coordinator Pattern 예제 (작업 중)",
             blogUrl = "",
-            exampleType = ConstValue.MVIExample
+            exampleType = ConstValue.CoordinatorExample
         )
     )
 
     insertExampleObject.add(
         ExampleObject(
-            title = "Coordinator Example",
-            description = "간단한 버튼 클릭 예제",
+            title = "MVI Pattern Example (작업 중)",
+            description = "MVI 패턴을 사용하여 단방향 통신을 구현하는 예제 (작업 중)",
             blogUrl = "",
-            exampleType = ConstValue.CoordinatorExample
+            exampleType = ConstValue.MVIExample
         )
     )
 
