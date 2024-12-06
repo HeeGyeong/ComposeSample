@@ -286,7 +286,7 @@ fun exampleObjectList(): ArrayList<ExampleObject> {
         ExampleObject(
             title = "MVI Pattern Example (작업 중)",
             description = "MVI 패턴을 사용하여 단방향 통신을 구현하는 예제 (작업 중)",
-            blogUrl = "",
+            blogUrl = "https://heegs.tistory.com/179",
             exampleType = ConstValue.MVIExample
         )
     )
