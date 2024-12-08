@@ -248,6 +248,33 @@ fun exampleObjectList(): ArrayList<ExampleObject> {
 
     insertExampleObject.add(
         ExampleObject(
+            title = "Animation Example",
+            description = "Compose에서 다양한 애니메이션을 사용하는 방법에 대한 예제",
+            blogUrl = "",
+            exampleType = ConstValue.AnimationExample
+        )
+    )
+
+    insertExampleObject.add(
+        ExampleObject(
+            title = "Coordinator Example",
+            description = "간단한 Coordinator Pattern 예제",
+            blogUrl = "",
+            exampleType = ConstValue.CoordinatorExample
+        )
+    )
+
+    insertExampleObject.add(
+        ExampleObject(
+            title = "MVI Pattern Example",
+            description = "MVI 패턴을 사용하여 단방향 통신을 구현하는 예제",
+            blogUrl = "https://heegs.tistory.com/179",
+            exampleType = ConstValue.MVIExample
+        )
+    )
+
+    insertExampleObject.add(
+        ExampleObject(
             title = "Ktor API Example (작업 중)",
             description = "Ktor을 사용하여 API를 호출하는 예제 (작업 중)",
             blogUrl = "",
@@ -257,37 +284,10 @@ fun exampleObjectList(): ArrayList<ExampleObject> {
 
     insertExampleObject.add(
         ExampleObject(
-            title = "Animation Example (작업 중)",
-            description = "Compose에서 다양한 애니메이션을 사용하는 방법에 대한 예제 (작업 중)",
-            blogUrl = "",
-            exampleType = ConstValue.AnimationExample
-        )
-    )
-
-    insertExampleObject.add(
-        ExampleObject(
             title = "Server-Sent Events Example (작업 중)",
             description = "SSE를 사용하여 서버로부터 실시간 업데이트를 받는 예제 (작업 중)",
             blogUrl = "",
             exampleType = ConstValue.SSEExample
-        )
-    )
-
-    insertExampleObject.add(
-        ExampleObject(
-            title = "Coordinator Example (작업 중)",
-            description = "간단한 Coordinator Pattern 예제 (작업 중)",
-            blogUrl = "",
-            exampleType = ConstValue.CoordinatorExample
-        )
-    )
-
-    insertExampleObject.add(
-        ExampleObject(
-            title = "MVI Pattern Example (작업 중)",
-            description = "MVI 패턴을 사용하여 단방향 통신을 구현하는 예제 (작업 중)",
-            blogUrl = "https://heegs.tistory.com/179",
-            exampleType = ConstValue.MVIExample
         )
     )
 
