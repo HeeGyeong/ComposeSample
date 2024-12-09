@@ -34,7 +34,11 @@ suspend fun HttpClient.getPostsByUserId(userId: Int): List<PostData> {
  */
 suspend fun HttpClient.createPost(postData: PostData): PostData {
     return this.post(baseUrl) {
-        contentType(ContentType.Application.Json) // Content-Type을 application/json으로 설정
-        setBody(postData) // postData 객체를 JSON으로 직렬화하여 요청 본문에 포함
+        // Content-Type을 application/json으로 설정
+        // ktorModule에 선언되어 있지만, 명시적으로 처리해주는 것이 안전한 방법.
+        contentType(ContentType.Application.Json)
+
+        // postData 객체를 JSON으로 직렬화하여 요청 본문에 포함
+        setBody(postData)
     }.body()
 }
