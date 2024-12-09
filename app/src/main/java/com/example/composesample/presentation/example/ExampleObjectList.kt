@@ -275,19 +275,19 @@ fun exampleObjectList(): ArrayList<ExampleObject> {
 
     insertExampleObject.add(
         ExampleObject(
-            title = "Ktor API Example (작업 중)",
-            description = "Ktor을 사용하여 API를 호출하는 예제 (작업 중)",
+            title = "Server-Sent Events Example (작업 중)",
+            description = "SSE를 사용하여 서버로부터 실시간 업데이트를 받는 예제 (작업 중)",
             blogUrl = "",
-            exampleType = ConstValue.KtorExample
+            exampleType = ConstValue.SSEExample
         )
     )
 
     insertExampleObject.add(
         ExampleObject(
-            title = "Server-Sent Events Example (작업 중)",
-            description = "SSE를 사용하여 서버로부터 실시간 업데이트를 받는 예제 (작업 중)",
+            title = "Ktor API Example (작업 중)",
+            description = "Ktor을 사용하여 API를 호출하는 예제 (작업 중)",
             blogUrl = "",
-            exampleType = ConstValue.SSEExample
+            exampleType = ConstValue.KtorExample
         )
     )
 

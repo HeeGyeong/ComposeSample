@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.data.api.PostApiInterface
 import com.example.composesample.util.NetworkStatusLiveData
+import com.example.data.api.getPosts
 import com.example.domain.model.PostData
 import io.ktor.client.*
 import io.ktor.client.call.*
@@ -15,7 +16,9 @@ import io.ktor.client.request.*
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
+import retrofit2.HttpException
 import retrofit2.Response
+import java.io.IOException
 
 class ApiExampleViewModel(
     application: Application,
@@ -58,12 +61,24 @@ class ApiExampleViewModel(
 
     // Ktor을 사용한 API 호출 함수
     suspend fun fetchPostsWithKtor() {
+        if (getNetworkStatus().value == false) {
+            Log.e("NetworkLog", "No network connection")
+            return
+        }
+
         try {
-            val response: List<PostData> = ktorClient.get("https://jsonplaceholder.typicode.com/posts").body()
+            Log.d("NetworkLog", "Ktor Api call Start")
+            val response: List<PostData> = ktorClient.getPosts()
             _ktorPosts.postValue(response)
             Log.d("NetworkLog", "Ktor Api call Success")
+        } catch (e: IOException) {
+            Log.e("NetworkLog", "Network error: ${e.message}")
+        } catch (e: HttpException) {
+            Log.e("NetworkLog", "HTTP error: ${e.message}")
         } catch (e: Exception) {
-            Log.e("NetworkLog", "Ktor Api call Failed: ${e.message}")
+            Log.e("NetworkLog", "Unexpected error: ${e.message}")
+        } finally {
+            Log.d("NetworkLog", "Ktor Api call End")
         }
     }
 }

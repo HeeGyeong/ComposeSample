@@ -83,13 +83,6 @@ dependencies {
     // Kotlin version issue로 사용하기 힘들다.
 //    implementation("sh.calvin.reorderable:reorderable:2.3.0")
 
-    // Ktor
-    implementation "io.ktor:ktor-client-android:2.3.7"
-    implementation "io.ktor:ktor-client-core:2.3.7"
-    implementation "io.ktor:ktor-client-logging:2.3.7"
-    implementation "io.ktor:ktor-client-content-negotiation:2.3.7"
-    implementation "io.ktor:ktor-serialization-gson:2.3.7"
-
     implementation("androidx.compose.ui:ui:1.7.5")
     implementation("androidx.compose.animation:animation:1.7.5")
 

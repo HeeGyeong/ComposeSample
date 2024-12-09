@@ -23,7 +23,7 @@ val ktorModule = module {
             /**
              * HttpLoggingInterceptor
              *
-             * 네트워크 로깅 설정
+             * logger를 사용하여 네트워크 로깅 설정
              * 디버그 모드에서는 모든 로그를, 릴리즈에서는 로그를 비활성화
              */
             install(Logging) {
@@ -38,12 +38,18 @@ val ktorModule = module {
             /**
              * .addConverterFactory(get<GsonConverterFactory>())
              *
+             * ContentNegotiation를 사용.
              * JSON 직렬화/역직렬화를 위한 Gson 설정
              */
             install(ContentNegotiation) {
                 gson()
             }
 
+            /**
+             * Header 설정
+             *
+             * DefaultRequest를 사용.
+             */
             install(DefaultRequest) {
                 header("X-Naver-Client-Id", "33chRuAiqlSn5hn8tIme")
                 header("X-Naver-Client-Secret", "fyfwt9PCUN")
