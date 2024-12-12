@@ -13,6 +13,7 @@ import com.example.domain.model.PostData
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.request.*
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
@@ -36,6 +37,13 @@ class ApiExampleViewModel(
     // Ktor Api Data
     private val _ktorPosts = MutableLiveData<List<PostData>>()
     val ktorPosts: LiveData<List<PostData>> get() = _ktorPosts
+
+    // Loading state
+    private val _isLoading = MutableLiveData<Boolean>()
+    val isLoading: LiveData<Boolean> get() = _isLoading
+
+    private val _errorMessage = MutableLiveData<String?>()
+    val errorMessage: LiveData<String?> get() = _errorMessage
 
     // 기존 Retrofit 호출 함수
     fun fetchPosts() {
@@ -62,22 +70,25 @@ class ApiExampleViewModel(
     // Ktor을 사용한 API 호출 함수
     suspend fun fetchPostsWithKtor() {
         if (getNetworkStatus().value == false) {
-            Log.e("NetworkLog", "No network connection")
+            _errorMessage.postValue("No network connection")
             return
         }
 
+        _isLoading.postValue(true)
         try {
             Log.d("NetworkLog", "Ktor Api call Start")
             val response: List<PostData> = ktorClient.getPosts()
             _ktorPosts.postValue(response)
+            _errorMessage.postValue(null) // Clear any previous error
             Log.d("NetworkLog", "Ktor Api call Success")
         } catch (e: IOException) {
-            Log.e("NetworkLog", "Network error: ${e.message}")
+            _errorMessage.postValue("Network error: ${e.message}")
         } catch (e: HttpException) {
-            Log.e("NetworkLog", "HTTP error: ${e.message}")
+            _errorMessage.postValue("HTTP error: ${e.message}")
         } catch (e: Exception) {
-            Log.e("NetworkLog", "Unexpected error: ${e.message}")
+            _errorMessage.postValue("Unexpected error: ${e.message}")
         } finally {
+            _isLoading.postValue(false)
             Log.d("NetworkLog", "Ktor Api call End")
         }
     }
