@@ -12,8 +12,8 @@ apply {
 android {
     defaultConfig {
         applicationId "com.example.composesample"
-        versionCode build_version_code
-        versionName build_version_name
+        versionCode libs.versions.versionCode.get().toInteger()
+        versionName libs.versions.versionName.get()
     }
 
     buildFeatures {
@@ -21,7 +21,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion compose_version
+        kotlinCompilerExtensionVersion libs.versions.kotlinCompilerExtension.get()
     }
 
     namespace 'com.example.composesample'

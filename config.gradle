@@ -3,12 +3,11 @@ apply {
 }
 
 android {
-    compileSdk target_sdk
+    compileSdk libs.versions.compileSdk.get().toInteger()
 
     defaultConfig {
-        minSdk min_sdk
-        targetSdk target_sdk
-
+        minSdk libs.versions.minSdk.get().toInteger()
+        targetSdk libs.versions.targetSdk.get().toInteger()
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary true
@@ -31,7 +30,7 @@ android {
 
 kotlin {
     jvmToolchain {
-        languageVersion.set(JavaLanguageVersion.of(java_version))
+        languageVersion.set(JavaLanguageVersion.of(libs.versions.javaVersion.get().toInteger()))
     }
     jvmToolchain(java_version)
 }
