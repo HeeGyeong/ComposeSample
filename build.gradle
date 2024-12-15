@@ -1,5 +1,4 @@
 buildscript {
-    apply from: 'version.gradle'
     dependencies {
         classpath "com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin:${libs.versions.ksp.get()}"
     }
@@ -11,7 +10,7 @@ plugins {
     // libs.versions.kotlinVersion.get() 을 사용하지 못함
     // libs.versions.kotlinVersion.get()은 Gradle의 Version Catalog 기능을 통해 정의된 버전 정보를 가져오는 코드.
     // 이 코드는 문자열 리터럴이 아니라, Gradle의 DSL을 사용하여 동적으로 값을 가져오는 표현식이다.
-    id 'org.jetbrains.kotlin.android' version "$kotlin_version" apply false
+    id 'org.jetbrains.kotlin.android' version '1.9.0' apply false
 }
 
 tasks.register('clean', Delete) {

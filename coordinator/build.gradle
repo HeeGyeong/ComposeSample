@@ -1,11 +1,14 @@
-apply plugin: 'com.android.library'
-apply plugin: 'org.jetbrains.kotlin.android'
-apply plugin: 'kotlin-parcelize'
-apply plugin: 'com.google.devtools.ksp'
+plugins {
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.android)
 
-apply from: '../version.gradle'
-apply from: '../config.gradle'
-apply from: '../core-dependencies.gradle'
+    id 'kotlin-parcelize'
+}
+
+apply {
+    from('../config.gradle')
+    from('../core-dependencies.gradle')
+}
 
 android {
     namespace 'com.example.coordinator'
@@ -15,7 +18,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion compose_version
+        kotlinCompilerExtensionVersion libs.versions.kotlinCompilerExtension.get()
     }
 }
 

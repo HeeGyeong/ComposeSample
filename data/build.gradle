@@ -1,10 +1,11 @@
-apply {
-    plugin('com.android.library')
-    plugin('org.jetbrains.kotlin.android')
-    plugin('kotlin-parcelize')
-    plugin('com.google.devtools.ksp')
+plugins {
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.android)
 
-    from('../version.gradle')
+    id 'kotlin-parcelize'
+}
+
+apply {
     from('../config.gradle')
     from('../core-dependencies.gradle')
 }
@@ -16,9 +17,4 @@ android {
 dependencies {
     // Module
     implementation(project(':domain'))
-
-    // Room
-    implementation("androidx.room:room-runtime:$room_version")
-    implementation("androidx.room:room-ktx:$room_version")
-    ksp("androidx.room:room-compiler:$room_version")
 }

@@ -1,10 +1,11 @@
-apply {
-    plugin('com.android.application')
-    plugin('org.jetbrains.kotlin.android')
-    plugin('kotlin-parcelize')
-    plugin('com.google.devtools.ksp')
+plugins {
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin.android)
 
-    from('../version.gradle')
+    id 'kotlin-parcelize'
+}
+
+apply {
     from('../config.gradle')
     from('../core-dependencies.gradle')
 }

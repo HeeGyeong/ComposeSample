@@ -1,6 +1,5 @@
 apply {
     plugin('com.google.devtools.ksp')
-    from('../version.gradle')
 }
 
 dependencies {

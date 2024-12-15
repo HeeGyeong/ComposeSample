@@ -1,7 +1,3 @@
-apply {
-    from('../version.gradle')
-}
-
 android {
     compileSdk libs.versions.compileSdk.get().toInteger()
 
@@ -32,6 +28,6 @@ kotlin {
     jvmToolchain {
         languageVersion.set(JavaLanguageVersion.of(libs.versions.javaVersion.get().toInteger()))
     }
-    jvmToolchain(java_version)
+    jvmToolchain(libs.versions.javaVersion.get().toInteger())
 }
 
