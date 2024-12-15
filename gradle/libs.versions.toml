@@ -6,10 +6,95 @@ targetSdk = "34"
 versionCode = "1"
 versionName = "1.0"
 
-#Java
+# Java
 javaVersion = "17"
 
 # Kotlin & KSP
 kotlinVersion = "1.9.0"
 kotlinCompilerExtension = "1.5.2"
 ksp = "1.9.0-1.0.13"
+
+# Compose
+activityCompose = "1.5.1"
+composeVersion = "1.5.2"
+
+# Lifecycle
+lifecycleRuntimeKtx = "2.8.6"
+lifecycleViewmodelKtx = "2.8.6"
+lifecycleViewmodelCompose = "2.8.6"
+
+# Koin
+koinCore = "3.2.2"
+koinAndroid = "3.2.2"
+koinAndroidxCompose = "3.2.2"
+
+# Core-dependencies
+coreKtx = "1.13.1"
+appcompat = "1.7.0"
+material = "1.7.4"
+material3 = "1.1.0"
+room = "2.6.1"
+retrofit = "2.9.0"
+retrofitRxJavaAdapter = "2.8.1"
+gson = "2.10.1"
+okhttpLoggingInterceptor = "4.11.0"
+ktor = "2.3.7"
+junit = "4.13.2"
+androidxTestJunit = "1.2.1"
+espressoCore = "3.6.1"
+
+[libraries]
+# Core-dependencies
+coreKtx = { module = "androidx.core:core-ktx", version.ref = "coreKtx" }
+appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
+material = { module = "com.google.android.material:material", version.ref = "material" }
+material3 = { module = "androidx.compose.material3:material3", version.ref = "material3" }
+roomRuntime = { module = "androidx.room:room-runtime", version.ref = "room" }
+roomKtx = { module = "androidx.room:room-ktx", version.ref = "room" }
+roomCompiler = { module = "androidx.room:room-compiler", version.ref = "room" }
+retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
+converterGson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "retrofit" }
+adapterRxJava2 = { module = "com.squareup.retrofit2:adapter-rxjava2", version.ref = "retrofitRxJavaAdapter" }
+gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
+okhttpLoggingInterceptor = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "okhttpLoggingInterceptor" }
+ktorClientAndroid = { module = "io.ktor:ktor-client-android", version.ref = "ktor" }
+ktorClientCore = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
+ktorClientLogging = { module = "io.ktor:ktor-client-logging", version.ref = "ktor" }
+ktorClientContentNegotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
+ktorSerializationGson = { module = "io.ktor:ktor-serialization-gson", version.ref = "ktor" }
+junit = { module = "junit:junit", version.ref = "junit" }
+androidxTestJunit = { module = "androidx.test.ext:junit", version.ref = "androidxTestJunit" }
+espressoCore = { module = "androidx.test.espresso:espresso-core", version.ref = "espressoCore" }
+junit4 = { module = "androidx.compose.ui:ui-test-junit4", version.ref = "composeVersion" }
+uiTooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "composeVersion" }
+
+# Module
+composeBom = { module = "androidx.compose:compose-bom", version = "2024.02.00" }
+activityCompose = { module = "androidx.activity:activity-compose", version.ref = "activityCompose" }
+composeUi = { module = "androidx.compose.ui:ui", version.ref = "composeVersion" }
+runtime = { module = "androidx.compose.runtime:runtime", version.ref = "composeVersion" }
+uiToolingPreview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "composeVersion" }
+lifecycleRuntimeKtx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
+lifecycleViewmodelKtx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycleViewmodelKtx" }
+lifecycleViewmodelCompose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycleViewmodelCompose" }
+koinCore = { module = "io.insert-koin:koin-core", version.ref = "koinCore" }
+koinAndroid = { module = "io.insert-koin:koin-android", version.ref = "koinAndroid" }
+koinAndroidxCompose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koinAndroidxCompose" }
+
+#runtimeLiveData = { module = "androidx.compose.runtime:runtime-livedata", version.ref = "composeVersion" }
+#accompanistSystemUiController = { module = "com.google.accompanist:accompanist-systemuicontroller", version = "0.32.0" }
+#accompanistWebview = { module = "com.google.accompanist:accompanist-webview", version = "0.24.13-rc" }
+#glideCompose = { module = "com.github.bumptech.glide:compose", version = "1.0.0-alpha.1" }
+#coilCompose = { module = "io.coil-kt:coil-compose", version = "2.5.0" }
+#coilGif = { module = "io.coil-kt:coil-gif", version = "2.6.0" }
+#rxJava = { module = "io.reactivex.rxjava2:rxjava", version = "2.2.17" }
+#rxAndroid = { module = "io.reactivex.rxjava2:rxandroid", version = "2.1.1" }
+#rxKotlin = { module = "io.reactivex.rxjava2:rxkotlin", version = "2.3.0" }
+#retrofitRxJavaAdapter = { module = "com.squareup.retrofit2:adapter-rxjava2", version = "2.8.1" }
+#ffmpegKitFull = { module = "com.arthenica:ffmpeg-kit-full", version = "5.1" }
+#lottieCompose = { module = "com.airbnb.android:lottie-compose", version = "6.0.0" }
+#reorderable = { module = "org.burnoutcrew.composereorderable:reorderable", version = "0.9.6" }
+#reorderableCalvin = { module = "sh.calvin.reorderable:reorderable", version = "2.3.0" }
+#okhttpEventSource = { module = "com.launchdarkly:okhttp-eventsource", version = "2.5.0" }
+#workRuntime = { module = "androidx.work:work-runtime", version = "2.9.1" }
+#workRuntimeKtx = { module = "androidx.work:work-runtime-ktx", version = "2.9.1" }

@@ -35,4 +35,37 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.1'
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
+
+
+//    // core
+//    implementation libs.coreKtx
+//    implementation libs.appcompat
+//    implementation libs.material
+//    implementation libs.material3
+//
+//    // Room
+//    implementation libs.roomRuntime
+//    implementation libs.roomKtx
+//    ksp libs.roomCompiler
+//
+//    // Retrofit2
+//    implementation libs.retrofit
+//    implementation libs.converterGson
+//    implementation libs.adapterRxJava2
+//    implementation libs.gson
+//    implementation libs.okhttpLoggingInterceptor
+//
+//    // Ktor
+//    implementation libs.ktorClientAndroid
+//    implementation libs.ktorClientCore
+//    implementation libs.ktorClientLogging
+//    implementation libs.ktorClientContentNegotiation
+//    implementation libs.ktorSerializationGson
+//
+//    // Test
+//    testImplementation libs.junit
+//    androidTestImplementation libs.androidxTestJunit
+//    androidTestImplementation libs.espressoCore
+//    androidTestImplementation libs.junit4
+//    debugImplementation libs.uiTooling
 }

@@ -88,4 +88,55 @@ dependencies {
 
     // SSE
     implementation "com.launchdarkly:okhttp-eventsource:2.5.0"
+
+//    // AndroidX Core
+//    implementation(libs.lifecycleRuntimeKtx)
+//    implementation(libs.activityCompose)
+//
+//    // Compose
+//    implementation(libs.composeUi)
+//    implementation(libs.uiToolingPreview)
+//    implementation(libs.runtimeLiveData)
+//    implementation(libs.material)
+//    implementation(libs.material3)
+//
+//    // ViewModel
+//    implementation(libs.lifecycleViewmodelKtx)
+//    implementation(libs.lifecycleViewmodelCompose)
+//
+//    // Dependency Injection
+//    implementation(libs.koinCore)
+//    implementation(libs.koinAndroid)
+//    implementation(libs.koinAndroidxCompose)
+//
+//    // Accompanist
+//    implementation(libs.accompanistSystemUiController)
+//    implementation(libs.accompanistWebview)
+//
+//    // Image Loading
+//    implementation(libs.glideCompose)
+//    implementation(libs.coilCompose)
+//    implementation(libs.coilGif)
+//
+//    // Reactive
+//    implementation(libs.rxJava)
+//    implementation(libs.rxAndroid)
+//    implementation(libs.rxKotlin)
+//    implementation(libs.retrofitRxJavaAdapter)
+//
+//    // Media
+//    implementation(libs.ffmpegKitFull)
+//    implementation(libs.lottieCompose)
+//
+//    // WorkManager
+//    implementation(libs.workRuntime)
+//    implementation(libs.workRuntimeKtx)
+//
+//    // UI Components
+//    // Drag and Drop
+//    implementation(libs.reorderable)
+//    implementation(libs.reorderableCalvin)
+//
+//    // SSE
+//    implementation(libs.okhttpEventSource)
 }

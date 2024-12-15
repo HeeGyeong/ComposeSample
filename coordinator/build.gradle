@@ -22,20 +22,20 @@ android {
 dependencies {
     implementation(project(':core'))
 
-    def composeBom = platform('androidx.compose:compose-bom:2024.02.00')
+    def composeBom = platform(libs.composeBom)
     implementation composeBom
 
-    implementation 'androidx.activity:activity-compose:1.8.2'
-    implementation 'androidx.compose.ui:ui'
-    implementation 'androidx.compose.material3:material3'
-    implementation 'androidx.compose.runtime:runtime'
-    implementation 'androidx.compose.ui:ui-tooling-preview'
+    implementation libs.activityCompose
+    implementation libs.composeUi
+    implementation libs.material3
+    implementation libs.runtime
+    implementation libs.uiToolingPreview
 
-    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.7.0'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0'
+    implementation libs.lifecycleRuntimeKtx
+    implementation libs.lifecycleViewmodelKtx
+    implementation libs.lifecycleViewmodelCompose
 
-    implementation "io.insert-koin:koin-core:$koin_version"
-    implementation "io.insert-koin:koin-android:$koin_version"
-    implementation "io.insert-koin:koin-androidx-compose:$koin_version"
+    implementation libs.koinCore
+    implementation libs.koinAndroid
+    implementation libs.koinAndroidxCompose
 }
