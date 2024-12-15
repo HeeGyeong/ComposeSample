@@ -47,7 +47,7 @@ espressoCore = "3.6.1"
 # Core-dependencies
 coreKtx = { module = "androidx.core:core-ktx", version.ref = "coreKtx" }
 appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
-material = { module = "com.google.android.material:material", version.ref = "material" }
+material = { module = "androidx.compose.material:material", version.ref = "material" }
 material3 = { module = "androidx.compose.material3:material3", version.ref = "material3" }
 roomRuntime = { module = "androidx.room:room-runtime", version.ref = "room" }
 roomKtx = { module = "androidx.room:room-ktx", version.ref = "room" }
@@ -69,32 +69,51 @@ junit4 = { module = "androidx.compose.ui:ui-test-junit4", version.ref = "compose
 uiTooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "composeVersion" }
 
 # Module
+
+# Compose
 composeBom = { module = "androidx.compose:compose-bom", version = "2024.02.00" }
-activityCompose = { module = "androidx.activity:activity-compose", version.ref = "activityCompose" }
 composeUi = { module = "androidx.compose.ui:ui", version.ref = "composeVersion" }
+composeAnimation = { module = "androidx.compose.animation:animation", version = "1.7.5" }
 runtime = { module = "androidx.compose.runtime:runtime", version.ref = "composeVersion" }
+runtimeLiveData = { module = "androidx.compose.runtime:runtime-livedata", version.ref = "composeVersion" }
 uiToolingPreview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "composeVersion" }
-lifecycleRuntimeKtx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
+activityCompose = { module = "androidx.activity:activity-compose", version.ref = "activityCompose" }
+
+# Lifecycle
 lifecycleViewmodelKtx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycleViewmodelKtx" }
 lifecycleViewmodelCompose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycleViewmodelCompose" }
+lifecycleRuntimeKtx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
+
+# Dependency Injection - Koin
 koinCore = { module = "io.insert-koin:koin-core", version.ref = "koinCore" }
 koinAndroid = { module = "io.insert-koin:koin-android", version.ref = "koinAndroid" }
 koinAndroidxCompose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koinAndroidxCompose" }
 
-#runtimeLiveData = { module = "androidx.compose.runtime:runtime-livedata", version.ref = "composeVersion" }
-#accompanistSystemUiController = { module = "com.google.accompanist:accompanist-systemuicontroller", version = "0.32.0" }
-#accompanistWebview = { module = "com.google.accompanist:accompanist-webview", version = "0.24.13-rc" }
-#glideCompose = { module = "com.github.bumptech.glide:compose", version = "1.0.0-alpha.1" }
-#coilCompose = { module = "io.coil-kt:coil-compose", version = "2.5.0" }
-#coilGif = { module = "io.coil-kt:coil-gif", version = "2.6.0" }
-#rxJava = { module = "io.reactivex.rxjava2:rxjava", version = "2.2.17" }
-#rxAndroid = { module = "io.reactivex.rxjava2:rxandroid", version = "2.1.1" }
-#rxKotlin = { module = "io.reactivex.rxjava2:rxkotlin", version = "2.3.0" }
-#retrofitRxJavaAdapter = { module = "com.squareup.retrofit2:adapter-rxjava2", version = "2.8.1" }
-#ffmpegKitFull = { module = "com.arthenica:ffmpeg-kit-full", version = "5.1" }
-#lottieCompose = { module = "com.airbnb.android:lottie-compose", version = "6.0.0" }
-#reorderable = { module = "org.burnoutcrew.composereorderable:reorderable", version = "0.9.6" }
-#reorderableCalvin = { module = "sh.calvin.reorderable:reorderable", version = "2.3.0" }
-#okhttpEventSource = { module = "com.launchdarkly:okhttp-eventsource", version = "2.5.0" }
-#workRuntime = { module = "androidx.work:work-runtime", version = "2.9.1" }
-#workRuntimeKtx = { module = "androidx.work:work-runtime-ktx", version = "2.9.1" }
+# Accompanist
+accompanistSystemUiController = { module = "com.google.accompanist:accompanist-systemuicontroller", version = "0.32.0" }
+accompanistWebview = { module = "com.google.accompanist:accompanist-webview", version = "0.24.13-rc" }
+
+# Image Loader
+glideCompose = { module = "com.github.bumptech.glide:compose", version = "1.0.0-alpha.1" }
+coilCompose = { module = "io.coil-kt:coil-compose", version = "2.5.0" }
+coilGif = { module = "io.coil-kt:coil-gif", version = "2.6.0" }
+
+# Reactive
+rxJava = { module = "io.reactivex.rxjava2:rxjava", version = "2.2.17" }
+rxAndroid = { module = "io.reactivex.rxjava2:rxandroid", version = "2.1.1" }
+rxKotlin = { module = "io.reactivex.rxjava2:rxkotlin", version = "2.3.0" }
+
+# Media
+ffmpegKitFull = { module = "com.arthenica:ffmpeg-kit-full", version = "5.1" }
+lottieCompose = { module = "com.airbnb.android:lottie-compose", version = "6.0.0" }
+
+# WorkManager
+workRuntime = { module = "androidx.work:work-runtime", version = "2.9.1" }
+workRuntimeKtx = { module = "androidx.work:work-runtime-ktx", version = "2.9.1" }
+
+# Drag and Drop Library
+reorderable = { module = "org.burnoutcrew.composereorderable:reorderable", version = "0.9.6" }
+reorderableCalvin = { module = "sh.calvin.reorderable:reorderable", version = "2.3.0" }
+
+# SSE
+okhttpEventSource = { module = "com.launchdarkly:okhttp-eventsource", version = "2.5.0" }
