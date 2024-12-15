@@ -79,6 +79,7 @@ okhttpEventSource = "2.5.0"
 android-application = { id = "com.android.application", version.ref = "applicationVersion" }
 android-library = { id = "com.android.library", version.ref = "libraryVersion" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlinVersion" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 
 [libraries]
 # Core-dependencies

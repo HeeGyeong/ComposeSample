@@ -1,16 +1,10 @@
-buildscript {
-    dependencies {
-        classpath "com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin:${libs.versions.ksp.get()}"
-    }
-}
-
 plugins {
-    id 'com.android.application' version '8.5.2' apply false
-    id 'com.android.library' version '8.5.2' apply false
-    // libs.versions.kotlinVersion.get() 을 사용하지 못함
-    // libs.versions.kotlinVersion.get()은 Gradle의 Version Catalog 기능을 통해 정의된 버전 정보를 가져오는 코드.
-    // 이 코드는 문자열 리터럴이 아니라, Gradle의 DSL을 사용하여 동적으로 값을 가져오는 표현식이다.
-    id 'org.jetbrains.kotlin.android' version '1.9.0' apply false
+    // apply false : 플러그인을 즉시 적용하지 않고 선언만 함. 필요 시 하위 모듈에서 적용
+    // apply true : 플러그인을 현재 프로젝트에 즉시 적용.
+    alias(libs.plugins.android.application) apply false
+    alias(libs.plugins.android.library) apply false
+    alias(libs.plugins.kotlin.android) apply false
+    alias(libs.plugins.ksp) apply false
 }
 
 tasks.register('clean', Delete) {
