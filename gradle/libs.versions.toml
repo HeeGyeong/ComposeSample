@@ -154,3 +154,10 @@ reorderableCalvin = { module = "sh.calvin.reorderable:reorderable", version.ref 
 
 # SSE
 okhttpEventSource = { module = "com.launchdarkly:okhttp-eventsource", version.ref = "okhttpEventSource" }
+
+[bundles]
+image = [
+    "glideCompose",
+    "coilCompose",
+    "coilGif",
+]

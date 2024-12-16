@@ -54,9 +54,7 @@ dependencies {
     implementation(libs.accompanistWebview)
 
     // Image Loading
-    implementation(libs.glideCompose)
-    implementation(libs.coilCompose)
-    implementation(libs.coilGif)
+    implementation(libs.bundles.image)
 
     // Dependency Injection
     implementation(libs.koinCore)
