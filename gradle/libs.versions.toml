@@ -150,6 +150,7 @@ workRuntimeKtx = { module = "androidx.work:work-runtime-ktx", version.ref = "wor
 
 # Drag and Drop Library
 reorderable = { module = "org.burnoutcrew.composereorderable:reorderable", version.ref = "reorderable" }
+# Kotlin version issue로 사용하기 힘들다.
 reorderableCalvin = { module = "sh.calvin.reorderable:reorderable", version.ref = "reorderableCalvin" }
 
 # SSE
@@ -160,4 +161,31 @@ image = [
     "glideCompose",
     "coilCompose",
     "coilGif",
+]
+
+koin = [
+    "koinAndroid",
+    "koinAndroidxCompose",
+    "koinCore"
+]
+
+reactive = [
+    "rxJava",
+    "rxAndroid",
+    "rxKotlin"
+]
+
+media = [
+    "ffmpegKitFull",
+    "lottieCompose"
+]
+
+workManager = [
+    "workRuntime",
+    "workRuntimeKtx"
+]
+
+dragAndDrop = [
+    "reorderable",
+    "reorderableCalvin"
 ]

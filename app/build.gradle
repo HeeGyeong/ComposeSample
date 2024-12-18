@@ -57,27 +57,19 @@ dependencies {
     implementation(libs.bundles.image)
 
     // Dependency Injection
-    implementation(libs.koinCore)
-    implementation(libs.koinAndroid)
-    implementation(libs.koinAndroidxCompose)
+    implementation(libs.bundles.koin)
 
     // Reactive
-    implementation(libs.rxJava)
-    implementation(libs.rxAndroid)
-    implementation(libs.rxKotlin)
+    implementation(libs.bundles.reactive)
 
     // Media
-    implementation(libs.ffmpegKitFull)
-    implementation(libs.lottieCompose)
+    implementation(libs.bundles.media)
 
     // WorkManager
-    implementation(libs.workRuntime)
-    implementation(libs.workRuntimeKtx)
+    implementation(libs.bundles.workManager)
 
     // Drag and Drop
-    implementation(libs.reorderable)
-    // Kotlin version issue로 사용하기 힘들다.
-    implementation(libs.reorderableCalvin)
+    implementation(libs.bundles.dragAndDrop)
 
     // SSE
     implementation(libs.okhttpEventSource)
