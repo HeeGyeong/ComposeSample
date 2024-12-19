@@ -10,28 +10,17 @@ dependencies {
     implementation(libs.material3)
 
     // Room
-    implementation(libs.roomRuntime)
-    implementation(libs.roomKtx)
+    implementation(libs.bundles.room)
     ksp(libs.roomCompiler)
 
     //retrofit2
-    implementation(libs.retrofit)
-    implementation(libs.converterGson)
-    implementation(libs.adapterRxJava2)
-    implementation(libs.gson)
-    implementation(libs.okhttpLoggingInterceptor)
+    implementation(libs.bundles.retrofit)
 
     // Ktor
-    implementation(libs.ktorClientAndroid)
-    implementation(libs.ktorClientCore)
-    implementation(libs.ktorClientLogging)
-    implementation(libs.ktorClientContentNegotiation)
-    implementation(libs.ktorSerializationGson)
+    implementation(libs.bundles.ktor)
 
     // Test
     testImplementation(libs.junit)
-    androidTestImplementation(libs.androidxTestJunit)
-    androidTestImplementation(libs.espressoCore)
-    androidTestImplementation(libs.junit4)
+    implementation(libs.bundles.androidTest)
     debugImplementation(libs.uiTooling)
 }

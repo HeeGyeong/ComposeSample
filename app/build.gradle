@@ -46,12 +46,10 @@ dependencies {
     implementation(libs.composeAnimation)
 
     // ViewModel
-    implementation(libs.lifecycleViewmodelKtx)
-    implementation(libs.lifecycleViewmodelCompose)
+    implementation(libs.bundles.lifecycle)
 
     // Accompanist
-    implementation(libs.accompanistSystemUiController)
-    implementation(libs.accompanistWebview)
+    implementation(libs.bundles.accompanist)
 
     // Image Loading
     implementation(libs.bundles.image)

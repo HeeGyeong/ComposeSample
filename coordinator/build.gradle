@@ -34,11 +34,6 @@ dependencies {
     implementation libs.runtime
     implementation libs.uiToolingPreview
 
-    implementation libs.lifecycleRuntimeKtx
-    implementation libs.lifecycleViewmodelKtx
-    implementation libs.lifecycleViewmodelCompose
-
-    implementation libs.koinCore
-    implementation libs.koinAndroid
-    implementation libs.koinAndroidxCompose
+    implementation(libs.bundles.lifecycle)
+    implementation(libs.bundles.koin)
 }
