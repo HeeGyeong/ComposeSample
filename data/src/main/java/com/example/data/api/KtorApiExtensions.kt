@@ -10,10 +10,8 @@ import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
 
-const val baseUrl = "https://jsonplaceholder.typicode.com/posts"
-
 suspend fun HttpClient.getPosts(): List<PostData> {
-    return this.get(baseUrl).body()
+    return this.get("/posts").body()
 }
 
 /**
@@ -22,7 +20,7 @@ suspend fun HttpClient.getPosts(): List<PostData> {
  * Used Parameter
  */
 suspend fun HttpClient.getPostsByUserId(userId: Int): List<PostData> {
-    return this.get(baseUrl) {
+    return this.get("/posts") {
         parameter("userId", userId)
     }.body()
 }
@@ -33,7 +31,7 @@ suspend fun HttpClient.getPostsByUserId(userId: Int): List<PostData> {
  * Create Post
  */
 suspend fun HttpClient.createPost(postData: PostData): PostData {
-    return this.post(baseUrl) {
+    return this.post("/posts") {
         // Content-Type을 application/json으로 설정
         // ktorModule에 선언되어 있지만, 명시적으로 처리해주는 것이 안전한 방법.
         contentType(ContentType.Application.Json)

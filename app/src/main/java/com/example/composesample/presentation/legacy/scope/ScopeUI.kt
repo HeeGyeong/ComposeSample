@@ -173,7 +173,10 @@ fun CoroutineTempScreen() {
 }
 
 @Composable
-fun LaunchedScreen(viewModel: LaunchedEffectViewModel) {
+fun LaunchedScreen(
+    paddingValues: PaddingValues,
+    viewModel: LaunchedEffectViewModel
+) {
 
     var textState by remember { mutableStateOf("Default") }
 

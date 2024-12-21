@@ -120,7 +120,7 @@ fun SideEffectExampleUI(
             }
 
             /**
-             * snapshotFlow 를 통해 isChanged.value 의 상태를 관찰한다.
+             * snapshotFlow 를 통해 isChanged.value 의 상태를 관찰하며, flow로 변환하여 사용한다.
              *
              * Unit으로 선언하여 최초 한번 실행되지만, 명시적으로 수집을 취소하지 않거나 다른 Flow를 사용하지 않으면,
              * 무기한 계속 관찰한다.

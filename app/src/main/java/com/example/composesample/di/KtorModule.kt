@@ -8,6 +8,7 @@ import io.ktor.serialization.gson.*
 import org.koin.dsl.module
 import android.util.Log
 import io.ktor.client.plugins.DefaultRequest
+import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.request.header
 import org.koin.android.BuildConfig
 
@@ -15,11 +16,16 @@ import org.koin.android.BuildConfig
 private object NetworkConstants {
     const val CONNECT_TIMEOUT = 60_000
     const val SOCKET_TIMEOUT = 60_000
+    const val BASE_URL = "https://jsonplaceholder.typicode.com"
 }
 
 val ktorModule = module {
     single {
         HttpClient(Android) {
+
+            defaultRequest {
+                url(NetworkConstants.BASE_URL)
+            }
             /**
              * HttpLoggingInterceptor
              *
