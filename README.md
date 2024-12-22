@@ -15,6 +15,7 @@
 Jetpack Compose를 공부하고 실무에 적용하면서 발생했던 이슈와 자주 사용되는 다양한 기능들의 샘플을 모아둔 프로젝트입니다.
 
 - **최신 업데이트**
+  - 2024.12: toml 파일 작성 및 gradle 변경
   - 2024.11: README.md 갱신, 도메인 별 READMD.md 작성
   - 2024.08: Version Update 및 버전 대응
   - 2024.06: Clean Architecture 구조로 전환
@@ -44,10 +45,17 @@ Jetpack Compose를 공부하고 실무에 적용하면서 발생했던 이슈와
 ComposeSample
 ├── app
 │ ├── presentation # UI 레이어 (Activity, Compose UI)
+│ ├── coordinator # Coordinator pattern Initializer
 │ ├── di # 의존성 주입
 │ ├── db # 로컬 데이터베이스
 │ ├── util # 유틸리티 클래스
 │ └── model # UI 모델 클래스
+│
+├── Coordinator
+│ └── coordinator # Coordinator pattern Initializer
+│
+├── Core
+│ └── navigatrion # Coordinator interface
 │
 ├── data
 │ ├── api # API 인터페이스
@@ -186,6 +194,18 @@ ComposeSample
 24. **workmanager**: 
 - WorkManager 백그라운드 작업
 - 작업 스케줄링 관리
+
+25. **ktor**: 
+- Ktor 클라이언트를 사용한 네트워크 통신
+- 코루틴 기반의 비동기 처리
+
+26. **mvi**: 
+- MVI 아키텍처 패턴 구현
+- 단방향 데이터 흐름과 상태 관리
+
+27. **sse**: 
+- Server-Sent Events 구현
+- 실시간 데이터 스트리밍 처리
 
 ## 주의사항
 - 일부 예제(예: Permission 관련)는 기본 설정이 필요할 수 있습니다
