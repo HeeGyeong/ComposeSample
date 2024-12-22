@@ -26,13 +26,13 @@ dependencies {
     implementation(project(':core'))
 
     def composeBom = platform(libs.composeBom)
-    implementation composeBom
+    implementation(composeBom)
 
-    implementation libs.activityCompose
-    implementation libs.composeUi
-    implementation libs.material3
-    implementation libs.runtime
-    implementation libs.uiToolingPreview
+    implementation(libs.activityCompose)
+    implementation(libs.composeUi)
+    implementation(libs.material3)
+    implementation(libs.runtime)
+    implementation(libs.uiToolingPreview)
 
     implementation(libs.bundles.lifecycle)
     implementation(libs.bundles.koin)
