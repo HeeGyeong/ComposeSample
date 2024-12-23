@@ -69,6 +69,8 @@ private sealed class SSEMessage {
  * SSE 예제의 메인 Composable 함수
  * 위키피디아의 실시간 업데이트를 SSE를 통해 수신하고 표시
  *
+ * ViewModel을 사용하여 로직을 분리하는 것이 좋으나, 샘플이기 때문에 VM은 사용하지 않는다.
+ *
  * @param onBackEvent 뒤로가기 버튼 클릭 시 호출될 콜백
  */
 @RequiresApi(Build.VERSION_CODES.O)
