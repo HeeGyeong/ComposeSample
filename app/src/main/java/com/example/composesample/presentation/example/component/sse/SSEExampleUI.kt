@@ -32,6 +32,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.net.URI
 import java.time.Duration
+import java.util.concurrent.TimeUnit
 
 /**
  * SSE(Server-Sent Events) 연결 상태와 메시지를 관리하는 상태 클래스
@@ -197,7 +198,7 @@ fun SSEExampleUI(onBackEvent: () -> Unit) {
                             eventHandler,
                             URI.create("https://stream.wikimedia.org/v2/stream/recentchange")
                         )
-                            .reconnectTime(Duration.ofSeconds(3))
+                            .reconnectTime(3, TimeUnit.SECONDS)
                             .build()
                     eventSourceHolder.value?.start()
                 } catch (e: Exception) {
