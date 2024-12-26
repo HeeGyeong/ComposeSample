@@ -3,8 +3,8 @@ package com.example.composesample.presentation.example.component.cache
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.composesample.db.RoomSingleton
-import com.example.composesample.db.UserData
+import com.example.data.db.RoomSingleton
+import com.example.data.db.UserData
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch

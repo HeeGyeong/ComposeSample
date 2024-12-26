@@ -1,7 +1,7 @@
 package com.example.composesample.di
 
 import androidx.room.Room
-import com.example.composesample.db.RoomSingleton
+import com.example.data.db.RoomSingleton
 import org.koin.android.ext.koin.androidApplication
 import org.koin.dsl.module
 

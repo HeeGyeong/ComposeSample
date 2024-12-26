@@ -82,6 +82,64 @@ This module contains the data layer of the application and is designed according
     }
     ```
 
+### 4. Database (Room)
+
+- **Description**: Contains Room implementations for local database management.
+
+  - `ItemDTO`, `UserData`: Database table entity definitions
+  
+    ```kotlin
+    @Entity(tableName = "itemTable")
+    data class ItemDTO(
+        @PrimaryKey
+        var id: Long?,
+        
+        @ColumnInfo(name = "uuid")
+        var uniqueId: String,
+    )
+
+    @Entity(tableName = "exampleTable")
+    data class UserData(
+        @PrimaryKey
+        val id: Long?,
+        
+        @ColumnInfo(name = "user_name")
+        val userName: String
+    )
+    ```
+
+  - `ItemDao`, `ExampleDao`: DAO interfaces for database access
+  
+    ```kotlin
+    @Dao
+    interface ItemDao {
+        fun searchData(startsWith: String): Flow<List<ItemDTO>>
+        suspend fun insert(item: ItemDTO)
+        suspend fun update(item: ItemDTO)
+        suspend fun delete(item: ItemDTO)
+        suspend fun clear()
+    }
+
+    @Dao
+    interface ExampleDao {
+        fun searchData(searchName: String): Flow<List<UserData>>
+        suspend fun insertData(item: UserData)
+        suspend fun updateData(item: UserData)
+        suspend fun deleteData(item: UserData)
+        suspend fun allDataDelete()
+    }
+    ```
+
+  - `RoomSingleton`: Room database singleton class
+  
+    ```kotlin
+    @Database(entities = [ItemDTO::class, UserData::class], version = 2, exportSchema = false)
+    abstract class RoomSingleton : RoomDatabase() {
+        abstract fun itemDao(): ItemDao
+        abstract fun exampleDao(): ExampleDao
+    }
+    ```
+
 ## Usage
 
 To use this module, add the necessary dependencies and implement the data layer using the defined API interfaces and repositories.

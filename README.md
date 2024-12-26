@@ -15,6 +15,7 @@
 Jetpack Compose를 공부하고 실무에 적용하면서 발생했던 이슈와 자주 사용되는 다양한 기능들의 샘플을 모아둔 프로젝트입니다.
 
 - **최신 업데이트**
+  - 2024.12: 
   - 2024.12: toml 파일 작성 및 gradle 변경
   - 2024.11: README.md 갱신, 도메인 별 READMD.md 작성
   - 2024.08: Version Update 및 버전 대응
@@ -45,9 +46,10 @@ Jetpack Compose를 공부하고 실무에 적용하면서 발생했던 이슈와
 ComposeSample
 ├── app
 │ ├── presentation # UI 레이어 (Activity, Compose UI)
+│ │ ├─ example # example feature pacakge
+│ │ └─ legacy  # legacy feature pacakge
 │ ├── coordinator # Coordinator pattern Initializer
 │ ├── di # 의존성 주입
-│ ├── db # 로컬 데이터베이스
 │ ├── util # 유틸리티 클래스
 │ └── model # UI 모델 클래스
 │
@@ -60,7 +62,7 @@ ComposeSample
 ├── data
 │ ├── api # API 인터페이스
 │ ├── repository # Repository 구현체
-│ ├── di # Data 모듈 DI
+│ ├── db # 로컬 데이터베이스
 │ └── model # Data 모델
 │
 └── domain
