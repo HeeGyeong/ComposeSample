@@ -30,6 +30,11 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+/**
+ * Feature 단위로 이동할 수 있는 Main 화면
+ *
+ * presentation Layer 아래에 있는 2개의 package는 각각의 feature 단위다.
+ */
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun MainActivityScreen() {

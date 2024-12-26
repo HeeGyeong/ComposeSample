@@ -54,7 +54,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.composesample.presentation.MainHeader
 import com.example.composesample.presentation.example.component.animation.AnimationExampleUI
 import com.example.composesample.presentation.example.component.api.ApiDisconnectExampleUI
@@ -124,7 +123,7 @@ import com.example.composesample.util.ConstValue.Companion.TargetSDK34Permission
 import com.example.composesample.util.ConstValue.Companion.TextStyleExample
 import com.example.composesample.util.ConstValue.Companion.WebViewIssueExample
 import com.example.composesample.util.ConstValue.Companion.WorkManagerExample
-import com.example.composesample.util.Toast
+import com.example.composesample.util.component.Toast
 import com.example.composesample.util.noRippleClickable
 import com.example.domain.model.ExampleMoveType
 import com.example.domain.model.ExampleObject
