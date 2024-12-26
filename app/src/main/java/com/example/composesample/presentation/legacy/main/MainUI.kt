@@ -66,7 +66,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun AppbarSample(
     title: String,
-    isViewLegacyPage: MutableState<Boolean>
+    onCloseEvent: () -> Unit,
 ) {
     val scaffoldState = rememberScaffoldState()
     val scope = rememberCoroutineScope()
@@ -106,8 +106,9 @@ fun AppbarSample(
         // Top, Bottom 사이에 들어갈 item
         content = { padding ->
             ListTest(
+                modifier = Modifier.padding(padding),
                 itemList = itemList,
-                isViewLegacyPage = isViewLegacyPage
+                onCloseEvent = onCloseEvent
             )
         },
         // floating Button
@@ -171,13 +172,10 @@ fun AppbarSample(
 @ExperimentalAnimationApi
 @Composable
 fun TestButton(
-    isViewLegacyPage: MutableState<Boolean>
+    onCloseEvent: () -> Unit,
 ) {
     Button(
-        onClick = {
-            Log.d("ComposeLog", "click test Button")
-            isViewLegacyPage.value = false
-        },
+        onClick = onCloseEvent,
         contentPadding = PaddingValues(
             start = 20.dp,
             top = 12.dp,
@@ -192,8 +190,9 @@ fun TestButton(
 @ExperimentalAnimationApi
 @Composable
 fun ListTest(
+    modifier: Modifier,
     itemList: List<Message>,
-    isViewLegacyPage: MutableState<Boolean>
+    onCloseEvent: () -> Unit,
 ) {
     Box(modifier = Modifier.fillMaxSize()) {
         // 스크롤의 position의 상태를 저장.
@@ -207,7 +206,7 @@ fun ListTest(
             itemsIndexed(itemList) { index, item ->
                 if (index == 3) {
                     TestButton(
-                        isViewLegacyPage = isViewLegacyPage
+                        onCloseEvent = onCloseEvent
                     )
                 } else {
                     CardView(item)

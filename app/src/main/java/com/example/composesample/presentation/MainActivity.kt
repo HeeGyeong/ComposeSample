@@ -29,9 +29,6 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -40,8 +37,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import com.example.composesample.presentation.example.BlogExampleActivity
-import com.example.composesample.presentation.legacy.base.SetSystemUI
-import com.example.composesample.presentation.legacy.main.AppbarSample
+import com.example.composesample.presentation.legacy.LegacyActivity
 import com.example.composesample.util.noRippleClickable
 
 @ExperimentalAnimationApi
@@ -52,19 +48,7 @@ class MainActivity : ComponentActivity() {
             Surface(
                 color = Color.White
             ) {
-                val isViewLegacyPage = remember { mutableStateOf(false) }
-
-                if (isViewLegacyPage.value) {
-                    SetSystemUI()
-                    AppbarSample(
-                        title = "AppBar Main",
-                        isViewLegacyPage = isViewLegacyPage
-                    )
-                } else {
-                    MainActivityScreen(
-                        isViewLegacyPage = isViewLegacyPage
-                    )
-                }
+                MainActivityScreen()
             }
         }
     }
@@ -72,9 +56,7 @@ class MainActivity : ComponentActivity() {
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalAnimationApi::class)
 @Composable
-fun MainActivityScreen(
-    isViewLegacyPage: MutableState<Boolean>
-) {
+fun MainActivityScreen() {
     val context = LocalContext.current
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -111,7 +93,8 @@ fun MainActivityScreen(
                             "완전히 기본적인 코드들과 기능들을 구현해두었습니다.\n" +
                             "추후 자주 사용하는 기능들은 개선하여 Function Sample에 추가 될 예정입니다.",
                     onClickEvent = {
-                        isViewLegacyPage.value = true
+                        // Activity Call
+                        context.startActivity(Intent(context, LegacyActivity::class.java))
                     }
                 )
 
