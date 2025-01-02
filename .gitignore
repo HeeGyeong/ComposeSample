@@ -16,6 +16,7 @@
 .idea/.gitignore
 .idea/compiler.xml
 .idea/gradle.xml
+.idea/libraries/*.xml
 .idea/libraries/Gradle__androidx_activity_activity_1_3_1_aar.xml
 .idea/libraries/Gradle__androidx_activity_activity_compose_1_3_1_aar.xml
 .idea/libraries/Gradle__androidx_activity_activity_ktx_1_3_1_aar.xml
