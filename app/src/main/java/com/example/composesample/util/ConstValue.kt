@@ -2,6 +2,10 @@ package com.example.composesample.util
 
 class ConstValue {
     companion object {
+        // Update date
+        const val UpdateDate = "25년 1월"
+
+        // Example
         const val LazyColumnExample = "lazyColumnExample"
         const val ClickEventExample = "clickEventExample"
         const val FlexBoxLayoutExample = "flexBoxLayoutExample"
