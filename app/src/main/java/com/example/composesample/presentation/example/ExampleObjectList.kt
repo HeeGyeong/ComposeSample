@@ -284,9 +284,9 @@ fun exampleObjectList(): ArrayList<ExampleObject> {
 
     insertExampleObject.add(
         ExampleObject(
-            title = "Server-Sent Events Example (글 작성 중)",
-            description = "SSE를 사용하여 서버로부터 실시간 업데이트를 받는 예제 (글 작성 중)",
-            blogUrl = "",
+            title = "Server-Sent Events Example",
+            description = "SSE를 사용하여 서버로부터 실시간 업데이트를 받는 예제",
+            blogUrl = "https://heegs.tistory.com/181",
             exampleType = ConstValue.SSEExample
         )
     )
