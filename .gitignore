@@ -17,6 +17,9 @@
 .idea/compiler.xml
 .idea/gradle.xml
 .idea/libraries/*.xml
+.idea/libraries/Gradle__androidx_loader_loader_1_0_0_aar.xml
+.idea/libraries/Gradle__androidx_viewpager_viewpager_1_0_0_aar.xml
+.idea/libraries/Gradle__io_reactivex_rxjava2_rxandroid_2_1_1_aar.xml
 .idea/libraries/Gradle__androidx_activity_activity_1_3_1_aar.xml
 .idea/libraries/Gradle__androidx_activity_activity_compose_1_3_1_aar.xml
 .idea/libraries/Gradle__androidx_activity_activity_ktx_1_3_1_aar.xml
