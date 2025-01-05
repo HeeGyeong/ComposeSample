@@ -21,7 +21,6 @@ import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -78,12 +77,14 @@ import com.example.composesample.presentation.example.component.intent.PassingIn
 import com.example.composesample.presentation.example.component.lazycolumn.LazyColumnFlingBehaviorExample
 import com.example.composesample.presentation.example.component.lazycolumn.LazyColumnIssueUI
 import com.example.composesample.presentation.example.component.lottie.LottieExampleUI
+import com.example.composesample.presentation.example.component.mvi.MVIExampleUI
 import com.example.composesample.presentation.example.component.navigation.BottomNavigationActivity
 import com.example.composesample.presentation.example.component.pager.PullScreenPagerUI
 import com.example.composesample.presentation.example.component.powersave.PowerSaveModeExampleUI
 import com.example.composesample.presentation.example.component.recorder.AudioRecorderUI
 import com.example.composesample.presentation.example.component.refresh.PullToRefreshUI
 import com.example.composesample.presentation.example.component.shimmer.ShimmerExampleUI
+import com.example.composesample.presentation.example.component.sse.SSEExampleUI
 import com.example.composesample.presentation.example.component.swipe.SwipeToDismissUI
 import com.example.composesample.presentation.example.component.text.TextStyleUI
 import com.example.composesample.presentation.example.component.version.TargetSDK34Example
@@ -98,6 +99,7 @@ import com.example.composesample.util.ConstValue.Companion.AudioRecorderExample
 import com.example.composesample.util.ConstValue.Companion.BottomNavigationExample
 import com.example.composesample.util.ConstValue.Companion.BottomSheetExample
 import com.example.composesample.util.ConstValue.Companion.ClickEventExample
+import com.example.composesample.util.ConstValue.Companion.CoordinatorExample
 import com.example.composesample.util.ConstValue.Companion.CursorIDEExample
 import com.example.composesample.util.ConstValue.Companion.CustomBottomSheetExample
 import com.example.composesample.util.ConstValue.Companion.DataCacheExample
@@ -108,12 +110,14 @@ import com.example.composesample.util.ConstValue.Companion.FlingBehaviorExample
 import com.example.composesample.util.ConstValue.Companion.KtorExample
 import com.example.composesample.util.ConstValue.Companion.LazyColumnExample
 import com.example.composesample.util.ConstValue.Companion.LottieExample
+import com.example.composesample.util.ConstValue.Companion.MVIExample
 import com.example.composesample.util.ConstValue.Companion.ModalBottomSheetExample
 import com.example.composesample.util.ConstValue.Companion.ModalDrawExample
 import com.example.composesample.util.ConstValue.Companion.PassingIntentDataExample
 import com.example.composesample.util.ConstValue.Companion.PowerSaveModeExample
 import com.example.composesample.util.ConstValue.Companion.PullScreenPager
 import com.example.composesample.util.ConstValue.Companion.PullToRefreshExample
+import com.example.composesample.util.ConstValue.Companion.SSEExample
 import com.example.composesample.util.ConstValue.Companion.ScaffoldDrawExample
 import com.example.composesample.util.ConstValue.Companion.ShimmerExample
 import com.example.composesample.util.ConstValue.Companion.SideEffectExample
@@ -127,11 +131,6 @@ import com.example.composesample.util.component.Toast
 import com.example.composesample.util.noRippleClickable
 import com.example.domain.model.ExampleMoveType
 import com.example.domain.model.ExampleObject
-import com.example.composesample.presentation.example.component.sse.SSEExampleUI
-import com.example.composesample.util.ConstValue.Companion.SSEExample
-import com.example.composesample.presentation.example.component.mvi.MVIExampleUI
-import com.example.composesample.util.ConstValue.Companion.CoordinatorExample
-import com.example.composesample.util.ConstValue.Companion.MVIExample
 import org.koin.androidx.compose.koinViewModel
 
 @ExperimentalAnimationApi
@@ -242,6 +241,7 @@ private fun ExampleListContent(
                         context = context,
                         type = exampleObject.exampleType,
                         subCategory = exampleObject.subCategory,
+                        exampleLastUpdate = exampleObject.lastUpdate,
                         exampleTitle = exampleObject.title,
                         exampleDescription = exampleObject.description,
                         exampleBlogUrl = exampleObject.blogUrl,
@@ -263,6 +263,7 @@ private fun ExampleListContent(
                         context = context,
                         type = exampleObject.exampleType,
                         subCategory = exampleObject.subCategory,
+                        exampleLastUpdate = exampleObject.lastUpdate,
                         exampleTitle = exampleObject.title,
                         exampleDescription = exampleObject.description,
                         exampleBlogUrl = exampleObject.blogUrl,
@@ -287,6 +288,7 @@ private fun ExampleListContent(
                         context = context,
                         type = exampleObject.exampleType,
                         subCategory = exampleObject.subCategory,
+                        exampleLastUpdate = exampleObject.lastUpdate,
                         exampleTitle = exampleObject.title,
                         exampleDescription = exampleObject.description,
                         exampleBlogUrl = exampleObject.blogUrl,
@@ -397,12 +399,14 @@ private fun SortButton(
     Row(
         modifier = modifier
             .height(52.dp)
-            .clickable(onClick = onClick),
+            .noRippleClickable {
+                onClick.invoke()
+            },
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.End
     ) {
         Text(
-            text = "정렬 기준\n변경",
+            text = "정렬 기준\n반대로 변경",
             textAlign = TextAlign.Center
         )
     }
@@ -426,6 +430,7 @@ fun ExampleCardSection(
     context: Context,
     type: String,
     subCategory: String,
+    exampleLastUpdate: String,
     exampleTitle: String,
     exampleDescription: String,
     exampleBlogUrl: String,
@@ -442,6 +447,17 @@ fun ExampleCardSection(
         Column(
             modifier = Modifier.padding(20.dp)
         ) {
+            if (exampleLastUpdate.isNotEmpty()) {
+                Text(
+                    modifier = Modifier.fillMaxWidth(),
+                    text = "Last update : $exampleLastUpdate",
+                    color = Color.LightGray,
+                    style = getTextStyle(12)
+                )
+
+                Spacer(modifier = Modifier.height(2.dp))
+            }
+
             Text(
                 modifier = Modifier.fillMaxWidth(),
                 text = exampleTitle,

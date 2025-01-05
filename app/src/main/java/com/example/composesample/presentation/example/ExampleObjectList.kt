@@ -221,6 +221,7 @@ fun exampleObjectList(): ArrayList<ExampleObject> {
 
     insertExampleObject.add(
         ExampleObject(
+            lastUpdate = "24. 10. 02",
             title = "Shimmer Example",
             description = "Shimmer를 사용하는 방법에 대해 알아보기 위한 예제.",
             blogUrl = "https://heegs.tistory.com/174",
@@ -230,6 +231,7 @@ fun exampleObjectList(): ArrayList<ExampleObject> {
 
     insertExampleObject.add(
         ExampleObject(
+            lastUpdate = "24. 10. 24",
             title = "Sticky Header Example",
             description = "사용성 높은 Sticky Header를 만들어보기 위한 예제.",
             blogUrl = "https://heegs.tistory.com/175",
@@ -239,6 +241,7 @@ fun exampleObjectList(): ArrayList<ExampleObject> {
 
     insertExampleObject.add(
         ExampleObject(
+            lastUpdate = "24. 11. 06",
             title = "Cursor IDE Example",
             description = "Cursor IDE를 사용하여 만들어본 예제 - 입력 된 텍스트 길이를 보여주는 예제",
             blogUrl = "https://heegs.tistory.com/177",
@@ -248,6 +251,7 @@ fun exampleObjectList(): ArrayList<ExampleObject> {
 
     insertExampleObject.add(
         ExampleObject(
+            lastUpdate = "24. 11. 19",
             title = "Animation Example",
             description = "Compose에서 다양한 애니메이션을 사용하는 방법에 대한 예제",
             blogUrl = "",
@@ -257,6 +261,7 @@ fun exampleObjectList(): ArrayList<ExampleObject> {
 
     insertExampleObject.add(
         ExampleObject(
+            lastUpdate = "24. 12. 03",
             title = "Coordinator Example",
             description = "간단한 Coordinator Pattern 예제",
             blogUrl = "",
@@ -266,6 +271,7 @@ fun exampleObjectList(): ArrayList<ExampleObject> {
 
     insertExampleObject.add(
         ExampleObject(
+            lastUpdate = "24. 12. 05",
             title = "MVI Pattern Example",
             description = "MVI 패턴을 사용하여 단방향 통신을 구현하는 예제",
             blogUrl = "https://heegs.tistory.com/179",
@@ -275,6 +281,7 @@ fun exampleObjectList(): ArrayList<ExampleObject> {
 
     insertExampleObject.add(
         ExampleObject(
+            lastUpdate = "24. 12. 21",
             title = "Ktor API Example",
             description = "Ktor을 사용하여 API를 호출하는 예제",
             blogUrl = "",
@@ -284,6 +291,7 @@ fun exampleObjectList(): ArrayList<ExampleObject> {
 
     insertExampleObject.add(
         ExampleObject(
+            lastUpdate = "25. 01. 05",
             title = "Server-Sent Events Example",
             description = "SSE를 사용하여 서버로부터 실시간 업데이트를 받는 예제",
             blogUrl = "https://heegs.tistory.com/181",
