@@ -25,6 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.composesample.presentation.MainHeader
+import com.example.composesample.util.ConstValue.Companion.SSEWikiURL
 import com.launchdarkly.eventsource.EventHandler
 import com.launchdarkly.eventsource.EventSource
 import com.launchdarkly.eventsource.MessageEvent
@@ -32,6 +33,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.koin.androidx.compose.get
+import org.koin.core.parameter.parametersOf
 import java.net.URI
 import java.util.concurrent.TimeUnit
 
@@ -62,6 +65,7 @@ sealed class SSEMessage {
         val chars: String,
         val cycleId: Int  // 각 연결 사이클을 구분하기 위한 ID
     ) : SSEMessage()
+
     data class Disconnected(val message: String = "연결 종료") : SSEMessage()
     data class Error(val message: String) : SSEMessage()
 }
@@ -187,19 +191,14 @@ fun SSEExampleUI(onBackEvent: () -> Unit) {
      * 새로운 SSE 연결을 시작하는 함수
      * 위키피디아의 실시간 업데이트 스트림에 연결
      */
+    val sseBuilder: EventSource = get { parametersOf(eventHandler) }
     val startConnection = remember {
         {
             currentChars.value = ""  // card에 보여줄 문자열 초기화
             cycleCount.value += 1    // 새로운 사이클 시작
             coroutineScope.launch(Dispatchers.IO) {
                 try {
-                    eventSourceHolder.value =
-                        EventSource.Builder(
-                            eventHandler,
-                            URI.create("https://stream.wikimedia.org/v2/stream/recentchange")
-                        )
-                            .reconnectTime(3, TimeUnit.SECONDS)
-                            .build()
+                    eventSourceHolder.value = sseBuilder
                     eventSourceHolder.value?.start()
                 } catch (e: Exception) {
                     Log.e("SSE", "Error starting connection: ${e.message}")
@@ -243,8 +242,7 @@ fun SSEExampleUI(onBackEvent: () -> Unit) {
 //                            coroutineScope,
 //                            uiState
 //                        )
-                    }
-                    else {
+                    } else {
                         closeConnection()
                     }
                 }
@@ -339,6 +337,10 @@ private fun CollectedCharsCard(chars: String) {
     }
 }
 
+/**
+ * DI를 사용하는 케이스에 대응되지 않은 샘플 func 입니다.
+ * 이런식으로만 사용한다. 함수로 빼내어 사용할 때는 이런식으로 사용한다. 정도만 확인하시면 됩니다.
+ */
 fun startSSEConnection(
     eventSourceHolder: MutableState<EventSource?>,
     eventHandler: EventHandler,
@@ -354,7 +356,7 @@ fun startSSEConnection(
             eventSourceHolder.value =
                 EventSource.Builder(
                     eventHandler,
-                    URI.create("https://stream.wikimedia.org/v2/stream/recentchange")
+                    URI.create(SSEWikiURL)
                 )
                     .reconnectTime(3, TimeUnit.SECONDS)
                     .build()

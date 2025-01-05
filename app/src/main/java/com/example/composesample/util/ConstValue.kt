@@ -5,6 +5,9 @@ class ConstValue {
         // Update date
         const val UpdateDate = "25년 1월"
 
+        // Example Value
+        const val SSEWikiURL = "https://stream.wikimedia.org/v2/stream/recentchange"
+
         // Example
         const val LazyColumnExample = "lazyColumnExample"
         const val ClickEventExample = "clickEventExample"
