@@ -14,6 +14,8 @@ import org.koin.androidx.compose.koinViewModel
 
 /**
  * Coordinator pattern Flow
+ * Module간 이동하는 것이 단순한 UI라면 AAC navigation을 사용하는 것이 바람직.
+ * Module간 Activity 간 전환이 발생하기 떄문에 Coordinator Pattern을 적용
  *
  * 1. Core Module - Navigation Interface, Navigation Interface를 매개변수로 가지는 Class(A)생성
  * 2. Core Module - A를 매개변수로 가지는 BaseViewModel 생성 : 모든 ViewModel이 상속받아서 사용, ViewModel에서 화면전환을 위함
