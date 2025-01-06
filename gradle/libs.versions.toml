@@ -43,9 +43,15 @@ retrofitRxJavaAdapter = "2.8.1"
 gson = "2.10.1"
 okhttpLoggingInterceptor = "4.11.0"
 ktor = "2.3.7"
+
+# Test
 junit = "4.13.2"
 androidxTestJunit = "1.2.1"
 espressoCore = "3.6.1"
+coroutineTest = "1.7.1"
+mockk = "1.13.5"
+turbine = "1.0.0"
+kotlinTestJunit = "1.8.20"
 
 # Accompanist
 accompanistSystemUiController = "0.32.0"
@@ -109,6 +115,13 @@ androidxTestJunit = { module = "androidx.test.ext:junit", version.ref = "android
 espressoCore = { module = "androidx.test.espresso:espresso-core", version.ref = "espressoCore" }
 junit4 = { module = "androidx.compose.ui:ui-test-junit4", version.ref = "composeVersion" }
 uiTooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "composeVersion" }
+
+# Test Dependency
+coroutinesTest = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutineTest" }
+mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
+turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
+kotlinTestJunit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlinTestJunit" }
+kotlinTest = { module = "org.jetbrains.kotlin:kotlin-test" }
 
 # Module
 # Compose
@@ -185,7 +198,15 @@ room = [
 androidTest = [
     "androidxTestJunit",
     "espressoCore",
-    "junit4"
+    "junit4",
+]
+
+unitTest = [
+    "coroutinesTest",
+    "mockk",
+    "turbine",
+    "kotlinTestJunit",
+    "kotlinTest"
 ]
 
 image = [
