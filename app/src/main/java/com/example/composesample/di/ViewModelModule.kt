@@ -5,6 +5,7 @@ import com.example.composesample.presentation.example.component.api.ApiExampleUs
 import com.example.composesample.presentation.example.component.api.ApiExampleViewModel
 import com.example.composesample.presentation.example.component.cache.DataCacheViewModel
 import com.example.composesample.presentation.example.component.mvi.MVIExampleViewModel
+import com.example.composesample.presentation.example.component.sse.SSEViewModel
 import com.example.composesample.presentation.legacy.movie.MovieViewModel
 import com.example.composesample.presentation.legacy.sub.SubActivityViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -28,4 +29,6 @@ val viewModelModule: Module = module {
     viewModel { SubActivityViewModel(get(), get()) }
 
     viewModel { MVIExampleViewModel(get()) }
+
+    viewModel { SSEViewModel() }
 }

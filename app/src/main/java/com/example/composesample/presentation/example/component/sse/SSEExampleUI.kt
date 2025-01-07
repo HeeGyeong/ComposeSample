@@ -17,6 +17,7 @@ import androidx.compose.material.Card
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -25,6 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.composesample.presentation.MainHeader
+import com.example.composesample.presentation.example.component.mvi.MVIExampleViewModel
 import com.example.composesample.util.ConstValue.Companion.SSEWikiURL
 import com.launchdarkly.eventsource.EventHandler
 import com.launchdarkly.eventsource.EventSource
@@ -34,184 +36,23 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.koin.androidx.compose.get
+import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 import java.net.URI
 import java.util.concurrent.TimeUnit
 
 /**
- * SSE(Server-Sent Events) 연결 상태와 메시지를 관리하는 상태 클래스
- *
- * @property messageList 수신된 모든 메시지들의 리스트
- * @property isConnected 현재 SSE 연결 상태
- */
-data class SSEUIState(
-    val messageList: List<SSEMessage> = emptyList(),
-    val isConnected: Boolean = false
-)
-
-/**
- * SSE로부터 수신되는 다양한 타입의 메시지를 정의하는 sealed class
- *
- * - Connected: 연결 성공 메시지
- * - Comment: 서버로부터 받은 주석 메시지
- * - CollectedChars: 수집된 문자들을 표시하는 메시지 (각 연결 사이클마다 하나씩 존재)
- * - Disconnected: 연결 종료 메시지
- * - Error: 에러 메시지
- */
-sealed class SSEMessage {
-    data class Connected(val message: String = "연결됨") : SSEMessage()
-    data class Comment(val message: String) : SSEMessage()
-    data class CollectedChars(
-        val chars: String,
-        val cycleId: Int  // 각 연결 사이클을 구분하기 위한 ID
-    ) : SSEMessage()
-
-    data class Disconnected(val message: String = "연결 종료") : SSEMessage()
-    data class Error(val message: String) : SSEMessage()
-}
-
-/**
  * SSE 예제의 메인 Composable 함수
  * 위키피디아의 실시간 업데이트를 SSE를 통해 수신하고 표시
- *
- * ViewModel을 사용하여 로직을 분리하는 것이 좋으나, 샘플이기 때문에 VM은 사용하지 않는다.
  *
  * @param onBackEvent 뒤로가기 버튼 클릭 시 호출될 콜백
  */
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun SSEExampleUI(onBackEvent: () -> Unit) {
-    val uiState = remember { mutableStateOf(SSEUIState()) }
-    val currentChars = remember { mutableStateOf("") }  // 현재 사이클에서 수집 중인 문자들
-    val cycleCount = remember { mutableStateOf(0) }     // 연결 사이클 카운터
-    val eventSourceHolder = remember { mutableStateOf<EventSource?>(null) }  // SSE 연결 객체
-    val coroutineScope = rememberCoroutineScope()
-
-    /**
-     * SSE 연결을 종료하는 함수
-     * eventHandler에서 closeConnection를 사용하기 위해 먼저 선언.
-     */
-    val closeConnection = remember {
-        {
-            coroutineScope.launch(Dispatchers.IO) {
-                try {
-                    eventSourceHolder.value?.close()
-                    eventSourceHolder.value = null
-                } catch (e: Exception) {
-                    Log.e("SSE", "Error closing connection: ${e.message}")
-                }
-            }
-        }
-    }
-
-    /**
-     * SSE 이벤트를 처리하는 핸들러
-     * 각각의 이벤트 타입에 따라 적절한 처리를 수행
-     */
-    val eventHandler = remember {
-        object : EventHandler {
-            // 연결이 성공적으로 되었을 때 호출
-            override fun onOpen() {
-                coroutineScope.launch {
-                    uiState.value = uiState.value.copy(
-                        isConnected = true,
-                        messageList = uiState.value.messageList + SSEMessage.Connected()
-                    )
-                }
-            }
-
-            // 연결이 종료되었을 때 호출
-            override fun onClosed() {
-                coroutineScope.launch {
-                    uiState.value = uiState.value.copy(
-                        isConnected = false,
-                        messageList = uiState.value.messageList + SSEMessage.Disconnected()
-                    )
-                }
-            }
-
-            // 서버로부터 메시지를 수신했을 때 호출
-            override fun onMessage(event: String, messageEvent: MessageEvent) {
-                coroutineScope.launch {
-                    try {
-                        // 메시지에서 첫 글자만 추출
-                        val firstChar = messageEvent.data.firstOrNull()?.toString() ?: ""
-                        currentChars.value += firstChar
-
-                        // 현재 사이클의 CollectedChars 메시지만 업데이트
-                        val updatedList = uiState.value.messageList.filterNot {
-                            it is SSEMessage.CollectedChars &&
-                                    it.cycleId == cycleCount.value
-                        } + SSEMessage.CollectedChars(
-                            chars = currentChars.value,
-                            cycleId = cycleCount.value
-                        )
-
-                        uiState.value = uiState.value.copy(
-                            messageList = updatedList
-                        )
-
-                        // 10개 글자를 수집하면 연결 종료
-                        if (currentChars.value.length >= 10) {
-                            closeConnection.invoke()
-                        }
-                    } catch (e: Exception) {
-                        uiState.value = uiState.value.copy(
-                            messageList = uiState.value.messageList +
-                                    SSEMessage.Error("파싱 에러: ${e.message}")
-                        )
-                    }
-                }
-            }
-
-            // 서버로부터 주석을 수신했을 때 호출
-            override fun onComment(comment: String) {
-                coroutineScope.launch {
-                    uiState.value = uiState.value.copy(
-                        messageList = uiState.value.messageList +
-                                SSEMessage.Comment("주석: $comment")
-                    )
-                }
-            }
-
-            // 에러가 발생했을 때 호출
-            override fun onError(t: Throwable) {
-                coroutineScope.launch {
-                    uiState.value = uiState.value.copy(
-                        isConnected = false,
-                        messageList = uiState.value.messageList +
-                                SSEMessage.Error("에러: ${t.message}")
-                    )
-                }
-            }
-        }
-    }
-
-    /**
-     * 새로운 SSE 연결을 시작하는 함수
-     * 위키피디아의 실시간 업데이트 스트림에 연결
-     */
-    val sseBuilder: EventSource = get { parametersOf(eventHandler) }
-    val startConnection = remember {
-        {
-            currentChars.value = ""  // card에 보여줄 문자열 초기화
-            cycleCount.value += 1    // 새로운 사이클 시작
-            coroutineScope.launch(Dispatchers.IO) {
-                try {
-                    eventSourceHolder.value = sseBuilder
-                    eventSourceHolder.value?.start()
-                } catch (e: Exception) {
-                    Log.e("SSE", "Error starting connection: ${e.message}")
-                    withContext(Dispatchers.Main) {
-                        uiState.value = uiState.value.copy(
-                            messageList = uiState.value.messageList +
-                                    SSEMessage.Error("연결 시작 에러: ${e.message}")
-                        )
-                    }
-                }
-            }
-        }
-    }
+    val sseViewModel: SSEViewModel = koinViewModel()
+    val uiState = sseViewModel.uiState.collectAsState().value
+    val clickCount = remember { mutableStateOf(0) }
 
     Column(
         modifier = Modifier
@@ -231,24 +72,17 @@ fun SSEExampleUI(onBackEvent: () -> Unit) {
         ) {
             Button(
                 onClick = {
-                    if (!uiState.value.isConnected) {
-                        startConnection()
-                        // 함수로 사용하는 경우
-//                        startSSEConnection(
-//                            eventSourceHolder,
-//                            eventHandler,
-//                            currentChars,
-//                            cycleCount,
-//                            coroutineScope,
-//                            uiState
-//                        )
+                    if (!uiState.isConnected) {
+                        clickCount.value += 1
+                        sseViewModel.incrementCycleCount()
+                        sseViewModel.startSSEConnection(clickCount.value)
                     } else {
-                        closeConnection()
+                        sseViewModel.closeSSEConnection()
                     }
                 }
             ) {
                 Text(
-                    if (uiState.value.isConnected) {
+                    if (uiState.isConnected) {
                         "SSE 연결 종료"
                     } else {
                         "SSE 연결\n(위키피디아 실시간 업데이트 보기)"
@@ -263,25 +97,25 @@ fun SSEExampleUI(onBackEvent: () -> Unit) {
                     .fillMaxWidth()
                     .weight(1f)
             ) {
-                items(uiState.value.messageList) { message ->
+                items(uiState.messageList) { message ->
                     when (message) {
-                        is SSEMessage.Connected -> StatusMessageCard(
+                        is SSEViewModel.SSEMessage.Connected -> StatusMessageCard(
                             message = message.message,
                             backgroundColor = Color.Gray
                         )
 
-                        is SSEMessage.Comment -> StatusMessageCard(
+                        is SSEViewModel.SSEMessage.Comment -> StatusMessageCard(
                             message = message.message,
                             backgroundColor = Color.White
                         )
 
-                        is SSEMessage.CollectedChars -> CollectedCharsCard(chars = message.chars)
-                        is SSEMessage.Disconnected -> StatusMessageCard(
+                        is SSEViewModel.SSEMessage.CollectedChars -> CollectedCharsCard(chars = message.chars)
+                        is SSEViewModel.SSEMessage.Disconnected -> StatusMessageCard(
                             message = message.message,
                             backgroundColor = Color.Cyan
                         )
 
-                        is SSEMessage.Error -> StatusMessageCard(
+                        is SSEViewModel.SSEMessage.Error -> StatusMessageCard(
                             message = message.message,
                             backgroundColor = Color.Red
                         )
@@ -334,41 +168,5 @@ private fun CollectedCharsCard(chars: String) {
                 .fillMaxWidth()
                 .padding(16.dp)
         )
-    }
-}
-
-/**
- * DI를 사용하는 케이스에 대응되지 않은 샘플 func 입니다.
- * 이런식으로만 사용한다. 함수로 빼내어 사용할 때는 이런식으로 사용한다. 정도만 확인하시면 됩니다.
- */
-fun startSSEConnection(
-    eventSourceHolder: MutableState<EventSource?>,
-    eventHandler: EventHandler,
-    currentChars: MutableState<String>,
-    cycleCount: MutableState<Int>,
-    coroutineScope: CoroutineScope,
-    uiState: MutableState<SSEUIState>
-) {
-    currentChars.value = ""  // card에 보여줄 문자열 초기화
-    cycleCount.value += 1    // 새로운 사이클 시작
-    coroutineScope.launch(Dispatchers.IO) {
-        try {
-            eventSourceHolder.value =
-                EventSource.Builder(
-                    eventHandler,
-                    URI.create(SSEWikiURL)
-                )
-                    .reconnectTime(3, TimeUnit.SECONDS)
-                    .build()
-            eventSourceHolder.value?.start()
-        } catch (e: Exception) {
-            Log.e("SSE", "Error starting connection: ${e.message}")
-            withContext(Dispatchers.Main) {
-                uiState.value = uiState.value.copy(
-                    messageList = uiState.value.messageList +
-                            SSEMessage.Error("연결 시작 에러: ${e.message}")
-                )
-            }
-        }
     }
 }
