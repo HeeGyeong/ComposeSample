@@ -291,7 +291,7 @@ fun exampleObjectList(): ArrayList<ExampleObject> {
 
     insertExampleObject.add(
         ExampleObject(
-            lastUpdate = "25. 01. 05",
+            lastUpdate = "25. 01. 07",
             title = "Server-Sent Events Example",
             description = "SSE를 사용하여 서버로부터 실시간 업데이트를 받는 예제",
             blogUrl = "https://heegs.tistory.com/181",

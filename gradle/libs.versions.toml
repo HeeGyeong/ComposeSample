@@ -47,11 +47,14 @@ ktor = "2.3.7"
 # Test
 junit = "4.13.2"
 androidxTestJunit = "1.2.1"
-espressoCore = "3.6.1"
+espressoCore = "3.5.1"
 coroutineTest = "1.7.1"
 mockk = "1.13.5"
 turbine = "1.0.0"
 kotlinTestJunit = "1.8.20"
+runner = "1.5.2"
+rules = "1.5.0"
+espressoIntents = "3.5.1"
 
 # Accompanist
 accompanistSystemUiController = "0.32.0"
@@ -116,12 +119,19 @@ espressoCore = { module = "androidx.test.espresso:espresso-core", version.ref = 
 junit4 = { module = "androidx.compose.ui:ui-test-junit4", version.ref = "composeVersion" }
 uiTooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "composeVersion" }
 
-# Test Dependency
+# Unit Test Dependency
 coroutinesTest = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutineTest" }
 mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
 kotlinTestJunit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlinTestJunit" }
 kotlinTest = { module = "org.jetbrains.kotlin:kotlin-test" }
+
+# UI Test Dependency
+junitNoVersion = { module = "androidx.compose.ui:ui-test-junit4"}
+testRunner = { module = "androidx.test:runner", version.ref = "runner" }
+testRules = { module = "androidx.test:rules", version.ref = "rules" }
+testManifest = { module = "androidx.compose.ui:ui-test-manifest" }
+espressoIntents = { module = "androidx.test.espresso:espresso-intents", version.ref = "espressoIntents" }
 
 # Module
 # Compose
@@ -207,6 +217,14 @@ unitTest = [
     "turbine",
     "kotlinTestJunit",
     "kotlinTest"
+]
+
+uiTest = [
+    "junitNoVersion",
+    "espressoCore",
+    "testRunner",
+    "testRules",
+    "espressoIntents",
 ]
 
 image = [
