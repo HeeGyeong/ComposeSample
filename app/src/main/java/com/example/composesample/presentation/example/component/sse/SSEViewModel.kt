@@ -4,7 +4,6 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.composesample.util.ConstValue.Companion.SSEWikiURL
-import com.example.domain.useCase.FetchDataUseCase
 import com.launchdarkly.eventsource.EventHandler
 import com.launchdarkly.eventsource.EventSource
 import com.launchdarkly.eventsource.MessageEvent
@@ -26,7 +25,7 @@ class SSEViewModel() : ViewModel() {
      */
     data class SSEUIState(
         val messageList: List<SSEMessage> = emptyList(),
-        val isConnected: Boolean = false
+        val isConnected: Boolean = false,
     )
 
     /**
@@ -43,11 +42,18 @@ class SSEViewModel() : ViewModel() {
         data class Comment(val message: String) : SSEMessage()
         data class CollectedChars(
             val chars: String,
-            val cycleId: Int  // 각 연결 사이클을 구분하기 위한 ID
+            val cycleId: Int,  // 각 연결 사이클을 구분하기 위한 ID
         ) : SSEMessage()
 
         data class Disconnected(val message: String = "연결 종료") : SSEMessage()
         data class Error(val message: String) : SSEMessage()
+    }
+
+    private val _loadMoreFlag = MutableStateFlow(false)
+    val loadMoreFlag = _loadMoreFlag.asStateFlow()
+
+    fun updateLoadMoreFlag(isLoadMore: Boolean) {
+        _loadMoreFlag.update { isLoadMore }
     }
 
     private val _currentChars = MutableStateFlow("")
@@ -69,10 +75,11 @@ class SSEViewModel() : ViewModel() {
 
     private var eventSourceHolder: EventSource? = null
 
-    fun startSSEConnection(index: Int) {
+    fun startSSEConnection(subUrl: String) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val sseUrl = "$SSEWikiURL?tab=$index"
+                 _currentChars.value = ""
+                val sseUrl = "$SSEWikiURL?tab=$subUrl"
                 Log.d("SSE", "Connecting to SSE URL: $sseUrl")
 
                 eventSourceHolder = EventSource.Builder(
@@ -129,18 +136,32 @@ class SSEViewModel() : ViewModel() {
             viewModelScope.launch {
                 // Handle message
                 try {
+                    val inputUrl = eventSourceHolder?.uri.toString()
+
                     // 메시지에서 첫 글자만 추출
                     val firstChar = messageEvent.data.firstOrNull()?.toString() ?: ""
                     updateCurrentChars(firstChar)
 
                     // 현재 사이클의 CollectedChars 메시지만 업데이트
-                    val updatedList = uiState.value.messageList.filterNot {
-                        it is SSEMessage.CollectedChars &&
-                                it.cycleId == cycleCount.value
-                    } + SSEMessage.CollectedChars(
-                        chars = currentChars.value,
-                        cycleId = cycleCount.value
-                    )
+                    val updatedList = if (inputUrl.contains("reverseItem=true")) {
+                        listOf(
+                            SSEMessage.CollectedChars(
+                                chars = currentChars.value,
+                                cycleId = cycleCount.value
+                            )
+                        ) + uiState.value.messageList.filterNot {
+                            it is SSEMessage.CollectedChars &&
+                                    it.cycleId == cycleCount.value
+                        }
+                    } else {
+                        uiState.value.messageList.filterNot {
+                            it is SSEMessage.CollectedChars &&
+                                    it.cycleId == cycleCount.value
+                        } + SSEMessage.CollectedChars(
+                            chars = currentChars.value,
+                            cycleId = cycleCount.value
+                        )
+                    }
 
                     _uiState.update {
                         it.copy(

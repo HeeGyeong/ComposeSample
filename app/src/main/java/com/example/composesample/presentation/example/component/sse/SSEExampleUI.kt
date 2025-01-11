@@ -75,7 +75,7 @@ fun SSEExampleUI(onBackEvent: () -> Unit) {
                     if (!uiState.isConnected) {
                         clickCount.value += 1
                         sseViewModel.incrementCycleCount()
-                        sseViewModel.startSSEConnection(clickCount.value)
+                        sseViewModel.startSSEConnection(clickCount.value.toString())
                     } else {
                         sseViewModel.closeSSEConnection()
                     }
@@ -132,7 +132,7 @@ fun SSEExampleUI(onBackEvent: () -> Unit) {
  * @param backgroundColor 카드의 배경색
  */
 @Composable
-private fun StatusMessageCard(message: String, backgroundColor: Color) {
+fun StatusMessageCard(message: String, backgroundColor: Color) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -154,7 +154,7 @@ private fun StatusMessageCard(message: String, backgroundColor: Color) {
  * @param chars 수집된 문자열
  */
 @Composable
-private fun CollectedCharsCard(chars: String) {
+fun CollectedCharsCard(chars: String) {
     Card(
         modifier = Modifier
             .fillMaxWidth()

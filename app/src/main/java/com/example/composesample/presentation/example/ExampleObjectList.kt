@@ -309,6 +309,16 @@ fun exampleObjectList(): ArrayList<ExampleObject> {
         )
     )
 
+    insertExampleObject.add(
+        ExampleObject(
+            lastUpdate = "25. 01. 12",
+            title = "Reverse LazyColumn Example",
+            description = "LazyColumn을 반대로 사용하는 예제",
+            blogUrl = "",
+            exampleType = ConstValue.ReverseLazyColumnExample
+        )
+    )
+
     return insertExampleObject
 }
 

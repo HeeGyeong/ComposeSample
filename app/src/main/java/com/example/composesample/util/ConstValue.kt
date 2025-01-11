@@ -44,6 +44,7 @@ class ConstValue {
         const val MVIExample = "mviExample"
         const val CoordinatorExample = "coordinatorExample"
         const val TestExample = "testExample"
+        const val ReverseLazyColumnExample = "reverseLazyColumnExample"
 
         // SubCategory
         const val FlingBehavior = "flingBehaviorExampleList"

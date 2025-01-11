@@ -76,6 +76,7 @@ import com.example.composesample.presentation.example.component.header.StickyHea
 import com.example.composesample.presentation.example.component.intent.PassingIntentDataExample
 import com.example.composesample.presentation.example.component.lazycolumn.LazyColumnFlingBehaviorExample
 import com.example.composesample.presentation.example.component.lazycolumn.LazyColumnIssueUI
+import com.example.composesample.presentation.example.component.lazycolumn.ReverseLazyColumnExampleUI
 import com.example.composesample.presentation.example.component.lottie.LottieExampleUI
 import com.example.composesample.presentation.example.component.mvi.MVIExampleUI
 import com.example.composesample.presentation.example.component.navigation.BottomNavigationActivity
@@ -118,6 +119,7 @@ import com.example.composesample.util.ConstValue.Companion.PassingIntentDataExam
 import com.example.composesample.util.ConstValue.Companion.PowerSaveModeExample
 import com.example.composesample.util.ConstValue.Companion.PullScreenPager
 import com.example.composesample.util.ConstValue.Companion.PullToRefreshExample
+import com.example.composesample.util.ConstValue.Companion.ReverseLazyColumnExample
 import com.example.composesample.util.ConstValue.Companion.SSEExample
 import com.example.composesample.util.ConstValue.Companion.ScaffoldDrawExample
 import com.example.composesample.util.ConstValue.Companion.ShimmerExample
@@ -725,6 +727,12 @@ fun ExampleCaseUI(
 
                         TestExample -> {
                             UITestExampleUI(onBackEvent)
+                        }
+
+                        ReverseLazyColumnExample -> {
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                ReverseLazyColumnExampleUI(onBackEvent)
+                            }
                         }
 
                         else -> {
