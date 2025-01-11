@@ -299,6 +299,16 @@ fun exampleObjectList(): ArrayList<ExampleObject> {
         )
     )
 
+    insertExampleObject.add(
+        ExampleObject(
+            lastUpdate = "25. 01. 11",
+            title = "UI Test Example",
+            description = "간단한 UI Test를 작성하여 TDD 구현 방식을 확인해보는 예제",
+            blogUrl = "",
+            exampleType = ConstValue.TestExample
+        )
+    )
+
     return insertExampleObject
 }
 

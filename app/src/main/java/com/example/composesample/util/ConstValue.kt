@@ -43,6 +43,7 @@ class ConstValue {
         const val SSEExample = "SSEExample"
         const val MVIExample = "mviExample"
         const val CoordinatorExample = "coordinatorExample"
+        const val TestExample = "testExample"
 
         // SubCategory
         const val FlingBehavior = "flingBehaviorExampleList"

@@ -86,6 +86,7 @@ import com.example.composesample.presentation.example.component.refresh.PullToRe
 import com.example.composesample.presentation.example.component.shimmer.ShimmerExampleUI
 import com.example.composesample.presentation.example.component.sse.SSEExampleUI
 import com.example.composesample.presentation.example.component.swipe.SwipeToDismissUI
+import com.example.composesample.presentation.example.component.test.UITestExampleUI
 import com.example.composesample.presentation.example.component.text.TextStyleUI
 import com.example.composesample.presentation.example.component.version.TargetSDK34Example
 import com.example.composesample.presentation.example.component.webview.WebViewIssueUI
@@ -124,6 +125,7 @@ import com.example.composesample.util.ConstValue.Companion.SideEffectExample
 import com.example.composesample.util.ConstValue.Companion.StickyHeaderExample
 import com.example.composesample.util.ConstValue.Companion.SwipeToDismissExample
 import com.example.composesample.util.ConstValue.Companion.TargetSDK34PermissionExample
+import com.example.composesample.util.ConstValue.Companion.TestExample
 import com.example.composesample.util.ConstValue.Companion.TextStyleExample
 import com.example.composesample.util.ConstValue.Companion.WebViewIssueExample
 import com.example.composesample.util.ConstValue.Companion.WorkManagerExample
@@ -719,6 +721,10 @@ fun ExampleCaseUI(
 
                         CoordinatorExample -> {
                             CoordinatorExampleUI(onBackEvent)
+                        }
+
+                        TestExample -> {
+                            UITestExampleUI(onBackEvent)
                         }
 
                         else -> {
