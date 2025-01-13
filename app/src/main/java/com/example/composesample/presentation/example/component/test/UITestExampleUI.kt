@@ -45,9 +45,36 @@ fun UITestExampleUI(onBackEvent: () -> Unit) {
         val text = remember { mutableStateOf("Hello") }
         val clickCount = remember { mutableStateOf(0) }
 
+        // clickEvent 첫 번째 방법
         Button(onClick = {
             clickCount.value++
             text.value = if (clickCount.value % 2 == 0) "Hello" else "Clicked!"
+        }) {
+            Text(text.value)
+        }
+
+        // clickEvent 두 번째 방법
+        val onClickEvent = remember {
+            {
+                clickCount.value++
+                text.value = if (clickCount.value % 2 == 0) "Hello" else "Clicked!"
+            }
+        }
+
+        Button(onClick = onClickEvent) {
+            Text(text.value)
+        }
+
+        // clickEvent 세 번째 방법
+        val onParamClickEvent = remember {
+            { count: Int ->
+                text.value = if (count % 2 == 0) "Hello" else "Clicked!"
+            }
+        }
+
+        Button(onClick = {
+            clickCount.value++
+            onParamClickEvent(clickCount.value)
         }) {
             Text(text.value)
         }
