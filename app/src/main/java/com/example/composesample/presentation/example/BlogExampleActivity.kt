@@ -63,6 +63,7 @@ import com.example.composesample.presentation.example.component.bottomsheet.Moda
 import com.example.composesample.presentation.example.component.cache.DataCacheExampleUI
 import com.example.composesample.presentation.example.component.clickevent.ClickEventUI
 import com.example.composesample.presentation.example.component.coordinator.CoordinatorExampleUI
+import com.example.composesample.presentation.example.component.coroutine.CoroutineExampleUI
 import com.example.composesample.presentation.example.component.cursor.CursorIDEExample
 import com.example.composesample.presentation.example.component.drag.DragAndDropExampleUI
 import com.example.composesample.presentation.example.component.drawer.ModalDrawerUI
@@ -102,6 +103,7 @@ import com.example.composesample.util.ConstValue.Companion.BottomNavigationExamp
 import com.example.composesample.util.ConstValue.Companion.BottomSheetExample
 import com.example.composesample.util.ConstValue.Companion.ClickEventExample
 import com.example.composesample.util.ConstValue.Companion.CoordinatorExample
+import com.example.composesample.util.ConstValue.Companion.CoroutineExample
 import com.example.composesample.util.ConstValue.Companion.CursorIDEExample
 import com.example.composesample.util.ConstValue.Companion.CustomBottomSheetExample
 import com.example.composesample.util.ConstValue.Companion.DataCacheExample
@@ -733,6 +735,10 @@ fun ExampleCaseUI(
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                                 ReverseLazyColumnExampleUI(onBackEvent)
                             }
+                        }
+
+                        CoroutineExample -> {
+                            CoroutineExampleUI(onBackEvent)
                         }
 
                         else -> {

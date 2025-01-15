@@ -319,6 +319,16 @@ fun exampleObjectList(): ArrayList<ExampleObject> {
         )
     )
 
+    insertExampleObject.add(
+        ExampleObject(
+            lastUpdate = "25. 01. 15",
+            title = "Coroutine Example (작성 중)",
+            description = "coroutine의 근본적인 특징에 대해 알아보는 예제 추가 (작성 중)",
+            blogUrl = "",
+            exampleType = ConstValue.CoroutineExample
+        )
+    )
+
     return insertExampleObject
 }
 
