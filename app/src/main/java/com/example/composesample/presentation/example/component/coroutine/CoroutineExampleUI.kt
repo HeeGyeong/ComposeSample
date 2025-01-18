@@ -31,10 +31,7 @@ import kotlinx.coroutines.withTimeout
 import kotlinx.coroutines.async
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.SupervisorJob
 
 @Composable
 fun CoroutineExampleUI(onBackEvent: () -> Unit) {
@@ -83,6 +80,10 @@ fun CoroutineExampleUI(onBackEvent: () -> Unit) {
         )
 
         CoroutineContextButton(
+            coroutineScope = coroutineScope
+        )
+
+        SupervisorJobButton(
             coroutineScope = coroutineScope
         )
     }
@@ -360,6 +361,8 @@ fun LaunchVsAsyncButton(
  * CoroutineName을 사용하여 코루틴 이름을 지정하고, 로그로 출력.
  *
  * 코루틴 이름을 기반으로 job을 저장하고, 버튼을 통해 특정 job을 취소하도록 설정
+ *
+ * coroutineContext를 사용하여 특정 이름의 coroutine을 확인할 수 있음.
  */
 @Composable
 fun CoroutineContextButton(
@@ -371,6 +374,10 @@ fun CoroutineContextButton(
         val job = coroutineScope.launch(CoroutineName("ExampleCoroutine")) {
             try {
                 Log.d("CoroutineExample", "Running in Coroutine: ${coroutineContext[CoroutineName]}")
+
+                if (coroutineContext[CoroutineName]?.name == "ExampleCoroutine") {
+                    Log.d("CoroutineExample", "CoroutineName : ExampleCoroutine !")
+                }
                 // 일부러 딜레이 추가
                 delay(5000)
             } finally {
@@ -407,6 +414,49 @@ fun CoroutineContextButton(
         jobMap["CoroutineSample"]?.cancel()
     }) {
         Text("Cancel CoroutineName 2")
+    }
+}
+
+/**
+ * SupervisorJob를 사용하여 코루틴의 실패를 전파하지 않도록 설정
+ *
+ * coroutineContext에 SupervisorJob을 추가하여 새로운 코루틴 스코프를 생성하고,
+ * 이 스코프는 SupervisorJob의 특성을 상속받아 자식 코루틴의 실패가 부모에게 전파되지 않도록 함.
+ */
+@Composable
+fun SupervisorJobButton(
+    coroutineScope: CoroutineScope
+) {
+    Button(onClick = {
+        coroutineScope.launch {
+            val supervisor = SupervisorJob()
+            val scope = CoroutineScope(coroutineContext + supervisor)
+
+            scope.launch {
+                try {
+                    Log.d("CoroutineExample", "Child coroutine 1 started")
+                    delay(1000L)
+                    throw Exception("Child coroutine 1 failed")
+                } catch (e: Exception) {
+                    Log.d("CoroutineExample", "Caught exception in child 1: ${e.message}")
+                }
+            }
+
+            scope.launch {
+                try {
+                    Log.d("CoroutineExample", "Child coroutine 2 started")
+                    delay(2000L)
+                    Log.d("CoroutineExample", "Child coroutine 2 completed")
+                } catch (e: Exception) {
+                    Log.d("CoroutineExample", "Caught exception in child 2: ${e.message}")
+                }
+            }
+
+            delay(3000L)
+            Log.d("CoroutineExample", "Parent coroutine completed")
+        }
+    }) {
+        Text("Test SupervisorJob")
     }
 }
 
