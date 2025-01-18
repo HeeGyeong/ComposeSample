@@ -3,15 +3,22 @@ package com.example.composesample.presentation.example.component.coroutine
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import com.example.composesample.presentation.MainHeader
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -20,6 +27,14 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withTimeout
+import kotlinx.coroutines.async
+import kotlinx.coroutines.CoroutineName
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
 @Composable
 fun CoroutineExampleUI(onBackEvent: () -> Unit) {
@@ -52,6 +67,22 @@ fun CoroutineExampleUI(onBackEvent: () -> Unit) {
         CancellationButton()
 
         ContextSwitchingButton(
+            coroutineScope = coroutineScope
+        )
+
+        ExceptionHandlingButton(
+            coroutineScope = coroutineScope
+        )
+
+        TimeoutButton(
+            coroutineScope = coroutineScope
+        )
+
+        LaunchVsAsyncButton(
+            coroutineScope = coroutineScope
+        )
+
+        CoroutineContextButton(
             coroutineScope = coroutineScope
         )
     }
@@ -241,6 +272,141 @@ fun ContextSwitchingButton(
         }
     }) {
         Text("Test Context Switching")
+    }
+}
+
+/**
+ * 코루틴 Exception 처리
+ *
+ * try - catch 를 통해 Exception을 처리하고, 로그로 출력.
+ */
+@Composable
+fun ExceptionHandlingButton(
+    coroutineScope: CoroutineScope
+) {
+    Button(onClick = {
+        coroutineScope.launch {
+            try {
+                throw Exception("Test Exception")
+            } catch (e: Exception) {
+                Log.d("CoroutineExample", "Caught exception: ${e.message}")
+            }
+        }
+    }) {
+        Text("Test Exception Handling")
+    }
+}
+
+/**
+ * 코루틴의 Timeout 동작 확인
+ *
+ * withTimeout을 사용하여 500ms 후에 TimeoutException을 발생시키고, 로그로 출력.
+ */
+@Composable
+fun TimeoutButton(
+    coroutineScope: CoroutineScope
+) {
+    Button(onClick = {
+        coroutineScope.launch {
+            try {
+                withTimeout(500L) {
+                    repeat(1000) { i ->
+                        Log.d("CoroutineExample", "Timeout Job: $i")
+                        delay(100L)
+                    }
+                }
+            } catch (e: Exception) {
+                Log.d("CoroutineExample", "Timeout occurred: ${e.message}")
+            }
+        }
+    }) {
+        Text("Test Timeout")
+    }
+}
+
+/**
+ * launch와 async의 차이를 보여주는 코루틴 예제
+ *
+ * 출력 순서를 통해 비동기 통신 및 await()의 차이를 확인.
+ */
+@Composable
+fun LaunchVsAsyncButton(
+    coroutineScope: CoroutineScope
+) {
+    Button(onClick = {
+        coroutineScope.launch {
+            // launch는 결과를 반환하지 않습니다.
+            val launchResult = launch {
+                Log.d("CoroutineExample", "Launch result?")
+                "Launch result"
+            }
+
+            Log.d("CoroutineExample", "Launch: $launchResult")
+
+            // async는 결과를 반환합니다.
+            val result = async {
+                Log.d("CoroutineExample", "Async result?")
+                "Async Result"
+            }.await()
+
+            Log.d("CoroutineExample", "Async: $result")
+        }
+    }) {
+        Text("Test Launch vs Async")
+    }
+}
+
+/**
+ * CoroutineName을 사용하여 코루틴 이름을 지정하고, 로그로 출력.
+ *
+ * 코루틴 이름을 기반으로 job을 저장하고, 버튼을 통해 특정 job을 취소하도록 설정
+ */
+@Composable
+fun CoroutineContextButton(
+    coroutineScope: CoroutineScope
+) {
+    val jobMap = remember { mutableMapOf<String, Job>() }
+
+    Button(onClick = {
+        val job = coroutineScope.launch(CoroutineName("ExampleCoroutine")) {
+            try {
+                Log.d("CoroutineExample", "Running in Coroutine: ${coroutineContext[CoroutineName]}")
+                // 일부러 딜레이 추가
+                delay(5000)
+            } finally {
+                Log.d("CoroutineExample", "ExampleCoroutine is cancelled")
+            }
+        }
+        jobMap["ExampleCoroutine"] = job
+    }) {
+        Text("Start CoroutineName 1")
+    }
+
+    Button(onClick = {
+        jobMap["ExampleCoroutine"]?.cancel()
+    }) {
+        Text("Cancel CoroutineName 1")
+    }
+
+    Button(onClick = {
+        val job = coroutineScope.launch(CoroutineName("CoroutineSample")) {
+            try {
+                Log.d("CoroutineExample", "Running in Coroutine: ${coroutineContext[CoroutineName]}")
+                // 일부러 딜레이 추가
+                delay(5000)
+            } finally {
+                Log.d("CoroutineExample", "CoroutineSample is cancelled")
+            }
+        }
+        jobMap["CoroutineSample"] = job
+    }) {
+        Text("Start CoroutineName 2")
+    }
+
+    Button(onClick = {
+        jobMap["CoroutineSample"]?.cancel()
+    }) {
+        Text("Cancel CoroutineName 2")
     }
 }
 
