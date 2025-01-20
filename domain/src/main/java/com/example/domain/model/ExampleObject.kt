@@ -13,5 +13,6 @@ data class ExampleObject(
 enum class ExampleMoveType {
     UI,
     ACTIVITY,
+    ALGORITHM,
     EMPTY,
 }

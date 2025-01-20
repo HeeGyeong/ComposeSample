@@ -96,6 +96,7 @@ import com.example.composesample.presentation.example.component.workmanager.Work
 import com.example.composesample.presentation.getTextStyle
 import com.example.composesample.presentation.legacy.base.SetSystemUI
 import com.example.composesample.presentation.openWebPage
+import com.example.composesample.util.ConstValue.Companion.AlgorithmType
 import com.example.composesample.util.ConstValue.Companion.AnimationExample
 import com.example.composesample.util.ConstValue.Companion.ApiDisconnectExample
 import com.example.composesample.util.ConstValue.Companion.AudioRecorderExample
@@ -108,9 +109,11 @@ import com.example.composesample.util.ConstValue.Companion.CursorIDEExample
 import com.example.composesample.util.ConstValue.Companion.CustomBottomSheetExample
 import com.example.composesample.util.ConstValue.Companion.DataCacheExample
 import com.example.composesample.util.ConstValue.Companion.DragAndDropExample
+import com.example.composesample.util.ConstValue.Companion.ExampleType
 import com.example.composesample.util.ConstValue.Companion.FfmpegExample
 import com.example.composesample.util.ConstValue.Companion.FlexBoxLayoutExample
 import com.example.composesample.util.ConstValue.Companion.FlingBehaviorExample
+import com.example.composesample.util.ConstValue.Companion.IntentType
 import com.example.composesample.util.ConstValue.Companion.KtorExample
 import com.example.composesample.util.ConstValue.Companion.LazyColumnExample
 import com.example.composesample.util.ConstValue.Companion.LottieExample
@@ -158,8 +161,18 @@ class BlogExampleActivity : ComponentActivity() {
         val launcher = registerForActivityResult(contract, callback)
 
         setContent {
+            val type = intent.getStringExtra(IntentType) ?: ExampleType
             val blogExampleViewModel: BlogExampleViewModel = koinViewModel()
+
             blogExampleViewModel.initExampleObject()
+
+            blogExampleViewModel.setStudyType(
+                when (type) {
+                    ExampleType -> ExampleMoveType.UI
+                    AlgorithmType -> ExampleMoveType.ALGORITHM
+                    else -> ExampleMoveType.EMPTY
+                }
+            )
 
             SetSystemUI()
             BlogExampleScreen(
@@ -180,9 +193,13 @@ fun BlogExampleScreen(
     val context = LocalContext.current
     val exampleType = remember { mutableStateOf("") }
     val exampleMoveType = remember { mutableStateOf(ExampleMoveType.UI) }
+    val studyType = blogExampleViewModel.studyType.collectAsState().value
     val exampleObjectList = blogExampleViewModel.exampleObjectList.collectAsState().value
+    val algorithmObjectList = blogExampleViewModel.algorithmObjectList.collectAsState().value
     val searchText by blogExampleViewModel.searchText.collectAsState()
     val searchExampleList = blogExampleViewModel.searchExampleList.collectAsState(listOf()).value
+    val searchAlgorithmList =
+        blogExampleViewModel.searchAlgorithmList.collectAsState(listOf()).value
     val subCategoryList = blogExampleViewModel.subCategoryList.collectAsState(listOf()).value
 
     LaunchedEffect(Unit) {
@@ -193,8 +210,24 @@ fun BlogExampleScreen(
         ExampleListContent(
             searchText = searchText,
             subCategoryList = subCategoryList,
-            exampleObjectList = exampleObjectList,
-            searchExampleList = searchExampleList,
+            exampleObjectList = when (studyType) {
+                ExampleMoveType.ALGORITHM -> {
+                    algorithmObjectList
+                }
+
+                else -> {
+                    exampleObjectList
+                }
+            },
+            searchExampleList = when (studyType) {
+                ExampleMoveType.ALGORITHM -> {
+                    searchAlgorithmList
+                }
+
+                else -> {
+                    searchExampleList
+                }
+            },
             blogExampleViewModel = blogExampleViewModel,
             exampleType = exampleType,
             exampleMoveType = exampleMoveType,
@@ -213,7 +246,7 @@ fun BlogExampleScreen(
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-private fun ExampleListContent(
+fun ExampleListContent(
     searchText: String,
     subCategoryList: List<ExampleObject>,
     exampleObjectList: List<ExampleObject>,
@@ -229,7 +262,6 @@ private fun ExampleListContent(
                 searchText = searchText,
                 onSearchTextChange = blogExampleViewModel::onSearchTextChange,
                 onSortClick = blogExampleViewModel::reverseExampleList,
-                hasSubCategories = subCategoryList.isNotEmpty(),
                 onBackClick = {
                     if (subCategoryList.isNotEmpty()) {
                         blogExampleViewModel.setSubCategoryList("")
@@ -325,7 +357,6 @@ private fun ExampleHeader(
     searchText: String,
     onSearchTextChange: (String) -> Unit,
     onSortClick: () -> Unit,
-    hasSubCategories: Boolean,
     onBackClick: () -> Unit
 ) {
     Column(
@@ -774,6 +805,10 @@ fun ExampleCaseUI(
         }
 
         ExampleMoveType.EMPTY -> {
+            Unit
+        }
+
+        ExampleMoveType.ALGORITHM -> {
             Unit
         }
     }

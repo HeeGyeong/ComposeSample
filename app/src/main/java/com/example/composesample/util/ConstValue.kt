@@ -5,6 +5,11 @@ class ConstValue {
         // Update date
         const val UpdateDate = "25년 1월"
 
+        // Code Type
+        const val IntentType = "type"
+        const val ExampleType = "example"
+        const val AlgorithmType = "algorithm"
+
         // Example Value
         const val SSEWikiURL = "https://stream.wikimedia.org/v2/stream/recentchange"
 
@@ -51,5 +56,7 @@ class ConstValue {
         const val FlingBehavior = "flingBehaviorExampleList"
         const val BottomSheet = "bottomSheetExampleList"
         const val NavigationDraw = "navigationDrawExampleList"
+
+        // Algorithm Type
     }
 }

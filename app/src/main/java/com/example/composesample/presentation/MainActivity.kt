@@ -15,6 +15,9 @@ import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import com.example.composesample.presentation.example.BlogExampleActivity
 import com.example.composesample.presentation.legacy.LegacyActivity
+import com.example.composesample.util.ConstValue.Companion.AlgorithmType
+import com.example.composesample.util.ConstValue.Companion.ExampleType
+import com.example.composesample.util.ConstValue.Companion.IntentType
 
 @ExperimentalAnimationApi
 class MainActivity : ComponentActivity() {
@@ -42,7 +45,16 @@ fun MainActivityScreen() {
 
     MainScreenContent(
         onExampleCodeClick = {
-            context.startActivity(Intent(context, BlogExampleActivity::class.java))
+            val intent = Intent(context, BlogExampleActivity::class.java).apply {
+                putExtra(IntentType, ExampleType)
+            }
+            context.startActivity(intent)
+        },
+        onAlgorithmClick = {
+            val intent = Intent(context, BlogExampleActivity::class.java).apply {
+                putExtra(IntentType, AlgorithmType)
+            }
+            context.startActivity(intent)
         },
         onLegacyCodeClick = {
             context.startActivity(Intent(context, LegacyActivity::class.java))

@@ -3,6 +3,7 @@ package com.example.composesample.presentation.example
 import android.app.Application
 import com.example.core.BaseViewModel
 import com.example.core.navigation.Navigation
+import com.example.domain.model.ExampleMoveType
 import com.example.domain.model.ExampleObject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -27,6 +28,9 @@ class BlogExampleViewModel(
     private val _exampleObjectList = MutableStateFlow<List<ExampleObject>>(emptyList())
     val exampleObjectList: StateFlow<List<ExampleObject>> = _exampleObjectList.asStateFlow()
 
+    private val _algorithmObjectList = MutableStateFlow<List<ExampleObject>>(emptyList())
+    val algorithmObjectList: StateFlow<List<ExampleObject>> = _algorithmObjectList.asStateFlow()
+
     private val _subCategoryList = MutableStateFlow<List<ExampleObject>>(emptyList())
     val subCategoryList: StateFlow<List<ExampleObject>> = _subCategoryList.asStateFlow()
 
@@ -44,9 +48,24 @@ class BlogExampleViewModel(
         }
     }
 
+    val searchAlgorithmList = searchText.combine(algorithmObjectList) { query, list ->
+        when {
+            query.isBlank() -> list
+            else -> list.filter { it.title.contains(query, ignoreCase = true) }
+        }
+    }
+
     // UI Events
     fun initExampleObject() {
         _exampleObjectList.update { exampleObjectList() }
+        _algorithmObjectList.update { algorithmObjectList() }
+    }
+
+    private val _studyType = MutableStateFlow(ExampleMoveType.UI)
+    val studyType: StateFlow<ExampleMoveType> = _studyType.asStateFlow()
+
+    fun setStudyType(moveType: ExampleMoveType) {
+        _studyType.value = moveType
     }
 
     fun setSubCategoryList(
