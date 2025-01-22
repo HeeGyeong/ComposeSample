@@ -60,7 +60,7 @@ fun UITestExampleUI(onBackEvent: () -> Unit) {
             }
     ) {
         MainHeader(
-            title = "SSE Example",
+            title = "UI Test Example",
             onBackIconClicked = onBackEvent
         )
 

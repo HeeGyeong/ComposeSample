@@ -101,7 +101,7 @@ fun UseNormalLayoutStyle(onBackEvent: () -> Unit) {
             .background(color = Color.LightGray)
     ) {
         MainHeader(
-            title = "SSE Example",
+            title = "Reverse Lazy Column Example",
             onBackIconClicked = onBackEvent
         )
 
@@ -214,7 +214,7 @@ fun UseReverseLayoutFlag(onBackEvent: () -> Unit) {
             .background(color = Color.LightGray)
     ) {
         MainHeader(
-            title = "SSE Example",
+            title = "Reverse Lazy Column Example",
             onBackIconClicked = onBackEvent
         )
 

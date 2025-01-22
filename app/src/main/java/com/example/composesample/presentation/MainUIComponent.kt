@@ -297,3 +297,82 @@ fun MainHeader(
         }
     }
 }
+
+@Composable
+fun AlgorithmMainHeader(
+    title: String,
+    algorithmName: String,
+    algorithmDescription: String,
+    onBackIconClicked: () -> Unit,
+    onLeftIconContent: @Composable () -> Unit = {
+        Icon(
+            modifier = Modifier
+                .size(24.dp, 24.dp)
+                .noRippleClickable {
+                    onBackIconClicked.invoke()
+                },
+            imageVector = Icons.Filled.ArrowBack,
+            contentDescription = ""
+        )
+    },
+) {
+    Column {
+        Box(
+            modifier = Modifier
+                .background(color = Color.LightGray)
+                .padding(vertical = (4.5).dp)
+        ) {
+            Box {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(56.dp)
+                        .padding(horizontal = 20.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    onLeftIconContent()
+
+                    Spacer(modifier = Modifier.weight(1f))
+                }
+
+                Text(
+                    modifier = Modifier.align(Alignment.Center),
+                    text = title,
+                    color = Color.Black,
+                    fontSize = 16.sp
+                )
+            }
+        }
+
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 20.dp, vertical = 10.dp),
+            shape = RoundedCornerShape(12.dp),
+            backgroundColor = Color.DarkGray,
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+            ) {
+                Text(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 12.dp),
+                    text = algorithmName,
+                    color = Color.White,
+                    style = getTextStyle(18)
+                )
+
+                Text(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    text = algorithmDescription,
+                    color = Color.White,
+                    style = getTextStyle(18)
+                )
+            }
+        }
+    }
+}

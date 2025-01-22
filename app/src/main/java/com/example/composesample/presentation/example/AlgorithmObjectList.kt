@@ -10,10 +10,10 @@ fun algorithmObjectList(): ArrayList<ExampleObject> {
 
     insertExampleObject.add(
         ExampleObject(
-            title = "SAMPLE",
-            description = "SAMPLE",
-            blogUrl = "https://heegs.tistory.com/142",
-            exampleType = ConstValue.LazyColumnExample
+            title = "TwoSum Algorithm",
+            description = "Hash - Two Sum 알고리즘",
+            blogUrl = "",
+            exampleType = ConstValue.TwoSumAlgorithm
         )
     )
 

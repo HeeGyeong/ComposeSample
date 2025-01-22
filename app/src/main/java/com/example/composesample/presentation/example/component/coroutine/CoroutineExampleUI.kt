@@ -43,7 +43,7 @@ fun CoroutineExampleUI(onBackEvent: () -> Unit) {
             .background(color = Color.LightGray)
     ) {
         MainHeader(
-            title = "SSE Example",
+            title = "Coroutine Example",
             onBackIconClicked = onBackEvent
         )
 

@@ -58,5 +58,6 @@ class ConstValue {
         const val NavigationDraw = "navigationDrawExampleList"
 
         // Algorithm Type
+        const val TwoSumAlgorithm = "TwoSumAlgorithm"
     }
 }

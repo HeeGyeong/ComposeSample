@@ -54,6 +54,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.composesample.presentation.MainHeader
+import com.example.composesample.presentation.example.algorithm.hash.TwoSumAlgorithmUI
 import com.example.composesample.presentation.example.component.animation.AnimationExampleUI
 import com.example.composesample.presentation.example.component.api.ApiDisconnectExampleUI
 import com.example.composesample.presentation.example.component.api.KtorExampleUI
@@ -134,6 +135,7 @@ import com.example.composesample.util.ConstValue.Companion.SwipeToDismissExample
 import com.example.composesample.util.ConstValue.Companion.TargetSDK34PermissionExample
 import com.example.composesample.util.ConstValue.Companion.TestExample
 import com.example.composesample.util.ConstValue.Companion.TextStyleExample
+import com.example.composesample.util.ConstValue.Companion.TwoSumAlgorithm
 import com.example.composesample.util.ConstValue.Companion.WebViewIssueExample
 import com.example.composesample.util.ConstValue.Companion.WorkManagerExample
 import com.example.composesample.util.component.Toast
@@ -770,6 +772,10 @@ fun ExampleCaseUI(
 
                         CoroutineExample -> {
                             CoroutineExampleUI(onBackEvent)
+                        }
+
+                        TwoSumAlgorithm -> {
+                            TwoSumAlgorithmUI(onBackEvent)
                         }
 
                         else -> {
