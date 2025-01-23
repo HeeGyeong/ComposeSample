@@ -15,7 +15,6 @@ import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import com.example.composesample.presentation.example.BlogExampleActivity
 import com.example.composesample.presentation.legacy.LegacyActivity
-import com.example.composesample.util.ConstValue.Companion.AlgorithmType
 import com.example.composesample.util.ConstValue.Companion.ExampleType
 import com.example.composesample.util.ConstValue.Companion.IntentType
 
@@ -47,12 +46,6 @@ fun MainActivityScreen() {
         onExampleCodeClick = {
             val intent = Intent(context, BlogExampleActivity::class.java).apply {
                 putExtra(IntentType, ExampleType)
-            }
-            context.startActivity(intent)
-        },
-        onAlgorithmClick = {
-            val intent = Intent(context, BlogExampleActivity::class.java).apply {
-                putExtra(IntentType, AlgorithmType)
             }
             context.startActivity(intent)
         },

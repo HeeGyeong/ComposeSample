@@ -34,7 +34,6 @@ import com.example.composesample.util.noRippleClickable
 fun MainScreenContent(
     onExampleCodeClick: () -> Unit,
     onLegacyCodeClick: () -> Unit,
-    onAlgorithmClick: () -> Unit,
     onWebViewClick: (String) -> Unit,
 ) {
 
@@ -54,7 +53,6 @@ fun MainScreenContent(
                 MainContentSection(
                     onExampleCodeClick = onExampleCodeClick,
                     onLegacyCodeClick = onLegacyCodeClick,
-                    onAlgorithmClick = onAlgorithmClick,
                     onWebViewClick = onWebViewClick
                 )
             }
@@ -65,7 +63,6 @@ fun MainScreenContent(
 @Composable
 fun MainContentSection(
     onExampleCodeClick: () -> Unit,
-    onAlgorithmClick: () -> Unit,
     onLegacyCodeClick: () -> Unit,
     onWebViewClick: (String) -> Unit,
 ) {
@@ -78,16 +75,6 @@ fun MainContentSection(
         cardDescription = "Github 및 Blog에서 볼 수 있는 Compose 기능 예제 리스트로 이동합니다.",
         onClickEvent = {
             onExampleCodeClick.invoke()
-        }
-    )
-
-    Spacer(modifier = Modifier.height(5.dp))
-
-    PageMoveCardViewContent(
-        cardTitle = "go to Algorithm Sample",
-        cardDescription = "알고리즘 관련 함수 코드로 이동합니다.\nUI보다는 코드를 확인해주세요.",
-        onClickEvent = {
-            onAlgorithmClick.invoke()
         }
     )
 

@@ -54,7 +54,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.composesample.presentation.MainHeader
-import com.example.composesample.presentation.example.algorithm.hash.TwoSumAlgorithmUI
 import com.example.composesample.presentation.example.component.animation.AnimationExampleUI
 import com.example.composesample.presentation.example.component.api.ApiDisconnectExampleUI
 import com.example.composesample.presentation.example.component.api.KtorExampleUI
@@ -97,7 +96,6 @@ import com.example.composesample.presentation.example.component.workmanager.Work
 import com.example.composesample.presentation.getTextStyle
 import com.example.composesample.presentation.legacy.base.SetSystemUI
 import com.example.composesample.presentation.openWebPage
-import com.example.composesample.util.ConstValue.Companion.AlgorithmType
 import com.example.composesample.util.ConstValue.Companion.AnimationExample
 import com.example.composesample.util.ConstValue.Companion.ApiDisconnectExample
 import com.example.composesample.util.ConstValue.Companion.AudioRecorderExample
@@ -135,7 +133,6 @@ import com.example.composesample.util.ConstValue.Companion.SwipeToDismissExample
 import com.example.composesample.util.ConstValue.Companion.TargetSDK34PermissionExample
 import com.example.composesample.util.ConstValue.Companion.TestExample
 import com.example.composesample.util.ConstValue.Companion.TextStyleExample
-import com.example.composesample.util.ConstValue.Companion.TwoSumAlgorithm
 import com.example.composesample.util.ConstValue.Companion.WebViewIssueExample
 import com.example.composesample.util.ConstValue.Companion.WorkManagerExample
 import com.example.composesample.util.component.Toast
@@ -171,7 +168,6 @@ class BlogExampleActivity : ComponentActivity() {
             blogExampleViewModel.setStudyType(
                 when (type) {
                     ExampleType -> ExampleMoveType.UI
-                    AlgorithmType -> ExampleMoveType.ALGORITHM
                     else -> ExampleMoveType.EMPTY
                 }
             )
@@ -197,11 +193,8 @@ fun BlogExampleScreen(
     val exampleMoveType = remember { mutableStateOf(ExampleMoveType.UI) }
     val studyType = blogExampleViewModel.studyType.collectAsState().value
     val exampleObjectList = blogExampleViewModel.exampleObjectList.collectAsState().value
-    val algorithmObjectList = blogExampleViewModel.algorithmObjectList.collectAsState().value
     val searchText by blogExampleViewModel.searchText.collectAsState()
     val searchExampleList = blogExampleViewModel.searchExampleList.collectAsState(listOf()).value
-    val searchAlgorithmList =
-        blogExampleViewModel.searchAlgorithmList.collectAsState(listOf()).value
     val subCategoryList = blogExampleViewModel.subCategoryList.collectAsState(listOf()).value
 
     LaunchedEffect(Unit) {
@@ -212,24 +205,8 @@ fun BlogExampleScreen(
         ExampleListContent(
             searchText = searchText,
             subCategoryList = subCategoryList,
-            exampleObjectList = when (studyType) {
-                ExampleMoveType.ALGORITHM -> {
-                    algorithmObjectList
-                }
-
-                else -> {
-                    exampleObjectList
-                }
-            },
-            searchExampleList = when (studyType) {
-                ExampleMoveType.ALGORITHM -> {
-                    searchAlgorithmList
-                }
-
-                else -> {
-                    searchExampleList
-                }
-            },
+            exampleObjectList = exampleObjectList,
+            searchExampleList = searchExampleList,
             blogExampleViewModel = blogExampleViewModel,
             exampleType = exampleType,
             exampleMoveType = exampleMoveType,
@@ -774,10 +751,6 @@ fun ExampleCaseUI(
                             CoroutineExampleUI(onBackEvent)
                         }
 
-                        TwoSumAlgorithm -> {
-                            TwoSumAlgorithmUI(onBackEvent)
-                        }
-
                         else -> {
                             Text(
                                 text = "Dummy",
@@ -811,10 +784,6 @@ fun ExampleCaseUI(
         }
 
         ExampleMoveType.EMPTY -> {
-            Unit
-        }
-
-        ExampleMoveType.ALGORITHM -> {
             Unit
         }
     }

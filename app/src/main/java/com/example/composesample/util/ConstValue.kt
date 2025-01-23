@@ -8,7 +8,6 @@ class ConstValue {
         // Code Type
         const val IntentType = "type"
         const val ExampleType = "example"
-        const val AlgorithmType = "algorithm"
 
         // Example Value
         const val SSEWikiURL = "https://stream.wikimedia.org/v2/stream/recentchange"
@@ -56,8 +55,5 @@ class ConstValue {
         const val FlingBehavior = "flingBehaviorExampleList"
         const val BottomSheet = "bottomSheetExampleList"
         const val NavigationDraw = "navigationDrawExampleList"
-
-        // Algorithm Type
-        const val TwoSumAlgorithm = "TwoSumAlgorithm"
     }
 }
