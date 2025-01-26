@@ -86,6 +86,7 @@ import com.example.composesample.presentation.example.component.powersave.PowerS
 import com.example.composesample.presentation.example.component.recorder.AudioRecorderUI
 import com.example.composesample.presentation.example.component.refresh.PullToRefreshUI
 import com.example.composesample.presentation.example.component.shimmer.ShimmerExampleUI
+import com.example.composesample.presentation.example.component.shimmer.TextShimmerExampleUI
 import com.example.composesample.presentation.example.component.sse.SSEExampleUI
 import com.example.composesample.presentation.example.component.swipe.SwipeToDismissUI
 import com.example.composesample.presentation.example.component.test.UITestExampleUI
@@ -126,12 +127,13 @@ import com.example.composesample.util.ConstValue.Companion.PullToRefreshExample
 import com.example.composesample.util.ConstValue.Companion.ReverseLazyColumnExample
 import com.example.composesample.util.ConstValue.Companion.SSEExample
 import com.example.composesample.util.ConstValue.Companion.ScaffoldDrawExample
-import com.example.composesample.util.ConstValue.Companion.ShimmerExample
+import com.example.composesample.util.ConstValue.Companion.UIShimmerExample
 import com.example.composesample.util.ConstValue.Companion.SideEffectExample
 import com.example.composesample.util.ConstValue.Companion.StickyHeaderExample
 import com.example.composesample.util.ConstValue.Companion.SwipeToDismissExample
 import com.example.composesample.util.ConstValue.Companion.TargetSDK34PermissionExample
 import com.example.composesample.util.ConstValue.Companion.TestExample
+import com.example.composesample.util.ConstValue.Companion.TextShimmerExample
 import com.example.composesample.util.ConstValue.Companion.TextStyleExample
 import com.example.composesample.util.ConstValue.Companion.WebViewIssueExample
 import com.example.composesample.util.ConstValue.Companion.WorkManagerExample
@@ -513,7 +515,7 @@ fun ExampleCardSection(
                             modifier = Modifier
                                 .padding(horizontal = 10.dp, vertical = 5.dp)
                                 .align(Alignment.CenterHorizontally),
-                            text = if (subCategory.isEmpty() || !subCategory.contains(type)) {
+                            text = if (subCategory.isEmpty()) {
                                 "Sample UI"
                             } else {
                                 "Sample List"
@@ -703,10 +705,6 @@ fun ExampleCaseUI(
                             LottieExampleUI(onBackEvent)
                         }
 
-                        ShimmerExample -> {
-                            ShimmerExampleUI(onBackEvent)
-                        }
-
                         StickyHeaderExample -> {
                             StickyHeaderExampleUI(onBackEvent)
                         }
@@ -749,6 +747,14 @@ fun ExampleCaseUI(
 
                         CoroutineExample -> {
                             CoroutineExampleUI(onBackEvent)
+                        }
+
+                        UIShimmerExample -> {
+                            ShimmerExampleUI(onBackEvent)
+                        }
+
+                        TextShimmerExample -> {
+                            TextShimmerExampleUI(onBackEvent)
                         }
 
                         else -> {

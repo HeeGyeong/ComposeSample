@@ -39,7 +39,6 @@ class ConstValue {
         const val PassingIntentDataExample = "passingIntentDataExample"
         const val BottomNavigationExample = "bottomNavigationExample"
         const val LottieExample = "lottieExample"
-        const val ShimmerExample = "ShimmerExample"
         const val StickyHeaderExample = "StickyHeaderExample"
         const val CursorIDEExample = "CursorIDEExample"
         const val KtorExample = "KtorExample"
@@ -50,10 +49,13 @@ class ConstValue {
         const val TestExample = "testExample"
         const val ReverseLazyColumnExample = "reverseLazyColumnExample"
         const val CoroutineExample = "coroutineExample"
+        const val UIShimmerExample = "uiShimmerExample"
+        const val TextShimmerExample = "textShimmerExample"
 
         // SubCategory
         const val FlingBehavior = "flingBehaviorExampleList"
         const val BottomSheet = "bottomSheetExampleList"
         const val NavigationDraw = "navigationDrawExampleList"
+        const val Shimmer = "ShimmerExampleList"
     }
 }

@@ -221,16 +221,6 @@ fun exampleObjectList(): ArrayList<ExampleObject> {
 
     insertExampleObject.add(
         ExampleObject(
-            lastUpdate = "24. 10. 02",
-            title = "Shimmer Example",
-            description = "Shimmer를 사용하는 방법에 대해 알아보기 위한 예제.",
-            blogUrl = "https://heegs.tistory.com/174",
-            exampleType = ConstValue.ShimmerExample
-        )
-    )
-
-    insertExampleObject.add(
-        ExampleObject(
             lastUpdate = "24. 10. 24",
             title = "Sticky Header Example",
             description = "사용성 높은 Sticky Header를 만들어보기 위한 예제.",
@@ -329,12 +319,43 @@ fun exampleObjectList(): ArrayList<ExampleObject> {
         )
     )
 
+    insertExampleObject.add(
+        ExampleObject(
+            subCategory = ConstValue.Shimmer,
+            lastUpdate = "25. 01. 26",
+            title = "Shimmer Example",
+            description = "Shimmer를 사용하는 방법에 대해 알아보기 위한 예제.",
+            blogUrl = "https://heegs.tistory.com/174",
+            exampleType = ConstValue.UIShimmerExample,
+        )
+    )
+
     return insertExampleObject
 }
 
 fun subCategoryList(): ArrayList<ExampleObject> {
     val insertExampleObject = ArrayList<ExampleObject>()
     insertExampleObject.clear()
+
+    insertExampleObject.add(
+        ExampleObject(
+            subCategory = ConstValue.Shimmer,
+            title = "UI Shimmer Example",
+            description = "UI Shimmer를 사용하는 방법에 대해 알아보기 위한 예제.",
+            blogUrl = "https://heegs.tistory.com/174",
+            exampleType = ConstValue.UIShimmerExample
+        )
+    )
+
+    insertExampleObject.add(
+        ExampleObject(
+            subCategory = ConstValue.Shimmer,
+            title = "Text Shimmer Example",
+            description = "text Shimmer를 사용하는 방법에 대해 알아보기 위한 예제.",
+            blogUrl = "",
+            exampleType = ConstValue.TextShimmerExample
+        )
+    )
 
     insertExampleObject.add(
         ExampleObject(
