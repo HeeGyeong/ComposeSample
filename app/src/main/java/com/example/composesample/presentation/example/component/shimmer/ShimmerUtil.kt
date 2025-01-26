@@ -19,6 +19,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
@@ -158,11 +159,19 @@ fun Modifier.defaultShimmerBrush(
 }
 
 @Composable
-fun textShimmerBrush(
-    colors: List<Color>,
-    durationMillis: Int = 1000,  // 1000에서 500으로 줄여서 속도 증가
-    gradientWidth: Float = 4000f  // 그라데이션 폭 증가
-): Brush {
+fun textShimmer(
+    colors: List<Color> = listOf(
+        Color.LightGray,
+        Color.DarkGray,
+        Color.LightGray,
+    ),
+    durationMillis: Int = 1000,
+    gradientWidth: Float = 4000f,
+    fontWeight: FontWeight = FontWeight.W400,
+    fontSize: TextUnit = 13.sp,
+    letterSpacing: TextUnit = 0.01.em,
+    lineHeight: TextUnit = 1.40.em
+): TextStyle {
     val transition = rememberInfiniteTransition(label = "shimmer")
     val translateAnimation = transition.animateFloat(
         initialValue = 0f,
@@ -174,12 +183,18 @@ fun textShimmerBrush(
             ),
             repeatMode = RepeatMode.Reverse
         ),
-        label = "shimmer"
+        label = "textShimmer"
     )
 
-    return Brush.linearGradient(
-        colors = colors,
-        start = Offset(0f, 0f),
-        end = Offset(translateAnimation.value * gradientWidth, 0f),  // 그라데이션 폭 증가
+    return TextStyle(
+        brush = Brush.linearGradient(
+            colors = colors,
+            start = Offset(0f, 0f),
+            end = Offset(translateAnimation.value * gradientWidth, 0f),
+        ),
+        fontWeight = fontWeight,
+        fontSize = fontSize,
+        letterSpacing = letterSpacing,
+        lineHeight = lineHeight
     )
 }

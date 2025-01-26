@@ -9,7 +9,9 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -19,6 +21,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import com.example.composesample.presentation.MainHeader
@@ -61,8 +64,19 @@ fun TextShimmerExampleUI(
             )
         }
 
+        Spacer(modifier = Modifier.height(40.dp))
+
         Text(
-            text = "Gradient Shimmer with Modifier",
+            text = "Shimmer Effect Using Modifier Only",
+            modifier = Modifier.shimmer(
+                shimmerAnimation = translateAnim
+            )
+        )
+
+        Spacer(modifier = Modifier.height(40.dp))
+
+        Text(
+            text = "Shimmer with Modifier + Gradient Style",
             modifier = Modifier.shimmer(
                 shimmerAnimation = translateAnim
             ),
@@ -76,6 +90,8 @@ fun TextShimmerExampleUI(
                 )
             )
         )
+
+        Spacer(modifier = Modifier.height(40.dp))
 
         Text(
             text = "Dynamic Linear Gradient",
@@ -92,21 +108,11 @@ fun TextShimmerExampleUI(
             ),
         )
 
+        Spacer(modifier = Modifier.height(40.dp))
+
         Text(
-            text = "Custom Shimmer with Typography",
-            style = TextStyle(
-                brush = textShimmerBrush(
-                    colors = listOf(
-                        Color.LightGray,
-                        Color.DarkGray,
-                        Color.LightGray,
-                    )
-                ),
-                fontWeight = FontWeight.W400,
-                fontSize = 13.sp,
-                letterSpacing = 0.01.em,
-                lineHeight = 1.40.em
-            )
+            text = "Custom Shimmer with Style",
+            style = textShimmer()
         )
     }
 }
