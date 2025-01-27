@@ -325,7 +325,7 @@ fun exampleObjectList(): ArrayList<ExampleObject> {
             lastUpdate = "25. 01. 26",
             title = "Shimmer Example",
             description = "Shimmer를 사용하는 방법에 대해 알아보기 위한 예제.",
-            blogUrl = "https://heegs.tistory.com/174",
+            blogUrl = "",
             exampleType = ConstValue.UIShimmerExample,
         )
     )
@@ -352,7 +352,7 @@ fun subCategoryList(): ArrayList<ExampleObject> {
             subCategory = ConstValue.Shimmer,
             title = "Text Shimmer Example",
             description = "text Shimmer를 사용하는 방법에 대해 알아보기 위한 예제.",
-            blogUrl = "",
+            blogUrl = "https://heegs.tistory.com/182",
             exampleType = ConstValue.TextShimmerExample
         )
     )
