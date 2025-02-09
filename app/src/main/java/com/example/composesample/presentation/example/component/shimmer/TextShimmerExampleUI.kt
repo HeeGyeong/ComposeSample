@@ -116,4 +116,3 @@ fun TextShimmerExampleUI(
         )
     }
 }
-

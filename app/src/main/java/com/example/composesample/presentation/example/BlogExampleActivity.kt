@@ -62,6 +62,7 @@ import com.example.composesample.presentation.example.component.bottomsheet.Cust
 import com.example.composesample.presentation.example.component.bottomsheet.ModalBottomSheetUI
 import com.example.composesample.presentation.example.component.cache.DataCacheExampleUI
 import com.example.composesample.presentation.example.component.clickevent.ClickEventUI
+import com.example.composesample.presentation.example.component.compositionLocal.CompositionLocalExampleUI
 import com.example.composesample.presentation.example.component.coordinator.CoordinatorExampleUI
 import com.example.composesample.presentation.example.component.coroutine.CoroutineExampleUI
 import com.example.composesample.presentation.example.component.cursor.CursorIDEExample
@@ -103,6 +104,7 @@ import com.example.composesample.util.ConstValue.Companion.AudioRecorderExample
 import com.example.composesample.util.ConstValue.Companion.BottomNavigationExample
 import com.example.composesample.util.ConstValue.Companion.BottomSheetExample
 import com.example.composesample.util.ConstValue.Companion.ClickEventExample
+import com.example.composesample.util.ConstValue.Companion.CompositionLocalExample
 import com.example.composesample.util.ConstValue.Companion.CoordinatorExample
 import com.example.composesample.util.ConstValue.Companion.CoroutineExample
 import com.example.composesample.util.ConstValue.Companion.CursorIDEExample
@@ -755,6 +757,10 @@ fun ExampleCaseUI(
 
                         TextShimmerExample -> {
                             TextShimmerExampleUI(onBackEvent)
+                        }
+
+                        CompositionLocalExample -> {
+                            CompositionLocalExampleUI(onBackEvent)
                         }
 
                         else -> {

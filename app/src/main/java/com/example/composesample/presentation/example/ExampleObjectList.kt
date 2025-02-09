@@ -330,6 +330,17 @@ fun exampleObjectList(): ArrayList<ExampleObject> {
         )
     )
 
+    insertExampleObject.add(
+        ExampleObject(
+            subCategory = ConstValue.CompositionLocalExample,
+            lastUpdate = "25. 02. 09",
+            title = "CompositionLocal Example",
+            description = "CompositionLocal을 사용하는 방법에 대해 알아보기 위한 예제.",
+            blogUrl = "",
+            exampleType = ConstValue.CompositionLocalExample,
+        )
+    )
+
     return insertExampleObject
 }
 
