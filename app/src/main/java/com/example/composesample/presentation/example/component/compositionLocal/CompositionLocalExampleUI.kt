@@ -13,6 +13,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -23,18 +24,22 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.composesample.presentation.MainHeader
+import org.koin.androidx.compose.koinViewModel
 
 
 // CompositionLocal 선언
 val LocalUserName = compositionLocalOf { "Default User" }
 val LocalUserAge = compositionLocalOf { 0 }
 val LocalColor = compositionLocalOf { lightColors() }
+val LocalViewModel = compositionLocalOf<CompositionLocalViewModel> { error("No ViewModel found!") }
 
 @Composable
 fun CompositionLocalExampleUI(
     onBackButtonClick: () -> Unit
 ) {
     Log.d("CompositionLocal", "CompositionLocalExampleUI")
+
+    val viewModel: CompositionLocalViewModel = koinViewModel()
 
     Column(
         modifier = Modifier
@@ -46,15 +51,35 @@ fun CompositionLocalExampleUI(
             onBackIconClicked = onBackButtonClick
         )
 
-//        DefaultCompositionLocalUse()
+        DefaultCompositionLocalUse()
 
-//        RecompositionCheckCase1()
+        RecompositionCheckCase1()
 
-//        RecompositionCheckCase2()
+        RecompositionCheckCase2()
 
-//        ColorThemeCase()
+        ColorThemeCase()
 
         MultiCompositionLocalUse()
+
+        CompositionLocalViewModelCase(viewModel)
+    }
+}
+
+@Composable
+fun CompositionLocalViewModelCase(viewModel: CompositionLocalViewModel) {
+    Log.d("CompositionLocal", "CompositionLocalViewModel")
+
+    CompositionLocalProvider(LocalViewModel provides viewModel) {
+        val compositionLocalViewModel = LocalViewModel.current
+
+        val text = compositionLocalViewModel.compositionLocalTextData.collectAsState().value
+        MutableTextPrintUI(text)
+
+        ButtonUI(
+            onButtonClick = {
+                compositionLocalViewModel.changeTextData("Change Click")
+            }
+        )
     }
 }
 
@@ -166,7 +191,7 @@ fun RecompositionTextLayer3(mutableText: String) {
 fun MutableTextPrintUI(mutableText: String) {
     Log.d("CompositionLocal", "MutableTextPrintUI[$mutableText]")
 
-    Text(text = "InputData, $mutableText!")
+    Text(text = "InputData : $mutableText!")
 }
 
 @Composable
@@ -193,7 +218,7 @@ fun TextPrintUI() {
 
     Log.d("CompositionLocal", "TextPrintUI[$userName]")
 
-    Text(text = "InputData, $userName!")
+    Text(text = "InputData : $userName!")
 }
 
 @Composable

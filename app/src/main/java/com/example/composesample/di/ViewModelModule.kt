@@ -4,6 +4,7 @@ import com.example.composesample.presentation.example.BlogExampleViewModel
 import com.example.composesample.presentation.example.component.api.ApiExampleUseCaseViewModel
 import com.example.composesample.presentation.example.component.api.ApiExampleViewModel
 import com.example.composesample.presentation.example.component.cache.DataCacheViewModel
+import com.example.composesample.presentation.example.component.compositionLocal.CompositionLocalViewModel
 import com.example.composesample.presentation.example.component.mvi.MVIExampleViewModel
 import com.example.composesample.presentation.example.component.sse.SSEViewModel
 import com.example.composesample.presentation.legacy.movie.MovieViewModel
@@ -31,4 +32,6 @@ val viewModelModule: Module = module {
     viewModel { MVIExampleViewModel(get()) }
 
     viewModel { SSEViewModel() }
+
+    viewModel { CompositionLocalViewModel() }
 }
