@@ -5,14 +5,17 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.ProvidableCompositionLocal
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.getValue
@@ -26,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import com.example.composesample.presentation.MainHeader
 import org.koin.androidx.compose.koinViewModel
 
+private const val LOG_TAG = "CompositionLocal"
 
 // CompositionLocal 선언
 val LocalUserName = compositionLocalOf { "Default User" }
@@ -37,7 +41,7 @@ val LocalViewModel = compositionLocalOf<CompositionLocalViewModel> { error("No V
 fun CompositionLocalExampleUI(
     onBackButtonClick: () -> Unit
 ) {
-    Log.d("CompositionLocal", "CompositionLocalExampleUI")
+    Log.d(LOG_TAG, "CompositionLocalExampleUI")
 
     val viewModel: CompositionLocalViewModel = koinViewModel()
 
@@ -51,23 +55,50 @@ fun CompositionLocalExampleUI(
             onBackIconClicked = onBackButtonClick
         )
 
+        ExampleDivider(title = "DefaultCompositionLocalUse")
         DefaultCompositionLocalUse()
 
-        RecompositionCheckCase1()
+        ExampleDivider(title = "NoRecompositionCheckCase")
+        NoRecompositionCheckCase()
 
-        RecompositionCheckCase2()
+        ExampleDivider(title = "RecompositionCheckCase")
+        RecompositionCheckCase()
 
+        ExampleDivider(title = "ColorThemeCase")
         ColorThemeCase()
 
+        ExampleDivider(title = "MultiCompositionLocalUse")
         MultiCompositionLocalUse()
 
+        ExampleDivider(title = "CompositionLocalViewModelCase")
         CompositionLocalViewModelCase(viewModel)
+
+        ExampleDivider(title = "InnerCompositionLocalProvider")
+        LocalVariableCompositionLocalProvider()
     }
 }
 
 @Composable
+fun LocalVariableCompositionLocalProvider() {
+    val localVariableData = compositionLocalOf { 0 }
+
+    CompositionLocalProvider(localVariableData provides 40) {
+        TextPrintUIWithLocalData(localVariableData)
+    }
+}
+
+@Composable
+fun TextPrintUIWithLocalData(localData: ProvidableCompositionLocal<Int>) {
+    val data = localData.current
+
+    Log.d(LOG_TAG, "TextPrintUIWithLocalData[$data]")
+
+    Text(text = "Data: $data")
+}
+
+@Composable
 fun CompositionLocalViewModelCase(viewModel: CompositionLocalViewModel) {
-    Log.d("CompositionLocal", "CompositionLocalViewModel")
+    Log.d(LOG_TAG, "CompositionLocalViewModel")
 
     CompositionLocalProvider(LocalViewModel provides viewModel) {
         val compositionLocalViewModel = LocalViewModel.current
@@ -123,20 +154,20 @@ fun ThemedButton() {
 
 @Composable
 fun DefaultCompositionLocalUse() {
-    Log.d("CompositionLocal", "DefaultCompositionLocalUse")
+    Log.d(LOG_TAG, "DefaultCompositionLocalUse")
     CompositionLocalProvider(LocalUserName provides "Alice") {
         TextPrintUI()
     }
 }
 
 @Composable
-fun RecompositionCheckCase1() {
-    Log.d("CompositionLocal", "RecompositionCheckCase")
+fun NoRecompositionCheckCase() {
+    Log.d(LOG_TAG, "RecompositionCheckCase")
 
     var mutableText by remember { mutableStateOf("Mutable") }
 
     CompositionLocalProvider(LocalUserName provides mutableText) {
-        Log.d("CompositionLocal", "CompositionLocalProvider")
+        Log.d(LOG_TAG, "CompositionLocalProvider")
         NoRecompositionTextLayer1()
     }
 
@@ -150,13 +181,13 @@ fun RecompositionCheckCase1() {
 }
 
 @Composable
-fun RecompositionCheckCase2() {
-    Log.d("CompositionLocal", "RecompositionCheckCase")
+fun RecompositionCheckCase() {
+    Log.d(LOG_TAG, "RecompositionCheckCase")
 
     var mutableText by remember { mutableStateOf("Mutable") }
 
     CompositionLocalProvider(LocalUserName provides mutableText) {
-        Log.d("CompositionLocal", "CompositionLocalProvider")
+        Log.d(LOG_TAG, "CompositionLocalProvider")
         RecompositionTextLayer1(mutableText)
     }
 
@@ -171,52 +202,52 @@ fun RecompositionCheckCase2() {
 
 @Composable
 fun RecompositionTextLayer1(mutableText: String) {
-    Log.d("CompositionLocal", "RecompositionTextLayer1")
+    Log.d(LOG_TAG, "RecompositionTextLayer1")
     RecompositionTextLayer2(mutableText)
 }
 
 @Composable
 fun RecompositionTextLayer2(mutableText: String) {
-    Log.d("CompositionLocal", "RecompositionTextLayer2")
+    Log.d(LOG_TAG, "RecompositionTextLayer2")
     RecompositionTextLayer3(mutableText)
     TextPrintUI()
 }
 
 @Composable
 fun RecompositionTextLayer3(mutableText: String) {
-    Log.d("CompositionLocal", "RecompositionTextLayer3")
+    Log.d(LOG_TAG, "RecompositionTextLayer3")
 }
 
 @Composable
 fun MutableTextPrintUI(mutableText: String) {
-    Log.d("CompositionLocal", "MutableTextPrintUI[$mutableText]")
+    Log.d(LOG_TAG, "MutableTextPrintUI[$mutableText]")
 
     Text(text = "InputData : $mutableText!")
 }
 
 @Composable
 fun NoRecompositionTextLayer1() {
-    Log.d("CompositionLocal", "NoRecompositionTextLayer1")
+    Log.d(LOG_TAG, "NoRecompositionTextLayer1")
     NoRecompositionTextLayer2()
 }
 
 @Composable
 fun NoRecompositionTextLayer2() {
-    Log.d("CompositionLocal", "NoRecompositionTextLayer2")
+    Log.d(LOG_TAG, "NoRecompositionTextLayer2")
     NoRecompositionTextLayer3()
     TextPrintUI()
 }
 
 @Composable
 fun NoRecompositionTextLayer3() {
-    Log.d("CompositionLocal", "NoRecompositionTextLayer3")
+    Log.d(LOG_TAG, "NoRecompositionTextLayer3")
 }
 
 @Composable
 fun TextPrintUI() {
     val userName = LocalUserName.current
 
-    Log.d("CompositionLocal", "TextPrintUI[$userName]")
+    Log.d(LOG_TAG, "TextPrintUI[$userName]")
 
     Text(text = "InputData : $userName!")
 }
@@ -228,6 +259,28 @@ fun ButtonUI(
     Button(onClick = onButtonClick) {
         Text(text = "Change Text")
     }
+}
+
+@Composable
+fun ExampleDivider(title: String) {
+    Spacer(modifier = Modifier.height(5.dp))
+    Text(
+        text = "------------------------------------",
+        modifier = Modifier.fillMaxWidth(),
+        color = Color.White
+    )
+    Text(
+        text = title,
+        modifier = Modifier.fillMaxWidth(),
+        style = MaterialTheme.typography.labelSmall,
+        color = Color.Black
+    )
+    Text(
+        text = "------------------------------------",
+        modifier = Modifier.fillMaxWidth(),
+        color = Color.White
+    )
+    Spacer(modifier = Modifier.height(5.dp))
 }
 
 @Preview
