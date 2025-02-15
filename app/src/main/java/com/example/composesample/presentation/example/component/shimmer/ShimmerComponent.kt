@@ -24,6 +24,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.example.composesample.util.defaultShimmerBrush
+import com.example.composesample.util.shimmer
+import com.example.composesample.util.shimmerBrush
 
 
 @Composable

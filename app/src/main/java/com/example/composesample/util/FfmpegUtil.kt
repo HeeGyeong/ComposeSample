@@ -1,4 +1,4 @@
-package com.example.composesample.presentation.example.component.ffmpeg
+package com.example.composesample.util
 
 import android.annotation.SuppressLint
 import android.content.Context

@@ -20,11 +20,10 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.em
-import androidx.compose.ui.unit.sp
 import com.example.composesample.presentation.MainHeader
+import com.example.composesample.util.shimmer
+import com.example.composesample.util.textShimmer
 
 @Composable
 fun TextShimmerExampleUI(

@@ -168,7 +168,7 @@ fun SimpleSwipeToDismissUI(
             }
 
             LaunchedEffect(key1 = Unit, block = {
-                // View에 보이지 않던 item이 다시 보일 때, re-composable이 발생하면서 View를 초기화 시키기 때문에, 다시 설정 필요함.
+                // View에 보이지 않던 item이 다시 보일 때, reComposition이 발생하면서 View를 초기화 시키기 때문에, 다시 설정 필요함.
                 isFavoriteItem = data.isFavorite
                 isDismissItem = data.isDismiss
 
@@ -187,16 +187,16 @@ fun SimpleSwipeToDismissUI(
                 dismissThresholds = { direction ->
                     FractionalThreshold( // Deprecated
                         if (direction == DismissDirection.StartToEnd) {
-                            startDismissEventRatio
+                            startDismissEventRatio // 좌 -> 우 비율
                         } else {
-                            endDismissEventRatio
+                            endDismissEventRatio // 우 -> 좌 비율
                         }
                     )
                 },
                 directions = setOf(
                     DismissDirection.StartToEnd,
                     DismissDirection.EndToStart
-                ), // dismiss Animation이 가능한 부분 설정.
+                ), // swipe Animation이 가능한 부분 설정.
                 background = {
                     AnimatedContent(
                         targetState = Pair(
@@ -310,7 +310,7 @@ fun SimpleSwipeToDismissUI(
                 },
                 dismissContent = {
                     // isDismissItem 만 사용하면 천천히 스크롤했을 때 이슈 발생.
-                    // recomposable이 발생할 때, false로 설정 후 true로 변경되면서 아래로 아이템 크기만큼 스크롤.
+                    // reComposition이 발생할 때, false로 설정 후 true로 변경되면서 아래로 아이템 크기만큼 스크롤.
                     val cardModifier = if (data.isDismiss || isDismissItem) {
                         Modifier
                             .fillMaxWidth()

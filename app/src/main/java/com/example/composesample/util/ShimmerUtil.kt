@@ -1,4 +1,4 @@
-package com.example.composesample.presentation.example.component.shimmer
+package com.example.composesample.util
 
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.LinearEasing
@@ -8,7 +8,6 @@ import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -24,31 +23,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 
-fun Modifier.shimmer(
-    colorList: List<Color> = listOf(
-        Color.LightGray.copy(alpha = 0.2f),
-        Color.LightGray.copy(alpha = 0.9f),
-        Color.LightGray.copy(alpha = 0.2f)
-    ),
-    shimmerAnimation: Float,
-    ratio: Float = 0.6f
-): Modifier = composed {
-    val configuration = LocalConfiguration.current
-    val screenWidthDp = configuration.screenWidthDp.dp
-    val shimmerWidth = screenWidthDp * ratio
-
-    background(
-        brush = Brush.linearGradient(
-            colors = colorList,
-            start = Offset(
-                x = shimmerAnimation - shimmerWidth.value,
-                y = shimmerAnimation - shimmerWidth.value
-            ),
-            end = Offset(x = shimmerAnimation, y = shimmerAnimation)
-        )
-    )
-}
-
+/**
+ * 배경에 Shimmer 효과를 추가하는 기본적인 Modifier입니다.
+ *
+ * 애니메이션 변수를 직접 설정할 필요 없이, 색상 리스트와 너비 비율(ratio)만 지정하면 됩니다.
+ *
+ * @param colorList Shimmer 효과에 사용할 색상 리스트입니다.
+ * @param ratio 화면 너비에 대한 Shimmer 효과의 비율입니다.
+ */
 fun Modifier.defaultShimmer(
     colorList: List<Color> = listOf(
         Color.LightGray.copy(alpha = 0.2f),
@@ -82,6 +64,31 @@ fun Modifier.defaultShimmer(
                 y = translateAnim - shimmerWidth.value
             ),
             end = Offset(x = translateAnim, y = translateAnim)
+        )
+    )
+}
+
+fun Modifier.shimmer(
+    colorList: List<Color> = listOf(
+        Color.LightGray.copy(alpha = 0.2f),
+        Color.LightGray.copy(alpha = 0.9f),
+        Color.LightGray.copy(alpha = 0.2f)
+    ),
+    shimmerAnimation: Float,
+    ratio: Float = 0.6f
+): Modifier = composed {
+    val configuration = LocalConfiguration.current
+    val screenWidthDp = configuration.screenWidthDp.dp
+    val shimmerWidth = screenWidthDp * ratio
+
+    background(
+        brush = Brush.linearGradient(
+            colors = colorList,
+            start = Offset(
+                x = shimmerAnimation - shimmerWidth.value,
+                y = shimmerAnimation - shimmerWidth.value
+            ),
+            end = Offset(x = shimmerAnimation, y = shimmerAnimation)
         )
     )
 }
@@ -158,6 +165,22 @@ fun Modifier.defaultShimmerBrush(
     )
 }
 
+/**
+ * 텍스트에 Shimmer 효과를 적용하는 유틸 함수입니다.
+ *
+ * 사용 예시: Text(style = textShimmer(), ...)
+ *
+ * 이 함수는 텍스트의 스타일 속성인 fontWeight, fontSize, letterSpacing, lineHeight를
+ * 설정할 수 있습니다. 만약 별도의 스타일 유틸 함수가 있다면, 해당 값을 대체하여 사용할 수 있습니다.
+ *
+ * @param colors Shimmer 효과에 사용할 색상 리스트입니다.
+ * @param durationMillis 애니메이션의 지속 시간(밀리초)입니다.
+ * @param gradientWidth 그라데이션의 너비입니다.
+ * @param fontWeight 텍스트의 굵기를 설정합니다.
+ * @param fontSize 텍스트의 크기를 설정합니다.
+ * @param letterSpacing 텍스트의 자간을 설정합니다.
+ * @param lineHeight 텍스트의 줄 높이를 설정합니다.
+ */
 @Composable
 fun textShimmer(
     colors: List<Color> = listOf(

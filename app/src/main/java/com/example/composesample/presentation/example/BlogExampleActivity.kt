@@ -71,8 +71,8 @@ import com.example.composesample.presentation.example.component.drawer.ModalDraw
 import com.example.composesample.presentation.example.component.drawer.ScaffoldDrawerUI
 import com.example.composesample.presentation.example.component.effect.SideEffectExampleUI
 import com.example.composesample.presentation.example.component.ffmpeg.FfmpegEncodingUI
-import com.example.composesample.presentation.example.component.ffmpeg.executeCommand
-import com.example.composesample.presentation.example.component.ffmpeg.getRealPathFromURI
+import com.example.composesample.util.executeCommand
+import com.example.composesample.util.getRealPathFromURI
 import com.example.composesample.presentation.example.component.flexbox.FlexBoxUI
 import com.example.composesample.presentation.example.component.header.StickyHeaderExampleUI
 import com.example.composesample.presentation.example.component.intent.PassingIntentDataExample

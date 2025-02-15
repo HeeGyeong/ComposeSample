@@ -41,7 +41,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
+import com.example.composesample.util.CameraPermission
+import com.example.composesample.util.ImagePermission
+import com.example.composesample.util.PermissionType
+import com.example.composesample.util.VideoPermission
+import com.example.composesample.util.checkMediaTypePermissionGranted
+import com.example.composesample.util.checkPermissionTypeGranted
+import com.example.composesample.util.checkSinglePermissionGranted
 import com.example.composesample.util.component.PermissionDialog
+import com.example.composesample.util.imageAlbumIntent
+import com.example.composesample.util.videoAlbumIntent
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
