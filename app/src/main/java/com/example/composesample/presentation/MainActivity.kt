@@ -1,5 +1,6 @@
 package com.example.composesample.presentation
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -7,8 +8,15 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material.Surface
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.em
@@ -20,13 +28,21 @@ import com.example.composesample.util.ConstValue.Companion.IntentType
 
 @ExperimentalAnimationApi
 class MainActivity : ComponentActivity() {
+    @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             Surface(
                 color = Color.White
             ) {
-                MainActivityScreen()
+                Scaffold(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(color = Color.LightGray)
+                        .windowInsetsPadding(WindowInsets.systemBars),
+                ) { _ ->
+                    MainActivityScreen()
+                }
             }
         }
     }

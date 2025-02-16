@@ -39,6 +39,7 @@ import androidx.compose.material.Card
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.material.TextFieldDefaults
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
@@ -71,8 +72,6 @@ import com.example.composesample.presentation.example.component.drawer.ModalDraw
 import com.example.composesample.presentation.example.component.drawer.ScaffoldDrawerUI
 import com.example.composesample.presentation.example.component.effect.SideEffectExampleUI
 import com.example.composesample.presentation.example.component.ffmpeg.FfmpegEncodingUI
-import com.example.composesample.util.executeCommand
-import com.example.composesample.util.getRealPathFromURI
 import com.example.composesample.presentation.example.component.flexbox.FlexBoxUI
 import com.example.composesample.presentation.example.component.header.StickyHeaderExampleUI
 import com.example.composesample.presentation.example.component.intent.PassingIntentDataExample
@@ -96,7 +95,6 @@ import com.example.composesample.presentation.example.component.version.TargetSD
 import com.example.composesample.presentation.example.component.webview.WebViewIssueUI
 import com.example.composesample.presentation.example.component.workmanager.WorkManagerUI
 import com.example.composesample.presentation.getTextStyle
-import com.example.composesample.presentation.legacy.base.SetSystemUI
 import com.example.composesample.presentation.openWebPage
 import com.example.composesample.util.ConstValue.Companion.AnimationExample
 import com.example.composesample.util.ConstValue.Companion.ApiDisconnectExample
@@ -129,7 +127,6 @@ import com.example.composesample.util.ConstValue.Companion.PullToRefreshExample
 import com.example.composesample.util.ConstValue.Companion.ReverseLazyColumnExample
 import com.example.composesample.util.ConstValue.Companion.SSEExample
 import com.example.composesample.util.ConstValue.Companion.ScaffoldDrawExample
-import com.example.composesample.util.ConstValue.Companion.UIShimmerExample
 import com.example.composesample.util.ConstValue.Companion.SideEffectExample
 import com.example.composesample.util.ConstValue.Companion.StickyHeaderExample
 import com.example.composesample.util.ConstValue.Companion.SwipeToDismissExample
@@ -137,9 +134,12 @@ import com.example.composesample.util.ConstValue.Companion.TargetSDK34Permission
 import com.example.composesample.util.ConstValue.Companion.TestExample
 import com.example.composesample.util.ConstValue.Companion.TextShimmerExample
 import com.example.composesample.util.ConstValue.Companion.TextStyleExample
+import com.example.composesample.util.ConstValue.Companion.UIShimmerExample
 import com.example.composesample.util.ConstValue.Companion.WebViewIssueExample
 import com.example.composesample.util.ConstValue.Companion.WorkManagerExample
 import com.example.composesample.util.component.Toast
+import com.example.composesample.util.executeCommand
+import com.example.composesample.util.getRealPathFromURI
 import com.example.composesample.util.noRippleClickable
 import com.example.domain.model.ExampleMoveType
 import com.example.domain.model.ExampleObject
@@ -176,13 +176,36 @@ class BlogExampleActivity : ComponentActivity() {
                 }
             )
 
-            SetSystemUI()
-            BlogExampleScreen(
-                launcher = launcher,
-                blogExampleViewModel = blogExampleViewModel
-            )
+            Scaffold(
+                containerColor = Color.LightGray // 파란색 배경 적용
+            ) { paddingValues ->
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(paddingValues)
+                        .background(color = Color.White)
+                ) {
+                    BlogExampleScreen(
+                        launcher = launcher,
+                        blogExampleViewModel = blogExampleViewModel
+                    )
 
-            Toast(stream = blogExampleViewModel.toast)
+                    Toast(stream = blogExampleViewModel.toast)
+                }
+            }
+
+//            Box(
+//                modifier = Modifier
+//                    .fillMaxSize()
+//                    .windowInsetsPadding(WindowInsets.safeDrawing)
+//            ) {
+//                BlogExampleScreen(
+//                    launcher = launcher,
+//                    blogExampleViewModel = blogExampleViewModel
+//                )
+//
+//                Toast(stream = blogExampleViewModel.toast)
+//            }
         }
     }
 }
