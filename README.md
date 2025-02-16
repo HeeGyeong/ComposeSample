@@ -26,7 +26,7 @@ Jetpack Compose를 공부하고 실무에 적용하면서 발생했던 이슈와
 - Kotlin 1.9.0
 - Android Studio
 - Compose 1.5.2
-- Target SDK 34
+- Target SDK 35
 - Min SDK 24
 - Java 17
 
