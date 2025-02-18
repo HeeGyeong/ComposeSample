@@ -102,10 +102,14 @@ fun AppbarSample(
     )
 
     Scaffold(
+        // Compose의 Modifier는 chaining 방식으로 동작하기 때문에 아래와 같은 형태가 가능하다.
         modifier = Modifier
             .fillMaxSize()
-            .background(color = Color.LightGray)
-            .windowInsetsPadding(WindowInsets.systemBars) // 위, 아래 둘 다
+            .background(color = Color.LightGray) // status bar color
+            .windowInsetsPadding(WindowInsets.statusBars)
+            .background(color = Color.Red) // navigation bar color
+            .windowInsetsPadding(WindowInsets.navigationBars)
+//            .windowInsetsPadding(WindowInsets.systemBars) // 위, 아래 둘 다
 //            .windowInsetsPadding(WindowInsets.statusBars) // 위
 //            .windowInsetsPadding(WindowInsets.navigationBars) // 아래
         ,
