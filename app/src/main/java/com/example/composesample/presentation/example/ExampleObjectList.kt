@@ -10,15 +10,6 @@ fun exampleObjectList(): ArrayList<ExampleObject> {
 
     insertExampleObject.add(
         ExampleObject(
-            title = "Lazy Column Keyboard Issue",
-            description = "LazyColumn 내부에 TextField Component가 있을 때, keyboard가 정상적으로 보이지 않는 문제.",
-            blogUrl = "https://heegs.tistory.com/142",
-            exampleType = ConstValue.LazyColumnExample
-        )
-    )
-
-    insertExampleObject.add(
-        ExampleObject(
             title = "Click Event",
             description = "Button 사용 시 고려할만한 클릭 이벤트 효과 방지 및 다중 클릭 이벤트 방지 방법",
             blogUrl = "https://heegs.tistory.com/143",
@@ -337,6 +328,16 @@ fun exampleObjectList(): ArrayList<ExampleObject> {
             description = "CompositionLocal을 사용하는 방법에 대해 알아보기 위한 예제.",
             blogUrl = "",
             exampleType = ConstValue.CompositionLocalExample,
+        )
+    )
+
+    insertExampleObject.add(
+        ExampleObject(
+            lastUpdate = "25. 02. 19",
+            title = "Lazy Column Keyboard Issue",
+            description = "LazyColumn 내부에 TextField Component가 있을 때, keyboard가 정상적으로 보이지 않는 문제. + SDK 35 대응",
+            blogUrl = "https://heegs.tistory.com/142",
+            exampleType = ConstValue.LazyColumnExample
         )
     )
 
