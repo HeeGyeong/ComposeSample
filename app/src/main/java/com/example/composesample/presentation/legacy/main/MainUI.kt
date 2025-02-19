@@ -14,7 +14,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.captionBar
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -22,7 +22,6 @@ import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
-import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -108,7 +107,8 @@ fun AppbarSample(
             .background(color = Color.LightGray) // status bar color
             .windowInsetsPadding(WindowInsets.statusBars)
             .background(color = Color.Red) // navigation bar color
-            .windowInsetsPadding(WindowInsets.navigationBars)
+//            .windowInsetsPadding(WindowInsets.navigationBars)
+            .padding(WindowInsets.navigationBars.asPaddingValues()) // 2가지 방식을 사용하여 padding 추가
 //            .windowInsetsPadding(WindowInsets.systemBars) // 위, 아래 둘 다
 //            .windowInsetsPadding(WindowInsets.statusBars) // 위
 //            .windowInsetsPadding(WindowInsets.navigationBars) // 아래
