@@ -108,6 +108,7 @@ gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 okhttpLoggingInterceptor = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "okhttpLoggingInterceptor" }
 
 ktorClientAndroid = { module = "io.ktor:ktor-client-android", version.ref = "ktor" }
+ktorClientOkHttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
 ktorClientCore = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
 ktorClientLogging = { module = "io.ktor:ktor-client-logging", version.ref = "ktor" }
 ktorClientContentNegotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
@@ -194,6 +195,7 @@ retrofit = [
 
 ktor = [
     "ktorClientAndroid",
+    "ktorClientOkHttp",
     "ktorClientContentNegotiation",
     "ktorClientCore",
     "ktorClientLogging",

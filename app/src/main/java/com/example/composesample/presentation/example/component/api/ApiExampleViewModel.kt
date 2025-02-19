@@ -13,6 +13,7 @@ import com.example.domain.model.PostData
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.request.*
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import retrofit2.Call
@@ -26,6 +27,11 @@ class ApiExampleViewModel(
     private val postApiInterface: PostApiInterface,
     private val ktorClient: HttpClient
 ) : AndroidViewModel(application) {
+    // viewModelScope를 사용할 때 예외 처리를 위한 CoroutineExceptionHandler
+    private val handler = CoroutineExceptionHandler { _, throwable ->
+        Log.e("NetworkLog", "Coroutine Exception Caught: $throwable")
+    }
+
     // Network connect 관련 LiveData
     private val networkStatusLiveData = NetworkStatusLiveData(application)
     fun getNetworkStatus(): LiveData<Boolean> = networkStatusLiveData
@@ -47,7 +53,7 @@ class ApiExampleViewModel(
 
     // 기존 Retrofit 호출 함수
     fun fetchPosts() {
-        viewModelScope.launch {
+        viewModelScope.launch(handler) {
             postApiInterface.getPosts().enqueue(object : Callback<List<PostData>> {
                 override fun onResponse(
                     call: Call<List<PostData>>,
@@ -81,6 +87,11 @@ class ApiExampleViewModel(
             _ktorPosts.postValue(response)
             _errorMessage.postValue(null) // Clear any previous error
             Log.d("NetworkLog", "Ktor Api call Success")
+
+            // Post인 경우 Body 값을 넣는 방법.
+//            ktorClient.post {
+//                setBody(111)
+//            }
         } catch (e: IOException) {
             _errorMessage.postValue("Network error: ${e.message}")
         } catch (e: HttpException) {

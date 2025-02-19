@@ -10,7 +10,20 @@ import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
 
+/**
+ * Ktor에서 사용하는 API 호출 함수
+ */
 suspend fun HttpClient.getPosts(): List<PostData> {
+    // state code에 따른 별도 처리 로직 예시
+//    val httpResponse = this.get("/posts")
+//    when (httpResponse.status.value) {
+//        in 200..299 -> {
+//            // Success case
+//        }
+//        else -> {
+//            // Error case
+//        }
+//    }
     return this.get("/posts").body()
 }
 

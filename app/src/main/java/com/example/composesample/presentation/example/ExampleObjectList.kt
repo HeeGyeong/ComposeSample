@@ -262,16 +262,6 @@ fun exampleObjectList(): ArrayList<ExampleObject> {
 
     insertExampleObject.add(
         ExampleObject(
-            lastUpdate = "24. 12. 21",
-            title = "Ktor API Example",
-            description = "Ktor을 사용하여 API를 호출하는 예제",
-            blogUrl = "",
-            exampleType = ConstValue.KtorExample
-        )
-    )
-
-    insertExampleObject.add(
-        ExampleObject(
             lastUpdate = "25. 01. 07",
             title = "Server-Sent Events Example",
             description = "SSE를 사용하여 서버로부터 실시간 업데이트를 받는 예제",
@@ -338,6 +328,16 @@ fun exampleObjectList(): ArrayList<ExampleObject> {
             description = "LazyColumn 내부에 TextField Component가 있을 때, keyboard가 정상적으로 보이지 않는 문제. + SDK 35 대응",
             blogUrl = "https://heegs.tistory.com/142",
             exampleType = ConstValue.LazyColumnExample
+        )
+    )
+
+    insertExampleObject.add(
+        ExampleObject(
+            lastUpdate = "25. 02. 20",
+            title = "Ktor API Example",
+            description = "Ktor을 사용하여 API를 호출하는 예제",
+            blogUrl = "",
+            exampleType = ConstValue.KtorExample
         )
     )
 

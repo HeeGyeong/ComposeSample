@@ -7,6 +7,7 @@ import io.ktor.client.plugins.logging.*
 import io.ktor.serialization.gson.*
 import org.koin.dsl.module
 import android.util.Log
+import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.plugins.DefaultRequest
 import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.request.header
@@ -21,11 +22,23 @@ private object NetworkConstants {
 
 val ktorModule = module {
     single {
-        HttpClient(Android) {
+        HttpClient(OkHttp) {
 
             defaultRequest {
                 url(NetworkConstants.BASE_URL)
+                header("X-Naver-Client-Id", "33chRuAiqlSn5hn8tIme")
             }
+
+            /**
+             * Header 설정
+             *
+             * DefaultRequest를 사용.
+             */
+            install(DefaultRequest) { // defaultRequest { ... } 와 동일한 역할
+                header("X-Naver-Client-Secret", "fyfwt9PCUN")
+            }
+
+
             /**
              * HttpLoggingInterceptor
              *
@@ -50,21 +63,19 @@ val ktorModule = module {
             install(ContentNegotiation) {
                 gson()
             }
-
-            /**
-             * Header 설정
-             *
-             * DefaultRequest를 사용.
-             */
-            install(DefaultRequest) {
-                header("X-Naver-Client-Id", "33chRuAiqlSn5hn8tIme")
-                header("X-Naver-Client-Secret", "fyfwt9PCUN")
-            }
             
-            // HTTP 클라이언트 엔진 설정
+            // Android Engine일 때, HTTP 클라이언트 엔진 설정
+//            engine {
+//                connectTimeout = NetworkConstants.CONNECT_TIMEOUT
+//                socketTimeout = NetworkConstants.SOCKET_TIMEOUT
+//            }
+
+            // OkHttp Engine일 때, HTTP 클라이언트 엔진 설정
             engine {
-                connectTimeout = NetworkConstants.CONNECT_TIMEOUT
-                socketTimeout = NetworkConstants.SOCKET_TIMEOUT
+                config {
+                    connectTimeout(NetworkConstants.CONNECT_TIMEOUT.toLong(), java.util.concurrent.TimeUnit.MILLISECONDS)
+                    readTimeout(NetworkConstants.SOCKET_TIMEOUT.toLong(), java.util.concurrent.TimeUnit.MILLISECONDS)
+                }
             }
         }
     }
