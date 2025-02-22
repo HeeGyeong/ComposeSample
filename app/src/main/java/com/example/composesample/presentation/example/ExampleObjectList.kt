@@ -341,6 +341,16 @@ fun exampleObjectList(): ArrayList<ExampleObject> {
         )
     )
 
+    insertExampleObject.add(
+        ExampleObject(
+            lastUpdate = "25. 02. 22",
+            title = "Init Case Test Example (작업 중)",
+            description = "Compose 환경에서 데이터를 init 하는 케이스를 확인해보는 예제 (작업 중)",
+            blogUrl = "",
+            exampleType = ConstValue.InitTestExample
+        )
+    )
+
     return insertExampleObject
 }
 

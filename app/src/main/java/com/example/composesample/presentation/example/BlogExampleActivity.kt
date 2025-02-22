@@ -81,6 +81,7 @@ import com.example.composesample.presentation.example.component.effect.SideEffec
 import com.example.composesample.presentation.example.component.ffmpeg.FfmpegEncodingUI
 import com.example.composesample.presentation.example.component.flexbox.FlexBoxUI
 import com.example.composesample.presentation.example.component.header.StickyHeaderExampleUI
+import com.example.composesample.presentation.example.component.init.InitTestExampleUI
 import com.example.composesample.presentation.example.component.intent.PassingIntentDataExample
 import com.example.composesample.presentation.example.component.lazycolumn.LazyColumnFlingBehaviorExample
 import com.example.composesample.presentation.example.component.lazycolumn.LazyColumnIssueUI
@@ -120,6 +121,7 @@ import com.example.composesample.util.ConstValue.Companion.ExampleType
 import com.example.composesample.util.ConstValue.Companion.FfmpegExample
 import com.example.composesample.util.ConstValue.Companion.FlexBoxLayoutExample
 import com.example.composesample.util.ConstValue.Companion.FlingBehaviorExample
+import com.example.composesample.util.ConstValue.Companion.InitTestExample
 import com.example.composesample.util.ConstValue.Companion.IntentType
 import com.example.composesample.util.ConstValue.Companion.KtorExample
 import com.example.composesample.util.ConstValue.Companion.LazyColumnExample
@@ -792,6 +794,10 @@ fun ExampleCaseUI(
 
                         CompositionLocalExample -> {
                             CompositionLocalExampleUI(onBackEvent)
+                        }
+
+                        InitTestExample -> {
+                            InitTestExampleUI(onBackEvent)
                         }
 
                         else -> {

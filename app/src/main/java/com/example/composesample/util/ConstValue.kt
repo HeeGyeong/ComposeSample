@@ -52,6 +52,7 @@ class ConstValue {
         const val UIShimmerExample = "uiShimmerExample"
         const val TextShimmerExample = "textShimmerExample"
         const val CompositionLocalExample = "compositonLocalExample"
+        const val InitTestExample = "initTestExample"
 
         // SubCategory
         const val FlingBehavior = "flingBehaviorExampleList"
