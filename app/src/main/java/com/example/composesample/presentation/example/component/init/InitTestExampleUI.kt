@@ -32,7 +32,7 @@ fun InitTestExampleUI(
             .background(color = Color.Black)
     ) {
         MainHeader(
-            title = "Text Shimmer Example",
+            title = "Init Test Example",
             onBackIconClicked = onBackButtonClick
         )
     }
