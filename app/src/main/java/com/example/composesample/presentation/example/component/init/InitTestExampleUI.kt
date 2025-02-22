@@ -1,14 +1,13 @@
 package com.example.composesample.presentation.example.component.init
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.composesample.presentation.MainHeader
 import org.koin.androidx.compose.koinViewModel
 
@@ -17,13 +16,15 @@ fun InitTestExampleUI(
     onBackButtonClick: () -> Unit
 ) {
     val initTestViewModel: InitTestViewModel = koinViewModel()
-    val launchedEffectLoading = initTestViewModel.isLaunchedEffectLoading.collectAsState().value
 
+    val initLoadingFlag = initTestViewModel.isInitLoading.collectAsStateWithLifecycle()
+
+    // ui가 다시 그려질 때 마다 호출 된다.
     LaunchedEffect(key1 = Unit) {
-        println("Launched flag before: $launchedEffectLoading")
         initTestViewModel.changeLaunchedEffectLoading()
-        println("Launched flag after: $launchedEffectLoading")
     }
+
+    println("initLoading flag : ${initLoadingFlag.value}")
 
     Column(
         modifier = Modifier
