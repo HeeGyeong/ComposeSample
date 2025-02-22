@@ -205,7 +205,7 @@ class BlogExampleActivity : ComponentActivity() {
                     .fillMaxSize()
                     .background(color = Color.Yellow)
                     .padding(WindowInsets.systemBars.asPaddingValues())
-                    .background(color = Color.Black)
+                    .background(color = Color.White)
             ) {
                 BlogExampleScreen(
                     launcher = launcher,
