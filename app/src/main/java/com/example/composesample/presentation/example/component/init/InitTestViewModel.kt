@@ -1,5 +1,6 @@
 package com.example.composesample.presentation.example.component.init
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.delay
@@ -26,7 +27,13 @@ class InitTestViewModel : ViewModel() {
             initialValue = false // 해당 flow가 생성될 때의 초기값
         )
 
+    private val _isTestLoadingCount = MutableStateFlow(0)
+    val isTestLoadingCount = _isTestLoadingCount.asStateFlow()
+
     fun changeLaunchedEffectLoading() {
+        Log.d("TAG", "LaunchedEffect Loading")
+        _isTestLoadingCount.value++
+
         viewModelScope.launch {
             _isLaunchedEffectLoading.value = true
             delay(3000L)
@@ -35,6 +42,9 @@ class InitTestViewModel : ViewModel() {
     }
 
     private fun changeViewModelInitLoading() {
+        Log.d("TAG", "ViewModel Init Loading")
+        _isTestLoadingCount.value++
+
         viewModelScope.launch {
             _isViewModelInitLoading.value = true
             delay(3000L)
@@ -43,6 +53,9 @@ class InitTestViewModel : ViewModel() {
     }
 
     private fun changeInitLoading() {
+        Log.d("TAG", "Init Loading")
+        _isTestLoadingCount.value++
+
         viewModelScope.launch {
             _isInitLoading.value = true
             delay(3000L)
@@ -52,6 +65,7 @@ class InitTestViewModel : ViewModel() {
 
     // viewModel instance가 생성될 때 한번 호출 된다.
     init {
+        _isTestLoadingCount.value = 0
         changeViewModelInitLoading()
     }
 }
