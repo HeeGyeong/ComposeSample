@@ -253,7 +253,7 @@ fun MainHeader(
                     onBackIconClicked.invoke()
                 },
             imageVector = Icons.Filled.ArrowBack,
-            contentDescription = ""
+            contentDescription = "Header_back_button"
         )
     },
 ) {
