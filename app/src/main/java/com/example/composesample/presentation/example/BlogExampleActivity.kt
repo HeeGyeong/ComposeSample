@@ -1,11 +1,17 @@
 package com.example.composesample.presentation.example
 
+import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.content.pm.ShortcutInfo
+import android.content.pm.ShortcutManager
+import android.graphics.drawable.Icon
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResultCallback
@@ -61,6 +67,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.getSystemService
+import com.example.composesample.R
 import com.example.composesample.presentation.MainHeader
 import com.example.composesample.presentation.example.component.animation.AnimationExampleUI
 import com.example.composesample.presentation.example.component.api.ApiDisconnectExampleUI
@@ -220,6 +229,45 @@ class BlogExampleActivity : ComponentActivity() {
     }
 }
 
+@OptIn(ExperimentalAnimationApi::class)
+@SuppressLint("NewApi")
+private fun createDynamicShortcut(context: Context) {
+    val shortcutManager = context.getSystemService(ShortcutManager::class.java)
+
+    val dynamicShortCut = ShortcutInfo.Builder(context, "shortcut_id")
+        .setShortLabel("dynamicShortCut")
+        .setLongLabel("dynamicShortCut Long Label")
+        .setIntent(
+            Intent(context, BlogExampleActivity::class.java).apply {
+                action = Intent.ACTION_VIEW
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or
+                        Intent.FLAG_ACTIVITY_CLEAR_TASK
+            }
+        )
+        .build()
+
+    shortcutManager.addDynamicShortcuts(listOf(dynamicShortCut))
+
+    val pinShortCut = ShortcutInfo.Builder(context, "shortcut_id_2")
+        .setShortLabel("pinShortCut")
+        .setLongLabel("pinShortCut Long Label")
+        .setIntent(
+            Intent(context, BlogExampleActivity::class.java).apply {
+                action = Intent.ACTION_VIEW
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or
+                        Intent.FLAG_ACTIVITY_CLEAR_TASK
+            }
+        )
+        .build()
+
+    // 핀 숏컷 요청
+    val pinnedShortcutCallbackIntent = shortcutManager.createShortcutResultIntent(pinShortCut)
+    val successCallback = PendingIntent.getBroadcast(context, 0,
+        pinnedShortcutCallbackIntent, PendingIntent.FLAG_IMMUTABLE)
+
+    shortcutManager.requestPinShortcut(pinShortCut, successCallback.intentSender)
+}
+
 @Composable
 fun BlogExampleScreen(
     launcher: ActivityResultLauncher<String>,
@@ -286,6 +334,30 @@ fun ExampleListContent(
                     }
                 }
             )
+        }
+
+        item {
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 20.dp, vertical = 10.dp)
+                    .noRippleClickable {
+                        createDynamicShortcut(context)
+                    },
+                shape = RoundedCornerShape(12.dp),
+                backgroundColor = Color.DarkGray,
+            ) {
+                Column(
+                    modifier = Modifier.padding(20.dp)
+                ) {
+                    Text(
+                        modifier = Modifier.fillMaxWidth(),
+                        text = "바로가기 만들기",
+                        color = Color.White,
+                        style = getTextStyle(18)
+                    )
+                }
+            }
         }
 
         when {

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- 앱 설치 시 바로 확인 가능한 shortcut -->
+<!-- 앱 설치 시 바로 확인 가능한 shortcut list -->
 <shortcuts xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android">
     <shortcut
