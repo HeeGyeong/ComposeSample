@@ -144,6 +144,8 @@ ComposeSample
 11. **lazycolumn**: 
 - LazyColumn 성능 최적화
 - FlingBehavior 커스터마이징
+- reverse LayzyColumn 구현
+- targetSDK 35 대응
 
 12. **lottie**: 
 - Lottie 애니메이션 구현
@@ -176,6 +178,7 @@ ComposeSample
 19. **shimmer**: 
 - 로딩 상태 Shimmer 효과
 - 커스텀 Shimmer 애니메이션
+- text Shimmer 효과 추가
 
 20. **swipe**: 
 - Swipe to Dismiss 구현
@@ -208,6 +211,18 @@ ComposeSample
 27. **sse**: 
 - Server-Sent Events 구현
 - 실시간 데이터 스트리밍 처리
+
+28. **test**: 
+- 간단한 UI Test 예제 구현
+
+29. **CompositionLocal**: 
+- CompositionLocal을 사용한 데이터 공유
+- 다양한 컴포저블에서 데이터 전달
+
+30. **shortcuts**: 
+- 안드로이드 shortcuts 기능 구현
+- dynamic shortcuts, static shortcuts 구현
+
 
 ## 주의사항
 - 일부 예제(예: Permission 관련)는 기본 설정이 필요할 수 있습니다
