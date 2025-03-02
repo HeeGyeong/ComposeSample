@@ -12,6 +12,9 @@
         <intent
             android:action="android.intent.action.VIEW"
             android:targetClass="com.example.composesample.presentation.example.BlogExampleActivity"
-            android:targetPackage="com.example.composesample" />
+            android:targetPackage="com.example.composesample">
+
+            <extra android:name="shortcut_key" android:value="type_xml"/>
+        </intent>
     </shortcut>
 </shortcuts>

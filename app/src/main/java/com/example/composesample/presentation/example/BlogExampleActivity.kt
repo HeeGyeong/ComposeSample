@@ -132,6 +132,10 @@ import com.example.composesample.util.ConstValue.Companion.PullToRefreshExample
 import com.example.composesample.util.ConstValue.Companion.ReverseLazyColumnExample
 import com.example.composesample.util.ConstValue.Companion.SSEExample
 import com.example.composesample.util.ConstValue.Companion.ScaffoldDrawExample
+import com.example.composesample.util.ConstValue.Companion.ShortCutKey
+import com.example.composesample.util.ConstValue.Companion.ShortCutTypeDynamic
+import com.example.composesample.util.ConstValue.Companion.ShortCutTypePin
+import com.example.composesample.util.ConstValue.Companion.ShortCutTypeXML
 import com.example.composesample.util.ConstValue.Companion.ShortcutExample
 import com.example.composesample.util.ConstValue.Companion.SideEffectExample
 import com.example.composesample.util.ConstValue.Companion.StickyHeaderExample
@@ -170,10 +174,18 @@ class BlogExampleActivity : ComponentActivity() {
         val launcher = registerForActivityResult(contract, callback)
 
         setContent {
+            val context = LocalContext.current as BlogExampleActivity
             val type = intent.getStringExtra(IntentType) ?: ExampleType
             val blogExampleViewModel: BlogExampleViewModel = koinViewModel()
 
             blogExampleViewModel.initExampleObject()
+
+            val enterShortcutCase = when {
+                context.intent.getStringExtra(ShortCutKey) == ShortCutTypeXML -> 1
+                context.intent.getStringExtra(ShortCutKey) == ShortCutTypeDynamic -> 2
+                context.intent.getStringExtra(ShortCutKey) == ShortCutTypePin -> 3
+                else -> 0
+            }
 
             blogExampleViewModel.setStudyType(
                 when (type) {
@@ -181,6 +193,8 @@ class BlogExampleActivity : ComponentActivity() {
                     else -> ExampleMoveType.EMPTY
                 }
             )
+
+            // targetSDK 35 example case
 //            Scaffold(
 //                containerColor = Color.LightGray
 //            ) { paddingValues ->
@@ -198,6 +212,23 @@ class BlogExampleActivity : ComponentActivity() {
 //                    Toast(stream = blogExampleViewModel.toast)
 //                }
 //            }
+
+
+            LaunchedEffect(enterShortcutCase) {
+                when (enterShortcutCase) {
+                    1 -> {
+                        blogExampleViewModel.sendToastMessage("Enter Shortcut case : XML")
+                    }
+
+                    2 -> {
+                        blogExampleViewModel.sendToastMessage("Enter Shortcut case : Dynamic")
+                    }
+
+                    3 -> {
+                        blogExampleViewModel.sendToastMessage("Enter Shortcut case : Pin")
+                    }
+                }
+            }
 
             Box(
                 modifier = Modifier

@@ -9,6 +9,12 @@ class ConstValue {
         const val IntentType = "type"
         const val ExampleType = "example"
 
+        // shortcut Type
+        const val ShortCutKey = "shortcut_key"
+        const val ShortCutTypeXML = "type_xml"
+        const val ShortCutTypeDynamic = "type_dynamic"
+        const val ShortCutTypePin = "type_pin"
+
         // Example Value
         const val SSEWikiURL = "https://stream.wikimedia.org/v2/stream/recentchange"
 

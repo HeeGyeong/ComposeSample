@@ -4,6 +4,6 @@
     <string name="progress_wait">Wait Progress</string>
 
     <!-- shortcuts.xml 파일에는 문자열을 리소스로 제공해야한다. -->
-    <string name="shortcut_short_label">SSL</string>
-    <string name="shortcut_long_label">Shortcut Long Label</string>
+    <string name="shortcut_short_label">xmlShortCut</string>
+    <string name="shortcut_long_label">xmlShortCut Long Label</string>
 </resources>
