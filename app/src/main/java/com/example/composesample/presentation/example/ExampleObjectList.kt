@@ -353,7 +353,7 @@ fun exampleObjectList(): ArrayList<ExampleObject> {
 
     insertExampleObject.add(
         ExampleObject(
-            lastUpdate = "25. 02. 26",
+            lastUpdate = "25. 03. 02",
             title = "Shortcut Example (작업 중)",
             description = "Shortcut을 통해 앱을 실행하는 방법에 대해 알아보기 위한 예제. (작업 중)",
             blogUrl = "",
