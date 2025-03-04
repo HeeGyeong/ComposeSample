@@ -84,6 +84,10 @@ reorderableCalvin = "2.3.0"
 # SSE
 okhttpEventSource = "3.0.0"
 
+# Paging
+paging = "3.2.1"
+pagingCompose = "3.2.1"
+
 [plugins]
 android-application = { id = "com.android.application", version.ref = "applicationVersion" }
 android-library = { id = "com.android.library", version.ref = "libraryVersion" }
@@ -184,6 +188,10 @@ reorderableCalvin = { module = "sh.calvin.reorderable:reorderable", version.ref 
 # SSE
 okhttpEventSource = { module = "com.launchdarkly:okhttp-eventsource", version.ref = "okhttpEventSource" }
 
+# Paging
+pagingRuntime = { module = "androidx.paging:paging-runtime", version.ref = "paging" }
+pagingCompose = { module = "androidx.paging:paging-compose", version.ref = "pagingCompose" }
+
 [bundles]
 retrofit = [
     "retrofit",
@@ -271,4 +279,9 @@ workManager = [
 dragAndDrop = [
     "reorderable",
     "reorderableCalvin"
+]
+
+paging = [
+    "pagingRuntime",
+    "pagingCompose"
 ]

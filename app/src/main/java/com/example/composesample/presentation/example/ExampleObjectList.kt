@@ -361,6 +361,16 @@ fun exampleObjectList(): ArrayList<ExampleObject> {
         )
     )
 
+    insertExampleObject.add(
+        ExampleObject(
+            lastUpdate = "25. 03. 04",
+            title = "Paging Example (작업 중)",
+            description = "Paging 라이브러리 통해 무한 스크롤을 구현해보는 예제. (작업 중)",
+            blogUrl = "",
+            exampleType = ConstValue.PagingExample
+        )
+    )
+
     return insertExampleObject
 }
 

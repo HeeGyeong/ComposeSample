@@ -72,6 +72,9 @@ dependencies {
     // SSE
     implementation(libs.okhttpEventSource)
 
+    // Paging
+    implementation(libs.bundles.paging)
+
     // Unit Test
     testImplementation(libs.bundles.unitTest)
 

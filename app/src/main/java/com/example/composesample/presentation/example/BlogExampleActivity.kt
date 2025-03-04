@@ -85,6 +85,7 @@ import com.example.composesample.presentation.example.component.lottie.LottieExa
 import com.example.composesample.presentation.example.component.mvi.MVIExampleUI
 import com.example.composesample.presentation.example.component.navigation.BottomNavigationActivity
 import com.example.composesample.presentation.example.component.pager.PullScreenPagerUI
+import com.example.composesample.presentation.example.component.paging.PagingExampleUI
 import com.example.composesample.presentation.example.component.powersave.PowerSaveModeExampleUI
 import com.example.composesample.presentation.example.component.recorder.AudioRecorderUI
 import com.example.composesample.presentation.example.component.refresh.PullToRefreshUI
@@ -125,6 +126,7 @@ import com.example.composesample.util.ConstValue.Companion.LottieExample
 import com.example.composesample.util.ConstValue.Companion.MVIExample
 import com.example.composesample.util.ConstValue.Companion.ModalBottomSheetExample
 import com.example.composesample.util.ConstValue.Companion.ModalDrawExample
+import com.example.composesample.util.ConstValue.Companion.PagingExample
 import com.example.composesample.util.ConstValue.Companion.PassingIntentDataExample
 import com.example.composesample.util.ConstValue.Companion.PowerSaveModeExample
 import com.example.composesample.util.ConstValue.Companion.PullScreenPager
@@ -830,6 +832,10 @@ fun ExampleCaseUI(
 
                         ShortcutExample -> {
                             ShortcutExampleUI(onBackEvent)
+                        }
+
+                        PagingExample -> {
+                            PagingExampleUI(onBackEvent)
                         }
 
                         else -> {

@@ -60,6 +60,7 @@ class ConstValue {
         const val CompositionLocalExample = "compositonLocalExample"
         const val InitTestExample = "initTestExample"
         const val ShortcutExample = "shortcutExample"
+        const val PagingExample = "pagingExample"
 
         // SubCategory
         const val FlingBehavior = "flingBehaviorExampleList"
