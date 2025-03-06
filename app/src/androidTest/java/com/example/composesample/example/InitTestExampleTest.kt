@@ -1,6 +1,7 @@
 package com.example.composesample.example
 
 import android.content.pm.ActivityInfo
+import android.util.Log
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertIsDisplayed
@@ -36,7 +37,9 @@ class InitTestExampleUITest {
     @Before
     fun setUp() {
         // ViewModel 초기화
+        Log.d("TAG", "setUp Start")
         viewModel = InitTestViewModel()
+        Log.d("TAG", "setUp Fin")
     }
 
     // 초기 UI 요소들이 제대로 존재하는지 검증
@@ -96,7 +99,7 @@ class InitTestExampleUITest {
         assert(viewModel.isInitLoading.value) { "InitLoading should be true" }
 
         // isTestLoadingCount 값 검증
-        assert(viewModel.isTestLoadingCount.value == 3) { "TestLoadingCount should be 3" }
+        assert(viewModel.testLoadingCount.value == 3) { "TestLoadingCount should be 3" }
 
         verify_loading_count_increments_on_subsequent_trigger()
     }
@@ -109,7 +112,7 @@ class InitTestExampleUITest {
         viewModel.isInitLoading.first { it } // collect가 해제되지 않으므로 동작 X
 
         // Then
-        assert(viewModel.isTestLoadingCount.value == 4) { "TestLoadingCount should be 4" }
+        assert(viewModel.testLoadingCount.value == 4) { "TestLoadingCount should be 4" }
 
         verify_loading_count_after_viewmodel_reset()
     }
@@ -124,7 +127,7 @@ class InitTestExampleUITest {
         newViewModel.isInitLoading.first { it }
 
         // Then
-        assert(newViewModel.isTestLoadingCount.value == 3) { "Loading count should be 3 after ViewModel reset" }
+        assert(newViewModel.testLoadingCount.value == 3) { "Loading count should be 3 after ViewModel reset" }
     }
 
     // 화면 회전 후에도 로딩 상태가 유지되는지 검증
@@ -149,7 +152,7 @@ class InitTestExampleUITest {
 
             // Then
             assert(viewModel.isLaunchedEffectLoading.value) { "LaunchedEffect loading should remain true after rotation" }
-            assert(viewModel.isTestLoadingCount.value == 3) { "Loading count should be 3 after rotation" }
+            assert(viewModel.testLoadingCount.value == 3) { "Loading count should be 3 after rotation" }
         }
     }
 
@@ -166,6 +169,6 @@ class InitTestExampleUITest {
         viewModel.isInitLoading.first { it }
 
         // Then
-        assert(viewModel.isTestLoadingCount.value == 3) { "TestLoadingCount should be 3" }
+        assert(viewModel.testLoadingCount.value == 3) { "TestLoadingCount should be 3" }
     }
 }

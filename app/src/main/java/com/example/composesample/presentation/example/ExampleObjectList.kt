@@ -343,16 +343,6 @@ fun exampleObjectList(): ArrayList<ExampleObject> {
 
     insertExampleObject.add(
         ExampleObject(
-            lastUpdate = "25. 02. 22",
-            title = "Init Case Test Example (작업 중)",
-            description = "Compose 환경에서 데이터를 init 하는 케이스를 확인해보는 예제 (작업 중)",
-            blogUrl = "",
-            exampleType = ConstValue.InitTestExample
-        )
-    )
-
-    insertExampleObject.add(
-        ExampleObject(
             lastUpdate = "25. 03. 05",
             title = "Paging Example",
             description = "Paging 라이브러리 통해 무한 스크롤을 구현해보는 예제.",
@@ -368,6 +358,16 @@ fun exampleObjectList(): ArrayList<ExampleObject> {
             description = "Shortcut을 통해 앱을 실행하는 방법에 대해 알아보기 위한 예제.\n블로그는 22년도 글이지만 Base는 그대로입니다.",
             blogUrl = "https://heegs.tistory.com/130",
             exampleType = ConstValue.ShortcutExample
+        )
+    )
+
+    insertExampleObject.add(
+        ExampleObject(
+            lastUpdate = "25. 03. 07",
+            title = "Init Case Test Example",
+            description = "Compose 환경에서 데이터를 init 하는 케이스를 확인해보는 예제",
+            blogUrl = "https://heegs.tistory.com/185",
+            exampleType = ConstValue.InitTestExample
         )
     )
 

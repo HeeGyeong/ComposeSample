@@ -20,21 +20,30 @@ class InitTestViewModel : ViewModel() {
 
     private val _isInitLoading = MutableStateFlow(false)
     val isInitLoading = _isInitLoading
-        .onStart { changeInitLoading() } // 해당 flow가 시작될 때 changeInitLoading() 호출
+        .onStart { changeInitLoading() } // StateFlow를 flow로 변환, 해당 flow가 시작될 때 changeInitLoading() 호출
         .stateIn ( // flow 상태를 stateFlow로 반환
             scope = viewModelScope, // 해당 flow가 생성될 때의 scope
             started = SharingStarted.WhileSubscribed(5000L), // 구독 관련 설정. 구독 해제 후 5초가 지나면 데이터 유실.
             initialValue = false // 해당 flow가 생성될 때의 초기값
         )
 
-    private val _isTestLoadingCount = MutableStateFlow(0)
-    val isTestLoadingCount = _isTestLoadingCount.asStateFlow()
+    private val _testLoadingCount = MutableStateFlow(0)
+    val testLoadingCount = _testLoadingCount.asStateFlow()
+
+    // viewModel instance가 생성될 때 한번 호출 된다.
+    init {
+        Log.d("TAG", "Init ViewModel")
+        _testLoadingCount.value = 0
+        changeViewModelInitLoading()
+    }
 
     fun changeLaunchedEffectLoading() {
         Log.d("TAG", "LaunchedEffect Loading")
-        _isTestLoadingCount.value++
+        _testLoadingCount.value++
 
         viewModelScope.launch {
+            Log.d("TAG", "LaunchedEffect loadingCount : ${testLoadingCount.value}")
+
             _isLaunchedEffectLoading.value = true
             delay(3000L)
             _isLaunchedEffectLoading.value = false
@@ -43,9 +52,10 @@ class InitTestViewModel : ViewModel() {
 
     private fun changeViewModelInitLoading() {
         Log.d("TAG", "ViewModel Init Loading")
-        _isTestLoadingCount.value++
+        _testLoadingCount.value++
 
         viewModelScope.launch {
+            Log.d("TAG", "ViewModel loadingCount : ${testLoadingCount.value}")
             _isViewModelInitLoading.value = true
             delay(3000L)
             _isViewModelInitLoading.value = false
@@ -54,18 +64,13 @@ class InitTestViewModel : ViewModel() {
 
     private fun changeInitLoading() {
         Log.d("TAG", "Init Loading")
-        _isTestLoadingCount.value++
+        _testLoadingCount.value++
 
         viewModelScope.launch {
+            Log.d("TAG", "changeInitLoading loadingCount : ${testLoadingCount.value}")
             _isInitLoading.value = true
             delay(3000L)
             _isInitLoading.value = false
         }
-    }
-
-    // viewModel instance가 생성될 때 한번 호출 된다.
-    init {
-        _isTestLoadingCount.value = 0
-        changeViewModelInitLoading()
     }
 }
