@@ -353,21 +353,21 @@ fun exampleObjectList(): ArrayList<ExampleObject> {
 
     insertExampleObject.add(
         ExampleObject(
-            lastUpdate = "25. 03. 02",
-            title = "Shortcut Example (작업 중)",
-            description = "Shortcut을 통해 앱을 실행하는 방법에 대해 알아보기 위한 예제. (작업 중)",
-            blogUrl = "",
-            exampleType = ConstValue.ShortcutExample
-        )
-    )
-
-    insertExampleObject.add(
-        ExampleObject(
             lastUpdate = "25. 03. 05",
             title = "Paging Example",
             description = "Paging 라이브러리 통해 무한 스크롤을 구현해보는 예제.",
             blogUrl = "",
             exampleType = ConstValue.PagingExample
+        )
+    )
+
+    insertExampleObject.add(
+        ExampleObject(
+            lastUpdate = "25. 03. 06",
+            title = "Shortcut Example",
+            description = "Shortcut을 통해 앱을 실행하는 방법에 대해 알아보기 위한 예제.\n블로그는 22년도 글이지만 Base는 그대로입니다.",
+            blogUrl = "https://heegs.tistory.com/130",
+            exampleType = ConstValue.ShortcutExample
         )
     )
 
