@@ -1,5 +1,14 @@
 # Dependency Injection Architecture Documentation
 
+## Table of Contents
+- [Core Specifications](#core-specifications)
+- [Module Specifications](#module-specifications)
+- [Implementation Rules](#implementation-rules)
+- [Usage Examples](#usage-examples)
+- [Validation Rules](#validation-rules)
+- [Testing Strategies](#testing-strategies)
+- [Performance Monitoring](#performance-monitoring)
+
 ## Core Specifications
 
 ### Framework Configuration
