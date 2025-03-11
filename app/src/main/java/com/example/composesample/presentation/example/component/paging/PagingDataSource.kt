@@ -4,7 +4,7 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import kotlinx.coroutines.delay
 
-class PagingDataSourceExample : PagingSource<Int, String>() {
+class PagingDataSource : PagingSource<Int, String>() {
     // 실제 데이터 로드 로직
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, String> {
         val page = params.key ?: 0 // 현재 페이지 번호
@@ -27,9 +27,9 @@ class PagingDataSourceExample : PagingSource<Int, String>() {
 
     // override 필수
     override fun getRefreshKey(state: PagingState<Int, String>): Int? {
-    return state.anchorPosition?.let { anchorPosition ->
-        state.closestPageToPosition(anchorPosition)?.prevKey?.plus(1)
-            ?: state.closestPageToPosition(anchorPosition)?.nextKey?.minus(1)
+        return state.anchorPosition?.let { anchorPosition ->
+            state.closestPageToPosition(anchorPosition)?.prevKey?.plus(1)
+                ?: state.closestPageToPosition(anchorPosition)?.nextKey?.minus(1)
+        }
     }
-}
 }

@@ -18,7 +18,7 @@ class PagingViewModel : ViewModel() {
 
     val pagingDataFlow: Flow<PagingData<String>> = Pager(
         config = config,
-        pagingSourceFactory = { PagingDataSourceExample() } // 데이터 로드 처리
+        pagingSourceFactory = { PagingDataSource() } // 데이터 로드 처리
     )
         .flow // Pager를 Flow<PagingData>로 변환
         .cachedIn(viewModelScope) // 페이징 데이터를 ViewModel 스코프에서 캐싱
