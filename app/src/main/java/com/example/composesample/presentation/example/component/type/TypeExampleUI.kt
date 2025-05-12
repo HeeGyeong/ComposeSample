@@ -18,8 +18,6 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -27,7 +25,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
-import com.example.composesample.presentation.example.component.paging.PagingViewModel
 import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -35,19 +32,18 @@ import org.koin.androidx.compose.koinViewModel
 fun TypeExampleUI(onBackButtonClick: () -> Unit) {
     val viewModelStoreOwner = checkNotNull(LocalViewModelStoreOwner.current)
     val viewModel = koinViewModel<TypeExampleViewModel>(owner = viewModelStoreOwner)
-    
-    // ViewModel에서 데이터 수집
-    val a1 = viewModel.a1.collectAsState().value
-    val a2 = viewModel.a2.collectAsState().value
-    val b1 = viewModel.b1.collectAsState().value
-    val b2 = viewModel.b2.collectAsState().value
-    val c1 = viewModel.c1.collectAsState().value
-    val c2 = viewModel.c2.collectAsState().value
-    val d1 = viewModel.d1.collectAsState().value
-    val d2 = viewModel.d2.collectAsState().value
-    val e1 = viewModel.e1.collectAsState().value
-    val e2 = viewModel.e2.collectAsState().value
-    
+
+    val intListMutable = viewModel.intListMutable
+    val intListImmutable = viewModel.intListImmutable
+    val floatListMutable = viewModel.floatListMutable
+    val floatListImmutable = viewModel.floatListImmutable
+    val stringBuilderResult = viewModel.stringBuilderResult
+    val buildStringResult = viewModel.buildStringResult
+    val numberSet = viewModel.numberSet
+    val emptySet = viewModel.emptySet
+    val stringMap = viewModel.stringMap
+    val emptyMap = viewModel.emptyMap
+
     LazyColumn(modifier = Modifier.padding(horizontal = 20.dp)) {
         stickyHeader {
             Box(
@@ -63,7 +59,7 @@ fun TypeExampleUI(onBackButtonClick: () -> Unit) {
                     ) {
                         Icon(Icons.Filled.ArrowBack, contentDescription = "뒤로가기")
                     }
-                    
+
                     Text(
                         modifier = Modifier
                             .align(Alignment.CenterVertically)
@@ -74,10 +70,10 @@ fun TypeExampleUI(onBackButtonClick: () -> Unit) {
                 }
             }
         }
-        
+
         item {
             Spacer(modifier = Modifier.height(20.dp))
-            
+
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -88,31 +84,51 @@ fun TypeExampleUI(onBackButtonClick: () -> Unit) {
                 Column(
                     modifier = Modifier.padding(16.dp)
                 ) {
-                    // 첫 번째 행
-                    TypeRow(label1 = a1, label2 = a2)
-                    
+                    Text(
+                        text = "Int 리스트",
+                        fontSize = 16.sp,
+                        modifier = Modifier.padding(bottom = 8.dp)
+                    )
+                    TypeRow(label1 = "$intListMutable", label2 = "$intListImmutable")
+
                     Spacer(modifier = Modifier.height(16.dp))
-                    
-                    // 두 번째 행
-                    TypeRow(label1 = b1, label2 = b2)
-                    
+
+                    Text(
+                        text = "Float 리스트",
+                        fontSize = 16.sp,
+                        modifier = Modifier.padding(bottom = 8.dp)
+                    )
+                    TypeRow(label1 = "$floatListMutable", label2 = "$floatListImmutable")
+
                     Spacer(modifier = Modifier.height(16.dp))
-                    
-                    // 세 번째 행
-                    TypeRow(label1 = c1, label2 = c2)
-                    
+
+                    Text(
+                        text = "문자열 빌더",
+                        fontSize = 16.sp,
+                        modifier = Modifier.padding(bottom = 8.dp)
+                    )
+                    TypeRow(label1 = stringBuilderResult, label2 = buildStringResult)
+
                     Spacer(modifier = Modifier.height(16.dp))
-                    
-                    // 네 번째 행
-                    TypeRow(label1 = d1, label2 = d2)
-                    
+
+                    Text(
+                        text = "Set 컬렉션",
+                        fontSize = 16.sp,
+                        modifier = Modifier.padding(bottom = 8.dp)
+                    )
+                    TypeRow(label1 = "$numberSet", label2 = "$emptySet")
+
                     Spacer(modifier = Modifier.height(16.dp))
-                    
-                    // 다섯 번째 행
-                    TypeRow(label1 = e1, label2 = e2)
+
+                    Text(
+                        text = "Map 컬렉션",
+                        fontSize = 16.sp,
+                        modifier = Modifier.padding(bottom = 8.dp)
+                    )
+                    TypeRow(label1 = "$stringMap", label2 = "$emptyMap")
                 }
             }
-            
+
             Spacer(modifier = Modifier.height(40.dp))
         }
     }
@@ -123,7 +139,6 @@ fun TypeRow(label1: String, label2: String) {
     Row(
         modifier = Modifier.fillMaxWidth()
     ) {
-        // 첫 번째 열
         Text(
             modifier = Modifier
                 .weight(1f)
@@ -132,10 +147,9 @@ fun TypeRow(label1: String, label2: String) {
             text = label1,
             textAlign = TextAlign.Center
         )
-        
+
         Spacer(modifier = Modifier.width(16.dp))
-        
-        // 두 번째 열
+
         Text(
             modifier = Modifier
                 .weight(1f)
