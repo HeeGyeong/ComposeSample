@@ -96,6 +96,7 @@ import com.example.composesample.presentation.example.component.sse.SSEExampleUI
 import com.example.composesample.presentation.example.component.swipe.SwipeToDismissUI
 import com.example.composesample.presentation.example.component.test.UITestExampleUI
 import com.example.composesample.presentation.example.component.text.TextStyleUI
+import com.example.composesample.presentation.example.component.type.TypeExampleUI
 import com.example.composesample.presentation.example.component.version.TargetSDK34Example
 import com.example.composesample.presentation.example.component.webview.WebViewIssueUI
 import com.example.composesample.presentation.example.component.workmanager.WorkManagerUI
@@ -146,6 +147,7 @@ import com.example.composesample.util.ConstValue.Companion.TargetSDK34Permission
 import com.example.composesample.util.ConstValue.Companion.TestExample
 import com.example.composesample.util.ConstValue.Companion.TextShimmerExample
 import com.example.composesample.util.ConstValue.Companion.TextStyleExample
+import com.example.composesample.util.ConstValue.Companion.TypeExample
 import com.example.composesample.util.ConstValue.Companion.UIShimmerExample
 import com.example.composesample.util.ConstValue.Companion.WebViewIssueExample
 import com.example.composesample.util.ConstValue.Companion.WorkManagerExample
@@ -836,6 +838,10 @@ fun ExampleCaseUI(
 
                         PagingExample -> {
                             PagingExampleUI(onBackEvent)
+                        }
+
+                        TypeExample -> {
+                            TypeExampleUI(onBackEvent)
                         }
 
                         else -> {

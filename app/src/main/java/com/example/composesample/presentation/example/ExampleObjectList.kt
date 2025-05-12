@@ -371,6 +371,16 @@ fun exampleObjectList(): ArrayList<ExampleObject> {
         )
     )
 
+    insertExampleObject.add(
+        ExampleObject(
+            lastUpdate = "25. 05. 12",
+            title = "Type Example",
+            description = "각 변수 타입을 보다 kotlin스럽게 변형하여 사용하는 예제",
+            blogUrl = "",
+            exampleType = ConstValue.TypeExample
+        )
+    )
+
     return insertExampleObject
 }
 

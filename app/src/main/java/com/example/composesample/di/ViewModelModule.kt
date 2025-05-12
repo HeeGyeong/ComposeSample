@@ -9,6 +9,7 @@ import com.example.composesample.presentation.example.component.init.InitTestVie
 import com.example.composesample.presentation.example.component.mvi.MVIExampleViewModel
 import com.example.composesample.presentation.example.component.paging.PagingViewModel
 import com.example.composesample.presentation.example.component.sse.SSEViewModel
+import com.example.composesample.presentation.example.component.type.TypeExampleViewModel
 import com.example.composesample.presentation.legacy.movie.MovieViewModel
 import com.example.composesample.presentation.legacy.sub.SubActivityViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -36,4 +37,5 @@ val viewModelModule: Module = module {
     viewModel { CompositionLocalViewModel() }
     viewModel { InitTestViewModel() }
     viewModel { PagingViewModel() }
+    viewModel { TypeExampleViewModel() }
 }
