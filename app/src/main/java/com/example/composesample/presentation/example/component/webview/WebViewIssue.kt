@@ -23,10 +23,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import com.google.accompanist.web.AccompanistWebChromeClient
-import com.google.accompanist.web.AccompanistWebViewClient
-import com.google.accompanist.web.WebView
-import com.google.accompanist.web.rememberWebViewState
+import io.github.kevinnzou.compose.webview.AccompanistWebChromeClient
+import io.github.kevinnzou.compose.webview.AccompanistWebViewClient
+import io.github.kevinnzou.compose.webview.WebView
+import io.github.kevinnzou.compose.webview.rememberWebViewState
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
