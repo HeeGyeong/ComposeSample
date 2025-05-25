@@ -62,6 +62,7 @@ class ConstValue {
         const val ShortcutExample = "shortcutExample"
         const val PagingExample = "pagingExample"
         const val TypeExample = "typeExample"
+        const val SafFileExample = "safFileExample"
 
         // SubCategory
         const val FlingBehavior = "flingBehaviorExampleList"

@@ -381,6 +381,16 @@ fun exampleObjectList(): ArrayList<ExampleObject> {
         )
     )
 
+    insertExampleObject.add(
+        ExampleObject(
+            lastUpdate = "25. 05. 25",
+            title = "SAF File Selection Example",
+            description = "SAF를 사용하여 txt, doc, docx 파일을 선택하고 파일 정보를 표시하는 예제",
+            blogUrl = "",
+            exampleType = ConstValue.SafFileExample
+        )
+    )
+
     return insertExampleObject
 }
 
