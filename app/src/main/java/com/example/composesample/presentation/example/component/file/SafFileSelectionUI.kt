@@ -16,13 +16,19 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -34,15 +40,31 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import java.text.DecimalFormat
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun SafFileSelectionUI(onBackButtonClick: () -> Unit) {
     val context = LocalContext.current
+    val viewModel: SafFileSelectionViewModel = viewModel()
     var selectedFileName by remember { mutableStateOf<String?>(null) }
     var selectedFileSize by remember { mutableStateOf<Long?>(null) }
     var errorMessage by remember { mutableStateOf<String?>(null) }
+    var selectedFileUri by remember { mutableStateOf<Uri?>(null) }
+    var selectedFileExtension by remember { mutableStateOf<String?>(null) }
+    
+    // ViewModel에서 데이터 수집
+    val extractedText by viewModel.extractedText.collectAsState()
+    val isLoading by viewModel.isLoading.collectAsState()
+    val viewModelError by viewModel.errorMessage.collectAsState()
+    
+    // ViewModel 에러 메시지를 UI 에러 메시지로 설정
+    LaunchedEffect(viewModelError) {
+        viewModelError?.let {
+            errorMessage = it
+        }
+    }
 
     // 파일 선택기 런처 설정
     val fileLauncher = rememberLauncherForActivityResult(
@@ -56,6 +78,8 @@ fun SafFileSelectionUI(onBackButtonClick: () -> Unit) {
                 errorMessage = "파일 크기가 200KB를 초과합니다."
                 selectedFileName = null
                 selectedFileSize = null
+                selectedFileUri = null
+                selectedFileExtension = null
                 return@let
             }
 
@@ -71,12 +95,19 @@ fun SafFileSelectionUI(onBackButtonClick: () -> Unit) {
                         errorMessage = "지원되지 않는 파일 형식입니다. (txt, doc, docx만 가능)"
                         selectedFileName = null
                         selectedFileSize = null
+                        selectedFileUri = null
+                        selectedFileExtension = null
                         return@use
                     }
 
                     selectedFileName = fileName
                     selectedFileSize = fileSize
+                    selectedFileUri = uri
+                    selectedFileExtension = extension
                     errorMessage = null
+                    
+                    // 파일 내용 읽기
+                    viewModel.readFileContent(context, uri, extension)
                 }
             }
         } ?: run {
@@ -167,6 +198,40 @@ fun SafFileSelectionUI(onBackButtonClick: () -> Unit) {
                         text = "파일 크기: ${formatFileSize(selectedFileSize!!)}",
                         fontSize = 16.sp
                     )
+
+                    Spacer(modifier = Modifier.height(20.dp))
+                }
+                
+                // 로딩 인디케이터
+                if (isLoading) {
+                    CircularProgressIndicator()
+                    Spacer(modifier = Modifier.height(20.dp))
+                }
+                
+                // 추출된 텍스트 표시
+                extractedText?.let { text ->
+                    Text(
+                        text = "파일 내용:",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                    
+                    Spacer(modifier = Modifier.height(8.dp))
+                    
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(Color.LightGray.copy(alpha = 0.3f))
+                            .padding(16.dp)
+                    ) {
+                        Text(
+                            text = text,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .verticalScroll(rememberScrollState()),
+                            fontSize = 14.sp
+                        )
+                    }
                 }
             }
         }

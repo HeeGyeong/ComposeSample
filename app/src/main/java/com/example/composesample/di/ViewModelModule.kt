@@ -5,6 +5,7 @@ import com.example.composesample.presentation.example.component.api.ApiExampleUs
 import com.example.composesample.presentation.example.component.api.ApiExampleViewModel
 import com.example.composesample.presentation.example.component.cache.DataCacheViewModel
 import com.example.composesample.presentation.example.component.compositionLocal.CompositionLocalViewModel
+import com.example.composesample.presentation.example.component.file.SafFileSelectionViewModel
 import com.example.composesample.presentation.example.component.init.InitTestViewModel
 import com.example.composesample.presentation.example.component.mvi.MVIExampleViewModel
 import com.example.composesample.presentation.example.component.paging.PagingViewModel
@@ -38,4 +39,5 @@ val viewModelModule: Module = module {
     viewModel { InitTestViewModel() }
     viewModel { PagingViewModel() }
     viewModel { TypeExampleViewModel() }
+    viewModel { SafFileSelectionViewModel() }
 }
