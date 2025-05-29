@@ -6,4 +6,12 @@
     <!-- shortcuts.xml 파일에는 문자열을 리소스로 제공해야한다. -->
     <string name="shortcut_short_label">xmlShortCut</string>
     <string name="shortcut_long_label">xmlShortCut Long Label</string>
+    
+    <!-- Language Setting Example -->
+    <string name="language_setting_title">언어 설정 예제</string>
+    <string name="current_language_info">현재 언어 설정 정보</string>
+    <string name="region_label">지역</string>
+    <string name="language_label">언어</string>
+    <string name="change_language_settings">언어 설정 변경하기</string>
+    <string name="language_setting_description">위 버튼을 눌러 시스템 언어 설정을 변경한 후\n앱으로 돌아오면 변경된 언어가 반영됩니다.</string>
 </resources>

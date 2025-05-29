@@ -34,7 +34,7 @@ import com.example.composesample.util.noRippleClickable
 fun MainScreenContent(
     onExampleCodeClick: () -> Unit,
     onLegacyCodeClick: () -> Unit,
-    onWebViewClick: (String) -> Unit,
+    onWebViewClick: (String) -> Unit
 ) {
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -64,7 +64,7 @@ fun MainScreenContent(
 fun MainContentSection(
     onExampleCodeClick: () -> Unit,
     onLegacyCodeClick: () -> Unit,
-    onWebViewClick: (String) -> Unit,
+    onWebViewClick: (String) -> Unit
 ) {
     Spacer(modifier = Modifier.height(10.dp))
 

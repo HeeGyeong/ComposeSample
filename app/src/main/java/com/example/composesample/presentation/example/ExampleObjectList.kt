@@ -391,6 +391,16 @@ fun exampleObjectList(): ArrayList<ExampleObject> {
         )
     )
 
+    insertExampleObject.add(
+        ExampleObject(
+            lastUpdate = "25. 05. 29",
+            title = "Language Setting Example",
+            description = "시스템 언어 설정을 확인하고 변경하는 예제\n언어 설정 변경 후 앱으로 돌아오면 변경사항이 반영됩니다.",
+            blogUrl = "",
+            exampleType = ConstValue.LanguageSettingExample
+        )
+    )
+
     return insertExampleObject
 }
 

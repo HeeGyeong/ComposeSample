@@ -63,6 +63,7 @@ class ConstValue {
         const val PagingExample = "pagingExample"
         const val TypeExample = "typeExample"
         const val SafFileExample = "safFileExample"
+        const val LanguageSettingExample = "languageSettingExample"
 
         // SubCategory
         const val FlingBehavior = "flingBehaviorExampleList"

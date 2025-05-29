@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">ComposeSample</string>
+
+    <string name="progress_wait">Wait Progress</string>
+
+    <!-- shortcuts.xml 파일에는 문자열을 리소스로 제공해야한다. -->
+    <string name="shortcut_short_label">xmlShortCut</string>
+    <string name="shortcut_long_label">xmlShortCut Long Label</string>
+    
+    <!-- Language Setting Example -->
+    <string name="language_setting_title">Language Setting Example</string>
+    <string name="current_language_info">Current Language Settings</string>
+    <string name="region_label">Region</string>
+    <string name="language_label">Language</string>
+    <string name="change_language_settings">Change Language Settings</string>
+    <string name="language_setting_description">Press the button above to change system language settings\nand return to the app to see the changes reflected.</string>
+</resources> 
