@@ -11,11 +11,17 @@
     <string name="language_setting_title">언어 설정 예제</string>
     <string name="current_language_info">현재 언어 설정 정보</string>
     <string name="detailed_locale_info">상세 로케일 정보</string>
+    <string name="ip_location_info">IP 기반 위치 정보</string>
     <string name="region_label">지역</string>
     <string name="language_label">언어</string>
     <string name="locale_code_label">로케일 코드</string>
     <string name="language_code_label">언어 코드</string>
     <string name="country_code_label">국가 코드</string>
+    <string name="ip_address_label">IP 주소</string>
+    <string name="ip_country_label">국가</string>
+    <string name="ip_region_label">지역</string>
+    <string name="ip_city_label">도시</string>
+    <string name="ip_timezone_label">시간대</string>
     <string name="change_language_settings">언어 설정 변경하기</string>
     <string name="language_setting_description">위 버튼을 눌러 시스템 언어 설정을 변경한 후\n앱으로 돌아오면 변경된 언어가 반영됩니다.</string>
 </resources>
