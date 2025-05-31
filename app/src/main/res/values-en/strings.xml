@@ -10,8 +10,12 @@
     <!-- Language Setting Example -->
     <string name="language_setting_title">Language Setting Example</string>
     <string name="current_language_info">Current Language Settings</string>
+    <string name="detailed_locale_info">Detailed Locale Information</string>
     <string name="region_label">Region</string>
     <string name="language_label">Language</string>
+    <string name="locale_code_label">Locale Code</string>
+    <string name="language_code_label">Language Code</string>
+    <string name="country_code_label">Country Code</string>
     <string name="change_language_settings">Change Language Settings</string>
     <string name="language_setting_description">Press the button above to change system language settings\nand return to the app to see the changes reflected.</string>
 </resources> 

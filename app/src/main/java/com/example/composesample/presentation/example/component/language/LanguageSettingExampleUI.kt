@@ -27,14 +27,20 @@ import com.example.composesample.R
 fun LanguageSettingExampleUI(onBackButtonClick: () -> Unit) {
     val context = LocalContext.current
     
-    // 현재 설정된 로케일 및 언어 정보 가져오기
+    // 현재 설정된 로케일 정보들
     var currentLocale by remember { mutableStateOf(getCurrentLocale(context)) }
     var currentLanguage by remember { mutableStateOf(getCurrentLanguage(context)) }
+    var localeCode by remember { mutableStateOf(getLocaleCode(context)) }
+    var languageCode by remember { mutableStateOf(getLanguageCode(context)) }
+    var countryCode by remember { mutableStateOf(getCountryCode(context)) }
     
     // Compose가 다시 그려질 때마다 현재 언어 설정을 업데이트
     LaunchedEffect(Unit) {
         currentLocale = getCurrentLocale(context)
         currentLanguage = getCurrentLanguage(context)
+        localeCode = getLocaleCode(context)
+        languageCode = getLanguageCode(context)
+        countryCode = getCountryCode(context)
     }
 
     LazyColumn(modifier = Modifier.padding(horizontal = 20.dp)) {
@@ -67,7 +73,7 @@ fun LanguageSettingExampleUI(onBackButtonClick: () -> Unit) {
         item {
             Spacer(modifier = Modifier.height(20.dp))
 
-            // 언어 정보 표시 카드
+            // 기본 언어 정보 표시 카드
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -97,6 +103,50 @@ fun LanguageSettingExampleUI(onBackButtonClick: () -> Unit) {
                     LanguageInfoRow(
                         label = stringResource(id = R.string.language_label),
                         value = currentLanguage
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // 상세 로케일 정보 표시 카드
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp),
+                backgroundColor = Color.White,
+                elevation = 4.dp
+            ) {
+                Column(
+                    modifier = Modifier.padding(16.dp)
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.detailed_locale_info),
+                        fontSize = 16.sp,
+                        modifier = Modifier.padding(bottom = 16.dp),
+                        color = Color.Black
+                    )
+                    
+                    // 로케일 코드
+                    LanguageInfoRow(
+                        label = stringResource(id = R.string.locale_code_label),
+                        value = localeCode
+                    )
+
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    // 언어 코드
+                    LanguageInfoRow(
+                        label = stringResource(id = R.string.language_code_label),
+                        value = languageCode
+                    )
+
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    // 국가 코드
+                    LanguageInfoRow(
+                        label = stringResource(id = R.string.country_code_label),
+                        value = countryCode
                     )
                 }
             }
@@ -172,7 +222,7 @@ fun LanguageInfoRow(label: String, value: String) {
     }
 }
 
-// 현재 로케일 가져오기
+// 현재 로케일 가져오기 (지역명)
 fun getCurrentLocale(context: Context): String {
     return if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
         context.resources.configuration.locales[0].displayCountry
@@ -182,12 +232,42 @@ fun getCurrentLocale(context: Context): String {
     }
 }
 
-// 현재 언어 가져오기
+// 현재 언어 가져오기 (언어명)
 fun getCurrentLanguage(context: Context): String {
     return if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
         context.resources.configuration.locales[0].displayLanguage
     } else {
         @Suppress("DEPRECATION")
         context.resources.configuration.locale.displayLanguage
+    }
+}
+
+// 로케일 코드 (예: ko-KR, en-US)
+fun getLocaleCode(context: Context): String {
+    return if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+        context.resources.configuration.locales[0].toString()
+    } else {
+        @Suppress("DEPRECATION")
+        context.resources.configuration.locale.toString()
+    }
+}
+
+// 언어 코드만 (예: ko, en)
+fun getLanguageCode(context: Context): String {
+    return if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+        context.resources.configuration.locales[0].language
+    } else {
+        @Suppress("DEPRECATION")
+        context.resources.configuration.locale.language
+    }
+}
+
+// 국가 코드만 (예: KR, US)
+fun getCountryCode(context: Context): String {
+    return if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+        context.resources.configuration.locales[0].country
+    } else {
+        @Suppress("DEPRECATION")
+        context.resources.configuration.locale.country
     }
 } 
