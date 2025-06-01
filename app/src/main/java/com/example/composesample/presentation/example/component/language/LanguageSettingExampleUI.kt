@@ -8,19 +8,38 @@ import android.content.pm.PackageManager
 import android.location.Geocoder
 import android.location.LocationManager
 import android.net.wifi.WifiManager
+import android.os.Build
 import android.provider.Settings
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.Card
+import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Refresh
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -29,13 +48,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
 import com.example.composesample.R
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.json.JSONObject
-import okhttp3.OkHttpClient
-import okhttp3.Request
 import java.util.Locale
 
 data class LocationInfo(
@@ -50,6 +68,7 @@ data class LocationInfo(
 @Composable
 fun LanguageSettingExampleUI(onBackButtonClick: () -> Unit) {
     val context = LocalContext.current
+    val isEmulator = remember { isEmulator() }
 
     // 현재 설정된 로케일 정보들
     var currentLocale by remember { mutableStateOf(getCurrentLocale(context)) }
@@ -75,7 +94,7 @@ fun LanguageSettingExampleUI(onBackButtonClick: () -> Unit) {
     suspend fun fetchLocationInfo() {
         locationInfo = locationInfo.copy(isLoading = true, error = null)
         try {
-            val info = getLocationInfo(hasLocationPermission, context)
+            val info = getLocationInfo(hasLocationPermission, context, isEmulator)
             locationInfo = info
         } catch (e: Exception) {
             locationInfo = locationInfo.copy(
@@ -85,11 +104,22 @@ fun LanguageSettingExampleUI(onBackButtonClick: () -> Unit) {
         }
     }
 
+    // 권한 요청 콜백
+    val permissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        hasLocationPermission = isGranted
+        if (isGranted) {
+            // 권한이 허용되면 위치 정보 가져오기
+            MainScope().launch {
+                fetchLocationInfo()
+            }
+        }
+    }
+
     // 초기 위치 정보 가져오기
     LaunchedEffect(hasLocationPermission) {
-        if (hasLocationPermission) {
-            fetchLocationInfo()
-        }
+        fetchLocationInfo()
     }
 
     LazyColumn {
@@ -219,12 +249,12 @@ fun LanguageSettingExampleUI(onBackButtonClick: () -> Unit) {
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = "현재 위치 정보",
+                            text = "현재 위치 정보" + if (isEmulator) " (에뮬레이터)" else "",
                             fontSize = 16.sp,
                             color = Color.Black
                         )
 
-                        if (hasLocationPermission) {
+                        if (!isEmulator && hasLocationPermission) {
                             IconButton(
                                 onClick = {
                                     kotlinx.coroutines.MainScope().launch {
@@ -244,7 +274,7 @@ fun LanguageSettingExampleUI(onBackButtonClick: () -> Unit) {
                     Spacer(modifier = Modifier.height(16.dp))
 
                     when {
-                        !hasLocationPermission -> {
+                        !hasLocationPermission && !isEmulator -> {
                             Column(
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalAlignment = Alignment.CenterHorizontally
@@ -261,11 +291,7 @@ fun LanguageSettingExampleUI(onBackButtonClick: () -> Unit) {
 
                                 Button(
                                     onClick = {
-                                        ActivityCompat.requestPermissions(
-                                            context as android.app.Activity,
-                                            arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                                            1000
-                                        )
+                                        permissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
                                     },
                                     colors = ButtonDefaults.buttonColors(
                                         backgroundColor = Color.Blue,
@@ -444,11 +470,44 @@ fun getCountryCode(context: Context): String {
     }
 }
 
+fun isEmulator(): Boolean {
+    return (Build.BRAND.startsWith("generic") && Build.DEVICE.startsWith("generic"))
+            || Build.FINGERPRINT.startsWith("generic")
+            || Build.FINGERPRINT.startsWith("unknown")
+            || Build.HARDWARE.contains("goldfish")
+            || Build.HARDWARE.contains("ranchu")
+            || Build.MODEL.contains("google_sdk")
+            || Build.MODEL.contains("Emulator")
+            || Build.MODEL.contains("Android SDK built for x86")
+            || Build.MANUFACTURER.contains("Genymotion")
+            || Build.PRODUCT.contains("sdk_gphone")
+            || Build.PRODUCT.contains("google_sdk")
+            || Build.PRODUCT.contains("sdk")
+            || Build.PRODUCT.contains("sdk_x86")
+            || Build.PRODUCT.contains("vbox86p")
+            || Build.PRODUCT.contains("emulator")
+            || Build.PRODUCT.contains("simulator")
+}
+
 // 위치 정보 가져오기
 @SuppressLint("MissingPermission")
-suspend fun getLocationInfo(hasLocationPermission: Boolean, context: Context): LocationInfo {
+suspend fun getLocationInfo(
+    hasLocationPermission: Boolean,
+    context: Context,
+    isEmulator: Boolean
+): LocationInfo {
     return withContext(Dispatchers.IO) {
         try {
+            if (isEmulator) {
+                return@withContext LocationInfo(
+                    country = "에뮬레이터",
+                    region = "가상 지역",
+                    city = "가상 도시",
+                    isLoading = false,
+                    error = null
+                )
+            }
+
             if (!hasLocationPermission) {
                 throw Exception("위치 권한이 필요합니다")
             }
