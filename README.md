@@ -225,6 +225,9 @@ ComposeSample
 - dynamic shortcuts, static shortcuts 구현
 
 
+etc. **그 외 실무에 사용할 법한 다양한 예제 작성**
+
+
 ## 주의사항
 - 일부 예제(예: Permission 관련)는 기본 설정이 필요할 수 있습니다
 - Compose 버전 1.4.0-alpha04 이하에서는 키보드 관련 이슈가 있을 수 있습니다
