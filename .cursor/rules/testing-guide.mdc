@@ -1,5 +1,29 @@
 ---
-description:
-globs:
+description: 
+globs: 
 alwaysApply: false
 ---
+# Testing Guide
+
+## Unit Tests
+- Use JUnit5
+- All ViewModels must have unit tests
+- All UseCases must have unit tests
+- Use Given-When-Then format
+- Mock dependencies with Mockk library
+
+## UI Tests
+- Use ComposeTestRule
+- Each screen must have at least 1 UI test
+- Prioritize semantics testing
+- Screenshot testing recommended
+
+## Test Coverage
+- Domain Layer: 90% or higher
+- Data Layer: 80% or higher
+- Presentation Layer: 70% or higher
+
+## Performance Testing
+- Compose recomposition optimization tests
+- Memory leak tests (LeakCanary)
+- Frame drop monitoring

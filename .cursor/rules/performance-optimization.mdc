@@ -1,5 +1,30 @@
 ---
-description:
-globs:
+description: 
+globs: 
 alwaysApply: false
 ---
+# Performance Optimization Guide
+
+## Compose Optimization
+- Use remember/derivedStateOf appropriately
+- Minimize LaunchedEffect scope
+- Prevent unnecessary recompositions
+- Optimize key usage
+
+## Memory Management
+- Cache image resources
+- Prevent memory leaks
+- Manage background tasks
+- Implement pagination for large datasets
+
+## Network Optimization
+- Image compression and caching
+- Cache API responses
+- Use batch requests
+- Implement offline-first strategy
+
+## App Launch Optimization
+- Minimize cold start time
+- Implement lazy initialization
+- Process heavy tasks in background
+- Optimize screen transitions

@@ -1,5 +1,30 @@
 ---
-description:
-globs:
+description: 
+globs: 
 alwaysApply: false
 ---
+# Dependency Management Guide
+
+## Core Libraries
+- Jetpack Compose: 1.5.0 or higher
+- Kotlin: 1.9.0 or higher
+- Coroutines: 1.7.0 or higher
+- Hilt: 2.48 or higher
+
+## Version Management
+- Use Version Catalog
+- Manage with libs.versions.toml
+- Regular dependency updates required
+- Compatibility testing mandatory
+
+## Module Dependencies
+- No circular dependencies
+- Use Hilt for dependency injection
+- Test dependencies in testImplementation
+- Debug dependencies in debugImplementation
+
+## Security
+- Follow ProGuard/R8 rules
+- Manage sensitive info in BuildConfig
+- Network security configuration required
+- Apply latest security patches

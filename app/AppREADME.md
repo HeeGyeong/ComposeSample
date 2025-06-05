@@ -16,8 +16,8 @@ ComposeSample
 ```
 
 ## Key Components
-- **MainActivity**: Example using Legacy Compose written in the past.
-- **BlogExampleActivity**: Various feature implementation examples created for practical use.
+- **MainActivity**: Main screen that provides navigation to example code and legacy code
+- **BlogExampleActivity**: Various feature implementation examples created for practical use
 
 ## Key Features
 
@@ -51,6 +51,21 @@ ComposeSample
 ### 10. Drawer
 - **Description**: Provides a Drawer UI for implementing a side menu. Includes functionality for users to open and close the menu.
 
+### 11. Animation
+- **Description**: Includes examples of implementing various animation effects.
+
+### 12. Coroutine
+- **Description**: Includes examples of asynchronous processing using Coroutines.
+
+### 13. Test
+- **Description**: Includes examples of implementing UI tests.
+
+### 14. MVI
+- **Description**: Includes examples of implementing the MVI architecture pattern.
+
+### 15. Coordinator
+- **Description**: Includes examples of screen transitions using the Coordinator pattern.
+
 ### Others
 - For many folders not mentioned above, you can intuitively distinguish them by their folder names, so please check them if necessary.
 
@@ -59,12 +74,17 @@ The App module manages dependency injection using Koin. Define the necessary mod
 
 ## Usage
 1. Build the project.
-2. Run BlogExampleActivity to check various features.
-3. If you need additional features, please let us know through the blog, and we will create additional examples.
+2. Run MainActivity to navigate to either example code or legacy code.
+3. Check various features in BlogExampleActivity.
 
 ## Caution
 - Ensure that the Compose version and Kotlin version are compatible.
 - Necessary permissions must be set in the AndroidManifest.xml file.
+- Team approval is required for adding new libraries.
+- Version modifications are prohibited.
+- Domain layer must be pure Kotlin.
+- Presentation layer must use Compose.
+- Clear separation between layers is required.
 
 ## Conclusion
 This README.md document provides basic information about the App module of ComposeSample. It aims to help you understand and utilize each component and feature.

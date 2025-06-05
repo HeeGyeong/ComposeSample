@@ -1,5 +1,30 @@
 ---
-description:
-globs:
+description: 
+globs: 
 alwaysApply: false
 ---
+# Kotlin & Jetpack Compose Code Style Guide
+
+## Naming Conventions
+- Classes: PascalCase
+- Functions: camelCase
+- Variables: camelCase
+- Constants: SCREAMING_SNAKE_CASE
+- Composable Functions: PascalCase
+
+## Composable Function Rules
+- Must include Preview functions
+- Parameters must have explicit default values
+- Apply state hoisting
+- Reusable components should be in separate files
+
+## Code Formatting
+- Indentation: 4 spaces
+- Maximum line length: 120 characters
+- Maximum function length: 50 lines
+- Maximum file length: 500 lines
+
+## Comment Rules
+- Comments only for complex business logic
+- Use KDoc format
+- TODO comments must include resolution deadline

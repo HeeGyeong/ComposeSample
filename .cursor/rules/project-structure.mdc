@@ -1,5 +1,39 @@
 ---
-description:
-globs:
+description: 
+globs: 
 alwaysApply: false
 ---
+# Project Structure Guide
+
+## Layer Structure
+```
+app/
+├── domain/
+│   ├── model/
+│   ├── repository/
+│   └── usecase/
+├── data/
+│   ├── remote/
+│   ├── local/
+│   └── repository/
+└── presentation/
+    ├── ui/
+    ├── viewmodel/
+    └── navigation/
+```
+
+## Modularization Rules
+- Separate modules by feature
+- Common utilities in core module
+- UI components in design-system module
+
+## Dependency Rules
+- Domain layer uses pure Kotlin only
+- Data layer depends on domain layer
+- Presentation layer depends only on domain layer
+
+## Resource Management
+- Strings in strings.xml
+- Colors in colors.xml
+- Themes in theme.xml
+- Images in drawable/ or mipmap/
