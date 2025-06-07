@@ -15,6 +15,7 @@
 Jetpack Compose를 공부하고 실무에 적용하면서 발생했던 이슈와 자주 사용되는 다양한 기능들의 샘플을 모아둔 프로젝트입니다.
 
 - **최신 업데이트**
+  - 2025.06: cursorrules mdc 파일 추가
   - 2025.03: Cursor IDE 용 md 파일 추가
   - 2025.02: targetSDK 35 UI 대응
   - 2024.12: toml 파일 작성 및 gradle 변경
