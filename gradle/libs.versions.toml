@@ -10,17 +10,17 @@ versionName = "1.0"
 javaVersion = "17"
 
 # Kotlin & KSP
-kotlinVersion = "1.9.0"
-kotlinCompilerExtension = "1.5.2"
-ksp = "1.9.0-1.0.13"
+kotlinVersion = "1.9.22"
+kotlinCompilerExtension = "1.5.8"
+ksp = "1.9.22-1.0.17"
 applicationVersion = "8.5.2"
 libraryVersion = "8.5.2"
 
 # Compose
-activityCompose = "1.5.1"
-composeVersion = "1.5.2"
-composeBom = "2024.02.00"
-composeAnimation = "1.7.5"
+activityCompose = "1.8.2"
+composeVersion = "1.6.1"
+composeBom = "2024.02.01"
+composeAnimation = "1.6.1"
 
 # Lifecycle
 lifecycleRuntimeKtx = "2.8.6"
@@ -71,7 +71,7 @@ rxAndroid = "2.1.1"
 rxKotlin = "2.3.0"
 
 # Media
-ffmpegKitFull = "5.1"
+# ffmpegKitFull = "5.1"
 lottieCompose = "6.0.0"
 
 # WorkManager
@@ -173,7 +173,7 @@ rxAndroid = { module = "io.reactivex.rxjava2:rxandroid", version.ref = "rxAndroi
 rxKotlin = { module = "io.reactivex.rxjava2:rxkotlin", version.ref = "rxKotlin" }
 
 # Media
-ffmpegKitFull = { module = "com.arthenica:ffmpeg-kit-full", version.ref = "ffmpegKitFull" }
+# ffmpegKitFull = { module = "com.arthenica:ffmpeg-kit-full", version.ref = "ffmpegKitFull" }
 lottieCompose = { module = "com.airbnb.android:lottie-compose", version.ref = "lottieCompose" }
 
 # WorkManager
@@ -267,7 +267,6 @@ accompanist = [
 ]
 
 media = [
-    "ffmpegKitFull",
     "lottieCompose"
 ]
 

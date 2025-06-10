@@ -1,3 +1,5 @@
+// 전체 파일 주석처리
+/*
 package com.example.composesample.util
 
 import android.annotation.SuppressLint
@@ -74,3 +76,4 @@ fun getRealPathFromURI(uri: Uri, context: Context): String? {
 
     return file.path
 }
+*/

@@ -44,14 +44,14 @@ fun exampleObjectList(): ArrayList<ExampleObject> {
         )
     )
 
-    insertExampleObject.add(
-        ExampleObject(
-            title = "Video Encoding Example",
-            description = "ffmpeg를 사용하여 동영상을 인코딩해보는 예제",
-            blogUrl = "https://heegs.tistory.com/152",
-            exampleType = ConstValue.FfmpegExample
-        )
-    )
+//    insertExampleObject.add(
+//        ExampleObject(
+//            title = "Video Encoding Example",
+//            description = "ffmpeg를 사용하여 동영상을 인코딩해보는 예제",
+//            blogUrl = "https://heegs.tistory.com/152",
+//            exampleType = ConstValue.FfmpegExample
+//        )
+//    )
 
     insertExampleObject.add(
         ExampleObject(

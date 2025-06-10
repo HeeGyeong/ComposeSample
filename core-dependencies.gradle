@@ -23,4 +23,6 @@ dependencies {
     testImplementation(libs.junit)
     implementation(libs.bundles.androidTest)
     debugImplementation(libs.uiTooling)
+
+    // implementation(libs.ffmpegKitFull)
 }

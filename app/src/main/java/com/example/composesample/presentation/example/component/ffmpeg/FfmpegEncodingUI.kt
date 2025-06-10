@@ -1,3 +1,5 @@
+// 전체 파일 주석처리
+/*
 package com.example.composesample.presentation.example.component.ffmpeg
 
 import androidx.activity.result.ActivityResultLauncher
@@ -55,3 +57,4 @@ fun FfmpegEncodingUI(
         }
     }
 }
+*/

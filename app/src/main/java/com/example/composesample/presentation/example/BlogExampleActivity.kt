@@ -73,7 +73,6 @@ import com.example.composesample.presentation.example.component.drag.DragAndDrop
 import com.example.composesample.presentation.example.component.drawer.ModalDrawerUI
 import com.example.composesample.presentation.example.component.drawer.ScaffoldDrawerUI
 import com.example.composesample.presentation.example.component.effect.SideEffectExampleUI
-import com.example.composesample.presentation.example.component.ffmpeg.FfmpegEncodingUI
 import com.example.composesample.presentation.example.component.file.SafFileSelectionUI
 import com.example.composesample.presentation.example.component.flexbox.FlexBoxUI
 import com.example.composesample.presentation.example.component.header.StickyHeaderExampleUI
@@ -118,7 +117,6 @@ import com.example.composesample.util.ConstValue.Companion.CustomBottomSheetExam
 import com.example.composesample.util.ConstValue.Companion.DataCacheExample
 import com.example.composesample.util.ConstValue.Companion.DragAndDropExample
 import com.example.composesample.util.ConstValue.Companion.ExampleType
-import com.example.composesample.util.ConstValue.Companion.FfmpegExample
 import com.example.composesample.util.ConstValue.Companion.FlexBoxLayoutExample
 import com.example.composesample.util.ConstValue.Companion.FlingBehaviorExample
 import com.example.composesample.util.ConstValue.Companion.InitTestExample
@@ -156,8 +154,6 @@ import com.example.composesample.util.ConstValue.Companion.WebViewIssueExample
 import com.example.composesample.util.ConstValue.Companion.WorkManagerExample
 import com.example.composesample.util.ConstValue.Companion.SafFileExample
 import com.example.composesample.util.component.Toast
-import com.example.composesample.util.executeCommand
-import com.example.composesample.util.getRealPathFromURI
 import com.example.composesample.util.noRippleClickable
 import com.example.domain.model.ExampleMoveType
 import com.example.domain.model.ExampleObject
@@ -172,10 +168,10 @@ class BlogExampleActivity : ComponentActivity() {
 
         val callback = ActivityResultCallback<Uri?> { uri ->
             uri?.let {
-                val inputVideoPath = getRealPathFromURI(uri, this)
-                inputVideoPath?.let {
-                    this.executeCommand(inputVideoPath)
-                }
+                // val inputVideoPath = getRealPathFromURI(uri, this)
+                // inputVideoPath?.let {
+                //     this.executeCommand(inputVideoPath)
+                // }
             }
         }
 
@@ -691,13 +687,6 @@ fun ExampleCaseUI(
 
                         TextStyleExample -> {
                             TextStyleUI(onBackEvent)
-                        }
-
-                        FfmpegExample -> {
-                            FfmpegEncodingUI(
-                                launcher = launcher,
-                                onBackButtonClick = onBackEvent,
-                            )
                         }
 
                         AudioRecorderExample -> {
