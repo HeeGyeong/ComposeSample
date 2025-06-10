@@ -3,7 +3,6 @@ package com.example.composesample.presentation.example.component.navigation
 import android.content.Context
 import android.util.Log
 import android.view.inputmethod.InputMethodManager
-import androidx.activity.ComponentActivity.INPUT_METHOD_SERVICE
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -52,7 +51,7 @@ fun ColumnScope.BottomNavigationAPIComponent(
 
     Text(
         modifier = Modifier.noRippleClickable {
-            val imm = context.getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+            val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0)
         },
         text = "클릭하면 키보드가 올라갑니다.\n키보드를 올려서 위치를 확인하세요.",
