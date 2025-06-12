@@ -15,6 +15,7 @@
 Jetpack Compose를 공부하고 실무에 적용하면서 발생했던 이슈와 자주 사용되는 다양한 기능들의 샘플을 모아둔 프로젝트입니다.
 
 - **최신 업데이트**
+  - 2025.06: Compose 버전 및 kotlin 버전 최신화
   - 2025.06: cursorrules mdc 파일 추가
   - 2025.03: Cursor IDE 용 md 파일 추가
   - 2025.02: targetSDK 35 UI 대응
@@ -25,10 +26,10 @@ Jetpack Compose를 공부하고 실무에 적용하면서 발생했던 이슈와
   - 2024.04: 메인 화면 UI/UX 개선
 
 ## 개발 환경
-- Kotlin 1.9.0
+- Kotlin 1.9.22
 - Android Studio
-- Compose 1.5.2
-- Target SDK 35
+- ComposeBom 2025.01.00
+- Target SDK 34
 - Min SDK 24
 - Java 17
 
@@ -233,6 +234,8 @@ etc. **그 외 실무에 사용할 법한 다양한 예제 작성**
 - 일부 예제(예: Permission 관련)는 기본 설정이 필요할 수 있습니다
 - Compose 버전 1.4.0-alpha04 이하에서는 키보드 관련 이슈가 있을 수 있습니다
 - 실제 앱에서 필요한 기본 로직들은 그대로 활용 가능하도록 구현되어 있습니다
+- Library version 최신화에 따라 구현된 기능들이 동작하지 않을 수 있습니다.
+- Version 호환이 되지 않는 예제는 제거하지 않고 전체 주석 처리로 남겨두었습니다.
 
 ## 더 자세한 내용
 각 예제에 대한 자세한 설명은 [Tistory Blog](https://heegs.tistory.com/category/Android/Jetpack)에서 확인하실 수 있습니다.
