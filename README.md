@@ -127,9 +127,9 @@ ComposeSample
 - Compose의 Side Effect 처리
 - LaunchedEffect, SideEffect 등 효과 관리
 
-7. **ffmpeg**: 
-- FFmpeg를 사용한 비디오/오디오 처리
-- 미디어 파일 인코딩/디코딩 예제
+7. **ffmpeg**: 2025. 06 기준 라이브러리 버전 문제로 전체 주석처리.
+- FFmpeg를 사용한 비디오/오디오 인코딩/디코딩 예제 
+- 주석 처리 되었으나 코드는 남아있음. 
 
 8. **flexbox**: 
 - FlexBox 레이아웃 구현
