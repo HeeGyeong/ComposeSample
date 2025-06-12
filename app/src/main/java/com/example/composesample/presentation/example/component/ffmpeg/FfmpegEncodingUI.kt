@@ -1,4 +1,4 @@
-// 전체 파일 주석처리
+// 2025.06 기준 라이브러리 호환성 문제로 예제 전체 주석처리
 /*
 package com.example.composesample.presentation.example.component.ffmpeg
 
