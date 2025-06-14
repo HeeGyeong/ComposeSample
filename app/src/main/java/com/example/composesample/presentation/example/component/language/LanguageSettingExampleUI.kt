@@ -55,6 +55,7 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.Locale
+import com.example.composesample.util.EmulatorUtil
 
 data class LocationInfo(
     val country: String = "",
@@ -68,7 +69,7 @@ data class LocationInfo(
 @Composable
 fun LanguageSettingExampleUI(onBackButtonClick: () -> Unit) {
     val context = LocalContext.current
-    val isEmulator = remember { isEmulator() }
+    val isEmulator = remember { EmulatorUtil.isEmulator() }
 
     // 현재 설정된 로케일 정보들
     var currentLocale by remember { mutableStateOf(getCurrentLocale(context)) }
@@ -421,8 +422,9 @@ fun LanguageInfoRow(label: String, value: String) {
 }
 
 // 현재 로케일 가져오기 (지역명)
+@SuppressLint("ObsoleteSdkInt")
 fun getCurrentLocale(context: Context): String {
-    return if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
         context.resources.configuration.locales[0].displayCountry
     } else {
         @Suppress("DEPRECATION")
@@ -431,8 +433,9 @@ fun getCurrentLocale(context: Context): String {
 }
 
 // 현재 언어 가져오기 (언어명)
+@SuppressLint("ObsoleteSdkInt")
 fun getCurrentLanguage(context: Context): String {
-    return if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
         context.resources.configuration.locales[0].displayLanguage
     } else {
         @Suppress("DEPRECATION")
@@ -440,9 +443,16 @@ fun getCurrentLanguage(context: Context): String {
     }
 }
 
-// 로케일 코드 (예: ko-KR, en-US)
+/**
+ * 로케일 코드 (예: ko-KR, en-US)
+ *
+ * 주의: Android 시스템에서 언어 설정을 변경하면, 시스템이 자동으로 해당 언어의 기본 국가 코드를 매칭합니다.
+ * 예: 한국어(ko) → ko-KR, 태국어(th) → th-TH, 영어(en) → en-US
+ * 따라서 언어만 변경해도 국가 코드가 함께 변경될 수 있습니다.
+ */
+@SuppressLint("ObsoleteSdkInt")
 fun getLocaleCode(context: Context): String {
-    return if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
         context.resources.configuration.locales[0].toString()
     } else {
         @Suppress("DEPRECATION")
@@ -451,8 +461,9 @@ fun getLocaleCode(context: Context): String {
 }
 
 // 언어 코드만 (예: ko, en)
+@SuppressLint("ObsoleteSdkInt")
 fun getLanguageCode(context: Context): String {
-    return if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
         context.resources.configuration.locales[0].language
     } else {
         @Suppress("DEPRECATION")
@@ -461,32 +472,14 @@ fun getLanguageCode(context: Context): String {
 }
 
 // 국가 코드만 (예: KR, US)
+@SuppressLint("ObsoleteSdkInt")
 fun getCountryCode(context: Context): String {
-    return if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
         context.resources.configuration.locales[0].country
     } else {
         @Suppress("DEPRECATION")
         context.resources.configuration.locale.country
     }
-}
-
-fun isEmulator(): Boolean {
-    return (Build.BRAND.startsWith("generic") && Build.DEVICE.startsWith("generic"))
-            || Build.FINGERPRINT.startsWith("generic")
-            || Build.FINGERPRINT.startsWith("unknown")
-            || Build.HARDWARE.contains("goldfish")
-            || Build.HARDWARE.contains("ranchu")
-            || Build.MODEL.contains("google_sdk")
-            || Build.MODEL.contains("Emulator")
-            || Build.MODEL.contains("Android SDK built for x86")
-            || Build.MANUFACTURER.contains("Genymotion")
-            || Build.PRODUCT.contains("sdk_gphone")
-            || Build.PRODUCT.contains("google_sdk")
-            || Build.PRODUCT.contains("sdk")
-            || Build.PRODUCT.contains("sdk_x86")
-            || Build.PRODUCT.contains("vbox86p")
-            || Build.PRODUCT.contains("emulator")
-            || Build.PRODUCT.contains("simulator")
 }
 
 // 위치 정보 가져오기
