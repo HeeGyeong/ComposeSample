@@ -36,7 +36,8 @@ koinAndroidxCompose = "3.2.2"
 coreKtx = "1.13.1"
 appcompat = "1.7.0"
 material = "1.7.4"
-material3 = "1.1.0"
+material3 = "1.2.0-rc01"
+material3WindowSizeClass = "1.2.0-rc01"
 room = "2.6.1"
 retrofit = "2.9.0"
 retrofitRxJavaAdapter = "2.8.1"
@@ -100,6 +101,7 @@ coreKtx = { module = "androidx.core:core-ktx", version.ref = "coreKtx" }
 appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
 material = { module = "androidx.compose.material:material", version.ref = "material" }
 material3 = { module = "androidx.compose.material3:material3", version.ref = "material3" }
+material3WindowSizeClass = { module = "androidx.compose.material3:material3-window-size-class", version.ref = "material3WindowSizeClass" }
 
 roomRuntime = { module = "androidx.room:room-runtime", version.ref = "room" }
 roomKtx = { module = "androidx.room:room-ktx", version.ref = "room" }
