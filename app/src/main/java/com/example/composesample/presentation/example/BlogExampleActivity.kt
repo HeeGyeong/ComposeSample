@@ -158,6 +158,18 @@ import com.example.composesample.util.noRippleClickable
 import com.example.domain.model.ExampleMoveType
 import com.example.domain.model.ExampleObject
 import org.koin.androidx.compose.koinViewModel
+import com.example.composesample.presentation.example.component.compose17.TextOverflowExampleUI
+import com.example.composesample.presentation.example.component.compose17.GraphicsLayerExampleUI
+import com.example.composesample.presentation.example.component.compose17.LookaheadScopeExampleUI
+import com.example.composesample.presentation.example.component.compose17.FocusRestorerExampleUI
+import com.example.composesample.presentation.example.component.compose17.PathGraphicsExampleUI
+import com.example.composesample.presentation.example.component.compose17.Compose17FeaturesOverviewUI
+import com.example.composesample.util.ConstValue.Companion.Compose17FeaturesExample
+import com.example.composesample.util.ConstValue.Companion.TextOverflowExample
+import com.example.composesample.util.ConstValue.Companion.GraphicsLayerExample
+import com.example.composesample.util.ConstValue.Companion.LookaheadScopeExample
+import com.example.composesample.util.ConstValue.Companion.FocusRestorerExample
+import com.example.composesample.util.ConstValue.Companion.PathGraphicsExample
 
 @ExperimentalAnimationApi
 class BlogExampleActivity : ComponentActivity() {
@@ -843,6 +855,26 @@ fun ExampleCaseUI(
 
                         LanguageSettingExample -> {
                             LanguageSettingExampleUI(onBackEvent)
+                        }
+
+                        TextOverflowExample -> {
+                            TextOverflowExampleUI(onBackEvent)
+                        }
+
+                        GraphicsLayerExample -> {
+                            GraphicsLayerExampleUI(onBackEvent)
+                        }
+
+                        LookaheadScopeExample -> {
+                            LookaheadScopeExampleUI(onBackEvent)
+                        }
+
+                        FocusRestorerExample -> {
+                            FocusRestorerExampleUI(onBackEvent)
+                        }
+
+                        PathGraphicsExample -> {
+                            PathGraphicsExampleUI(onBackEvent)
                         }
 
                         else -> {

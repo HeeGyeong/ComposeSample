@@ -64,11 +64,20 @@ class ConstValue {
         const val TypeExample = "typeExample"
         const val SafFileExample = "safFileExample"
         const val LanguageSettingExample = "languageSettingExample"
+        
+        // 새로운 Compose 1.7 기능 예제들
+        const val Compose17FeaturesExample = "compose17FeaturesExample"
+        const val TextOverflowExample = "textOverflowExample"
+        const val GraphicsLayerExample = "graphicsLayerExample"
+        const val LookaheadScopeExample = "lookaheadScopeExample"
+        const val FocusRestorerExample = "focusRestorerExample"
+        const val PathGraphicsExample = "pathGraphicsExample"
 
         // SubCategory
         const val FlingBehavior = "flingBehaviorExampleList"
         const val BottomSheet = "bottomSheetExampleList"
         const val NavigationDraw = "navigationDrawExampleList"
         const val Shimmer = "ShimmerExampleList"
+        const val Compose17Features = "compose17FeaturesExampleList"
     }
 }

@@ -283,7 +283,7 @@ fun SharedElementTransitionCard(
                     Image(
                         modifier = Modifier
                             .sharedElement(
-                                state = rememberSharedContentState(key = "image"),
+                                sharedContentState = rememberSharedContentState(key = "image"),
                                 animatedVisibilityScope = this@AnimatedContent,
                                 boundsTransform = boundsTransform,
                             )
@@ -295,7 +295,7 @@ fun SharedElementTransitionCard(
                     Text(
                         modifier = Modifier
                             .sharedElement(
-                                state = rememberSharedContentState(key = "name"),
+                                sharedContentState = rememberSharedContentState(key = "name"),
                                 animatedVisibilityScope = this@AnimatedContent,
                                 boundsTransform = boundsTransform,
                             )
@@ -314,7 +314,7 @@ fun SharedElementTransitionCard(
                     Image(
                         modifier = Modifier
                             .sharedElement(
-                                state = rememberSharedContentState(key = "image"),
+                                sharedContentState = rememberSharedContentState(key = "image"),
                                 animatedVisibilityScope = this@AnimatedContent,
                                 boundsTransform = boundsTransform,
                             )
@@ -328,7 +328,7 @@ fun SharedElementTransitionCard(
                     Text(
                         modifier = Modifier
                             .sharedElement(
-                                state = rememberSharedContentState(key = "name"),
+                                sharedContentState = rememberSharedContentState(key = "name"),
                                 animatedVisibilityScope = this@AnimatedContent,
                                 boundsTransform = boundsTransform,
                             )

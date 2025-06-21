@@ -402,6 +402,16 @@ fun exampleObjectList(): ArrayList<ExampleObject> {
         )
     )
 
+    insertExampleObject.add(
+        ExampleObject(
+            subCategory = ConstValue.Compose17FeaturesExample,
+            title = "Compose 1.7.6 새로운 기능들",
+            description = "Compose 1.7.6에서 새롭게 추가된 UI 기능들을 확인해보는 예제 모음",
+            blogUrl = "",
+            exampleType = ConstValue.Compose17FeaturesExample
+        )
+    )
+
     return insertExampleObject
 }
 
@@ -496,6 +506,56 @@ fun subCategoryList(): ArrayList<ExampleObject> {
             description = "다양한 방법으로 구현해보는 NavigationDraw - ModalDrawExample",
             blogUrl = "https://heegs.tistory.com/160",
             exampleType = ConstValue.ModalDrawExample
+        )
+    )
+
+    insertExampleObject.add(
+        ExampleObject(
+            subCategory = ConstValue.Compose17FeaturesExample,
+            title = "Text Overflow 새 기능",
+            description = "TextOverflow.StartEllipsis와 MiddleEllipsis를 사용한 새로운 텍스트 오버플로우 옵션",
+            blogUrl = "",
+            exampleType = ConstValue.TextOverflowExample
+        )
+    )
+
+    insertExampleObject.add(
+        ExampleObject(
+            subCategory = ConstValue.Compose17FeaturesExample,
+            title = "GraphicsLayer 향상된 기능",
+            description = "새로운 BlendMode와 ColorFilter를 사용한 고급 그래픽 효과",
+            blogUrl = "",
+            exampleType = ConstValue.GraphicsLayerExample
+        )
+    )
+
+    insertExampleObject.add(
+        ExampleObject(
+            subCategory = ConstValue.Compose17FeaturesExample,
+            title = "LookaheadScope 애니메이션",
+            description = "안정화된 LookaheadScope를 사용한 자동 크기/위치 애니메이션",
+            blogUrl = "",
+            exampleType = ConstValue.LookaheadScopeExample
+        )
+    )
+
+    insertExampleObject.add(
+        ExampleObject(
+            subCategory = ConstValue.Compose17FeaturesExample,
+            title = "Focus Restorer",
+            description = "개선된 포커스 복원 기능으로 더 나은 사용자 경험 제공",
+            blogUrl = "",
+            exampleType = ConstValue.FocusRestorerExample
+        )
+    )
+
+    insertExampleObject.add(
+        ExampleObject(
+            subCategory = ConstValue.Compose17FeaturesExample,
+            title = "Path Graphics 새 기능",
+            description = "Path.reverse()와 Path.contains()를 활용한 새로운 그래픽 기능",
+            blogUrl = "",
+            exampleType = ConstValue.PathGraphicsExample
         )
     )
 
