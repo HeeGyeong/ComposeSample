@@ -163,8 +163,6 @@ import com.example.composesample.presentation.example.component.compose17.Graphi
 import com.example.composesample.presentation.example.component.compose17.LookaheadScopeExampleUI
 import com.example.composesample.presentation.example.component.compose17.FocusRestorerExampleUI
 import com.example.composesample.presentation.example.component.compose17.PathGraphicsExampleUI
-import com.example.composesample.presentation.example.component.compose17.Compose17FeaturesOverviewUI
-import com.example.composesample.util.ConstValue.Companion.Compose17FeaturesExample
 import com.example.composesample.util.ConstValue.Companion.TextOverflowExample
 import com.example.composesample.util.ConstValue.Companion.GraphicsLayerExample
 import com.example.composesample.util.ConstValue.Companion.LookaheadScopeExample

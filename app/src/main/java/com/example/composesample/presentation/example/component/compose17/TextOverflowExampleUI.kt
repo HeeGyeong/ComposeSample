@@ -106,10 +106,8 @@ fun TextOverflowExampleUI(onBackButtonClick: () -> Unit) {
             UseCaseExample(
                 title = "파일 경로 표시",
                 example = "/Users/developer/Projects/ComposeSample/app/src/main/java/com/example/very/long/package/name/Activity.kt",
-                overflow = TextOverflow.Ellipsis,
-                description = "파일 경로에서 파일명이 중요할 때 (StartEllipsis 기능 대기중)",
-                isSimulation = true,
-                simulatedText = "...package/name/Activity.kt"
+                overflow = TextOverflow.StartEllipsis,
+                description = "파일 경로에서 파일명이 중요할 때"
             )
 
             Spacer(modifier = Modifier.height(12.dp))
@@ -117,10 +115,8 @@ fun TextOverflowExampleUI(onBackButtonClick: () -> Unit) {
             UseCaseExample(
                 title = "URL 표시",
                 example = "https://developer.android.com/jetpack/compose/text/overflow/documentation/very/long/url/path",
-                overflow = TextOverflow.Ellipsis,
-                description = "URL에서 도메인과 끝 부분이 중요할 때 (MiddleEllipsis 기능 대기중)",
-                isSimulation = true,
-                simulatedText = "https://developer.android.com...long/url/path"
+                overflow = TextOverflow.MiddleEllipsis,
+                description = "URL에서 도메인과 끝 부분이 중요할 때"
             )
 
             Spacer(modifier = Modifier.height(12.dp))
@@ -128,10 +124,8 @@ fun TextOverflowExampleUI(onBackButtonClick: () -> Unit) {
             UseCaseExample(
                 title = "이메일 주소",
                 example = "very.long.email.address.example@company.co.kr",
-                overflow = TextOverflow.Ellipsis,
-                description = "이메일에서 아이디와 도메인이 중요할 때 (MiddleEllipsis 기능 대기중)",
-                isSimulation = true,
-                simulatedText = "very.long.email...@company.co.kr"
+                overflow = TextOverflow.MiddleEllipsis,
+                description = "이메일에서 아이디와 도메인이 중요할 때"
             )
 
             Spacer(modifier = Modifier.height(40.dp))

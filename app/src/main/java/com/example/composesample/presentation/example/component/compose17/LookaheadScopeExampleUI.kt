@@ -2,6 +2,7 @@ package com.example.composesample.presentation.example.component.compose17
 
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.animateBounds
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -122,20 +123,27 @@ private fun SizeChangeAnimationExample() {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // LookaheadScope 사용 (현재는 시뮬레이션)
-            Box(
-                modifier = Modifier
-                    .width(if (expanded) 300.dp else 150.dp)
-                    .height(if (expanded) 150.dp else 75.dp)
-//                    .animateBounds(this@LookaheadScope) // 실제 1.7.6에서는 이 기능이 활성화됩니다
-                    .background(Color.Blue, RoundedCornerShape(12.dp)),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = if (expanded) "확장됨!" else "축소됨",
-                    color = Color.White,
-                    style = getTextStyle(14)
-                )
+            // animateBounds로 직접 애니메이션
+            LookaheadScope {
+                Box(
+                    modifier = Modifier
+                        .width(if (expanded) 300.dp else 150.dp)
+                        .height(if (expanded) 150.dp else 75.dp)
+                        .animateBounds(
+                            lookaheadScope = this@LookaheadScope,
+                            boundsTransform = { _, _ -> 
+                                spring(dampingRatio = 0.8f, stiffness = 400f)
+                            }
+                        )
+                        .background(Color.Blue, RoundedCornerShape(12.dp)),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = if (expanded) "확장됨!" else "축소됨",
+                        color = Color.White,
+                        style = getTextStyle(14)
+                    )
+                }
             }
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -181,25 +189,32 @@ private fun PositionChangeAnimationExample() {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // LookaheadScope로 위치 애니메이션 (현재는 시뮬레이션)
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(100.dp)
-                    .background(Color.LightGray.copy(alpha = 0.3f), RoundedCornerShape(8.dp))
-            ) {
+            // animateBounds로 위치 애니메이션 
+            LookaheadScope {
                 Box(
                     modifier = Modifier
-                        .size(60.dp)
-                        .offset(x = if (isRight) 200.dp else 0.dp)
-//                        .animateBounds(this@LookaheadScope) // 실제 1.7.6에서는 이 기능이 활성화됩니다
-                        .background(Color.Green, RoundedCornerShape(30.dp)),
-                    contentAlignment = Alignment.Center
+                        .fillMaxWidth()
+                        .height(100.dp)
+                        .background(Color.LightGray.copy(alpha = 0.3f), RoundedCornerShape(8.dp))
                 ) {
-                    Text(
-                        text = "📦",
-                        style = getTextStyle(20)
-                    )
+                    Box(
+                        modifier = Modifier
+                            .size(60.dp)
+                            .offset(x = if (isRight) 200.dp else 0.dp)
+                            .animateBounds(
+                                lookaheadScope = this@LookaheadScope,
+                                boundsTransform = { _, _ -> 
+                                    spring(dampingRatio = 0.7f, stiffness = 300f)
+                                }
+                            )
+                            .background(Color.Green, RoundedCornerShape(30.dp)),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = "📦",
+                            style = getTextStyle(20)
+                        )
+                    }
                 }
             }
 
@@ -277,7 +292,12 @@ private fun ComplexAnimationExample() {
                                         else -> 60.dp
                                     }
                                 )
-                                .animateBounds(this@LookaheadScope)
+                                .animateBounds(
+                                    lookaheadScope = this@LookaheadScope,
+                                    boundsTransform = { _, _ -> 
+                                        spring(dampingRatio = 0.6f, stiffness = 200f)
+                                    }
+                                )
                                 .background(
                                     when (state) {
                                         0 -> Color.Red
