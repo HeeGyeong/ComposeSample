@@ -41,7 +41,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.composesample.presentation.getTextStyle
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalComposeUiApi::class)
 @Composable
 fun FocusRestorerExampleUI(onBackButtonClick: () -> Unit) {
     val focusManager = LocalFocusManager.current
@@ -95,11 +95,13 @@ fun FocusRestorerExampleUI(onBackButtonClick: () -> Unit) {
     }
 }
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 private fun BasicFocusRestorerExample() {
     var showDialog by remember { mutableStateOf(false) }
-    val focusRequester = remember { FocusRequester() }
+    var text1 by remember { mutableStateOf("") }
+    var text2 by remember { mutableStateOf("") }
+    var text3 by remember { mutableStateOf("") }
+    val focusRequester1 = remember { FocusRequester() }
     
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -117,7 +119,7 @@ private fun BasicFocusRestorerExample() {
             Spacer(modifier = Modifier.height(12.dp))
             
             Text(
-                text = "다이얼로그나 다른 화면으로 이동 후 돌아왔을 때 이전 포커스를 복원합니다.",
+                text = "다이얼로그 열었다 닫으면 이전 포커스된 필드로 복원됩니다.",
                 style = getTextStyle(14),
                 color = Color.Gray
             )
@@ -129,19 +131,19 @@ private fun BasicFocusRestorerExample() {
                 modifier = Modifier.focusRestorer()
             ) {
                 TextField(
-                    value = "",
-                    onValueChange = { },
+                    value = text1,
+                    onValueChange = { text1 = it },
                     label = { Text("첫 번째 필드") },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .focusRequester(focusRequester)
+                        .focusRequester(focusRequester1)
                 )
                 
                 Spacer(modifier = Modifier.height(8.dp))
                 
                 TextField(
-                    value = "",
-                    onValueChange = { },
+                    value = text2,
+                    onValueChange = { text2 = it },
                     label = { Text("두 번째 필드") },
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -149,8 +151,8 @@ private fun BasicFocusRestorerExample() {
                 Spacer(modifier = Modifier.height(8.dp))
                 
                 TextField(
-                    value = "",
-                    onValueChange = { },
+                    value = text3,
+                    onValueChange = { text3 = it },
                     label = { Text("세 번째 필드") },
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -169,47 +171,33 @@ private fun BasicFocusRestorerExample() {
                 }
                 
                 Button(
-                    onClick = { focusRequester.requestFocus() }
+                    onClick = { focusRequester1.requestFocus() }
                 ) {
                     Text("첫 번째 필드 포커스", style = getTextStyle(12))
                 }
             }
             
             if (showDialog) {
-                // 간단한 다이얼로그 시뮬레이션
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp)
-                        .background(Color.Black.copy(alpha = 0.7f), RoundedCornerShape(8.dp))
-                        .padding(16.dp)
-                ) {
-                    Column {
-                        Text(
-                            text = "다이얼로그",
-                            color = Color.White,
-                            style = getTextStyle(16)
-                        )
-                        
-                        Spacer(modifier = Modifier.height(8.dp))
-                        
-                        Button(
-                            onClick = { showDialog = false }
-                        ) {
-                            Text("닫기", style = getTextStyle(12))
+                androidx.compose.material.AlertDialog(
+                    onDismissRequest = { showDialog = false },
+                    title = { Text("포커스 복원 테스트") },
+                    text = { Text("이 다이얼로그를 닫으면 이전에 포커스된 필드로 포커스가 복원됩니다.") },
+                    confirmButton = {
+                        Button(onClick = { showDialog = false }) {
+                            Text("확인")
                         }
                     }
-                }
+                )
             }
         }
     }
 }
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 private fun LazyListFocusRestorerExample() {
-    val items = remember { (1..10).map { "아이템 $it" }.toMutableList() }
+    var items by remember { mutableStateOf((1..6).map { "아이템 $it" }) }
     var removedItem by remember { mutableStateOf<String?>(null) }
+    var focusedIndex by remember { mutableStateOf(-1) }
     
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -227,7 +215,7 @@ private fun LazyListFocusRestorerExample() {
             Spacer(modifier = Modifier.height(12.dp))
             
             Text(
-                text = "리스트에서 아이템 제거 후 적절한 아이템으로 포커스가 복원됩니다.",
+                text = "아이템 제거 시 가장 가까운 아이템으로 포커스가 복원됩니다.",
                 style = getTextStyle(14),
                 color = Color.Gray
             )
@@ -245,8 +233,8 @@ private fun LazyListFocusRestorerExample() {
                         modifier = Modifier
                             .padding(4.dp)
                             .border(
-                                1.dp,
-                                Color.Blue.copy(alpha = 0.3f),
+                                if (focusedIndex == index) 2.dp else 1.dp,
+                                if (focusedIndex == index) Color.Red else Color.Blue.copy(alpha = 0.3f),
                                 RoundedCornerShape(8.dp)
                             ),
                         elevation = 2.dp
@@ -265,8 +253,9 @@ private fun LazyListFocusRestorerExample() {
                             
                             Button(
                                 onClick = {
+                                    focusedIndex = index
                                     removedItem = item
-                                    items.removeAt(index)
+                                    items = items.filterIndexed { i, _ -> i != index }
                                 }
                             ) {
                                 Text("제거", style = getTextStyle(10))
@@ -277,6 +266,29 @@ private fun LazyListFocusRestorerExample() {
             }
             
             Spacer(modifier = Modifier.height(16.dp))
+            
+            if (items.isEmpty()) {
+                Text(
+                    text = "모든 아이템이 제거되었습니다",
+                    style = getTextStyle(14),
+                    color = Color.Gray,
+                    modifier = Modifier.fillMaxWidth(),
+                    textAlign = TextAlign.Center
+                )
+                
+                Spacer(modifier = Modifier.height(8.dp))
+                
+                Button(
+                    onClick = {
+                        items = (1..6).map { "아이템 $it" }
+                        focusedIndex = -1
+                        removedItem = null
+                    },
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                ) {
+                    Text("전체 복원", style = getTextStyle(12))
+                }
+            }
             
             removedItem?.let { item ->
                 Row(
@@ -292,8 +304,9 @@ private fun LazyListFocusRestorerExample() {
                     
                     Button(
                         onClick = {
-                            items.add(item)
+                            items = items + item
                             removedItem = null
+                            focusedIndex = -1
                         }
                     ) {
                         Text("복원", style = getTextStyle(10))
