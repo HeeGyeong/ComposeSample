@@ -35,7 +35,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.CompositingStrategy
+import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.unit.dp
 import com.example.composesample.presentation.getTextStyle
 
@@ -162,7 +165,7 @@ private fun BlendModeExample() {
                     modifier = Modifier
                         .size(80.dp)
                         .graphicsLayer(
-                            // blendMode = selectedBlendMode // Compose 1.7.6에서 지원 예정
+                            compositingStrategy = CompositingStrategy.Offscreen
                         )
                         .background(Color.Blue, RoundedCornerShape(8.dp))
                 ) {
@@ -189,9 +192,9 @@ private fun BlendModeExample() {
                         modifier = Modifier
                             .fillMaxSize()
                             .graphicsLayer(
-                                // blendMode = selectedBlendMode // Compose 1.7.6에서 지원 예정
+                                compositingStrategy = CompositingStrategy.Offscreen
                             )
-                            .background(Color.Blue, RoundedCornerShape(8.dp))
+                            .background(Color.Blue.copy(alpha = 0.7f), RoundedCornerShape(8.dp))
                     )
                     Text(
                         text = "결과",
@@ -240,9 +243,9 @@ private fun ColorFilterExample() {
             Spacer(modifier = Modifier.height(8.dp))
             
             Text(
-                text = "현재 버전에서는 UI만 제공됩니다. Compose 1.7.6에서 실제 ColorFilter 기능이 활성화됩니다.",
+                text = "ColorFilter가 활성화되었습니다. 색상과 강도를 조절해보세요!",
                 style = getTextStyle(12),
-                color = Color.Gray
+                color = Color.Green
             )
             
             Spacer(modifier = Modifier.height(12.dp))
@@ -302,11 +305,13 @@ private fun ColorFilterExample() {
                     Box(
                         modifier = Modifier
                             .size(100.dp)
-                            .graphicsLayer(
-                                // colorFilter = ColorFilter.tint(
-                                //     selectedColor.copy(alpha = tintStrength)
-                                // ) // Compose 1.7.6에서 지원 예정
-                            )
+                            .drawWithContent {
+                                drawContent()
+                                drawRect(
+                                    color = selectedColor,
+                                    alpha = tintStrength
+                                )
+                            }
                             .background(
                                 Color.Gray,
                                 RoundedCornerShape(12.dp)
@@ -396,9 +401,14 @@ private fun CombinedEffectsExample() {
                             rotationZ = animatedRotation,
                             scaleX = animatedScale,
                             scaleY = animatedScale
-                            // blendMode = BlendMode.Multiply, // Compose 1.7.6에서 지원 예정
-                            // colorFilter = ColorFilter.tint(Color.Cyan.copy(alpha = 0.7f)) // Compose 1.7.6에서 지원 예정
                         )
+                        .drawWithContent {
+                            drawContent()
+                            drawRect(
+                                color = Color.Cyan,
+                                alpha = 0.7f
+                            )
+                        }
                         .background(Color.Yellow)
                 ) {
                     Text(

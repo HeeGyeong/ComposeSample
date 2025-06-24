@@ -404,6 +404,7 @@ fun exampleObjectList(): ArrayList<ExampleObject> {
 
     insertExampleObject.add(
         ExampleObject(
+            lastUpdate = "25. 06. 25",
             subCategory = ConstValue.Compose17FeaturesExample,
             title = "Compose 1.7.6 새로운 기능들",
             description = "Compose 1.7.6에서 새롭게 추가된 UI 기능들을 확인해보는 예제 모음",
