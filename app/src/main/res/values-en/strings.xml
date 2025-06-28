@@ -24,4 +24,17 @@
     <string name="ip_timezone_label">Timezone</string>
     <string name="change_language_settings">Change Language Settings</string>
     <string name="language_setting_description">Press the button above to change system language settings\nand return to the app to see the changes reflected.</string>
+    
+    <!-- Local Language Change Example -->
+    <string name="local_language_title">Local Language Change Example</string>
+    <string name="current_language">Current Language</string>
+    <string name="korean">한국어</string>
+    <string name="english">English</string>
+    <string name="language_toggle_button">Change Language</string>
+    <string name="welcome_message">Welcome!</string>
+    <string name="sample_content">This is sample text.</string>
+    <string name="description_text">Press the button to change the language.</string>
+    <string name="test_other_screen">Go to Other Screen</string>
+    <string name="test_other_activity">Go to New Activity</string>
+    <string name="test_description">Test if language settings are maintained on other screens</string>
 </resources> 

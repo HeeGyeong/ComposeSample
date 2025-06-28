@@ -24,4 +24,17 @@
     <string name="ip_timezone_label">시간대</string>
     <string name="change_language_settings">언어 설정 변경하기</string>
     <string name="language_setting_description">위 버튼을 눌러 시스템 언어 설정을 변경한 후\n앱으로 돌아오면 변경된 언어가 반영됩니다.</string>
+    
+    <!-- Local Language Change Example -->
+    <string name="local_language_title">로컬 언어 변경 예제</string>
+    <string name="current_language">현재 언어</string>
+    <string name="korean">한국어</string>
+    <string name="english">English</string>
+    <string name="language_toggle_button">언어 변경</string>
+    <string name="welcome_message">환영합니다!</string>
+    <string name="sample_content">이것은 샘플 텍스트입니다.</string>
+    <string name="description_text">버튼을 눌러서 언어를 변경해보세요.</string>
+    <string name="test_other_screen">다른 화면으로 이동</string>
+    <string name="test_other_activity">새로운 Activity로 이동</string>
+    <string name="test_description">언어 설정이 다른 화면에서도 유지되는지 테스트해보세요</string>
 </resources>

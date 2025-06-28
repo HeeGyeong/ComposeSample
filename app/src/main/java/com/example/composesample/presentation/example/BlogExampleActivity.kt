@@ -79,6 +79,7 @@ import com.example.composesample.presentation.example.component.header.StickyHea
 import com.example.composesample.presentation.example.component.init.InitTestExampleUI
 import com.example.composesample.presentation.example.component.intent.PassingIntentDataExample
 import com.example.composesample.presentation.example.component.language.LanguageSettingExampleUI
+import com.example.composesample.presentation.example.component.language.LocalLanguageChangeExampleUI
 import com.example.composesample.presentation.example.component.lazycolumn.LazyColumnFlingBehaviorExample
 import com.example.composesample.presentation.example.component.lazycolumn.LazyColumnIssueUI
 import com.example.composesample.presentation.example.component.lazycolumn.ReverseLazyColumnExampleUI
@@ -123,6 +124,7 @@ import com.example.composesample.util.ConstValue.Companion.InitTestExample
 import com.example.composesample.util.ConstValue.Companion.IntentType
 import com.example.composesample.util.ConstValue.Companion.KtorExample
 import com.example.composesample.util.ConstValue.Companion.LanguageSettingExample
+import com.example.composesample.util.ConstValue.Companion.LocalLanguageChangeExample
 import com.example.composesample.util.ConstValue.Companion.LazyColumnExample
 import com.example.composesample.util.ConstValue.Companion.LottieExample
 import com.example.composesample.util.ConstValue.Companion.MVIExample
@@ -853,6 +855,10 @@ fun ExampleCaseUI(
 
                         LanguageSettingExample -> {
                             LanguageSettingExampleUI(onBackEvent)
+                        }
+
+                        LocalLanguageChangeExample -> {
+                            LocalLanguageChangeExampleUI(onBackEvent)
                         }
 
                         TextOverflowExample -> {

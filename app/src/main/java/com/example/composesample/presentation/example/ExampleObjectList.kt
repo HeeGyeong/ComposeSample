@@ -413,6 +413,15 @@ fun exampleObjectList(): ArrayList<ExampleObject> {
         )
     )
 
+    insertExampleObject.add(
+        ExampleObject(
+            title = "로컬 언어 변경 예제",
+            description = "OS 설정이 아닌 앱 내에서 true/false 값으로 한국어/영어를 실시간 변경하는 예제",
+            blogUrl = "",
+            exampleType = ConstValue.LocalLanguageChangeExample
+        )
+    )
+
     return insertExampleObject
 }
 

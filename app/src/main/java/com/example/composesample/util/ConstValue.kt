@@ -64,6 +64,7 @@ class ConstValue {
         const val TypeExample = "typeExample"
         const val SafFileExample = "safFileExample"
         const val LanguageSettingExample = "languageSettingExample"
+        const val LocalLanguageChangeExample = "localLanguageChangeExample"
         
         // 새로운 Compose 1.7 기능 예제들
         const val Compose17FeaturesExample = "compose17FeaturesExample"
