@@ -1,10 +1,7 @@
 package com.example.composesample.presentation.example.component.language
 
-import android.annotation.SuppressLint
-import android.content.Context
-import android.content.res.Configuration
-import androidx.compose.foundation.background
 import android.content.Intent
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -36,32 +33,30 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.composesample.R
 import com.example.composesample.util.LanguageManager
-import java.util.Locale
 
-@SuppressLint("LocalContextConfigurationRead")
 @Composable
 fun LocalLanguageChangeExampleUI(onBackButtonClick: () -> Unit) {
     val context = LocalContext.current
-    
+
     // LanguageManager를 사용하여 언어 설정 관리
-    var isKorean by remember { 
-        mutableStateOf(LanguageManager.getLanguagePreference(context)) 
+    var isKorean by remember {
+        mutableStateOf(LanguageManager.getLanguagePreference(context))
     }
-    
+
     // 언어 변경 함수
     fun changeLanguage(useKorean: Boolean) {
         LanguageManager.saveLanguagePreference(context, useKorean)
         isKorean = useKorean
     }
-    
+
     // 현재 설정에 따른 Context 생성
     val localizedContext = remember(isKorean) {
         LanguageManager.createLocalizedContext(context)
     }
-    
+
     // 화면 전환 상태 관리
     var showOtherScreen by remember { mutableStateOf(false) }
-    
+
     // 다른 화면을 보여주는 경우
     if (showOtherScreen) {
         LanguageTestScreen {
@@ -218,7 +213,7 @@ fun LocalLanguageChangeExampleUI(onBackButtonClick: () -> Unit) {
 
                     // 다른 Activity로 이동 버튼
                     Button(
-                        onClick = { 
+                        onClick = {
                             val intent = Intent(context, LanguageTestActivity::class.java)
                             context.startActivity(intent)
                         },
