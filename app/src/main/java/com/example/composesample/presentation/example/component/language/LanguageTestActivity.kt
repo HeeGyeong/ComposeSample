@@ -34,9 +34,6 @@ class LanguageTestActivity : ComponentActivity() {
 @Composable
 fun LanguageTestActivityScreen(onBackClick: () -> Unit) {
     val context = LocalContext.current
-    val localizedContext = remember(context) { 
-        LanguageManager.createLocalizedContext(context) 
-    }
     
     // 언어 변경 상태를 추적하기 위한 state
     var refreshKey by remember { mutableStateOf(0) }

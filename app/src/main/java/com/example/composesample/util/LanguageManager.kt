@@ -3,6 +3,7 @@ package com.example.composesample.util
 import android.content.Context
 import android.content.res.Configuration
 import java.util.Locale
+import androidx.core.content.edit
 
 object LanguageManager {
     private const val LANGUAGE_PREFS = "language_prefs"
@@ -10,7 +11,7 @@ object LanguageManager {
     
     fun saveLanguagePreference(context: Context, isKorean: Boolean) {
         val sharedPrefs = context.getSharedPreferences(LANGUAGE_PREFS, Context.MODE_PRIVATE)
-        sharedPrefs.edit().putBoolean(IS_KOREAN_KEY, isKorean).apply()
+        sharedPrefs.edit { putBoolean(IS_KOREAN_KEY, isKorean) }
     }
     
     fun getLanguagePreference(context: Context): Boolean {

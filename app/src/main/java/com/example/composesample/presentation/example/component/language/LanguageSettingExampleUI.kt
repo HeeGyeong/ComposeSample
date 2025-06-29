@@ -65,7 +65,6 @@ data class LocationInfo(
     val error: String? = null
 )
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun LanguageSettingExampleUI(onBackButtonClick: () -> Unit) {
     val context = LocalContext.current
