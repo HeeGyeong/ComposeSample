@@ -1,16 +1,16 @@
 package com.example.composesample.di
 
 import com.example.composesample.presentation.example.BlogExampleViewModel
-import com.example.composesample.presentation.example.component.api.ApiExampleUseCaseViewModel
-import com.example.composesample.presentation.example.component.api.ApiExampleViewModel
-import com.example.composesample.presentation.example.component.cache.DataCacheViewModel
-import com.example.composesample.presentation.example.component.compositionLocal.CompositionLocalViewModel
-import com.example.composesample.presentation.example.component.file.SafFileSelectionViewModel
-import com.example.composesample.presentation.example.component.init.InitTestViewModel
-import com.example.composesample.presentation.example.component.mvi.MVIExampleViewModel
-import com.example.composesample.presentation.example.component.paging.PagingViewModel
-import com.example.composesample.presentation.example.component.sse.SSEViewModel
-import com.example.composesample.presentation.example.component.type.TypeExampleViewModel
+import com.example.composesample.presentation.example.component.architecture.development.init.InitTestViewModel
+import com.example.composesample.presentation.example.component.architecture.development.type.TypeExampleViewModel
+import com.example.composesample.presentation.example.component.architecture.pattern.compositionLocal.CompositionLocalViewModel
+import com.example.composesample.presentation.example.component.architecture.pattern.mvi.MVIExampleViewModel
+import com.example.composesample.presentation.example.component.data.api.ApiExampleUseCaseViewModel
+import com.example.composesample.presentation.example.component.data.api.ApiExampleViewModel
+import com.example.composesample.presentation.example.component.data.cache.DataCacheViewModel
+import com.example.composesample.presentation.example.component.data.paging.PagingViewModel
+import com.example.composesample.presentation.example.component.data.sse.SSEViewModel
+import com.example.composesample.presentation.example.component.system.platform.file.SafFileSelectionViewModel
 import com.example.composesample.presentation.legacy.movie.MovieViewModel
 import com.example.composesample.presentation.legacy.sub.SubActivityViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel

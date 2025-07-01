@@ -7,7 +7,7 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.provider.MediaStore
 import androidx.core.content.ContextCompat
-import com.example.composesample.presentation.example.component.version.PermissionConstValue
+import com.example.composesample.presentation.example.component.system.platform.version.PermissionConstValue
 
 enum class PermissionType {
     MEDIA,

@@ -35,11 +35,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.data.db.ItemDTO
-import com.example.composesample.presentation.example.component.cache.DataCacheViewModel
 import org.koin.androidx.compose.koinViewModel
-import java.util.*
+import java.util.UUID
 
 @Composable
 fun MainContent() {
