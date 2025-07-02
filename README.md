@@ -17,7 +17,7 @@ Jetpack Compose를 공부하고 실무에 적용하면서 발생했던 이슈와
 Clean Architecture 기반으로 구성되어 있으며, 컴포넌트들은 기능별로 체계적으로 분류되어 있어 원하는 예제를 쉽게 찾을 수 있습니다.
 
 - **최신 업데이트**
-  - 2025.07: 컴포넌트 패키지 구조 대분류별 정리 (ui, interaction, navigation, data, system, architecture)
+  - 2025.07: 컴포넌트 패키지 구조 대분류별 정리
   - 2025.06: 버전 최신화 및 cursorrules mdc 파일 추가
   - 2025.03: Cursor IDE 용 md 파일 추가
   - 2025.02: targetSDK 35 UI 대응
