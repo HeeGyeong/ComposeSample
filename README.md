@@ -14,7 +14,10 @@
 ## 프로젝트 소개
 Jetpack Compose를 공부하고 실무에 적용하면서 발생했던 이슈와 자주 사용되는 다양한 기능들의 샘플을 모아둔 프로젝트입니다.
 
+Clean Architecture 기반으로 구성되어 있으며, 컴포넌트들은 기능별로 체계적으로 분류되어 있어 원하는 예제를 쉽게 찾을 수 있습니다.
+
 - **최신 업데이트**
+  - 2025.07: 컴포넌트 패키지 구조 대분류별 정리 (ui, interaction, navigation, data, system, architecture)
   - 2025.06: 버전 최신화 및 cursorrules mdc 파일 추가
   - 2025.03: Cursor IDE 용 md 파일 추가
   - 2025.02: targetSDK 35 UI 대응
@@ -48,8 +51,15 @@ Jetpack Compose를 공부하고 실무에 적용하면서 발생했던 이슈와
 ComposeSample
 ├── app
 │ ├── presentation # UI 레이어 (Activity, Compose UI)
-│ │ ├─ example # example feature pacakge
-│ │ └─ legacy  # legacy feature pacakge
+│ │ ├─ example # example feature package
+│ │ │ └─ component # 컴포넌트 예제
+│ │ │   ├── ui # UI 컴포넌트 & 레이아웃
+│ │ │   ├── interaction # 사용자 상호작용 & 제스처
+│ │ │   ├── navigation # 내비게이션
+│ │ │   ├── data # 데이터 관리 & 네트워크
+│ │ │   ├── system # 시스템 통합 & 플랫폼
+│ │ │   └── architecture # 아키텍처 & 개발 도구
+│ │ └─ legacy  # legacy feature package
 │ ├── coordinator # Coordinator pattern Initializer
 │ ├── di # 의존성 주입
 │ ├── util # 유틸리티 클래스
@@ -59,7 +69,7 @@ ComposeSample
 │ └── coordinator # Coordinator pattern Initializer
 │
 ├── Core
-│ └── navigatrion # Coordinator interface
+│ └── navigation # Coordinator interface
 │
 ├── data
 │ ├── api # API 인터페이스
@@ -103,130 +113,74 @@ ComposeSample
    - 리컴포지션 최소화
 
 ## 컴포넌트 예제
-1. **api**: 
-- Retrofit을 사용한 API 호출과 UseCase 패턴 구현
-- 네트워크 연결 상태 모니터링 및 에러 처리
 
-2. **bottomsheet**: 
-- BottomSheet와 ModalBottomSheet 구현
-- 애니메이션과 상태 관리를 포함한 커스텀 BottomSheet
+### **ui** - UI 컴포넌트 & 레이아웃
+**layout**: 
+- **animation**: Compose 애니메이션과 전환 효과
+- **bottomsheet**: BottomSheet와 ModalBottomSheet 구현, 커스텀 BottomSheet
+- **drawer**: Navigation Drawer와 Modal Drawer 구현
+- **flexbox**: FlexBox 레이아웃과 반응형 디자인
+- **header**: Sticky Header와 스크롤 상태 연동
+- **lazycolumn**: LazyColumn 성능 최적화, FlingBehavior 커스터마이징, targetSDK 35 대응
+- **pager**: ViewPager 구현과 페이지 전환
 
-3. **cache**: 
-- Room을 사용한 로컬 데이터 캐싱과 CRUD 구현
-- 실시간 검색 기능이 포함된 데이터 관리
+**media**:
+- **lottie**: Lottie 애니메이션 구현과 제어
+- **shimmer**: 로딩 상태 Shimmer 효과와 커스텀 애니메이션
 
-4. **drag**: 
-- LazyColumn에서의 드래그 앤 드롭 기능
-- 아이템 위치 변경 및 애니메이션 처리
+**text**:
+- 텍스트 스타일링과 다양한 표현 방식
 
-5. **drawer**: 
-- Navigation Drawer 구현
-- Modal Drawer와 스크린 전환 예제
+### **interaction** - 사용자 상호작용 & 제스처
+- **clickevent**: 다양한 클릭 이벤트 처리
+- **drag**: LazyColumn 드래그 앤 드롭과 아이템 위치 변경
+- **refresh**: Pull-to-Refresh 구현과 새로고침 애니메이션
+- **swipe**: Swipe to Dismiss와 스와이프 제스처 처리
 
-6. **effect**: 
-- Compose의 Side Effect 처리
-- LaunchedEffect, SideEffect 등 효과 관리
-
-7. **ffmpeg**: 2025. 06 기준 라이브러리 버전 문제로 전체 주석처리.
-- FFmpeg를 사용한 비디오/오디오 인코딩/디코딩 예제 
-- 주석 처리 되었으나 코드는 남아있음. 
-
-8. **flexbox**: 
-- FlexBox 레이아웃 구현
-- 동적 크기 조절 및 반응형 레이아웃
-
-9. **header**: 
-- Sticky Header 구현
-- 스크롤에 따른 헤더 상태 변경
-
-10. **intent**: 
-- 안드로이드 Intent 처리
-- 앱 간 데이터 공유 및 딥링크 처리
-
-11. **lazycolumn**: 
-- LazyColumn 성능 최적화
-- FlingBehavior 커스터마이징
-- reverse LayzyColumn 구현
-- targetSDK 35 대응
-
-12. **lottie**: 
-- Lottie 애니메이션 구현
-- 애니메이션 제어 및 상호작용
-
-13. **navigation**: 
+### **navigation** - 내비게이션
 - Bottom Navigation 구현
 - Navigation Component 활용
 
-14. **pager**: 
-- ViewPager 구현
-- 페이지 전환 및 인디케이터
+### **data** - 데이터 관리 & 네트워크
+- **api**: Retrofit API 호출과 UseCase 패턴, 네트워크 연결 상태 모니터링
+- **cache**: Room 로컬 데이터 캐싱과 CRUD, 실시간 검색 기능
+- **paging**: 페이징 처리와 무한 스크롤
+- **sse**: Server-Sent Events와 실시간 데이터 스트리밍
 
-15. **powersave**: 
-- 절전 모드 감지 및 대응
-- 배터리 최적화 처리
+### **system** - 시스템 통합 & 플랫폼
+**platform**:
+- **file**: 파일 선택과 SAF(Storage Access Framework) 처리
+- **intent**: Intent 처리와 앱 간 데이터 공유, 딥링크
+- **language**: 다국어 처리와 언어 설정
+- **powersave**: 절전 모드 감지와 배터리 최적화
+- **shortcut**: 안드로이드 shortcuts (dynamic, static)
+- **version**: Android SDK 버전 대응과 호환성 처리
+- **webview**: WebView 구현과 JavaScript 인터페이스
 
-16. **preview**: 
-- Compose Preview 기능
-- 다양한 Preview 옵션 활용
+**media**:
+- **ffmpeg**: 비디오/오디오 인코딩/디코딩 (2025.06 기준 라이브러리 호환성 문제로 주석처리)
+- **recorder**: 오디오/비디오 녹화와 미디어 레코딩 상태 관리
 
-17. **recorder**: 
-- 오디오/비디오 녹화 기능
-- 미디어 레코딩 상태 관리
+**background**:
+- **workmanager**: 백그라운드 작업과 작업 스케줄링
 
-18. **refresh**: 
-- Pull-to-Refresh 구현
-- 새로고침 상태 및 애니메이션
+###️ **architecture** - 아키텍처 & 개발 도구
+**pattern**:
+- **compositionLocal**: CompositionLocal을 사용한 데이터 공유
+- **coroutine**: 코루틴 기반 비동기 처리
+- **effect**: Compose Side Effect 처리 (LaunchedEffect, SideEffect 등)
+- **mvi**: MVI 아키텍처 패턴과 단방향 데이터 흐름
 
-19. **shimmer**: 
-- 로딩 상태 Shimmer 효과
-- 커스텀 Shimmer 애니메이션
-- text Shimmer 효과 추가
+**development**:
+- **compose17**: Compose 1.7 신기능들 (Graphics Layer, Path Graphics 등)
+- **coordinator**: Coordinator Pattern 구현
+- **cursor**: Cursor IDE 관련 예제
+- **init**: 초기화 로직과 상태 관리
+- **preview**: Compose Preview 기능과 다양한 옵션
+- **test**: UI 테스트 예제
+- **type**: 타입 안전성과 컴파일 타임 최적화
 
-20. **swipe**: 
-- Swipe to Dismiss 구현
-- 스와이프 제스처 처리
-
-21. **text**: 
-- 텍스트 스타일링
-- 다양한 텍스트 표현 방식
-
-22. **version**: 
-- Android SDK 버전 대응
-- 버전별 기능 처리
-
-23. **webview**: 
-- WebView 구현 및 설정
-- JavaScript 인터페이스 처리
-
-24. **workmanager**: 
-- WorkManager 백그라운드 작업
-- 작업 스케줄링 관리
-
-25. **ktor**: 
-- Ktor 클라이언트를 사용한 네트워크 통신
-- 코루틴 기반의 비동기 처리
-
-26. **mvi**: 
-- MVI 아키텍처 패턴 구현
-- 단방향 데이터 흐름과 상태 관리
-
-27. **sse**: 
-- Server-Sent Events 구현
-- 실시간 데이터 스트리밍 처리
-
-28. **test**: 
-- 간단한 UI Test 예제 구현
-
-29. **CompositionLocal**: 
-- CompositionLocal을 사용한 데이터 공유
-- 다양한 컴포저블에서 데이터 전달
-
-30. **shortcuts**: 
-- 안드로이드 shortcuts 기능 구현
-- dynamic shortcuts, static shortcuts 구현
-
-
-etc. **그 외 실무에 사용할 법한 다양한 예제 작성**
+**etc.** 그 외 실무에 사용할 법한 다양한 예제 작성
 
 
 ## 주의사항
