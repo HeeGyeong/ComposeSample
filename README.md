@@ -164,7 +164,7 @@ ComposeSample
 **background**:
 - **workmanager**: 백그라운드 작업과 작업 스케줄링
 
-###️ **architecture** - 아키텍처 & 개발 도구
+### **architecture** - 아키텍처 & 개발 도구
 **pattern**:
 - **compositionLocal**: CompositionLocal을 사용한 데이터 공유
 - **coroutine**: 코루틴 기반 비동기 처리
