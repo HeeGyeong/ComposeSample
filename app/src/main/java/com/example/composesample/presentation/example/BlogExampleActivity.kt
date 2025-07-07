@@ -5,14 +5,10 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.result.ActivityResultCallback
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.AnimationConstants
@@ -179,19 +175,6 @@ class BlogExampleActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val contract = ActivityResultContracts.GetContent()
-
-        val callback = ActivityResultCallback<Uri?> { uri ->
-            uri?.let {
-                // val inputVideoPath = getRealPathFromURI(uri, this)
-                // inputVideoPath?.let {
-                //     this.executeCommand(inputVideoPath)
-                // }
-            }
-        }
-
-        val launcher = registerForActivityResult(contract, callback)
-
         setContent {
             val context = LocalContext.current as BlogExampleActivity
             val type = intent.getStringExtra(IntentType) ?: ExampleType
@@ -257,7 +240,6 @@ class BlogExampleActivity : ComponentActivity() {
                     .background(color = Color.White)
             ) {
                 BlogExampleScreen(
-                    launcher = launcher,
                     blogExampleViewModel = blogExampleViewModel
                 )
 
@@ -269,13 +251,11 @@ class BlogExampleActivity : ComponentActivity() {
 
 @Composable
 fun BlogExampleScreen(
-    launcher: ActivityResultLauncher<String>,
     blogExampleViewModel: BlogExampleViewModel
 ) {
     val context = LocalContext.current
     val exampleType = remember { mutableStateOf("") }
     val exampleMoveType = remember { mutableStateOf(ExampleMoveType.UI) }
-    val studyType = blogExampleViewModel.studyType.collectAsState().value
     val exampleObjectList = blogExampleViewModel.exampleObjectList.collectAsState().value
     val searchText by blogExampleViewModel.searchText.collectAsState()
     val searchExampleList = blogExampleViewModel.searchExampleList.collectAsState(listOf()).value
@@ -300,7 +280,6 @@ fun BlogExampleScreen(
         ExampleCaseUI(
             exampleType = exampleType,
             exampleMoveType = exampleMoveType,
-            launcher = launcher
         ) {
             exampleType.value = ""
         }
@@ -656,7 +635,6 @@ fun ExampleCardSection(
 fun ExampleCaseUI(
     exampleType: MutableState<String>,
     exampleMoveType: MutableState<ExampleMoveType>,
-    launcher: ActivityResultLauncher<String>,
     onBackEvent: () -> Unit
 ) {
     val context = LocalContext.current

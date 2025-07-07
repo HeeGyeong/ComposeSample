@@ -19,7 +19,6 @@ class BlogExampleViewModel(
     private val navigation: Navigation,
     application: Application
 ) : BaseViewModel(navigation, application) {
-    // toast는 그대로 유지
     val toast = MutableStateFlow("")
     fun sendToastMessage(message: String) {
         toast.update { message }
