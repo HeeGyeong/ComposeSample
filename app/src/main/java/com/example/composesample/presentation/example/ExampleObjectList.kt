@@ -406,20 +406,20 @@ fun exampleObjectList(): ArrayList<ExampleObject> {
     insertExampleObject.add(
         ExampleObject(
             lastUpdate = "25. 06. 29",
-            title = "로컬 언어 변경 예제",
-            description = "OS 설정이 아닌 앱 내에서 true/false 값으로 한국어/영어를 실시간 변경하는 예제",
-            blogUrl = "",
-            exampleType = ConstValue.LocalLanguageChangeExample
+            title = "Init Case Test Example",
+            description = "Compose 환경에서 데이터를 init 하는 케이스를 확인해보는 예제",
+            blogUrl = "https://heegs.tistory.com/185",
+            exampleType = ConstValue.InitTestExample
         )
     )
 
     insertExampleObject.add(
         ExampleObject(
-            lastUpdate = "25. 06. 29",
-            title = "Init Case Test Example",
-            description = "Compose 환경에서 데이터를 init 하는 케이스를 확인해보는 예제",
-            blogUrl = "https://heegs.tistory.com/185",
-            exampleType = ConstValue.InitTestExample
+            lastUpdate = "25. 07. 09",
+            title = "로컬 언어 변경 예제",
+            description = "OS 설정이 아닌 앱 내에서 true/false 값으로 한국어/영어를 실시간 변경하는 예제",
+            blogUrl = "https://heegs.tistory.com/188",
+            exampleType = ConstValue.LocalLanguageChangeExample
         )
     )
 
