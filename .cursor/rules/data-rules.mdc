@@ -1,0 +1,57 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+---
+description: "Data Class Implementation Rules for Android Development"
+globs: ""
+alwaysApply: true
+---
+
+# Data Class Implementation Rules
+
+## Overview
+This rule defines the implementation guidelines for data classes in the Android project. Follow the comprehensive guidelines from [DataRules.md](mdc:app/src/main/java/com/example/composesample/docs/data/DataRules.md).
+
+## Key Rules
+
+### Naming Conventions
+- **File Pattern**: `{Domain}Data.kt` or `{Domain}ListData.kt`
+- **Server fields**: snake_case
+- **Client fields**: camelCase
+- **Boolean flags**: prefix with 'is' or 'has'
+- **YN flags**: String type with "Y"/"N"
+
+### Required Structure
+```kotlin
+@Parcelize
+data class ExampleData(
+    @SerializedName("server_field")
+    val clientField: Type? = defaultValue
+) : Parcelable
+```
+
+### Mandatory Annotations
+- **@SerializedName**: REQUIRED for all API response fields
+- **@Parcelize**: REQUIRED for Android component data transfer
+
+### Field Types
+- **Required fields**: Non-null types
+- **Optional fields**: Nullable types with defaults
+- **Collections**: Empty collection defaults
+
+### Companion Objects
+```kotlin
+companion object {
+    val EMPTY = DataModel("")
+    val MOCK = DataModel("test_data")
+}
+```
+
+## Validation Requirements
+1. ALL fields must have @SerializedName
+2. Field names must match API spec exactly
+3. Default values for nullable fields
+4. Proper nullability handling
+5. Documentation for complex business logic

@@ -1,0 +1,59 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+---
+description: "API and UI Binding Creation using MVVM and Material3"
+globs: ""
+alwaysApply: true
+---
+
+# API and UI Binding Creation Rules
+
+## Overview
+This rule explains the steps to add APIs using MVVM architecture and connect data to UI following Material3 guidelines. Reference the detailed guide from [CreateAPIAndUIBindingGuide.md](mdc:app/src/main/java/com/example/composesample/docs/prompt/CreateAPIAndUIBindingGuide.md).
+
+## Requirements
+
+### 1. DTO Creation
+- Generate DTOs that match API documentation
+- Follow data class implementation rules from [DataRules.md](mdc:app/src/main/java/com/example/composesample/docs/data/DataRules.md)
+
+### 2. API Interface
+- Add API call functions within already declared API interfaces
+- Create new interfaces only when no appropriate existing interface exists
+- Use proper naming and organization
+
+### 3. API Call Function Implementation
+- Implement API call functions that match API documentation
+- Use proper HTTP methods and endpoints
+- Include error handling and response processing
+
+### 4. ViewModel Integration
+- Add API call functions to appropriate ViewModel
+- Store data through API calls via ViewModel
+- Render UI with stored data
+- Follow ViewModel patterns from [DIRules.md](mdc:app/src/main/java/com/example/composesample/docs/di/DIRules.md)
+
+## Constraints
+1. **Import**: Use import statements after checking existing versions
+2. **Responsiveness**: Ensure code responsiveness
+
+## Expected Results
+
+### API Interface
+- API functions added to API interface
+
+### ViewModel
+- API call functions exist in appropriate ViewModel
+- Data stored after API calls
+
+### UI Rendering
+- UI rendered with stored data
+- Follow UI guidelines from [UIRules.md](mdc:app/src/main/java/com/example/composesample/docs/ui/UIRules.md)
+
+## Additional Guidelines
+- Follow MVVM architecture and Material3 guidelines
+- Implement according to existing project patterns and rules
+- Maintain consistency across the codebase

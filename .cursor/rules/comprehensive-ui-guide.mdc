@@ -1,0 +1,102 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+---
+description: "Comprehensive UI System Guide for Android Jetpack Compose"
+globs: ""
+alwaysApply: true
+---
+
+# Comprehensive UI System Guide
+
+## Overview
+This rule defines comprehensive UI guidelines including business logic separation, component organization, and feature implementation. References [UIRules.md](mdc:app/src/main/java/com/example/composesample/docs/ui/UIRules.md).
+
+## Business Logic Separation
+
+### ❌ Incorrect Pattern
+```kotlin
+@Composable
+fun PlayerScreen() {
+    Button(onClick = {
+        // Business logic directly in UI - WRONG
+    }) {
+        Text("Button")
+    }
+}
+```
+
+### ✅ Correct Pattern
+```kotlin
+class PlayerViewModel() : ViewModel() {
+    fun fetchPlayList() {
+        // Business logic here
+    }
+}
+
+@Composable
+fun PlayerScreen(
+    playerViewModel: PlayerViewModel
+) {
+    Button(onClick = {
+        playerViewModel.fetchPlayList()
+    }) {
+        Text("Button")
+    }
+}
+```
+
+## ViewModel Organization Rules
+
+### Higher-Level Feature Organization
+Use one ViewModel per major feature, not per sub-feature.
+
+**✅ DO THIS**: Single ViewModel for feature
+```kotlin
+class LiveViewModel {
+    // One ViewModel handles all Live-related features
+    fun handleStreaming() { ... }
+    fun handleSettings() { ... }
+    fun handleChat() { ... }
+}
+```
+
+**❌ DON'T DO THIS**: Multiple ViewModels for sub-features
+```kotlin
+class LiveStreamViewModel { ... }  // WRONG
+class LiveSettingViewModel { ... }  // WRONG
+class LiveChatViewModel { ... }     // WRONG
+```
+
+## Composable Components
+- Place reusable components in components/ directory
+- Each component must be independent
+- Follow theme system
+- Consider accessibility (ContentDescription required)
+- ViewModel naming: `FunctionName + ViewModel`
+- Register in `../di/ViewModelModule.kt` using Koin
+
+## State Management
+- Manage state in ViewModel
+- Use StateFlow
+- Follow Unidirectional Data Flow (UDF)
+- Apply state hoisting pattern
+- Use `remember` and `derivedStateOf` for expensive calculations
+
+## Navigation
+- Use Compose Navigation
+- Support Deep Links
+- Implement screen transition animations
+- Handle backstack management
+
+## Error Handling
+- User-friendly error messages
+- Offline mode support
+- Implement retry mechanisms
+- Error logging and analytics
+
+## Performance Optimization
+- **Recomposition**: Use `remember` and `derivedStateOf` for expensive calculations
+- **Lazy Components**: Use `LazyColumn` and `LazyRow` for lists

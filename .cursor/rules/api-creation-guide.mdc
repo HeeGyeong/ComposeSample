@@ -1,0 +1,49 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+---
+description: "API Creation Guide following MVVM architecture and Material3"
+globs: ""
+alwaysApply: true
+---
+
+# API Creation Guide Rules
+
+## Overview
+This rule provides guidelines for adding API call logic based on API documentation following MVVM architecture and Material3 guidelines. Reference the detailed guide from [CreateAPIGuide.md](mdc:app/src/main/java/com/example/composesample/docs/prompt/CreateAPIGuide.md).
+
+## Requirements
+
+### API Call Function
+- Write API call functions that match the API documentation
+- Follow the rules specified in `Create API and UI Binding Guide`
+
+### Constraints
+1. **Imports**: Check existing versions and use appropriate import statements
+2. **Responsiveness**: Code must be responsive
+3. **API Documentation**: Required for implementation
+
+## Expected Results
+
+### API Interface
+- API functions added to appropriate API interface
+- Explore existing API interfaces and add functions to appropriate locations
+- Avoid creating new interfaces when possible
+
+### ViewModel Integration
+- API call functions exist in appropriate ViewModel
+- Avoid creating new ViewModels when possible
+- Reuse existing ViewModels that handle similar functionality
+
+### Flow Implementation
+- Add flows that match API documentation
+- Use `Any` type for responses when specific response handling is not needed
+- Follow existing patterns in the codebase
+
+## Implementation Guidelines
+- Ensure all implementations are consistent with existing project patterns and rules
+- Follow MVVM architecture and Material3 guidelines
+- Maintain code consistency and readability
+- Use proper error handling and loading states

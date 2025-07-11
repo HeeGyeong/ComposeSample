@@ -3,7 +3,23 @@ description:
 globs: 
 alwaysApply: false
 ---
+---
+description: "Kotlin & Jetpack Compose Code Style Guide with Korean comments"
+globs: ""
+alwaysApply: true
+---
+
 # Kotlin & Jetpack Compose Code Style Guide
+
+## Overview
+This rule defines comprehensive code style guidelines for Kotlin and Jetpack Compose development. References [CreateUICodeSnippet.md](mdc:app/src/main/java/com/example/composesample/docs/prompt/CreateUICodeSnippet.md).
+
+## Technical Specifications
+- **Language**: Kotlin
+- **Framework**: Jetpack Compose
+- **Architecture**: MVVM + Clean Architecture
+- **Comments**: Write in Korean
+- **File Coverage**: Write all parts without omission
 
 ## Naming Conventions
 - Classes: PascalCase
@@ -28,3 +44,25 @@ alwaysApply: false
 - Comments only for complex business logic
 - Use KDoc format
 - TODO comments must include resolution deadline
+
+## Code Style Examples
+
+### Color and Style Usage
+```kotlin
+Text(
+    modifier = Modifier,
+    text = title,
+    color = Color.LightGray,
+    style = getTextStyle(12)
+)
+```
+
+### ViewModel Usage
+- Reference [DIRules.md](mdc:app/src/main/java/com/example/composesample/docs/di/DIRules.md)
+- Use Koin as DI framework
+
+## Implementation Guidelines
+- Implement UI that matches provided designs/requirements
+- Maintain build integrity using dummy data
+- Express full context of requirements
+- Base implementation on comprehensive understanding
