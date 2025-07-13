@@ -87,9 +87,11 @@ ComposeSample
 
 ## Cursor Rules 설정
 
-이 프로젝트는 **Cursor IDE**를 사용하는 개발자들을 위한 **AI 코딩 어시스턴트 규칙**을 제공합니다. `.cursor/rules` 디렉토리에 9개의 mdc 파일이 포함되어 있어, Cursor AI가 프로젝트의 아키텍처와 코딩 스타일을 자동으로 이해하고 일관된 코드를 생성할 수 있도록 도와줍니다.
+이 프로젝트는 **Cursor IDE**를 사용하는 개발자들을 위한 **AI 코딩 어시스턴트 규칙**을 제공합니다.
 
-### 📁 Rules 파일 구성
+`.cursor/rules` 디렉토리에 9개의 mdc 파일이 포함되어 있어, Cursor AI가 프로젝트의 아키텍처와 코딩 스타일을 자동으로 이해하고 일관된 코드를 생성할 수 있도록 도와줍니다.
+
+### Rules 파일 구성
 
 ```
 .cursor/rules/
@@ -104,7 +106,7 @@ ComposeSample
 └── testing-guide.mdc               # 테스팅 가이드
 ```
 
-### 🎯 주요 규칙 내용
+### 주요 규칙 내용
 
 - **아키텍처**: Clean Architecture + MVVM 패턴
 - **UI 프레임워크**: Jetpack Compose + Material3
@@ -114,11 +116,11 @@ ComposeSample
 - **성능 최적화**: Compose 리컴포지션, 메모리 관리
 - **테스팅**: 단위 테스트, UI 테스트 커버리지
 
-### 🔗 원본 문서 참조
+### 원본 문서 참조
 
 상세한 규칙 내용은 `app/src/main/java/com/example/composesample/docs/` 폴더의 원본 문서에서 확인할 수 있습니다.
 
-### 주요 컴포넌트
+## 주요 컴포넌트
 - **MainActivity**: 가장 기본적인 Compose 사용 예제
 - **BlogExampleActivity**: 실무에 적용 가능한 다양한 기능 구현 예제
   - BottomSheet
