@@ -423,6 +423,16 @@ fun exampleObjectList(): ArrayList<ExampleObject> {
         )
     )
 
+    insertExampleObject.add(
+        ExampleObject(
+            lastUpdate = "25. 07. 14",
+            title = "Nested Scrolling Example",
+            description = "Nested Scroll과 NestedScrollConnection을 활용한 고급 스크롤 예제",
+            blogUrl = "",
+            exampleType = ConstValue.NestedScrollingExample
+        )
+    )
+
     return insertExampleObject
 }
 

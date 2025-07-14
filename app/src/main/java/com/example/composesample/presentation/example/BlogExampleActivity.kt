@@ -101,6 +101,7 @@ import com.example.composesample.presentation.example.component.ui.layout.lazyco
 import com.example.composesample.presentation.example.component.ui.layout.lazycolumn.LazyColumnIssueUI
 import com.example.composesample.presentation.example.component.ui.layout.lazycolumn.ReverseLazyColumnExampleUI
 import com.example.composesample.presentation.example.component.ui.layout.pager.PullScreenPagerUI
+import com.example.composesample.presentation.example.component.ui.scroll.NestedScrollingExampleUI
 import com.example.composesample.presentation.example.component.ui.media.lottie.LottieExampleUI
 import com.example.composesample.presentation.example.component.ui.media.shimmer.ShimmerExampleUI
 import com.example.composesample.presentation.example.component.ui.media.shimmer.TextShimmerExampleUI
@@ -135,6 +136,7 @@ import com.example.composesample.util.ConstValue.Companion.LookaheadScopeExample
 import com.example.composesample.util.ConstValue.Companion.LottieExample
 import com.example.composesample.util.ConstValue.Companion.MVIExample
 import com.example.composesample.util.ConstValue.Companion.ModalBottomSheetExample
+import com.example.composesample.util.ConstValue.Companion.NestedScrollingExample
 import com.example.composesample.util.ConstValue.Companion.ModalDrawExample
 import com.example.composesample.util.ConstValue.Companion.PagingExample
 import com.example.composesample.util.ConstValue.Companion.PassingIntentDataExample
@@ -782,6 +784,10 @@ fun ExampleCaseUI(
 
                         MVIExample -> {
                             MVIExampleUI(onBackEvent)
+                        }
+
+                        NestedScrollingExample -> {
+                            NestedScrollingExampleUI(onBackEvent)
                         }
 
                         CoordinatorExample -> {
