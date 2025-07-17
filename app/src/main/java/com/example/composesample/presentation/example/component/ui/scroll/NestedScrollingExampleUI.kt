@@ -72,6 +72,12 @@ fun NestedScrollingExampleUI(
     val lastScrollDelta = remember { mutableFloatStateOf(0f) }
     val lastFlingVelocity = remember { mutableFloatStateOf(0f) }
 
+    // 시각적 차이를 보여주기 위한 상태들
+    val preScrollConsumed = remember { mutableFloatStateOf(0f) }   // Pre에서 소비한 양
+    val postScrollConsumed = remember { mutableFloatStateOf(0f) }  // Post에서 소비한 양
+    val childScrollConsumed = remember { mutableFloatStateOf(0f) } // LazyColumn에서 소비한 양
+    val currentScrollDirection = remember { mutableStateOf("없음") }
+
     // 네스티드 스크롤 연결 설정
     val nestedScrollConnection = remember {
         object : NestedScrollConnection {
@@ -83,21 +89,27 @@ fun NestedScrollingExampleUI(
                 lastCalledFunction.value = "onPreScroll (자식 처리 전)"
                 lastScrollDelta.floatValue = available.y
 
+                // 스크롤 방향 업데이트
+                currentScrollDirection.value = if (available.y > 0) "⬇️ 아래로" else "⬆️ 위로"
+
                 val delta = available.y
 
-                // 위로 스크롤할 때만 여기서 처리 (자식에게 전달하기 전에 툴바 숨기기)
-                if (delta < 0 && toolbarOffsetHeightPx.floatValue > -toolbarHeightPx) {
-                    val newOffset = toolbarOffsetHeightPx.floatValue + delta
+                // 위로 스크롤할 때만 onPreScroll에서 처리 (툴바 숨기기)
+                if (delta < 0) {
+                    val preConsume = delta * 0.3f
+                    preScrollConsumed.floatValue = abs(preConsume)
+
+                    // 툴바 숨기기
+                    val newOffset = toolbarOffsetHeightPx.floatValue + preConsume
                     toolbarOffsetHeightPx.floatValue = newOffset.coerceIn(-toolbarHeightPx, 0f)
 
-                    // 툴바가 아직 숨겨지지 않았다면 스크롤을 여기서 소비 (자식에게 전달 안함)
-                    val consumed =
-                        toolbarOffsetHeightPx.floatValue - (toolbarOffsetHeightPx.floatValue - delta)
-                    return androidx.compose.ui.geometry.Offset(0f, consumed)
+                    // 30% 소비하고 70%를 자식에게 전달
+                    return androidx.compose.ui.geometry.Offset(0f, preConsume)
+                } else {
+                    // 아래로 스크롤할 때는 onPreScroll에서 아무것도 소비하지 않음
+                    preScrollConsumed.floatValue = 0f
+                    return androidx.compose.ui.geometry.Offset.Zero
                 }
-
-                // 아래로 스크롤하거나 툴바가 이미 숨겨진 경우 자식에게 전달
-                return androidx.compose.ui.geometry.Offset.Zero
             }
 
             override fun onPostScroll(
@@ -107,37 +119,39 @@ fun NestedScrollingExampleUI(
             ): androidx.compose.ui.geometry.Offset {
                 postScrollCount.intValue++
                 lastCalledFunction.value = "onPostScroll (자식 처리 후)"
-                lastScrollDelta.floatValue = available.y
 
-                // 자식이 처리하지 못한 나머지 스크롤만 여기서 처리
-                // 아래로 스크롤할 때 & 자식이 더 이상 스크롤할 수 없을 때만 툴바 보이기
-                if (available.y > 0 && toolbarOffsetHeightPx.floatValue < 0) {
-                    val delta = available.y
-                    val newOffset = toolbarOffsetHeightPx.floatValue + delta
+                // 자식이 실제로 소비한 양 계산
+                val childConsumed = consumed.y
+                childScrollConsumed.floatValue = abs(childConsumed)
+
+                // 아래로 스크롤할 때만 onPostScroll에서 처리 (LazyColumn이 더 이상 스크롤할 수 없을 때)
+                if (available.y > 0) {
+                    val postConsume = available.y
+                    postScrollConsumed.floatValue = abs(postConsume)
+
+                    // 툴바 보이기 (LazyColumn이 끝에 도달했을 때만)
+                    val newOffset = toolbarOffsetHeightPx.floatValue + postConsume
                     toolbarOffsetHeightPx.floatValue = newOffset.coerceIn(-toolbarHeightPx, 0f)
 
-                    // 실제로 소비한 스크롤 양 반환
-                    return androidx.compose.ui.geometry.Offset(
-                        0f,
-                        newOffset - (toolbarOffsetHeightPx.floatValue - delta)
-                    )
+                    // 실제로 소비한 양만 반환
+                    return androidx.compose.ui.geometry.Offset(0f, postConsume)
+                } else {
+                    // 위로 스크롤이거나 LazyColumn이 모든 스크롤을 처리했을 때
+                    postScrollConsumed.floatValue = 0f
+                    return androidx.compose.ui.geometry.Offset.Zero
                 }
-
-                return androidx.compose.ui.geometry.Offset.Zero
             }
 
             override suspend fun onPreFling(available: Velocity): Velocity {
                 preFlingCount.intValue++
-                lastCalledFunction.value = "onPreFling"
+                lastCalledFunction.value = "onPreFling (자식 플링 전)"
                 lastFlingVelocity.floatValue = available.y
 
-                // 빠른 스크롤 시 툴바 완전히 숨기기/보이기
+                // Fling에서는 툴바 조작하지 않음 (일반 스크롤 로직에 맡김)
+                // 단순히 velocity 일부만 소비
                 if (abs(available.y) > 1000) {
-                    toolbarOffsetHeightPx.floatValue = if (available.y < 0) {
-                        -toolbarHeightPx // 위로 빠르게 스크롤: 완전히 숨기기
-                    } else {
-                        0f // 아래로 빠르게 스크롤: 완전히 보이기
-                    }
+                    // 플링의 일부만 소비하고 나머지는 자식에게
+                    return Velocity(0f, available.y * 0.3f)
                 }
 
                 return Velocity.Zero
@@ -145,7 +159,7 @@ fun NestedScrollingExampleUI(
 
             override suspend fun onPostFling(consumed: Velocity, available: Velocity): Velocity {
                 postFlingCount.intValue++
-                lastCalledFunction.value = "onPostFling"
+                lastCalledFunction.value = "onPostFling (자식 플링 후)"
                 lastFlingVelocity.floatValue = available.y
 
                 return Velocity.Zero
@@ -178,7 +192,11 @@ fun NestedScrollingExampleUI(
             postFlingCount = postFlingCount.intValue,
             lastCalledFunction = lastCalledFunction.value,
             lastScrollDelta = lastScrollDelta.floatValue,
-            lastFlingVelocity = lastFlingVelocity.floatValue
+            lastFlingVelocity = lastFlingVelocity.floatValue,
+            preScrollConsumed = preScrollConsumed.floatValue,
+            postScrollConsumed = postScrollConsumed.floatValue,
+            childScrollConsumed = childScrollConsumed.floatValue,
+            currentScrollDirection = currentScrollDirection.value
         )
 
         Box(
@@ -211,11 +229,12 @@ fun NestedScrollingExampleUI(
                             Spacer(modifier = Modifier.height(4.dp))
                             Text(
                                 text = when {
-                                    index < 10 -> "천천히 스크롤해보세요 (onPreScroll, onPostScroll 확인)"
-                                    index < 20 -> "빠르게 플링해보세요 (onPreFling, onPostFling 확인)"
-                                    else -> "다양한 스크롤 패턴을 시도해보세요!"
+                                    index < 5 -> "1️⃣ onPreScroll → 2️⃣ LazyColumn → 3️⃣ onPostScroll 순서로 처리됩니다"
+                                    index < 10 -> "⬆️ 위로 스크롤: Pre 30% + LazyColumn 70% (Post 0%)"
+                                    index < 15 -> "⬇️ 아래로 스크롤: Pre 30% + LazyColumn 일부 + Post 나머지"
+                                    else -> "📊 위 소비량 바로 처리 과정을 실시간 확인하세요!"
                                 },
-                                fontSize = 14.sp,
+                                fontSize = 11.sp,
                                 color = Color.Gray
                             )
                         }
@@ -249,7 +268,11 @@ private fun ScrollStatusCard(
     postFlingCount: Int,
     lastCalledFunction: String,
     lastScrollDelta: Float,
-    lastFlingVelocity: Float
+    lastFlingVelocity: Float,
+    preScrollConsumed: Float,
+    postScrollConsumed: Float,
+    childScrollConsumed: Float,
+    currentScrollDirection: String
 ) {
     Card(
         modifier = Modifier
@@ -262,23 +285,55 @@ private fun ScrollStatusCard(
             modifier = Modifier.padding(12.dp)
         ) {
             Text(
-                text = "NestedScrollConnection 함수 호출 상태",
+                text = "스크롤 처리 순서: Pre → LazyColumn → Post",
                 fontWeight = FontWeight.Bold,
                 fontSize = 14.sp,
                 color = Color(0xFF3700B3)
             )
 
+            Text(
+                text = "현재 스크롤: $currentScrollDirection",
+                fontSize = 12.sp,
+                color = Color.Gray,
+                modifier = Modifier.padding(vertical = 4.dp)
+            )
+
+            Text(
+                text = "💡 LazyColumn이 끝에 도달해도 Pre → LazyColumn(0px) → Post 순서 유지",
+                fontSize = 10.sp,
+                color = Color(0xFF666666),
+                modifier = Modifier.padding(bottom = 4.dp)
+            )
+
             Spacer(modifier = Modifier.height(8.dp))
 
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                ScrollFunctionStatus("onPreScroll", preScrollCount, Color(0xFF4CAF50))
-                ScrollFunctionStatus("onPostScroll", postScrollCount, Color(0xFF2196F3))
-            }
+            // 실제 소비량 표시
+            ScrollConsumptionBar(
+                label = "1️⃣ onPreScroll (30% 먼저 소비)",
+                consumed = preScrollConsumed,
+                color = Color(0xFFE53E3E),
+                count = preScrollCount
+            )
 
-            Spacer(modifier = Modifier.height(4.dp))
+            Spacer(modifier = Modifier.height(6.dp))
+
+            ScrollConsumptionBar(
+                label = "2️⃣ LazyColumn (자식 처리)",
+                consumed = childScrollConsumed,
+                color = Color(0xFF38A169),
+                count = 0
+            )
+
+            Spacer(modifier = Modifier.height(6.dp))
+
+            ScrollConsumptionBar(
+                label = "3️⃣ onPostScroll (나머지 처리)",
+                consumed = postScrollConsumed,
+                color = Color(0xFF3182CE),
+                count = postScrollCount
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -314,6 +369,70 @@ private fun ScrollStatusCard(
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun ScrollConsumptionBar(
+    label: String,
+    consumed: Float,
+    color: Color,
+    count: Int
+) {
+    Column {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = label,
+                fontSize = 10.sp,
+                fontWeight = FontWeight.Medium,
+                color = color
+            )
+            if (count > 0) {
+                Text(
+                    text = "호출: $count",
+                    fontSize = 9.sp,
+                    color = Color.Gray
+                )
+            }
+        }
+
+        Spacer(modifier = Modifier.height(3.dp))
+
+        // 소비량을 시각적으로 표시하는 바
+        val maxConsumption = 100f // 최대 소비량 기준
+        val consumptionRatio = (consumed / maxConsumption).coerceIn(0f, 1f)
+
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(6.dp)
+                .background(
+                    Color.Gray.copy(alpha = 0.2f),
+                    RoundedCornerShape(3.dp)
+                )
+        ) {
+            // 실제 소비량 바
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth(consumptionRatio)
+                    .height(6.dp)
+                    .background(
+                        color,
+                        RoundedCornerShape(3.dp)
+                    )
+            )
+        }
+
+        Text(
+            text = "소비: ${consumed.toInt()}px",
+            fontSize = 8.sp,
+            color = color,
+            modifier = Modifier.padding(top = 1.dp)
+        )
     }
 }
 
@@ -372,7 +491,7 @@ private fun CollapsingToolbar(
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Text(
-                    text = "Nested Scrolling",
+                    text = "스크롤 처리 순서",
                     color = Color.White,
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Bold,
@@ -382,7 +501,7 @@ private fun CollapsingToolbar(
                 Spacer(modifier = Modifier.height(4.dp))
 
                 Text(
-                    text = "스크롤하여 툴바 효과를 확인하세요",
+                    text = "실시간 소비량으로 확인하세요",
                     color = Color.White.copy(alpha = 0.8f),
                     fontSize = 14.sp,
                     textAlign = TextAlign.Center
@@ -391,9 +510,10 @@ private fun CollapsingToolbar(
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Text(
-                    text = " 스크롤하여 숨기기/보이기 ",
+                    text = "Pre(30%) → LazyColumn → Post(나머지)",
                     color = Color.White.copy(alpha = 0.7f),
-                    fontSize = 12.sp
+                    fontSize = 12.sp,
+                    textAlign = TextAlign.Center
                 )
             }
         }
