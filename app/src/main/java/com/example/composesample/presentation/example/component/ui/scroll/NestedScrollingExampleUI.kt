@@ -228,13 +228,14 @@ fun NestedScrollingExampleUI(
                             )
                             Spacer(modifier = Modifier.height(4.dp))
                             Text(
-                                text = when {
-                                    index < 5 -> "1️⃣ onPreScroll → 2️⃣ LazyColumn → 3️⃣ onPostScroll 순서로 처리됩니다"
-                                    index < 10 -> "⬆️ 위로 스크롤: Pre 30% + LazyColumn 70% (Post 0%)"
-                                    index < 15 -> "⬇️ 아래로 스크롤: Pre 30% + LazyColumn 일부 + Post 나머지"
-                                    else -> "📊 위 소비량 바로 처리 과정을 실시간 확인하세요!"
-                                },
-                                fontSize = 11.sp,
+                                text = "좀 더 디테일한 항목 확인을 위해서 컨텐츠를 늘립니다.",
+                                fontSize = 13.sp,
+                                color = Color.Gray
+                            )
+                            Spacer(modifier = Modifier.height(4.dp))
+                            Text(
+                                text = "이정도 되는 크기는 되어야 확인이 편합니다",
+                                fontSize = 10.sp,
                                 color = Color.Gray
                             )
                         }

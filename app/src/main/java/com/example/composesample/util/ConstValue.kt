@@ -24,6 +24,7 @@ class ConstValue {
         const val FlexBoxLayoutExample = "flexBoxLayoutExample"
         const val WebViewIssueExample = "webViewIssueExample"
         const val TextStyleExample = "textStyleExample"
+
         // const val FfmpegExample = "ffmpegExample"
         const val AudioRecorderExample = "audioRecorderExample"
         const val WorkManagerExample = "workManagerExample"
@@ -66,7 +67,7 @@ class ConstValue {
         const val LanguageSettingExample = "languageSettingExample"
         const val LocalLanguageChangeExample = "localLanguageChangeExample"
         const val NestedScrollingExample = "nestedScrollingExample"
-        
+
         // 새로운 Compose 1.7 기능 예제들
         const val Compose17FeaturesExample = "compose17FeaturesExample"
         const val TextOverflowExample = "textOverflowExample"
@@ -80,6 +81,5 @@ class ConstValue {
         const val BottomSheet = "bottomSheetExampleList"
         const val NavigationDraw = "navigationDrawExampleList"
         const val Shimmer = "ShimmerExampleList"
-        const val Compose17Features = "compose17FeaturesExampleList"
     }
 }
