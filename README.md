@@ -229,6 +229,7 @@ ComposeSample
 - **Cursor Rules**: `.cursor/rules` 디렉토리의 mdc 파일들은 Cursor IDE에서만 동작하며, 다른 IDE에서는 영향을 주지 않습니다.
 
 ## 더 자세한 내용
+- **앱 설치 및 실행**: 프로젝트를 클론하여 직접 앱을 빌드하고 설치하면 다양한 컴포넌트와 UI 예제들을 실제 디바이스에서 확인할 수 있어 더욱 편리합니다. 코드만으로는 파악하기 어려운 애니메이션, 제스처, 인터랙션 등을 직접 확인해보세요.
 - **예제 설명**: 각 예제에 대한 자세한 설명은 [Tistory Blog](https://heegs.tistory.com/category/Android/Jetpack)에서 확인하실 수 있습니다.
 - **Cursor Rules**: 프로젝트의 아키텍처와 코딩 규칙은 `app/src/main/java/com/example/composesample/docs/` 폴더의 원본 문서에서 확인할 수 있습니다.
 - **AI 코딩 어시스턴트**: Cursor IDE 사용 시 자동으로 적용되는 규칙들이 일관된 코드 생성을 도와줍니다.
