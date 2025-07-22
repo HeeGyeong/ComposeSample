@@ -433,6 +433,16 @@ fun exampleObjectList(): ArrayList<ExampleObject> {
         )
     )
 
+    insertExampleObject.add(
+        ExampleObject(
+            lastUpdate = "25. 07. 22",
+            title = "SnapshotFlow vs collectAsState",
+            description = "snapshotFlow와 collectAsState 차이점과 올바른 사용법 예제",
+            blogUrl = "",
+            exampleType = ConstValue.SnapshotFlowExample
+        )
+    )
+
     return insertExampleObject
 }
 

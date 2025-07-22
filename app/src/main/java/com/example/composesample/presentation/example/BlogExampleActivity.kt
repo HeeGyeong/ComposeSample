@@ -105,6 +105,7 @@ import com.example.composesample.presentation.example.component.ui.media.lottie.
 import com.example.composesample.presentation.example.component.ui.media.shimmer.ShimmerExampleUI
 import com.example.composesample.presentation.example.component.ui.media.shimmer.TextShimmerExampleUI
 import com.example.composesample.presentation.example.component.ui.scroll.NestedScrollingExampleUI
+import com.example.composesample.presentation.example.component.architecture.state.SnapshotFlowExampleUI
 import com.example.composesample.presentation.example.component.ui.text.TextStyleUI
 import com.example.composesample.presentation.getTextStyle
 import com.example.composesample.presentation.openWebPage
@@ -154,6 +155,7 @@ import com.example.composesample.util.ConstValue.Companion.ShortCutTypePin
 import com.example.composesample.util.ConstValue.Companion.ShortCutTypeXML
 import com.example.composesample.util.ConstValue.Companion.ShortcutExample
 import com.example.composesample.util.ConstValue.Companion.SideEffectExample
+import com.example.composesample.util.ConstValue.Companion.SnapshotFlowExample
 import com.example.composesample.util.ConstValue.Companion.StickyHeaderExample
 import com.example.composesample.util.ConstValue.Companion.SwipeToDismissExample
 import com.example.composesample.util.ConstValue.Companion.TargetSDK34PermissionExample
@@ -866,6 +868,10 @@ fun ExampleCaseUI(
 
                         NestedScrollingExample -> {
                             NestedScrollingExampleUI(onBackEvent)
+                        }
+
+                        SnapshotFlowExample -> {
+                            SnapshotFlowExampleUI(onBackEvent)
                         }
 
                         else -> {
