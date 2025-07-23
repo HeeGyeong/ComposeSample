@@ -224,6 +224,11 @@ private fun CollectAsStateWithLifecycleCard(viewModel: SnapshotFlowExampleViewMo
     // ✅ 더 나은 방법: 라이프사이클 인식 버전
     val animationProgress by viewModel.animationProgress.collectAsStateWithLifecycle()
     val lifecycleOwner = LocalLifecycleOwner.current
+    
+    // ViewModel에 라이프사이클 설정
+    LaunchedEffect(Unit) {
+        viewModel.setLifecycleOwner(lifecycleOwner)
+    }
 
     Card(
         modifier = Modifier.fillMaxWidth(),
