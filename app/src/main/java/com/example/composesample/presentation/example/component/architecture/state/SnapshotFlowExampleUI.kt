@@ -47,13 +47,7 @@ import org.koin.androidx.compose.koinViewModel
 
 /**
  * SnapshotFlow vs collectAsState Example
- *
- * 주요 차이점과 올바른 사용법:
- * 1. collectAsState: Flow → State 변환, UI 업데이트용
- * 2. snapshotFlow: Compose state → Flow 변환, side-effect용
- * 3. collectAsStateWithLifecycle: 라이프사이클 인식 버전
  */
-
 @Composable
 fun SnapshotFlowExampleUI(
     onBackEvent: () -> Unit,
@@ -168,7 +162,6 @@ private fun UsageGuideCard() {
 
 @Composable
 private fun CollectAsStateExampleCard(viewModel: SnapshotFlowExampleViewModel) {
-    // ✅ 올바른 사용: ViewModel → UI 데이터 바인딩
     val userInputCount by viewModel.userInputCount.collectAsState()
 
     Card(
@@ -221,11 +214,9 @@ private fun CollectAsStateExampleCard(viewModel: SnapshotFlowExampleViewModel) {
 
 @Composable
 private fun CollectAsStateWithLifecycleCard(viewModel: SnapshotFlowExampleViewModel) {
-    // ✅ 더 나은 방법: 라이프사이클 인식 버전
     val animationProgress by viewModel.animationProgress.collectAsStateWithLifecycle()
     val lifecycleOwner = LocalLifecycleOwner.current
     
-    // ViewModel에 라이프사이클 설정
     LaunchedEffect(Unit) {
         viewModel.setLifecycleOwner(lifecycleOwner)
     }
@@ -307,7 +298,6 @@ private fun SnapshotFlowExampleCard(viewModel: SnapshotFlowExampleViewModel) {
     val lazyListState = rememberLazyListState()
     var scrollPosition by remember { mutableStateOf(0) }
 
-    // ✅ snapshotFlow 올바른 사용: side-effect용
     LaunchedEffect(Unit) {
         snapshotFlow { lazyListState.firstVisibleItemIndex }
             .distinctUntilChanged()
@@ -377,7 +367,6 @@ private fun SnapshotFlowExampleCard(viewModel: SnapshotFlowExampleViewModel) {
 @Composable
 private fun WrongUsageExampleCard(viewModel: SnapshotFlowExampleViewModel) {
     // ❌ 잘못된 사용: 고빈도 데이터를 collectAsState로
-    // 이것은 매 100ms마다 recomposition을 일으킴!
     val highFrequencyData by viewModel.highFrequencyData.collectAsState()
 
     Card(
