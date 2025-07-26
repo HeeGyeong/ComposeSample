@@ -42,6 +42,9 @@ import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.unit.dp
 import com.example.composesample.presentation.getTextStyle
 
+/**
+ * GraphicsLayer Example
+ */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun GraphicsLayerExampleUI(onBackButtonClick: () -> Unit) {
@@ -81,17 +84,14 @@ fun GraphicsLayerExampleUI(onBackButtonClick: () -> Unit) {
             
             Spacer(modifier = Modifier.height(16.dp))
 
-            // BlendMode 예제
             BlendModeExample()
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // ColorFilter 예제  
             ColorFilterExample()
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // 조합 예제
             CombinedEffectsExample()
 
             Spacer(modifier = Modifier.height(40.dp))

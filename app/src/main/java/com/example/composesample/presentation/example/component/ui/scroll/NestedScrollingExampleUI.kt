@@ -43,13 +43,6 @@ import kotlin.math.abs
 
 /**
  * Nested Scrolling Example
- *
- * NestedScrollConnection을 활용하여 다음 기능들을 구현:
- * 1. Collapsing Toolbar 효과
- * 2. 스크롤에 따른 헤더 투명도 변화
- * 3. 중첩된 스크롤 동작 제어
- * 4. 스크롤 상태에 따른 UI 변화
- * 5. 모든 NestedScrollConnection 함수들의 동작 확인
  */
 @Composable
 fun NestedScrollingExampleUI(
@@ -58,27 +51,21 @@ fun NestedScrollingExampleUI(
     val toolbarHeight = 200.dp
     val toolbarHeightPx = with(LocalDensity.current) { toolbarHeight.roundToPx().toFloat() }
 
-    // 툴바 오프셋 상태
     val toolbarOffsetHeightPx = remember { mutableFloatStateOf(0f) }
 
-    // 각 함수 호출 횟수 추적
     val preScrollCount = remember { mutableIntStateOf(0) }
     val postScrollCount = remember { mutableIntStateOf(0) }
     val preFlingCount = remember { mutableIntStateOf(0) }
     val postFlingCount = remember { mutableIntStateOf(0) }
 
-    // 마지막 호출된 함수 추적
     val lastCalledFunction = remember { mutableStateOf("None") }
     val lastScrollDelta = remember { mutableFloatStateOf(0f) }
     val lastFlingVelocity = remember { mutableFloatStateOf(0f) }
 
-    // 시각적 차이를 보여주기 위한 상태들
-    val preScrollConsumed = remember { mutableFloatStateOf(0f) }   // Pre에서 소비한 양
-    val postScrollConsumed = remember { mutableFloatStateOf(0f) }  // Post에서 소비한 양
-    val childScrollConsumed = remember { mutableFloatStateOf(0f) } // LazyColumn에서 소비한 양
+    val preScrollConsumed = remember { mutableFloatStateOf(0f) }
+    val postScrollConsumed = remember { mutableFloatStateOf(0f) }
+    val childScrollConsumed = remember { mutableFloatStateOf(0f) }
     val currentScrollDirection = remember { mutableStateOf("없음") }
-
-    // 네스티드 스크롤 연결 설정
     val nestedScrollConnection = remember {
         object : NestedScrollConnection {
             override fun onPreScroll(
@@ -89,24 +76,19 @@ fun NestedScrollingExampleUI(
                 lastCalledFunction.value = "onPreScroll (자식 처리 전)"
                 lastScrollDelta.floatValue = available.y
 
-                // 스크롤 방향 업데이트
                 currentScrollDirection.value = if (available.y > 0) "⬇️ 아래로" else "⬆️ 위로"
 
                 val delta = available.y
 
-                // 위로 스크롤할 때만 onPreScroll에서 처리 (툴바 숨기기)
                 if (delta < 0) {
                     val preConsume = delta * 0.3f
                     preScrollConsumed.floatValue = abs(preConsume)
 
-                    // 툴바 숨기기
                     val newOffset = toolbarOffsetHeightPx.floatValue + preConsume
                     toolbarOffsetHeightPx.floatValue = newOffset.coerceIn(-toolbarHeightPx, 0f)
 
-                    // 30% 소비하고 70%를 자식에게 전달
                     return androidx.compose.ui.geometry.Offset(0f, preConsume)
                 } else {
-                    // 아래로 스크롤할 때는 onPreScroll에서 아무것도 소비하지 않음
                     preScrollConsumed.floatValue = 0f
                     return androidx.compose.ui.geometry.Offset.Zero
                 }
@@ -120,23 +102,18 @@ fun NestedScrollingExampleUI(
                 postScrollCount.intValue++
                 lastCalledFunction.value = "onPostScroll (자식 처리 후)"
 
-                // 자식이 실제로 소비한 양 계산
                 val childConsumed = consumed.y
                 childScrollConsumed.floatValue = abs(childConsumed)
 
-                // 아래로 스크롤할 때만 onPostScroll에서 처리 (LazyColumn이 더 이상 스크롤할 수 없을 때)
                 if (available.y > 0) {
                     val postConsume = available.y
                     postScrollConsumed.floatValue = abs(postConsume)
 
-                    // 툴바 보이기 (LazyColumn이 끝에 도달했을 때만)
                     val newOffset = toolbarOffsetHeightPx.floatValue + postConsume
                     toolbarOffsetHeightPx.floatValue = newOffset.coerceIn(-toolbarHeightPx, 0f)
 
-                    // 실제로 소비한 양만 반환
                     return androidx.compose.ui.geometry.Offset(0f, postConsume)
                 } else {
-                    // 위로 스크롤이거나 LazyColumn이 모든 스크롤을 처리했을 때
                     postScrollConsumed.floatValue = 0f
                     return androidx.compose.ui.geometry.Offset.Zero
                 }
@@ -147,10 +124,7 @@ fun NestedScrollingExampleUI(
                 lastCalledFunction.value = "onPreFling (자식 플링 전)"
                 lastFlingVelocity.floatValue = available.y
 
-                // Fling에서는 툴바 조작하지 않음 (일반 스크롤 로직에 맡김)
-                // 단순히 velocity 일부만 소비
                 if (abs(available.y) > 1000) {
-                    // 플링의 일부만 소비하고 나머지는 자식에게
                     return Velocity(0f, available.y * 0.3f)
                 }
 
@@ -169,7 +143,6 @@ fun NestedScrollingExampleUI(
 
     val lazyListState = rememberLazyListState()
 
-    // 투명도 계산
     val alpha = remember(toolbarOffsetHeightPx.floatValue) {
         1f - (abs(toolbarOffsetHeightPx.floatValue) / toolbarHeightPx)
     }
@@ -184,7 +157,6 @@ fun NestedScrollingExampleUI(
             onBackIconClicked = onBackEvent
         )
 
-        // 함수 호출 상태 표시
         ScrollStatusCard(
             preScrollCount = preScrollCount.intValue,
             postScrollCount = postScrollCount.intValue,
@@ -204,7 +176,6 @@ fun NestedScrollingExampleUI(
                 .fillMaxSize()
                 .nestedScroll(nestedScrollConnection)
         ) {
-            // 스크롤 가능한 콘텐츠
             LazyColumn(
                 state = lazyListState,
                 contentPadding = PaddingValues(top = toolbarHeight),
@@ -243,7 +214,6 @@ fun NestedScrollingExampleUI(
                 }
             }
 
-            // Collapsing Toolbar
             CollapsingToolbar(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -403,8 +373,7 @@ private fun ScrollConsumptionBar(
 
         Spacer(modifier = Modifier.height(3.dp))
 
-        // 소비량을 시각적으로 표시하는 바
-        val maxConsumption = 100f // 최대 소비량 기준
+        val maxConsumption = 100f
         val consumptionRatio = (consumed / maxConsumption).coerceIn(0f, 1f)
 
         Box(
@@ -416,7 +385,6 @@ private fun ScrollConsumptionBar(
                     RoundedCornerShape(3.dp)
                 )
         ) {
-            // 실제 소비량 바
             Box(
                 modifier = Modifier
                     .fillMaxWidth(consumptionRatio)

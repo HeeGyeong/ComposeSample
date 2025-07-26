@@ -46,6 +46,9 @@ import kotlin.math.sin
 import kotlin.math.sqrt
 import kotlin.math.PI
 
+/**
+ * Path Graphics Example
+ */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun PathGraphicsExampleUI(onBackButtonClick: () -> Unit) {
@@ -85,17 +88,14 @@ fun PathGraphicsExampleUI(onBackButtonClick: () -> Unit) {
             
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Path.reverse() 예제
             PathReverseExample()
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // Path.contains() 예제
             PathContainsExample()
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // 복합 Path 예제
             ComplexPathExample()
 
             Spacer(modifier = Modifier.height(40.dp))

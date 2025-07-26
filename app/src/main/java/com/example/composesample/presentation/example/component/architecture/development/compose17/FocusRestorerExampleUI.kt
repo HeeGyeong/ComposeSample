@@ -41,6 +41,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.composesample.presentation.getTextStyle
 
+/**
+ * Focus Restorer Example
+ */
 @OptIn(ExperimentalFoundationApi::class, ExperimentalComposeUiApi::class)
 @Composable
 fun FocusRestorerExampleUI(onBackButtonClick: () -> Unit) {
@@ -82,12 +85,10 @@ fun FocusRestorerExampleUI(onBackButtonClick: () -> Unit) {
             
             Spacer(modifier = Modifier.height(16.dp))
 
-            // 기본 포커스 복원 예제
             BasicFocusRestorerExample()
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // LazyList 포커스 복원 예제
             LazyListFocusRestorerExample()
 
             Spacer(modifier = Modifier.height(40.dp))

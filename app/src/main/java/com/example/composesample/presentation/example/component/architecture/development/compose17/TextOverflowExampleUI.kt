@@ -26,6 +26,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.composesample.presentation.getTextStyle
 
+/**
+ * Text Overflow Example
+ */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun TextOverflowExampleUI(onBackButtonClick: () -> Unit) {
@@ -65,7 +68,6 @@ fun TextOverflowExampleUI(onBackButtonClick: () -> Unit) {
             
             Spacer(modifier = Modifier.height(16.dp))
 
-            // 기본 Ellipsis 예제
             TextOverflowCard(
                 title = "기본 TextOverflow.Ellipsis",
                 description = "기존 방식: 텍스트 끝에 ... 표시",
@@ -74,7 +76,6 @@ fun TextOverflowExampleUI(onBackButtonClick: () -> Unit) {
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // Start Ellipsis 예제 - 실제 기능 테스트
             TextOverflowCard(
                 title = "TextOverflow.StartEllipsis (Compose 1.8+)",
                 description = "텍스트 시작 부분에 ... 표시하는 새로운 기능",
@@ -84,7 +85,6 @@ fun TextOverflowExampleUI(onBackButtonClick: () -> Unit) {
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // Middle Ellipsis 예제 - 실제 기능 테스트
             TextOverflowCard(
                 title = "TextOverflow.MiddleEllipsis (Compose 1.8+)",
                 description = "텍스트 중간 부분에 ... 표시하는 새로운 기능",
@@ -101,8 +101,6 @@ fun TextOverflowExampleUI(onBackButtonClick: () -> Unit) {
             )
 
             Spacer(modifier = Modifier.height(16.dp))
-
-            // 실제 사용 사례 예제들
             UseCaseExample(
                 title = "파일 경로 표시",
                 example = "/Users/developer/Projects/ComposeSample/app/src/main/java/com/example/very/long/package/name/Activity.kt",

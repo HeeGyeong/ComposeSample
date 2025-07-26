@@ -38,6 +38,9 @@ import androidx.compose.ui.layout.LookaheadScope
 import androidx.compose.ui.unit.dp
 import com.example.composesample.presentation.getTextStyle
 
+/**
+ * LookaheadScope Example
+ */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun LookaheadScopeExampleUI(onBackButtonClick: () -> Unit) {
@@ -77,17 +80,14 @@ fun LookaheadScopeExampleUI(onBackButtonClick: () -> Unit) {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // 크기 변경 애니메이션 예제
             SizeChangeAnimationExample()
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // 위치 변경 애니메이션 예제
             PositionChangeAnimationExample()
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // 복합 애니메이션 예제
             ComplexAnimationExample()
 
             Spacer(modifier = Modifier.height(40.dp))

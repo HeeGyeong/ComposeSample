@@ -13,8 +13,6 @@ import kotlinx.coroutines.launch
 
 /**
  * SnapshotFlow vs collectAsState Example ViewModel
- * 
- * 📚 상세한 학습 가이드는 SnapshotFlowExampleGuide.kt 파일을 참고하세요.
  */
 class SnapshotFlowExampleViewModel : ViewModel(), DefaultLifecycleObserver {
 
