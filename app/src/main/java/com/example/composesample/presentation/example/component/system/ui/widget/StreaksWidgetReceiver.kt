@@ -4,7 +4,7 @@ import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
 
 /**
- * Glance 위젯의 라이프사이클을 관리하는 Receiver
+ * Streaks Widget Receiver
  */
 class StreaksWidgetReceiver : GlanceAppWidgetReceiver() {
     override val glanceAppWidget: GlanceAppWidget = StreaksWidget()

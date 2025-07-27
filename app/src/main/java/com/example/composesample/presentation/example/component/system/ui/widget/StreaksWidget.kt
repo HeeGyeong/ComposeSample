@@ -32,17 +32,15 @@ import com.example.composesample.presentation.MainActivity
 import com.example.composesample.presentation.example.exampleObjectList
 
 /**
- * Glance를 사용한 실제 위젯 구현체
+ * Streaks Widget Implementation
  */
 class StreaksWidget : GlanceAppWidget() {
 
     @SuppressLint("RestrictedApi")
     @OptIn(ExperimentalAnimationApi::class)
     override suspend fun provideGlance(context: Context, id: GlanceId) {
-        // 실제 데이터를 가져오는 로직 (여기서는 예시 데이터 사용)
         var streakData: WeeklyPostingStreak? = null
 
-        // ExampleObjectList에서 마지막 업데이트 날짜 가져오기
         val exampleList = exampleObjectList()
         val lastUpdateTitle = exampleList.lastOrNull()?.title ?: "타이틀 정보 없음"
         val lastUpdateDate = exampleList.lastOrNull()?.lastUpdate ?: "업데이트 정보 없음"
@@ -55,7 +53,6 @@ class StreaksWidget : GlanceAppWidget() {
         provideContent {
             GlanceTheme {
                 streakData.let { data ->
-                    // 위젯 클릭 이벤트
                     val streakModifier = GlanceModifier.clickable(
                         actionStartActivity<MainActivity>()
                     )
@@ -119,9 +116,6 @@ private fun Streak(
     }
 }
 
-/**
- * 예시 데이터 클래스
- */
 data class WeeklyPostingStreak(
     val message: String,
     val lastUpdate: String

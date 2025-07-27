@@ -29,13 +29,7 @@ import androidx.compose.ui.unit.sp
 import com.example.composesample.presentation.MainHeader
 
 /**
- * Jetpack Compose for Widgets with Glance Example
- *
- * Glance를 사용하여 Jetpack Compose로 Android 위젯을 만드는 방법:
- * 1. GlanceAppWidget - 위젯의 UI 구성
- * 2. GlanceAppWidgetReceiver - 위젯 라이프사이클 관리
- * 3. Manifest 등록 및 메타데이터 설정
- * 4. Dependency Injection 및 Intent 처리
+ * Glance Widget Example
  */
 @Composable
 fun GlanceWidgetExampleUI(
