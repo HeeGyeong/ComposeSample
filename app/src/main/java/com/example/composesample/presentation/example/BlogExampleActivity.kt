@@ -106,6 +106,7 @@ import com.example.composesample.presentation.example.component.ui.media.shimmer
 import com.example.composesample.presentation.example.component.ui.media.shimmer.TextShimmerExampleUI
 import com.example.composesample.presentation.example.component.ui.scroll.NestedScrollingExampleUI
 import com.example.composesample.presentation.example.component.architecture.state.SnapshotFlowExampleUI
+import com.example.composesample.presentation.example.component.system.ui.widget.GlanceWidgetExampleUI
 import com.example.composesample.presentation.example.component.ui.text.TextStyleUI
 import com.example.composesample.presentation.getTextStyle
 import com.example.composesample.presentation.openWebPage
@@ -126,6 +127,7 @@ import com.example.composesample.util.ConstValue.Companion.ExampleType
 import com.example.composesample.util.ConstValue.Companion.FlexBoxLayoutExample
 import com.example.composesample.util.ConstValue.Companion.FlingBehaviorExample
 import com.example.composesample.util.ConstValue.Companion.FocusRestorerExample
+import com.example.composesample.util.ConstValue.Companion.GlanceWidgetExample
 import com.example.composesample.util.ConstValue.Companion.GraphicsLayerExample
 import com.example.composesample.util.ConstValue.Companion.InitTestExample
 import com.example.composesample.util.ConstValue.Companion.IntentType
@@ -872,6 +874,10 @@ fun ExampleCaseUI(
 
                         SnapshotFlowExample -> {
                             SnapshotFlowExampleUI(onBackEvent)
+                        }
+
+                        GlanceWidgetExample -> {
+                            GlanceWidgetExampleUI(onBackEvent)
                         }
 
                         else -> {

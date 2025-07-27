@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:initialKeyguardLayout="@layout/glance_default_loading_layout"
+    android:initialLayout="@layout/glance_default_loading_layout"
+    android:minWidth="140dp"
+    android:minHeight="90dp"
+    android:previewImage="@drawable/ic_launcher_foreground"
+    android:resizeMode="none"
+    android:widgetCategory="home_screen"
+    android:description="@string/streaks_widget_description"
+    android:updatePeriodMillis="1800000" /> 

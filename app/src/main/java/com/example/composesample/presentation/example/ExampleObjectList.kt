@@ -443,6 +443,16 @@ fun exampleObjectList(): ArrayList<ExampleObject> {
         )
     )
 
+    insertExampleObject.add(
+        ExampleObject(
+            lastUpdate = "25. 07. 27",
+            title = "Jetpack Compose for Widgets with Glance",
+            description = "Glance를 사용하여 Jetpack Compose로 안드로이드 위젯 만들기",
+            blogUrl = "",
+            exampleType = ConstValue.GlanceWidgetExample
+        )
+    )
+
     return insertExampleObject
 }
 

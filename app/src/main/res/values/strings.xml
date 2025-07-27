@@ -37,4 +37,7 @@
     <string name="test_other_screen">다른 화면으로 이동</string>
     <string name="test_other_activity">새로운 Activity로 이동</string>
     <string name="test_description">언어 설정이 다른 화면에서도 유지되는지 테스트해보세요</string>
+
+    <!-- Glance Widget -->
+    <string name="streaks_widget_description">위젯 예제를 사용하는 프로바이더</string>
 </resources>
