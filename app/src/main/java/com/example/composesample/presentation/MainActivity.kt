@@ -21,16 +21,23 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
+import androidx.glance.appwidget.updateAll
 import com.example.composesample.presentation.example.BlogExampleActivity
+import com.example.composesample.presentation.example.component.system.ui.widget.StreaksWidget
 import com.example.composesample.presentation.legacy.LegacyActivity
 import com.example.composesample.util.ConstValue.Companion.ExampleType
 import com.example.composesample.util.ConstValue.Companion.IntentType
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @ExperimentalAnimationApi
 class MainActivity : ComponentActivity() {
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        updateWidget()
+
         setContent {
             Surface(
                 color = Color.White
@@ -43,6 +50,16 @@ class MainActivity : ComponentActivity() {
                 ) { _ ->
                     MainActivityScreen()
                 }
+            }
+        }
+    }
+
+    private fun updateWidget() {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                StreaksWidget().updateAll(this@MainActivity)
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
         }
     }
