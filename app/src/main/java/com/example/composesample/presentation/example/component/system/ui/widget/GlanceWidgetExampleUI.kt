@@ -52,6 +52,7 @@ fun GlanceWidgetExampleUI(
         ) {
             item { GlanceOverviewCard() }
             item { WidgetHierarchyCard() }
+            item { WidgetSizesCard() }
         }
     }
 }
@@ -159,6 +160,88 @@ private fun HierarchyItem(title: String, description: String) {
 
         Spacer(modifier = Modifier.width(12.dp))
 
+        Column {
+            Text(
+                text = title,
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Medium
+            )
+            Text(
+                text = description,
+                fontSize = 12.sp,
+                color = Color.Gray
+            )
+        }
+    }
+}
+
+@Composable
+private fun WidgetSizesCard() {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        elevation = 4.dp,
+        backgroundColor = Color(0xFFFFF3E0),
+        shape = RoundedCornerShape(12.dp)
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp)
+        ) {
+            Text(
+                text = "📏 다양한 위젯 크기",
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color(0xFFE65100)
+            )
+            
+            Spacer(modifier = Modifier.height(12.dp))
+            
+            SizeItem("2x1", "작은 위젯 (기본)", "아이콘 + 제목 + 새로고침 버튼")
+            SizeItem("2x2", "중간 위젯", "세로 배치, 아이콘 + 상세 정보 + 버튼")
+            SizeItem("3x2+", "큰 위젯", "좌우 분할, 풍부한 정보 표시")
+            
+            Spacer(modifier = Modifier.height(12.dp))
+            
+            Text(
+                text = "💡 기본 2x1 크기로 시작하여 원하는 크기로 조정 가능!",
+                fontSize = 12.sp,
+                color = Color(0xFF795548),
+                fontWeight = FontWeight.Medium
+            )
+            
+            Text(
+                text = "📱 위젯을 길게 눌러서 테두리 핸들로 크기 조정",
+                fontSize = 12.sp,
+                color = Color(0xFF795548),
+                fontWeight = FontWeight.Medium
+            )
+        }
+    }
+}
+
+@Composable
+private fun SizeItem(size: String, title: String, description: String) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 4.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Surface(
+            modifier = Modifier,
+            shape = RoundedCornerShape(8.dp),
+            color = Color(0xFFE65100).copy(alpha = 0.1f)
+        ) {
+            Text(
+                text = size,
+                modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+                fontSize = 10.sp,
+                color = Color(0xFFE65100),
+                fontWeight = FontWeight.Bold
+            )
+        }
+        
+        Spacer(modifier = Modifier.width(12.dp))
+        
         Column {
             Text(
                 text = title,

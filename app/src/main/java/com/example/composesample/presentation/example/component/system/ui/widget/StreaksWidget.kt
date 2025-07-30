@@ -31,6 +31,11 @@ import androidx.glance.text.Text
 import androidx.glance.text.TextAlign
 import androidx.glance.text.TextStyle
 import androidx.glance.unit.ColorProvider
+import androidx.glance.LocalSize
+import androidx.glance.layout.Row
+import androidx.compose.ui.unit.DpSize
+import androidx.glance.layout.fillMaxWidth
+import androidx.glance.layout.width
 import com.example.composesample.presentation.MainActivity
 import com.example.composesample.presentation.example.exampleObjectList
 import java.text.SimpleDateFormat
@@ -77,6 +82,8 @@ private fun StreakContent(
     modifier: GlanceModifier = GlanceModifier,
     content: WeeklyPostingStreak
 ) {
+    val size = LocalSize.current
+    
     Box(
         modifier = modifier
             .background(ColorProvider(Color(0xFF6200EE)))
@@ -84,44 +91,133 @@ private fun StreakContent(
             .fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
-        Streak(
-            modifier = GlanceModifier.wrapContentSize(),
-            content = content
-        )
+        when {
+            // 큰 위젯 (3x2 이상) - 가로가 넓고 세로도 충분할 때
+            size.width >= 320.dp && size.height >= 120.dp -> {
+                LargeWidgetLayout(content = content)
+            }
+            // 중간 위젯 (2x2) - 정사각형에 가까운 형태
+            size.width >= 180.dp && size.height >= 120.dp -> {
+                MediumWidgetLayout(content = content)
+            }
+            // 작은 위젯 (2x1) - 가로로 긴 형태
+            else -> {
+                SmallWidgetLayout(content = content)
+            }
+        }
     }
 }
 
+// 큰 위젯용 레이아웃 (3x2 이상)
 @SuppressLint("RestrictedApi")
 @Composable
-private fun Streak(
-    modifier: GlanceModifier = GlanceModifier,
+private fun LargeWidgetLayout(
+    content: WeeklyPostingStreak
+) {
+    Row(
+        modifier = GlanceModifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        // 왼쪽: 아이콘과 제목
+        Column(
+            modifier = GlanceModifier.defaultWeight(),
+            horizontalAlignment = Alignment.Start
+        ) {
+            Text(
+                text = "⭐ Glance Widget",
+                style = TextStyle(
+                    color = ColorProvider(Color.White),
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            )
+            
+            Spacer(modifier = GlanceModifier.height(8.dp))
+            
+            Text(
+                text = content.message,
+                style = TextStyle(
+                    color = ColorProvider(Color.White),
+                    fontSize = 14.sp,
+                    textAlign = TextAlign.Start
+                )
+            )
+            
+            Spacer(modifier = GlanceModifier.height(4.dp))
+            
+            Text(
+                text = "업데이트: ${content.lastUpdate}",
+                style = TextStyle(
+                    color = ColorProvider(Color.White.copy(alpha = 0.8f)),
+                    fontSize = 10.sp
+                )
+            )
+            
+            Text(
+                text = "새로고침: ${content.refreshedAt}",
+                style = TextStyle(
+                    color = ColorProvider(Color.White.copy(alpha = 0.6f)),
+                    fontSize = 8.sp
+                )
+            )
+        }
+        
+        // 오른쪽: 새로고침 버튼
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Button(
+                text = "🔄",
+                onClick = actionRunCallback<RefreshWidgetAction>(),
+                colors = ButtonDefaults.buttonColors(
+                    backgroundColor = ColorProvider(Color.White.copy(alpha = 0.2f)),
+                    contentColor = ColorProvider(Color.White)
+                )
+            )
+        }
+    }
+}
+
+// 중간 위젯용 레이아웃 (2x2)
+@SuppressLint("RestrictedApi")
+@Composable
+private fun MediumWidgetLayout(
     content: WeeklyPostingStreak
 ) {
     Column(
-        modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = content.message,
+            text = "⭐",
             style = TextStyle(
                 color = ColorProvider(Color.White),
-                fontSize = 14.sp,
+                fontSize = 20.sp
+            )
+        )
+        
+        Spacer(modifier = GlanceModifier.height(6.dp))
+        
+        Text(
+            text = "Glance Widget",
+            style = TextStyle(
+                color = ColorProvider(Color.White),
+                fontSize = 13.sp,
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center
             )
         )
 
-        Spacer(modifier = GlanceModifier.height(8.dp))
+        Spacer(modifier = GlanceModifier.height(4.dp))
 
         Text(
-            text = "마지막 업데이트: ${content.lastUpdate}",
+            text = "업데이트: ${content.lastUpdate}",
             style = TextStyle(
                 color = ColorProvider(Color.White.copy(alpha = 0.8f)),
-                fontSize = 10.sp,
+                fontSize = 9.sp,
                 textAlign = TextAlign.Center
             )
         )
-
+        
         Text(
             text = "새로고침: ${content.refreshedAt}",
             style = TextStyle(
@@ -131,10 +227,66 @@ private fun Streak(
             )
         )
 
-        Spacer(modifier = GlanceModifier.height(12.dp))
+        Spacer(modifier = GlanceModifier.height(6.dp))
 
         Button(
-            text = "새로고침",
+            text = "🔄 새로고침",
+            onClick = actionRunCallback<RefreshWidgetAction>(),
+            colors = ButtonDefaults.buttonColors(
+                backgroundColor = ColorProvider(Color.White.copy(alpha = 0.2f)),
+                contentColor = ColorProvider(Color.White)
+            )
+        )
+    }
+}
+
+// 작은 위젯용 레이아웃 (2x1)
+@SuppressLint("RestrictedApi")
+@Composable
+private fun SmallWidgetLayout(
+    content: WeeklyPostingStreak
+) {
+    Row(
+        modifier = GlanceModifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        // 아이콘
+        Text(
+            text = "⭐",
+            style = TextStyle(
+                color = ColorProvider(Color.White),
+                fontSize = 16.sp
+            )
+        )
+        
+        Spacer(modifier = GlanceModifier.width(8.dp))
+        
+        // 텍스트 정보
+        Column(
+            modifier = GlanceModifier.defaultWeight(),
+            horizontalAlignment = Alignment.Start
+        ) {
+            Text(
+                text = "Glance Widget",
+                style = TextStyle(
+                    color = ColorProvider(Color.White),
+                    fontSize = 11.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            )
+            
+            Text(
+                text = "${content.refreshedAt}",
+                style = TextStyle(
+                    color = ColorProvider(Color.White.copy(alpha = 0.8f)),
+                    fontSize = 8.sp
+                )
+            )
+        }
+        
+        // 새로고침 버튼
+        Button(
+            text = "🔄",
             onClick = actionRunCallback<RefreshWidgetAction>(),
             colors = ButtonDefaults.buttonColors(
                 backgroundColor = ColorProvider(Color.White.copy(alpha = 0.2f)),
