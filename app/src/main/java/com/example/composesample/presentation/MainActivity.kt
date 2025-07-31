@@ -24,6 +24,9 @@ import androidx.compose.ui.unit.sp
 import androidx.glance.appwidget.updateAll
 import com.example.composesample.presentation.example.BlogExampleActivity
 import com.example.composesample.presentation.example.component.system.ui.widget.StreaksWidget
+import com.example.composesample.presentation.example.component.system.ui.widget.SmallWidget
+import com.example.composesample.presentation.example.component.system.ui.widget.MediumWidget
+import com.example.composesample.presentation.example.component.system.ui.widget.LargeWidget
 import com.example.composesample.presentation.legacy.LegacyActivity
 import com.example.composesample.util.ConstValue.Companion.ExampleType
 import com.example.composesample.util.ConstValue.Companion.IntentType
@@ -57,7 +60,11 @@ class MainActivity : ComponentActivity() {
     private fun updateWidget() {
         CoroutineScope(Dispatchers.IO).launch {
             try {
+                // 모든 위젯 타입을 갱신
                 StreaksWidget().updateAll(this@MainActivity)
+                SmallWidget().updateAll(this@MainActivity)
+                MediumWidget().updateAll(this@MainActivity)
+                LargeWidget().updateAll(this@MainActivity)
             } catch (e: Exception) {
                 e.printStackTrace()
             }

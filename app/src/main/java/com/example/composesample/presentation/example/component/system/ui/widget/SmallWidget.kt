@@ -12,26 +12,15 @@ import androidx.glance.ButtonDefaults
 import androidx.glance.GlanceId
 import androidx.glance.GlanceModifier
 import androidx.glance.GlanceTheme
-import androidx.glance.LocalSize
 import androidx.glance.action.actionStartActivity
 import androidx.glance.action.clickable
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.action.actionRunCallback
 import androidx.glance.appwidget.provideContent
 import androidx.glance.background
-import androidx.glance.layout.Alignment
-import androidx.glance.layout.Box
-import androidx.glance.layout.Column
-import androidx.glance.layout.Row
-import androidx.glance.layout.Spacer
-import androidx.glance.layout.fillMaxSize
-import androidx.glance.layout.fillMaxWidth
-import androidx.glance.layout.height
-import androidx.glance.layout.padding
-import androidx.glance.layout.width
+import androidx.glance.layout.*
 import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
-import androidx.glance.text.TextAlign
 import androidx.glance.text.TextStyle
 import androidx.glance.unit.ColorProvider
 import com.example.composesample.presentation.MainActivity
@@ -41,34 +30,27 @@ import java.util.Date
 import java.util.Locale
 
 /**
- * Streaks Widget Implementation
+ * 2x1 크기 전용 작은 위젯
  */
-class StreaksWidget : GlanceAppWidget() {
+class SmallWidget : GlanceAppWidget() {
 
-    @SuppressLint("RestrictedApi")
     @OptIn(ExperimentalAnimationApi::class)
+    @SuppressLint("RestrictedApi")
     override suspend fun provideGlance(context: Context, id: GlanceId) {
-        var streakData: WeeklyPostingStreak? = null
-
         val exampleList = exampleObjectList()
-        val lastUpdateTitle = exampleList.lastOrNull()?.title ?: "타이틀 정보 없음"
         val lastUpdateDate = exampleList.lastOrNull()?.lastUpdate ?: "업데이트 정보 없음"
         val currentTime = SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(Date())
 
-        streakData = WeeklyPostingStreak(
-            message = lastUpdateTitle,
+        val streakData = WeeklyPostingStreak(
+            message = "Small Widget",
             lastUpdate = lastUpdateDate,
             refreshedAt = currentTime
         )
 
         provideContent {
             GlanceTheme {
-                streakData.let { data ->
-                    val streakModifier = GlanceModifier.clickable(
-                        actionStartActivity<MainActivity>()
-                    )
-                    StreakContent(modifier = streakModifier, content = data)
-                }
+                val clickModifier = GlanceModifier.clickable(actionStartActivity<MainActivity>())
+                SmallWidgetContent(modifier = clickModifier, content = streakData)
             }
         }
     }
@@ -76,75 +58,49 @@ class StreaksWidget : GlanceAppWidget() {
 
 @SuppressLint("RestrictedApi")
 @Composable
-private fun StreakContent(
+private fun SmallWidgetContent(
     modifier: GlanceModifier = GlanceModifier,
     content: WeeklyPostingStreak
 ) {
     Box(
         modifier = modifier
-            .background(ColorProvider(Color(0xFF6200EE)))
-            .padding(16.dp)
-            .fillMaxSize(),
+            .fillMaxSize()
+            .background(ColorProvider(Color.Gray))
+            .padding(4.dp),
         contentAlignment = Alignment.Center
     ) {
-        Streak(content = content)
-    }
-}
-
-@SuppressLint("RestrictedApi")
-@Composable
-private fun Streak(
-    content: WeeklyPostingStreak
-) {
-    Row(
-        modifier = GlanceModifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(
-            text = "⭐",
-            style = TextStyle(
-                color = ColorProvider(Color.White),
-                fontSize = 16.sp
-            )
-        )
-
-        Spacer(modifier = GlanceModifier.width(8.dp))
-
         Column(
-            modifier = GlanceModifier.defaultWeight(),
-            horizontalAlignment = Alignment.Start
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "Glance Widget ~",
+                text = "📱",
                 style = TextStyle(
                     color = ColorProvider(Color.White),
-                    fontSize = 11.sp,
+                    fontSize = 20.sp
+                )
+            )
+            
+            Spacer(modifier = GlanceModifier.height(2.dp))
+            
+            Text(
+                text = "1x1",
+                style = TextStyle(
+                    color = ColorProvider(Color.White),
+                    fontSize = 8.sp,
                     fontWeight = FontWeight.Bold
                 )
             )
-
+            
+            Spacer(modifier = GlanceModifier.height(2.dp))
+            
             Text(
                 text = "${content.refreshedAt}",
                 style = TextStyle(
                     color = ColorProvider(Color.White.copy(alpha = 0.8f)),
-                    fontSize = 8.sp
+                    fontSize = 6.sp
                 )
             )
         }
-
-        Button(
-            text = "🔄",
-            onClick = actionRunCallback<RefreshWidgetAction>(),
-            colors = ButtonDefaults.buttonColors(
-                backgroundColor = ColorProvider(Color.White.copy(alpha = 0.2f)),
-                contentColor = ColorProvider(Color.White)
-            )
-        )
     }
-}
-
-data class WeeklyPostingStreak(
-    val message: String,
-    val lastUpdate: String,
-    val refreshedAt: String
-) 
+} 

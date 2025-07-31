@@ -40,4 +40,7 @@
 
     <!-- Glance Widget -->
     <string name="streaks_widget_description">위젯 예제를 사용하는 프로바이더</string>
+    <string name="small_widget_description">1x1 작은 Glance 위젯</string>
+    <string name="medium_widget_description">2x2 중간 Glance 위젯</string>
+    <string name="large_widget_description">3x2+ 큰 Glance 위젯</string>
 </resources>
