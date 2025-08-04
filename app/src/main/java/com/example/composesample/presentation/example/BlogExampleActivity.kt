@@ -107,11 +107,13 @@ import com.example.composesample.presentation.example.component.ui.media.shimmer
 import com.example.composesample.presentation.example.component.ui.scroll.NestedScrollingExampleUI
 import com.example.composesample.presentation.example.component.architecture.state.SnapshotFlowExampleUI
 import com.example.composesample.presentation.example.component.system.ui.widget.GlanceWidgetExampleUI
+import com.example.composesample.presentation.example.component.ui.text.AutoSizingTextExampleUI
 import com.example.composesample.presentation.example.component.ui.text.TextStyleUI
 import com.example.composesample.presentation.getTextStyle
 import com.example.composesample.presentation.openWebPage
 import com.example.composesample.util.ConstValue.Companion.AnimationExample
 import com.example.composesample.util.ConstValue.Companion.ApiDisconnectExample
+import com.example.composesample.util.ConstValue.Companion.AutoSizingTextExample
 import com.example.composesample.util.ConstValue.Companion.AudioRecorderExample
 import com.example.composesample.util.ConstValue.Companion.BottomNavigationExample
 import com.example.composesample.util.ConstValue.Companion.BottomSheetExample
@@ -878,6 +880,10 @@ fun ExampleCaseUI(
 
                         GlanceWidgetExample -> {
                             GlanceWidgetExampleUI(onBackEvent)
+                        }
+
+                        AutoSizingTextExample -> {
+                            AutoSizingTextExampleUI(onBackEvent)
                         }
 
                         else -> {

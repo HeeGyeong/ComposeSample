@@ -69,6 +69,7 @@ class ConstValue {
         const val NestedScrollingExample = "nestedScrollingExample"
         const val SnapshotFlowExample = "snapshotFlowExample"
         const val GlanceWidgetExample = "glanceWidgetExample"
+        const val AutoSizingTextExample = "autoSizingTextExample"
 
         // 새로운 Compose 1.7 기능 예제들
         const val Compose17FeaturesExample = "compose17FeaturesExample"

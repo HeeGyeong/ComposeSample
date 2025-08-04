@@ -453,6 +453,16 @@ fun exampleObjectList(): ArrayList<ExampleObject> {
         )
     )
 
+    insertExampleObject.add(
+        ExampleObject(
+            lastUpdate = "25. 08. 04",
+            title = "Auto-sizing Text with BasicText",
+            description = "BasicText의 autoSize 기능으로 동적 텍스트 크기 조절하기",
+            blogUrl = "",
+            exampleType = ConstValue.AutoSizingTextExample
+        )
+    )
+
     return insertExampleObject
 }
 
