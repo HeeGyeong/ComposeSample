@@ -31,10 +31,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -42,16 +40,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.composesample.presentation.MainHeader
 
-/**
- * Auto-sizing Text in Jetpack Compose with BasicText Example
- *
- * BasicText의 autoSize 기능을 활용한 동적 텍스트 크기 조절:
- * 1. TextAutoSize.StepBased() - 자동 크기 조절
- * 2. minFontSize, maxFontSize - 최소/최대 크기 제한
- * 3. softWrap, maxLines - 줄바꿈 및 라인 제한
- * 4. TextOverflow.Ellipsis - 텍스트 오버플로우 처리
- * 5. onTextLayout - 텍스트 레이아웃 콜백
- */
+
 @Composable
 fun AutoSizingTextExampleUI(
     onBackEvent: () -> Unit
@@ -95,66 +84,36 @@ private fun AutoSizeOverviewCard() {
             modifier = Modifier.padding(16.dp)
         ) {
             Text(
-                text = "📏 BasicText Auto-sizing이란?",
+                text = "Auto-sizing 개요",
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color(0xFF1976D2)
             )
 
             Spacer(modifier = Modifier.height(8.dp))
-
-            Text(
-                text = "BasicText의 autoSize 기능은 텍스트가 주어진 공간에 맞게 자동으로 크기를 조절해주는 강력한 기능입니다.",
-                fontSize = 14.sp,
-                color = Color.Gray
-            )
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(60.dp)
+                    .border(1.dp, Color(0xFF1976D2), RoundedCornerShape(8.dp))
+                    .padding(8.dp),
+                contentAlignment = Alignment.Center
             ) {
-                FeatureChip("자동 크기 조절", Color(0xFF4CAF50))
-                FeatureChip("공간 최적화", Color(0xFF2196F3))
-                FeatureChip("유연한 제어", Color(0xFFFF9800))
-            }
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            Surface(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(8.dp),
-                color = Color(0xFFF5F5F5)
-            ) {
-                Text(
-                    text = "⚠️ 참고: Compose BOM 버전 2025.04.01 이상이 필요합니다.",
-                    modifier = Modifier.padding(12.dp),
-                    fontSize = 12.sp,
-                    color = Color(0xFF666666),
-                    fontStyle = androidx.compose.ui.text.font.FontStyle.Italic
+                BasicText(
+                    text = "BasicText with autoSize feature",
+                    style = TextStyle(fontSize = 24.sp),
+                    autoSize = TextAutoSize.StepBased(
+                        maxFontSize = 20.sp
+                    ),
+                    color = { Color(0xFF1976D2) }
                 )
             }
         }
     }
 }
 
-@Composable
-private fun FeatureChip(text: String, color: Color) {
-    Surface(
-        modifier = Modifier,
-        shape = RoundedCornerShape(16.dp),
-        color = color.copy(alpha = 0.1f)
-    ) {
-        Text(
-            text = text,
-            modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
-            fontSize = 12.sp,
-            color = color,
-            fontWeight = FontWeight.Medium
-        )
-    }
-}
+
 
 @Composable
 private fun BasicComparisonCard() {
@@ -168,7 +127,7 @@ private fun BasicComparisonCard() {
             modifier = Modifier.padding(16.dp)
         ) {
             Text(
-                text = "⚖️ Text vs BasicText 비교",
+                text = "Text vs BasicText 비교",
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color(0xFF7B1FA2)
@@ -176,9 +135,8 @@ private fun BasicComparisonCard() {
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // 일반 Text
             Text(
-                text = "일반 Text (고정 크기):",
+                text = "일반 Text:",
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Medium,
                 color = Color.Gray
@@ -201,9 +159,8 @@ private fun BasicComparisonCard() {
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            // BasicText with AutoSize
             Text(
-                text = "BasicText (자동 크기 조절):",
+                text = "BasicText (AutoSize):",
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Medium,
                 color = Color.Gray
@@ -242,25 +199,10 @@ private fun AutoSizeWithMaxSizeCard() {
             modifier = Modifier.padding(16.dp)
         ) {
             Text(
-                text = "📐 최대 크기 제한 예제",
+                text = "최대 크기 제한 (maxFontSize)",
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color(0xFF388E3C)
-            )
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            CodeBlock(
-                """
-                BasicText(
-                    text = "Auto Resizing Text but with max size limit",
-                    style = TextStyle(fontSize = 32.sp),
-                    autoSize = TextAutoSize.StepBased(
-                        maxFontSize = 16.sp
-                    ),
-                    color = { Color.Green }
-                )
-                """.trimIndent()
             )
 
             Spacer(modifier = Modifier.height(12.dp))
@@ -298,21 +240,13 @@ private fun ConstrainedBoxExampleCard() {
             modifier = Modifier.padding(16.dp)
         ) {
             Text(
-                text = "📦 제약이 있는 Box에서의 동작",
+                text = "제약이 있는 컨테이너",
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color(0xFFE65100)
             )
 
             Spacer(modifier = Modifier.height(12.dp))
-
-            Text(
-                text = "240x240dp Box 안에서의 자동 크기 조절:",
-                fontSize = 14.sp,
-                color = Color.Gray
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -370,33 +304,10 @@ private fun MinFontSizeWithEllipsisCard() {
             modifier = Modifier.padding(16.dp)
         ) {
             Text(
-                text = "✂️ 최소 크기 제한과 말줄임표",
+                text = "최소 크기 제한과 Ellipsis",
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color(0xFFD32F2F)
-            )
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            Text(
-                text = "minFontSize 설정과 TextOverflow.Ellipsis 처리:",
-                fontSize = 14.sp,
-                color = Color.Gray
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            CodeBlock(
-                """
-                BasicText(
-                    text = "Very long text that cannot fit...",
-                    style = TextStyle(fontSize = 32.sp),
-                    autoSize = TextAutoSize.StepBased(
-                        minFontSize = 10.sp,
-                    ),
-                    overflow = TextOverflow.Ellipsis
-                )
-                """.trimIndent()
             )
 
             Spacer(modifier = Modifier.height(12.dp))
@@ -437,7 +348,7 @@ private fun SoftWrapExampleCard() {
             modifier = Modifier.padding(16.dp)
         ) {
             Text(
-                text = "🔄 SoftWrap 제어",
+                text = "SoftWrap 제어",
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color(0xFF1976D2)
@@ -501,32 +412,10 @@ private fun MaxLinesExampleCard() {
             modifier = Modifier.padding(16.dp)
         ) {
             Text(
-                text = "📏 라인 수 제한",
+                text = "라인 수 제한 (maxLines)",
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color(0xFF388E3C)
-            )
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            Text(
-                text = "maxLines와 TextOverflow.Ellipsis 조합:",
-                fontSize = 14.sp,
-                color = Color.Gray
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            CodeBlock(
-                """
-                BasicText(
-                    text = "Very long text...",
-                    style = TextStyle(fontSize = 24.sp),
-                    autoSize = TextAutoSize.StepBased(),
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
-                """.trimIndent()
             )
 
             Spacer(modifier = Modifier.height(12.dp))
@@ -567,18 +456,10 @@ private fun OnTextLayoutCard() {
             modifier = Modifier.padding(16.dp)
         ) {
             Text(
-                text = "📐 onTextLayout 콜백",
+                text = "onTextLayout 콜백",
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color(0xFFE91E63)
-            )
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            Text(
-                text = "텍스트 레이아웃 정보 실시간 확인:",
-                fontSize = 14.sp,
-                color = Color.Gray
             )
 
             Spacer(modifier = Modifier.height(12.dp))
@@ -629,15 +510,13 @@ private fun PracticalExamplesCard() {
             modifier = Modifier.padding(16.dp)
         ) {
             Text(
-                text = "🎯 실용적인 활용 예시",
+                text = "활용 예시",
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color(0xFF1976D2)
             )
 
             Spacer(modifier = Modifier.height(12.dp))
-
-            // 카드 제목 예시
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -663,8 +542,6 @@ private fun PracticalExamplesCard() {
             }
 
             Spacer(modifier = Modifier.height(8.dp))
-
-            // 버튼 텍스트 예시
             Button(
                 onClick = { },
                 modifier = Modifier
@@ -682,42 +559,12 @@ private fun PracticalExamplesCard() {
                 )
             }
 
-            Spacer(modifier = Modifier.height(12.dp))
 
-            Text(
-                text = "💡 활용 팁:",
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Bold
-            )
-
-            Text(
-                text = "• 카드나 버튼의 제목\n• 동적 콘텐츠 표시\n• 반응형 UI 구성\n• 다국어 지원 시 유용",
-                fontSize = 12.sp,
-                color = Color.Gray,
-                modifier = Modifier.padding(start = 8.dp)
-            )
         }
     }
 }
 
-@Composable
-private fun CodeBlock(code: String) {
-    Surface(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(8.dp)),
-        color = Color(0xFF263238)
-    ) {
-        Text(
-            text = code,
-            modifier = Modifier.padding(12.dp),
-            fontSize = 11.sp,
-            fontFamily = FontFamily.Monospace,
-            color = Color(0xFF80CBC4),
-            lineHeight = 16.sp
-        )
-    }
-}
+
 
 @Preview(showBackground = true)
 @Composable
