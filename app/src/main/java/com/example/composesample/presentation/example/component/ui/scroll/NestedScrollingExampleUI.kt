@@ -27,6 +27,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
@@ -69,9 +70,9 @@ fun NestedScrollingExampleUI(
     val nestedScrollConnection = remember {
         object : NestedScrollConnection {
             override fun onPreScroll(
-                available: androidx.compose.ui.geometry.Offset,
+                available: Offset,
                 source: NestedScrollSource
-            ): androidx.compose.ui.geometry.Offset {
+            ): Offset {
                 preScrollCount.intValue++
                 lastCalledFunction.value = "onPreScroll (자식 처리 전)"
                 lastScrollDelta.floatValue = available.y
@@ -87,18 +88,18 @@ fun NestedScrollingExampleUI(
                     val newOffset = toolbarOffsetHeightPx.floatValue + preConsume
                     toolbarOffsetHeightPx.floatValue = newOffset.coerceIn(-toolbarHeightPx, 0f)
 
-                    return androidx.compose.ui.geometry.Offset(0f, preConsume)
+                    return Offset(0f, preConsume)
                 } else {
                     preScrollConsumed.floatValue = 0f
-                    return androidx.compose.ui.geometry.Offset.Zero
+                    return Offset.Zero
                 }
             }
 
             override fun onPostScroll(
-                consumed: androidx.compose.ui.geometry.Offset,
-                available: androidx.compose.ui.geometry.Offset,
+                consumed: Offset,
+                available: Offset,
                 source: NestedScrollSource
-            ): androidx.compose.ui.geometry.Offset {
+            ): Offset {
                 postScrollCount.intValue++
                 lastCalledFunction.value = "onPostScroll (자식 처리 후)"
 
@@ -112,10 +113,10 @@ fun NestedScrollingExampleUI(
                     val newOffset = toolbarOffsetHeightPx.floatValue + postConsume
                     toolbarOffsetHeightPx.floatValue = newOffset.coerceIn(-toolbarHeightPx, 0f)
 
-                    return androidx.compose.ui.geometry.Offset(0f, postConsume)
+                    return Offset(0f, postConsume)
                 } else {
                     postScrollConsumed.floatValue = 0f
-                    return androidx.compose.ui.geometry.Offset.Zero
+                    return Offset.Zero
                 }
             }
 

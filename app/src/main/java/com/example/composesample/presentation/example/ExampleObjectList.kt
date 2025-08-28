@@ -425,16 +425,6 @@ fun exampleObjectList(): ArrayList<ExampleObject> {
 
     insertExampleObject.add(
         ExampleObject(
-            lastUpdate = "25. 07. 19",
-            title = "Nested Scrolling Example",
-            description = "Nested Scroll과 NestedScrollConnection을 활용한 중첩 스크롤 예제",
-            blogUrl = "",
-            exampleType = ConstValue.NestedScrollingExample
-        )
-    )
-
-    insertExampleObject.add(
-        ExampleObject(
             lastUpdate = "25. 07. 22",
             title = "SnapshotFlow vs collectAsState",
             description = "snapshotFlow와 collectAsState 차이점과 올바른 사용법 예제",
@@ -460,6 +450,16 @@ fun exampleObjectList(): ArrayList<ExampleObject> {
             description = "BasicText의 autoSize 기능으로 동적 텍스트 크기 조절하기",
             blogUrl = "",
             exampleType = ConstValue.AutoSizingTextExample
+        )
+    )
+
+    insertExampleObject.add(
+        ExampleObject(
+            lastUpdate = "25. 08. 28",
+            title = "Nested Scrolling Example",
+            description = "Nested Scroll과 NestedScrollConnection을 활용한 중첩 스크롤 예제",
+            blogUrl = "https://heegs.tistory.com/188",
+            exampleType = ConstValue.NestedScrollingExample
         )
     )
 
