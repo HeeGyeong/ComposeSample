@@ -463,6 +463,16 @@ fun exampleObjectList(): ArrayList<ExampleObject> {
         )
     )
 
+    insertExampleObject.add(
+        ExampleObject(
+            lastUpdate = "25. 09. 01",
+            title = "Nested Routes with Navigation 3",
+            description = "Navigation 3의 중첩 라우팅과 RouteComponent를 활용한 고급 네비게이션 예제",
+            blogUrl = "",
+            exampleType = ConstValue.NestedRoutesNav3Example
+        )
+    )
+
     return insertExampleObject
 }
 
