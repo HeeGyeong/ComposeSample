@@ -2,21 +2,45 @@ package com.example.composesample.presentation.example.component.ui.navigation
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.Card
+import androidx.compose.material.Icon
+import androidx.compose.material.OutlinedTextField
+import androidx.compose.material.Surface
+import androidx.compose.material.Text
+import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowForward
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Build
-import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Refresh
-import androidx.compose.runtime.*
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.Stable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -27,6 +51,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.composesample.presentation.MainHeader
+import kotlinx.coroutines.delay
 
 
 @Composable
@@ -34,7 +59,6 @@ fun NestedRoutesNav3ExampleUI(
     onBackEvent: () -> Unit
 ) {
     var currentTab by remember { mutableStateOf<AppRoute>(AppRoute.Home) }
-    var currentSubRoute by remember { mutableStateOf<SubRoute?>(null) }
 
     Column(
         modifier = Modifier
@@ -52,10 +76,9 @@ fun NestedRoutesNav3ExampleUI(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             item { BottomNavigationDemoCard(currentTab) { currentTab = it } }
-            item { RouteComponentExampleCard(currentSubRoute) { currentSubRoute = it } }
-            item { IndependentBackstackDemoCard() }
-            item { StateManagementDemoCard() }
-            item { MemoryManagementDemoCard() }
+            item { RealNavBackStackDemoCard() }
+            item { RealStateManagementDemoCard() }
+            item { RealRouteComponentDemoCard() }
         }
     }
 }
@@ -68,14 +91,108 @@ sealed class AppRoute(val title: String, val icon: ImageVector) {
     object User : AppRoute("User", Icons.Filled.ArrowBack)
 }
 
-sealed class SubRoute(val title: String) {
-    object PhraseOfTheDay : SubRoute("Phrase of the Day")
-    object SaintOfTheDay : SubRoute("Saint of the Day")
-    object PrayersDetail : SubRoute("Prayers Detail")
-    object NovenaFlow : SubRoute("Novena Flow")
-    object ChapletFlow : SubRoute("Chaplet Flow")
-    object PlansFlow : SubRoute("Plans Flow")
+@Stable
+class NavBackStackSimulator(initialRoute: String) {
+    private val _entries = mutableStateListOf<NavEntrySimulator>()
+    val entries: List<NavEntrySimulator> = _entries
+
+    init {
+        _entries.add(NavEntrySimulator("${initialRoute}Route", ""))
+    }
+
+    fun push(route: String) {
+        _entries.add(NavEntrySimulator(route, ""))
+    }
+
+    fun pop() {
+        if (_entries.size > 1) {
+            _entries.removeLastOrNull()
+        }
+    }
+
+    fun saveState(state: String) {
+        if (_entries.isNotEmpty()) {
+            _entries[_entries.lastIndex] = _entries.last().copy(savedState = state)
+        }
+    }
+
+    fun getCurrentEntry(): NavEntrySimulator? = _entries.lastOrNull()
 }
+
+@Stable
+data class NavEntrySimulator(
+    val route: String,
+    val savedState: String
+)
+
+@Stable
+class EntryDecoratorSimulator {
+    private val _decoratedEntries = mutableStateMapOf<String, DecoratedEntryState>()
+    val decoratedEntries: Map<String, DecoratedEntryState> = _decoratedEntries
+
+    fun decorateEntry(
+        route: String,
+        viewModelActive: Boolean = true,
+        stateRestored: Boolean = false
+    ) {
+        _decoratedEntries[route] = DecoratedEntryState(
+            viewModelActive = viewModelActive,
+            stateRestored = stateRestored,
+            memoryUsage = (8..20).random()
+        )
+    }
+
+    fun removeEntry(route: String) {
+        _decoratedEntries.remove(route)
+    }
+
+    fun restoreState(route: String) {
+        _decoratedEntries[route] = _decoratedEntries[route]?.copy(stateRestored = true)
+            ?: DecoratedEntryState(true, true, (8..20).random())
+    }
+}
+
+@Stable
+data class DecoratedEntryState(
+    val viewModelActive: Boolean,
+    val stateRestored: Boolean,
+    val memoryUsage: Int
+)
+
+@Stable
+class RouteComponentManagerSimulator {
+    private val _activeComponents = mutableStateMapOf<String, RouteComponentState>()
+    val activeComponents: Map<String, RouteComponentState> = _activeComponents
+
+    fun createComponent(name: String) {
+        _activeComponents[name] = RouteComponentState(
+            isActive = true,
+            backStackSize = 1,
+            memoryUsage = (12..25).random()
+        )
+    }
+
+    fun removeComponent(name: String) {
+        _activeComponents.remove(name)
+    }
+
+    fun activateComponent(name: String) {
+        _activeComponents[name] = _activeComponents[name]?.copy(isActive = true)
+            ?: RouteComponentState(true, 1, (12..25).random())
+    }
+
+    fun deactivateComponent(name: String) {
+        _activeComponents[name] = _activeComponents[name]?.copy(isActive = false)
+            ?: return
+    }
+}
+
+@Stable
+data class RouteComponentState(
+    val isActive: Boolean,
+    val backStackSize: Int,
+    val memoryUsage: Int
+)
 
 @Composable
 private fun BottomNavigationDemoCard(
@@ -94,7 +211,7 @@ private fun BottomNavigationDemoCard(
             modifier = Modifier.padding(16.dp)
         ) {
             Text(
-                text = "📱 Bottom Navigation 데모",
+                text = "📱 Bottom Navigation",
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color(0xFF388E3C)
@@ -181,121 +298,11 @@ private fun BottomNavItem(
 }
 
 @Composable
-private fun RouteComponentExampleCard(
-    currentSubRoute: SubRoute?,
-    onSubRouteSelected: (SubRoute?) -> Unit
-) {
-    val subRoutes = listOf(
-        SubRoute.PhraseOfTheDay,
-        SubRoute.SaintOfTheDay,
-        SubRoute.PrayersDetail,
-        SubRoute.NovenaFlow,
-        SubRoute.ChapletFlow,
-        SubRoute.PlansFlow
-    )
+private fun RealNavBackStackDemoCard() {
 
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        backgroundColor = Color(0xFFFFF3E0),
-        shape = RoundedCornerShape(12.dp)
-    ) {
-        Column(
-            modifier = Modifier.padding(16.dp)
-        ) {
-            Text(
-                text = "🔄 RouteComponent 예시",
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color(0xFFE65100)
-            )
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            Text(
-                text = "Home Route에서 접근 가능한 서브 라우트들:",
-                fontSize = 14.sp,
-                color = Color.Gray
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
-            Column(
-                verticalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                subRoutes.chunked(2).forEach { rowRoutes ->
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        rowRoutes.forEach { route ->
-                            Button(
-                                onClick = {
-                                    onSubRouteSelected(if (currentSubRoute == route) null else route)
-                                },
-                                modifier = Modifier.weight(1f),
-                                colors = ButtonDefaults.buttonColors(
-                                    backgroundColor = if (currentSubRoute == route)
-                                        Color(0xFFE65100) else Color(0xFFE65100).copy(alpha = 0.3f)
-                                ),
-                                shape = RoundedCornerShape(8.dp)
-                            ) {
-                                Text(
-                                    text = route.title,
-                                    color = Color.White,
-                                    fontSize = 11.sp,
-                                    textAlign = TextAlign.Center
-                                )
-                            }
-                        }
-
-                        if (rowRoutes.size == 1) {
-                            Spacer(modifier = Modifier.weight(1f))
-                        }
-                    }
-                }
-            }
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-
-            if (currentSubRoute != null) {
-                Surface(
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(8.dp),
-                    color = Color(0xFFE65100).copy(alpha = 0.1f)
-                ) {
-                    Row(
-                        modifier = Modifier.padding(12.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Icon(
-                            imageVector = Icons.Filled.ArrowForward,
-                            contentDescription = "Navigate",
-                            tint = Color(0xFFE65100),
-                            modifier = Modifier.size(16.dp)
-                        )
-
-                        Spacer(modifier = Modifier.width(8.dp))
-
-                        Text(
-                            text = "현재 화면: ${currentSubRoute.title}",
-                            fontSize = 14.sp,
-                            color = Color(0xFFE65100),
-                            fontWeight = FontWeight.Medium
-                        )
-                    }
-                }
-            }
-        }
-    }
-}
-
-// 독립적인 백스택 관리 데모
-@Composable
-private fun IndependentBackstackDemoCard() {
-    var homeStack by remember { mutableStateOf(listOf("Home")) }
-    var prayersStack by remember { mutableStateOf(listOf("Prayers")) }
-    var currentTab by remember { mutableStateOf("Home") }
+    val homeBackStack = remember { NavBackStackSimulator("Home") }
+    val prayersBackStack = remember { NavBackStackSimulator("Prayers") }
+    var currentRouteComponent by remember { mutableStateOf("Home") }
 
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -307,7 +314,7 @@ private fun IndependentBackstackDemoCard() {
             modifier = Modifier.padding(16.dp)
         ) {
             Text(
-                text = "🎯 독립적인 백스택 관리",
+                text = "🎯 실제 NavBackStack 동작",
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color(0xFF1976D2)
@@ -316,30 +323,32 @@ private fun IndependentBackstackDemoCard() {
             Spacer(modifier = Modifier.height(12.dp))
 
             Text(
-                text = "각 RouteComponent가 독립적인 네비게이션 스택을 유지합니다:",
+                text = "각 RouteComponent가 독립적인 NavBackStack을 관리합니다:",
                 fontSize = 14.sp,
                 color = Color.Gray
             )
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // 탭 선택기
+            // RouteComponent 선택기
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                listOf("Home", "Prayers").forEach { tab ->
+                listOf("Home", "Prayers").forEach { component ->
                     Button(
-                        onClick = { currentTab = tab },
+                        onClick = { currentRouteComponent = component },
                         modifier = Modifier.weight(1f),
                         colors = ButtonDefaults.buttonColors(
-                            backgroundColor = if (currentTab == tab) Color(0xFF1976D2) else Color(0xFF1976D2).copy(alpha = 0.3f)
+                            backgroundColor = if (currentRouteComponent == component)
+                                Color(0xFF1976D2) else Color(0xFF1976D2).copy(alpha = 0.3f)
                         )
                     ) {
                         Text(
-                            text = "$tab Tab",
+                            text = "${component}RouteComponent",
                             color = Color.White,
-                            fontSize = 12.sp
+                            fontSize = 10.sp,
+                            textAlign = TextAlign.Center
                         )
                     }
                 }
@@ -347,9 +356,10 @@ private fun IndependentBackstackDemoCard() {
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // 현재 선택된 탭의 스택 표시
-            val currentStack = if (currentTab == "Home") homeStack else prayersStack
-            
+            // 현재 선택된 RouteComponent의 백스택 표시
+            val currentBackStack =
+                if (currentRouteComponent == "Home") homeBackStack else prayersBackStack
+
             Surface(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(8.dp),
@@ -359,33 +369,42 @@ private fun IndependentBackstackDemoCard() {
                     modifier = Modifier.padding(12.dp)
                 ) {
                     Text(
-                        text = "${currentTab} RouteComponent Stack:",
+                        text = "NavBackStack<${currentRouteComponent}Route>:",
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Medium,
                         color = Color(0xFF1976D2)
                     )
-                    
+
                     Spacer(modifier = Modifier.height(8.dp))
-                    
-                    currentStack.forEachIndexed { index, route ->
+
+                    currentBackStack.entries.forEachIndexed { index, entry ->
                         Row(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(
-                                text = "[$index] $route",
+                                text = "Entry[$index]: ${entry.route}",
                                 fontSize = 12.sp,
                                 color = Color(0xFF1976D2),
                                 modifier = Modifier.weight(1f)
                             )
-                            
-                            if (index == currentStack.lastIndex) {
+
+                            if (index == currentBackStack.entries.lastIndex) {
                                 Text(
-                                    text = "← 현재",
+                                    text = "← Current",
                                     fontSize = 10.sp,
                                     color = Color(0xFFFF5722),
                                     fontWeight = FontWeight.Bold
                                 )
                             }
+                        }
+
+                        if (entry.savedState.isNotEmpty()) {
+                            Text(
+                                text = "  SavedState: ${entry.savedState}",
+                                fontSize = 10.sp,
+                                color = Color.Gray,
+                                modifier = Modifier.padding(start = 16.dp)
+                            )
                         }
                     }
                 }
@@ -393,20 +412,19 @@ private fun IndependentBackstackDemoCard() {
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // 네비게이션 액션 버튼들
+            // NavBackStack 조작 버튼들
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Button(
                     onClick = {
-                        val routes = listOf("Detail", "Settings", "Profile", "About")
-                        val newRoute = routes.random()
-                        if (currentTab == "Home") {
-                            homeStack = homeStack + newRoute
+                        val subRoutes = if (currentRouteComponent == "Home") {
+                            listOf("PhraseOfDay", "SaintOfDay", "Calendar")
                         } else {
-                            prayersStack = prayersStack + newRoute
+                            listOf("Novena", "Chaplet", "Rosary")
                         }
+                        currentBackStack.push("${subRoutes.random()}Route")
                     },
                     modifier = Modifier.weight(1f),
                     colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF4CAF50))
@@ -423,11 +441,7 @@ private fun IndependentBackstackDemoCard() {
 
                 Button(
                     onClick = {
-                        if (currentTab == "Home" && homeStack.size > 1) {
-                            homeStack = homeStack.dropLast(1)
-                        } else if (currentTab == "Prayers" && prayersStack.size > 1) {
-                            prayersStack = prayersStack.dropLast(1)
-                        }
+                        currentBackStack.pop()
                     },
                     modifier = Modifier.weight(1f),
                     colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFFF5722))
@@ -451,7 +465,7 @@ private fun IndependentBackstackDemoCard() {
                 color = Color(0xFF4CAF50).copy(alpha = 0.1f)
             ) {
                 Text(
-                    text = "💡 각 탭을 전환해도 이전 스택이 그대로 유지됩니다!",
+                    text = "💡 실제로는 rememberNavBackStack<RouteType>()으로 생성되며, 각 RouteComponent가 독립적인 백스택을 유지합니다!",
                     modifier = Modifier.padding(8.dp),
                     fontSize = 11.sp,
                     color = Color(0xFF388E3C),
@@ -462,13 +476,19 @@ private fun IndependentBackstackDemoCard() {
     }
 }
 
-// 상태 관리 및 복원 데모
 @Composable
-private fun StateManagementDemoCard() {
-    var inputText by remember { mutableStateOf("") }
-    var savedStates by remember { mutableStateOf(mapOf<String, String>()) }
-    var currentRoute by remember { mutableStateOf("Route1") }
-    var simulatedRotation by remember { mutableStateOf(false) }
+private fun RealStateManagementDemoCard() {
+    val entryDecorator = remember { EntryDecoratorSimulator() }
+    var currentRoute by remember { mutableStateOf("HomeRoute") }
+    var inputText by rememberSaveable(currentRoute) { mutableStateOf("") }
+    var rotationCount by remember { mutableStateOf(0) }
+
+
+    LaunchedEffect(currentRoute) {
+        entryDecorator.decorateEntry(currentRoute)
+        delay(100)
+        entryDecorator.restoreState(currentRoute)
+    }
 
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -480,7 +500,7 @@ private fun StateManagementDemoCard() {
             modifier = Modifier.padding(16.dp)
         ) {
             Text(
-                text = "🔄 상태 관리 및 복원",
+                text = "🔄 EntryDecorator 상태 관리",
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color(0xFF7B1FA2)
@@ -489,40 +509,42 @@ private fun StateManagementDemoCard() {
             Spacer(modifier = Modifier.height(12.dp))
 
             Text(
-                text = "SavedStateNavEntryDecorator로 상태가 자동 저장/복원됩니다:",
+                text = "SavedStateNavEntryDecorator가 자동으로 상태를 저장/복원합니다:",
                 fontSize = 14.sp,
                 color = Color.Gray
             )
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // 라우트 선택
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                listOf("Route1", "Route2", "Route3").forEach { route ->
+                listOf("HomeRoute", "DetailRoute", "SettingsRoute").forEach { route ->
                     Button(
-                        onClick = { 
-                            // 현재 상태 저장
-                            savedStates = savedStates + (currentRoute to inputText)
+                        onClick = {
                             currentRoute = route
-                            // 저장된 상태 복원
-                            inputText = savedStates[route] ?: ""
                         },
                         modifier = Modifier.weight(1f),
                         colors = ButtonDefaults.buttonColors(
-                            backgroundColor = if (currentRoute == route) Color(0xFF7B1FA2) else Color(0xFF7B1FA2).copy(alpha = 0.3f)
+                            backgroundColor = if (currentRoute == route)
+                                Color(0xFF7B1FA2) else Color(0xFF7B1FA2).copy(alpha = 0.3f)
                         )
                     ) {
-                        Text(route, color = Color.White, fontSize = 11.sp)
+                        Text(
+                            text = route.replace("Route", ""),
+                            color = Color.White,
+                            fontSize = 10.sp,
+                            textAlign = TextAlign.Center
+                        )
                     }
                 }
             }
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // 현재 라우트의 상태
+
             Surface(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(8.dp),
@@ -532,7 +554,7 @@ private fun StateManagementDemoCard() {
                     modifier = Modifier.padding(12.dp)
                 ) {
                     Text(
-                        text = "현재 라우트: $currentRoute",
+                        text = "NavEntry: $currentRoute",
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Medium,
                         color = Color(0xFF7B1FA2)
@@ -540,10 +562,31 @@ private fun StateManagementDemoCard() {
 
                     Spacer(modifier = Modifier.height(8.dp))
 
+                    val entryState = entryDecorator.decoratedEntries[currentRoute]
+                    if (entryState != null) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text(
+                                text = "ViewModel: ${if (entryState.viewModelActive) "Active" else "Cleared"}",
+                                fontSize = 11.sp,
+                                color = if (entryState.viewModelActive) Color(0xFF4CAF50) else Color.Gray
+                            )
+                            Text(
+                                text = "State: ${if (entryState.stateRestored) "Restored" else "New"}",
+                                fontSize = 11.sp,
+                                color = if (entryState.stateRestored) Color(0xFF2196F3) else Color.Gray
+                            )
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
                     OutlinedTextField(
                         value = inputText,
                         onValueChange = { inputText = it },
-                        label = { Text("사용자 입력", fontSize = 12.sp) },
+                        label = { Text("rememberSaveable로 저장되는 상태", fontSize = 11.sp) },
                         modifier = Modifier.fillMaxWidth(),
                         colors = TextFieldDefaults.outlinedTextFieldColors(
                             focusedBorderColor = Color(0xFF7B1FA2),
@@ -555,36 +598,15 @@ private fun StateManagementDemoCard() {
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // 저장된 상태들 표시
-            if (savedStates.isNotEmpty()) {
-                Text(
-                    text = "💾 저장된 상태들:",
-                    fontSize = 12.sp,
-                    fontWeight = FontWeight.Medium,
-                    color = Color(0xFF7B1FA2)
-                )
-                
-                savedStates.forEach { (route, state) ->
-                    Text(
-                        text = "• $route: \"${state.take(20)}${if (state.length > 20) "..." else ""}\"",
-                        fontSize = 11.sp,
-                        color = Color.Gray,
-                        modifier = Modifier.padding(start = 8.dp, top = 2.dp)
-                    )
-                }
-            }
 
-            Spacer(modifier = Modifier.height(12.dp))
-
-            // 시뮬레이션 버튼들
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Button(
-                    onClick = { 
-                        simulatedRotation = !simulatedRotation
-                        // 화면 회전 시뮬레이션 (상태는 유지됨)
+                    onClick = {
+                        rotationCount++
+
                     },
                     modifier = Modifier.weight(1f),
                     colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFFF9800))
@@ -596,25 +618,29 @@ private fun StateManagementDemoCard() {
                         tint = Color.White
                     )
                     Spacer(modifier = Modifier.width(4.dp))
-                    Text("화면회전", color = Color.White, fontSize = 10.sp)
+                    Text("회전($rotationCount)", color = Color.White, fontSize = 9.sp)
                 }
 
                 Button(
                     onClick = {
-                        // 프로세스 재시작 시뮬레이션
-                        savedStates = savedStates + (currentRoute to inputText)
+
+                        entryDecorator.decoratedEntries.keys.forEach { route ->
+                            if (route != currentRoute) {
+                                entryDecorator.removeEntry(route)
+                            }
+                        }
                     },
                     modifier = Modifier.weight(1f),
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF2196F3))
+                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFD32F2F))
                 ) {
                     Icon(
-                        imageVector = Icons.Filled.Menu,
-                        contentDescription = "Save",
+                        imageVector = Icons.Filled.Delete,
+                        contentDescription = "Cleanup",
                         modifier = Modifier.size(16.dp),
                         tint = Color.White
                     )
                     Spacer(modifier = Modifier.width(4.dp))
-                    Text("상태저장", color = Color.White, fontSize = 10.sp)
+                    Text("정리", color = Color.White, fontSize = 10.sp)
                 }
             }
 
@@ -626,7 +652,7 @@ private fun StateManagementDemoCard() {
                 color = Color(0xFF4CAF50).copy(alpha = 0.1f)
             ) {
                 Text(
-                    text = "💡 라우트를 전환해도 각각의 입력 상태가 유지됩니다!",
+                    text = "💡 실제로는 rememberSavedStateNavEntryDecorator()가 자동으로 상태 저장/복원을 처리합니다!",
                     modifier = Modifier.padding(8.dp),
                     fontSize = 11.sp,
                     color = Color(0xFF388E3C),
@@ -637,12 +663,10 @@ private fun StateManagementDemoCard() {
     }
 }
 
-// 메모리 관리 데모
 @Composable
-private fun MemoryManagementDemoCard() {
-    var activeRoutes by remember { mutableStateOf(setOf("Home")) }
-    var memoryUsage by remember { mutableStateOf(mapOf("Home" to 12)) }
-    var totalMemory by remember { mutableStateOf(12) }
+private fun RealRouteComponentDemoCard() {
+    val routeComponentManager = remember { RouteComponentManagerSimulator() }
+    var selectedComponent by remember { mutableStateOf<String?>(null) }
 
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -654,7 +678,7 @@ private fun MemoryManagementDemoCard() {
             modifier = Modifier.padding(16.dp)
         ) {
             Text(
-                text = "🗑️ 메모리 관리",
+                text = "🧩 RouteComponent 라이프사이클",
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color(0xFFD32F2F)
@@ -663,14 +687,14 @@ private fun MemoryManagementDemoCard() {
             Spacer(modifier = Modifier.height(12.dp))
 
             Text(
-                text = "RouteComponent 제거 시 자동으로 리소스가 정리됩니다:",
+                text = "각 RouteComponent의 생성, 활성화, 제거 과정을 시뮬레이션합니다:",
                 fontSize = 14.sp,
                 color = Color.Gray
             )
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // 메모리 사용량 표시
+
             Surface(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(8.dp),
@@ -680,7 +704,7 @@ private fun MemoryManagementDemoCard() {
                     modifier = Modifier.padding(12.dp)
                 ) {
                     Text(
-                        text = "📊 현재 메모리 사용량: ${totalMemory}MB",
+                        text = "📊 활성 RouteComponent 목록:",
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Medium,
                         color = Color(0xFFD32F2F)
@@ -688,23 +712,49 @@ private fun MemoryManagementDemoCard() {
 
                     Spacer(modifier = Modifier.height(8.dp))
 
-                    activeRoutes.forEach { route ->
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(
-                                text = "• $route Route",
-                                fontSize = 12.sp,
-                                color = Color.Gray
-                            )
-                            Text(
-                                text = "${memoryUsage[route] ?: 0}MB",
-                                fontSize = 12.sp,
-                                color = Color(0xFFD32F2F),
-                                fontWeight = FontWeight.Medium
-                            )
+                    if (routeComponentManager.activeComponents.isEmpty()) {
+                        Text(
+                            text = "활성 컴포넌트 없음",
+                            fontSize = 12.sp,
+                            color = Color.Gray,
+                            fontStyle = androidx.compose.ui.text.font.FontStyle.Italic
+                        )
+                    } else {
+                        routeComponentManager.activeComponents.forEach { (name, component) ->
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Column {
+                                    Text(
+                                        text = "${name}RouteComponent",
+                                        fontSize = 12.sp,
+                                        color = Color(0xFFD32F2F),
+                                        fontWeight = FontWeight.Medium
+                                    )
+                                    Text(
+                                        text = "백스택: ${component.backStackSize}개 엔트리",
+                                        fontSize = 10.sp,
+                                        color = Color.Gray
+                                    )
+                                }
+
+                                Column(horizontalAlignment = Alignment.End) {
+                                    Text(
+                                        text = "${component.memoryUsage}MB",
+                                        fontSize = 12.sp,
+                                        color = Color(0xFFD32F2F),
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                    Text(
+                                        text = if (component.isActive) "활성" else "비활성",
+                                        fontSize = 10.sp,
+                                        color = if (component.isActive) Color(0xFF4CAF50) else Color.Gray
+                                    )
+                                }
+                            }
+                            Spacer(modifier = Modifier.height(4.dp))
                         }
                     }
                 }
@@ -712,62 +762,62 @@ private fun MemoryManagementDemoCard() {
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // 라우트 관리 버튼들
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                Button(
-                    onClick = {
-                        val newRoutes = listOf("Detail", "Settings", "Profile", "About", "Help")
-                        val newRoute = newRoutes.random()
-                        if (!activeRoutes.contains(newRoute)) {
-                            val newMemory = (8..15).random()
-                            activeRoutes = activeRoutes + newRoute
-                            memoryUsage = memoryUsage + (newRoute to newMemory)
-                            totalMemory += newMemory
-                        }
-                    },
-                    modifier = Modifier.weight(1f),
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF4CAF50))
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.Add,
-                        contentDescription = "Add Route",
-                        modifier = Modifier.size(16.dp),
-                        tint = Color.White
-                    )
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Text("라우트 추가", color = Color.White, fontSize = 10.sp)
-                }
 
-                Button(
-                    onClick = {
-                        if (activeRoutes.size > 1) {
-                            val routeToRemove = activeRoutes.filter { it != "Home" }.randomOrNull()
-                            routeToRemove?.let { route ->
-                                activeRoutes = activeRoutes - route
-                                val freedMemory = memoryUsage[route] ?: 0
-                                memoryUsage = memoryUsage - route
-                                totalMemory -= freedMemory
-                            }
-                        }
-                    },
-                    modifier = Modifier.weight(1f),
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFD32F2F))
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.Delete,
-                        contentDescription = "Remove Route",
-                        modifier = Modifier.size(16.dp),
-                        tint = Color.White
-                    )
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Text("라우트 제거", color = Color.White, fontSize = 10.sp)
-                }
-            }
+            Text(
+                text = "RouteComponent 관리:",
+                fontSize = 12.sp,
+                fontWeight = FontWeight.Medium,
+                color = Color(0xFFD32F2F)
+            )
 
             Spacer(modifier = Modifier.height(8.dp))
+
+            val availableComponents = listOf("Home", "Prayers", "Plans", "Profile")
+            availableComponents.chunked(2).forEach { rowComponents ->
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    rowComponents.forEach { component ->
+                        val isActive = routeComponentManager.activeComponents.containsKey(component)
+                        Button(
+                            onClick = {
+                                if (isActive) {
+                                    routeComponentManager.removeComponent(component)
+                                } else {
+                                    routeComponentManager.createComponent(component)
+                                }
+                            },
+                            modifier = Modifier.weight(1f),
+                            colors = ButtonDefaults.buttonColors(
+                                backgroundColor = if (isActive) Color(0xFFD32F2F) else Color(
+                                    0xFF4CAF50
+                                )
+                            )
+                        ) {
+                            Icon(
+                                imageVector = if (isActive) Icons.Filled.Delete else Icons.Filled.Add,
+                                contentDescription = if (isActive) "Remove" else "Create",
+                                modifier = Modifier.size(12.dp),
+                                tint = Color.White
+                            )
+                            Spacer(modifier = Modifier.width(4.dp))
+                            Text(
+                                text = if (isActive) "제거" else "생성",
+                                color = Color.White,
+                                fontSize = 10.sp
+                            )
+                        }
+                    }
+
+                    if (rowComponents.size == 1) {
+                        Spacer(modifier = Modifier.weight(1f))
+                    }
+                }
+                Spacer(modifier = Modifier.height(4.dp))
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
 
             Surface(
                 modifier = Modifier.fillMaxWidth(),
@@ -775,7 +825,7 @@ private fun MemoryManagementDemoCard() {
                 color = Color(0xFF4CAF50).copy(alpha = 0.1f)
             ) {
                 Text(
-                    text = "💡 라우트 제거 시 해당 ViewModel, 상태, 리소스가 모두 자동으로 정리됩니다!",
+                    text = "💡 실제로는 NavDisplay와 entryProvider를 통해 RouteComponent가 생성되고, 필요 없을 때 자동으로 정리됩니다!",
                     modifier = Modifier.padding(8.dp),
                     fontSize = 11.sp,
                     color = Color(0xFF388E3C),
