@@ -107,6 +107,7 @@ import com.example.composesample.presentation.example.component.ui.media.shimmer
 import com.example.composesample.presentation.example.component.ui.scroll.NestedScrollingExampleUI
 import com.example.composesample.presentation.example.component.architecture.state.SnapshotFlowExampleUI
 import com.example.composesample.presentation.example.component.system.ui.widget.GlanceWidgetExampleUI
+import com.example.composesample.presentation.example.component.ui.graphics.NewShadowApiExampleUI
 import com.example.composesample.presentation.example.component.ui.navigation.NestedRoutesNav3ExampleUI
 import com.example.composesample.presentation.example.component.ui.text.AutoSizingTextExampleUI
 import com.example.composesample.presentation.example.component.ui.text.TextStyleUI
@@ -145,6 +146,7 @@ import com.example.composesample.util.ConstValue.Companion.ModalBottomSheetExamp
 import com.example.composesample.util.ConstValue.Companion.ModalDrawExample
 import com.example.composesample.util.ConstValue.Companion.NestedRoutesNav3Example
 import com.example.composesample.util.ConstValue.Companion.NestedScrollingExample
+import com.example.composesample.util.ConstValue.Companion.NewShadowApiExample
 import com.example.composesample.util.ConstValue.Companion.PagingExample
 import com.example.composesample.util.ConstValue.Companion.PassingIntentDataExample
 import com.example.composesample.util.ConstValue.Companion.PathGraphicsExample
@@ -890,6 +892,10 @@ fun ExampleCaseUI(
 
                         NestedRoutesNav3Example -> {
                             NestedRoutesNav3ExampleUI(onBackEvent)
+                        }
+
+                        NewShadowApiExample -> {
+                            NewShadowApiExampleUI(onBackEvent)
                         }
 
                         else -> {

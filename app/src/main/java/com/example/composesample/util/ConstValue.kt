@@ -71,6 +71,7 @@ class ConstValue {
         const val GlanceWidgetExample = "glanceWidgetExample"
         const val AutoSizingTextExample = "autoSizingTextExample"
         const val NestedRoutesNav3Example = "nestedRoutesNav3Example"
+        const val NewShadowApiExample = "newShadowApiExample"
 
         // 새로운 Compose 1.7 기능 예제들
         const val Compose17FeaturesExample = "compose17FeaturesExample"

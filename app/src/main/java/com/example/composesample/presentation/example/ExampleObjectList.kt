@@ -473,6 +473,16 @@ fun exampleObjectList(): ArrayList<ExampleObject> {
         )
     )
 
+    insertExampleObject.add(
+        ExampleObject(
+            lastUpdate = "25. 09. 09",
+            title = "New Shadow API for Compose",
+            description = "Compose 1.9.0의 새로운 dropShadow와 innerShadow API 활용 예제",
+            blogUrl = "",
+            exampleType = ConstValue.NewShadowApiExample
+        )
+    )
+
     return insertExampleObject
 }
 
