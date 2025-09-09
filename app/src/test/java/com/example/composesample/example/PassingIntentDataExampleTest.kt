@@ -3,7 +3,7 @@ package com.example.composesample.example
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import com.example.composesample.presentation.example.component.intent.ParcelableDataClass
+import com.example.composesample.presentation.example.component.system.platform.intent.ParcelableDataClass
 import io.mockk.CapturingSlot
 import io.mockk.Runs
 import io.mockk.every

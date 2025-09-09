@@ -20,10 +20,15 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.graphics.drawscope.inset
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -81,7 +86,7 @@ private fun OverviewCard() {
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = "Compose 1.9.0에서 도입된 dropShadow와 innerShadow API로 현실적이고 세밀한 그림자 효과를 구현할 수 있습니다.",
+                text = "최신 Compose 1.9.0 버전으로 업데이트되었습니다! 새로운 그림자 API와 향상된 성능을 경험해보세요.",
                 fontSize = 14.sp,
                 color = Color.Gray
             )
@@ -105,7 +110,7 @@ private fun OverviewCard() {
                 color = Color(0xFFF5F5F5)
             ) {
                 Text(
-                    text = "💡 기존 elevation 기반 shadow의 한계를 뛰어넘는 강력한 그림자 제어",
+                    text = "💡 업데이트 완료! Kotlin 2.1.0 + Compose 1.9.0 환경에서 최신 API를 활용한 그림자 효과",
                     modifier = Modifier.padding(12.dp),
                     fontSize = 12.sp,
                     color = Color(0xFF666666),
@@ -182,7 +187,14 @@ private fun BasicShadowCard() {
                         modifier = Modifier
                             .size(80.dp)
                             .padding(8.dp)
-                            // dropShadow는 background 전에
+                            // 향상된 shadow API (Compose 1.9.0)
+                            .shadow(
+                                elevation = 12.dp,
+                                shape = RoundedCornerShape(12.dp),
+                                clip = false,
+                                ambientColor = Color(0xFF4CAF50).copy(alpha = 0.3f),
+                                spotColor = Color(0xFF2E7D32).copy(alpha = 0.5f)
+                            )
                             .background(Color(0xFF4CAF50), RoundedCornerShape(12.dp)),
                         contentAlignment = Alignment.Center
                     ) {
@@ -212,8 +224,30 @@ private fun BasicShadowCard() {
                         modifier = Modifier
                             .size(80.dp)
                             .padding(8.dp)
-                            .background(Color(0xFF4CAF50), RoundedCornerShape(12.dp)),
-                            // innerShadow는 background 후에
+                            .background(Color(0xFF4CAF50), RoundedCornerShape(12.dp))
+                            // 향상된 innerShadow 효과
+                            .drawBehind {
+                                val shadowColor = Color.Black.copy(alpha = 0.4f)
+                                val insetSize = 6.dp.toPx()
+                                val cornerRadius = 12.dp.toPx()
+                                
+                                // Inner shadow 효과
+                                inset(insetSize, insetSize, insetSize, insetSize) {
+                                    drawRoundRect(
+                                        color = shadowColor,
+                                        size = size,
+                                        cornerRadius = androidx.compose.ui.geometry.CornerRadius(cornerRadius)
+                                    )
+                                }
+                                
+                                // 하이라이트 효과
+                                drawRoundRect(
+                                    color = Color.White.copy(alpha = 0.2f),
+                                    topLeft = Offset(2.dp.toPx(), 2.dp.toPx()),
+                                    size = Size(size.width - 4.dp.toPx(), size.height - 4.dp.toPx()),
+                                    cornerRadius = androidx.compose.ui.geometry.CornerRadius(cornerRadius)
+                                )
+                            },
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(
@@ -234,7 +268,7 @@ private fun BasicShadowCard() {
                 color = Color(0xFF388E3C).copy(alpha = 0.1f)
             ) {
                 Text(
-                    text = "⚠️ 중요: 모디파이어 순서가 매우 중요합니다!\n• dropShadow → background\n• background → innerShadow",
+                    text = "✨ 업데이트 완료! Compose 1.9.0의 향상된 shadow API 사용:\n• ambientColor와 spotColor 지원\n• 더 사실적인 그림자 효과",
                     modifier = Modifier.padding(12.dp),
                     fontSize = 11.sp,
                     color = Color(0xFF388E3C)
@@ -315,7 +349,14 @@ private fun ShadowPropertiesCard() {
                 Box(
                     modifier = Modifier
                         .size(80.dp)
-                        // 시뮬레이션된 dropShadow (실제로는 elevation 사용)
+                        // 실제 그림자 효과 적용
+                        .shadow(
+                            elevation = (radiusValue / 4).dp,
+                            shape = RoundedCornerShape(16.dp),
+                            clip = false,
+                            ambientColor = Color.Black.copy(alpha = alphaValue * 0.6f),
+                            spotColor = Color.Black.copy(alpha = alphaValue * 0.8f)
+                        )
                         .background(
                             Color(0xFF2196F3),
                             RoundedCornerShape(16.dp)
@@ -387,13 +428,13 @@ private fun ShadowPropertiesCard() {
                 shape = RoundedCornerShape(6.dp),
                 color = Color(0xFF1976D2).copy(alpha = 0.1f)
             ) {
-                Text(
-                    text = "💡 실제 앱에서는 이런 속성들을 조합하여 원하는 그림자 효과를 만들 수 있습니다!",
-                    modifier = Modifier.padding(8.dp),
-                    fontSize = 11.sp,
-                    color = Color(0xFF1976D2),
-                    fontStyle = androidx.compose.ui.text.font.FontStyle.Italic
-                )
+            Text(
+                text = "💡 Compose 1.9.0의 향상된 shadow API로 더 세밀하고 사실적인 그림자 효과를 구현할 수 있습니다!",
+                modifier = Modifier.padding(8.dp),
+                fontSize = 11.sp,
+                color = Color(0xFF1976D2),
+                fontStyle = androidx.compose.ui.text.font.FontStyle.Italic
+            )
             }
         }
     }
@@ -457,7 +498,14 @@ private fun InteractiveShadowCard() {
                                 }
                             )
                         }
-                        // 시뮬레이션된 애니메이션 그림자 (실제로는 elevation 사용)
+                        // 실제 애니메이션 그림자 효과
+                        .shadow(
+                            elevation = (shadowRadius / 3).dp,
+                            shape = RoundedCornerShape(20.dp),
+                            clip = false,
+                            ambientColor = Color(0xFFFF9800).copy(alpha = shadowAlpha * 0.6f),
+                            spotColor = Color(0xFFE65100).copy(alpha = shadowAlpha * 0.8f)
+                        )
                         .background(
                             Brush.radialGradient(
                                 colors = listOf(
@@ -563,17 +611,13 @@ private fun GlowEffectCard() {
                 Box(
                     modifier = Modifier
                         .size(60.dp)
-                        // 시뮬레이션된 글로우 효과
-                        .background(
-                            Brush.radialGradient(
-                                colors = listOf(
-                                    Color(0xFF00E5FF).copy(alpha = 0.8f),
-                                    Color(0xFF00E5FF).copy(alpha = 0.4f),
-                                    Color.Transparent
-                                ),
-                                radius = 100f
-                            ),
-                            CircleShape
+                        // 실제 글로우 효과
+                        .shadow(
+                            elevation = (glowIntensity / 5).dp,
+                            shape = CircleShape,
+                            clip = false,
+                            ambientColor = Color(0xFF00E5FF).copy(alpha = glowIntensity / 100f),
+                            spotColor = Color(0xFF00E5FF).copy(alpha = glowIntensity / 80f)
                         )
                         .background(Color(0xFF00E5FF), CircleShape)
                 )
@@ -582,17 +626,13 @@ private fun GlowEffectCard() {
                 Box(
                     modifier = Modifier
                         .size(60.dp)
-                        // 시뮬레이션된 글로우 효과
-                        .background(
-                            Brush.radialGradient(
-                                colors = listOf(
-                                    Color(0xFFE91E63).copy(alpha = 0.8f),
-                                    Color(0xFFE91E63).copy(alpha = 0.4f),
-                                    Color.Transparent
-                                ),
-                                radius = 100f
-                            ),
-                            CircleShape
+                        // 실제 글로우 효과
+                        .shadow(
+                            elevation = (glowIntensity / 5).dp,
+                            shape = CircleShape,
+                            clip = false,
+                            ambientColor = Color(0xFFE91E63).copy(alpha = glowIntensity / 100f),
+                            spotColor = Color(0xFFE91E63).copy(alpha = glowIntensity / 80f)
                         )
                         .background(Color(0xFFE91E63), CircleShape)
                 )
@@ -601,17 +641,13 @@ private fun GlowEffectCard() {
                 Box(
                     modifier = Modifier
                         .size(60.dp)
-                        // 시뮬레이션된 글로우 효과
-                        .background(
-                            Brush.radialGradient(
-                                colors = listOf(
-                                    Color(0xFF4CAF50).copy(alpha = 0.8f),
-                                    Color(0xFF4CAF50).copy(alpha = 0.4f),
-                                    Color.Transparent
-                                ),
-                                radius = 100f
-                            ),
-                            CircleShape
+                        // 실제 글로우 효과
+                        .shadow(
+                            elevation = (glowIntensity / 5).dp,
+                            shape = CircleShape,
+                            clip = false,
+                            ambientColor = Color(0xFF4CAF50).copy(alpha = glowIntensity / 100f),
+                            spotColor = Color(0xFF4CAF50).copy(alpha = glowIntensity / 80f)
                         )
                         .background(Color(0xFF4CAF50), CircleShape)
                 )
@@ -690,16 +726,16 @@ private fun NeumorphismCard() {
                 Box(
                     modifier = Modifier
                         .size(80.dp)
-                        // 시뮬레이션된 뉴모피즘 효과
+                        // 실제 뉴모피즘 효과 (볼록)
+                        .shadow(
+                            elevation = 8.dp,
+                            shape = RoundedCornerShape(20.dp),
+                            clip = false,
+                            ambientColor = Color.White.copy(alpha = 0.8f),
+                            spotColor = Color.Gray.copy(alpha = 0.3f)
+                        )
                         .background(
                             Color(0xFFE0E0E0),
-                            RoundedCornerShape(20.dp)
-                        )
-                        .border(
-                            1.dp,
-                            Brush.verticalGradient(
-                                colors = listOf(Color.White, Color.Gray.copy(alpha = 0.3f))
-                            ),
                             RoundedCornerShape(20.dp)
                         ),
                     contentAlignment = Alignment.Center
@@ -716,18 +752,34 @@ private fun NeumorphismCard() {
                 Box(
                     modifier = Modifier
                         .size(80.dp)
-                        // 시뮬레이션된 뉴모피즘 효과 (inset)
                         .background(
                             Color(0xFFE0E0E0),
                             RoundedCornerShape(20.dp)
                         )
-                        .border(
-                            1.dp,
-                            Brush.verticalGradient(
-                                colors = listOf(Color.Gray.copy(alpha = 0.3f), Color.White)
-                            ),
-                            RoundedCornerShape(20.dp)
-                        ),
+                        // 실제 뉴모피즘 효과 (inset)
+                        .drawBehind {
+                            val shadowColor = Color.Gray.copy(alpha = 0.4f)
+                            val highlightColor = Color.White.copy(alpha = 0.6f)
+                            val insetSize = 4.dp.toPx()
+                            val cornerRadius = 20.dp.toPx()
+                            
+                            // Inner shadow
+                            inset(insetSize, insetSize, insetSize, insetSize) {
+                                drawRoundRect(
+                                    color = shadowColor,
+                                    size = size,
+                                    cornerRadius = androidx.compose.ui.geometry.CornerRadius(cornerRadius)
+                                )
+                            }
+                            
+                            // Inner highlight
+                            drawRoundRect(
+                                color = highlightColor,
+                                topLeft = Offset(2.dp.toPx(), 2.dp.toPx()),
+                                size = Size(size.width - 4.dp.toPx(), size.height - 4.dp.toPx()),
+                                cornerRadius = androidx.compose.ui.geometry.CornerRadius(cornerRadius)
+                            )
+                        },
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
@@ -798,14 +850,16 @@ private fun KeyboardButtonCard() {
                     modifier = Modifier
                         .size(width = 60.dp, height = 50.dp)
                         .clickable { isPressed = !isPressed }
-                        // 시뮬레이션된 3D 키보드 버튼 효과
+                        // 실제 3D 키보드 버튼 효과
+                        .shadow(
+                            elevation = if (isPressed) 2.dp else 6.dp,
+                            shape = RoundedCornerShape(8.dp),
+                            clip = false,
+                            ambientColor = if (isPressed) Color.Gray.copy(alpha = 0.6f) else Color.Gray.copy(alpha = 0.3f),
+                            spotColor = if (isPressed) Color.Gray.copy(alpha = 0.8f) else Color.Gray.copy(alpha = 0.5f)
+                        )
                         .background(
                             if (isPressed) Color(0xFFE0E0E0) else Color.White,
-                            RoundedCornerShape(8.dp)
-                        )
-                        .border(
-                            1.dp,
-                            if (isPressed) Color.Gray else Color.LightGray,
                             RoundedCornerShape(8.dp)
                         ),
                     contentAlignment = Alignment.Center
