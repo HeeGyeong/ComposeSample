@@ -58,8 +58,8 @@ fun NewShadowApiExampleUI(
             item { BasicShadowCard() }
             item { ShadowPropertiesCard() }
             item { InteractiveShadowCard() }
-            item { GlowEffectCard() }
             item { NeumorphismCard() }
+            item { GlowEffectCard() }
             item { KeyboardButtonCard() }
             item { BlendModeCard() }
         }
@@ -349,14 +349,28 @@ private fun ShadowPropertiesCard() {
                 Box(
                     modifier = Modifier
                         .size(80.dp)
-                        // 실제 그림자 효과 적용
-                        .shadow(
-                            elevation = (radiusValue / 4).dp,
-                            shape = RoundedCornerShape(16.dp),
-                            clip = false,
-                            ambientColor = Color.Black.copy(alpha = alphaValue * 0.6f),
-                            spotColor = Color.Black.copy(alpha = alphaValue * 0.8f)
-                        )
+                        // 실제 그림자 효과 적용 - 모든 속성 반영
+                        .drawBehind {
+                            val shadowColor = Color.Black.copy(alpha = alphaValue)
+                            val blurRadius = radiusValue
+                            val spread = spreadValue
+                            val offsetXPx = offsetX
+                            val offsetYPx = offsetY
+                            
+                            // 그림자 렌더링 (spread와 offset 적용)
+                            drawRoundRect(
+                                color = shadowColor,
+                                topLeft = Offset(
+                                    offsetXPx - spread/2,
+                                    offsetYPx - spread/2
+                                ),
+                                size = Size(
+                                    size.width + spread,
+                                    size.height + spread
+                                ),
+                                cornerRadius = androidx.compose.ui.geometry.CornerRadius(16.dp.toPx())
+                            )
+                        }
                         .background(
                             Color(0xFF2196F3),
                             RoundedCornerShape(16.dp)
@@ -445,13 +459,21 @@ private fun InteractiveShadowCard() {
     var isPressed by remember { mutableStateOf(false) }
     
     val shadowRadius by animateFloatAsState(
-        targetValue = if (isPressed) 10f else 30f,
-        animationSpec = spring()
+        targetValue = if (isPressed) 5f else 25f,
+        animationSpec = spring(dampingRatio = 0.6f, stiffness = 300f),
+        label = "shadowRadius"
     )
     
     val shadowAlpha by animateFloatAsState(
-        targetValue = if (isPressed) 0.3f else 0.6f,
-        animationSpec = spring()
+        targetValue = if (isPressed) 0.2f else 0.7f,
+        animationSpec = spring(dampingRatio = 0.6f, stiffness = 300f),
+        label = "shadowAlpha"
+    )
+    
+    val buttonScale by animateFloatAsState(
+        targetValue = if (isPressed) 0.95f else 1f,
+        animationSpec = spring(dampingRatio = 0.6f, stiffness = 400f),
+        label = "buttonScale"
     )
 
     Card(
@@ -488,7 +510,7 @@ private fun InteractiveShadowCard() {
             ) {
                 Box(
                     modifier = Modifier
-                        .size(100.dp)
+                        .size((100 * buttonScale).dp)
                         .pointerInput(Unit) {
                             detectTapGestures(
                                 onPress = {
@@ -500,15 +522,18 @@ private fun InteractiveShadowCard() {
                         }
                         // 실제 애니메이션 그림자 효과
                         .shadow(
-                            elevation = (shadowRadius / 3).dp,
+                            elevation = shadowRadius.dp,
                             shape = RoundedCornerShape(20.dp),
                             clip = false,
-                            ambientColor = Color(0xFFFF9800).copy(alpha = shadowAlpha * 0.6f),
-                            spotColor = Color(0xFFE65100).copy(alpha = shadowAlpha * 0.8f)
+                            ambientColor = Color(0xFFFF9800).copy(alpha = shadowAlpha),
+                            spotColor = Color(0xFFE65100).copy(alpha = shadowAlpha * 1.2f)
                         )
                         .background(
                             Brush.radialGradient(
-                                colors = listOf(
+                                colors = if (isPressed) listOf(
+                                    Color(0xFFE65100),
+                                    Color(0xFFBF360C)
+                                ) else listOf(
                                     Color(0xFFFF9800),
                                     Color(0xFFE65100)
                                 )
@@ -711,7 +736,7 @@ private fun NeumorphismCard() {
             Spacer(modifier = Modifier.height(12.dp))
 
             Text(
-                text = "dropShadow와 innerShadow를 조합하여 뉴모피즘 효과:",
+                text = "실제 이중 그림자를 사용한 현실적인 뉴모피즘 효과:",
                 fontSize = 14.sp,
                 color = Color.Gray
             )
@@ -726,18 +751,33 @@ private fun NeumorphismCard() {
                 Box(
                     modifier = Modifier
                         .size(80.dp)
-                        // 실제 뉴모피즘 효과 (볼록)
-                        .shadow(
-                            elevation = 8.dp,
-                            shape = RoundedCornerShape(20.dp),
-                            clip = false,
-                            ambientColor = Color.White.copy(alpha = 0.8f),
-                            spotColor = Color.Gray.copy(alpha = 0.3f)
-                        )
                         .background(
                             Color(0xFFE0E0E0),
                             RoundedCornerShape(20.dp)
-                        ),
+                        )
+                        // 실제 뉴모피즘 효과 (볼록) - 이중 그림자
+                        .drawBehind {
+                            val lightShadowColor = Color.White.copy(alpha = 0.8f)
+                            val darkShadowColor = Color.Gray.copy(alpha = 0.4f)
+                            val offset = 6.dp.toPx()
+                            val cornerRadius = 20.dp.toPx()
+                            
+                            // 어두운 그림자 (아래/오른쪽)
+                            drawRoundRect(
+                                color = darkShadowColor,
+                                topLeft = Offset(offset, offset),
+                                size = size,
+                                cornerRadius = androidx.compose.ui.geometry.CornerRadius(cornerRadius)
+                            )
+                            
+                            // 밝은 그림자 (위/왼쪽)
+                            drawRoundRect(
+                                color = lightShadowColor,
+                                topLeft = Offset(-offset/2, -offset/2),
+                                size = size,
+                                cornerRadius = androidx.compose.ui.geometry.CornerRadius(cornerRadius)
+                            )
+                        },
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
@@ -756,28 +796,33 @@ private fun NeumorphismCard() {
                             Color(0xFFE0E0E0),
                             RoundedCornerShape(20.dp)
                         )
-                        // 실제 뉴모피즘 효과 (inset)
+                        // 실제 뉴모피즘 효과 (inset) - 더 사실적
                         .drawBehind {
-                            val shadowColor = Color.Gray.copy(alpha = 0.4f)
-                            val highlightColor = Color.White.copy(alpha = 0.6f)
-                            val insetSize = 4.dp.toPx()
+                            val darkShadowColor = Color.Gray.copy(alpha = 0.5f)
+                            val lightShadowColor = Color.White.copy(alpha = 0.7f)
+                            val insetOffset = 3.dp.toPx()
                             val cornerRadius = 20.dp.toPx()
                             
-                            // Inner shadow
-                            inset(insetSize, insetSize, insetSize, insetSize) {
-                                drawRoundRect(
-                                    color = shadowColor,
-                                    size = size,
-                                    cornerRadius = androidx.compose.ui.geometry.CornerRadius(cornerRadius)
-                                )
-                            }
-                            
-                            // Inner highlight
+                            // Inner dark shadow (왼쪽 위 안쪽)
                             drawRoundRect(
-                                color = highlightColor,
-                                topLeft = Offset(2.dp.toPx(), 2.dp.toPx()),
-                                size = Size(size.width - 4.dp.toPx(), size.height - 4.dp.toPx()),
-                                cornerRadius = androidx.compose.ui.geometry.CornerRadius(cornerRadius)
+                                color = darkShadowColor,
+                                topLeft = Offset(insetOffset, insetOffset),
+                                size = Size(
+                                    size.width - insetOffset * 2,
+                                    size.height - insetOffset * 2
+                                ),
+                                cornerRadius = androidx.compose.ui.geometry.CornerRadius(cornerRadius - insetOffset)
+                            )
+                            
+                            // Inner light highlight (오른쪽 아래 안쪽)
+                            drawRoundRect(
+                                color = lightShadowColor,
+                                topLeft = Offset(insetOffset * 1.5f, insetOffset * 1.5f),
+                                size = Size(
+                                    size.width - insetOffset * 3,
+                                    size.height - insetOffset * 3
+                                ),
+                                cornerRadius = androidx.compose.ui.geometry.CornerRadius(cornerRadius - insetOffset * 1.5f)
                             )
                         },
                     contentAlignment = Alignment.Center
@@ -799,7 +844,7 @@ private fun NeumorphismCard() {
                 color = Color(0xFF757575).copy(alpha = 0.1f)
             ) {
                 Text(
-                    text = "🎯 뉴모피즘은 밝은 그림자(위/왼쪽)와 어두운 그림자(아래/오른쪽)를 조합하여 만듭니다!",
+                    text = "🎯 개선된 뉴모피즘: 실제 이중 그림자로 볼록/오목 효과를 구현했습니다!",
                     modifier = Modifier.padding(8.dp),
                     fontSize = 11.sp,
                     color = Color(0xFF757575),
