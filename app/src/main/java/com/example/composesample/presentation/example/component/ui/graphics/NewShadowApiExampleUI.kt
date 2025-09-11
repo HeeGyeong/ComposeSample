@@ -281,11 +281,11 @@ private fun BasicShadowCard() {
 @Composable
 private fun ShadowPropertiesCard() {
     var selectedProperty by remember { mutableStateOf("radius") }
-    var radiusValue by remember { mutableStateOf(20f) }
+    var radiusValue by remember { mutableStateOf(30f) }
     var spreadValue by remember { mutableStateOf(0f) }
     var offsetX by remember { mutableStateOf(0f) }
     var offsetY by remember { mutableStateOf(0f) }
-    var alphaValue by remember { mutableStateOf(0.5f) }
+    var alphaValue by remember { mutableStateOf(0.7f) }
 
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -339,50 +339,83 @@ private fun ShadowPropertiesCard() {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // 그림자 미리보기
+            // 그림자 미리보기 - 안정적이고 명확한 효과
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(120.dp),
+                    .height(160.dp)
+                    .background(Color(0xFFF8F8F8), RoundedCornerShape(12.dp))
+                    .padding(24.dp),
                 contentAlignment = Alignment.Center
             ) {
                 Box(
                     modifier = Modifier
+                        // 고정 크기를 유지하면서 속성 변화만 적용
                         .size(80.dp)
-                        // 실제 그림자 효과 적용 - 모든 속성 반영
+                        // 실제 shadow API로 모든 속성 적용
                         .drawBehind {
-                            val shadowColor = Color.Black.copy(alpha = alphaValue)
-                            val blurRadius = radiusValue
-                            val spread = spreadValue
-                            val offsetXPx = offsetX
-                            val offsetYPx = offsetY
-                            
-                            // 그림자 렌더링 (spread와 offset 적용)
-                            drawRoundRect(
-                                color = shadowColor,
-                                topLeft = Offset(
-                                    offsetXPx - spread/2,
-                                    offsetYPx - spread/2
-                                ),
-                                size = Size(
-                                    size.width + spread,
-                                    size.height + spread
-                                ),
-                                cornerRadius = androidx.compose.ui.geometry.CornerRadius(16.dp.toPx())
-                            )
+                            // spread 효과를 위한 추가 그림자
+                            if (spreadValue > 0) {
+                                drawRoundRect(
+                                    color = Color.Black.copy(alpha = alphaValue * 0.3f),
+                                    topLeft = Offset(
+                                        offsetX - spreadValue/2,
+                                        offsetY - spreadValue/2
+                                    ),
+                                    size = Size(
+                                        size.width + spreadValue,
+                                        size.height + spreadValue
+                                    ),
+                                    cornerRadius = androidx.compose.ui.geometry.CornerRadius(16.dp.toPx())
+                                )
+                            }
                         }
+                        .offset(offsetX.dp, offsetY.dp)
+                        .shadow(
+                            elevation = (radiusValue / 2).dp,
+                            shape = RoundedCornerShape(16.dp),
+                            clip = false,
+                            ambientColor = Color.Black.copy(alpha = alphaValue * 0.6f),
+                            spotColor = Color.Black.copy(alpha = alphaValue * 0.8f)
+                        )
                         .background(
                             Color(0xFF2196F3),
                             RoundedCornerShape(16.dp)
                         ),
                     contentAlignment = Alignment.Center
                 ) {
-                    Text(
-                        text = "DEMO",
-                        color = Color.White,
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.Bold
-                    )
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            text = "DEMO",
+                            color = Color.White,
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                        when (selectedProperty) {
+                            "radius" -> Text(
+                                text = "${radiusValue.toInt()}px",
+                                color = Color.White.copy(alpha = 0.8f),
+                                fontSize = 8.sp
+                            )
+                            "spread" -> Text(
+                                text = "+${spreadValue.toInt()}px",
+                                color = Color.White.copy(alpha = 0.8f),
+                                fontSize = 8.sp
+                            )
+                            "offset" -> Text(
+                                text = "${offsetX.toInt()},${offsetY.toInt()}",
+                                color = Color.White.copy(alpha = 0.8f),
+                                fontSize = 8.sp
+                            )
+                            "alpha" -> Text(
+                                text = "${(alphaValue * 100).toInt()}%",
+                                color = Color.White.copy(alpha = 0.8f),
+                                fontSize = 8.sp
+                            )
+                        }
+                    }
                 }
             }
 
@@ -391,41 +424,61 @@ private fun ShadowPropertiesCard() {
             // 슬라이더 컨트롤
             when (selectedProperty) {
                 "radius" -> {
-                    Text("Blur Radius: ${radiusValue.toInt()}px", fontSize = 12.sp)
+                    Text(
+                        text = "Blur Radius: ${radiusValue.toInt()}px (elevation: ${(radiusValue/2).toInt()}dp)",
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Medium
+                    )
                     Slider(
                         value = radiusValue,
                         onValueChange = { radiusValue = it },
-                        valueRange = 0f..100f,
+                        valueRange = 0f..60f,
                         colors = SliderDefaults.colors(thumbColor = Color(0xFF1976D2))
                     )
                 }
                 "spread" -> {
-                    Text("Spread: ${spreadValue.toInt()}px", fontSize = 12.sp)
+                    Text(
+                        text = "Spread: ${spreadValue.toInt()}px (size: ${80 + spreadValue.toInt()}dp)",
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Medium
+                    )
                     Slider(
                         value = spreadValue,
                         onValueChange = { spreadValue = it },
-                        valueRange = 0f..50f,
+                        valueRange = 0f..40f,
                         colors = SliderDefaults.colors(thumbColor = Color(0xFF1976D2))
                     )
                 }
                 "offset" -> {
-                    Text("Offset X: ${offsetX.toInt()}px", fontSize = 12.sp)
+                    Text(
+                        text = "Offset X: ${offsetX.toInt()}px",
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Medium
+                    )
                     Slider(
                         value = offsetX,
                         onValueChange = { offsetX = it },
-                        valueRange = -50f..50f,
+                        valueRange = -30f..30f,
                         colors = SliderDefaults.colors(thumbColor = Color(0xFF1976D2))
                     )
-                    Text("Offset Y: ${offsetY.toInt()}px", fontSize = 12.sp)
+                    Text(
+                        text = "Offset Y: ${offsetY.toInt()}px",
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Medium
+                    )
                     Slider(
                         value = offsetY,
                         onValueChange = { offsetY = it },
-                        valueRange = -50f..50f,
+                        valueRange = -30f..30f,
                         colors = SliderDefaults.colors(thumbColor = Color(0xFF1976D2))
                     )
                 }
                 "alpha" -> {
-                    Text("Alpha: ${(alphaValue * 100).toInt()}%", fontSize = 12.sp)
+                    Text(
+                        text = "Alpha: ${(alphaValue * 100).toInt()}% (opacity)",
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Medium
+                    )
                     Slider(
                         value = alphaValue,
                         onValueChange = { alphaValue = it },
@@ -736,43 +789,108 @@ private fun NeumorphismCard() {
             Spacer(modifier = Modifier.height(12.dp))
 
             Text(
-                text = "실제 이중 그림자를 사용한 현실적인 뉴모피즘 효과:",
+                text = "상단: 일반 버튼 vs 하단: 뉴모피즘 효과 (볼록/오목)",
                 fontSize = 14.sp,
                 color = Color.Gray
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
+            // 비교를 위한 일반 버튼
+            Text(
+                text = "🔴 일반 버튼 (비교용)",
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Medium,
+                color = Color(0xFF757575)
+            )
+            
+            Spacer(modifier = Modifier.height(8.dp))
+            
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                // 볼록한 버튼
+                // 일반 버튼 1
                 Box(
                     modifier = Modifier
-                        .size(80.dp)
+                        .size(70.dp)
+                        .shadow(4.dp, RoundedCornerShape(16.dp))
                         .background(
                             Color(0xFFE0E0E0),
-                            RoundedCornerShape(20.dp)
+                            RoundedCornerShape(16.dp)
+                        ),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "A",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFF757575)
+                    )
+                }
+                
+                // 일반 버튼 2
+                Box(
+                    modifier = Modifier
+                        .size(70.dp)
+                        .shadow(4.dp, RoundedCornerShape(16.dp))
+                        .background(
+                            Color(0xFFE0E0E0),
+                            RoundedCornerShape(16.dp)
+                        ),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "B",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFF757575)
+                    )
+                }
+            }
+            
+            Spacer(modifier = Modifier.height(20.dp))
+            
+            // 뉴모피즘 버튼
+            Text(
+                text = "✨ 뉴모피즘 버튼 (이중 그림자)",
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Medium,
+                color = Color(0xFF424242)
+            )
+            
+            Spacer(modifier = Modifier.height(8.dp))
+            
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                // 볼록한 뉴모피즘 버튼
+                Box(
+                    modifier = Modifier
+                        .size(70.dp)
+                        .background(
+                            Color(0xFFE0E0E0),
+                            RoundedCornerShape(16.dp)
                         )
-                        // 실제 뉴모피즘 효과 (볼록) - 이중 그림자
+                        // 드라마틱한 뉴모피즘 효과
                         .drawBehind {
-                            val lightShadowColor = Color.White.copy(alpha = 0.8f)
-                            val darkShadowColor = Color.Gray.copy(alpha = 0.4f)
-                            val offset = 6.dp.toPx()
-                            val cornerRadius = 20.dp.toPx()
+                            val lightShadow = Color.White.copy(alpha = 0.9f)
+                            val darkShadow = Color.Black.copy(alpha = 0.15f)
+                            val offset = 8.dp.toPx()
+                            val cornerRadius = 16.dp.toPx()
                             
-                            // 어두운 그림자 (아래/오른쪽)
+                            // 어두운 그림자 (오른쪽 아래)
                             drawRoundRect(
-                                color = darkShadowColor,
+                                color = darkShadow,
                                 topLeft = Offset(offset, offset),
                                 size = size,
                                 cornerRadius = androidx.compose.ui.geometry.CornerRadius(cornerRadius)
                             )
                             
-                            // 밝은 그림자 (위/왼쪽)
+                            // 밝은 그림자 (왼쪽 위)
                             drawRoundRect(
-                                color = lightShadowColor,
+                                color = lightShadow,
                                 topLeft = Offset(-offset/2, -offset/2),
                                 size = size,
                                 cornerRadius = androidx.compose.ui.geometry.CornerRadius(cornerRadius)
@@ -780,58 +898,58 @@ private fun NeumorphismCard() {
                         },
                     contentAlignment = Alignment.Center
                 ) {
-                    Icon(
-                        imageVector = Icons.Filled.Add,
-                        contentDescription = "Add",
-                        tint = Color(0xFF757575),
-                        modifier = Modifier.size(24.dp)
+                    Text(
+                        text = "C",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFF424242)
                     )
                 }
 
-                // 오목한 버튼
+                // 오목한 뉴모피즘 버튼
                 Box(
                     modifier = Modifier
-                        .size(80.dp)
+                        .size(70.dp)
                         .background(
                             Color(0xFFE0E0E0),
-                            RoundedCornerShape(20.dp)
+                            RoundedCornerShape(16.dp)
                         )
-                        // 실제 뉴모피즘 효과 (inset) - 더 사실적
+                        // 오목한 효과
                         .drawBehind {
-                            val darkShadowColor = Color.Gray.copy(alpha = 0.5f)
-                            val lightShadowColor = Color.White.copy(alpha = 0.7f)
-                            val insetOffset = 3.dp.toPx()
-                            val cornerRadius = 20.dp.toPx()
+                            val darkShadow = Color.Black.copy(alpha = 0.2f)
+                            val lightHighlight = Color.White.copy(alpha = 0.8f)
+                            val inset = 4.dp.toPx()
+                            val cornerRadius = 16.dp.toPx()
                             
-                            // Inner dark shadow (왼쪽 위 안쪽)
+                            // 내부 어두운 그림자
                             drawRoundRect(
-                                color = darkShadowColor,
-                                topLeft = Offset(insetOffset, insetOffset),
+                                color = darkShadow,
+                                topLeft = Offset(inset, inset),
                                 size = Size(
-                                    size.width - insetOffset * 2,
-                                    size.height - insetOffset * 2
+                                    size.width - inset * 2,
+                                    size.height - inset * 2
                                 ),
-                                cornerRadius = androidx.compose.ui.geometry.CornerRadius(cornerRadius - insetOffset)
+                                cornerRadius = androidx.compose.ui.geometry.CornerRadius(cornerRadius - inset)
                             )
                             
-                            // Inner light highlight (오른쪽 아래 안쪽)
+                            // 내부 밝은 하이라이트
                             drawRoundRect(
-                                color = lightShadowColor,
-                                topLeft = Offset(insetOffset * 1.5f, insetOffset * 1.5f),
+                                color = lightHighlight,
+                                topLeft = Offset(inset * 2, inset * 2),
                                 size = Size(
-                                    size.width - insetOffset * 3,
-                                    size.height - insetOffset * 3
+                                    size.width - inset * 4,
+                                    size.height - inset * 4
                                 ),
-                                cornerRadius = androidx.compose.ui.geometry.CornerRadius(cornerRadius - insetOffset * 1.5f)
+                                cornerRadius = androidx.compose.ui.geometry.CornerRadius(cornerRadius - inset * 2)
                             )
                         },
                     contentAlignment = Alignment.Center
                 ) {
-                    Icon(
-                        imageVector = Icons.Filled.KeyboardArrowDown,
-                        contentDescription = "Down",
-                        tint = Color(0xFF757575),
-                        modifier = Modifier.size(24.dp)
+                    Text(
+                        text = "D",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFF424242)
                     )
                 }
             }
