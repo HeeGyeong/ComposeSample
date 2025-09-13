@@ -170,7 +170,6 @@ private fun BasicShadowCard() {
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                // dropShadow 예제
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
@@ -187,7 +186,6 @@ private fun BasicShadowCard() {
                         modifier = Modifier
                             .size(80.dp)
                             .padding(8.dp)
-                            // 향상된 shadow API (Compose 1.9.0)
                             .shadow(
                                 elevation = 12.dp,
                                 shape = RoundedCornerShape(12.dp),
@@ -207,7 +205,6 @@ private fun BasicShadowCard() {
                     }
                 }
 
-                // innerShadow 예제
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
@@ -225,13 +222,11 @@ private fun BasicShadowCard() {
                             .size(80.dp)
                             .padding(8.dp)
                             .background(Color(0xFF4CAF50), RoundedCornerShape(12.dp))
-                            // 향상된 innerShadow 효과
                             .drawBehind {
                                 val shadowColor = Color.Black.copy(alpha = 0.4f)
                                 val insetSize = 6.dp.toPx()
                                 val cornerRadius = 12.dp.toPx()
                                 
-                                // Inner shadow 효과
                                 inset(insetSize, insetSize, insetSize, insetSize) {
                                     drawRoundRect(
                                         color = shadowColor,
@@ -240,7 +235,6 @@ private fun BasicShadowCard() {
                                     )
                                 }
                                 
-                                // 하이라이트 효과
                                 drawRoundRect(
                                     color = Color.White.copy(alpha = 0.2f),
                                     topLeft = Offset(2.dp.toPx(), 2.dp.toPx()),
@@ -313,7 +307,6 @@ private fun ShadowPropertiesCard() {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // 속성 선택 탭
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(4.dp)
@@ -339,7 +332,6 @@ private fun ShadowPropertiesCard() {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // 그림자 미리보기 - 안정적이고 명확한 효과
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -350,11 +342,8 @@ private fun ShadowPropertiesCard() {
             ) {
                 Box(
                     modifier = Modifier
-                        // 고정 크기를 유지하면서 속성 변화만 적용
                         .size(80.dp)
-                        // 실제 shadow API로 모든 속성 적용
                         .drawBehind {
-                            // spread 효과를 위한 추가 그림자
                             if (spreadValue > 0) {
                                 drawRoundRect(
                                     color = Color.Black.copy(alpha = alphaValue * 0.3f),
@@ -421,7 +410,6 @@ private fun ShadowPropertiesCard() {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // 슬라이더 컨트롤
             when (selectedProperty) {
                 "radius" -> {
                     Text(
@@ -573,7 +561,6 @@ private fun InteractiveShadowCard() {
                                 }
                             )
                         }
-                        // 실제 애니메이션 그림자 효과
                         .shadow(
                             elevation = shadowRadius.dp,
                             shape = RoundedCornerShape(20.dp),
@@ -685,11 +672,9 @@ private fun GlowEffectCard() {
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                // 청록색 글로우
                 Box(
                     modifier = Modifier
                         .size(60.dp)
-                        // 실제 글로우 효과
                         .shadow(
                             elevation = (glowIntensity / 5).dp,
                             shape = CircleShape,
@@ -700,11 +685,9 @@ private fun GlowEffectCard() {
                         .background(Color(0xFF00E5FF), CircleShape)
                 )
 
-                // 핑크색 글로우
                 Box(
                     modifier = Modifier
                         .size(60.dp)
-                        // 실제 글로우 효과
                         .shadow(
                             elevation = (glowIntensity / 5).dp,
                             shape = CircleShape,
@@ -715,11 +698,9 @@ private fun GlowEffectCard() {
                         .background(Color(0xFFE91E63), CircleShape)
                 )
 
-                // 초록색 글로우
                 Box(
                     modifier = Modifier
                         .size(60.dp)
-                        // 실제 글로우 효과
                         .shadow(
                             elevation = (glowIntensity / 5).dp,
                             shape = CircleShape,
@@ -796,7 +777,6 @@ private fun NeumorphismCard() {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // 비교를 위한 일반 버튼
             Text(
                 text = "🔴 일반 버튼 (비교용)",
                 fontSize = 14.sp,
@@ -810,7 +790,6 @@ private fun NeumorphismCard() {
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                // 일반 버튼 1
                 Box(
                     modifier = Modifier
                         .size(70.dp)
@@ -829,7 +808,6 @@ private fun NeumorphismCard() {
                     )
                 }
                 
-                // 일반 버튼 2
                 Box(
                     modifier = Modifier
                         .size(70.dp)
@@ -851,7 +829,6 @@ private fun NeumorphismCard() {
             
             Spacer(modifier = Modifier.height(20.dp))
             
-            // 뉴모피즘 버튼
             Text(
                 text = "✨ 뉴모피즘 버튼 (이중 그림자)",
                 fontSize = 14.sp,
@@ -865,7 +842,6 @@ private fun NeumorphismCard() {
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                // 볼록한 뉴모피즘 버튼
                 Box(
                     modifier = Modifier
                         .size(70.dp)
@@ -873,14 +849,12 @@ private fun NeumorphismCard() {
                             Color(0xFFE0E0E0),
                             RoundedCornerShape(16.dp)
                         )
-                        // 드라마틱한 뉴모피즘 효과
                         .drawBehind {
                             val lightShadow = Color.White.copy(alpha = 0.9f)
                             val darkShadow = Color.Black.copy(alpha = 0.15f)
                             val offset = 8.dp.toPx()
                             val cornerRadius = 16.dp.toPx()
                             
-                            // 어두운 그림자 (오른쪽 아래)
                             drawRoundRect(
                                 color = darkShadow,
                                 topLeft = Offset(offset, offset),
@@ -888,7 +862,6 @@ private fun NeumorphismCard() {
                                 cornerRadius = androidx.compose.ui.geometry.CornerRadius(cornerRadius)
                             )
                             
-                            // 밝은 그림자 (왼쪽 위)
                             drawRoundRect(
                                 color = lightShadow,
                                 topLeft = Offset(-offset/2, -offset/2),
@@ -906,7 +879,6 @@ private fun NeumorphismCard() {
                     )
                 }
 
-                // 오목한 뉴모피즘 버튼
                 Box(
                     modifier = Modifier
                         .size(70.dp)
@@ -914,14 +886,12 @@ private fun NeumorphismCard() {
                             Color(0xFFE0E0E0),
                             RoundedCornerShape(16.dp)
                         )
-                        // 오목한 효과
                         .drawBehind {
                             val darkShadow = Color.Black.copy(alpha = 0.2f)
                             val lightHighlight = Color.White.copy(alpha = 0.8f)
                             val inset = 4.dp.toPx()
                             val cornerRadius = 16.dp.toPx()
                             
-                            // 내부 어두운 그림자
                             drawRoundRect(
                                 color = darkShadow,
                                 topLeft = Offset(inset, inset),
@@ -932,7 +902,6 @@ private fun NeumorphismCard() {
                                 cornerRadius = androidx.compose.ui.geometry.CornerRadius(cornerRadius - inset)
                             )
                             
-                            // 내부 밝은 하이라이트
                             drawRoundRect(
                                 color = lightHighlight,
                                 topLeft = Offset(inset * 2, inset * 2),
@@ -1013,7 +982,6 @@ private fun KeyboardButtonCard() {
                     modifier = Modifier
                         .size(width = 60.dp, height = 50.dp)
                         .clickable { isPressed = !isPressed }
-                        // 실제 3D 키보드 버튼 효과
                         .shadow(
                             elevation = if (isPressed) 2.dp else 6.dp,
                             shape = RoundedCornerShape(8.dp),
@@ -1096,7 +1064,6 @@ private fun BlendModeCard() {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // 블렌딩 모드 선택
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(4.dp)
@@ -1122,19 +1089,16 @@ private fun BlendModeCard() {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // 블렌딩 효과 미리보기
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                // 파란 배경
                 Box(
                     modifier = Modifier
                         .size(60.dp)
                         .background(Color(0xFF2196F3), CircleShape),
                     contentAlignment = Alignment.Center
                 ) {
-                    // 시뮬레이션된 블렌딩된 그림자
                     Box(
                         modifier = Modifier
                             .size(40.dp)
@@ -1150,7 +1114,6 @@ private fun BlendModeCard() {
                     )
                 }
 
-                // 초록 배경
                 Box(
                     modifier = Modifier
                         .size(60.dp)
@@ -1172,7 +1135,6 @@ private fun BlendModeCard() {
                     )
                 }
 
-                // 빨간 배경
                 Box(
                     modifier = Modifier
                         .size(60.dp)
