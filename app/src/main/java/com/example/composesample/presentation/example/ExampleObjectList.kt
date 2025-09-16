@@ -485,6 +485,7 @@ fun exampleObjectList(): ArrayList<ExampleObject> {
 
     insertExampleObject.add(
         ExampleObject(
+            lastUpdate = "25. 09. 16",
             title = "SnapNotify: Simplified Snackbars",
             description = "Snackbar 코드를 간소화하는 SnapNotify 라이브러리 예제",
             blogUrl = "",

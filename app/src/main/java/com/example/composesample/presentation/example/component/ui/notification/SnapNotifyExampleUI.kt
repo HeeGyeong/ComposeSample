@@ -2,7 +2,6 @@ package com.example.composesample.presentation.example.component.ui.notification
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -29,11 +28,8 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.ShoppingCart
-import androidx.compose.material.icons.filled.Warning
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -43,8 +39,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -83,10 +77,7 @@ fun SnapNotifyExampleUI(
                 contentPadding = PaddingValues(16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                item { OverviewCard() }
-                item { ComparisonCard() }
                 item { BasicUsageCard(snackbarHostState) }
-                item { ThemedMessagesCard(snackbarHostState) }
                 item { InteractiveSnackbarsCard(snackbarHostState) }
                 item {
                     RealWorldUseCasesCard(
@@ -99,7 +90,6 @@ fun SnapNotifyExampleUI(
                         snackbarHostState = snackbarHostState
                     )
                 }
-                item { IntegrationGuideCard() }
             }
         }
     }
@@ -111,186 +101,6 @@ data class FormData(
     val password: String = "",
     val isValid: Boolean = false
 )
-
-@Composable
-private fun OverviewCard() {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        shape = RoundedCornerShape(12.dp)
-    ) {
-        Column(
-            modifier = Modifier.padding(16.dp)
-        ) {
-            Text(
-                text = "🚀 SnapNotify: 혁신적인 Snackbar 라이브러리",
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color(0xFF1976D2)
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Text(
-                text = "15줄 이상의 복잡한 Snackbar 코드를 단 1줄로 간소화하는 혁신적인 라이브러리입니다.",
-                fontSize = 14.sp,
-                color = Color.Gray
-            )
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                FeatureChip("1줄 코드", Color(0xFF4CAF50))
-                FeatureChip("자동 상태 관리", Color(0xFF2196F3))
-                FeatureChip("스레드 안전", Color(0xFFFF9800))
-            }
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            Surface(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(8.dp),
-                color = Color(0xFFF5F5F5)
-            ) {
-                Text(
-                    text = "💡 GitHub: github.com/ivamsi/snapnotify | Maven: io.github.ivamsi:snapnotify:1.0.2",
-                    modifier = Modifier.padding(12.dp),
-                    fontSize = 11.sp,
-                    color = Color(0xFF666666),
-                    fontStyle = androidx.compose.ui.text.font.FontStyle.Italic
-                )
-            }
-        }
-    }
-}
-
-@Composable
-private fun FeatureChip(text: String, color: Color) {
-    Surface(
-        modifier = Modifier,
-        shape = RoundedCornerShape(16.dp),
-        color = color.copy(alpha = 0.1f)
-    ) {
-        Text(
-            text = text,
-            modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
-            fontSize = 12.sp,
-            color = color,
-            fontWeight = FontWeight.Medium
-        )
-    }
-}
-
-@Composable
-private fun ComparisonCard() {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        backgroundColor = Color(0xFFE8F5E8),
-        shape = RoundedCornerShape(12.dp)
-    ) {
-        Column(
-            modifier = Modifier.padding(16.dp)
-        ) {
-            Text(
-                text = "📊 기존 방식 vs SnapNotify 비교",
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color(0xFF388E3C)
-            )
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            // 기존 방식
-            ComparisonSection(
-                title = "😰 기존 Compose 방식 (15+ 줄)",
-                color = Color(0xFFD32F2F),
-                code = """
-val snackbarHostState = remember { SnackbarHostState() }
-val scope = rememberCoroutineScope()
-
-Scaffold(
-    snackbarHost = { SnackbarHost(snackbarHostState) }
-) { paddingValues ->
-    Button(
-        onClick = {
-            scope.launch {
-                snackbarHostState.showSnackbar(
-                    message = "저장되었습니다!",
-                    actionLabel = "확인"
-                )
-            }
-        }
-    ) { Text("저장") }
-}
-                """.trimIndent()
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // SnapNotify 방식
-            ComparisonSection(
-                title = "🎉 SnapNotify 방식 (1줄)",
-                color = Color(0xFF388E3C),
-                code = """
-Button(
-    onClick = {
-        SnapNotify.success("저장되었습니다!")
-    }
-) { Text("저장") }
-                """.trimIndent()
-            )
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            Surface(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(8.dp),
-                color = Color(0xFF388E3C).copy(alpha = 0.1f)
-            ) {
-                Text(
-                    text = "✨ 93% 코드 감소! 상태 관리, 스레드 처리, 큐잉이 모두 자동화됩니다.",
-                    modifier = Modifier.padding(12.dp),
-                    fontSize = 12.sp,
-                    color = Color(0xFF388E3C),
-                    fontWeight = FontWeight.Medium
-                )
-            }
-        }
-    }
-}
-
-@Composable
-private fun ComparisonSection(title: String, color: Color, code: String) {
-    Column {
-        Text(
-            text = title,
-            fontSize = 14.sp,
-            fontWeight = FontWeight.Medium,
-            color = color
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        Surface(
-            modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(8.dp),
-            color = Color(0xFF263238)
-        ) {
-            Text(
-                text = code,
-                modifier = Modifier.padding(12.dp),
-                fontSize = 10.sp,
-                fontFamily = FontFamily.Monospace,
-                color = Color(0xFF80CBC4),
-                lineHeight = 14.sp
-            )
-        }
-    }
-}
 
 @Composable
 private fun BasicUsageCard(snackbarHostState: SnackbarHostState) {
@@ -406,144 +216,6 @@ private fun BasicUsageButton(
                 text = description,
                 color = Color.White.copy(alpha = 0.8f),
                 fontSize = 11.sp
-            )
-        }
-    }
-}
-
-@Composable
-private fun ThemedMessagesCard(snackbarHostState: SnackbarHostState) {
-    val scope = rememberCoroutineScope()
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        backgroundColor = Color(0xFFFFF3E0),
-        shape = RoundedCornerShape(12.dp)
-    ) {
-        Column(
-            modifier = Modifier.padding(16.dp)
-        ) {
-            Text(
-                text = "🎨 테마별 메시지",
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color(0xFFE65100)
-            )
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            Text(
-                text = "상황에 맞는 4가지 테마 메시지를 제공합니다:",
-                fontSize = 14.sp,
-                color = Color.Gray
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                ThemedMessageButton(
-                    text = "성공",
-                    icon = Icons.Filled.Favorite,
-                    color = Color(0xFF4CAF50),
-                    modifier = Modifier.weight(1f)
-                ) {
-                    scope.launch {
-                        snackbarHostState.showSnackbar("✅ 작업이 성공적으로 완료되었습니다!")
-                    }
-                }
-
-                ThemedMessageButton(
-                    text = "오류",
-                    icon = Icons.Filled.Warning,
-                    color = Color(0xFFD32F2F),
-                    modifier = Modifier.weight(1f)
-                ) {
-                    scope.launch {
-                        snackbarHostState.showSnackbar("❌ 오류가 발생했습니다. 다시 시도해주세요.")
-                    }
-                }
-            }
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                ThemedMessageButton(
-                    text = "경고",
-                    icon = Icons.Filled.Warning,
-                    color = Color(0xFFFF9800),
-                    modifier = Modifier.weight(1f)
-                ) {
-                    scope.launch {
-                        snackbarHostState.showSnackbar("⚠️ 주의: 이 작업은 되돌릴 수 없습니다.")
-                    }
-                }
-
-                ThemedMessageButton(
-                    text = "정보",
-                    icon = Icons.Filled.Info,
-                    color = Color(0xFF2196F3),
-                    modifier = Modifier.weight(1f)
-                ) {
-                    scope.launch {
-                        snackbarHostState.showSnackbar("ℹ️ 새로운 업데이트가 사용 가능합니다.")
-                    }
-                }
-            }
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            Surface(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(8.dp),
-                color = Color(0xFFE65100).copy(alpha = 0.1f)
-            ) {
-                Text(
-                    text = "🎯 각 테마는 Material Design 가이드라인에 따른 색상과 아이콘을 사용합니다.",
-                    modifier = Modifier.padding(12.dp),
-                    fontSize = 12.sp,
-                    color = Color(0xFFE65100),
-                    fontStyle = androidx.compose.ui.text.font.FontStyle.Italic
-                )
-            }
-        }
-    }
-}
-
-@Composable
-private fun ThemedMessageButton(
-    text: String,
-    icon: ImageVector,
-    color: Color,
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit
-) {
-    Button(
-        onClick = onClick,
-        modifier = modifier,
-        colors = ButtonDefaults.buttonColors(backgroundColor = color),
-        shape = RoundedCornerShape(8.dp)
-    ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Icon(
-                imageVector = icon,
-                contentDescription = text,
-                tint = Color.White,
-                modifier = Modifier.size(20.dp)
-            )
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(
-                text = text,
-                color = Color.White,
-                fontSize = 12.sp,
-                fontWeight = FontWeight.Medium
             )
         }
     }
@@ -907,166 +579,3 @@ private fun UseCaseSection(
         content()
     }
 }
-
-@Composable
-private fun IntegrationGuideCard() {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        backgroundColor = Color(0xFFF1F8E9),
-        shape = RoundedCornerShape(12.dp)
-    ) {
-        Column(
-            modifier = Modifier.padding(16.dp)
-        ) {
-            Text(
-                text = "🔧 통합 가이드",
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color(0xFF388E3C)
-            )
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            Text(
-                text = "프로젝트에 SnapNotify를 통합하는 단계별 가이드:",
-                fontSize = 14.sp,
-                color = Color.Gray
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            IntegrationStep(
-                step = "1",
-                title = "의존성 추가",
-                description = "build.gradle.kts에 라이브러리 추가",
-                code = "implementation(\"io.github.ivamsi:snapnotify:1.0.2\")"
-            )
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            IntegrationStep(
-                step = "2",
-                title = "Provider 설정",
-                description = "앱 전체 또는 특정 화면에 Provider 래핑",
-                code = """
-SnapNotifyProvider {
-    MyApp() // 또는 특정 화면
-}
-                """.trimIndent()
-            )
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            IntegrationStep(
-                step = "3",
-                title = "Hilt 설정 (선택사항)",
-                description = "더 나은 의존성 관리를 위한 Hilt 통합",
-                code = """
-@HiltAndroidApp
-class MyApplication : Application()
-                """.trimIndent()
-            )
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            IntegrationStep(
-                step = "4",
-                title = "사용하기",
-                description = "어디서든 간단하게 호출",
-                code = """
-// 기본 사용
-SnapNotify.show("메시지")
-
-// 테마별 사용
-SnapNotify.success("성공!")
-SnapNotify.error("오류 발생")
-
-// 액션 포함
-SnapNotify.show("메시지", "액션") { /* 처리 */ }
-                """.trimIndent()
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Surface(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(8.dp),
-                color = Color(0xFF388E3C).copy(alpha = 0.1f)
-            ) {
-                Text(
-                    text = "✅ 설정 완료! 이제 프로젝트 어디서든 SnapNotify를 사용할 수 있습니다.",
-                    modifier = Modifier.padding(12.dp),
-                    fontSize = 12.sp,
-                    color = Color(0xFF388E3C),
-                    fontWeight = FontWeight.Medium
-                )
-            }
-        }
-    }
-}
-
-@Composable
-private fun IntegrationStep(
-    step: String,
-    title: String,
-    description: String,
-    code: String
-) {
-    Column {
-        Row(
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Surface(
-                modifier = Modifier.size(24.dp),
-                shape = RoundedCornerShape(12.dp),
-                color = Color(0xFF388E3C)
-            ) {
-                Box(
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = step,
-                        color = Color.White,
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
-            }
-
-            Spacer(modifier = Modifier.width(12.dp))
-
-            Column {
-                Text(
-                    text = title,
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Medium,
-                    color = Color(0xFF388E3C)
-                )
-                Text(
-                    text = description,
-                    fontSize = 12.sp,
-                    color = Color.Gray
-                )
-            }
-        }
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        Surface(
-            modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(6.dp),
-            color = Color(0xFF263238)
-        ) {
-            Text(
-                text = code,
-                modifier = Modifier.padding(8.dp),
-                fontSize = 10.sp,
-                fontFamily = FontFamily.Monospace,
-                color = Color(0xFF80CBC4),
-                lineHeight = 12.sp
-            )
-        }
-    }
-}
-
