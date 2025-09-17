@@ -50,12 +50,9 @@ import kotlinx.coroutines.launch
 fun SnapNotifyExampleUI(
     onBackEvent: () -> Unit
 ) {
-    // 실제 사용 사례를 위한 상태들
     var formData by remember { mutableStateOf(FormData()) }
     var cartItems by remember { mutableStateOf(0) }
     var isLoading by remember { mutableStateOf(false) }
-
-    // Snackbar 상태 관리
     val snackbarHostState = remember { SnackbarHostState() }
 
     Scaffold(
@@ -95,7 +92,6 @@ fun SnapNotifyExampleUI(
     }
 }
 
-// 데이터 클래스들
 data class FormData(
     val email: String = "",
     val password: String = "",
@@ -383,7 +379,6 @@ private fun RealWorldUseCasesCard(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // 폼 검증 사례
             UseCaseSection(
                 title = "📝 폼 검증 및 제출",
                 description = "이메일 검증과 성공 피드백"
@@ -425,7 +420,6 @@ private fun RealWorldUseCasesCard(
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // 쇼핑카트 사례
             UseCaseSection(
                 title = "🛒 쇼핑카트 작업",
                 description = "상품 추가/제거 피드백 (현재: ${cartItems}개)"
@@ -498,7 +492,6 @@ private fun RealWorldUseCasesCard(
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // 네트워크 작업 사례
             UseCaseSection(
                 title = "🌐 네트워크 작업",
                 description = "로딩 상태와 결과 피드백"
@@ -510,7 +503,6 @@ private fun RealWorldUseCasesCard(
                             scope.launch {
                                 snackbarHostState.showSnackbar("⏳ 데이터를 불러오는 중...")
 
-                                // 3초 후 완료 시뮬레이션
                                 delay(3000)
                                 onLoadingChange(false)
                                 snackbarHostState.showSnackbar("✅ 데이터 로드가 완료되었습니다")
