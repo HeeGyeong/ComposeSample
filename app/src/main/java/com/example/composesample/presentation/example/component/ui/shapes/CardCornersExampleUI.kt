@@ -157,7 +157,7 @@ private fun BasicCornerTypesCard() {
                 color = Color(0xFF388E3C).copy(alpha = 0.1f)
             ) {
                 Text(
-                    text = "🎯 Concave 모서리는 기존 Compose에서 불가능했던 혁신적인 기능입니다!",
+                    text = "💡 Concave 모서리는 시뮬레이션으로 표현했습니다. 실제로는 Custom Path나 Canvas를 사용해야 합니다.",
                     modifier = Modifier.padding(12.dp),
                     fontSize = 12.sp,
                     color = Color(0xFF388E3C),
@@ -318,34 +318,49 @@ private fun MixedCornersCard() {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // 혼합 스타일 예시들
+            // 실제 혼합 스타일 예시들
             Column(
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                MixedCornerExample(
+                // 상단만 둥근 모서리
+                MixedCornerExampleCard(
                     title = "정보 카드 스타일",
                     description = "상단: 둥근 모서리, 하단: 직각 모서리",
-                    topStartShape = RoundedCornerShape(topStart = 16.dp),
-                    topEndShape = RoundedCornerShape(topEnd = 16.dp),
+                    shape = RoundedCornerShape(
+                        topStart = 16.dp,
+                        topEnd = 16.dp,
+                        bottomStart = 0.dp,
+                        bottomEnd = 0.dp
+                    ),
                     color = Color(0xFF4CAF50)
                 )
 
-                MixedCornerExample(
-                    title = "액션 버튼 스타일",
-                    description = "좌상단: 둥근, 우하단: 잘린 모서리",
-                    topStartShape = RoundedCornerShape(topStart = 12.dp),
-                    bottomEndShape = CutCornerShape(bottomEnd = 12.dp),
+                // 대각선 스타일
+                MixedCornerExampleCard(
+                    title = "대각선 스타일",
+                    description = "좌상단과 우하단만 둥근 모서리",
+                    shape = RoundedCornerShape(
+                        topStart = 20.dp,
+                        topEnd = 0.dp,
+                        bottomStart = 0.dp,
+                        bottomEnd = 20.dp
+                    ),
                     color = Color(0xFFFF9800)
                 )
 
-                MixedCornerExample(
-                    title = "독특한 디자인",
-                    description = "대각선으로 다른 스타일 적용",
-                    topStartShape = RoundedCornerShape(topStart = 20.dp),
-                    bottomEndShape = RoundedCornerShape(bottomEnd = 20.dp),
-                    topEndShape = CutCornerShape(topEnd = 8.dp),
-                    bottomStartShape = CutCornerShape(bottomStart = 8.dp),
-                    color = Color(0xFFE91E63)
+                // 잘린 모서리 조합
+                MixedCornerExampleCard(
+                    title = "잘린 모서리 조합",
+                    description = "상단: 둥근, 하단: 잘린 모서리",
+                    shape = RoundedCornerShape(
+                        topStart = 12.dp,
+                        topEnd = 12.dp
+                    ),
+                    color = Color(0xFFE91E63),
+                    bottomShape = CutCornerShape(
+                        bottomStart = 12.dp,
+                        bottomEnd = 12.dp
+                    )
                 )
             }
 
@@ -357,7 +372,7 @@ private fun MixedCornersCard() {
                 color = Color(0xFF1976D2).copy(alpha = 0.1f)
             ) {
                 Text(
-                    text = "💡 실제 구현에서는 cornerShape() 함수로 각 모서리를 개별 제어할 수 있습니다!",
+                    text = "💡 RoundedCornerShape()의 각 모서리별 매개변수를 활용한 실제 구현입니다!",
                     modifier = Modifier.padding(12.dp),
                     fontSize = 12.sp,
                     color = Color(0xFF1976D2),
@@ -369,66 +384,76 @@ private fun MixedCornersCard() {
 }
 
 @Composable
-private fun MixedCornerExample(
+private fun MixedCornerExampleCard(
     title: String,
     description: String,
+    shape: androidx.compose.ui.graphics.Shape,
     color: Color,
-    topStartShape: androidx.compose.ui.graphics.Shape = RectangleShape,
-    topEndShape: androidx.compose.ui.graphics.Shape = RectangleShape,
-    bottomStartShape: androidx.compose.ui.graphics.Shape = RectangleShape,
-    bottomEndShape: androidx.compose.ui.graphics.Shape = RectangleShape
+    bottomShape: androidx.compose.ui.graphics.Shape? = null
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        // 시뮬레이션된 혼합 모서리 (실제로는 더 복잡한 구현 필요)
-        Box(
-            modifier = Modifier.size(60.dp),
-            contentAlignment = Alignment.Center
-        ) {
-            // 기본 사각형
-            Box(
-                modifier = Modifier
-                    .size(60.dp)
-                    .background(color, RectangleShape)
-            )
-
-            // 각 모서리별 오버레이 (시뮬레이션)
-            if (topStartShape is RoundedCornerShape) {
-                Box(
+        // 실제 혼합 모서리 카드
+        if (bottomShape != null) {
+            // 상단과 하단이 다른 Shape인 경우 (Column으로 분리)
+            Column(
+                modifier = Modifier.size(width = 80.dp, height = 60.dp)
+            ) {
+                Card(
                     modifier = Modifier
-                        .size(20.dp)
-                        .offset((-20).dp, (-20).dp)
-                        .background(color, RoundedCornerShape(bottomEnd = 20.dp))
-                )
+                        .fillMaxWidth()
+                        .height(30.dp),
+                    shape = shape,
+                    backgroundColor = color,
+                    elevation = 2.dp
+                ) {
+                    Box(contentAlignment = Alignment.Center) {
+                        Icon(
+                            imageVector = Icons.Filled.Star,
+                            contentDescription = "Star",
+                            tint = Color.White,
+                            modifier = Modifier.size(16.dp)
+                        )
+                    }
+                }
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(30.dp),
+                    shape = bottomShape,
+                    backgroundColor = color.copy(alpha = 0.8f),
+                    elevation = 2.dp
+                ) {
+                    Box(contentAlignment = Alignment.Center) {
+                        Icon(
+                            imageVector = Icons.Filled.Star,
+                            contentDescription = "Star",
+                            tint = Color.White,
+                            modifier = Modifier.size(16.dp)
+                        )
+                    }
+                }
             }
-
-            if (topEndShape is RoundedCornerShape) {
+        } else {
+            // 단일 Shape인 경우
+            Card(
+                modifier = Modifier.size(width = 80.dp, height = 60.dp),
+                shape = shape,
+                backgroundColor = color,
+                elevation = 4.dp
+            ) {
                 Box(
-                    modifier = Modifier
-                        .size(20.dp)
-                        .offset(20.dp, (-20).dp)
-                        .background(color, RoundedCornerShape(bottomStart = 20.dp))
-                )
-            }
-
-            if (bottomStartShape is RoundedCornerShape) {
-                Box(
-                    modifier = Modifier
-                        .size(20.dp)
-                        .offset((-20).dp, 20.dp)
-                        .background(color, RoundedCornerShape(topEnd = 20.dp))
-                )
-            }
-
-            if (bottomEndShape is RoundedCornerShape) {
-                Box(
-                    modifier = Modifier
-                        .size(20.dp)
-                        .offset(20.dp, 20.dp)
-                        .background(color, RoundedCornerShape(topStart = 20.dp))
-                )
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.Star,
+                        contentDescription = "Star",
+                        tint = Color.White,
+                        modifier = Modifier.size(24.dp)
+                    )
+                }
             }
         }
 
@@ -454,9 +479,16 @@ private fun MixedCornerExample(
 
 @Composable
 private fun InteractiveCornerCard() {
-    var selectedCorner by remember { mutableStateOf("topStart") }
-    var selectedType by remember { mutableStateOf("Rounded") }
-    var cornerSize by remember { mutableStateOf(16f) }
+    // 각 모서리별 설정 상태
+    var topStartSize by remember { mutableStateOf(16f) }
+    var topEndSize by remember { mutableStateOf(16f) }
+    var bottomStartSize by remember { mutableStateOf(16f) }
+    var bottomEndSize by remember { mutableStateOf(16f) }
+    
+    var topStartType by remember { mutableStateOf("Rounded") }
+    var topEndType by remember { mutableStateOf("Rounded") }
+    var bottomStartType by remember { mutableStateOf("Rounded") }
+    var bottomEndType by remember { mutableStateOf("Rounded") }
 
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -477,125 +509,31 @@ private fun InteractiveCornerCard() {
             Spacer(modifier = Modifier.height(12.dp))
 
             Text(
-                text = "실시간으로 모서리 스타일을 변경해보세요:",
+                text = "각 모서리를 개별적으로 제어해보세요:",
                 fontSize = 14.sp,
                 color = Color.Gray
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // 모서리 선택
-            Text(
-                text = "모서리 선택:",
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Medium,
-                color = Color(0xFFE65100)
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                listOf("topStart", "topEnd", "bottomStart", "bottomEnd").forEach { corner ->
-                    Button(
-                        onClick = { selectedCorner = corner },
-                        modifier = Modifier.weight(1f),
-                        colors = ButtonDefaults.buttonColors(
-                            backgroundColor = if (selectedCorner == corner)
-                                Color(0xFFE65100) else Color(0xFFE65100).copy(alpha = 0.3f)
-                        ),
-                        shape = RoundedCornerShape(8.dp)
-                    ) {
-                        Text(
-                            text = when (corner) {
-                                "topStart" -> "좌상"
-                                "topEnd" -> "우상"
-                                "bottomStart" -> "좌하"
-                                "bottomEnd" -> "우하"
-                                else -> corner
-                            },
-                            fontSize = 10.sp,
-                            color = Color.White
-                        )
-                    }
-                }
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // 타입 선택
-            Text(
-                text = "Corner 타입:",
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Medium,
-                color = Color(0xFFE65100)
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                listOf("Rounded", "Cut", "Sharp").forEach { type ->
-                    Button(
-                        onClick = { selectedType = type },
-                        modifier = Modifier.weight(1f),
-                        colors = ButtonDefaults.buttonColors(
-                            backgroundColor = if (selectedType == type)
-                                Color(0xFFE65100) else Color(0xFFE65100).copy(alpha = 0.3f)
-                        ),
-                        shape = RoundedCornerShape(8.dp)
-                    ) {
-                        Text(
-                            text = type,
-                            fontSize = 10.sp,
-                            color = Color.White
-                        )
-                    }
-                }
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // 크기 조절
-            if (selectedType != "Sharp") {
-                Text(
-                    text = "Corner 크기: ${cornerSize.toInt()}dp",
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Medium,
-                    color = Color(0xFFE65100)
-                )
-
-                Slider(
-                    value = cornerSize,
-                    onValueChange = { cornerSize = it },
-                    valueRange = 4f..32f,
-                    colors = SliderDefaults.colors(thumbColor = Color(0xFFE65100))
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-            }
-
-            // 프리뷰 카드
+            // 프리뷰 카드 (상단에 배치)
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(120.dp),
                 contentAlignment = Alignment.Center
             ) {
-                // 현재 설정에 따른 Shape 생성 (시뮬레이션)
-                val currentShape = when (selectedType) {
-                    "Rounded" -> RoundedCornerShape(cornerSize.dp)
-                    "Cut" -> CutCornerShape(cornerSize.dp)
-                    else -> RectangleShape
-                }
+                // 실제 각 모서리별 설정을 반영한 Shape 생성
+                val dynamicShape = RoundedCornerShape(
+                    topStart = if (topStartType == "Sharp") 0.dp else topStartSize.dp,
+                    topEnd = if (topEndType == "Sharp") 0.dp else topEndSize.dp,
+                    bottomStart = if (bottomStartType == "Sharp") 0.dp else bottomStartSize.dp,
+                    bottomEnd = if (bottomEndType == "Sharp") 0.dp else bottomEndSize.dp
+                )
 
                 Card(
                     modifier = Modifier.size(100.dp),
-                    shape = currentShape,
+                    shape = dynamicShape,
                     backgroundColor = Color(0xFFE65100),
                     elevation = 4.dp
                 ) {
@@ -606,13 +544,13 @@ private fun InteractiveCornerCard() {
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             Text(
-                                text = "DEMO",
+                                text = "LIVE",
                                 color = Color.White,
-                                fontSize = 12.sp,
+                                fontSize = 14.sp,
                                 fontWeight = FontWeight.Bold
                             )
                             Text(
-                                text = selectedType,
+                                text = "DEMO",
                                 color = Color.White.copy(alpha = 0.8f),
                                 fontSize = 10.sp
                             )
@@ -621,18 +559,139 @@ private fun InteractiveCornerCard() {
                 }
             }
 
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // 각 모서리별 컨트롤
+            Column(
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                CornerControl(
+                    label = "좌상단 (TopStart)",
+                    size = topStartSize,
+                    type = topStartType,
+                    onSizeChange = { topStartSize = it },
+                    onTypeChange = { topStartType = it }
+                )
+                
+                CornerControl(
+                    label = "우상단 (TopEnd)",
+                    size = topEndSize,
+                    type = topEndType,
+                    onSizeChange = { topEndSize = it },
+                    onTypeChange = { topEndType = it }
+                )
+                
+                CornerControl(
+                    label = "좌하단 (BottomStart)",
+                    size = bottomStartSize,
+                    type = bottomStartType,
+                    onSizeChange = { bottomStartSize = it },
+                    onTypeChange = { bottomStartType = it }
+                )
+                
+                CornerControl(
+                    label = "우하단 (BottomEnd)",
+                    size = bottomEndSize,
+                    type = bottomEndType,
+                    onSizeChange = { bottomEndSize = it },
+                    onTypeChange = { bottomEndType = it }
+                )
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
+
             Surface(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(8.dp),
                 color = Color(0xFFE65100).copy(alpha = 0.1f)
             ) {
                 Text(
-                    text = "🎯 실제 구현에서는 각 모서리를 개별적으로 제어하여 더 복잡한 조합이 가능합니다!",
+                    text = "🎯 각 모서리를 독립적으로 제어하여 완전히 커스텀된 Shape를 만들 수 있습니다!",
                     modifier = Modifier.padding(12.dp),
                     fontSize = 12.sp,
                     color = Color(0xFFE65100),
                     fontStyle = androidx.compose.ui.text.font.FontStyle.Italic
                 )
+            }
+        }
+    }
+}
+
+@Composable
+private fun CornerControl(
+    label: String,
+    size: Float,
+    type: String,
+    onSizeChange: (Float) -> Unit,
+    onTypeChange: (String) -> Unit
+) {
+    Surface(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(8.dp),
+        color = Color(0xFFE65100).copy(alpha = 0.05f),
+        elevation = 1.dp
+    ) {
+        Column(
+            modifier = Modifier.padding(12.dp)
+        ) {
+            Text(
+                text = label,
+                fontSize = 12.sp,
+                fontWeight = FontWeight.Medium,
+                color = Color(0xFFE65100)
+            )
+            
+            Spacer(modifier = Modifier.height(8.dp))
+            
+            // 타입 선택
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(6.dp)
+            ) {
+                listOf("Rounded", "Sharp").forEach { typeOption ->
+                    Button(
+                        onClick = { onTypeChange(typeOption) },
+                        modifier = Modifier.weight(1f),
+                        colors = ButtonDefaults.buttonColors(
+                            backgroundColor = if (type == typeOption)
+                                Color(0xFFE65100) else Color(0xFFE65100).copy(alpha = 0.2f)
+                        ),
+                        shape = RoundedCornerShape(6.dp)
+                    ) {
+                        Text(
+                            text = typeOption,
+                            fontSize = 9.sp,
+                            color = if (type == typeOption) Color.White else Color(0xFFE65100)
+                        )
+                    }
+                }
+            }
+            
+            // 크기 조절 (Sharp가 아닐 때만)
+            if (type != "Sharp") {
+                Spacer(modifier = Modifier.height(8.dp))
+                
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "${size.toInt()}dp",
+                        fontSize = 10.sp,
+                        color = Color(0xFFE65100),
+                        modifier = Modifier.width(30.dp)
+                    )
+                    
+                    Slider(
+                        value = size,
+                        onValueChange = onSizeChange,
+                        valueRange = 0f..32f,
+                        modifier = Modifier.weight(1f),
+                        colors = SliderDefaults.colors(
+                            thumbColor = Color(0xFFE65100),
+                            activeTrackColor = Color(0xFFE65100)
+                        )
+                    )
+                }
             }
         }
     }
