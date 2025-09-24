@@ -73,6 +73,7 @@ class ConstValue {
         const val NestedRoutesNav3Example = "nestedRoutesNav3Example"
         const val NewShadowApiExample = "newShadowApiExample"
         const val SnapNotifyExample = "snapNotifyExample"
+        const val CardCornersExample = "cardCornersExample"
 
         // 새로운 Compose 1.7 기능 예제들
         const val Compose17FeaturesExample = "compose17FeaturesExample"

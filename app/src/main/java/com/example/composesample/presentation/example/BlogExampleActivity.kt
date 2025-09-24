@@ -110,6 +110,7 @@ import com.example.composesample.presentation.example.component.system.ui.widget
 import com.example.composesample.presentation.example.component.ui.graphics.NewShadowApiExampleUI
 import com.example.composesample.presentation.example.component.ui.navigation.NestedRoutesNav3ExampleUI
 import com.example.composesample.presentation.example.component.ui.notification.SnapNotifyExampleUI
+import com.example.composesample.presentation.example.component.ui.shapes.CardCornersExampleUI
 import com.example.composesample.presentation.example.component.ui.text.AutoSizingTextExampleUI
 import com.example.composesample.presentation.example.component.ui.text.TextStyleUI
 import com.example.composesample.presentation.getTextStyle
@@ -149,6 +150,7 @@ import com.example.composesample.util.ConstValue.Companion.NestedRoutesNav3Examp
 import com.example.composesample.util.ConstValue.Companion.NestedScrollingExample
 import com.example.composesample.util.ConstValue.Companion.NewShadowApiExample
 import com.example.composesample.util.ConstValue.Companion.SnapNotifyExample
+import com.example.composesample.util.ConstValue.Companion.CardCornersExample
 import com.example.composesample.util.ConstValue.Companion.PagingExample
 import com.example.composesample.util.ConstValue.Companion.PassingIntentDataExample
 import com.example.composesample.util.ConstValue.Companion.PathGraphicsExample
@@ -902,6 +904,10 @@ fun ExampleCaseUI(
 
                         SnapNotifyExample -> {
                             SnapNotifyExampleUI(onBackEvent)
+                        }
+
+                        CardCornersExample -> {
+                            CardCornersExampleUI(onBackEvent)
                         }
 
                         else -> {

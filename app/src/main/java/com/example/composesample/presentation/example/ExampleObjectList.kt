@@ -493,6 +493,15 @@ fun exampleObjectList(): ArrayList<ExampleObject> {
         )
     )
 
+    insertExampleObject.add(
+        ExampleObject(
+            title = "Card Corners in Compose",
+            description = "Convex, Concave, Cut, Sharp 등 다양한 카드 모서리 스타일 구현 예제",
+            blogUrl = "",
+            exampleType = ConstValue.CardCornersExample
+        )
+    )
+
     return insertExampleObject
 }
 
