@@ -148,22 +148,6 @@ private fun BasicCornerTypesCard() {
                     modifier = Modifier.weight(1f)
                 )
             }
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            Surface(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(8.dp),
-                color = Color(0xFF388E3C).copy(alpha = 0.1f)
-            ) {
-                Text(
-                    text = "💡 Concave 모서리는 시뮬레이션으로 표현했습니다. 실제로는 Custom Path나 Canvas를 사용해야 합니다.",
-                    modifier = Modifier.padding(12.dp),
-                    fontSize = 12.sp,
-                    color = Color(0xFF388E3C),
-                    fontStyle = androidx.compose.ui.text.font.FontStyle.Italic
-                )
-            }
         }
     }
 }
@@ -361,22 +345,6 @@ private fun MixedCornersCard() {
                         bottomStart = 12.dp,
                         bottomEnd = 12.dp
                     )
-                )
-            }
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            Surface(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(8.dp),
-                color = Color(0xFF1976D2).copy(alpha = 0.1f)
-            ) {
-                Text(
-                    text = "💡 RoundedCornerShape()의 각 모서리별 매개변수를 활용한 실제 구현입니다!",
-                    modifier = Modifier.padding(12.dp),
-                    fontSize = 12.sp,
-                    color = Color(0xFF1976D2),
-                    fontStyle = androidx.compose.ui.text.font.FontStyle.Italic
                 )
             }
         }
@@ -597,22 +565,6 @@ private fun InteractiveCornerCard() {
                     onTypeChange = { bottomEndType = it }
                 )
             }
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            Surface(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(8.dp),
-                color = Color(0xFFE65100).copy(alpha = 0.1f)
-            ) {
-                Text(
-                    text = "🎯 각 모서리를 독립적으로 제어하여 완전히 커스텀된 Shape를 만들 수 있습니다!",
-                    modifier = Modifier.padding(12.dp),
-                    fontSize = 12.sp,
-                    color = Color(0xFFE65100),
-                    fontStyle = androidx.compose.ui.text.font.FontStyle.Italic
-                )
-            }
         }
     }
 }
@@ -774,22 +726,6 @@ private fun RealWorldExamplesCard() {
                         topEnd = 16.dp
                     ),
                     color = Color(0xFF9C27B0)
-                )
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Surface(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(8.dp),
-                color = Color(0xFFD32F2F).copy(alpha = 0.1f)
-            ) {
-                Text(
-                    text = "💡 각 사례는 사용자 경험과 브랜드 아이덴티티를 고려한 의도적인 디자인 선택입니다.",
-                    modifier = Modifier.padding(12.dp),
-                    fontSize = 12.sp,
-                    color = Color(0xFFD32F2F),
-                    fontStyle = androidx.compose.ui.text.font.FontStyle.Italic
                 )
             }
         }
