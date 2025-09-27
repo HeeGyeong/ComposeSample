@@ -103,7 +103,6 @@ private fun BasicCornerTypesCard() {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // 첫 번째 행
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
@@ -127,7 +126,6 @@ private fun BasicCornerTypesCard() {
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // 두 번째 행
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
@@ -140,7 +138,6 @@ private fun BasicCornerTypesCard() {
                     modifier = Modifier.weight(1f)
                 )
 
-                // Concave는 시뮬레이션 (실제 구현 없이 시각적 표현)
                 ConcaveCornerExample(
                     title = "Concave\n(Inward)",
                     description = "오목한 모서리",
@@ -208,19 +205,16 @@ private fun ConcaveCornerExample(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // Concave 효과 시뮬레이션 (실제로는 복잡한 Path 연산 필요)
         Box(
             modifier = Modifier.size(80.dp),
             contentAlignment = Alignment.Center
         ) {
-            // 기본 배경
             Box(
                 modifier = Modifier
                     .size(80.dp)
                     .background(color, RectangleShape)
             )
 
-            // 모서리에 원형으로 잘라내는 효과 시뮬레이션
             Box(
                 modifier = Modifier
                     .size(24.dp)
@@ -246,7 +240,6 @@ private fun ConcaveCornerExample(
                     .background(Color.White, CircleShape)
             )
 
-            // 중앙 아이콘
             Icon(
                 imageVector = Icons.Filled.Star,
                 contentDescription = "Star",
@@ -302,11 +295,9 @@ private fun MixedCornersCard() {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // 실제 혼합 스타일 예시들
             Column(
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                // 상단만 둥근 모서리
                 MixedCornerExampleCard(
                     title = "정보 카드 스타일",
                     description = "상단: 둥근 모서리, 하단: 직각 모서리",
@@ -319,7 +310,6 @@ private fun MixedCornersCard() {
                     color = Color(0xFF4CAF50)
                 )
 
-                // 대각선 스타일
                 MixedCornerExampleCard(
                     title = "대각선 스타일",
                     description = "좌상단과 우하단만 둥근 모서리",
@@ -332,7 +322,6 @@ private fun MixedCornersCard() {
                     color = Color(0xFFFF9800)
                 )
 
-                // 잘린 모서리 조합
                 MixedCornerExampleCard(
                     title = "잘린 모서리 조합",
                     description = "상단: 둥근, 하단: 잘린 모서리",
@@ -363,9 +352,7 @@ private fun MixedCornerExampleCard(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        // 실제 혼합 모서리 카드
         if (bottomShape != null) {
-            // 상단과 하단이 다른 Shape인 경우 (Column으로 분리)
             Column(
                 modifier = Modifier.size(width = 80.dp, height = 60.dp)
             ) {
@@ -405,7 +392,6 @@ private fun MixedCornerExampleCard(
                 }
             }
         } else {
-            // 단일 Shape인 경우
             Card(
                 modifier = Modifier.size(width = 80.dp, height = 60.dp),
                 shape = shape,
@@ -447,7 +433,6 @@ private fun MixedCornerExampleCard(
 
 @Composable
 private fun InteractiveCornerCard() {
-    // 각 모서리별 설정 상태
     var topStartSize by remember { mutableStateOf(16f) }
     var topEndSize by remember { mutableStateOf(16f) }
     var bottomStartSize by remember { mutableStateOf(16f) }
@@ -484,14 +469,12 @@ private fun InteractiveCornerCard() {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // 프리뷰 카드 (상단에 배치)
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(120.dp),
                 contentAlignment = Alignment.Center
             ) {
-                // 실제 각 모서리별 설정을 반영한 Shape 생성
                 val dynamicShape = RoundedCornerShape(
                     topStart = if (topStartType == "Sharp") 0.dp else topStartSize.dp,
                     topEnd = if (topEndType == "Sharp") 0.dp else topEndSize.dp,
@@ -529,7 +512,6 @@ private fun InteractiveCornerCard() {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // 각 모서리별 컨트롤
             Column(
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
@@ -595,7 +577,6 @@ private fun CornerControl(
             
             Spacer(modifier = Modifier.height(8.dp))
             
-            // 타입 선택
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(6.dp)
@@ -619,7 +600,6 @@ private fun CornerControl(
                 }
             }
             
-            // 크기 조절 (Sharp가 아닐 때만)
             if (type != "Sharp") {
                 Spacer(modifier = Modifier.height(8.dp))
                 
