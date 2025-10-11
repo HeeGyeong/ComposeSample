@@ -62,6 +62,10 @@ fun NewShadowApiExampleUI(
             item { GlowEffectCard() }
             item { KeyboardButtonCard() }
             item { BlendModeCard() }
+            item { LayeredShadowCard() }
+            item { ColoredShadowCard() }
+            item { ShadowDirectionCard() }
+            item { MaterialCardComparisonCard() }
         }
     }
 }
@@ -1186,6 +1190,472 @@ private fun BlendModeCard() {
                         fontStyle = androidx.compose.ui.text.font.FontStyle.Italic
                     )
                 }
+            }
+        }
+    }
+}
+
+@Composable
+private fun LayeredShadowCard() {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        elevation = 4.dp,
+        backgroundColor = Color(0xFFFFF8E1),
+        shape = RoundedCornerShape(12.dp)
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp)
+        ) {
+            Text(
+                text = "📚 레이어드 섀도우",
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color(0xFFF57C00)
+            )
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Text(
+                text = "여러 그림자 레이어를 중첩하여 깊이감 표현:",
+                fontSize = 14.sp,
+                color = Color.Gray
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(180.dp)
+                    .background(Color(0xFFF5F5F5), RoundedCornerShape(12.dp))
+                    .padding(24.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(100.dp)
+                        .drawBehind {
+                            val shadowLayers = listOf(
+                                Triple(20.dp.toPx(), 0.15f, Offset(0f, 8.dp.toPx())),
+                                Triple(40.dp.toPx(), 0.1f, Offset(0f, 16.dp.toPx())),
+                                Triple(60.dp.toPx(), 0.05f, Offset(0f, 24.dp.toPx()))
+                            )
+                            
+                            shadowLayers.forEach { (blur, alpha, offset) ->
+                                drawRoundRect(
+                                    color = Color.Black.copy(alpha = alpha),
+                                    topLeft = offset,
+                                    size = size,
+                                    cornerRadius = androidx.compose.ui.geometry.CornerRadius(20.dp.toPx())
+                                )
+                            }
+                        }
+                        .shadow(8.dp, RoundedCornerShape(20.dp))
+                        .background(Color.White, RoundedCornerShape(20.dp)),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            text = "깊이감",
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color(0xFFF57C00)
+                        )
+                        Text(
+                            text = "3 Layers",
+                            fontSize = 10.sp,
+                            color = Color.Gray
+                        )
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Surface(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(6.dp),
+                color = Color(0xFFF57C00).copy(alpha = 0.1f)
+            ) {
+                Text(
+                    text = "💡 여러 레이어의 그림자를 중첩하면 더 자연스럽고 깊이감 있는 효과를 만들 수 있습니다!",
+                    modifier = Modifier.padding(8.dp),
+                    fontSize = 11.sp,
+                    color = Color(0xFFF57C00),
+                    fontStyle = androidx.compose.ui.text.font.FontStyle.Italic
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun ColoredShadowCard() {
+    var selectedColor by remember { mutableStateOf(Color(0xFF9C27B0)) }
+    val colorOptions = listOf(
+        Color(0xFF9C27B0) to "Purple",
+        Color(0xFF00BCD4) to "Cyan",
+        Color(0xFFFF5722) to "Orange",
+        Color(0xFF4CAF50) to "Green"
+    )
+
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        elevation = 4.dp,
+        backgroundColor = Color(0xFF1A1A1A),
+        shape = RoundedCornerShape(12.dp)
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp)
+        ) {
+            Text(
+                text = "🎨 컬러 섀도우",
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.White
+            )
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Text(
+                text = "ambientColor와 spotColor로 생동감 있는 그림자:",
+                fontSize = 14.sp,
+                color = Color.Gray
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(140.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(100.dp)
+                        .shadow(
+                            elevation = 16.dp,
+                            shape = RoundedCornerShape(24.dp),
+                            clip = false,
+                            ambientColor = selectedColor.copy(alpha = 0.5f),
+                            spotColor = selectedColor.copy(alpha = 0.7f)
+                        )
+                        .background(
+                            Brush.linearGradient(
+                                colors = listOf(
+                                    selectedColor.copy(alpha = 0.8f),
+                                    selectedColor
+                                )
+                            ),
+                            RoundedCornerShape(24.dp)
+                        )
+                )
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                colorOptions.forEach { (color, name) ->
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .size(48.dp)
+                                .clickable { selectedColor = color }
+                                .background(color, CircleShape)
+                                .then(
+                                    if (selectedColor == color) {
+                                        Modifier.border(3.dp, Color.White, CircleShape)
+                                    } else Modifier
+                                )
+                        )
+                        Text(
+                            text = name,
+                            fontSize = 10.sp,
+                            color = Color.White,
+                            modifier = Modifier.padding(top = 4.dp)
+                        )
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Surface(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(6.dp),
+                color = selectedColor.copy(alpha = 0.15f)
+            ) {
+                Text(
+                    text = "✨ 컬러 섀도우는 현대적인 UI 디자인에서 브랜드 아이덴티티를 표현하는 강력한 도구입니다!",
+                    modifier = Modifier.padding(8.dp),
+                    fontSize = 11.sp,
+                    color = Color.White,
+                    fontStyle = androidx.compose.ui.text.font.FontStyle.Italic
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun ShadowDirectionCard() {
+    var angle by remember { mutableStateOf(45f) }
+
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        elevation = 4.dp,
+        backgroundColor = Color(0xFFE1F5FE),
+        shape = RoundedCornerShape(12.dp)
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp)
+        ) {
+            Text(
+                text = "🧭 방향성 있는 그림자",
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color(0xFF0277BD)
+            )
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Text(
+                text = "오프셋을 조절하여 광원의 방향을 표현:",
+                fontSize = 14.sp,
+                color = Color.Gray
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(160.dp)
+                    .background(Color(0xFFF5F5F5), RoundedCornerShape(12.dp))
+                    .padding(24.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                val angleRad = Math.toRadians(angle.toDouble())
+                val offsetX = (kotlin.math.cos(angleRad) * 20f).toFloat()
+                val offsetY = (kotlin.math.sin(angleRad) * 20f).toFloat()
+
+                Box(
+                    modifier = Modifier
+                        .size(80.dp)
+                        .drawBehind {
+                            drawRoundRect(
+                                color = Color.Black.copy(alpha = 0.25f),
+                                topLeft = Offset(offsetX, offsetY),
+                                size = size,
+                                cornerRadius = androidx.compose.ui.geometry.CornerRadius(16.dp.toPx())
+                            )
+                        }
+                        .shadow(
+                            elevation = 8.dp,
+                            shape = RoundedCornerShape(16.dp),
+                            clip = false
+                        )
+                        .background(Color(0xFF0288D1), RoundedCornerShape(16.dp)),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "${angle.toInt()}°",
+                        color = Color.White,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Text(
+                text = "광원 각도: ${angle.toInt()}°",
+                fontSize = 12.sp,
+                fontWeight = FontWeight.Medium,
+                color = Color(0xFF0277BD)
+            )
+
+            Slider(
+                value = angle,
+                onValueChange = { angle = it },
+                valueRange = 0f..360f,
+                colors = SliderDefaults.colors(
+                    thumbColor = Color(0xFF0288D1),
+                    activeTrackColor = Color(0xFF0288D1)
+                )
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Surface(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(6.dp),
+                color = Color(0xFF0277BD).copy(alpha = 0.1f)
+            ) {
+                Text(
+                    text = "💡 offset을 이용해 광원의 위치를 시뮬레이션하여 더 사실적인 그림자를 만들 수 있습니다!",
+                    modifier = Modifier.padding(8.dp),
+                    fontSize = 11.sp,
+                    color = Color(0xFF0277BD),
+                    fontStyle = androidx.compose.ui.text.font.FontStyle.Italic
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun MaterialCardComparisonCard() {
+    var expanded by remember { mutableStateOf(false) }
+
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        elevation = 4.dp,
+        backgroundColor = Color(0xFFF3E5F5),
+        shape = RoundedCornerShape(12.dp)
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp)
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "📐 Material Design Elevation",
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFF6A1B9A)
+                )
+                
+                Icon(
+                    imageVector = if (expanded) Icons.Filled.KeyboardArrowUp else Icons.Filled.KeyboardArrowDown,
+                    contentDescription = if (expanded) "접기" else "펼치기",
+                    tint = Color(0xFF6A1B9A),
+                    modifier = Modifier
+                        .size(32.dp)
+                        .clickable { expanded = !expanded }
+                )
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Text(
+                text = "Material Design의 Elevation 가이드라인 비교:",
+                fontSize = 14.sp,
+                color = Color.Gray
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                listOf(
+                    Triple(1.dp, "버튼", Color(0xFF9C27B0)),
+                    Triple(4.dp, "카드", Color(0xFF7B1FA2)),
+                    Triple(8.dp, "메뉴", Color(0xFF6A1B9A)),
+                    Triple(16.dp, "다이얼로그", Color(0xFF4A148C))
+                ).forEach { (elevation, label, color) ->
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "$label (${elevation.value.toInt()}dp)",
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Medium,
+                            color = Color(0xFF6A1B9A),
+                            modifier = Modifier.weight(0.4f)
+                        )
+                        
+                        Box(
+                            modifier = Modifier
+                                .weight(0.6f)
+                                .height(56.dp)
+                                .shadow(elevation, RoundedCornerShape(8.dp))
+                                .background(color, RoundedCornerShape(8.dp)),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = "${elevation.value.toInt()}dp",
+                                color = Color.White,
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+                    }
+                }
+            }
+
+            if (expanded) {
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Surface(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(8.dp),
+                    color = Color(0xFF6A1B9A).copy(alpha = 0.1f)
+                ) {
+                    Column(
+                        modifier = Modifier.padding(12.dp)
+                    ) {
+                        Text(
+                            text = "📚 Material Design Elevation 가이드라인",
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color(0xFF6A1B9A)
+                        )
+                        
+                        Spacer(modifier = Modifier.height(8.dp))
+                        
+                        listOf(
+                            "• 0dp: 배경 표면",
+                            "• 1dp: 검색 바, 카드 (휴식 상태)",
+                            "• 2dp: 버튼 (휴식 상태)",
+                            "• 4dp: 앱 바",
+                            "• 6dp: FAB (휴식 상태), 스낵바",
+                            "• 8dp: 하단 내비게이션, 메뉴",
+                            "• 12dp: FAB (눌림 상태)",
+                            "• 16dp: 내비게이션 드로어, 모달 사이드 시트",
+                            "• 24dp: 다이얼로그, 피커"
+                        ).forEach { guideline ->
+                            Text(
+                                text = guideline,
+                                fontSize = 10.sp,
+                                color = Color(0xFF6A1B9A),
+                                modifier = Modifier.padding(vertical = 2.dp)
+                            )
+                        }
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Surface(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(6.dp),
+                color = Color(0xFF6A1B9A).copy(alpha = 0.1f)
+            ) {
+                Text(
+                    text = "🎯 Material Design의 Elevation 시스템은 일관된 시각적 계층을 만드는 핵심 원칙입니다!",
+                    modifier = Modifier.padding(8.dp),
+                    fontSize = 11.sp,
+                    color = Color(0xFF6A1B9A),
+                    fontStyle = androidx.compose.ui.text.font.FontStyle.Italic
+                )
             }
         }
     }
