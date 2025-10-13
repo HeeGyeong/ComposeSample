@@ -65,7 +65,6 @@ fun NewShadowApiExampleUI(
             item { LayeredShadowCard() }
             item { ColoredShadowCard() }
             item { ShadowDirectionCard() }
-            item { MaterialCardComparisonCard() }
         }
     }
 }
@@ -1273,20 +1272,6 @@ private fun LayeredShadowCard() {
             }
 
             Spacer(modifier = Modifier.height(12.dp))
-
-            Surface(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(6.dp),
-                color = Color(0xFFF57C00).copy(alpha = 0.1f)
-            ) {
-                Text(
-                    text = "💡 여러 레이어의 그림자를 중첩하면 더 자연스럽고 깊이감 있는 효과를 만들 수 있습니다!",
-                    modifier = Modifier.padding(8.dp),
-                    fontSize = 11.sp,
-                    color = Color(0xFFF57C00),
-                    fontStyle = androidx.compose.ui.text.font.FontStyle.Italic
-                )
-            }
         }
     }
 }
@@ -1387,20 +1372,6 @@ private fun ColoredShadowCard() {
             }
 
             Spacer(modifier = Modifier.height(12.dp))
-
-            Surface(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(6.dp),
-                color = selectedColor.copy(alpha = 0.15f)
-            ) {
-                Text(
-                    text = "✨ 컬러 섀도우는 현대적인 UI 디자인에서 브랜드 아이덴티티를 표현하는 강력한 도구입니다!",
-                    modifier = Modifier.padding(8.dp),
-                    fontSize = 11.sp,
-                    color = Color.White,
-                    fontStyle = androidx.compose.ui.text.font.FontStyle.Italic
-                )
-            }
         }
     }
 }
@@ -1495,168 +1466,6 @@ private fun ShadowDirectionCard() {
             )
 
             Spacer(modifier = Modifier.height(8.dp))
-
-            Surface(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(6.dp),
-                color = Color(0xFF0277BD).copy(alpha = 0.1f)
-            ) {
-                Text(
-                    text = "💡 offset을 이용해 광원의 위치를 시뮬레이션하여 더 사실적인 그림자를 만들 수 있습니다!",
-                    modifier = Modifier.padding(8.dp),
-                    fontSize = 11.sp,
-                    color = Color(0xFF0277BD),
-                    fontStyle = androidx.compose.ui.text.font.FontStyle.Italic
-                )
-            }
-        }
-    }
-}
-
-@Composable
-private fun MaterialCardComparisonCard() {
-    var expanded by remember { mutableStateOf(false) }
-
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        backgroundColor = Color(0xFFF3E5F5),
-        shape = RoundedCornerShape(12.dp)
-    ) {
-        Column(
-            modifier = Modifier.padding(16.dp)
-        ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = "📐 Material Design Elevation",
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color(0xFF6A1B9A)
-                )
-                
-                Icon(
-                    imageVector = if (expanded) Icons.Filled.KeyboardArrowUp else Icons.Filled.KeyboardArrowDown,
-                    contentDescription = if (expanded) "접기" else "펼치기",
-                    tint = Color(0xFF6A1B9A),
-                    modifier = Modifier
-                        .size(32.dp)
-                        .clickable { expanded = !expanded }
-                )
-            }
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            Text(
-                text = "Material Design의 Elevation 가이드라인 비교:",
-                fontSize = 14.sp,
-                color = Color.Gray
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                listOf(
-                    Triple(1.dp, "버튼", Color(0xFF9C27B0)),
-                    Triple(4.dp, "카드", Color(0xFF7B1FA2)),
-                    Triple(8.dp, "메뉴", Color(0xFF6A1B9A)),
-                    Triple(16.dp, "다이얼로그", Color(0xFF4A148C))
-                ).forEach { (elevation, label, color) ->
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = "$label (${elevation.value.toInt()}dp)",
-                            fontSize = 12.sp,
-                            fontWeight = FontWeight.Medium,
-                            color = Color(0xFF6A1B9A),
-                            modifier = Modifier.weight(0.4f)
-                        )
-                        
-                        Box(
-                            modifier = Modifier
-                                .weight(0.6f)
-                                .height(56.dp)
-                                .shadow(elevation, RoundedCornerShape(8.dp))
-                                .background(color, RoundedCornerShape(8.dp)),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Text(
-                                text = "${elevation.value.toInt()}dp",
-                                color = Color.White,
-                                fontSize = 14.sp,
-                                fontWeight = FontWeight.Bold
-                            )
-                        }
-                    }
-                }
-            }
-
-            if (expanded) {
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Surface(
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(8.dp),
-                    color = Color(0xFF6A1B9A).copy(alpha = 0.1f)
-                ) {
-                    Column(
-                        modifier = Modifier.padding(12.dp)
-                    ) {
-                        Text(
-                            text = "📚 Material Design Elevation 가이드라인",
-                            fontSize = 12.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = Color(0xFF6A1B9A)
-                        )
-                        
-                        Spacer(modifier = Modifier.height(8.dp))
-                        
-                        listOf(
-                            "• 0dp: 배경 표면",
-                            "• 1dp: 검색 바, 카드 (휴식 상태)",
-                            "• 2dp: 버튼 (휴식 상태)",
-                            "• 4dp: 앱 바",
-                            "• 6dp: FAB (휴식 상태), 스낵바",
-                            "• 8dp: 하단 내비게이션, 메뉴",
-                            "• 12dp: FAB (눌림 상태)",
-                            "• 16dp: 내비게이션 드로어, 모달 사이드 시트",
-                            "• 24dp: 다이얼로그, 피커"
-                        ).forEach { guideline ->
-                            Text(
-                                text = guideline,
-                                fontSize = 10.sp,
-                                color = Color(0xFF6A1B9A),
-                                modifier = Modifier.padding(vertical = 2.dp)
-                            )
-                        }
-                    }
-                }
-            }
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            Surface(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(6.dp),
-                color = Color(0xFF6A1B9A).copy(alpha = 0.1f)
-            ) {
-                Text(
-                    text = "🎯 Material Design의 Elevation 시스템은 일관된 시각적 계층을 만드는 핵심 원칙입니다!",
-                    modifier = Modifier.padding(8.dp),
-                    fontSize = 11.sp,
-                    color = Color(0xFF6A1B9A),
-                    fontStyle = androidx.compose.ui.text.font.FontStyle.Italic
-                )
-            }
         }
     }
 }
