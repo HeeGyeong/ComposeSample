@@ -503,6 +503,15 @@ fun exampleObjectList(): ArrayList<ExampleObject> {
         )
     )
 
+    insertExampleObject.add(
+        ExampleObject(
+            title = "AutoCloseable ViewModel Pattern",
+            description = "ViewModel에서 AutoCloseable을 활용한 자동 리소스 정리 패턴",
+            blogUrl = "",
+            exampleType = ConstValue.AutoCloseableExample
+        )
+    )
+
     return insertExampleObject
 }
 

@@ -74,6 +74,7 @@ class ConstValue {
         const val NewShadowApiExample = "newShadowApiExample"
         const val SnapNotifyExample = "snapNotifyExample"
         const val CardCornersExample = "cardCornersExample"
+        const val AutoCloseableExample = "autoCloseableExample"
 
         // 새로운 Compose 1.7 기능 예제들
         const val Compose17FeaturesExample = "compose17FeaturesExample"

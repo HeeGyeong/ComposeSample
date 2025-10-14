@@ -111,6 +111,7 @@ import com.example.composesample.presentation.example.component.ui.graphics.NewS
 import com.example.composesample.presentation.example.component.ui.navigation.NestedRoutesNav3ExampleUI
 import com.example.composesample.presentation.example.component.ui.notification.SnapNotifyExampleUI
 import com.example.composesample.presentation.example.component.ui.shapes.CardCornersExampleUI
+import com.example.composesample.presentation.example.component.architecture.lifecycle.AutoCloseableExampleUI
 import com.example.composesample.presentation.example.component.ui.text.AutoSizingTextExampleUI
 import com.example.composesample.presentation.example.component.ui.text.TextStyleUI
 import com.example.composesample.presentation.getTextStyle
@@ -151,6 +152,7 @@ import com.example.composesample.util.ConstValue.Companion.NestedScrollingExampl
 import com.example.composesample.util.ConstValue.Companion.NewShadowApiExample
 import com.example.composesample.util.ConstValue.Companion.SnapNotifyExample
 import com.example.composesample.util.ConstValue.Companion.CardCornersExample
+import com.example.composesample.util.ConstValue.Companion.AutoCloseableExample
 import com.example.composesample.util.ConstValue.Companion.PagingExample
 import com.example.composesample.util.ConstValue.Companion.PassingIntentDataExample
 import com.example.composesample.util.ConstValue.Companion.PathGraphicsExample
@@ -908,6 +910,10 @@ fun ExampleCaseUI(
 
                         CardCornersExample -> {
                             CardCornersExampleUI(onBackEvent)
+                        }
+
+                        AutoCloseableExample -> {
+                            AutoCloseableExampleUI(onBackEvent)
                         }
 
                         else -> {

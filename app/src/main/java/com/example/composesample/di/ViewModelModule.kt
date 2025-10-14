@@ -6,6 +6,10 @@ import com.example.composesample.presentation.example.component.architecture.dev
 import com.example.composesample.presentation.example.component.architecture.pattern.compositionLocal.CompositionLocalViewModel
 import com.example.composesample.presentation.example.component.architecture.pattern.mvi.MVIExampleViewModel
 import com.example.composesample.presentation.example.component.architecture.state.SnapshotFlowExampleViewModel
+import com.example.composesample.presentation.example.component.architecture.lifecycle.AutoCloseableExampleViewModel
+import com.example.composesample.presentation.example.component.architecture.lifecycle.RealItemsService
+import com.example.composesample.presentation.example.component.architecture.lifecycle.RealCustomersService
+import com.example.composesample.presentation.example.component.architecture.lifecycle.RealNetworkService
 import com.example.composesample.presentation.example.component.data.api.ApiExampleUseCaseViewModel
 import com.example.composesample.presentation.example.component.data.api.ApiExampleViewModel
 import com.example.composesample.presentation.example.component.data.cache.DataCacheViewModel
@@ -42,4 +46,11 @@ val viewModelModule: Module = module {
     viewModel { TypeExampleViewModel() }
     viewModel { SafFileSelectionViewModel() }
     viewModel { SnapshotFlowExampleViewModel() }
+    viewModel { 
+        AutoCloseableExampleViewModel(
+            RealItemsService(),
+            RealCustomersService(),
+            RealNetworkService()
+        )
+    }
 }
