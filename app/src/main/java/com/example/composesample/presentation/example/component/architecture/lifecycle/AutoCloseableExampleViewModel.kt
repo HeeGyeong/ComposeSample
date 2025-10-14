@@ -15,6 +15,9 @@ class AutoCloseableExampleViewModel(
     customersService,
     networkService
 ) {
+    private val _lastClosedService = MutableStateFlow<String?>(null)
+    val lastClosedService: StateFlow<String?> = _lastClosedService.asStateFlow()
+
     val items: StateFlow<List<String>> = itemsService.items
         .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 
@@ -72,6 +75,21 @@ class AutoCloseableExampleViewModel(
             networkService.disconnect()
         }
     }
+
+    fun forceCloseService(serviceName: String) {
+        _lastClosedService.value = serviceName
+        when (serviceName) {
+            "ItemsService" -> itemsService.close()
+            "CustomersService" -> customersService.close()
+            "NetworkService" -> networkService.close()
+        }
+    }
+
+    fun simulateViewModelClear() {
+        println("\n🔴🔴🔴 === SIMULATING ViewModel.onCleared() === 🔴🔴🔴")
+        onCleared()
+        println("🔴🔴🔴 === All AutoCloseable services closed === 🔴🔴🔴\n")
+    }
 }
 
 data class ServiceStatusInfo(
@@ -110,22 +128,36 @@ class RealItemsService : ItemsService {
     override val isActive: Flow<Boolean> = _isActive.asStateFlow()
 
     init {
+        println("🟢 ItemsService initialized - Starting background updates")
         scope.launch {
             delay(1000)
             _items.value = listOf("Item 1", "Item 2", "Item 3")
+            
+            // 백그라운드에서 계속 아이템 업데이트 (close 되면 중단됨)
+            var counter = 4
+            while (isActive) {
+                delay(5000)
+                _items.update { current -> 
+                    current + "Auto Item $counter (${System.currentTimeMillis() % 10000})"
+                }
+                println("📦 ItemsService: Auto-added Item $counter")
+                counter++
+            }
         }
     }
 
     override suspend fun addItem(item: String) {
         _items.update { it + item }
+        println("➕ ItemsService: Added item '$item'")
     }
 
     override suspend fun getItems(): List<String> = _items.value
 
     override fun close() {
+        println("🔴 ItemsService.close() called - Cancelling scope")
         _isActive.value = false
         scope.cancel()
-        println("✅ ItemsService closed - CoroutineScope cancelled")
+        println("✅ ItemsService closed - CoroutineScope cancelled, no more updates")
     }
 }
 
@@ -138,22 +170,36 @@ class RealCustomersService : CustomersService {
     override val isActive: Flow<Boolean> = _isActive.asStateFlow()
 
     init {
+        println("🟢 CustomersService initialized - Starting DB sync")
         scope.launch {
             delay(1500)
             _customers.value = listOf("Customer A", "Customer B")
+            
+            // 백그라운드에서 계속 고객 동기화 (close 되면 중단됨)
+            var counter = 1
+            while (isActive) {
+                delay(7000)
+                _customers.update { current ->
+                    current + "DB Customer $counter (${System.currentTimeMillis() % 10000})"
+                }
+                println("👤 CustomersService: Synced Customer $counter from DB")
+                counter++
+            }
         }
     }
 
     override suspend fun addCustomer(customer: String) {
         _customers.update { it + customer }
+        println("➕ CustomersService: Added customer '$customer'")
     }
 
     override suspend fun getCustomers(): List<String> = _customers.value
 
     override fun close() {
+        println("🔴 CustomersService.close() called - Closing DB connection")
         _isActive.value = false
         scope.cancel()
-        println("✅ CustomersService closed - Database connection closed")
+        println("✅ CustomersService closed - Database connection closed, no more sync")
     }
 }
 
@@ -167,10 +213,16 @@ class RealNetworkService : NetworkService {
     
     private var connectionJob: Job? = null
 
+    init {
+        println("🟢 NetworkService initialized - Ready to connect")
+    }
+
     override suspend fun connect() {
+        println("🌐 NetworkService: Connecting...")
         _status.value = "Connecting..."
         delay(2000)
         _status.value = "Connected"
+        println("✅ NetworkService: Connected")
         
         connectionJob = scope.launch {
             var counter = 0
@@ -178,19 +230,23 @@ class RealNetworkService : NetworkService {
                 delay(3000)
                 counter++
                 _status.value = "Connected (${counter} messages received)"
+                println("📨 NetworkService: Received message $counter")
             }
         }
     }
 
     override suspend fun disconnect() {
+        println("🔌 NetworkService: Disconnecting...")
         connectionJob?.cancel()
         _status.value = "Disconnected"
+        println("⏸️ NetworkService: Disconnected")
     }
 
     override fun close() {
+        println("🔴 NetworkService.close() called - Closing all connections")
         _isActive.value = false
         connectionJob?.cancel()
         scope.cancel()
-        println("✅ NetworkService closed - Network connections closed")
+        println("✅ NetworkService closed - All network connections closed")
     }
 }
