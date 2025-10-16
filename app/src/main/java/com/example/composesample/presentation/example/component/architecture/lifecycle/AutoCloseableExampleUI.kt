@@ -4,7 +4,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -37,10 +36,10 @@ fun AutoCloseableExampleUI(
     val networkStatus by viewModel.networkStatus.collectAsState()
     val serviceStatus by viewModel.serviceStatus.collectAsState()
     val lastClosedService by viewModel.lastClosedService.collectAsState()
-    
+
     // 현재 시간을 표시하여 UI가 살아있음을 보여줌
     var currentTime by remember { mutableStateOf(System.currentTimeMillis()) }
-    
+
     LaunchedEffect(Unit) {
         while (true) {
             delay(1000)
@@ -63,58 +62,23 @@ fun AutoCloseableExampleUI(
             contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            item { OverviewCard() }
             item { LiveDemoCard(currentTime) }
-            item { ManualCloseControlCard(
-                onCloseService = viewModel::forceCloseService,
-                onSimulateClear = viewModel::simulateViewModelClear,
-                lastClosedService = lastClosedService
-            ) }
+            item {
+                ManualCloseControlCard(
+                    onCloseService = viewModel::forceCloseService,
+                    onSimulateClear = viewModel::simulateViewModelClear,
+                    lastClosedService = lastClosedService
+                )
+            }
             item { ServiceStatusCard(serviceStatus) }
-            item { TraditionalVsAutoCloseableCard() }
             item { ItemsServiceCard(items, viewModel::addItem) }
             item { CustomersServiceCard(customers, viewModel::addCustomer) }
-            item { NetworkServiceCard(networkStatus, viewModel::connectNetwork, viewModel::disconnectNetwork) }
-            item { BenefitsCard() }
-            item { ImplementationGuideCard() }
-        }
-    }
-}
-
-@Composable
-private fun OverviewCard() {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        shape = RoundedCornerShape(12.dp)
-    ) {
-        Column(
-            modifier = Modifier.padding(16.dp)
-        ) {
-            Text(
-                text = "🔧 AutoCloseable ViewModel Pattern",
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color(0xFF1976D2)
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Text(
-                text = "ViewModel이 소멸될 때 자동으로 리소스를 정리하는 패턴입니다. onCleared() 오버라이드 없이 깔끔하게 메모리 누수를 방지할 수 있습니다.",
-                fontSize = 14.sp,
-                color = Color.Gray
-            )
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                FeatureChip("자동 정리", Color(0xFF4CAF50))
-                FeatureChip("메모리 안전", Color(0xFF2196F3))
-                FeatureChip("깔끔한 코드", Color(0xFFFF9800))
+            item {
+                NetworkServiceCard(
+                    networkStatus,
+                    viewModel::connectNetwork,
+                    viewModel::disconnectNetwork
+                )
             }
         }
     }
@@ -181,7 +145,7 @@ private fun LiveDemoCard(currentTime: Long) {
                         color = Color(0xFFE65100)
                     )
                     Spacer(modifier = Modifier.height(8.dp))
-                    
+
                     listOf(
                         "1️⃣ 아래로 스크롤하여 자동 업데이트되는 데이터 확인",
                         "2️⃣ ItemsService: 5초마다 자동 추가",
@@ -316,7 +280,7 @@ private fun ManualCloseControlCard(
             // 마지막 종료된 서비스 표시
             lastClosedService?.let { service ->
                 Spacer(modifier = Modifier.height(12.dp))
-                
+
                 Surface(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(8.dp),
@@ -402,15 +366,15 @@ private fun ServiceStatusCard(serviceStatus: Map<String, ServiceStatusInfo>) {
             Surface(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(8.dp),
-                color = if (allActive) 
-                    Color(0xFF388E3C).copy(alpha = 0.1f) 
-                else 
+                color = if (allActive)
+                    Color(0xFF388E3C).copy(alpha = 0.1f)
+                else
                     Color(0xFFD32F2F).copy(alpha = 0.1f)
             ) {
                 Text(
-                    text = if (allActive) 
+                    text = if (allActive)
                         "✅ 모든 서비스 활성화 중 → 뒤로가기 시 자동으로 close() 호출됨"
-                    else 
+                    else
                         "🔴 일부 서비스가 종료되었습니다",
                     modifier = Modifier.padding(12.dp),
                     fontSize = 12.sp,
@@ -474,9 +438,9 @@ private fun ServiceStatusItem(status: ServiceStatusInfo) {
 
         Surface(
             shape = RoundedCornerShape(12.dp),
-            color = if (status.isActive) 
-                Color(0xFF4CAF50).copy(alpha = 0.1f) 
-            else 
+            color = if (status.isActive)
+                Color(0xFF4CAF50).copy(alpha = 0.1f)
+            else
                 Color(0xFFD32F2F).copy(alpha = 0.2f)
         ) {
             Text(
@@ -486,127 +450,6 @@ private fun ServiceStatusItem(status: ServiceStatusInfo) {
                 color = if (status.isActive) Color(0xFF4CAF50) else Color(0xFFD32F2F),
                 fontWeight = FontWeight.Bold
             )
-        }
-    }
-}
-
-@Composable
-private fun TraditionalVsAutoCloseableCard() {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        backgroundColor = Color(0xFFE3F2FD),
-        shape = RoundedCornerShape(12.dp)
-    ) {
-        Column(
-            modifier = Modifier.padding(16.dp)
-        ) {
-            Text(
-                text = "⚖️ 전통적 방식 vs AutoCloseable",
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color(0xFF1976D2)
-            )
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            ComparisonSection(
-                title = "❌ 전통적 방식",
-                code = """
-override fun onCleared() {
-    super.onCleared()
-    itemsService.cleanup()
-    customersService.cleanup()
-    networkService.cleanup()
-}
-                """.trimIndent(),
-                issues = listOf(
-                    "onCleared() 오버라이드 필요",
-                    "각 서비스마다 cleanup() 호출",
-                    "새 서비스 추가 시 누락 가능"
-                ),
-                color = Color(0xFFD32F2F)
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            ComparisonSection(
-                title = "✅ AutoCloseable 방식",
-                code = """
-class HomeViewModel(
-    private val itemsService: ItemsService,
-    private val customersService: CustomersService,
-    private val networkService: NetworkService
-) : ViewModel(
-    itemsService,
-    customersService,
-    networkService
-) {
-    // onCleared() 불필요!
-}
-                """.trimIndent(),
-                issues = listOf(
-                    "자동으로 close() 호출",
-                    "보일러플레이트 코드 제거",
-                    "타입 안전한 리소스 정리"
-                ),
-                color = Color(0xFF4CAF50)
-            )
-        }
-    }
-}
-
-@Composable
-private fun ComparisonSection(
-    title: String,
-    code: String,
-    issues: List<String>,
-    color: Color
-) {
-    Column {
-        Text(
-            text = title,
-            fontSize = 14.sp,
-            fontWeight = FontWeight.Medium,
-            color = color
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        Surface(
-            modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(8.dp),
-            color = Color(0xFF263238)
-        ) {
-            Text(
-                text = code,
-                modifier = Modifier.padding(12.dp),
-                fontSize = 10.sp,
-                fontFamily = androidx.compose.ui.text.font.FontFamily.Monospace,
-                color = Color(0xFF80CBC4),
-                lineHeight = 14.sp
-            )
-        }
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        issues.forEach { issue ->
-            Row(
-                modifier = Modifier.padding(vertical = 2.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Box(
-                    modifier = Modifier
-                        .size(6.dp)
-                        .background(color, CircleShape)
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                Text(
-                    text = issue,
-                    fontSize = 12.sp,
-                    color = Color.Gray
-                )
-            }
         }
     }
 }
@@ -708,8 +551,9 @@ private fun ItemsServiceCard(items: List<String>, onAddItem: (String) -> Unit) {
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            val isServiceClosed = items.isNotEmpty() && items.last().startsWith("Item") && items.size == items.size
-            
+            val isServiceClosed =
+                items.isNotEmpty() && items.last().startsWith("Item") && items.size == items.size
+
             if (items.isEmpty()) {
                 Surface(
                     modifier = Modifier.fillMaxWidth(),
@@ -728,11 +572,11 @@ private fun ItemsServiceCard(items: List<String>, onAddItem: (String) -> Unit) {
                 // 서비스 종료 감지
                 val lastUpdateTime = remember { mutableStateOf(System.currentTimeMillis()) }
                 val itemCount = items.size
-                
+
                 LaunchedEffect(itemCount) {
                     lastUpdateTime.value = System.currentTimeMillis()
                 }
-                
+
                 items.takeLast(5).forEach { item ->
                     Row(
                         modifier = Modifier
@@ -757,7 +601,7 @@ private fun ItemsServiceCard(items: List<String>, onAddItem: (String) -> Unit) {
                     }
                     Spacer(modifier = Modifier.height(4.dp))
                 }
-                
+
                 if (items.size > 5) {
                     Text(
                         text = "... 그 외 ${items.size - 5}개 아이템",
@@ -886,11 +730,11 @@ private fun CustomersServiceCard(customers: List<String>, onAddCustomer: (String
                 // 서비스 종료 감지
                 val lastUpdateTime = remember { mutableStateOf(System.currentTimeMillis()) }
                 val customerCount = customers.size
-                
+
                 LaunchedEffect(customerCount) {
                     lastUpdateTime.value = System.currentTimeMillis()
                 }
-                
+
                 customers.takeLast(5).forEach { customer ->
                     Row(
                         modifier = Modifier
@@ -915,7 +759,7 @@ private fun CustomersServiceCard(customers: List<String>, onAddCustomer: (String
                     }
                     Spacer(modifier = Modifier.height(4.dp))
                 }
-                
+
                 if (customers.size > 5) {
                     Text(
                         text = "... 그 외 ${customers.size - 5}명",
@@ -991,7 +835,9 @@ private fun NetworkServiceCard(
                         text = status,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold,
-                        color = if (status.contains("Connected")) Color(0xFF4CAF50) else Color(0xFFD32F2F)
+                        color = if (status.contains("Connected")) Color(0xFF4CAF50) else Color(
+                            0xFFD32F2F
+                        )
                     )
                 }
             }
@@ -1027,197 +873,6 @@ private fun NetworkServiceCard(
                     Text("종료", color = Color.White)
                 }
             }
-        }
-    }
-}
-
-@Composable
-private fun BenefitsCard() {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        backgroundColor = Color(0xFFF1F8E9),
-        shape = RoundedCornerShape(12.dp)
-    ) {
-        Column(
-            modifier = Modifier.padding(16.dp)
-        ) {
-            Text(
-                text = "✨ AutoCloseable 패턴의 이점",
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color(0xFF388E3C)
-            )
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            listOf(
-                "자동 리소스 정리" to "ViewModel 소멸 시 자동으로 close() 호출",
-                "메모리 누수 방지" to "코루틴, 리스너, 연결 등 확실한 정리",
-                "깔끔한 코드" to "onCleared() 오버라이드 불필요",
-                "타입 안전성" to "인터페이스 계약으로 close() 구현 강제",
-                "테스트 용이성" to "Mock 객체 주입 및 검증 간편"
-            ).forEach { (title, description) ->
-                BenefitItem(title, description)
-                Spacer(modifier = Modifier.height(8.dp))
-            }
-        }
-    }
-}
-
-@Composable
-private fun BenefitItem(title: String, description: String) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(Color.White, RoundedCornerShape(8.dp))
-            .padding(12.dp)
-    ) {
-        Icon(
-            imageVector = Icons.Filled.CheckCircle,
-            contentDescription = "Benefit",
-            tint = Color(0xFF4CAF50),
-            modifier = Modifier.size(20.dp)
-        )
-        Spacer(modifier = Modifier.width(12.dp))
-        Column {
-            Text(
-                text = title,
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Medium,
-                color = Color(0xFF388E3C)
-            )
-            Text(
-                text = description,
-                fontSize = 12.sp,
-                color = Color.Gray
-            )
-        }
-    }
-}
-
-@Composable
-private fun ImplementationGuideCard() {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        shape = RoundedCornerShape(12.dp)
-    ) {
-        Column(
-            modifier = Modifier.padding(16.dp)
-        ) {
-            Text(
-                text = "📚 구현 가이드",
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color(0xFF1976D2)
-            )
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            ImplementationStep(
-                step = "1",
-                title = "Service에 Closeable 구현",
-                code = """
-interface ItemsService : Closeable {
-    val items: Flow<List<Item>>
-}
-
-class RealItemsService : ItemsService {
-    private val scope = CoroutineScope(...)
-    
-    override fun close() {
-        scope.cancel()
-    }
-}
-                """.trimIndent()
-            )
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            ImplementationStep(
-                step = "2",
-                title = "ViewModel 생성자에 전달",
-                code = """
-class HomeViewModel(
-    private val itemsService: ItemsService,
-    private val customersService: CustomersService
-) : ViewModel(
-    itemsService,
-    customersService
-) {
-    // onCleared() 불필요!
-}
-                """.trimIndent()
-            )
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            Surface(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(8.dp),
-                color = Color(0xFF1976D2).copy(alpha = 0.1f)
-            ) {
-                Text(
-                    text = "🎉 완성! ViewModel 소멸 시 자동으로 모든 서비스의 close()가 호출됩니다.",
-                    modifier = Modifier.padding(12.dp),
-                    fontSize = 12.sp,
-                    color = Color(0xFF1976D2),
-                    fontStyle = androidx.compose.ui.text.font.FontStyle.Italic
-                )
-            }
-        }
-    }
-}
-
-@Composable
-private fun ImplementationStep(step: String, title: String, code: String) {
-    Column {
-        Row(
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Surface(
-                modifier = Modifier.size(24.dp),
-                shape = RoundedCornerShape(12.dp),
-                color = Color(0xFF1976D2)
-            ) {
-                Box(
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = step,
-                        color = Color.White,
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
-            }
-
-            Spacer(modifier = Modifier.width(12.dp))
-
-            Text(
-                text = title,
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Medium,
-                color = Color(0xFF1976D2)
-            )
-        }
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        Surface(
-            modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(8.dp),
-            color = Color(0xFF263238)
-        ) {
-            Text(
-                text = code,
-                modifier = Modifier.padding(12.dp),
-                fontSize = 10.sp,
-                fontFamily = androidx.compose.ui.text.font.FontFamily.Monospace,
-                color = Color(0xFF80CBC4),
-                lineHeight = 12.sp
-            )
         }
     }
 }
