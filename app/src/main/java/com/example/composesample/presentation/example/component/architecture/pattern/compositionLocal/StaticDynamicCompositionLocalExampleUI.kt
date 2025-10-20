@@ -3,16 +3,38 @@ package com.example.composesample.presentation.example.component.architecture.pa
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.Card
+import androidx.compose.material.Icon
+import androidx.compose.material.Surface
+import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Refresh
-import androidx.compose.material.icons.filled.Warning
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.compositionLocalOf
+import androidx.compose.runtime.currentRecomposeScope
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -21,7 +43,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.composesample.presentation.MainHeader
-import kotlinx.coroutines.delay
 
 // Static CompositionLocal (전체 리컴포지션)
 val LocalStaticCounter = staticCompositionLocalOf { 0 }
@@ -51,8 +72,13 @@ fun StaticDynamicCompositionLocalExampleUI(
             contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            item { OverviewCard() }
-            item { ControlPanel(staticCounter, dynamicCounter, { staticCounter = it }, { dynamicCounter = it }) }
+            item {
+                ControlPanel(
+                    staticCounter,
+                    dynamicCounter,
+                    { staticCounter = it },
+                    { dynamicCounter = it })
+            }
             item {
                 CompositionLocalProvider(LocalStaticCounter provides staticCounter) {
                     StaticCompositionLocalDemo()
@@ -63,80 +89,7 @@ fun StaticDynamicCompositionLocalExampleUI(
                     DynamicCompositionLocalDemo()
                 }
             }
-            item { ComparisonCard() }
-            item { DecisionGuideCard() }
         }
-    }
-}
-
-@Composable
-private fun OverviewCard() {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        shape = RoundedCornerShape(12.dp)
-    ) {
-        Column(
-            modifier = Modifier.padding(16.dp)
-        ) {
-            Text(
-                text = "🎯 Static vs Dynamic CompositionLocal",
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color(0xFF1976D2)
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Text(
-                text = "CompositionLocal의 두 가지 타입은 '변경 빈도'가 아닌 '리컴포지션 전파 방식'에서 차이가 있습니다.",
-                fontSize = 14.sp,
-                color = Color.Gray
-            )
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                FeatureChip("Static: 전체", Color(0xFFD32F2F))
-                FeatureChip("Dynamic: 부분", Color(0xFF4CAF50))
-            }
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            Surface(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(8.dp),
-                color = Color(0xFFF5F5F5)
-            ) {
-                Text(
-                    text = "💡 아래 버튼으로 값을 변경하며 리컴포지션 차이를 확인하세요",
-                    modifier = Modifier.padding(12.dp),
-                    fontSize = 12.sp,
-                    color = Color(0xFF666666),
-                    fontStyle = androidx.compose.ui.text.font.FontStyle.Italic
-                )
-            }
-        }
-    }
-}
-
-@Composable
-private fun FeatureChip(text: String, color: Color) {
-    Surface(
-        modifier = Modifier,
-        shape = RoundedCornerShape(16.dp),
-        color = color.copy(alpha = 0.1f)
-    ) {
-        Text(
-            text = text,
-            modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
-            fontSize = 12.sp,
-            color = color,
-            fontWeight = FontWeight.Medium
-        )
     }
 }
 
@@ -544,249 +497,6 @@ private fun RecompositionIndicator(
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Bold,
                     color = color
-                )
-            }
-        }
-    }
-}
-
-@Composable
-private fun ComparisonCard() {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        backgroundColor = Color(0xFFE3F2FD),
-        shape = RoundedCornerShape(12.dp)
-    ) {
-        Column(
-            modifier = Modifier.padding(16.dp)
-        ) {
-            Text(
-                text = "⚖️ 특징 비교",
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color(0xFF1976D2)
-            )
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            ComparisonItem(
-                title = "리컴포지션 범위",
-                staticText = "전체 하위 트리",
-                dynamicText = "읽는 컴포저블만"
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            ComparisonItem(
-                title = "초기 성능",
-                staticText = "빠름 (추적 없음)",
-                dynamicText = "약간 느림 (추적)"
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            ComparisonItem(
-                title = "변경 시 성능",
-                staticText = "느림 (전체 무효화)",
-                dynamicText = "빠름 (부분 무효화)"
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            ComparisonItem(
-                title = "메모리 사용",
-                staticText = "적음",
-                dynamicText = "약간 많음"
-            )
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            Surface(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(8.dp),
-                color = Color(0xFF1976D2).copy(alpha = 0.1f)
-            ) {
-                Text(
-                    text = "💡 핵심: '변경 빈도'가 아닌 '리컴포지션 패턴'이 선택 기준입니다",
-                    modifier = Modifier.padding(12.dp),
-                    fontSize = 12.sp,
-                    color = Color(0xFF1976D2),
-                    fontWeight = FontWeight.Medium,
-                    lineHeight = 16.sp
-                )
-            }
-        }
-    }
-}
-
-@Composable
-private fun ComparisonItem(title: String, staticText: String, dynamicText: String) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(
-            text = title,
-            modifier = Modifier.width(100.dp),
-            fontSize = 12.sp,
-            fontWeight = FontWeight.Medium,
-            color = Color(0xFF1976D2)
-        )
-
-        Surface(
-            modifier = Modifier.weight(1f),
-            shape = RoundedCornerShape(6.dp),
-            color = Color(0xFFD32F2F).copy(alpha = 0.1f)
-        ) {
-            Text(
-                text = staticText,
-                modifier = Modifier.padding(8.dp),
-                fontSize = 11.sp,
-                color = Color(0xFFD32F2F),
-                textAlign = TextAlign.Center
-            )
-        }
-
-        Spacer(modifier = Modifier.width(8.dp))
-
-        Surface(
-            modifier = Modifier.weight(1f),
-            shape = RoundedCornerShape(6.dp),
-            color = Color(0xFF4CAF50).copy(alpha = 0.1f)
-        ) {
-            Text(
-                text = dynamicText,
-                modifier = Modifier.padding(8.dp),
-                fontSize = 11.sp,
-                color = Color(0xFF4CAF50),
-                textAlign = TextAlign.Center
-            )
-        }
-    }
-}
-
-@Composable
-private fun DecisionGuideCard() {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        backgroundColor = Color(0xFFF1F8E9),
-        shape = RoundedCornerShape(12.dp)
-    ) {
-        Column(
-            modifier = Modifier.padding(16.dp)
-        ) {
-            Text(
-                text = "🎯 선택 가이드",
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color(0xFF388E3C)
-            )
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            DecisionGuideItem(
-                icon = "🔴",
-                title = "Static을 선택하세요",
-                points = listOf(
-                    "거의 변경되지 않음 (앱당 1-2회)",
-                    "대부분의 하위가 값을 사용",
-                    "전체 UI 새로고침이 자연스러움",
-                    "예: Theme, Context, Configuration"
-                ),
-                color = Color(0xFFD32F2F)
-            )
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            DecisionGuideItem(
-                icon = "🟢",
-                title = "Dynamic을 선택하세요",
-                points = listOf(
-                    "자주 변경됨 (사용자 인터랙션)",
-                    "일부만 값을 사용",
-                    "부분 업데이트가 성능에 중요",
-                    "예: User state, UI state, Alpha"
-                ),
-                color = Color(0xFF4CAF50)
-            )
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            Surface(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(8.dp),
-                color = Color(0xFF388E3C).copy(alpha = 0.1f)
-            ) {
-                Row(
-                    modifier = Modifier.padding(12.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.CheckCircle,
-                        contentDescription = "Tip",
-                        tint = Color(0xFF388E3C),
-                        modifier = Modifier.size(20.dp)
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(
-                        text = "확신이 없다면 Dynamic(compositionLocalOf) 사용을 권장합니다",
-                        fontSize = 12.sp,
-                        color = Color(0xFF388E3C),
-                        fontWeight = FontWeight.Medium,
-                        lineHeight = 16.sp
-                    )
-                }
-            }
-        }
-    }
-}
-
-@Composable
-private fun DecisionGuideItem(icon: String, title: String, points: List<String>, color: Color) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(Color.White, RoundedCornerShape(8.dp))
-            .border(2.dp, color.copy(alpha = 0.3f), RoundedCornerShape(8.dp))
-            .padding(12.dp)
-    ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = icon,
-                fontSize = 20.sp
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(
-                text = title,
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Bold,
-                color = color
-            )
-        }
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        points.forEach { point ->
-            Row(
-                modifier = Modifier.padding(vertical = 2.dp),
-                verticalAlignment = Alignment.Top
-            ) {
-                Box(
-                    modifier = Modifier
-                        .size(6.dp)
-                        .padding(top = 6.dp)
-                        .background(color, CircleShape)
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                Text(
-                    text = point,
-                    fontSize = 12.sp,
-                    color = Color.Gray,
-                    lineHeight = 16.sp
                 )
             }
         }
