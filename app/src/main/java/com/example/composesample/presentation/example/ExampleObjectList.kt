@@ -512,6 +512,15 @@ fun exampleObjectList(): ArrayList<ExampleObject> {
         )
     )
 
+    insertExampleObject.add(
+        ExampleObject(
+            title = "Static vs Dynamic CompositionLocal",
+            description = "staticCompositionLocalOf와 compositionLocalOf의 차이와 올바른 사용법",
+            blogUrl = "",
+            exampleType = ConstValue.StaticDynamicCompositionLocalExample
+        )
+    )
+
     return insertExampleObject
 }
 
