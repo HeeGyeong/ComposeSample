@@ -89,6 +89,12 @@ fun StaticDynamicCompositionLocalExampleUI(
                     DynamicCompositionLocalDemo()
                 }
             }
+            item {
+                NestedProviderDemo(staticCounter, dynamicCounter)
+            }
+            item {
+                ConditionalReadingDemo(dynamicCounter)
+            }
         }
     }
 }
@@ -497,6 +503,257 @@ private fun RecompositionIndicator(
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Bold,
                     color = color
+                )
+            }
+        }
+    }
+}
+
+// 중첩된 Provider에서의 동작
+val LocalNestedValue = compositionLocalOf { 0 }
+
+@Composable
+private fun NestedProviderDemo(staticCounter: Int, dynamicCounter: Int) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        elevation = 4.dp,
+        backgroundColor = Color(0xFFFFF9C4),
+        shape = RoundedCornerShape(12.dp)
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp)
+        ) {
+            Text(
+                text = "🔄 중첩된 Provider",
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color(0xFFF57F17)
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Text(
+                text = "부모 Provider 변경 시 자식 Provider 리컴포지션 동작",
+                fontSize = 12.sp,
+                color = Color.Gray
+            )
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            // Static 중첩
+            CompositionLocalProvider(LocalStaticCounter provides staticCounter) {
+                Column {
+                    Text(
+                        text = "Static 부모 (${staticCounter})",
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFFD32F2F)
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    
+                    CompositionLocalProvider(LocalNestedValue provides dynamicCounter) {
+                        NestedChild(isStatic = true)
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            // Dynamic 중첩
+            CompositionLocalProvider(LocalDynamicCounter provides dynamicCounter) {
+                Column {
+                    Text(
+                        text = "Dynamic 부모 (${dynamicCounter})",
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFF4CAF50)
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    
+                    CompositionLocalProvider(LocalNestedValue provides staticCounter) {
+                        NestedChild(isStatic = false)
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Surface(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(8.dp),
+                color = Color(0xFFF57F17).copy(alpha = 0.1f)
+            ) {
+                Text(
+                    text = "💡 Static 부모는 자식까지 전부 리컴포지션\n💡 Dynamic 부모는 읽는 자식만 리컴포지션",
+                    modifier = Modifier.padding(12.dp),
+                    fontSize = 11.sp,
+                    color = Color(0xFFF57F17),
+                    lineHeight = 16.sp
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun NestedChild(isStatic: Boolean) {
+    val parentCounter = if (isStatic) LocalStaticCounter.current else LocalDynamicCounter.current
+    val nestedValue = LocalNestedValue.current
+    var recomposeCount by remember { mutableStateOf(0) }
+
+    LaunchedEffect(parentCounter, nestedValue) {
+        recomposeCount++
+    }
+
+    Surface(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(8.dp),
+        color = if (isStatic) Color(0xFFFFEBEE) else Color(0xFFE8F5E8)
+    ) {
+        Row(
+            modifier = Modifier.padding(8.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = "자식: 부모=$parentCounter, 중첩=$nestedValue",
+                fontSize = 11.sp,
+                color = if (isStatic) Color(0xFFD32F2F) else Color(0xFF4CAF50)
+            )
+            Text(
+                text = "리컴포지션: ${recomposeCount}회",
+                fontSize = 10.sp,
+                fontWeight = FontWeight.Bold,
+                color = if (isStatic) Color(0xFFD32F2F) else Color(0xFF4CAF50)
+            )
+        }
+    }
+}
+
+// 조건부 읽기
+@Composable
+private fun ConditionalReadingDemo(dynamicCounter: Int) {
+    var showValue by remember { mutableStateOf(false) }
+
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        elevation = 4.dp,
+        backgroundColor = Color(0xFFE1F5FE),
+        shape = RoundedCornerShape(12.dp)
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp)
+        ) {
+            Text(
+                text = "🎯 조건부 읽기",
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color(0xFF0277BD)
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Text(
+                text = "CompositionLocal을 조건부로 읽을 때의 리컴포지션",
+                fontSize = 12.sp,
+                color = Color.Gray
+            )
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Button(
+                    onClick = { showValue = !showValue },
+                    colors = ButtonDefaults.buttonColors(
+                        backgroundColor = if (showValue) Color(0xFF0277BD) else Color.Gray
+                    ),
+                    shape = RoundedCornerShape(8.dp)
+                ) {
+                    Text(
+                        text = if (showValue) "값 표시 중" else "값 숨김 중",
+                        color = Color.White,
+                        fontSize = 12.sp
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            CompositionLocalProvider(LocalDynamicCounter provides dynamicCounter) {
+                ConditionalReader(showValue = showValue)
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Surface(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(8.dp),
+                color = Color(0xFF0277BD).copy(alpha = 0.1f)
+            ) {
+                Text(
+                    text = "💡 값을 읽지 않는 동안은 counter 변경에도 리컴포지션 안 됨\n💡 값을 읽기 시작하면 그때부터 리컴포지션 발생",
+                    modifier = Modifier.padding(12.dp),
+                    fontSize = 11.sp,
+                    color = Color(0xFF0277BD),
+                    lineHeight = 16.sp
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun ConditionalReader(showValue: Boolean) {
+    var recomposeCount by remember { mutableStateOf(0) }
+    
+    // 조건부로만 값을 읽음
+    val displayText = if (showValue) {
+        val counter = LocalDynamicCounter.current
+        LaunchedEffect(counter) {
+            recomposeCount++
+        }
+        "📖 Counter: $counter"
+    } else {
+        LaunchedEffect(Unit) {
+            // showValue가 false일 때 한 번만 카운트
+            if (recomposeCount == 0) recomposeCount = 1
+        }
+        "🚫 값 읽지 않음"
+    }
+
+    Surface(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(8.dp),
+        color = if (showValue) Color(0xFF0277BD).copy(alpha = 0.1f) else Color.Gray.copy(alpha = 0.1f)
+    ) {
+        Row(
+            modifier = Modifier.padding(12.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = displayText,
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Bold,
+                color = if (showValue) Color(0xFF0277BD) else Color.Gray
+            )
+            Column(
+                horizontalAlignment = Alignment.End
+            ) {
+                Text(
+                    text = "리컴포지션",
+                    fontSize = 9.sp,
+                    color = Color.Gray
+                )
+                Text(
+                    text = "${recomposeCount}회",
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = if (showValue) Color(0xFF0277BD) else Color.Gray
                 )
             }
         }
