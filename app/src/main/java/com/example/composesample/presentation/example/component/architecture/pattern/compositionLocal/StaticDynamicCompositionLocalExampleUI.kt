@@ -44,10 +44,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.composesample.presentation.MainHeader
 
-// Static CompositionLocal (전체 리컴포지션)
 val LocalStaticCounter = staticCompositionLocalOf { 0 }
 
-// Dynamic CompositionLocal (부분 리컴포지션)
 val LocalDynamicCounter = compositionLocalOf { 0 }
 
 @Composable
@@ -124,7 +122,6 @@ private fun ControlPanel(
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // Static Counter Control
             Text(
                 text = "Static Counter: $staticCounter",
                 fontSize = 14.sp,
@@ -166,7 +163,6 @@ private fun ControlPanel(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Dynamic Counter Control
             Text(
                 text = "Dynamic Counter: $dynamicCounter",
                 fontSize = 14.sp,
@@ -314,12 +310,10 @@ private fun StaticReaderComponent(label: String, modifier: Modifier = Modifier) 
 private fun StaticNonReaderComponent(label: String, modifier: Modifier = Modifier) {
     var recomposeCount by remember { mutableStateOf(0) }
 
-    // LocalStaticCounter를 읽지 않음
     LaunchedEffect(Unit) {
         recomposeCount++
     }
 
-    // 하지만 Static이므로 값 변경 시 리컴포지션됨
     val currentComposition = currentRecomposeScope
     DisposableEffect(currentComposition) {
         recomposeCount++
@@ -425,7 +419,6 @@ private fun DynamicReaderComponent(label: String, modifier: Modifier = Modifier)
 private fun DynamicNonReaderComponent(label: String, modifier: Modifier = Modifier) {
     var recomposeCount by remember { mutableStateOf(0) }
 
-    // LocalDynamicCounter를 읽지 않음
     LaunchedEffect(Unit) {
         recomposeCount++
     }
@@ -509,7 +502,6 @@ private fun RecompositionIndicator(
     }
 }
 
-// 중첩된 Provider에서의 동작
 val LocalNestedValue = compositionLocalOf { 0 }
 
 @Composable
@@ -540,7 +532,6 @@ private fun NestedProviderDemo(staticCounter: Int, dynamicCounter: Int) {
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // Static 중첩
             CompositionLocalProvider(LocalStaticCounter provides staticCounter) {
                 Column {
                     Text(
@@ -559,7 +550,6 @@ private fun NestedProviderDemo(staticCounter: Int, dynamicCounter: Int) {
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // Dynamic 중첩
             CompositionLocalProvider(LocalDynamicCounter provides dynamicCounter) {
                 Column {
                     Text(
@@ -630,7 +620,6 @@ private fun NestedChild(isStatic: Boolean) {
     }
 }
 
-// 조건부 읽기
 @Composable
 private fun ConditionalReadingDemo(dynamicCounter: Int) {
     var showValue by remember { mutableStateOf(false) }
@@ -710,7 +699,6 @@ private fun ConditionalReadingDemo(dynamicCounter: Int) {
 private fun ConditionalReader(showValue: Boolean) {
     var recomposeCount by remember { mutableStateOf(0) }
     
-    // 조건부로만 값을 읽음
     val displayText = if (showValue) {
         val counter = LocalDynamicCounter.current
         LaunchedEffect(counter) {
@@ -719,7 +707,6 @@ private fun ConditionalReader(showValue: Boolean) {
         "📖 Counter: $counter"
     } else {
         LaunchedEffect(Unit) {
-            // showValue가 false일 때 한 번만 카운트
             if (recomposeCount == 0) recomposeCount = 1
         }
         "🚫 값 읽지 않음"
