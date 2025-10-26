@@ -505,6 +505,7 @@ fun exampleObjectList(): ArrayList<ExampleObject> {
 
     insertExampleObject.add(
         ExampleObject(
+            lastUpdate = "25. 10. 16",
             title = "AutoCloseable ViewModel Pattern",
             description = "ViewModel에서 AutoCloseable을 활용한 자동 리소스 정리 패턴",
             blogUrl = "",
@@ -514,6 +515,7 @@ fun exampleObjectList(): ArrayList<ExampleObject> {
 
     insertExampleObject.add(
         ExampleObject(
+            lastUpdate = "25. 10. 26",
             title = "Static vs Dynamic CompositionLocal",
             description = "staticCompositionLocalOf와 compositionLocalOf의 차이와 올바른 사용법",
             blogUrl = "",
