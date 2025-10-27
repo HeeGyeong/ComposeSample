@@ -523,6 +523,15 @@ fun exampleObjectList(): ArrayList<ExampleObject> {
         )
     )
 
+    insertExampleObject.add(
+        ExampleObject(
+            title = "Inline Functions & Value Classes",
+            description = "Kotlin의 Zero-Cost Abstractions: inline 함수와 value class로 성능 최적화",
+            blogUrl = "",
+            exampleType = ConstValue.InlineValueClassExample
+        )
+    )
+
     return insertExampleObject
 }
 
