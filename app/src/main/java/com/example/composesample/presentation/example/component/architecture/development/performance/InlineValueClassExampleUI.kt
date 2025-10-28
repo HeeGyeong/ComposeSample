@@ -3,7 +3,6 @@ package com.example.composesample.presentation.example.component.architecture.de
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -22,7 +21,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Card
-import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
@@ -31,7 +29,6 @@ import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -45,17 +42,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.composesample.presentation.MainHeader
-import kotlinx.coroutines.delay
-
-/**
- * Inline Functions & Value Classes Example
- *
- *
- * Kotlin의 Zero-Cost Abstractions인 inline 함수와 value class를 활용한
- * 성능 최적화 기법을 시각적으로 보여줍니다.
- */
-
-// ===== Value Classes 예제 =====
 
 @JvmInline
 value class UserId(val value: String) {
@@ -125,12 +111,6 @@ inline fun <reified T> isInstance(any: Any?): Boolean {
     return any is T
 }
 
-inline fun <T> T.alsoIf(condition: Boolean, crossinline block: (T) -> Unit): T {
-    if (condition) block(this)
-    return this
-}
-
-// Regular (non-inline) function for comparison
 fun <T> measureNonInline(label: String, block: () -> T): Pair<T, Long> {
     val start = System.currentTimeMillis()
     val result = block()
@@ -138,14 +118,10 @@ fun <T> measureNonInline(label: String, block: () -> T): Pair<T, Long> {
     return result to elapsed
 }
 
-// ===== UI =====
-
 @Composable
 fun InlineValueClassExampleUI(
     onBackEvent: () -> Unit
 ) {
-    var animationTrigger by remember { mutableStateOf(0) }
-    
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -162,7 +138,7 @@ fun InlineValueClassExampleUI(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             item {
-                ValueClassDemoCard { animationTrigger++ }
+                ValueClassDemoCard()
             }
             
             item {
@@ -190,14 +166,14 @@ fun InlineValueClassExampleUI(
             }
             
             item {
-                PerformanceComparisonCard(animationTrigger)
+                PerformanceComparisonCard()
             }
         }
     }
 }
 
 @Composable
-private fun ValueClassDemoCard(onAnimate: () -> Unit) {
+private fun ValueClassDemoCard() {
     Card(
         modifier = Modifier.fillMaxWidth(),
         elevation = 4.dp,
@@ -258,12 +234,12 @@ private fun ValueClassDemoCard(onAnimate: () -> Unit) {
                     modifier = Modifier.padding(12.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Icon(
-                        imageVector = Icons.Filled.Info,
-                        contentDescription = "Info",
-                        tint = Color(0xFF1976D2),
-                        modifier = Modifier.size(20.dp)
-                    )
+                Icon(
+                    imageVector = Icons.Filled.Info,
+                    contentDescription = null,
+                    tint = Color(0xFF1976D2),
+                    modifier = Modifier.size(20.dp)
+                )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
                         text = "컴파일 타임 타입 체크 + 런타임 성능 최적화",
@@ -360,7 +336,7 @@ private fun ValueClassTypeSafetyCard() {
                 ) {
                     Icon(
                         imageVector = Icons.Filled.CheckCircle,
-                        contentDescription = "Success",
+                        contentDescription = null,
                         tint = Color(0xFF4CAF50),
                         modifier = Modifier.size(20.dp)
                     )
@@ -568,23 +544,6 @@ private fun InlineFunctionDemoCard() {
                 color = Color(0xFF2196F3)
             )
             
-            Spacer(modifier = Modifier.height(8.dp))
-            
-            InlineFunctionExample(
-                title = "alsoIf (extension + inline)",
-                code = """
-                    inline fun <T> T.alsoIf(
-                        condition: Boolean,
-                        crossinline block: (T) -> Unit
-                    ): T {
-                        if (condition) block(this)
-                        return this
-                    }
-                """.trimIndent(),
-                benefit = "Zero-cost 편의 함수",
-                color = Color(0xFF3F51B5)
-            )
-            
             Spacer(modifier = Modifier.height(12.dp))
             
             Surface(
@@ -645,7 +604,7 @@ private fun InlineFunctionExample(
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(
                     imageVector = Icons.Filled.CheckCircle,
-                    contentDescription = "Benefit",
+                    contentDescription = null,
                     tint = color,
                     modifier = Modifier.size(16.dp)
                 )
@@ -899,7 +858,7 @@ private fun BoxingExamplesCard() {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(
                     imageVector = Icons.Filled.Warning,
-                    contentDescription = "Warning",
+                    contentDescription = null,
                     tint = Color(0xFFF57F17),
                     modifier = Modifier.size(24.dp)
                 )
@@ -1006,7 +965,7 @@ private fun BoxingScenario(
 }
 
 @Composable
-private fun PerformanceComparisonCard(animationTrigger: Int) {
+private fun PerformanceComparisonCard() {
     var inlineTime by remember { mutableStateOf(0L) }
     var nonInlineTime by remember { mutableStateOf(0L) }
     var isRunning by remember { mutableStateOf(false) }
@@ -1037,13 +996,11 @@ private fun PerformanceComparisonCard(animationTrigger: Int) {
             Button(
                 onClick = {
                     isRunning = true
-                    // Inline 측정
                     val (_, inline) = measure("inline") {
                         repeat(10000) { it * 2 }
                     }
                     inlineTime = inline
                     
-                    // Non-inline 측정
                     val (_, nonInline) = measureNonInline("non-inline") {
                         repeat(10000) { it * 2 }
                     }
