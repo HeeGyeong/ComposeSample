@@ -525,6 +525,7 @@ fun exampleObjectList(): ArrayList<ExampleObject> {
 
     insertExampleObject.add(
         ExampleObject(
+            lastUpdate = "25. 11. 03",
             title = "Inline Functions & Value Classes",
             description = "Kotlin의 Zero-Cost Abstractions: inline 함수와 value class로 성능 최적화",
             blogUrl = "",
