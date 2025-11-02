@@ -9,7 +9,6 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -23,30 +22,21 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Card
+import androidx.compose.material.Divider
 import androidx.compose.material.Icon
-import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Surface
-import androidx.compose.material.Tab
-import androidx.compose.material.TabRow
 import androidx.compose.material.Text
-import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.CheckCircle
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material.icons.filled.Warning
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -56,65 +46,15 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.composesample.presentation.MainHeader
 
-@JvmInline
-value class UserId(val value: String) {
-    init {
-        require(value.isNotBlank()) { "UserId cannot be blank" }
-    }
-    
-    override fun toString(): String = "UserId($value)"
-}
-
-@JvmInline
-value class ProductId(val value: String) {
-    init {
-        require(value.isNotBlank()) { "ProductId cannot be blank" }
-    }
-    
-    override fun toString(): String = "ProductId($value)"
-}
-
-@JvmInline
-value class Money(val cents: Long) {
-    init {
-        require(cents >= 0) { "Money cannot be negative" }
-    }
-    
-    operator fun plus(other: Money) = Money(cents + other.cents)
-    operator fun minus(other: Money) = Money(cents - other.cents)
-    operator fun times(multiplier: Int) = Money(cents * multiplier)
-    
-    fun toDisplayString(): String = "$${cents / 100}.${String.format("%02d", cents % 100)}"
-    override fun toString(): String = "Money(${toDisplayString()})"
-}
-
-@JvmInline
-value class Email(val value: String) {
-    init {
-        require("@" in value) { "Invalid email format" }
-    }
-    
-    override fun toString(): String = "Email($value)"
-}
-
-inline fun <T> measure(label: String, block: () -> T): Pair<T, Long> {
+inline fun <T> measureInline(label: String, block: () -> T): Pair<T, Long> {
     val start = System.currentTimeMillis()
     val result = block()
     val elapsed = System.currentTimeMillis() - start
     return result to elapsed
-}
-
-inline fun <reified T> castOrNull(any: Any?): T? {
-    return any as? T
-}
-
-inline fun <reified T> isInstance(any: Any?): Boolean {
-    return any is T
 }
 
 fun <T> measureNonInline(label: String, block: () -> T): Pair<T, Long> {
@@ -124,135 +64,112 @@ fun <T> measureNonInline(label: String, block: () -> T): Pair<T, Long> {
     return result to elapsed
 }
 
-data class CartItem(
-    val productId: ProductId,
-    val name: String,
-    val price: Money,
-    val quantity: Int
-)
+inline fun <T> List<T>.customFilterInline(predicate: (T) -> Boolean): List<T> {
+    val result = mutableListOf<T>()
+    for (item in this) {
+        if (predicate(item)) {
+            result.add(item)
+        }
+    }
+    return result
+}
+
+fun <T> List<T>.customFilterNonInline(predicate: (T) -> Boolean): List<T> {
+    val result = mutableListOf<T>()
+    for (item in this) {
+        if (predicate(item)) {
+            result.add(item)
+        }
+    }
+    return result
+}
 
 @Composable
 fun InlineValueClassExampleUI(
     onBackEvent: () -> Unit
 ) {
-    var selectedTab by remember { mutableStateOf(0) }
-
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White)
     ) {
         MainHeader(
-            title = "Inline & Value Classes",
+            title = "Inline Functions",
             onBackIconClicked = onBackEvent
         )
 
-        TabRow(
-            selectedTabIndex = selectedTab,
-            backgroundColor = Color(0xFF1976D2),
-            contentColor = Color.White
+        LazyColumn(
+            modifier = Modifier.fillMaxSize(),
+            contentPadding = PaddingValues(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            Tab(
-                selected = selectedTab == 0,
-                onClick = { selectedTab = 0 },
-                text = { Text("Value Classes", fontSize = 12.sp) }
-            )
-            Tab(
-                selected = selectedTab == 1,
-                onClick = { selectedTab = 1 },
-                text = { Text("Reified", fontSize = 12.sp) }
-            )
-            Tab(
-                selected = selectedTab == 2,
-                onClick = { selectedTab = 2 },
-                text = { Text("성능 비교", fontSize = 12.sp) }
-            )
-        }
-
-        when (selectedTab) {
-            0 -> ValueClassesTab()
-            1 -> ReifiedGenericsTab()
-            2 -> PerformanceComparisonTab()
+            item { InlineExplanationCard() }
+            item { CodeComparisonCard() }
+            item { PerformanceBenchmarkCard() }
         }
     }
 }
 
 @Composable
-private fun ValueClassesTab() {
-    LazyColumn(
-        modifier = Modifier.fillMaxSize(),
-        contentPadding = PaddingValues(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-        item { TypeSafetyDemoCard() }
-        item { MoneyCalculatorCard() }
-        item { ValidationDemoCard() }
-    }
-}
-
-@Composable
-private fun TypeSafetyDemoCard() {
-    val cartItems = remember { mutableStateListOf<CartItem>() }
-    var productIdInput by remember { mutableStateOf("") }
-    var nameInput by remember { mutableStateOf("") }
-    var priceInput by remember { mutableStateOf("") }
-    var quantityInput by remember { mutableStateOf("1") }
-    var errorMessage by remember { mutableStateOf<String?>(null) }
-
+private fun InlineExplanationCard() {
     Card(
         modifier = Modifier.fillMaxWidth(),
         elevation = 4.dp,
-        backgroundColor = Color(0xFFE8F5E9),
+        backgroundColor = Color(0xFFE3F2FD),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            Text(
-                text = "🛒 장바구니 시뮬레이터",
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color(0xFF388E3C)
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Text(
-                text = "Value Classes로 타입 안전성 보장",
-                fontSize = 12.sp,
-                color = Color.Gray
-            )
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Delete,
+                    contentDescription = null,
+                    tint = Color(0xFF1976D2),
+                    modifier = Modifier.size(28.dp)
+                )
+                Spacer(modifier = Modifier.width(12.dp))
+                Text(
+                    text = "Inline Functions란?",
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFF1976D2)
+                )
+            }
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            OutlinedTextField(
-                value = productIdInput,
-                onValueChange = { 
-                    productIdInput = it
-                    errorMessage = null
-                },
-                label = { Text("Product ID") },
+            Surface(
                 modifier = Modifier.fillMaxWidth(),
-                colors = TextFieldDefaults.outlinedTextFieldColors(
-                    focusedBorderColor = Color(0xFF388E3C),
-                    focusedLabelColor = Color(0xFF388E3C)
-                ),
-                singleLine = true
-            )
+                shape = RoundedCornerShape(8.dp),
+                color = Color.White
+            ) {
+                Column(modifier = Modifier.padding(12.dp)) {
+                    Text(
+                        text = "inline 키워드를 붙이면:",
+                        fontSize = 13.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFF1976D2)
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    
+                    BulletPoint("함수 본문이 호출 지점에 복사됨 (인라인 전개)")
+                    BulletPoint("람다 파라미터의 객체 할당이 제거됨")
+                    BulletPoint("함수 호출 오버헤드가 사라짐")
+                }
+            }
 
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(12.dp))
 
-            OutlinedTextField(
-                value = nameInput,
-                onValueChange = { 
-                    nameInput = it
-                    errorMessage = null
-                },
-                label = { Text("상품명") },
-                modifier = Modifier.fillMaxWidth(),
-                colors = TextFieldDefaults.outlinedTextFieldColors(
-                    focusedBorderColor = Color(0xFF388E3C),
-                    focusedLabelColor = Color(0xFF388E3C)
-                ),
-                singleLine = true
+            Divider(color = Color(0xFF1976D2).copy(alpha = 0.2f))
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Text(
+                text = "언제 사용하나요?",
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color(0xFF1976D2)
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -261,158 +178,32 @@ private fun TypeSafetyDemoCard() {
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                OutlinedTextField(
-                    value = priceInput,
-                    onValueChange = { 
-                        priceInput = it
-                        errorMessage = null
-                    },
-                    label = { Text("가격 (센트)") },
-                    modifier = Modifier.weight(1f),
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                    colors = TextFieldDefaults.outlinedTextFieldColors(
-                        focusedBorderColor = Color(0xFF388E3C),
-                        focusedLabelColor = Color(0xFF388E3C)
-                    ),
-                    singleLine = true
-                )
-
-                OutlinedTextField(
-                    value = quantityInput,
-                    onValueChange = { 
-                        quantityInput = it
-                        errorMessage = null
-                    },
-                    label = { Text("수량") },
-                    modifier = Modifier.weight(1f),
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                    colors = TextFieldDefaults.outlinedTextFieldColors(
-                        focusedBorderColor = Color(0xFF388E3C),
-                        focusedLabelColor = Color(0xFF388E3C)
-                    ),
-                    singleLine = true
-                )
+                UseCaseChip("고차 함수", Color(0xFF4CAF50))
+                UseCaseChip("람다를 받는 함수", Color(0xFF2196F3))
             }
 
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(8.dp))
 
-            errorMessage?.let { error ->
-                Surface(
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(8.dp),
-                    color = Color(0xFFFFEBEE)
-                ) {
-                    Row(
-                        modifier = Modifier.padding(12.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Icon(
-                            imageVector = Icons.Filled.Delete,
-                            contentDescription = null,
-                            tint = Color(0xFFD32F2F),
-                            modifier = Modifier.size(20.dp)
-                        )
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text(
-                            text = error,
-                            fontSize = 12.sp,
-                            color = Color(0xFFD32F2F)
-                        )
-                    }
-                }
-                Spacer(modifier = Modifier.height(8.dp))
-            }
-
-            Button(
-                onClick = {
-                    try {
-                        val productId = ProductId(productIdInput.trim())
-                        val price = Money(priceInput.toLong())
-                        val quantity = quantityInput.toInt()
-
-                        if (nameInput.isBlank()) {
-                            errorMessage = "상품명을 입력하세요"
-                            return@Button
-                        }
-
-                        cartItems.add(
-                            CartItem(
-                                productId = productId,
-                                name = nameInput,
-                                price = price,
-                                quantity = quantity
-                            )
-                        )
-
-                        productIdInput = ""
-                        nameInput = ""
-                        priceInput = ""
-                        quantityInput = "1"
-                    } catch (e: Exception) {
-                        errorMessage = when (e) {
-                            is IllegalArgumentException -> e.message ?: "검증 실패"
-                            is NumberFormatException -> "숫자를 입력하세요"
-                            else -> "알 수 없는 오류"
-                        }
-                    }
-                },
+            Surface(
                 modifier = Modifier.fillMaxWidth(),
-                colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF388E3C)),
-                shape = RoundedCornerShape(8.dp)
+                shape = RoundedCornerShape(8.dp),
+                color = Color(0xFFFFF9C4)
             ) {
-                Icon(
-                    imageVector = Icons.Filled.Add,
-                    contentDescription = null,
-                    modifier = Modifier.size(20.dp)
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                Text("장바구니 추가", color = Color.White, fontWeight = FontWeight.Bold)
-            }
-
-            if (cartItems.isNotEmpty()) {
-                Spacer(modifier = Modifier.height(16.dp))
-
-                val totalAmount = cartItems.fold(Money(0)) { acc, item ->
-                    acc + (item.price * item.quantity)
-                }
-
-                Surface(
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(8.dp),
-                    color = Color.White
+                Row(
+                    modifier = Modifier.padding(12.dp),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Column(modifier = Modifier.padding(12.dp)) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(
-                                text = "장바구니",
-                                fontSize = 14.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = Color(0xFF388E3C)
-                            )
-                            Text(
-                                text = "총액: ${totalAmount.toDisplayString()}",
-                                fontSize = 16.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = Color(0xFF1976D2)
-                            )
-                        }
-
-                        Spacer(modifier = Modifier.height(8.dp))
-
-                        cartItems.forEachIndexed { index, item ->
-                            CartItemRow(
-                                item = item,
-                                onDelete = { cartItems.removeAt(index) }
-                            )
-                            if (index < cartItems.size - 1) {
-                                Spacer(modifier = Modifier.height(4.dp))
-                            }
-                        }
-                    }
+                    Text(
+                        text = "⚠️",
+                        fontSize = 20.sp
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = "큰 함수에는 사용하지 마세요. 코드 크기가 증가합니다.",
+                        fontSize = 11.sp,
+                        color = Color(0xFF666666),
+                        lineHeight = 16.sp
+                    )
                 }
             }
         }
@@ -420,372 +211,45 @@ private fun TypeSafetyDemoCard() {
 }
 
 @Composable
-private fun CartItemRow(item: CartItem, onDelete: () -> Unit) {
+private fun BulletPoint(text: String) {
+    Row(
+        modifier = Modifier.padding(vertical = 4.dp),
+        verticalAlignment = Alignment.Top
+    ) {
+        Box(
+            modifier = Modifier
+                .size(6.dp)
+                .background(Color(0xFF1976D2), CircleShape)
+                .padding(top = 6.dp)
+        )
+        Spacer(modifier = Modifier.width(8.dp))
+        Text(
+            text = text,
+            fontSize = 12.sp,
+            color = Color(0xFF666666),
+            lineHeight = 18.sp
+        )
+    }
+}
+
+@Composable
+private fun UseCaseChip(text: String, color: Color) {
     Surface(
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(6.dp),
-        color = Color(0xFFF5F5F5)
+        shape = RoundedCornerShape(16.dp),
+        color = color.copy(alpha = 0.1f)
     ) {
-        Row(
-            modifier = Modifier.padding(8.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    text = item.name,
-                    fontSize = 13.sp,
-                    fontWeight = FontWeight.Medium,
-                    color = Color(0xFF212121)
-                )
-                Text(
-                    text = "${item.productId} • ${item.price.toDisplayString()} × ${item.quantity}",
-                    fontSize = 11.sp,
-                    color = Color.Gray,
-                    fontFamily = FontFamily.Monospace
-                )
-            }
-            Text(
-                text = (item.price * item.quantity).toDisplayString(),
-                fontSize = 13.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color(0xFF1976D2)
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Icon(
-                imageVector = Icons.Filled.Delete,
-                contentDescription = null,
-                tint = Color(0xFFD32F2F),
-                modifier = Modifier
-                    .size(20.dp)
-                    .clickable { onDelete() }
-            )
-        }
+        Text(
+            text = text,
+            modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
+            fontSize = 12.sp,
+            color = color,
+            fontWeight = FontWeight.Medium
+        )
     }
 }
 
 @Composable
-private fun MoneyCalculatorCard() {
-    var amount1Input by remember { mutableStateOf("") }
-    var amount2Input by remember { mutableStateOf("") }
-    var operation by remember { mutableStateOf("+") }
-    var result by remember { mutableStateOf<Money?>(null) }
-    var error by remember { mutableStateOf<String?>(null) }
-
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        backgroundColor = Color(0xFFFFF3E0),
-        shape = RoundedCornerShape(12.dp)
-    ) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Text(
-                text = "💰 Money 계산기",
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color(0xFFFF9800)
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Text(
-                text = "연산자 오버로딩으로 안전한 금액 계산",
-                fontSize = 12.sp,
-                color = Color.Gray
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                OutlinedTextField(
-                    value = amount1Input,
-                    onValueChange = { 
-                        amount1Input = it
-                        error = null
-                    },
-                    label = { Text("금액 1 (센트)", fontSize = 11.sp) },
-                    modifier = Modifier.weight(1f),
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                    colors = TextFieldDefaults.outlinedTextFieldColors(
-                        focusedBorderColor = Color(0xFFFF9800),
-                        focusedLabelColor = Color(0xFFFF9800)
-                    ),
-                    singleLine = true
-                )
-
-                Surface(
-                    modifier = Modifier
-                        .size(40.dp)
-                        .clickable {
-                            operation = when (operation) {
-                                "+" -> "-"
-                                "-" -> "+"
-                                else -> "+"
-                            }
-                        },
-                    shape = CircleShape,
-                    color = Color(0xFFFF9800)
-                ) {
-                    Box(contentAlignment = Alignment.Center) {
-                        Text(
-                            text = operation,
-                            fontSize = 20.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = Color.White
-                        )
-                    }
-                }
-
-                OutlinedTextField(
-                    value = amount2Input,
-                    onValueChange = { 
-                        amount2Input = it
-                        error = null
-                    },
-                    label = { Text("금액 2 (센트)", fontSize = 11.sp) },
-                    modifier = Modifier.weight(1f),
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                    colors = TextFieldDefaults.outlinedTextFieldColors(
-                        focusedBorderColor = Color(0xFFFF9800),
-                        focusedLabelColor = Color(0xFFFF9800)
-                    ),
-                    singleLine = true
-                )
-            }
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            error?.let { err ->
-                Surface(
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(8.dp),
-                    color = Color(0xFFFFEBEE)
-                ) {
-                    Row(
-                        modifier = Modifier.padding(12.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Icon(
-                            imageVector = Icons.Filled.Delete,
-                            contentDescription = null,
-                            tint = Color(0xFFD32F2F),
-                            modifier = Modifier.size(20.dp)
-                        )
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text(text = err, fontSize = 12.sp, color = Color(0xFFD32F2F))
-                    }
-                }
-                Spacer(modifier = Modifier.height(8.dp))
-            }
-
-            Button(
-                onClick = {
-                    try {
-                        val money1 = Money(amount1Input.toLong())
-                        val money2 = Money(amount2Input.toLong())
-
-                        result = when (operation) {
-                            "+" -> money1 + money2
-                            "-" -> money1 - money2
-                            else -> money1 + money2
-                        }
-                        error = null
-                    } catch (e: Exception) {
-                        error = when (e) {
-                            is IllegalArgumentException -> e.message ?: "검증 실패"
-                            is NumberFormatException -> "숫자를 입력하세요"
-                            else -> "계산 오류"
-                        }
-                        result = null
-                    }
-                },
-                modifier = Modifier.fillMaxWidth(),
-                colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFFF9800)),
-                shape = RoundedCornerShape(8.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Filled.PlayArrow,
-                    contentDescription = null,
-                    modifier = Modifier.size(20.dp)
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                Text("계산하기", color = Color.White, fontWeight = FontWeight.Bold)
-            }
-
-            result?.let { res ->
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Surface(
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(8.dp),
-                    color = Color(0xFF4CAF50).copy(alpha = 0.1f)
-                ) {
-                    Column(
-                        modifier = Modifier.padding(16.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Text(
-                            text = "결과",
-                            fontSize = 12.sp,
-                            color = Color.Gray
-                        )
-                        Spacer(modifier = Modifier.height(4.dp))
-                        Text(
-                            text = res.toDisplayString(),
-                            fontSize = 28.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = Color(0xFF4CAF50)
-                        )
-                        Spacer(modifier = Modifier.height(4.dp))
-                        Text(
-                            text = "${res.cents} cents",
-                            fontSize = 11.sp,
-                            color = Color.Gray,
-                            fontFamily = FontFamily.Monospace
-                        )
-                    }
-                }
-            }
-        }
-    }
-}
-
-@Composable
-private fun ValidationDemoCard() {
-    var emailInput by remember { mutableStateOf("") }
-    var emailResult by remember { mutableStateOf<String?>(null) }
-    var emailError by remember { mutableStateOf<String?>(null) }
-
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        backgroundColor = Color(0xFFE3F2FD),
-        shape = RoundedCornerShape(12.dp)
-    ) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Text(
-                text = "✉️ Email 검증 데모",
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color(0xFF1976D2)
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Text(
-                text = "Value Class의 init 블록으로 자동 검증",
-                fontSize = 12.sp,
-                color = Color.Gray
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            OutlinedTextField(
-                value = emailInput,
-                onValueChange = { 
-                    emailInput = it
-                    emailError = null
-                    emailResult = null
-                },
-                label = { Text("이메일 주소") },
-                modifier = Modifier.fillMaxWidth(),
-                colors = TextFieldDefaults.outlinedTextFieldColors(
-                    focusedBorderColor = Color(0xFF1976D2),
-                    focusedLabelColor = Color(0xFF1976D2)
-                ),
-                singleLine = true
-            )
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            Button(
-                onClick = {
-                    try {
-                        val email = Email(emailInput.trim())
-                        emailResult = "✓ 유효한 이메일: ${email.value}"
-                        emailError = null
-                    } catch (e: IllegalArgumentException) {
-                        emailError = e.message ?: "이메일 형식이 올바르지 않습니다"
-                        emailResult = null
-                    }
-                },
-                modifier = Modifier.fillMaxWidth(),
-                colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF1976D2)),
-                shape = RoundedCornerShape(8.dp)
-            ) {
-                Text("검증하기", color = Color.White, fontWeight = FontWeight.Bold)
-            }
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            emailError?.let { error ->
-                Surface(
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(8.dp),
-                    color = Color(0xFFFFEBEE)
-                ) {
-                    Row(
-                        modifier = Modifier.padding(12.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Icon(
-                            imageVector = Icons.Filled.Close,
-                            contentDescription = null,
-                            tint = Color(0xFFD32F2F),
-                            modifier = Modifier.size(20.dp)
-                        )
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text(text = error, fontSize = 12.sp, color = Color(0xFFD32F2F))
-                    }
-                }
-            }
-
-            emailResult?.let { success ->
-                Surface(
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(8.dp),
-                    color = Color(0xFFE8F5E9)
-                ) {
-                    Row(
-                        modifier = Modifier.padding(12.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Icon(
-                            imageVector = Icons.Filled.CheckCircle,
-                            contentDescription = null,
-                            tint = Color(0xFF4CAF50),
-                            modifier = Modifier.size(20.dp)
-                        )
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text(text = success, fontSize = 12.sp, color = Color(0xFF4CAF50))
-                    }
-                }
-            }
-        }
-    }
-}
-
-@Composable
-private fun ReifiedGenericsTab() {
-    LazyColumn(
-        modifier = Modifier.fillMaxSize(),
-        contentPadding = PaddingValues(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-        item { TypeCheckingDemoCard() }
-        item { CastingDemoCard() }
-    }
-}
-
-@Composable
-private fun TypeCheckingDemoCard() {
-    var inputValue by remember { mutableStateOf("") }
-    val testResults = remember { mutableStateListOf<Pair<String, Boolean>>() }
-    var selectedType by remember { mutableStateOf("String") }
-
+private fun CodeComparisonCard() {
     Card(
         modifier = Modifier.fillMaxWidth(),
         elevation = 4.dp,
@@ -794,7 +258,7 @@ private fun TypeCheckingDemoCard() {
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(
-                text = "🔍 Reified 타입 체크",
+                text = "📝 코드 비교",
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color(0xFF9C27B0)
@@ -803,100 +267,70 @@ private fun TypeCheckingDemoCard() {
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = "런타임에 타입 정보 확인 (타입 소거 극복)",
+                text = "같은 기능, 다른 구현 방식",
                 fontSize = 12.sp,
                 color = Color.Gray
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            OutlinedTextField(
-                value = inputValue,
-                onValueChange = { inputValue = it },
-                label = { Text("테스트할 값") },
-                modifier = Modifier.fillMaxWidth(),
-                colors = TextFieldDefaults.outlinedTextFieldColors(
-                    focusedBorderColor = Color(0xFF9C27B0),
-                    focusedLabelColor = Color(0xFF9C27B0)
-                ),
-                singleLine = true
+            CodeComparisonSection(
+                title = "Inline Function",
+                code = """
+inline fun <T> measureInline(
+    label: String, 
+    block: () -> T
+): Pair<T, Long> {
+    val start = System.currentTimeMillis()
+    val result = block()
+    val elapsed = System.currentTimeMillis() - start
+    return result to elapsed
+}
+                """.trimIndent(),
+                explanation = "• 호출 시점에 함수 본문이 복사됨\n• 람다 객체 생성 없음\n• 함수 호출 스택 없음",
+                color = Color(0xFF4CAF50)
             )
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            Row(
+            CodeComparisonSection(
+                title = "Non-Inline Function",
+                code = """
+fun <T> measureNonInline(
+    label: String, 
+    block: () -> T
+): Pair<T, Long> {
+    val start = System.currentTimeMillis()
+    val result = block()
+    val elapsed = System.currentTimeMillis() - start
+    return result to elapsed
+}
+                """.trimIndent(),
+                explanation = "• 일반적인 함수 호출\n• 람다가 객체로 생성됨\n• 함수 호출 오버헤드 존재",
+                color = Color(0xFFFF9800)
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Surface(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                shape = RoundedCornerShape(8.dp),
+                color = Color(0xFF9C27B0).copy(alpha = 0.1f)
             ) {
-                listOf("String", "Int", "UserId").forEach { type ->
-                    Button(
-                        onClick = { selectedType = type },
-                        modifier = Modifier.weight(1f),
-                        colors = ButtonDefaults.buttonColors(
-                            backgroundColor = if (selectedType == type) 
-                                Color(0xFF9C27B0) else Color(0xFFE1BEE7)
-                        ),
-                        shape = RoundedCornerShape(8.dp)
-                    ) {
-                        Text(
-                            text = type,
-                            fontSize = 11.sp,
-                            color = if (selectedType == type) Color.White else Color(0xFF9C27B0)
-                        )
-                    }
-                }
-            }
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            Button(
-                onClick = {
-                    val testValue: Any = when (selectedType) {
-                        "Int" -> inputValue.toIntOrNull() ?: inputValue
-                        "UserId" -> try { UserId(inputValue) } catch (e: Exception) { inputValue }
-                        else -> inputValue
-                    }
-
-                    testResults.clear()
-                    testResults.add("String" to isInstance<String>(testValue))
-                    testResults.add("Int" to isInstance<Int>(testValue))
-                    testResults.add("UserId" to isInstance<UserId>(testValue))
-                },
-                modifier = Modifier.fillMaxWidth(),
-                colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF9C27B0)),
-                shape = RoundedCornerShape(8.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Filled.PlayArrow,
-                    contentDescription = null,
-                    modifier = Modifier.size(20.dp)
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                Text("타입 체크 실행", color = Color.White, fontWeight = FontWeight.Bold)
-            }
-
-            if (testResults.isNotEmpty()) {
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Surface(
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(8.dp),
-                    color = Color.White
-                ) {
-                    Column(modifier = Modifier.padding(12.dp)) {
-                        Text(
-                            text = "타입 체크 결과",
-                            fontSize = 13.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = Color(0xFF9C27B0)
-                        )
-                        Spacer(modifier = Modifier.height(8.dp))
-
-                        testResults.forEach { (type, isMatch) ->
-                            TypeCheckResult(type, isMatch)
-                            Spacer(modifier = Modifier.height(4.dp))
-                        }
-                    }
+                Column(modifier = Modifier.padding(12.dp)) {
+                    Text(
+                        text = "📊 실제 차이",
+                        fontSize = 13.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFF9C27B0)
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        text = "호출 횟수가 많을수록 Inline의 성능 이점이 커집니다.\n아래 벤치마크에서 직접 확인해보세요!",
+                        fontSize = 11.sp,
+                        color = Color(0xFF666666),
+                        lineHeight = 16.sp
+                    )
                 }
             }
         }
@@ -904,198 +338,80 @@ private fun TypeCheckingDemoCard() {
 }
 
 @Composable
-private fun TypeCheckResult(typeName: String, isMatch: Boolean) {
+private fun CodeComparisonSection(
+    title: String,
+    code: String,
+    explanation: String,
+    color: Color
+) {
     Surface(
         modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(6.dp),
-        color = if (isMatch) Color(0xFF4CAF50).copy(alpha = 0.1f) else Color(0xFFF5F5F5)
+        shape = RoundedCornerShape(8.dp),
+        color = Color.White
     ) {
-        Row(
-            modifier = Modifier.padding(8.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = "isInstance<$typeName>",
-                fontSize = 12.sp,
-                fontFamily = FontFamily.Monospace,
-                color = Color(0xFF212121)
-            )
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(
-                    imageVector = if (isMatch) Icons.Filled.CheckCircle else Icons.Filled.Close,
-                    contentDescription = null,
-                    tint = if (isMatch) Color(0xFF4CAF50) else Color.Gray,
-                    modifier = Modifier.size(16.dp)
-                )
-                Spacer(modifier = Modifier.width(4.dp))
+        Column(modifier = Modifier.padding(12.dp)) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
                 Text(
-                    text = isMatch.toString(),
-                    fontSize = 12.sp,
+                    text = title,
+                    fontSize = 14.sp,
                     fontWeight = FontWeight.Bold,
-                    color = if (isMatch) Color(0xFF4CAF50) else Color.Gray
+                    color = color
+                )
+                Surface(
+                    shape = RoundedCornerShape(12.dp),
+                    color = color.copy(alpha = 0.1f)
+                ) {
+                    Text(
+                        text = if (title.contains("Inline")) "최적화" else "일반",
+                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+                        fontSize = 10.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = color
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Surface(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(6.dp),
+                color = Color(0xFF263238)
+            ) {
+                Text(
+                    text = code,
+                    modifier = Modifier.padding(12.dp),
+                    fontSize = 10.sp,
+                    fontFamily = FontFamily.Monospace,
+                    color = Color(0xFF80CBC4),
+                    lineHeight = 14.sp
                 )
             }
-        }
-    }
-}
-
-@Composable
-private fun CastingDemoCard() {
-    var inputValue by remember { mutableStateOf("") }
-    var targetType by remember { mutableStateOf("String") }
-    var castResult by remember { mutableStateOf<String?>(null) }
-
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        backgroundColor = Color(0xFFE8EAF6),
-        shape = RoundedCornerShape(12.dp)
-    ) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Text(
-                text = "🎯 Safe Casting",
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color(0xFF3F51B5)
-            )
 
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = "Reified로 안전한 타입 캐스팅",
-                fontSize = 12.sp,
-                color = Color.Gray
+                text = explanation,
+                fontSize = 11.sp,
+                color = Color(0xFF666666),
+                lineHeight = 16.sp
             )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            OutlinedTextField(
-                value = inputValue,
-                onValueChange = { inputValue = it },
-                label = { Text("캐스팅할 값") },
-                modifier = Modifier.fillMaxWidth(),
-                colors = TextFieldDefaults.outlinedTextFieldColors(
-                    focusedBorderColor = Color(0xFF3F51B5),
-                    focusedLabelColor = Color(0xFF3F51B5)
-                ),
-                singleLine = true
-            )
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                listOf("String", "Int", "UserId").forEach { type ->
-                    Button(
-                        onClick = { targetType = type },
-                        modifier = Modifier.weight(1f),
-                        colors = ButtonDefaults.buttonColors(
-                            backgroundColor = if (targetType == type) 
-                                Color(0xFF3F51B5) else Color(0xFFC5CAE9)
-                        ),
-                        shape = RoundedCornerShape(8.dp)
-                    ) {
-                        Text(
-                            text = type,
-                            fontSize = 11.sp,
-                            color = if (targetType == type) Color.White else Color(0xFF3F51B5)
-                        )
-                    }
-                }
-            }
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            Button(
-                onClick = {
-                    val testValue: Any = inputValue
-
-                    castResult = when (targetType) {
-                        "String" -> castOrNull<String>(testValue)?.let { "✓ String: $it" }
-                            ?: "✗ 캐스팅 실패 (null)"
-                        "Int" -> castOrNull<Int>(testValue)?.let { "✓ Int: $it" }
-                            ?: "✗ 캐스팅 실패 (null)"
-                        "UserId" -> castOrNull<UserId>(testValue)?.let { "✓ UserId: $it" }
-                            ?: "✗ 캐스팅 실패 (null)"
-                        else -> "알 수 없는 타입"
-                    }
-                },
-                modifier = Modifier.fillMaxWidth(),
-                colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF3F51B5)),
-                shape = RoundedCornerShape(8.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Filled.PlayArrow,
-                    contentDescription = null,
-                    modifier = Modifier.size(20.dp)
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                Text("캐스팅 실행", color = Color.White, fontWeight = FontWeight.Bold)
-            }
-
-            castResult?.let { result ->
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Surface(
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(8.dp),
-                    color = if (result.startsWith("✓")) 
-                        Color(0xFF4CAF50).copy(alpha = 0.1f) 
-                    else 
-                        Color(0xFFFFEBEE)
-                ) {
-                    Row(
-                        modifier = Modifier.padding(12.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Icon(
-                            imageVector = if (result.startsWith("✓")) 
-                                Icons.Filled.CheckCircle 
-                            else 
-                                Icons.Filled.Warning,
-                            contentDescription = null,
-                            tint = if (result.startsWith("✓")) 
-                                Color(0xFF4CAF50) 
-                            else 
-                                Color(0xFFFF9800),
-                            modifier = Modifier.size(20.dp)
-                        )
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text(
-                            text = result,
-                            fontSize = 13.sp,
-                            color = if (result.startsWith("✓")) 
-                                Color(0xFF4CAF50) 
-                            else 
-                                Color(0xFFFF9800)
-                        )
-                    }
-                }
-            }
         }
     }
 }
 
 @Composable
-private fun PerformanceComparisonTab() {
-    LazyColumn(
-        modifier = Modifier.fillMaxSize(),
-        contentPadding = PaddingValues(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-        item { PerformanceComparisonCard() }
-    }
-}
-
-@Composable
-private fun PerformanceComparisonCard() {
+private fun PerformanceBenchmarkCard() {
+    var iterations by remember { mutableStateOf(10000) }
+    var isRunning by remember { mutableStateOf(false) }
     var inlineTime by remember { mutableStateOf(0L) }
     var nonInlineTime by remember { mutableStateOf(0L) }
-    var isRunning by remember { mutableStateOf(false) }
-    var iterations by remember { mutableStateOf(10000) }
+    var inlineFilterTime by remember { mutableStateOf(0L) }
+    var nonInlineFilterTime by remember { mutableStateOf(0L) }
 
     val scale by animateFloatAsState(
         targetValue = if (isRunning) 1.02f else 1f,
@@ -1107,67 +423,103 @@ private fun PerformanceComparisonCard() {
             .fillMaxWidth()
             .scale(scale),
         elevation = 4.dp,
-        shape = RoundedCornerShape(12.dp),
-        backgroundColor = Color(0xFFE8EAF6)
+        backgroundColor = Color(0xFFE8EAF6),
+        shape = RoundedCornerShape(12.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            Text(
-                text = "📊 Inline vs Non-Inline 성능 비교",
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color(0xFF3F51B5)
-            )
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Delete,
+                    contentDescription = null,
+                    tint = Color(0xFF3F51B5),
+                    modifier = Modifier.size(28.dp)
+                )
+                Spacer(modifier = Modifier.width(12.dp))
+                Text(
+                    text = "성능 벤치마크",
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFF3F51B5)
+                )
+            }
 
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = "실시간 성능 측정 벤치마크",
+                text = "실제 성능 차이를 측정해보세요",
                 fontSize = 12.sp,
                 color = Color.Gray
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
+            Text(
+                text = "반복 횟수 선택",
+                fontSize = 13.sp,
+                fontWeight = FontWeight.Medium,
+                color = Color(0xFF3F51B5)
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                listOf(1000, 10000, 100000).forEach { count ->
+                listOf(1000 to "1K", 10000 to "10K", 100000 to "100K", 1000000 to "1M").forEach { (count, label) ->
                     Button(
                         onClick = { iterations = count },
                         modifier = Modifier.weight(1f),
                         colors = ButtonDefaults.buttonColors(
-                            backgroundColor = if (iterations == count) 
+                            backgroundColor = if (iterations == count)
                                 Color(0xFF3F51B5) else Color(0xFFC5CAE9)
                         ),
                         shape = RoundedCornerShape(8.dp),
                         enabled = !isRunning
                     ) {
                         Text(
-                            text = "${count / 1000}K",
-                            fontSize = 11.sp,
+                            text = label,
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Bold,
                             color = if (iterations == count) Color.White else Color(0xFF3F51B5)
                         )
                     }
                 }
             }
 
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
             Button(
                 onClick = {
                     isRunning = true
-                    
-                    val (_, inline) = measure("inline") {
-                        repeat(iterations) { it * 2 }
-                    }
-                    inlineTime = inline
 
-                    val (_, nonInline) = measureNonInline("non-inline") {
+                    val (_, inline1) = measureInline("test") {
                         repeat(iterations) { it * 2 }
                     }
-                    nonInlineTime = nonInline
-                    
+                    inlineTime = inline1
+
+                    val (_, nonInline1) = measureNonInline("test") {
+                        repeat(iterations) { it * 2 }
+                    }
+                    nonInlineTime = nonInline1
+
+                    val testList = (1..1000).toList()
+                    val (_, inline2) = measureInline("filter") {
+                        repeat(iterations / 100) {
+                            testList.customFilterInline { it % 2 == 0 }
+                        }
+                    }
+                    inlineFilterTime = inline2
+
+                    val (_, nonInline2) = measureNonInline("filter") {
+                        repeat(iterations / 100) {
+                            testList.customFilterNonInline { it % 2 == 0 }
+                        }
+                    }
+                    nonInlineFilterTime = nonInline2
+
                     isRunning = false
                 },
                 modifier = Modifier.fillMaxWidth(),
@@ -1185,10 +537,10 @@ private fun PerformanceComparisonCard() {
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        "성능 측정 시작 ($iterations iterations)",
+                        "벤치마크 시작",
                         color = Color.White,
                         fontWeight = FontWeight.Bold,
-                        fontSize = 13.sp
+                        fontSize = 14.sp
                     )
                 }
             }
@@ -1199,10 +551,18 @@ private fun PerformanceComparisonCard() {
                 exit = shrinkVertically() + fadeOut()
             ) {
                 Column {
-                    Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(20.dp))
 
-                    PerformanceResult(
-                        label = "Inline Function",
+                    Text(
+                        text = "테스트 1: 간단한 연산 반복",
+                        fontSize = 13.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFF3F51B5)
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    BenchmarkResult(
+                        label = "Inline",
                         time = inlineTime,
                         color = Color(0xFF4CAF50),
                         isFaster = inlineTime < nonInlineTime && nonInlineTime > 0
@@ -1210,67 +570,73 @@ private fun PerformanceComparisonCard() {
 
                     Spacer(modifier = Modifier.height(8.dp))
 
-                    PerformanceResult(
-                        label = "Non-Inline Function",
+                    BenchmarkResult(
+                        label = "Non-Inline",
                         time = nonInlineTime,
                         color = Color(0xFFFF5722),
                         isFaster = nonInlineTime < inlineTime && inlineTime > 0
                     )
 
-                    if (nonInlineTime > 0 && inlineTime > 0) {
-                        Spacer(modifier = Modifier.height(12.dp))
-
-                        val improvement = if (nonInlineTime > inlineTime) {
-                            ((nonInlineTime - inlineTime).toFloat() / nonInlineTime * 100).toInt()
-                        } else {
-                            -((inlineTime - nonInlineTime).toFloat() / inlineTime * 100).toInt()
-                        }
-
-                        Surface(
-                            modifier = Modifier.fillMaxWidth(),
-                            shape = RoundedCornerShape(8.dp),
-                            color = if (improvement > 0) 
-                                Color(0xFF4CAF50).copy(alpha = 0.1f)
-                            else
-                                Color(0xFFFF5722).copy(alpha = 0.1f)
-                        ) {
-                            Column(
-                                modifier = Modifier.padding(12.dp),
-                                horizontalAlignment = Alignment.CenterHorizontally
-                            ) {
-                                Text(
-                                    text = if (improvement > 0) 
-                                        "⚡ Inline이 ${improvement}% 더 빠릅니다"
-                                    else
-                                        "⚠️ Non-inline이 ${-improvement}% 더 빠릅니다",
-                                    fontSize = 13.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    color = if (improvement > 0) Color(0xFF4CAF50) else Color(0xFFFF5722)
-                                )
-                                Spacer(modifier = Modifier.height(4.dp))
-                                Text(
-                                    text = "차이: ${kotlin.math.abs(nonInlineTime - inlineTime)}ms",
-                                    fontSize = 11.sp,
-                                    color = Color.Gray
-                                )
-                            }
-                        }
+                    if (inlineTime > 0 && nonInlineTime > 0) {
+                        Spacer(modifier = Modifier.height(8.dp))
+                        PerformanceComparison(inlineTime, nonInlineTime, "간단한 연산")
                     }
 
-                    Spacer(modifier = Modifier.height(12.dp))
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Divider(color = Color(0xFF3F51B5).copy(alpha = 0.2f))
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Text(
+                        text = "테스트 2: 람다를 받는 고차 함수",
+                        fontSize = 13.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFF3F51B5)
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    BenchmarkResult(
+                        label = "Inline (람다 최적화)",
+                        time = inlineFilterTime,
+                        color = Color(0xFF4CAF50),
+                        isFaster = inlineFilterTime < nonInlineFilterTime && nonInlineFilterTime > 0
+                    )
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    BenchmarkResult(
+                        label = "Non-Inline (람다 객체 생성)",
+                        time = nonInlineFilterTime,
+                        color = Color(0xFFFF5722),
+                        isFaster = nonInlineFilterTime < inlineFilterTime && inlineFilterTime > 0
+                    )
+
+                    if (inlineFilterTime > 0 && nonInlineFilterTime > 0) {
+                        Spacer(modifier = Modifier.height(8.dp))
+                        PerformanceComparison(inlineFilterTime, nonInlineFilterTime, "람다 함수")
+                    }
+
+                    Spacer(modifier = Modifier.height(16.dp))
 
                     Surface(
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(8.dp),
                         color = Color(0xFF3F51B5).copy(alpha = 0.1f)
                     ) {
-                        Text(
-                            text = "💡 실제 성능 향상은 사용 사례와 JVM 최적화에 따라 다를 수 있습니다",
-                            modifier = Modifier.padding(12.dp),
-                            fontSize = 11.sp,
-                            color = Color(0xFF3F51B5),
-                            lineHeight = 16.sp
-                        )
+                        Column(modifier = Modifier.padding(12.dp)) {
+                            Text(
+                                text = "📊 분석 결과",
+                                fontSize = 13.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = Color(0xFF3F51B5)
+                            )
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Text(
+                                text = "• 람다를 받는 함수에서 Inline의 성능 이점이 더 큽니다\n• 호출 횟수가 많을수록 차이가 명확해집니다\n• 실제 성능은 JVM 최적화에 따라 달라질 수 있습니다",
+                                fontSize = 11.sp,
+                                color = Color(0xFF666666),
+                                lineHeight = 16.sp
+                            )
+                        }
                     }
                 }
             }
@@ -1279,7 +645,7 @@ private fun PerformanceComparisonCard() {
 }
 
 @Composable
-private fun PerformanceResult(
+private fun BenchmarkResult(
     label: String,
     time: Long,
     color: Color,
@@ -1289,8 +655,8 @@ private fun PerformanceResult(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(8.dp),
         color = color.copy(alpha = 0.1f),
-        border = if (isFaster) 
-            androidx.compose.foundation.BorderStroke(2.dp, color) 
+        border = if (isFaster)
+            androidx.compose.foundation.BorderStroke(2.dp, color)
         else null
     ) {
         Row(
@@ -1298,7 +664,10 @@ private fun PerformanceResult(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.weight(1f)
+            ) {
                 if (isFaster) {
                     Icon(
                         imageVector = Icons.Filled.CheckCircle,
@@ -1321,6 +690,56 @@ private fun PerformanceResult(
                 fontWeight = FontWeight.Bold,
                 fontFamily = FontFamily.Monospace,
                 color = color
+            )
+        }
+    }
+}
+
+@Composable
+private fun PerformanceComparison(inlineTime: Long, nonInlineTime: Long, context: String) {
+    val improvement = if (nonInlineTime > inlineTime) {
+        ((nonInlineTime - inlineTime).toFloat() / nonInlineTime * 100).toInt()
+    } else {
+        -((inlineTime - nonInlineTime).toFloat() / inlineTime * 100).toInt()
+    }
+
+    Surface(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(8.dp),
+        color = if (improvement > 0)
+            Color(0xFF4CAF50).copy(alpha = 0.1f)
+        else
+            Color(0xFFFF5722).copy(alpha = 0.1f)
+    ) {
+        Column(
+            modifier = Modifier.padding(12.dp)
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = if (improvement > 0)
+                        "⚡ Inline이 더 빠름"
+                    else
+                        "⚠️ Non-inline이 더 빠름",
+                    fontSize = 13.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = if (improvement > 0) Color(0xFF4CAF50) else Color(0xFFFF5722)
+                )
+                Text(
+                    text = "${kotlin.math.abs(improvement)}%",
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = if (improvement > 0) Color(0xFF4CAF50) else Color(0xFFFF5722)
+                )
+            }
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(
+                text = "$context 실행 시간 차이: ${kotlin.math.abs(nonInlineTime - inlineTime)}ms",
+                fontSize = 11.sp,
+                color = Color.Gray
             )
         }
     }
