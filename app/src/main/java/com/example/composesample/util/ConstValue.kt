@@ -77,6 +77,7 @@ class ConstValue {
         const val AutoCloseableExample = "autoCloseableExample"
         const val StaticDynamicCompositionLocalExample = "staticDynamicCompositionLocalExample"
         const val InlineValueClassExample = "inlineValueClassExample"
+        const val SealedClassInterfaceExample = "sealedClassInterfaceExample"
 
         // 새로운 Compose 1.7 기능 예제들
         const val Compose17FeaturesExample = "compose17FeaturesExample"

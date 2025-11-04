@@ -114,6 +114,7 @@ import com.example.composesample.presentation.example.component.ui.shapes.CardCo
 import com.example.composesample.presentation.example.component.architecture.lifecycle.AutoCloseableExampleUI
 import com.example.composesample.presentation.example.component.architecture.pattern.compositionLocal.StaticDynamicCompositionLocalExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.performance.InlineValueClassExampleUI
+import com.example.composesample.presentation.example.component.architecture.development.language.SealedClassInterfaceExampleUI
 import com.example.composesample.presentation.example.component.ui.text.AutoSizingTextExampleUI
 import com.example.composesample.presentation.example.component.ui.text.TextStyleUI
 import com.example.composesample.presentation.getTextStyle
@@ -157,6 +158,7 @@ import com.example.composesample.util.ConstValue.Companion.CardCornersExample
 import com.example.composesample.util.ConstValue.Companion.AutoCloseableExample
 import com.example.composesample.util.ConstValue.Companion.StaticDynamicCompositionLocalExample
 import com.example.composesample.util.ConstValue.Companion.InlineValueClassExample
+import com.example.composesample.util.ConstValue.Companion.SealedClassInterfaceExample
 import com.example.composesample.util.ConstValue.Companion.PagingExample
 import com.example.composesample.util.ConstValue.Companion.PassingIntentDataExample
 import com.example.composesample.util.ConstValue.Companion.PathGraphicsExample
@@ -926,6 +928,10 @@ fun ExampleCaseUI(
 
                         InlineValueClassExample -> {
                             InlineValueClassExampleUI(onBackEvent)
+                        }
+
+                        SealedClassInterfaceExample -> {
+                            SealedClassInterfaceExampleUI(onBackEvent)
                         }
 
                         else -> {
