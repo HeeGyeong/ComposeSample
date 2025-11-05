@@ -54,13 +54,6 @@ import com.example.composesample.presentation.MainHeader
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-/**
- * Sealed Classes & Interfaces Example
- *
- * Sealed class와 sealed interface를 활용한 타입 안전한 상태 관리 예제
- */
-
-// ===== Sealed Classes 예제 =====
 
 sealed class ApiResult<out T> {
     data class Success<T>(val data: T, val timestamp: Long = System.currentTimeMillis()) : ApiResult<T>()
@@ -76,8 +69,6 @@ sealed class UiState {
     data class Error(val message: String, val canRetry: Boolean = true) : UiState()
 }
 
-// ===== Sealed Interfaces 예제 =====
-
 sealed interface NetworkState
 sealed interface CacheState
 
@@ -85,16 +76,12 @@ data class OnlineState(val connectionType: String) : NetworkState, CacheState
 data class OfflineState(val reason: String) : NetworkState
 data class CachedData(val items: List<String>) : CacheState
 
-// ===== Navigation Event 예제 =====
-
 sealed class NavigationEvent {
     object Back : NavigationEvent()
     data class ToDetail(val id: String) : NavigationEvent()
     data class ToExternal(val url: String) : NavigationEvent()
     data class ShowDialog(val title: String, val message: String) : NavigationEvent()
 }
-
-// ===== Nested Sealed 예제 =====
 
 sealed class PaymentStatus {
     object Pending : PaymentStatus()
