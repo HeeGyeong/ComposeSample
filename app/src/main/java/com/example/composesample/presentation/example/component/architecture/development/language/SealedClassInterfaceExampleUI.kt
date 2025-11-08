@@ -97,6 +97,19 @@ sealed class PaymentStatus {
     }
 }
 
+enum class StatusEnum {
+    SUCCESS, ERROR, LOADING
+}
+
+sealed class StatusSealed {
+    data class Success(val data: String, val timestamp: Long) : StatusSealed()
+    data class Error(val exception: Exception, val retryCount: Int) : StatusSealed()
+    object Loading : StatusSealed()
+}
+
+data class User(val id: String, val name: String, val email: String)
+data class Product(val id: String, val name: String, val price: Double)
+
 @Composable
 fun SealedClassInterfaceExampleUI(
     onBackEvent: () -> Unit
@@ -122,6 +135,8 @@ fun SealedClassInterfaceExampleUI(
             item { SealedInterfaceDemoCard() }
             item { NavigationEventDemoCard() }
             item { NestedSealedDemoCard() }
+            item { SealedVsEnumDemoCard() }
+            item { GenericTypeDemoCard() }
             item { WhenExpressionCard() }
         }
     }
@@ -1111,6 +1126,662 @@ private fun StatusIndicator(label: String, color: Color, emoji: String) {
             fontWeight = FontWeight.Bold,
             color = color
         )
+    }
+}
+
+@Composable
+private fun SealedVsEnumDemoCard() {
+    var useEnum by remember { mutableStateOf(true) }
+    var enumStatus by remember { mutableStateOf(StatusEnum.SUCCESS) }
+    var sealedStatus by remember { mutableStateOf<StatusSealed>(StatusSealed.Loading) }
+
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        elevation = 4.dp,
+        backgroundColor = Color(0xFFFFF8E1),
+        shape = RoundedCornerShape(12.dp)
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Text(
+                text = "⚖️ Sealed Class vs Enum",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color(0xFFF57F17)
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Text(
+                text = "Enum과 Sealed Class의 차이를 실제로 비교",
+                fontSize = 12.sp,
+                color = Color.Gray
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Button(
+                    onClick = { useEnum = true },
+                    modifier = Modifier.weight(1f),
+                    colors = ButtonDefaults.buttonColors(
+                        backgroundColor = if (useEnum) Color(0xFFF57F17) else Color(0xFFFFE082)
+                    ),
+                    shape = RoundedCornerShape(8.dp)
+                ) {
+                    Text(
+                        "Enum 사용",
+                        color = if (useEnum) Color.White else Color(0xFFF57F17),
+                        fontSize = 12.sp
+                    )
+                }
+
+                Button(
+                    onClick = { useEnum = false },
+                    modifier = Modifier.weight(1f),
+                    colors = ButtonDefaults.buttonColors(
+                        backgroundColor = if (!useEnum) Color(0xFFF57F17) else Color(0xFFFFE082)
+                    ),
+                    shape = RoundedCornerShape(8.dp)
+                ) {
+                    Text(
+                        "Sealed 사용",
+                        color = if (!useEnum) Color.White else Color(0xFFF57F17),
+                        fontSize = 12.sp
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            if (useEnum) {
+                CodeBox(
+                    """
+                    enum class StatusEnum {
+                        SUCCESS, ERROR, LOADING
+                    }
+                    
+                    ❌ 상태를 가질 수 없음
+                    ❌ 제네릭 타입 불가
+                    ❌ 추가 정보 저장 불가
+                    """.trimIndent()
+                )
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Button(
+                        onClick = { enumStatus = StatusEnum.SUCCESS },
+                        modifier = Modifier.weight(1f),
+                        colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF4CAF50)),
+                        shape = RoundedCornerShape(8.dp)
+                    ) {
+                        Text("Success", color = Color.White, fontSize = 11.sp)
+                    }
+                    Button(
+                        onClick = { enumStatus = StatusEnum.ERROR },
+                        modifier = Modifier.weight(1f),
+                        colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFFF5722)),
+                        shape = RoundedCornerShape(8.dp)
+                    ) {
+                        Text("Error", color = Color.White, fontSize = 11.sp)
+                    }
+                    Button(
+                        onClick = { enumStatus = StatusEnum.LOADING },
+                        modifier = Modifier.weight(1f),
+                        colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF2196F3)),
+                        shape = RoundedCornerShape(8.dp)
+                    ) {
+                        Text("Loading", color = Color.White, fontSize = 11.sp)
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                Surface(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(8.dp),
+                    color = Color.White
+                ) {
+                    Column(modifier = Modifier.padding(12.dp)) {
+                        Text(
+                            text = "현재 상태: $enumStatus",
+                            fontSize = 13.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color(0xFFF57F17)
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(
+                            text = "⚠️ 추가 정보를 저장할 수 없습니다",
+                            fontSize = 11.sp,
+                            color = Color(0xFFFF5722)
+                        )
+                        Text(
+                            text = "• 에러 메시지를 포함할 수 없음",
+                            fontSize = 10.sp,
+                            color = Color.Gray
+                        )
+                        Text(
+                            text = "• 데이터나 타임스탬프를 저장할 수 없음",
+                            fontSize = 10.sp,
+                            color = Color.Gray
+                        )
+                    }
+                }
+            } else {
+                CodeBox(
+                    """
+                    sealed class StatusSealed {
+                        data class Success(
+                            val data: String,
+                            val timestamp: Long
+                        ) : StatusSealed()
+                        data class Error(
+                            val exception: Exception,
+                            val retryCount: Int
+                        ) : StatusSealed()
+                        object Loading : StatusSealed()
+                    }
+                    
+                    ✓ 각 타입이 다른 데이터 보유
+                    ✓ 제네릭 타입 파라미터 사용
+                    ✓ 추가 정보 자유롭게 저장
+                    """.trimIndent()
+                )
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Button(
+                        onClick = {
+                            sealedStatus = StatusSealed.Success(
+                                data = "User data loaded",
+                                timestamp = System.currentTimeMillis()
+                            )
+                        },
+                        modifier = Modifier.weight(1f),
+                        colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF4CAF50)),
+                        shape = RoundedCornerShape(8.dp)
+                    ) {
+                        Text("Success", color = Color.White, fontSize = 11.sp)
+                    }
+                    Button(
+                        onClick = {
+                            sealedStatus = StatusSealed.Error(
+                                exception = Exception("Network timeout"),
+                                retryCount = 3
+                            )
+                        },
+                        modifier = Modifier.weight(1f),
+                        colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFFF5722)),
+                        shape = RoundedCornerShape(8.dp)
+                    ) {
+                        Text("Error", color = Color.White, fontSize = 11.sp)
+                    }
+                    Button(
+                        onClick = { sealedStatus = StatusSealed.Loading },
+                        modifier = Modifier.weight(1f),
+                        colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF2196F3)),
+                        shape = RoundedCornerShape(8.dp)
+                    ) {
+                        Text("Loading", color = Color.White, fontSize = 11.sp)
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                Surface(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(8.dp),
+                    color = Color.White
+                ) {
+                    Column(modifier = Modifier.padding(12.dp)) {
+                        when (sealedStatus) {
+                            is StatusSealed.Success -> {
+                                Text(
+                                    text = "✓ Success 상태",
+                                    fontSize = 13.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = Color(0xFF4CAF50)
+                                )
+                                Spacer(modifier = Modifier.height(8.dp))
+                                Text(
+                                    text = "📦 데이터: ${(sealedStatus as StatusSealed.Success).data}",
+                                    fontSize = 11.sp,
+                                    color = Color.Gray
+                                )
+                                Text(
+                                    text = "⏰ 시간: ${java.text.SimpleDateFormat("HH:mm:ss").format((sealedStatus as StatusSealed.Success).timestamp)}",
+                                    fontSize = 11.sp,
+                                    color = Color.Gray
+                                )
+                            }
+                            is StatusSealed.Error -> {
+                                Text(
+                                    text = "✗ Error 상태",
+                                    fontSize = 13.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = Color(0xFFFF5722)
+                                )
+                                Spacer(modifier = Modifier.height(8.dp))
+                                Text(
+                                    text = "❌ 에러: ${(sealedStatus as StatusSealed.Error).exception.message}",
+                                    fontSize = 11.sp,
+                                    color = Color.Gray
+                                )
+                                Text(
+                                    text = "🔄 재시도 횟수: ${(sealedStatus as StatusSealed.Error).retryCount}",
+                                    fontSize = 11.sp,
+                                    color = Color.Gray
+                                )
+                            }
+                            StatusSealed.Loading -> {
+                                Text(
+                                    text = "⏳ Loading 상태",
+                                    fontSize = 13.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = Color(0xFF2196F3)
+                                )
+                                Spacer(modifier = Modifier.height(8.dp))
+                                Text(
+                                    text = "상태 없음 (object 사용)",
+                                    fontSize = 11.sp,
+                                    color = Color.Gray
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Surface(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(8.dp),
+                color = Color(0xFFF57F17).copy(alpha = 0.1f)
+            ) {
+                Column(modifier = Modifier.padding(12.dp)) {
+                    Text(
+                        text = "💡 핵심 차이점",
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFFF57F17)
+                    )
+                    Spacer(modifier = Modifier.height(6.dp))
+                    Text(
+                        text = "Enum: 단순한 상태만 표현\nSealed: 상태 + 데이터를 함께 관리",
+                        fontSize = 11.sp,
+                        color = Color(0xFF666666),
+                        lineHeight = 16.sp
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun GenericTypeDemoCard() {
+    var selectedType by remember { mutableStateOf("String") }
+    var stringResult by remember { mutableStateOf<ApiResult<String>>(ApiResult.Empty) }
+    var userResult by remember { mutableStateOf<ApiResult<User>>(ApiResult.Empty) }
+    var productResult by remember { mutableStateOf<ApiResult<Product>>(ApiResult.Empty) }
+    val scope = rememberCoroutineScope()
+
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        elevation = 4.dp,
+        backgroundColor = Color(0xFFE8F5E9),
+        shape = RoundedCornerShape(12.dp)
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Text(
+                text = "🔤 제네릭 타입 파라미터",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color(0xFF388E3C)
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Text(
+                text = "ApiResult<T>를 다양한 타입에 재사용",
+                fontSize = 12.sp,
+                color = Color.Gray
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            CodeBox(
+                """
+                sealed class ApiResult<out T> {
+                    data class Success<T>(val data: T) : ApiResult<T>()
+                    data class Error(val message: String) : ApiResult<Nothing>()
+                    object Loading : ApiResult<Nothing>()
+                }
+                
+                // 다양한 타입에 재사용
+                val stringResult: ApiResult<String>
+                val userResult: ApiResult<User>
+                val productResult: ApiResult<Product>
+                """.trimIndent()
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Button(
+                    onClick = { selectedType = "String" },
+                    modifier = Modifier.weight(1f),
+                    colors = ButtonDefaults.buttonColors(
+                        backgroundColor = if (selectedType == "String") Color(0xFF388E3C) else Color(0xFFC8E6C9)
+                    ),
+                    shape = RoundedCornerShape(8.dp)
+                ) {
+                    Text(
+                        "String",
+                        color = if (selectedType == "String") Color.White else Color(0xFF388E3C),
+                        fontSize = 11.sp
+                    )
+                }
+                Button(
+                    onClick = { selectedType = "User" },
+                    modifier = Modifier.weight(1f),
+                    colors = ButtonDefaults.buttonColors(
+                        backgroundColor = if (selectedType == "User") Color(0xFF388E3C) else Color(0xFFC8E6C9)
+                    ),
+                    shape = RoundedCornerShape(8.dp)
+                ) {
+                    Text(
+                        "User",
+                        color = if (selectedType == "User") Color.White else Color(0xFF388E3C),
+                        fontSize = 11.sp
+                    )
+                }
+                Button(
+                    onClick = { selectedType = "Product" },
+                    modifier = Modifier.weight(1f),
+                    colors = ButtonDefaults.buttonColors(
+                        backgroundColor = if (selectedType == "Product") Color(0xFF388E3C) else Color(0xFFC8E6C9)
+                    ),
+                    shape = RoundedCornerShape(8.dp)
+                ) {
+                    Text(
+                        "Product",
+                        color = if (selectedType == "Product") Color.White else Color(0xFF388E3C),
+                        fontSize = 11.sp
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            when (selectedType) {
+                "String" -> {
+                    Surface(
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(8.dp),
+                        color = Color.White
+                    ) {
+                        Column(modifier = Modifier.padding(12.dp)) {
+                            Text(
+                                text = "ApiResult<String>",
+                                fontSize = 13.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = Color(0xFF388E3C),
+                                fontFamily = FontFamily.Monospace
+                            )
+                            Spacer(modifier = Modifier.height(8.dp))
+                            
+                            Button(
+                                onClick = {
+                                    scope.launch {
+                                        stringResult = ApiResult.Loading
+                                        delay(1500)
+                                        stringResult = ApiResult.Success("Hello, Kotlin!")
+                                    }
+                                },
+                                modifier = Modifier.fillMaxWidth(),
+                                colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF388E3C)),
+                                shape = RoundedCornerShape(8.dp)
+                            ) {
+                                Text("Load String Data", fontSize = 12.sp)
+                            }
+
+                            Spacer(modifier = Modifier.height(8.dp))
+
+                            when (stringResult) {
+                                is ApiResult.Success -> {
+                                    Text(
+                                        text = "✓ 데이터: ${(stringResult as ApiResult.Success).data}",
+                                        fontSize = 12.sp,
+                                        color = Color(0xFF388E3C)
+                                    )
+                                }
+                                is ApiResult.Error -> {
+                                    Text(
+                                        text = "✗ 에러: ${(stringResult as ApiResult.Error).message}",
+                                        fontSize = 12.sp,
+                                        color = Color(0xFFFF5722)
+                                    )
+                                }
+                                ApiResult.Loading -> {
+                                    Row(verticalAlignment = Alignment.CenterVertically) {
+                                        CircularProgressIndicator(
+                                            modifier = Modifier.size(16.dp),
+                                            color = Color(0xFF388E3C)
+                                        )
+                                        Spacer(modifier = Modifier.width(8.dp))
+                                        Text("Loading...", fontSize = 12.sp, color = Color.Gray)
+                                    }
+                                }
+                                ApiResult.Empty -> {
+                                    Text("버튼을 눌러 데이터 로드", fontSize = 11.sp, color = Color.Gray)
+                                }
+                            }
+                        }
+                    }
+                }
+                "User" -> {
+                    Surface(
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(8.dp),
+                        color = Color.White
+                    ) {
+                        Column(modifier = Modifier.padding(12.dp)) {
+                            Text(
+                                text = "ApiResult<User>",
+                                fontSize = 13.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = Color(0xFF388E3C),
+                                fontFamily = FontFamily.Monospace
+                            )
+                            Spacer(modifier = Modifier.height(8.dp))
+                            
+                            Button(
+                                onClick = {
+                                    scope.launch {
+                                        userResult = ApiResult.Loading
+                                        delay(1500)
+                                        userResult = ApiResult.Success(
+                                            User(
+                                                id = "user_123",
+                                                name = "김개발",
+                                                email = "dev@example.com"
+                                            )
+                                        )
+                                    }
+                                },
+                                modifier = Modifier.fillMaxWidth(),
+                                colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF388E3C)),
+                                shape = RoundedCornerShape(8.dp)
+                            ) {
+                                Text("Load User Data", fontSize = 12.sp)
+                            }
+
+                            Spacer(modifier = Modifier.height(8.dp))
+
+                            when (userResult) {
+                                is ApiResult.Success -> {
+                                    val user = (userResult as ApiResult.Success).data
+                                    Column {
+                                        Text(
+                                            text = "✓ User 정보:",
+                                            fontSize = 12.sp,
+                                            fontWeight = FontWeight.Bold,
+                                            color = Color(0xFF388E3C)
+                                        )
+                                        Spacer(modifier = Modifier.height(4.dp))
+                                        Text("• ID: ${user.id}", fontSize = 11.sp, color = Color.Gray)
+                                        Text("• Name: ${user.name}", fontSize = 11.sp, color = Color.Gray)
+                                        Text("• Email: ${user.email}", fontSize = 11.sp, color = Color.Gray)
+                                    }
+                                }
+                                is ApiResult.Error -> {
+                                    Text(
+                                        text = "✗ 에러: ${(userResult as ApiResult.Error).message}",
+                                        fontSize = 12.sp,
+                                        color = Color(0xFFFF5722)
+                                    )
+                                }
+                                ApiResult.Loading -> {
+                                    Row(verticalAlignment = Alignment.CenterVertically) {
+                                        CircularProgressIndicator(
+                                            modifier = Modifier.size(16.dp),
+                                            color = Color(0xFF388E3C)
+                                        )
+                                        Spacer(modifier = Modifier.width(8.dp))
+                                        Text("Loading...", fontSize = 12.sp, color = Color.Gray)
+                                    }
+                                }
+                                ApiResult.Empty -> {
+                                    Text("버튼을 눌러 데이터 로드", fontSize = 11.sp, color = Color.Gray)
+                                }
+                            }
+                        }
+                    }
+                }
+                "Product" -> {
+                    Surface(
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(8.dp),
+                        color = Color.White
+                    ) {
+                        Column(modifier = Modifier.padding(12.dp)) {
+                            Text(
+                                text = "ApiResult<Product>",
+                                fontSize = 13.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = Color(0xFF388E3C),
+                                fontFamily = FontFamily.Monospace
+                            )
+                            Spacer(modifier = Modifier.height(8.dp))
+                            
+                            Button(
+                                onClick = {
+                                    scope.launch {
+                                        productResult = ApiResult.Loading
+                                        delay(1500)
+                                        productResult = ApiResult.Success(
+                                            Product(
+                                                id = "prod_456",
+                                                name = "Kotlin 프로그래밍",
+                                                price = 35000.0
+                                            )
+                                        )
+                                    }
+                                },
+                                modifier = Modifier.fillMaxWidth(),
+                                colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF388E3C)),
+                                shape = RoundedCornerShape(8.dp)
+                            ) {
+                                Text("Load Product Data", fontSize = 12.sp)
+                            }
+
+                            Spacer(modifier = Modifier.height(8.dp))
+
+                            when (productResult) {
+                                is ApiResult.Success -> {
+                                    val product = (productResult as ApiResult.Success).data
+                                    Column {
+                                        Text(
+                                            text = "✓ Product 정보:",
+                                            fontSize = 12.sp,
+                                            fontWeight = FontWeight.Bold,
+                                            color = Color(0xFF388E3C)
+                                        )
+                                        Spacer(modifier = Modifier.height(4.dp))
+                                        Text("• ID: ${product.id}", fontSize = 11.sp, color = Color.Gray)
+                                        Text("• Name: ${product.name}", fontSize = 11.sp, color = Color.Gray)
+                                        Text(
+                                            "• Price: ${String.format("%,.0f", product.price)}원",
+                                            fontSize = 11.sp,
+                                            color = Color.Gray
+                                        )
+                                    }
+                                }
+                                is ApiResult.Error -> {
+                                    Text(
+                                        text = "✗ 에러: ${(productResult as ApiResult.Error).message}",
+                                        fontSize = 12.sp,
+                                        color = Color(0xFFFF5722)
+                                    )
+                                }
+                                ApiResult.Loading -> {
+                                    Row(verticalAlignment = Alignment.CenterVertically) {
+                                        CircularProgressIndicator(
+                                            modifier = Modifier.size(16.dp),
+                                            color = Color(0xFF388E3C)
+                                        )
+                                        Spacer(modifier = Modifier.width(8.dp))
+                                        Text("Loading...", fontSize = 12.sp, color = Color.Gray)
+                                    }
+                                }
+                                ApiResult.Empty -> {
+                                    Text("버튼을 눌러 데이터 로드", fontSize = 11.sp, color = Color.Gray)
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Surface(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(8.dp),
+                color = Color(0xFF388E3C).copy(alpha = 0.1f)
+            ) {
+                Column(modifier = Modifier.padding(12.dp)) {
+                    Text(
+                        text = "✓ 제네릭 타입의 장점",
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFF388E3C)
+                    )
+                    Spacer(modifier = Modifier.height(6.dp))
+                    Text(
+                        text = "• 하나의 ApiResult로 모든 타입 처리\n• 타입 안전성 보장\n• 코드 재사용성 극대화",
+                        fontSize = 11.sp,
+                        color = Color(0xFF666666),
+                        lineHeight = 16.sp
+                    )
+                }
+            }
+        }
     }
 }
 
