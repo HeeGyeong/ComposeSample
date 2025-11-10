@@ -542,6 +542,15 @@ fun exampleObjectList(): ArrayList<ExampleObject> {
         )
     )
 
+    insertExampleObject.add(
+        ExampleObject(
+            title = "Coroutines Internals",
+            description = "코루틴 내부: State Machines, Continuations, Structured Concurrency",
+            blogUrl = "",
+            exampleType = ConstValue.CoroutinesInternalsExample
+        )
+    )
+
     return insertExampleObject
 }
 
