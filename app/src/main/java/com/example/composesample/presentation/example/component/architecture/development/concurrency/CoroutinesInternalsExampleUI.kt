@@ -53,16 +53,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlin.system.measureTimeMillis
 
-/**
- * Coroutines Internals Example
- *
- * Kotlin Coroutines의 내부 동작 원리를 시각적으로 보여주는 예제:
- * - State Machine: suspend 함수가 컴파일되는 방식
- * - Continuation: 중단/재개 메커니즘
- * - Structured Concurrency: 계층적 코루틴 관리
- * - Cancellation: 협력적 취소
- * - Dispatchers: 스레드 전환
- */
 @Composable
 fun CoroutinesInternalsExampleUI(
     onBackEvent: () -> Unit
