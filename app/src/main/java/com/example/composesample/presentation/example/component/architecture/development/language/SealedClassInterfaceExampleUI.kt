@@ -6,7 +6,6 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,14 +19,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Card
 import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
@@ -56,7 +52,9 @@ import kotlinx.coroutines.launch
 
 
 sealed class ApiResult<out T> {
-    data class Success<T>(val data: T, val timestamp: Long = System.currentTimeMillis()) : ApiResult<T>()
+    data class Success<T>(val data: T, val timestamp: Long = System.currentTimeMillis()) :
+        ApiResult<T>()
+
     data class Error(val message: String, val code: Int = -1) : ApiResult<Nothing>()
     object Loading : ApiResult<Nothing>()
     object Empty : ApiResult<Nothing>()
@@ -85,12 +83,12 @@ sealed class NavigationEvent {
 
 sealed class PaymentStatus {
     object Pending : PaymentStatus()
-    
+
     sealed class InProgress : PaymentStatus() {
         data class Processing(val progress: Int) : InProgress()
         data class Verifying(val attempts: Int) : InProgress()
     }
-    
+
     sealed class Completed : PaymentStatus() {
         data class Success(val transactionId: String) : Completed()
         data class Failed(val reason: String) : Completed()
@@ -129,7 +127,6 @@ fun SealedClassInterfaceExampleUI(
             contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            item { IntroductionCard() }
             item { ApiResultDemoCard() }
             item { UiStateDemoCard() }
             item { SealedInterfaceDemoCard() }
@@ -137,132 +134,7 @@ fun SealedClassInterfaceExampleUI(
             item { NestedSealedDemoCard() }
             item { SealedVsEnumDemoCard() }
             item { GenericTypeDemoCard() }
-            item { WhenExpressionCard() }
         }
-    }
-}
-
-@Composable
-private fun IntroductionCard() {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        backgroundColor = Color(0xFFE3F2FD),
-        shape = RoundedCornerShape(12.dp)
-    ) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    imageVector = Icons.Filled.CheckCircle,
-                    contentDescription = null,
-                    tint = Color(0xFF1976D2),
-                    modifier = Modifier.size(28.dp)
-                )
-                Spacer(modifier = Modifier.width(12.dp))
-                Text(
-                    text = "Sealed Classes란?",
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color(0xFF1976D2)
-                )
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Surface(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(8.dp),
-                color = Color.White
-            ) {
-                Column(modifier = Modifier.padding(12.dp)) {
-                    Text(
-                        text = "제한된 클래스 계층 구조:",
-                        fontSize = 13.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color(0xFF1976D2)
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    
-                    BulletPoint("모든 하위 타입이 컴파일 타임에 알려짐")
-                    BulletPoint("when 표현식에서 else 분기 불필요")
-                    BulletPoint("타입 안전한 상태 관리 가능")
-                    BulletPoint("리팩토링 시 컴파일 에러로 누락 방지")
-                }
-            }
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            Divider(color = Color(0xFF1976D2).copy(alpha = 0.2f))
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            Text(
-                text = "주요 사용처",
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color(0xFF1976D2)
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                UseCaseChip("API 응답", Color(0xFF4CAF50))
-                UseCaseChip("UI 상태", Color(0xFF2196F3))
-            }
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                UseCaseChip("이벤트", Color(0xFFFF9800))
-                UseCaseChip("네비게이션", Color(0xFF9C27B0))
-            }
-        }
-    }
-}
-
-@Composable
-private fun BulletPoint(text: String) {
-    Row(
-        modifier = Modifier.padding(vertical = 4.dp),
-        verticalAlignment = Alignment.Top
-    ) {
-        Box(
-            modifier = Modifier
-                .size(6.dp)
-                .background(Color(0xFF1976D2), CircleShape)
-                .padding(top = 6.dp)
-        )
-        Spacer(modifier = Modifier.width(8.dp))
-        Text(
-            text = text,
-            fontSize = 12.sp,
-            color = Color(0xFF666666),
-            lineHeight = 18.sp
-        )
-    }
-}
-
-@Composable
-private fun UseCaseChip(text: String, color: Color) {
-    Surface(
-        shape = RoundedCornerShape(16.dp),
-        color = color.copy(alpha = 0.1f)
-    ) {
-        Text(
-            text = text,
-            modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
-            fontSize = 12.sp,
-            color = color,
-            fontWeight = FontWeight.Medium
-        )
     }
 }
 
@@ -291,19 +163,6 @@ private fun ApiResultDemoCard() {
                 text = "sealed class로 API 응답 상태를 타입 안전하게 관리",
                 fontSize = 12.sp,
                 color = Color.Gray
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            CodeBox(
-                """
-                sealed class ApiResult<out T> {
-                    data class Success<T>(val data: T) : ApiResult<T>()
-                    data class Error(val message: String) : ApiResult<Nothing>()
-                    object Loading : ApiResult<Nothing>()
-                    object Empty : ApiResult<Nothing>()
-                }
-                """.trimIndent()
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -394,6 +253,7 @@ private fun ApiResultView(state: ApiResult<List<String>>) {
                         }
                     }
                 }
+
                 is ApiResult.Error -> {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Icon(
@@ -416,6 +276,7 @@ private fun ApiResultView(state: ApiResult<List<String>>) {
                         )
                     }
                 }
+
                 ApiResult.Loading -> {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         CircularProgressIndicator(
@@ -430,6 +291,7 @@ private fun ApiResultView(state: ApiResult<List<String>>) {
                         )
                     }
                 }
+
                 ApiResult.Empty -> {
                     Text(
                         text = "버튼을 눌러 API 호출 시뮬레이션",
@@ -467,19 +329,6 @@ private fun UiStateDemoCard() {
                 text = "화면 상태를 명확하게 정의하고 관리",
                 fontSize = 12.sp,
                 color = Color.Gray
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            CodeBox(
-                """
-                sealed class UiState {
-                    object Idle : UiState()
-                    object Loading : UiState()
-                    data class Content(val items: List<String>) : UiState()
-                    data class Error(val message: String) : UiState()
-                }
-                """.trimIndent()
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -537,7 +386,11 @@ private fun UiStateDemoCard() {
 }
 
 @Composable
-private fun androidx.compose.foundation.layout.RowScope.StateButton(text: String, color: Color, onClick: () -> Unit) {
+private fun androidx.compose.foundation.layout.RowScope.StateButton(
+    text: String,
+    color: Color,
+    onClick: () -> Unit
+) {
     Button(
         onClick = onClick,
         modifier = Modifier.weight(1f),
@@ -569,6 +422,7 @@ private fun UiStateView(state: UiState, onRetry: () -> Unit) {
                         color = Color.Gray
                     )
                 }
+
                 UiState.Loading -> {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         CircularProgressIndicator(
@@ -579,6 +433,7 @@ private fun UiStateView(state: UiState, onRetry: () -> Unit) {
                         Text("Loading...", fontSize = 12.sp, color = Color.Gray)
                     }
                 }
+
                 is UiState.Content -> {
                     Column {
                         Text(
@@ -605,6 +460,7 @@ private fun UiStateView(state: UiState, onRetry: () -> Unit) {
                         }
                     }
                 }
+
                 is UiState.Error -> {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Icon(
@@ -670,18 +526,6 @@ private fun SealedInterfaceDemoCard() {
                 text = "다중 상속 가능한 sealed interface (Kotlin 1.5+)",
                 fontSize = 12.sp,
                 color = Color.Gray
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            CodeBox(
-                """
-                sealed interface NetworkState
-                sealed interface CacheState
-
-                data class OnlineState(val type: String) : NetworkState, CacheState
-                data class OfflineState(val reason: String) : NetworkState
-                """.trimIndent()
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -813,6 +657,7 @@ private fun NetworkStateView(state: NetworkState) {
                         )
                     }
                 }
+
                 is OfflineState -> {
                     Icon(
                         imageVector = Icons.Filled.Clear,
@@ -874,18 +719,6 @@ private fun NavigationEventDemoCard() {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            CodeBox(
-                """
-                sealed class NavigationEvent {
-                    object Back : NavigationEvent()
-                    data class ToDetail(val id: String) : NavigationEvent()
-                    data class ToExternal(val url: String) : NavigationEvent()
-                }
-                """.trimIndent()
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -916,7 +749,9 @@ private fun NavigationEventDemoCard() {
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Button(
-                    onClick = { events = events + NavigationEvent.ToExternal("https://example.com") },
+                    onClick = {
+                        events = events + NavigationEvent.ToExternal("https://example.com")
+                    },
                     modifier = Modifier.weight(1f),
                     colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF4CAF50)),
                     shape = RoundedCornerShape(8.dp)
@@ -1015,24 +850,6 @@ private fun NestedSealedDemoCard() {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            CodeBox(
-                """
-                sealed class PaymentStatus {
-                    object Pending : PaymentStatus()
-                    sealed class InProgress : PaymentStatus() {
-                        data class Processing(val progress: Int) : InProgress()
-                        data class Verifying(val attempts: Int) : InProgress()
-                    }
-                    sealed class Completed : PaymentStatus() {
-                        data class Success(val txId: String) : Completed()
-                        data class Failed(val reason: String) : Completed()
-                    }
-                }
-                """.trimIndent()
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
             Button(
                 onClick = {
                     scope.launch {
@@ -1044,7 +861,8 @@ private fun NestedSealedDemoCard() {
                         delay(800)
                         paymentStatus = PaymentStatus.InProgress.Verifying(1)
                         delay(1000)
-                        paymentStatus = PaymentStatus.Completed.Success("TX-${System.currentTimeMillis()}")
+                        paymentStatus =
+                            PaymentStatus.Completed.Success("TX-${System.currentTimeMillis()}")
                     }
                 },
                 modifier = Modifier.fillMaxWidth(),
@@ -1073,6 +891,7 @@ private fun PaymentStatusView(status: PaymentStatus) {
                 PaymentStatus.Pending -> {
                     StatusIndicator("대기 중", Color(0xFF9E9E9E), "⏳")
                 }
+
                 is PaymentStatus.InProgress.Processing -> {
                     StatusIndicator("처리 중", Color(0xFF2196F3), "⚙️")
                     Spacer(modifier = Modifier.height(8.dp))
@@ -1082,6 +901,7 @@ private fun PaymentStatusView(status: PaymentStatus) {
                         color = Color.Gray
                     )
                 }
+
                 is PaymentStatus.InProgress.Verifying -> {
                     StatusIndicator("검증 중", Color(0xFFFF9800), "🔍")
                     Spacer(modifier = Modifier.height(8.dp))
@@ -1091,6 +911,7 @@ private fun PaymentStatusView(status: PaymentStatus) {
                         color = Color.Gray
                     )
                 }
+
                 is PaymentStatus.Completed.Success -> {
                     StatusIndicator("완료", Color(0xFF4CAF50), "✅")
                     Spacer(modifier = Modifier.height(8.dp))
@@ -1101,6 +922,7 @@ private fun PaymentStatusView(status: PaymentStatus) {
                         color = Color.Gray
                     )
                 }
+
                 is PaymentStatus.Completed.Failed -> {
                     StatusIndicator("실패", Color(0xFFFF5722), "❌")
                     Spacer(modifier = Modifier.height(8.dp))
@@ -1197,20 +1019,6 @@ private fun SealedVsEnumDemoCard() {
             Spacer(modifier = Modifier.height(12.dp))
 
             if (useEnum) {
-                CodeBox(
-                    """
-                    enum class StatusEnum {
-                        SUCCESS, ERROR, LOADING
-                    }
-                    
-                    ❌ 상태를 가질 수 없음
-                    ❌ 제네릭 타입 불가
-                    ❌ 추가 정보 저장 불가
-                    """.trimIndent()
-                )
-
-                Spacer(modifier = Modifier.height(12.dp))
-
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -1274,28 +1082,6 @@ private fun SealedVsEnumDemoCard() {
                     }
                 }
             } else {
-                CodeBox(
-                    """
-                    sealed class StatusSealed {
-                        data class Success(
-                            val data: String,
-                            val timestamp: Long
-                        ) : StatusSealed()
-                        data class Error(
-                            val exception: Exception,
-                            val retryCount: Int
-                        ) : StatusSealed()
-                        object Loading : StatusSealed()
-                    }
-                    
-                    ✓ 각 타입이 다른 데이터 보유
-                    ✓ 제네릭 타입 파라미터 사용
-                    ✓ 추가 정보 자유롭게 저장
-                    """.trimIndent()
-                )
-
-                Spacer(modifier = Modifier.height(12.dp))
-
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -1359,11 +1145,15 @@ private fun SealedVsEnumDemoCard() {
                                     color = Color.Gray
                                 )
                                 Text(
-                                    text = "⏰ 시간: ${java.text.SimpleDateFormat("HH:mm:ss").format((sealedStatus as StatusSealed.Success).timestamp)}",
+                                    text = "⏰ 시간: ${
+                                        java.text.SimpleDateFormat("HH:mm:ss")
+                                            .format((sealedStatus as StatusSealed.Success).timestamp)
+                                    }",
                                     fontSize = 11.sp,
                                     color = Color.Gray
                                 )
                             }
+
                             is StatusSealed.Error -> {
                                 Text(
                                     text = "✗ Error 상태",
@@ -1383,6 +1173,7 @@ private fun SealedVsEnumDemoCard() {
                                     color = Color.Gray
                                 )
                             }
+
                             StatusSealed.Loading -> {
                                 Text(
                                     text = "⏳ Loading 상태",
@@ -1461,23 +1252,6 @@ private fun GenericTypeDemoCard() {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            CodeBox(
-                """
-                sealed class ApiResult<out T> {
-                    data class Success<T>(val data: T) : ApiResult<T>()
-                    data class Error(val message: String) : ApiResult<Nothing>()
-                    object Loading : ApiResult<Nothing>()
-                }
-                
-                // 다양한 타입에 재사용
-                val stringResult: ApiResult<String>
-                val userResult: ApiResult<User>
-                val productResult: ApiResult<Product>
-                """.trimIndent()
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -1486,7 +1260,9 @@ private fun GenericTypeDemoCard() {
                     onClick = { selectedType = "String" },
                     modifier = Modifier.weight(1f),
                     colors = ButtonDefaults.buttonColors(
-                        backgroundColor = if (selectedType == "String") Color(0xFF388E3C) else Color(0xFFC8E6C9)
+                        backgroundColor = if (selectedType == "String") Color(0xFF388E3C) else Color(
+                            0xFFC8E6C9
+                        )
                     ),
                     shape = RoundedCornerShape(8.dp)
                 ) {
@@ -1500,7 +1276,9 @@ private fun GenericTypeDemoCard() {
                     onClick = { selectedType = "User" },
                     modifier = Modifier.weight(1f),
                     colors = ButtonDefaults.buttonColors(
-                        backgroundColor = if (selectedType == "User") Color(0xFF388E3C) else Color(0xFFC8E6C9)
+                        backgroundColor = if (selectedType == "User") Color(0xFF388E3C) else Color(
+                            0xFFC8E6C9
+                        )
                     ),
                     shape = RoundedCornerShape(8.dp)
                 ) {
@@ -1514,7 +1292,9 @@ private fun GenericTypeDemoCard() {
                     onClick = { selectedType = "Product" },
                     modifier = Modifier.weight(1f),
                     colors = ButtonDefaults.buttonColors(
-                        backgroundColor = if (selectedType == "Product") Color(0xFF388E3C) else Color(0xFFC8E6C9)
+                        backgroundColor = if (selectedType == "Product") Color(0xFF388E3C) else Color(
+                            0xFFC8E6C9
+                        )
                     ),
                     shape = RoundedCornerShape(8.dp)
                 ) {
@@ -1544,7 +1324,7 @@ private fun GenericTypeDemoCard() {
                                 fontFamily = FontFamily.Monospace
                             )
                             Spacer(modifier = Modifier.height(8.dp))
-                            
+
                             Button(
                                 onClick = {
                                     scope.launch {
@@ -1554,7 +1334,11 @@ private fun GenericTypeDemoCard() {
                                     }
                                 },
                                 modifier = Modifier.fillMaxWidth(),
-                                colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF388E3C)),
+                                colors = ButtonDefaults.buttonColors(
+                                    backgroundColor = Color(
+                                        0xFF388E3C
+                                    )
+                                ),
                                 shape = RoundedCornerShape(8.dp)
                             ) {
                                 Text("Load String Data", fontSize = 12.sp)
@@ -1570,6 +1354,7 @@ private fun GenericTypeDemoCard() {
                                         color = Color(0xFF388E3C)
                                     )
                                 }
+
                                 is ApiResult.Error -> {
                                     Text(
                                         text = "✗ 에러: ${(stringResult as ApiResult.Error).message}",
@@ -1577,6 +1362,7 @@ private fun GenericTypeDemoCard() {
                                         color = Color(0xFFFF5722)
                                     )
                                 }
+
                                 ApiResult.Loading -> {
                                     Row(verticalAlignment = Alignment.CenterVertically) {
                                         CircularProgressIndicator(
@@ -1587,6 +1373,7 @@ private fun GenericTypeDemoCard() {
                                         Text("Loading...", fontSize = 12.sp, color = Color.Gray)
                                     }
                                 }
+
                                 ApiResult.Empty -> {
                                     Text("버튼을 눌러 데이터 로드", fontSize = 11.sp, color = Color.Gray)
                                 }
@@ -1594,6 +1381,7 @@ private fun GenericTypeDemoCard() {
                         }
                     }
                 }
+
                 "User" -> {
                     Surface(
                         modifier = Modifier.fillMaxWidth(),
@@ -1609,7 +1397,7 @@ private fun GenericTypeDemoCard() {
                                 fontFamily = FontFamily.Monospace
                             )
                             Spacer(modifier = Modifier.height(8.dp))
-                            
+
                             Button(
                                 onClick = {
                                     scope.launch {
@@ -1625,7 +1413,11 @@ private fun GenericTypeDemoCard() {
                                     }
                                 },
                                 modifier = Modifier.fillMaxWidth(),
-                                colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF388E3C)),
+                                colors = ButtonDefaults.buttonColors(
+                                    backgroundColor = Color(
+                                        0xFF388E3C
+                                    )
+                                ),
                                 shape = RoundedCornerShape(8.dp)
                             ) {
                                 Text("Load User Data", fontSize = 12.sp)
@@ -1644,11 +1436,24 @@ private fun GenericTypeDemoCard() {
                                             color = Color(0xFF388E3C)
                                         )
                                         Spacer(modifier = Modifier.height(4.dp))
-                                        Text("• ID: ${user.id}", fontSize = 11.sp, color = Color.Gray)
-                                        Text("• Name: ${user.name}", fontSize = 11.sp, color = Color.Gray)
-                                        Text("• Email: ${user.email}", fontSize = 11.sp, color = Color.Gray)
+                                        Text(
+                                            "• ID: ${user.id}",
+                                            fontSize = 11.sp,
+                                            color = Color.Gray
+                                        )
+                                        Text(
+                                            "• Name: ${user.name}",
+                                            fontSize = 11.sp,
+                                            color = Color.Gray
+                                        )
+                                        Text(
+                                            "• Email: ${user.email}",
+                                            fontSize = 11.sp,
+                                            color = Color.Gray
+                                        )
                                     }
                                 }
+
                                 is ApiResult.Error -> {
                                     Text(
                                         text = "✗ 에러: ${(userResult as ApiResult.Error).message}",
@@ -1656,6 +1461,7 @@ private fun GenericTypeDemoCard() {
                                         color = Color(0xFFFF5722)
                                     )
                                 }
+
                                 ApiResult.Loading -> {
                                     Row(verticalAlignment = Alignment.CenterVertically) {
                                         CircularProgressIndicator(
@@ -1666,6 +1472,7 @@ private fun GenericTypeDemoCard() {
                                         Text("Loading...", fontSize = 12.sp, color = Color.Gray)
                                     }
                                 }
+
                                 ApiResult.Empty -> {
                                     Text("버튼을 눌러 데이터 로드", fontSize = 11.sp, color = Color.Gray)
                                 }
@@ -1673,6 +1480,7 @@ private fun GenericTypeDemoCard() {
                         }
                     }
                 }
+
                 "Product" -> {
                     Surface(
                         modifier = Modifier.fillMaxWidth(),
@@ -1688,7 +1496,7 @@ private fun GenericTypeDemoCard() {
                                 fontFamily = FontFamily.Monospace
                             )
                             Spacer(modifier = Modifier.height(8.dp))
-                            
+
                             Button(
                                 onClick = {
                                     scope.launch {
@@ -1704,7 +1512,11 @@ private fun GenericTypeDemoCard() {
                                     }
                                 },
                                 modifier = Modifier.fillMaxWidth(),
-                                colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF388E3C)),
+                                colors = ButtonDefaults.buttonColors(
+                                    backgroundColor = Color(
+                                        0xFF388E3C
+                                    )
+                                ),
                                 shape = RoundedCornerShape(8.dp)
                             ) {
                                 Text("Load Product Data", fontSize = 12.sp)
@@ -1723,8 +1535,16 @@ private fun GenericTypeDemoCard() {
                                             color = Color(0xFF388E3C)
                                         )
                                         Spacer(modifier = Modifier.height(4.dp))
-                                        Text("• ID: ${product.id}", fontSize = 11.sp, color = Color.Gray)
-                                        Text("• Name: ${product.name}", fontSize = 11.sp, color = Color.Gray)
+                                        Text(
+                                            "• ID: ${product.id}",
+                                            fontSize = 11.sp,
+                                            color = Color.Gray
+                                        )
+                                        Text(
+                                            "• Name: ${product.name}",
+                                            fontSize = 11.sp,
+                                            color = Color.Gray
+                                        )
                                         Text(
                                             "• Price: ${String.format("%,.0f", product.price)}원",
                                             fontSize = 11.sp,
@@ -1732,6 +1552,7 @@ private fun GenericTypeDemoCard() {
                                         )
                                     }
                                 }
+
                                 is ApiResult.Error -> {
                                     Text(
                                         text = "✗ 에러: ${(productResult as ApiResult.Error).message}",
@@ -1739,6 +1560,7 @@ private fun GenericTypeDemoCard() {
                                         color = Color(0xFFFF5722)
                                     )
                                 }
+
                                 ApiResult.Loading -> {
                                     Row(verticalAlignment = Alignment.CenterVertically) {
                                         CircularProgressIndicator(
@@ -1749,6 +1571,7 @@ private fun GenericTypeDemoCard() {
                                         Text("Loading...", fontSize = 12.sp, color = Color.Gray)
                                     }
                                 }
+
                                 ApiResult.Empty -> {
                                     Text("버튼을 눌러 데이터 로드", fontSize = 11.sp, color = Color.Gray)
                                 }
@@ -1784,86 +1607,3 @@ private fun GenericTypeDemoCard() {
         }
     }
 }
-
-@Composable
-private fun WhenExpressionCard() {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        shape = RoundedCornerShape(12.dp)
-    ) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Text(
-                text = "🎯 Exhaustive when",
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color(0xFF607D8B)
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Text(
-                text = "sealed class는 when 표현식에서 else 불필요",
-                fontSize = 12.sp,
-                color = Color.Gray
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            CodeBox(
-                """
-                fun handle(result: ApiResult<String>) = when (result) {
-                    is ApiResult.Success -> result.data
-                    is ApiResult.Error -> result.message
-                    ApiResult.Loading -> "Loading..."
-                    ApiResult.Empty -> "No data"
-                    // else 불필요! 모든 케이스가 처리됨
-                }
-                """.trimIndent()
-            )
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            Surface(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(8.dp),
-                color = Color(0xFF4CAF50).copy(alpha = 0.1f)
-            ) {
-                Column(modifier = Modifier.padding(12.dp)) {
-                    Text(
-                        text = "✓ 컴파일 타임 안전성",
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color(0xFF4CAF50)
-                    )
-                    Spacer(modifier = Modifier.height(6.dp))
-                    Text(
-                        text = "• 새로운 하위 타입 추가 시 컴파일 에러\n• 모든 케이스 처리 강제\n• 리팩토링 안전성 향상",
-                        fontSize = 11.sp,
-                        color = Color(0xFF666666),
-                        lineHeight = 16.sp
-                    )
-                }
-            }
-        }
-    }
-}
-
-@Composable
-private fun CodeBox(code: String) {
-    Surface(
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(8.dp),
-        color = Color(0xFF263238)
-    ) {
-        Text(
-            text = code,
-            modifier = Modifier.padding(12.dp),
-            fontSize = 10.sp,
-            fontFamily = FontFamily.Monospace,
-            color = Color(0xFF80CBC4),
-            lineHeight = 14.sp
-        )
-    }
-}
-
