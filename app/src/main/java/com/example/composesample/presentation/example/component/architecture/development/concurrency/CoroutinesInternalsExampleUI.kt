@@ -14,18 +14,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Card
 import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.Icon
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Info
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -72,7 +68,6 @@ fun CoroutinesInternalsExampleUI(
             contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            item { OverviewCard() }
             item { StateMachineDemoCard() }
             item { ContinuationDemoCard() }
             item { StructuredConcurrencyDemoCard() }
@@ -80,72 +75,6 @@ fun CoroutinesInternalsExampleUI(
             item { DispatchersDemoCard() }
             item { ParallelExecutionDemoCard() }
         }
-    }
-}
-
-@Composable
-private fun OverviewCard() {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        backgroundColor = Color(0xFFE3F2FD),
-        shape = RoundedCornerShape(12.dp)
-    ) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(
-                    Icons.Filled.Info,
-                    contentDescription = null,
-                    tint = Color(0xFF1976D2),
-                    modifier = Modifier.size(28.dp)
-                )
-                Spacer(modifier = Modifier.width(12.dp))
-                Text(
-                    text = "Coroutines 내부 동작 원리",
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color(0xFF1976D2)
-                )
-            }
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            Text(
-                text = "Kotlin Coroutines는 다음과 같은 방식으로 동작합니다:",
-                fontSize = 13.sp,
-                color = Color(0xFF424242)
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            InfoItem("🔄 State Machine", "suspend 함수는 state machine으로 컴파일")
-            InfoItem("📦 Continuation", "중단된 지점 이후의 계산을 표현")
-            InfoItem("🏗️ Structured Concurrency", "계층적으로 코루틴을 관리")
-            InfoItem("🎯 Dispatchers", "적절한 스레드에서 코루틴 실행")
-            InfoItem("❌ Cancellation", "협력적으로 작업 취소")
-        }
-    }
-}
-
-@Composable
-private fun InfoItem(title: String, description: String) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 4.dp)
-    ) {
-        Text(
-            text = title,
-            fontSize = 12.sp,
-            fontWeight = FontWeight.Bold,
-            color = Color(0xFF1976D2),
-            modifier = Modifier.width(140.dp)
-        )
-        Text(
-            text = description,
-            fontSize = 12.sp,
-            color = Color(0xFF666666)
-        )
     }
 }
 
@@ -176,19 +105,6 @@ private fun StateMachineDemoCard() {
                 text = "suspend 함수가 State Machine으로 변환되는 과정",
                 fontSize = 12.sp,
                 color = Color.Gray
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            CodeBox(
-                """
-                suspend fun example() {
-                    val a = func1()  // State 0
-                    val b = func2()  // State 1
-                    val c = func3()  // State 2
-                    return a + b + c
-                }
-                """.trimIndent()
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -361,20 +277,6 @@ private fun ContinuationDemoCard() {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            CodeBox(
-                """
-                interface Continuation<in T> {
-                    val context: CoroutineContext
-                    fun resumeWith(result: Result<T>)
-                }
-                
-                // 중단: 상태 저장
-                // 재개: 저장된 지점부터 실행
-                """.trimIndent()
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
             Button(
                 onClick = {
                     if (!isRunning) {
@@ -498,19 +400,6 @@ private fun StructuredConcurrencyDemoCard() {
                 text = "계층적 코루틴 관리: 부모-자식 관계",
                 fontSize = 12.sp,
                 color = Color.Gray
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            CodeBox(
-                """
-                coroutineScope {
-                    launch { task1() }  // 자식 1
-                    launch { task2() }  // 자식 2
-                    launch { task3() }  // 자식 3
-                    // 모든 자식 완료될 때까지 대기
-                }
-                """.trimIndent()
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -723,20 +612,6 @@ private fun CancellationDemoCard() {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            CodeBox(
-                """
-                val job = launch {
-                    while (isActive) {  // 취소 체크
-                        doWork()
-                        delay(100)
-                    }
-                }
-                job.cancel()
-                """.trimIndent()
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
             Surface(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(8.dp),
@@ -880,19 +755,6 @@ private fun DispatchersDemoCard() {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            CodeBox(
-                """
-                withContext(Dispatchers.IO) {
-                    // IO 스레드에서 실행
-                }
-                withContext(Dispatchers.Main) {
-                    // UI 스레드에서 실행
-                }
-                """.trimIndent()
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
             Button(
                 onClick = {
                     if (!isRunning) {
@@ -1012,24 +874,6 @@ private fun ParallelExecutionDemoCard() {
                 text = "여러 작업을 병렬로 실행합니다",
                 fontSize = 12.sp,
                 color = Color.Gray
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            CodeBox(
-                """
-                coroutineScope {
-                    val task1 = async { fetchUser() }
-                    val task2 = async { fetchPosts() }
-                    val task3 = async { fetchStats() }
-                    
-                    Dashboard(
-                        task1.await(),
-                        task2.await(),
-                        task3.await()
-                    )
-                }
-                """.trimIndent()
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -1201,22 +1045,3 @@ private fun TaskBox(label: String, state: String, modifier: Modifier = Modifier)
         }
     }
 }
-
-@Composable
-private fun CodeBox(code: String) {
-    Surface(
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(8.dp),
-        color = Color(0xFF263238)
-    ) {
-        Text(
-            text = code,
-            fontSize = 10.sp,
-            color = Color(0xFF4CAF50),
-            fontFamily = FontFamily.Monospace,
-            modifier = Modifier.padding(12.dp),
-            lineHeight = 14.sp
-        )
-    }
-}
-
