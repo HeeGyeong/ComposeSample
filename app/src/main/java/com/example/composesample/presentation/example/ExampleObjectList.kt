@@ -545,6 +545,7 @@ fun exampleObjectList(): ArrayList<ExampleObject> {
 
     insertExampleObject.add(
         ExampleObject(
+            lastUpdate = "25. 11. 16",
             title = "Coroutines Internals",
             description = "코루틴 내부: State Machines, Continuations, Structured Concurrency",
             blogUrl = "",
