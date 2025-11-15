@@ -535,6 +535,7 @@ fun exampleObjectList(): ArrayList<ExampleObject> {
 
     insertExampleObject.add(
         ExampleObject(
+            lastUpdate = "25. 11. 12",
             title = "Sealed Classes & Interfaces",
             description = "Sealed class와 interface로 타입 안전한 계층 구조 설계하기",
             blogUrl = "",
