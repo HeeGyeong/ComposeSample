@@ -79,6 +79,7 @@ class ConstValue {
         const val InlineValueClassExample = "inlineValueClassExample"
         const val SealedClassInterfaceExample = "sealedClassInterfaceExample"
         const val CoroutinesInternalsExample = "coroutinesInternalsExample"
+        const val FlatMapExample = "flatMapExample"
 
         // 새로운 Compose 1.7 기능 예제들
         const val Compose17FeaturesExample = "compose17FeaturesExample"
