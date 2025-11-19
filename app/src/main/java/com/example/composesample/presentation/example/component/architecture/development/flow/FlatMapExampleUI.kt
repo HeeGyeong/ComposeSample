@@ -76,6 +76,8 @@ fun FlatMapExampleUI(
             item { FlatMapConcatDemoCard() }
             item { FlatMapMergeDemoCard() }
             item { FlatMapLatestDemoCard() }
+            item { ConcurrencyControlCard() }
+            item { ErrorHandlingCard() }
             item { SearchDemoCard() }
             item { PerformanceComparisonCard() }
         }
@@ -647,6 +649,450 @@ private fun FlatMapLatestDemoCard() {
             }
         }
     }
+}
+
+@OptIn(ExperimentalCoroutinesApi::class)
+@Composable
+private fun ConcurrencyControlCard() {
+    var isRunning by remember { mutableStateOf(false) }
+    var log by remember { mutableStateOf(listOf<String>()) }
+    var concurrency by remember { mutableStateOf(2) }
+    var requestStatuses by remember { mutableStateOf(listOf<RequestStatus>()) }
+    val scope = rememberCoroutineScope()
+
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        elevation = 4.dp,
+        backgroundColor = Color(0xFFE8EAF6),
+        shape = RoundedCornerShape(12.dp)
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Text(
+                text = "🎚️ 동시성 제어 (Concurrency)",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color(0xFF3F51B5)
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Text(
+                text = "flatMapMerge는 동시 실행 개수를 제한할 수 있습니다",
+                fontSize = 12.sp,
+                color = Color.Gray
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Concurrency selector
+            Surface(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(8.dp),
+                color = Color(0xFF3F51B5).copy(alpha = 0.1f)
+            ) {
+                Row(
+                    modifier = Modifier.padding(12.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        "동시 실행 수:",
+                        fontSize = 13.sp,
+                        fontWeight = FontWeight.Medium,
+                        color = Color(0xFF3F51B5)
+                    )
+
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        listOf(1, 2, 3).forEach { value ->
+                            Button(
+                                onClick = { concurrency = value },
+                                modifier = Modifier.size(40.dp),
+                                enabled = !isRunning,
+                                colors = ButtonDefaults.buttonColors(
+                                    backgroundColor = if (concurrency == value)
+                                        Color(0xFF3F51B5)
+                                    else
+                                        Color(0xFFE0E0E0)
+                                ),
+                                shape = CircleShape,
+                                contentPadding = PaddingValues(0.dp)
+                            ) {
+                                Text(
+                                    "$value",
+                                    color = if (concurrency == value) Color.White else Color.Gray,
+                                    fontSize = 14.sp,
+                                    fontWeight = FontWeight.Bold
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Button(
+                onClick = {
+                    if (!isRunning) {
+                        isRunning = true
+                        log = emptyList()
+                        requestStatuses = (1..5).map { RequestStatus("Request-$it") }
+
+                        scope.launch {
+                            flowOf(1, 2, 3, 4, 5)
+                                .flatMapMerge(concurrency = concurrency) { num ->
+                                    flow {
+                                        val index = num - 1
+                                        requestStatuses = requestStatuses.mapIndexed { i, status ->
+                                            if (i == index) status.copy(state = RequestState.RUNNING)
+                                            else status
+                                        }
+                                        log = log + "▶ Request-$num 시작 (동시 실행: $concurrency)"
+
+                                        repeat(10) {
+                                            delay(100)
+                                            requestStatuses =
+                                                requestStatuses.mapIndexed { i, status ->
+                                                    if (i == index) status.copy(progress = (it + 1) / 10f)
+                                                    else status
+                                                }
+                                        }
+
+                                        emit(num)
+                                        requestStatuses = requestStatuses.mapIndexed { i, status ->
+                                            if (i == index) status.copy(
+                                                state = RequestState.COMPLETED,
+                                                progress = 1f
+                                            )
+                                            else status
+                                        }
+                                        log = log + "✓ Request-$num 완료"
+                                    }
+                                }
+                                .collect { }
+                            isRunning = false
+                        }
+                    }
+                },
+                modifier = Modifier.fillMaxWidth(),
+                enabled = !isRunning,
+                colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF3F51B5)),
+                shape = RoundedCornerShape(8.dp)
+            ) {
+                Text(
+                    if (isRunning) "실행 중..." else "실행 (5개 요청, 동시성: $concurrency)",
+                    color = Color.White,
+                    fontSize = 13.sp
+                )
+            }
+
+            // Visual Timeline
+            if (requestStatuses.isNotEmpty()) {
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Surface(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(8.dp),
+                    color = Color.White
+                ) {
+                    Column(modifier = Modifier.padding(12.dp)) {
+                        Text(
+                            "🎬 실시간 진행 (최대 $concurrency 개 동시 실행)",
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color(0xFF3F51B5)
+                        )
+                        Spacer(modifier = Modifier.height(12.dp))
+
+                        requestStatuses.forEach { status ->
+                            RequestVisualizationRow(status, Color(0xFF3F51B5))
+                            Spacer(modifier = Modifier.height(8.dp))
+                        }
+                    }
+                }
+            }
+
+            if (log.isNotEmpty()) {
+                Spacer(modifier = Modifier.height(12.dp))
+
+                Surface(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(8.dp),
+                    color = Color.White
+                ) {
+                    Column(modifier = Modifier.padding(12.dp)) {
+                        log.takeLast(8).forEach { entry ->
+                            Text(
+                                text = entry,
+                                fontSize = 11.sp,
+                                color = when {
+                                    entry.contains("시작") -> Color(0xFF2196F3)
+                                    entry.contains("완료") -> Color(0xFF4CAF50)
+                                    else -> Color(0xFF666666)
+                                },
+                                modifier = Modifier.padding(vertical = 2.dp)
+                            )
+                        }
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Surface(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(8.dp),
+                color = Color(0xFF3F51B5).copy(alpha = 0.1f)
+            ) {
+                Column(modifier = Modifier.padding(12.dp)) {
+                    Text(
+                        text = "💡 특징",
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFF3F51B5)
+                    )
+                    Spacer(modifier = Modifier.height(6.dp))
+                    Text(
+                        text = "• concurrency=1: 순차 실행 (flatMapConcat과 유사)\n• concurrency=2: 최대 2개 동시 실행\n• concurrency=3+: 리소스 제어하며 병렬 처리\n\n사용: API rate limiting, 서버 부하 제어",
+                        fontSize = 11.sp,
+                        color = Color(0xFF666666),
+                        lineHeight = 16.sp
+                    )
+                }
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalCoroutinesApi::class)
+@Composable
+private fun ErrorHandlingCard() {
+    var selectedOperator by remember { mutableStateOf("flatMapConcat") }
+    var isRunning by remember { mutableStateOf(false) }
+    var log by remember { mutableStateOf(listOf<String>()) }
+    var requestStatuses by remember { mutableStateOf(listOf<RequestStatus>()) }
+    val scope = rememberCoroutineScope()
+
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        elevation = 4.dp,
+        backgroundColor = Color(0xFFFFEBEE),
+        shape = RoundedCornerShape(12.dp)
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Text(
+                text = "⚠️ 에러 핸들링",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color(0xFFC62828)
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Text(
+                text = "각 연산자의 에러 전파 방식을 확인하세요",
+                fontSize = 12.sp,
+                color = Color.Gray
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Operator selector
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                listOf("flatMapConcat", "flatMapMerge", "flatMapLatest").forEach { op ->
+                    Button(
+                        onClick = { selectedOperator = op },
+                        modifier = Modifier.weight(1f),
+                        enabled = !isRunning,
+                        colors = ButtonDefaults.buttonColors(
+                            backgroundColor = if (selectedOperator == op)
+                                Color(0xFFC62828)
+                            else
+                                Color(0xFFE0E0E0)
+                        ),
+                        shape = RoundedCornerShape(8.dp),
+                        contentPadding = PaddingValues(vertical = 8.dp, horizontal = 4.dp)
+                    ) {
+                        Text(
+                            op.replace("flatMap", ""),
+                            color = if (selectedOperator == op) Color.White else Color.Gray,
+                            fontSize = 11.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Button(
+                onClick = {
+                    if (!isRunning) {
+                        isRunning = true
+                        log = emptyList()
+                        requestStatuses = listOf(
+                            RequestStatus("Request-1"),
+                            RequestStatus("Request-2 💥"),
+                            RequestStatus("Request-3")
+                        )
+
+                        scope.launch {
+                            try {
+                                flowOf(1, 2, 3)
+                                    .let { source ->
+                                        when (selectedOperator) {
+                                            "flatMapConcat" -> source.flatMapConcat { num ->
+                                                createErrorFlow(num, requestStatuses) {
+                                                    requestStatuses = it; log =
+                                                    (log + it) as List<String>
+                                                }
+                                            }
+
+                                            "flatMapMerge" -> source.flatMapMerge { num ->
+                                                createErrorFlow(num, requestStatuses) {
+                                                    requestStatuses = it; log =
+                                                    (log + it) as List<String>
+                                                }
+                                            }
+
+                                            else -> source.flatMapLatest { num ->
+                                                createErrorFlow(num, requestStatuses) {
+                                                    requestStatuses = it; log =
+                                                    (log + it) as List<String>
+                                                }
+                                            }
+                                        }
+                                    }
+                                    .collect { }
+                            } catch (e: Exception) {
+                                log = log + "❌ 에러 발생: ${e.message}"
+                                log = log + "🛑 Flow 종료 (이후 요청 취소)"
+                            }
+                            isRunning = false
+                        }
+                    }
+                },
+                modifier = Modifier.fillMaxWidth(),
+                enabled = !isRunning,
+                colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFC62828)),
+                shape = RoundedCornerShape(8.dp)
+            ) {
+                Text(
+                    if (isRunning) "실행 중..." else "실행 ($selectedOperator)",
+                    color = Color.White,
+                    fontSize = 13.sp
+                )
+            }
+
+            // Visual Timeline
+            if (requestStatuses.isNotEmpty()) {
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Surface(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(8.dp),
+                    color = Color.White
+                ) {
+                    Column(modifier = Modifier.padding(12.dp)) {
+                        Text(
+                            "🎬 에러 전파 확인",
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color(0xFFC62828)
+                        )
+                        Spacer(modifier = Modifier.height(12.dp))
+
+                        requestStatuses.forEach { status ->
+                            RequestVisualizationRow(status, Color(0xFFC62828))
+                            Spacer(modifier = Modifier.height(8.dp))
+                        }
+                    }
+                }
+            }
+
+            if (log.isNotEmpty()) {
+                Spacer(modifier = Modifier.height(12.dp))
+
+                Surface(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(8.dp),
+                    color = Color.White
+                ) {
+                    Column(modifier = Modifier.padding(12.dp)) {
+                        log.forEach { entry ->
+                            Text(
+                                text = entry,
+                                fontSize = 11.sp,
+                                color = when {
+                                    entry.contains("시작") -> Color(0xFF2196F3)
+                                    entry.contains("✓") -> Color(0xFF4CAF50)
+                                    entry.contains("❌") || entry.contains("💥") -> Color(0xFFD32F2F)
+                                    entry.contains("🛑") -> Color(0xFFFF5722)
+                                    else -> Color(0xFF666666)
+                                },
+                                modifier = Modifier.padding(vertical = 2.dp)
+                            )
+                        }
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Surface(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(8.dp),
+                color = Color(0xFFC62828).copy(alpha = 0.1f)
+            ) {
+                Column(modifier = Modifier.padding(12.dp)) {
+                    Text(
+                        text = "💡 에러 처리 특징",
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFFC62828)
+                    )
+                    Spacer(modifier = Modifier.height(6.dp))
+                    Text(
+                        text = "• 모든 flatMap은 내부 Flow 에러 시 즉시 종료\n• 이후 요청은 실행되지 않음\n• try-catch 또는 catch 연산자로 핸들링 필요\n\n사용: retry, onErrorReturn 등과 조합",
+                        fontSize = 11.sp,
+                        color = Color(0xFF666666),
+                        lineHeight = 16.sp
+                    )
+                }
+            }
+        }
+    }
+}
+
+private fun createErrorFlow(
+    num: Int,
+    currentStatuses: List<RequestStatus>,
+    onUpdate: (List<RequestStatus>) -> Unit
+): kotlinx.coroutines.flow.Flow<Int> = flow {
+    val index = num - 1
+    onUpdate(currentStatuses.mapIndexed { i, status ->
+        if (i == index) status.copy(state = RequestState.RUNNING) else status
+    })
+
+    delay(500)
+
+    if (num == 2) {
+        onUpdate(currentStatuses.mapIndexed { i, status ->
+            if (i == index) status.copy(state = RequestState.CANCELLED, progress = 0.5f) else status
+        })
+        throw IllegalStateException("Request-2에서 에러 발생 💥")
+    }
+
+    onUpdate(currentStatuses.mapIndexed { i, status ->
+        if (i == index) status.copy(state = RequestState.COMPLETED, progress = 1f) else status
+    })
+
+    emit(num)
 }
 
 @Composable
