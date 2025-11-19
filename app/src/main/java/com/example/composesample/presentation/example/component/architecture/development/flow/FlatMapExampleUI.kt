@@ -1,8 +1,10 @@
 package com.example.composesample.presentation.example.component.architecture.development.flow
 
+import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,6 +18,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
@@ -35,6 +38,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -78,12 +82,22 @@ fun FlatMapExampleUI(
     }
 }
 
+// Request State for visualization
+enum class RequestState { WAITING, RUNNING, COMPLETED, CANCELLED }
+
+data class RequestStatus(
+    val name: String,
+    val state: RequestState = RequestState.WAITING,
+    val progress: Float = 0f
+)
+
 @OptIn(ExperimentalCoroutinesApi::class)
 @Composable
 private fun FlatMapConcatDemoCard() {
     var isRunning by remember { mutableStateOf(false) }
     var log by remember { mutableStateOf(listOf<String>()) }
     var totalTime by remember { mutableStateOf(0L) }
+    var requestStatuses by remember { mutableStateOf(listOf<RequestStatus>()) }
     val scope = rememberCoroutineScope()
 
     Card(
@@ -115,14 +129,43 @@ private fun FlatMapConcatDemoCard() {
                     if (!isRunning) {
                         isRunning = true
                         log = emptyList()
+                        requestStatuses = listOf(
+                            RequestStatus("Request-1"),
+                            RequestStatus("Request-2"),
+                            RequestStatus("Request-3")
+                        )
                         scope.launch {
                             val time = measureTimeMillis {
                                 flowOf("Request-1", "Request-2", "Request-3")
                                     .flatMapConcat { request ->
                                         flow {
+                                            val index = request.substringAfter("-").toInt() - 1
+                                            requestStatuses =
+                                                requestStatuses.mapIndexed { i, status ->
+                                                    if (i == index) status.copy(state = RequestState.RUNNING)
+                                                    else status
+                                                }
                                             log = log + "▶ $request 시작"
-                                            delay(1000)
+
+                                            // Progress animation
+                                            repeat(10) {
+                                                delay(100)
+                                                requestStatuses =
+                                                    requestStatuses.mapIndexed { i, status ->
+                                                        if (i == index) status.copy(progress = (it + 1) / 10f)
+                                                        else status
+                                                    }
+                                            }
+
                                             emit("$request 완료")
+                                            requestStatuses =
+                                                requestStatuses.mapIndexed { i, status ->
+                                                    if (i == index) status.copy(
+                                                        state = RequestState.COMPLETED,
+                                                        progress = 1f
+                                                    )
+                                                    else status
+                                                }
                                             log = log + "✓ $request 완료"
                                         }
                                     }
@@ -144,6 +187,32 @@ private fun FlatMapConcatDemoCard() {
                     color = Color.White,
                     fontSize = 13.sp
                 )
+            }
+
+            // Visual Timeline
+            if (requestStatuses.isNotEmpty()) {
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Surface(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(8.dp),
+                    color = Color.White
+                ) {
+                    Column(modifier = Modifier.padding(12.dp)) {
+                        Text(
+                            "🎬 실시간 진행 상태",
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color(0xFF2E7D32)
+                        )
+                        Spacer(modifier = Modifier.height(12.dp))
+
+                        requestStatuses.forEach { status ->
+                            RequestVisualizationRow(status, Color(0xFF2E7D32))
+                            Spacer(modifier = Modifier.height(8.dp))
+                        }
+                    }
+                }
             }
 
             if (log.isNotEmpty()) {
@@ -208,6 +277,7 @@ private fun FlatMapMergeDemoCard() {
     var isRunning by remember { mutableStateOf(false) }
     var log by remember { mutableStateOf(listOf<String>()) }
     var totalTime by remember { mutableStateOf(0L) }
+    var requestStatuses by remember { mutableStateOf(listOf<RequestStatus>()) }
     val scope = rememberCoroutineScope()
 
     Card(
@@ -239,14 +309,43 @@ private fun FlatMapMergeDemoCard() {
                     if (!isRunning) {
                         isRunning = true
                         log = emptyList()
+                        requestStatuses = listOf(
+                            RequestStatus("Request-1"),
+                            RequestStatus("Request-2"),
+                            RequestStatus("Request-3")
+                        )
                         scope.launch {
                             val time = measureTimeMillis {
                                 flowOf("Request-1", "Request-2", "Request-3")
                                     .flatMapMerge { request ->
                                         flow {
+                                            val index = request.substringAfter("-").toInt() - 1
+                                            requestStatuses =
+                                                requestStatuses.mapIndexed { i, status ->
+                                                    if (i == index) status.copy(state = RequestState.RUNNING)
+                                                    else status
+                                                }
                                             log = log + "▶ $request 시작"
-                                            delay(1000)
+
+                                            // Progress animation (all run simultaneously)
+                                            repeat(10) {
+                                                delay(100)
+                                                requestStatuses =
+                                                    requestStatuses.mapIndexed { i, status ->
+                                                        if (i == index) status.copy(progress = (it + 1) / 10f)
+                                                        else status
+                                                    }
+                                            }
+
                                             emit("$request 완료")
+                                            requestStatuses =
+                                                requestStatuses.mapIndexed { i, status ->
+                                                    if (i == index) status.copy(
+                                                        state = RequestState.COMPLETED,
+                                                        progress = 1f
+                                                    )
+                                                    else status
+                                                }
                                             log = log + "✓ $request 완료"
                                         }
                                     }
@@ -268,6 +367,32 @@ private fun FlatMapMergeDemoCard() {
                     color = Color.White,
                     fontSize = 13.sp
                 )
+            }
+
+            // Visual Timeline
+            if (requestStatuses.isNotEmpty()) {
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Surface(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(8.dp),
+                    color = Color.White
+                ) {
+                    Column(modifier = Modifier.padding(12.dp)) {
+                        Text(
+                            "🎬 실시간 진행 상태 (병렬 실행)",
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color(0xFF1976D2)
+                        )
+                        Spacer(modifier = Modifier.height(12.dp))
+
+                        requestStatuses.forEach { status ->
+                            RequestVisualizationRow(status, Color(0xFF1976D2))
+                            Spacer(modifier = Modifier.height(8.dp))
+                        }
+                    }
+                }
             }
 
             if (log.isNotEmpty()) {
@@ -332,6 +457,7 @@ private fun FlatMapLatestDemoCard() {
     var isRunning by remember { mutableStateOf(false) }
     var log by remember { mutableStateOf(listOf<String>()) }
     var totalTime by remember { mutableStateOf(0L) }
+    var requestStatuses by remember { mutableStateOf(listOf<RequestStatus>()) }
     val scope = rememberCoroutineScope()
 
     Card(
@@ -363,6 +489,12 @@ private fun FlatMapLatestDemoCard() {
                     if (!isRunning) {
                         isRunning = true
                         log = emptyList()
+                        requestStatuses = listOf(
+                            RequestStatus("Request-1"),
+                            RequestStatus("Request-2"),
+                            RequestStatus("Request-3")
+                        )
+
                         scope.launch {
                             val time = measureTimeMillis {
                                 flow {
@@ -374,9 +506,45 @@ private fun FlatMapLatestDemoCard() {
                                 }
                                     .flatMapLatest { request ->
                                         flow {
+                                            val index = request.substringAfter("-").toInt() - 1
+
+                                            // Start new request
+                                            requestStatuses =
+                                                requestStatuses.mapIndexed { i, status ->
+                                                    when {
+                                                        i == index -> status.copy(state = RequestState.RUNNING)
+                                                        status.state == RequestState.RUNNING -> status.copy(
+                                                            state = RequestState.CANCELLED
+                                                        )
+
+                                                        else -> status
+                                                    }
+                                                }
                                             log = log + "▶ $request 시작"
-                                            delay(1000)  // 1초 작업
+
+                                            // Progress animation
+                                            repeat(10) {
+                                                delay(100)
+                                                val currentStatus = requestStatuses.getOrNull(index)
+                                                if (currentStatus?.state == RequestState.RUNNING) {
+                                                    requestStatuses =
+                                                        requestStatuses.mapIndexed { i, status ->
+                                                            if (i == index) status.copy(progress = (it + 1) / 10f)
+                                                            else status
+                                                        }
+                                                }
+                                            }
+
                                             emit("$request 완료")
+                                            requestStatuses =
+                                                requestStatuses.mapIndexed { i, status ->
+                                                    if (i == index && status.state == RequestState.RUNNING) {
+                                                        status.copy(
+                                                            state = RequestState.COMPLETED,
+                                                            progress = 1f
+                                                        )
+                                                    } else status
+                                                }
                                             log = log + "✓ $request 완료"
                                         }
                                     }
@@ -399,6 +567,32 @@ private fun FlatMapLatestDemoCard() {
                     color = Color.White,
                     fontSize = 13.sp
                 )
+            }
+
+            // Visual Timeline
+            if (requestStatuses.isNotEmpty()) {
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Surface(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(8.dp),
+                    color = Color.White
+                ) {
+                    Column(modifier = Modifier.padding(12.dp)) {
+                        Text(
+                            "🎬 실시간 진행 상태 (취소 동작)",
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color(0xFFE65100)
+                        )
+                        Spacer(modifier = Modifier.height(12.dp))
+
+                        requestStatuses.forEach { status ->
+                            RequestVisualizationRow(status, Color(0xFFE65100))
+                            Spacer(modifier = Modifier.height(8.dp))
+                        }
+                    }
+                }
             }
 
             if (log.isNotEmpty()) {
@@ -823,6 +1017,120 @@ private fun PerformanceResultBox(
                 CircularProgressIndicator(
                     modifier = Modifier.size(24.dp),
                     color = color
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun RequestVisualizationRow(
+    status: RequestStatus,
+    themeColor: Color
+) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        // Status indicator
+        Box(
+            modifier = Modifier
+                .size(16.dp)
+                .clip(CircleShape)
+                .background(
+                    when (status.state) {
+                        RequestState.WAITING -> Color(0xFFBDBDBD)
+                        RequestState.RUNNING -> themeColor
+                        RequestState.COMPLETED -> Color(0xFF4CAF50)
+                        RequestState.CANCELLED -> Color(0xFFFF5722)
+                    }
+                )
+                .border(
+                    width = 2.dp,
+                    color = when (status.state) {
+                        RequestState.WAITING -> Color(0xFF9E9E9E)
+                        RequestState.RUNNING -> themeColor.copy(alpha = 0.5f)
+                        RequestState.COMPLETED -> Color(0xFF388E3C)
+                        RequestState.CANCELLED -> Color(0xFFE64A19)
+                    },
+                    shape = CircleShape
+                ),
+            contentAlignment = Alignment.Center
+        ) {
+            if (status.state == RequestState.RUNNING) {
+                Box(
+                    modifier = Modifier
+                        .size(8.dp)
+                        .clip(CircleShape)
+                        .background(Color.White)
+                )
+            }
+        }
+
+        Spacer(modifier = Modifier.width(12.dp))
+
+        // Request name and progress
+        Column(modifier = Modifier.weight(1f)) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = status.name,
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Medium,
+                    color = when (status.state) {
+                        RequestState.WAITING -> Color(0xFF9E9E9E)
+                        RequestState.RUNNING -> themeColor
+                        RequestState.COMPLETED -> Color(0xFF4CAF50)
+                        RequestState.CANCELLED -> Color(0xFFFF5722)
+                    }
+                )
+
+                Text(
+                    text = when (status.state) {
+                        RequestState.WAITING -> "대기 중"
+                        RequestState.RUNNING -> "${(status.progress * 100).toInt()}%"
+                        RequestState.COMPLETED -> "✓ 완료"
+                        RequestState.CANCELLED -> "✗ 취소됨"
+                    },
+                    fontSize = 10.sp,
+                    color = Color(0xFF666666)
+                )
+            }
+
+            Spacer(modifier = Modifier.height(4.dp))
+
+            // Progress bar
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(6.dp)
+                    .clip(RoundedCornerShape(3.dp))
+                    .background(Color(0xFFEEEEEE))
+            ) {
+                val animatedProgress by animateFloatAsState(
+                    targetValue = status.progress,
+                    animationSpec = tween(
+                        durationMillis = 200,
+                        easing = LinearEasing
+                    )
+                )
+
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth(animatedProgress)
+                        .fillMaxSize()
+                        .clip(RoundedCornerShape(3.dp))
+                        .background(
+                            when (status.state) {
+                                RequestState.WAITING -> Color(0xFFBDBDBD)
+                                RequestState.RUNNING -> themeColor
+                                RequestState.COMPLETED -> Color(0xFF4CAF50)
+                                RequestState.CANCELLED -> Color(0xFFFF5722)
+                            }
+                        )
                 )
             }
         }
