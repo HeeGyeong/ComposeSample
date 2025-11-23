@@ -555,7 +555,7 @@ fun exampleObjectList(): ArrayList<ExampleObject> {
 
     insertExampleObject.add(
         ExampleObject(
-            lastUpdate = "25. 11. 18",
+            lastUpdate = "25. 11. 23",
             title = "flatMap vs flatMapLatest",
             description = "Flow 변환 연산자의 차이점과 사용 시나리오 완벽 이해",
             blogUrl = "",
