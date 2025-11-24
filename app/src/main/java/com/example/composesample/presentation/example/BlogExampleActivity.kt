@@ -117,6 +117,7 @@ import com.example.composesample.presentation.example.component.architecture.dev
 import com.example.composesample.presentation.example.component.architecture.development.language.SealedClassInterfaceExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.concurrency.CoroutinesInternalsExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.flow.FlatMapExampleUI
+import com.example.composesample.presentation.example.component.architecture.navigation.Navigation3ExampleUI
 import com.example.composesample.presentation.example.component.ui.text.AutoSizingTextExampleUI
 import com.example.composesample.presentation.example.component.ui.text.TextStyleUI
 import com.example.composesample.presentation.getTextStyle
@@ -163,6 +164,7 @@ import com.example.composesample.util.ConstValue.Companion.InlineValueClassExamp
 import com.example.composesample.util.ConstValue.Companion.SealedClassInterfaceExample
 import com.example.composesample.util.ConstValue.Companion.CoroutinesInternalsExample
 import com.example.composesample.util.ConstValue.Companion.FlatMapExample
+import com.example.composesample.util.ConstValue.Companion.Navigation3Example
 import com.example.composesample.util.ConstValue.Companion.PagingExample
 import com.example.composesample.util.ConstValue.Companion.PassingIntentDataExample
 import com.example.composesample.util.ConstValue.Companion.PathGraphicsExample
@@ -944,6 +946,10 @@ fun ExampleCaseUI(
 
                         FlatMapExample -> {
                             FlatMapExampleUI(onBackEvent)
+                        }
+
+                        Navigation3Example -> {
+                            Navigation3ExampleUI(onBackEvent)
                         }
 
                         else -> {
