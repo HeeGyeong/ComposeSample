@@ -565,7 +565,7 @@ fun exampleObjectList(): ArrayList<ExampleObject> {
 
     insertExampleObject.add(
         ExampleObject(
-            lastUpdate = "25. 11. 24",
+            lastUpdate = "25. 11. 27",
             title = "Jetpack Navigation 3",
             description = "새로운 Navigation 라이브러리: Compose State 기반 네비게이션",
             blogUrl = "",
