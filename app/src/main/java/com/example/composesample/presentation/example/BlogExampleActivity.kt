@@ -594,7 +594,13 @@ fun ExampleCardSection(
                 // Move Sample Button
                 Card(
                     modifier = Modifier
-                        .weight(1f)
+                        .then(
+                            if (exampleBlogUrl.isEmpty()) {
+                                Modifier.fillMaxWidth()
+                            } else {
+                                Modifier.weight(1f)
+                            }
+                        )
                         .noRippleClickable {
                             onButtonClick.invoke()
                         },
@@ -617,42 +623,31 @@ fun ExampleCardSection(
                     }
                 }
 
-                Spacer(modifier = Modifier.width(20.dp))
+                if (exampleBlogUrl.isNotEmpty()) {
+                    Spacer(modifier = Modifier.width(20.dp))
 
-                // Move Blog Button
-                Card(
-                    modifier = Modifier
-                        .weight(1f)
-                        .noRippleClickable {
-                            if (exampleBlogUrl.isNotEmpty()) {
+                    Card(
+                        modifier = Modifier
+                            .weight(1f)
+                            .noRippleClickable {
                                 openWebPage(
                                     context = context,
                                     url = exampleBlogUrl
                                 )
-                            } else {
-                                noBlogUrlEvent.invoke()
-                            }
-                        },
-                    shape = RoundedCornerShape(12.dp),
-                    backgroundColor = if (exampleBlogUrl.isNotEmpty()) {
-                        Color.White
-                    } else {
-                        Color.LightGray
-                    },
-                ) {
-                    Column {
-                        Text(
-                            modifier = Modifier
-                                .padding(horizontal = 10.dp, vertical = 5.dp)
-                                .align(Alignment.CenterHorizontally),
-                            text = "Explain Blog",
-                            color = if (exampleBlogUrl.isNotEmpty()) {
-                                Color.Black
-                            } else {
-                                Color.DarkGray
                             },
-                            style = getTextStyle(18)
-                        )
+                        shape = RoundedCornerShape(12.dp),
+                        backgroundColor = Color.White,
+                    ) {
+                        Column {
+                            Text(
+                                modifier = Modifier
+                                    .padding(horizontal = 10.dp, vertical = 5.dp)
+                                    .align(Alignment.CenterHorizontally),
+                                text = "Explain Blog",
+                                color = Color.Black,
+                                style = getTextStyle(18)
+                            )
+                        }
                     }
                 }
             }
