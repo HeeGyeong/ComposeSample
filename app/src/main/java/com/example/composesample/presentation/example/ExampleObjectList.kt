@@ -573,6 +573,16 @@ fun exampleObjectList(): ArrayList<ExampleObject> {
         )
     )
 
+    insertExampleObject.add(
+        ExampleObject(
+            lastUpdate = "25. 12. 01",
+            title = "Pragmatic Modularization",
+            description = "Wiring Modules: 실용적인 모듈화 전략과 의존성 연결",
+            blogUrl = "",
+            exampleType = ConstValue.ModularizationExample
+        )
+    )
+
     return insertExampleObject
 }
 
