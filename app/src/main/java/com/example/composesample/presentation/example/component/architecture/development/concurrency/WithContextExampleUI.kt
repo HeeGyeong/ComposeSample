@@ -37,6 +37,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.composesample.presentation.MainHeader
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -64,6 +65,8 @@ fun WithContextExampleUI(
             item { ComparisonCard() }
             item { WithContextDemoCard() }
             item { LaunchDemoCard() }
+            item { AsyncAwaitDemoCard() }
+            item { ExceptionHandlingCard() }
             item { PerformanceComparisonCard() }
         }
     }
@@ -133,7 +136,7 @@ private fun ComparisonCard() {
                     )
                     Spacer(modifier = Modifier.height(6.dp))
                     Text(
-                        text = "• 결과값 필요? → withContext\n• Fire-and-Forget? → launch\n• 병렬 + 결과? → async/await",
+                        text = "• 순차 + 결과 필요? → withContext\n• Fire-and-Forget? → launch\n• 병렬 + 결과 필요? → async/await\n• 예외를 호출한 곳에서 처리? → withContext/async",
                         fontSize = 11.sp,
                         color = Color(0xFF666666),
                         lineHeight = 16.sp
@@ -666,6 +669,384 @@ private fun PerformanceResultItem(
                 fontWeight = FontWeight.Bold,
                 color = color
             )
+        }
+    }
+}
+
+@Composable
+private fun AsyncAwaitDemoCard() {
+    var isLoading by remember { mutableStateOf(false) }
+    var results by remember { mutableStateOf<String?>(null) }
+    var executionTime by remember { mutableStateOf<Long?>(null) }
+    val scope = rememberCoroutineScope()
+
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        elevation = 4.dp,
+        backgroundColor = Color(0xFFE8EAF6),
+        shape = RoundedCornerShape(12.dp)
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Text(
+                text = "⚡ async/await 데모",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color(0xFF3F51B5)
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Text(
+                text = "병렬 실행 + 결과 수집",
+                fontSize = 12.sp,
+                color = Color.Gray
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Code snippet
+            Surface(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(8.dp),
+                color = Color(0xFF263238)
+            ) {
+                Text(
+                    text = """
+                        // 여러 API를 병렬로 호출하고 결과 수집
+                        suspend fun loadProfile() {
+                            val user = async { fetchUser() }
+                            val posts = async { fetchPosts() }
+                            val friends = async { fetchFriends() }
+                            
+                            // 모든 결과를 기다림
+                            val profile = Profile(
+                                user = user.await(),
+                                posts = posts.await(),
+                                friends = friends.await()
+                            )
+                        }
+                    """.trimIndent(),
+                    fontSize = 9.sp,
+                    color = Color(0xFF4CAF50),
+                    modifier = Modifier.padding(12.dp),
+                    lineHeight = 12.sp
+                )
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Button(
+                onClick = {
+                    scope.launch {
+                        isLoading = true
+                        results = null
+                        executionTime = null
+
+                        val time = measureTimeMillis {
+                            // async로 병렬 실행 + 결과 반환
+                            val deferred1 = async(Dispatchers.IO) {
+                                delay(1000)
+                                "User Data"
+                            }
+
+                            val deferred2 = async(Dispatchers.IO) {
+                                delay(1000)
+                                "Posts Data"
+                            }
+
+                            val deferred3 = async(Dispatchers.IO) {
+                                delay(1000)
+                                "Friends Data"
+                            }
+
+                            // await()로 결과 수집
+                            val result1 = deferred1.await()
+                            val result2 = deferred2.await()
+                            val result3 = deferred3.await()
+
+                            results = "$result1\n$result2\n$result3"
+                        }
+
+                        executionTime = time
+                        isLoading = false
+                    }
+                },
+                modifier = Modifier.fillMaxWidth(),
+                colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF3F51B5)),
+                shape = RoundedCornerShape(8.dp),
+                enabled = !isLoading
+            ) {
+                if (isLoading) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(20.dp),
+                        color = Color.White,
+                        strokeWidth = 2.dp
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                }
+                Text(
+                    text = if (isLoading) "실행 중..." else "병렬 + 결과 수집 (async/await)",
+                    color = Color.White,
+                    fontSize = 13.sp
+                )
+            }
+
+            if (results != null || executionTime != null) {
+                Spacer(modifier = Modifier.height(12.dp))
+
+                Surface(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(8.dp),
+                    color = Color(0xFF3F51B5).copy(alpha = 0.1f)
+                ) {
+                    Column(modifier = Modifier.padding(12.dp)) {
+                        Text(
+                            text = "✅ 실행 결과",
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color(0xFF3F51B5)
+                        )
+                        Spacer(modifier = Modifier.height(6.dp))
+                        results?.let {
+                            Text(
+                                text = it,
+                                fontSize = 11.sp,
+                                color = Color(0xFF666666)
+                            )
+                        }
+                        executionTime?.let {
+                            Spacer(modifier = Modifier.height(4.dp))
+                            Text(
+                                text = "⏱️ 실행 시간: ${it}ms (병렬 실행)",
+                                fontSize = 11.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = Color(0xFF3F51B5)
+                            )
+                        }
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Surface(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(8.dp),
+                color = Color(0xFF3F51B5).copy(alpha = 0.1f)
+            ) {
+                Column(modifier = Modifier.padding(12.dp)) {
+                    Text(
+                        text = "💡 async vs launch",
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFF3F51B5)
+                    )
+                    Spacer(modifier = Modifier.height(6.dp))
+                    Text(
+                        text = "• async: Deferred<T> 반환 (결과값 있음)\n• launch: Job 반환 (결과값 없음)\n• await(): Deferred의 결과를 기다림\n• 병렬 + 결과 필요? → async/await",
+                        fontSize = 11.sp,
+                        color = Color(0xFF666666),
+                        lineHeight = 16.sp
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun ExceptionHandlingCard() {
+    var launchResult by remember { mutableStateOf<String?>(null) }
+    var withContextResult by remember { mutableStateOf<String?>(null) }
+    val scope = rememberCoroutineScope()
+
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        elevation = 4.dp,
+        backgroundColor = Color(0xFFFFEBEE),
+        shape = RoundedCornerShape(12.dp)
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Text(
+                text = "⚠️ 예외 처리 차이",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color(0xFFD32F2F)
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Text(
+                text = "launch vs withContext의 예외 전파 방식",
+                fontSize = 12.sp,
+                color = Color.Gray
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // withContext 예외 처리
+            Surface(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(8.dp),
+                color = Color(0xFF263238)
+            ) {
+                Text(
+                    text = """
+                        // withContext: try-catch로 처리 가능
+                        suspend fun loadData() {
+                            try {
+                                val data = withContext(Dispatchers.IO) {
+                                    if (error) throw Exception("Error!")
+                                    "Data"
+                                }
+                            } catch (e: Exception) {
+                                // 예외 처리 가능
+                            }
+                        }
+                    """.trimIndent(),
+                    fontSize = 9.sp,
+                    color = Color(0xFF4CAF50),
+                    modifier = Modifier.padding(12.dp),
+                    lineHeight = 12.sp
+                )
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Button(
+                onClick = {
+                    scope.launch {
+                        withContextResult = try {
+                            withContext(Dispatchers.IO) {
+                                delay(500)
+                                throw Exception("withContext 예외 발생!")
+                            }
+                            "성공"
+                        } catch (e: Exception) {
+                            "✅ 예외 포착됨: ${e.message}"
+                        }
+                    }
+                },
+                modifier = Modifier.fillMaxWidth(),
+                colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF1976D2)),
+                shape = RoundedCornerShape(8.dp)
+            ) {
+                Text(
+                    text = "withContext 예외 테스트",
+                    color = Color.White,
+                    fontSize = 13.sp
+                )
+            }
+
+            if (withContextResult != null) {
+                Spacer(modifier = Modifier.height(8.dp))
+                Surface(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(8.dp),
+                    color = Color(0xFF1976D2).copy(alpha = 0.1f)
+                ) {
+                    Text(
+                        text = withContextResult!!,
+                        fontSize = 11.sp,
+                        color = Color(0xFF666666),
+                        modifier = Modifier.padding(12.dp)
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // launch 예외 처리
+            Surface(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(8.dp),
+                color = Color(0xFF263238)
+            ) {
+                Text(
+                    text = """
+                        // launch: 내부에서 try-catch 필요
+                        scope.launch {
+                            try {
+                                throw Exception("Error!")
+                            } catch (e: Exception) {
+                                // launch 내부에서 처리
+                            }
+                        }
+                        // 또는 CoroutineExceptionHandler 사용
+                    """.trimIndent(),
+                    fontSize = 9.sp,
+                    color = Color(0xFF4CAF50),
+                    modifier = Modifier.padding(12.dp),
+                    lineHeight = 12.sp
+                )
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Button(
+                onClick = {
+                    scope.launch {
+                        val job = launch {
+                            try {
+                                delay(500)
+                                throw Exception("launch 예외 발생!")
+                            } catch (e: Exception) {
+                                launchResult = "✅ launch 내부에서 예외 포착: ${e.message}"
+                            }
+                        }
+                        job.join()
+                    }
+                },
+                modifier = Modifier.fillMaxWidth(),
+                colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFE65100)),
+                shape = RoundedCornerShape(8.dp)
+            ) {
+                Text(
+                    text = "launch 예외 테스트",
+                    color = Color.White,
+                    fontSize = 13.sp
+                )
+            }
+
+            if (launchResult != null) {
+                Spacer(modifier = Modifier.height(8.dp))
+                Surface(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(8.dp),
+                    color = Color(0xFFE65100).copy(alpha = 0.1f)
+                ) {
+                    Text(
+                        text = launchResult!!,
+                        fontSize = 11.sp,
+                        color = Color(0xFF666666),
+                        modifier = Modifier.padding(12.dp)
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Surface(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(8.dp),
+                color = Color(0xFFD32F2F).copy(alpha = 0.1f)
+            ) {
+                Column(modifier = Modifier.padding(12.dp)) {
+                    Text(
+                        text = "💡 예외 처리 규칙",
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFFD32F2F)
+                    )
+                    Spacer(modifier = Modifier.height(6.dp))
+                    Text(
+                        text = "• withContext: 호출한 쪽에서 try-catch 가능\n• launch: 내부에서 try-catch 또는 Handler 필요\n• async: await() 시점에 예외 발생",
+                        fontSize = 11.sp,
+                        color = Color(0xFF666666),
+                        lineHeight = 16.sp
+                    )
+                }
+            }
         }
     }
 }
