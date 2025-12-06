@@ -697,12 +697,37 @@ private fun AsyncAwaitDemoCard() {
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = "병렬 실행 + 결과 수집",
+                text = "병렬 실행 + 결과 수집 (launch와 withContext의 장점 결합)",
                 fontSize = 12.sp,
                 color = Color.Gray
             )
 
             Spacer(modifier = Modifier.height(16.dp))
+
+            // 설명
+            Surface(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(8.dp),
+                color = Color(0xFF3F51B5).copy(alpha = 0.1f)
+            ) {
+                Column(modifier = Modifier.padding(12.dp)) {
+                    Text(
+                        text = "📚 추가 이유",
+                        fontSize = 11.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFF3F51B5)
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = "• launch: 병렬 O, 결과 X\n• withContext: 병렬 X, 결과 O\n• async/await: 병렬 O, 결과 O ✨",
+                        fontSize = 10.sp,
+                        color = Color(0xFF666666),
+                        lineHeight = 14.sp
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
 
             // Code snippet
             Surface(
@@ -712,18 +737,20 @@ private fun AsyncAwaitDemoCard() {
             ) {
                 Text(
                     text = """
-                        // 여러 API를 병렬로 호출하고 결과 수집
+                        // 실제 사용 예: 여러 API 동시 호출
                         suspend fun loadProfile() {
-                            val user = async { fetchUser() }
-                            val posts = async { fetchPosts() }
-                            val friends = async { fetchFriends() }
+                            // 3개 작업을 동시에 시작
+                            val user = async { fetchUser() }      // 1초
+                            val posts = async { fetchPosts() }    // 1초
+                            val friends = async { fetchFriends() } // 1초
                             
-                            // 모든 결과를 기다림
+                            // 모든 결과를 기다림 (총 1초만 소요)
                             val profile = Profile(
-                                user = user.await(),
-                                posts = posts.await(),
-                                friends = friends.await()
+                                user = user.await(),     // 결과 수집
+                                posts = posts.await(),   // 결과 수집
+                                friends = friends.await() // 결과 수집
                             )
+                            // vs 순차 실행: 3초 소요
                         }
                     """.trimIndent(),
                     fontSize = 9.sp,
@@ -836,14 +863,14 @@ private fun AsyncAwaitDemoCard() {
             ) {
                 Column(modifier = Modifier.padding(12.dp)) {
                     Text(
-                        text = "💡 async vs launch",
+                        text = "🎯 확인 포인트",
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color(0xFF3F51B5)
                     )
                     Spacer(modifier = Modifier.height(6.dp))
                     Text(
-                        text = "• async: Deferred<T> 반환 (결과값 있음)\n• launch: Job 반환 (결과값 없음)\n• await(): Deferred의 결과를 기다림\n• 병렬 + 결과 필요? → async/await",
+                        text = "1. async는 Deferred<T> 반환 (결과 컨테이너)\n2. await()로 실제 결과값 추출\n3. 여러 async 동시 시작 = 병렬 실행\n4. 실행시간: 가장 긴 작업만큼만 소요\n5. 모든 결과를 모아서 처리 가능",
                         fontSize = 11.sp,
                         color = Color(0xFF666666),
                         lineHeight = 16.sp
@@ -877,12 +904,37 @@ private fun ExceptionHandlingCard() {
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = "launch vs withContext의 예외 전파 방식",
+                text = "launch vs withContext의 예외 전파 방식 (실무에서 매우 중요)",
                 fontSize = 12.sp,
                 color = Color.Gray
             )
 
             Spacer(modifier = Modifier.height(16.dp))
+
+            // 추가 이유 설명
+            Surface(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(8.dp),
+                color = Color(0xFFD32F2F).copy(alpha = 0.1f)
+            ) {
+                Column(modifier = Modifier.padding(12.dp)) {
+                    Text(
+                        text = "📚 추가 이유",
+                        fontSize = 11.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFFD32F2F)
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = "실무에서 네트워크 에러, 파싱 에러 등을 처리할 때\nlaunch와 withContext의 예외 처리 방식이 다름을\n모르면 에러를 놓치거나 앱이 크래시될 수 있음",
+                        fontSize = 10.sp,
+                        color = Color(0xFF666666),
+                        lineHeight = 14.sp
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
 
             // withContext 예외 처리
             Surface(
@@ -892,15 +944,17 @@ private fun ExceptionHandlingCard() {
             ) {
                 Text(
                     text = """
-                        // withContext: try-catch로 처리 가능
+                        // withContext: 예외가 호출자에게 전파
                         suspend fun loadData() {
                             try {
                                 val data = withContext(Dispatchers.IO) {
                                     if (error) throw Exception("Error!")
                                     "Data"
                                 }
+                                // 성공 처리
                             } catch (e: Exception) {
-                                // 예외 처리 가능
+                                // ✅ 외부에서 예외 처리 가능!
+                                showError(e)
                             }
                         }
                     """.trimIndent(),
@@ -964,15 +1018,25 @@ private fun ExceptionHandlingCard() {
             ) {
                 Text(
                     text = """
-                        // launch: 내부에서 try-catch 필요
+                        // launch: 새로운 코루틴이므로 예외 내부 처리
+                        try {
+                            scope.launch {
+                                throw Exception("Error!")
+                            }
+                        } catch (e: Exception) {
+                            // ❌ 여기서 못 잡음! (이미 다른 코루틴)
+                        }
+                        
+                        // ✅ 올바른 방법 1: 내부에서 처리
                         scope.launch {
                             try {
                                 throw Exception("Error!")
                             } catch (e: Exception) {
-                                // launch 내부에서 처리
+                                showError(e)
                             }
                         }
-                        // 또는 CoroutineExceptionHandler 사용
+                        
+                        // ✅ 올바른 방법 2: CoroutineExceptionHandler
                     """.trimIndent(),
                     fontSize = 9.sp,
                     color = Color(0xFF4CAF50),
@@ -1033,14 +1097,14 @@ private fun ExceptionHandlingCard() {
             ) {
                 Column(modifier = Modifier.padding(12.dp)) {
                     Text(
-                        text = "💡 예외 처리 규칙",
+                        text = "🎯 확인 포인트",
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color(0xFFD32F2F)
                     )
                     Spacer(modifier = Modifier.height(6.dp))
                     Text(
-                        text = "• withContext: 호출한 쪽에서 try-catch 가능\n• launch: 내부에서 try-catch 또는 Handler 필요\n• async: await() 시점에 예외 발생",
+                        text = "1. withContext: suspend 함수 → 예외 전파 O\n   → 호출한 곳에서 try-catch 가능\n\n2. launch: 새 코루틴 → 예외 전파 X\n   → 내부에서 try-catch 필요\n   → 또는 CoroutineExceptionHandler\n\n3. async: await() 시점에 예외 발생\n   → await()를 try-catch로 감싸기\n\n4. 실무 팁: 에러 UI 표시가 필요하면\n   withContext/async가 더 편리",
                         fontSize = 11.sp,
                         color = Color(0xFF666666),
                         lineHeight = 16.sp
