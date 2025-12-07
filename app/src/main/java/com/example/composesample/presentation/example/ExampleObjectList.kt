@@ -585,7 +585,7 @@ fun exampleObjectList(): ArrayList<ExampleObject> {
 
     insertExampleObject.add(
         ExampleObject(
-            lastUpdate = "25. 12. 02",
+            lastUpdate = "25. 12. 07",
             title = "withContext vs launch",
             description = "Dispatchers.IO 사용 시 withContext와 launch의 실제 차이",
             blogUrl = "",
