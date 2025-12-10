@@ -2,10 +2,8 @@ package com.example.composesample.presentation.example.component.ui.button
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
@@ -26,8 +24,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Card
 import androidx.compose.material.Icon
 import androidx.compose.material.Surface
@@ -62,13 +58,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.composesample.presentation.MainHeader
 
-/**
- * ButtonGroup Example UI
- *
- * Material 3 Expressive의 ButtonGroup 컴포넌트 데모
- * (실제 ButtonGroup API는 Experimental이므로 동작을 시뮬레이션)
- *
- */
 @Composable
 fun ButtonGroupExampleUI(
     onBackEvent: () -> Unit
@@ -124,50 +113,6 @@ private fun BasicButtonGroupCard() {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // 코드 스니펫
-            Surface(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(8.dp),
-                color = Color(0xFF263238)
-            ) {
-                Text(
-                    text = """
-                        ButtonGroup(
-                            overflowIndicator = { menuState ->
-                                FilledIconButton(onClick = { 
-                                    menuState.show() 
-                                }) {
-                                    Icon(Icons.Filled.MoreVert, "More")
-                                }
-                            }
-                        ) {
-                            for (i in 0 until 5) {
-                                clickableItem(
-                                    onClick = { /* handle click */ },
-                                    label = "Button ${'$'}i"
-                                )
-                            }
-                        }
-                    """.trimIndent(),
-                    fontSize = 9.sp,
-                    color = Color(0xFF4CAF50),
-                    modifier = Modifier.padding(12.dp),
-                    lineHeight = 12.sp
-                )
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // 시뮬레이션된 ButtonGroup
-            Text(
-                text = "▼ 데모 (확장 애니메이션 시뮬레이션)",
-                fontSize = 11.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color(0xFF1976D2)
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -180,8 +125,6 @@ private fun BasicButtonGroupCard() {
                         modifier = Modifier.weight(if (clickedButton == i) 1.3f else 1f)
                     )
                 }
-
-                // Overflow indicator
                 Surface(
                     modifier = Modifier
                         .size(40.dp)
@@ -208,30 +151,6 @@ private fun BasicButtonGroupCard() {
                     color = Color(0xFF1976D2)
                 )
             }
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            Surface(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(8.dp),
-                color = Color(0xFF1976D2).copy(alpha = 0.1f)
-            ) {
-                Column(modifier = Modifier.padding(12.dp)) {
-                    Text(
-                        text = "💡 expandedRatio",
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color(0xFF1976D2)
-                    )
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Text(
-                        text = "• 0f: 확장 애니메이션 비활성화\n• 0.5f: 50% 확장\n• 1f: 2배로 확장 (기본값)",
-                        fontSize = 11.sp,
-                        color = Color(0xFF666666),
-                        lineHeight = 16.sp
-                    )
-                }
-            }
         }
     }
 }
@@ -245,12 +164,6 @@ private fun SimulatedClickableButton(
 ) {
     val interactionSource = remember { MutableInteractionSource() }
     val isPressedState by interactionSource.collectIsPressedAsState()
-
-    val animatedWidth by animateFloatAsState(
-        targetValue = if (isPressed || isPressedState) 1.3f else 1f,
-        animationSpec = tween(200),
-        label = "width"
-    )
 
     Surface(
         modifier = modifier
@@ -306,46 +219,6 @@ private fun SingleSelectCard() {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // 코드 스니펫
-            Surface(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(8.dp),
-                color = Color(0xFF263238)
-            ) {
-                Text(
-                    text = """
-                        var selectedIndex by remember { mutableIntStateOf(0) }
-                        
-                        ButtonGroup(overflowIndicator = {}) {
-                            options.forEachIndexed { index, label ->
-                                toggleableItem(
-                                    checked = selectedIndex == index,
-                                    onCheckedChange = { selectedIndex = index },
-                                    label = label,
-                                    icon = { Icon(...) }
-                                )
-                            }
-                        }
-                    """.trimIndent(),
-                    fontSize = 9.sp,
-                    color = Color(0xFF4CAF50),
-                    modifier = Modifier.padding(12.dp),
-                    lineHeight = 12.sp
-                )
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Text(
-                text = "▼ 데모",
-                fontSize = 11.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color(0xFFE65100)
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            // 시뮬레이션된 Single-Select
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -453,47 +326,6 @@ private fun MultiSelectCard() {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // 코드 스니펫
-            Surface(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(8.dp),
-                color = Color(0xFF263238)
-            ) {
-                Text(
-                    text = """
-                        val checked = remember { 
-                            mutableStateListOf(false, false, false) 
-                        }
-                        
-                        ButtonGroup(overflowIndicator = {}) {
-                            options.forEachIndexed { index, label ->
-                                toggleableItem(
-                                    checked = checked[index],
-                                    onCheckedChange = { checked[index] = it },
-                                    label = label
-                                )
-                            }
-                        }
-                    """.trimIndent(),
-                    fontSize = 9.sp,
-                    color = Color(0xFF4CAF50),
-                    modifier = Modifier.padding(12.dp),
-                    lineHeight = 12.sp
-                )
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Text(
-                text = "▼ 데모",
-                fontSize = 11.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color(0xFF7B1FA2)
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            // 시뮬레이션된 Multi-Select
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -624,51 +456,6 @@ private fun ConnectedButtonGroupCard() {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // 코드 스니펫
-            Surface(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(8.dp),
-                color = Color(0xFF263238)
-            ) {
-                Text(
-                    text = """
-                        Row(
-                            horizontalArrangement = Arrangement.spacedBy(
-                                ButtonGroupDefaults.ConnectedSpaceBetween
-                            )
-                        ) {
-                            options.forEachIndexed { index, label ->
-                                ToggleButton(
-                                    checked = selectedIndex == index,
-                                    onCheckedChange = { selectedIndex = index },
-                                    shapes = when (index) {
-                                        0 -> connectedLeadingButtonShapes()
-                                        lastIndex -> connectedTrailingButtonShapes()
-                                        else -> connectedMiddleButtonShapes()
-                                    }
-                                ) { Text(label) }
-                            }
-                        }
-                    """.trimIndent(),
-                    fontSize = 9.sp,
-                    color = Color(0xFF4CAF50),
-                    modifier = Modifier.padding(12.dp),
-                    lineHeight = 12.sp
-                )
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Text(
-                text = "▼ 데모 (3개 버튼)",
-                fontSize = 11.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color(0xFF0277BD)
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            // 시뮬레이션된 Connected ButtonGroup (3개)
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(2.dp)
@@ -691,16 +478,6 @@ private fun ConnectedButtonGroupCard() {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            Text(
-                text = "▼ FlowRow로 여러 줄 (5개 버튼)",
-                fontSize = 11.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color(0xFF0277BD)
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            // FlowRow 데모
             FlowRow(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(2.dp),
