@@ -120,6 +120,7 @@ import com.example.composesample.presentation.example.component.architecture.dev
 import com.example.composesample.presentation.example.component.architecture.development.flow.FlatMapExampleUI
 import com.example.composesample.presentation.example.component.architecture.navigation.Navigation3ExampleUI
 import com.example.composesample.presentation.example.component.architecture.modularization.ModularizationExampleUI
+import com.example.composesample.presentation.example.component.ui.button.ButtonGroupExampleUI
 import com.example.composesample.presentation.example.component.ui.text.AutoSizingTextExampleUI
 import com.example.composesample.presentation.example.component.ui.text.TextStyleUI
 import com.example.composesample.presentation.getTextStyle
@@ -169,6 +170,7 @@ import com.example.composesample.util.ConstValue.Companion.FlatMapExample
 import com.example.composesample.util.ConstValue.Companion.Navigation3Example
 import com.example.composesample.util.ConstValue.Companion.ModularizationExample
 import com.example.composesample.util.ConstValue.Companion.WithContextExample
+import com.example.composesample.util.ConstValue.Companion.ButtonGroupExample
 import com.example.composesample.util.ConstValue.Companion.PagingExample
 import com.example.composesample.util.ConstValue.Companion.PassingIntentDataExample
 import com.example.composesample.util.ConstValue.Companion.PathGraphicsExample
@@ -957,6 +959,10 @@ fun ExampleCaseUI(
 
                         WithContextExample -> {
                             WithContextExampleUI(onBackEvent)
+                        }
+
+                        ButtonGroupExample -> {
+                            ButtonGroupExampleUI(onBackEvent)
                         }
 
                         else -> {
