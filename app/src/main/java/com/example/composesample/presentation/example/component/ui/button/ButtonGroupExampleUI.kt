@@ -80,6 +80,8 @@ fun ButtonGroupExampleUI(
             item { BasicButtonGroupCard() }
             item { SingleSelectCard() }
             item { MultiSelectCard() }
+            item { IconOnlyButtonGroupCard() }
+            item { ExpandedRatioCard() }
             item { ConnectedButtonGroupCard() }
         }
     }
@@ -290,6 +292,256 @@ private fun SimulatedToggleButton(
                 fontSize = 11.sp,
                 fontWeight = FontWeight.Medium,
                 color = contentColor
+            )
+        }
+    }
+}
+
+@Composable
+private fun IconOnlyButtonGroupCard() {
+    val icons = listOf(
+        Icons.Outlined.Home,
+        Icons.Outlined.Star,
+        Icons.Outlined.FavoriteBorder,
+        Icons.Outlined.Search,
+        Icons.Outlined.Person
+    )
+    val filledIcons = listOf(
+        Icons.Filled.Home,
+        Icons.Filled.Star,
+        Icons.Filled.Favorite,
+        Icons.Filled.Search,
+        Icons.Filled.Person
+    )
+    var selectedIndex by remember { mutableIntStateOf(0) }
+
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        elevation = 4.dp,
+        backgroundColor = Color(0xFFE8F5E9),
+        shape = RoundedCornerShape(12.dp)
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Text(
+                text = "🎨 아이콘 전용 ButtonGroup",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color(0xFF2E7D32)
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Text(
+                text = "텍스트 없이 아이콘만 사용",
+                fontSize = 12.sp,
+                color = Color.Gray
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                icons.forEachIndexed { index, icon ->
+                    IconOnlyButton(
+                        icon = if (selectedIndex == index) filledIcons[index] else icon,
+                        isSelected = selectedIndex == index,
+                        onClick = { selectedIndex = index },
+                        modifier = Modifier.weight(1f)
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            val labels = listOf("Home", "Star", "Heart", "Search", "Person")
+            Text(
+                text = "✅ 선택됨: ${labels[selectedIndex]}",
+                fontSize = 11.sp,
+                color = Color(0xFF2E7D32)
+            )
+        }
+    }
+}
+
+@Composable
+private fun IconOnlyButton(
+    icon: ImageVector,
+    isSelected: Boolean,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val backgroundColor by animateColorAsState(
+        targetValue = if (isSelected) Color(0xFF2E7D32) else Color(0xFFC8E6C9),
+        animationSpec = tween(200),
+        label = "bgColor"
+    )
+
+    val contentColor by animateColorAsState(
+        targetValue = if (isSelected) Color.White else Color(0xFF2E7D32),
+        animationSpec = tween(200),
+        label = "contentColor"
+    )
+
+    Surface(
+        modifier = modifier
+            .size(48.dp)
+            .clip(CircleShape)
+            .clickable(onClick = onClick),
+        color = backgroundColor,
+        shape = CircleShape
+    ) {
+        Box(contentAlignment = Alignment.Center) {
+            Icon(
+                icon,
+                contentDescription = null,
+                tint = contentColor,
+                modifier = Modifier.size(24.dp)
+            )
+        }
+    }
+}
+
+@Composable
+private fun ExpandedRatioCard() {
+    var selectedRatio by remember { mutableIntStateOf(1) }
+    val ratios = listOf(0f, 0.5f, 1f)
+    val ratioLabels = listOf("0f (비활성)", "0.5f (50%)", "1f (100%)")
+    var clickedButton by remember { mutableStateOf<Int?>(null) }
+
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        elevation = 4.dp,
+        backgroundColor = Color(0xFFFCE4EC),
+        shape = RoundedCornerShape(12.dp)
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Text(
+                text = "📏 ExpandedRatio 비교",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color(0xFFC2185B)
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Text(
+                text = "버튼 클릭 시 확장 비율 설정",
+                fontSize = 12.sp,
+                color = Color.Gray
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(4.dp)
+            ) {
+                ratioLabels.forEachIndexed { index, label ->
+                    RatioSelectorButton(
+                        label = label,
+                        isSelected = selectedRatio == index,
+                        onClick = { 
+                            selectedRatio = index
+                            clickedButton = null
+                        },
+                        modifier = Modifier.weight(1f)
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                for (i in 0 until 3) {
+                    ExpandableButton(
+                        label = "Btn $i",
+                        isPressed = clickedButton == i,
+                        expandedRatio = ratios[selectedRatio],
+                        onClick = { clickedButton = if (clickedButton == i) null else i },
+                        modifier = Modifier.weight(
+                            if (clickedButton == i) 1f + ratios[selectedRatio] else 1f
+                        )
+                    )
+                }
+            }
+
+            if (clickedButton != null) {
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = "✅ Button $clickedButton 클릭됨 (확장비율: ${ratioLabels[selectedRatio]})",
+                    fontSize = 11.sp,
+                    color = Color(0xFFC2185B)
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun RatioSelectorButton(
+    label: String,
+    isSelected: Boolean,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val backgroundColor by animateColorAsState(
+        targetValue = if (isSelected) Color(0xFFC2185B) else Color(0xFFF8BBD0),
+        animationSpec = tween(200),
+        label = "bgColor"
+    )
+
+    val contentColor by animateColorAsState(
+        targetValue = if (isSelected) Color.White else Color(0xFFC2185B),
+        animationSpec = tween(200),
+        label = "contentColor"
+    )
+
+    Surface(
+        modifier = modifier
+            .height(36.dp)
+            .clip(RoundedCornerShape(18.dp))
+            .clickable(onClick = onClick),
+        color = backgroundColor,
+        shape = RoundedCornerShape(18.dp)
+    ) {
+        Box(contentAlignment = Alignment.Center) {
+            Text(
+                text = label,
+                fontSize = 9.sp,
+                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
+                color = contentColor
+            )
+        }
+    }
+}
+
+@Composable
+private fun ExpandableButton(
+    label: String,
+    isPressed: Boolean,
+    expandedRatio: Float,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Surface(
+        modifier = modifier
+            .height(40.dp)
+            .clip(RoundedCornerShape(20.dp))
+            .clickable(onClick = onClick),
+        color = if (isPressed) Color(0xFFC2185B) else Color(0xFFF8BBD0),
+        shape = RoundedCornerShape(20.dp)
+    ) {
+        Box(contentAlignment = Alignment.Center) {
+            Text(
+                text = label,
+                fontSize = 12.sp,
+                fontWeight = FontWeight.Medium,
+                color = if (isPressed) Color.White else Color(0xFFC2185B)
             )
         }
     }
