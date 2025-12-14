@@ -595,7 +595,7 @@ fun exampleObjectList(): ArrayList<ExampleObject> {
 
     insertExampleObject.add(
         ExampleObject(
-            lastUpdate = "25. 12. 10",
+            lastUpdate = "25. 12. 14",
             title = "ButtonGroup (M3 Expressive)",
             description = "Material 3 Expressive의 ButtonGroup: 애니메이션, 오버플로우, 토글 지원",
             blogUrl = "",
