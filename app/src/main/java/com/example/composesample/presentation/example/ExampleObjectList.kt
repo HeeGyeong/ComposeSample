@@ -605,7 +605,7 @@ fun exampleObjectList(): ArrayList<ExampleObject> {
 
     insertExampleObject.add(
         ExampleObject(
-            lastUpdate = "25. 12. 12",
+            lastUpdate = "25. 12. 16",
             title = "Visibility in Compose",
             description = "View.INVISIBLE/GONE에서 Modifier.visible로: Compose 가시성 처리",
             blogUrl = "",
