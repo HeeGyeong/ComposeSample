@@ -20,7 +20,7 @@ class ConstValue {
         const val SSEWikiURL = "https://stream.wikimedia.org/v2/stream/recentchange"
 
         // ==================== UI 컴포넌트 예제 ====================
-        // LazyColumn(키보드 이슈), ClickEvent(중복 방지), FlexBox(유동 레이아웃), WebView(YouTube), TextStyle(스타일링), StickyHeader(고정 헤더), ReverseLazyColumn(역방향), AutoSizingText(자동 크기), CardCorners(모서리 스타일), ButtonGroup(M3 Expressive)
+        // LazyColumn(키보드 이슈), ClickEvent(중복 방지), FlexBox(유동 레이아웃), WebView(YouTube), TextStyle(스타일링), StickyHeader(고정 헤더), ReverseLazyColumn(역방향), AutoSizingText(자동 크기), CardCorners(모서리 스타일), ButtonGroup(M3 Expressive), Visibility(가시성 처리)
         const val LazyColumnExample = "lazyColumnExample"
         const val ClickEventExample = "clickEventExample"
         const val FlexBoxLayoutExample = "flexBoxLayoutExample"
@@ -31,6 +31,7 @@ class ConstValue {
         const val AutoSizingTextExample = "autoSizingTextExample"
         const val CardCornersExample = "cardCornersExample"
         const val ButtonGroupExample = "buttonGroupExample"
+        const val VisibilityExample = "visibilityExample"
 
         // ==================== 스크롤 & 제스처 예제 ====================
         // PullToRefresh(당겨서 새로고침), PullScreenPager(풀스크린 페이저), FlingBehavior(스크롤 커스텀), SwipeToDismiss(스와이프 삭제), DragAndDrop(드래그 앤 드롭), NestedScrolling(중첩 스크롤)
