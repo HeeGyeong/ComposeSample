@@ -131,8 +131,9 @@ class ConstValue {
         const val GlanceWidgetExample = "glanceWidgetExample"
 
         // ==================== 테스트 예제 ====================
-        // Test(UI 테스트 TDD)
+        // Test(UI 테스트 TDD), RecompositionTest(과도한 Recomposition 감지)
         const val TestExample = "testExample"
+        const val RecompositionTestExample = "recompositionTestExample"
 
         // ==================== 유틸리티 & 라이브러리 예제 ====================
         // CursorIDE(AI IDE 활용), SnapNotify(Snackbar 간소화), AutoCloseable(자동 리소스 정리)

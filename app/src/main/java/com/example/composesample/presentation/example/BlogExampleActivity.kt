@@ -63,6 +63,7 @@ import com.example.composesample.presentation.example.component.architecture.dev
 import com.example.composesample.presentation.example.component.architecture.development.coordinator.CoordinatorExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.cursor.CursorIDEExample
 import com.example.composesample.presentation.example.component.architecture.development.init.InitTestExampleUI
+import com.example.composesample.presentation.example.component.architecture.development.test.RecompositionTestExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.test.UITestExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.type.TypeExampleUI
 import com.example.composesample.presentation.example.component.architecture.pattern.compositionLocal.CompositionLocalExampleUI
@@ -193,6 +194,7 @@ import com.example.composesample.util.ConstValue.Companion.SnapshotFlowExample
 import com.example.composesample.util.ConstValue.Companion.StickyHeaderExample
 import com.example.composesample.util.ConstValue.Companion.SwipeToDismissExample
 import com.example.composesample.util.ConstValue.Companion.TargetSDK34PermissionExample
+import com.example.composesample.util.ConstValue.Companion.RecompositionTestExample
 import com.example.composesample.util.ConstValue.Companion.TestExample
 import com.example.composesample.util.ConstValue.Companion.TextOverflowExample
 import com.example.composesample.util.ConstValue.Companion.TextShimmerExample
@@ -969,6 +971,10 @@ fun ExampleCaseUI(
 
                         VisibilityExample -> {
                             VisibilityExampleUI(onBackEvent)
+                        }
+
+                        RecompositionTestExample -> {
+                            RecompositionTestExampleUI(onBackEvent)
                         }
 
                         else -> {
