@@ -615,7 +615,7 @@ fun exampleObjectList(): ArrayList<ExampleObject> {
 
     insertExampleObject.add(
         ExampleObject(
-            lastUpdate = "25. 12. 29",
+            lastUpdate = "25. 12. 31",
             title = "Catching Excessive Recompositions",
             description = "테스트로 과도한 Recomposition 감지: RecompositionCounter와 assertRecompositionCount",
             blogUrl = "",
