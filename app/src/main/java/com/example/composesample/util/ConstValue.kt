@@ -3,7 +3,7 @@ package com.example.composesample.util
 class ConstValue {
     companion object {
         // ==================== 기본 설정 ====================
-        const val UpdateDate = "25년 12월"
+        const val UpdateDate = "26년 1월"
 
         // ==================== Intent & Code Type ====================
         const val IntentType = "type"
