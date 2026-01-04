@@ -109,8 +109,9 @@ class ConstValue {
         const val PagingExample = "pagingExample"
 
         // ==================== 시스템 & 설정 예제 ====================
-        // PowerSaveMode(절전 모드), TargetSDK34Permission(권한 처리), PassingIntentData(Intent 전달), LanguageSetting(시스템 언어), LocalLanguageChange(앱 내 언어), Shortcut(앱 숏컷)
+        // PowerSaveMode(절전 모드), TargetSDK34Permission(권한 처리), PassingIntentData(Intent 전달), LanguageSetting(시스템 언어), LocalLanguageChange(앱 내 언어), Shortcut(앱 숏컷), QuickSettingsTile(빠른 설정 타일)
         const val PowerSaveModeExample = "powerSaveModeExample"
+        const val QuickSettingsTileExample = "quickSettingsTileExample"
         const val TargetSDK34PermissionExample = "targetSDK34PermissionExample"
         const val PassingIntentDataExample = "passingIntentDataExample"
         const val LanguageSettingExample = "languageSettingExample"
