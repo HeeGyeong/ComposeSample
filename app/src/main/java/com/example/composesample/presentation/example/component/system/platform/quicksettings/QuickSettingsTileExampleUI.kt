@@ -52,6 +52,10 @@ fun QuickSettingsTileExampleUI(
     val context = LocalContext.current
     val counterValue by CounterTileService.counterFlow.collectAsState()
     val toggleState by ToggleTileService.toggleStateFlow.collectAsState()
+    val timerSeconds by TimerTileService.timerSecondsFlow.collectAsState()
+    val timerRunning by TimerTileService.isRunningFlow.collectAsState()
+    val actionCount by QuickActionTileService.actionCountFlow.collectAsState()
+    val lastActionTime by QuickActionTileService.lastActionTimeFlow.collectAsState()
 
     Column(
         modifier = Modifier
@@ -68,84 +72,12 @@ fun QuickSettingsTileExampleUI(
             contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            item { OverviewCard() }
             item { CounterTileCard(counterValue, context) }
             item { ToggleTileCard(toggleState, context) }
+            item { TimerTileCard(timerSeconds, timerRunning, context) }
+            item { QuickActionTileCard(actionCount, lastActionTime, context) }
             item { HowToAddTileCard(context) }
         }
-    }
-}
-
-@Composable
-private fun OverviewCard() {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        backgroundColor = Color(0xFFE3F2FD),
-        shape = RoundedCornerShape(12.dp)
-    ) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Text(
-                text = "📱 Quick Settings Tile이란?",
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color(0xFF1976D2)
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Text(
-                text = "알림 패널을 내려서 빠르게 앱 기능에 접근할 수 있는 타일입니다.\n" +
-                        "마이크로 인터랙션 패턴을 적용하여 앱을 열지 않고도 즉각적인 입력이 가능합니다.",
-                fontSize = 13.sp,
-                color = Color(0xFF666666),
-                lineHeight = 20.sp
-            )
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            Surface(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(8.dp),
-                color = Color(0xFF1976D2).copy(alpha = 0.1f)
-            ) {
-                Column(modifier = Modifier.padding(12.dp)) {
-                    FeatureRow("🔢", "카운터 타일", "클릭할 때마다 값 증가")
-                    FeatureRow("🔄", "토글 타일", "on/off 상태 전환")
-                    FeatureRow("⏱️", "타이머 타일", "시작/정지 제어")
-                    FeatureRow("⚡", "퀵 액션 타일", "즉시 기능 실행")
-                }
-            }
-        }
-    }
-}
-
-@Composable
-private fun FeatureRow(emoji: String, title: String, description: String) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 4.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(
-            text = emoji,
-            fontSize = 16.sp
-        )
-        Spacer(modifier = Modifier.padding(horizontal = 6.dp))
-        Text(
-            text = title,
-            fontSize = 12.sp,
-            fontWeight = FontWeight.Bold,
-            color = Color(0xFF1976D2),
-            modifier = Modifier.weight(0.4f)
-        )
-        Text(
-            text = description,
-            fontSize = 11.sp,
-            color = Color(0xFF666666),
-            modifier = Modifier.weight(0.6f)
-        )
     }
 }
 
@@ -320,6 +252,221 @@ private fun ToggleTileCard(toggleState: Boolean, context: Context) {
                     shape = RoundedCornerShape(8.dp)
                 ) {
                     Text("타일 새로고침", color = Color.White, fontSize = 12.sp)
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun TimerTileCard(timerSeconds: Int, isRunning: Boolean, context: Context) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        elevation = 4.dp,
+        backgroundColor = Color(0xFFE1F5FE),
+        shape = RoundedCornerShape(12.dp)
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Text(
+                text = "⏱️ 타이머 타일 데모",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color(0xFF0277BD)
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Text(
+                text = "빠른 설정 패널에서 타일을 클릭하면 타이머가 시작/정지됩니다.",
+                fontSize = 12.sp,
+                color = Color.Gray
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Surface(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(8.dp),
+                color = if (isRunning) Color(0xFF4CAF50).copy(alpha = 0.2f)
+                else Color(0xFF0277BD).copy(alpha = 0.1f)
+            ) {
+                Column(
+                    modifier = Modifier.padding(16.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = if (isRunning) "타이머 실행 중" else "타이머 정지됨",
+                        fontSize = 14.sp,
+                        color = if (isRunning) Color(0xFF2E7D32) else Color(0xFF0277BD)
+                    )
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    Text(
+                        text = TimerTileService.formatTime(timerSeconds),
+                        fontSize = 48.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = if (isRunning) Color(0xFF2E7D32) else Color(0xFF0277BD)
+                    )
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    Text(
+                        text = "빠른 설정 패널에서 'Timer' 타일을 클릭하세요",
+                        fontSize = 11.sp,
+                        color = Color(0xFF666666)
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Button(
+                    onClick = { TimerTileService.toggleTimer() },
+                    modifier = Modifier.weight(1f),
+                    colors = ButtonDefaults.buttonColors(
+                        backgroundColor = if (isRunning) Color(0xFFF44336) else Color(0xFF4CAF50)
+                    ),
+                    shape = RoundedCornerShape(8.dp)
+                ) {
+                    Text(
+                        if (isRunning) "정지" else "시작",
+                        color = Color.White,
+                        fontSize = 12.sp
+                    )
+                }
+
+                Button(
+                    onClick = { TimerTileService.resetTimer() },
+                    modifier = Modifier.weight(1f),
+                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF0277BD)),
+                    shape = RoundedCornerShape(8.dp)
+                ) {
+                    Text("리셋", color = Color.White, fontSize = 12.sp)
+                }
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    Button(
+                        onClick = {
+                            TileService.requestListeningState(
+                                context,
+                                ComponentName(context, TimerTileService::class.java)
+                            )
+                        },
+                        modifier = Modifier.weight(1f),
+                        colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF03A9F4)),
+                        shape = RoundedCornerShape(8.dp)
+                    ) {
+                        Text("새로고침", color = Color.White, fontSize = 11.sp)
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun QuickActionTileCard(actionCount: Int, lastActionTime: String?, context: Context) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        elevation = 4.dp,
+        backgroundColor = Color(0xFFFFF8E1),
+        shape = RoundedCornerShape(12.dp)
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Text(
+                text = "⚡ 퀵 액션 타일 데모",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color(0xFFFF8F00)
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Text(
+                text = "빠른 설정 패널에서 타일을 클릭하면 즉시 액션이 실행됩니다.",
+                fontSize = 12.sp,
+                color = Color.Gray
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Surface(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(8.dp),
+                color = Color(0xFFFF8F00).copy(alpha = 0.1f)
+            ) {
+                Column(
+                    modifier = Modifier.padding(16.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = "실행 횟수",
+                        fontSize = 14.sp,
+                        color = Color(0xFFFF8F00)
+                    )
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    Text(
+                        text = "⚡ x$actionCount",
+                        fontSize = 48.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFFFF8F00)
+                    )
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    lastActionTime?.let { time ->
+                        Text(
+                            text = "마지막 실행: $time",
+                            fontSize = 12.sp,
+                            color = Color(0xFF666666)
+                        )
+                        Spacer(modifier = Modifier.height(4.dp))
+                    }
+
+                    Text(
+                        text = "빠른 설정 패널에서 'Quick Action' 타일을 클릭하세요",
+                        fontSize = 11.sp,
+                        color = Color(0xFF666666)
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Button(
+                    onClick = { QuickActionTileService.resetActionCount() },
+                    modifier = Modifier.weight(1f),
+                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFFF8F00)),
+                    shape = RoundedCornerShape(8.dp)
+                ) {
+                    Text("카운트 리셋", color = Color.White, fontSize = 12.sp)
+                }
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    Button(
+                        onClick = {
+                            TileService.requestListeningState(
+                                context,
+                                ComponentName(context, QuickActionTileService::class.java)
+                            )
+                        },
+                        modifier = Modifier.weight(1f),
+                        colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFFFC107)),
+                        shape = RoundedCornerShape(8.dp)
+                    ) {
+                        Text("타일 새로고침", color = Color.White, fontSize = 11.sp)
+                    }
                 }
             }
         }

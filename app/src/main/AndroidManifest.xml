@@ -190,6 +190,30 @@
                 <action android:name="android.service.quicksettings.action.QS_TILE" />
             </intent-filter>
         </service>
+
+        <!-- Quick Settings Tile - Timer -->
+        <service
+            android:name=".presentation.example.component.system.platform.quicksettings.TimerTileService"
+            android:label="Timer"
+            android:icon="@drawable/ic_launcher_foreground"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+        </service>
+
+        <!-- Quick Settings Tile - Quick Action -->
+        <service
+            android:name=".presentation.example.component.system.platform.quicksettings.QuickActionTileService"
+            android:label="Quick Action"
+            android:icon="@drawable/ic_launcher_foreground"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>
