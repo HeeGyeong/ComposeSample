@@ -20,14 +20,25 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Card
+import androidx.compose.material.Icon
+import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
+import androidx.compose.material.TextFieldDefaults
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.ui.window.Dialog
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -56,6 +67,9 @@ fun QuickSettingsTileExampleUI(
     val timerRunning by TimerTileService.isRunningFlow.collectAsState()
     val actionCount by QuickActionTileService.actionCountFlow.collectAsState()
     val lastActionTime by QuickActionTileService.lastActionTimeFlow.collectAsState()
+    val memos by MemoTileService.memosFlow.collectAsState()
+
+    var showMemoDialog by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -76,8 +90,27 @@ fun QuickSettingsTileExampleUI(
             item { ToggleTileCard(toggleState, context) }
             item { TimerTileCard(timerSeconds, timerRunning, context) }
             item { QuickActionTileCard(actionCount, lastActionTime, context) }
+            item {
+                MemoTileCard(
+                    memos = memos,
+                    onAddMemoClick = { showMemoDialog = true },
+                    onDeleteMemo = { MemoTileService.deleteMemo(it) },
+                    onClearAll = { MemoTileService.clearAllMemos() },
+                    context = context
+                )
+            }
             item { HowToAddTileCard(context) }
         }
+    }
+
+    if (showMemoDialog) {
+        MemoInputDialog(
+            onDismiss = { showMemoDialog = false },
+            onSave = { memo ->
+                MemoTileService.addMemo(memo)
+                showMemoDialog = false
+            }
+        )
     }
 }
 
@@ -466,6 +499,262 @@ private fun QuickActionTileCard(actionCount: Int, lastActionTime: String?, conte
                         shape = RoundedCornerShape(8.dp)
                     ) {
                         Text("타일 새로고침", color = Color.White, fontSize = 11.sp)
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun MemoTileCard(
+    memos: List<MemoItem>,
+    onAddMemoClick: () -> Unit,
+    onDeleteMemo: (Long) -> Unit,
+    onClearAll: () -> Unit,
+    context: Context
+) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        elevation = 4.dp,
+        backgroundColor = Color(0xFFF3E5F5),
+        shape = RoundedCornerShape(12.dp)
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Text(
+                text = "📝 메모 타일 데모",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color(0xFF6A1B9A)
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Text(
+                text = "빠른 설정 패널에서 타일을 클릭하면 메모를 입력할 수 있습니다.",
+                fontSize = 12.sp,
+                color = Color.Gray
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Surface(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(8.dp),
+                color = Color(0xFF6A1B9A).copy(alpha = 0.1f)
+            ) {
+                Column(modifier = Modifier.padding(12.dp)) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "저장된 메모 (${memos.size}개)",
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Medium,
+                            color = Color(0xFF6A1B9A)
+                        )
+
+                        if (memos.isNotEmpty()) {
+                            Text(
+                                text = "전체 삭제",
+                                fontSize = 12.sp,
+                                color = Color(0xFFC62828),
+                                modifier = Modifier.clickable { onClearAll() }
+                            )
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    if (memos.isEmpty()) {
+                        Text(
+                            text = "저장된 메모가 없습니다.\n빠른 설정 패널에서 'Memo' 타일을 클릭하거나\n아래 버튼을 눌러 메모를 추가하세요.",
+                            fontSize = 12.sp,
+                            color = Color(0xFF666666),
+                            lineHeight = 18.sp
+                        )
+                    } else {
+                        Column(
+                            verticalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            memos.take(5).forEach { memo ->
+                                MemoItemRow(
+                                    memo = memo,
+                                    onDelete = { onDeleteMemo(memo.id) }
+                                )
+                            }
+
+                            if (memos.size > 5) {
+                                Text(
+                                    text = "... 외 ${memos.size - 5}개 더",
+                                    fontSize = 11.sp,
+                                    color = Color(0xFF666666)
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Button(
+                    onClick = onAddMemoClick,
+                    modifier = Modifier.weight(1f),
+                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF6A1B9A)),
+                    shape = RoundedCornerShape(8.dp)
+                ) {
+                    Text("메모 추가", color = Color.White, fontSize = 12.sp)
+                }
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    Button(
+                        onClick = {
+                            TileService.requestListeningState(
+                                context,
+                                ComponentName(context, MemoTileService::class.java)
+                            )
+                        },
+                        modifier = Modifier.weight(1f),
+                        colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF9C27B0)),
+                        shape = RoundedCornerShape(8.dp)
+                    ) {
+                        Text("타일 새로고침", color = Color.White, fontSize = 11.sp)
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun MemoItemRow(
+    memo: MemoItem,
+    onDelete: () -> Unit
+) {
+    Surface(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(6.dp),
+        color = Color.White
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(10.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = memo.content,
+                    fontSize = 13.sp,
+                    color = Color(0xFF333333),
+                    maxLines = 2
+                )
+                Spacer(modifier = Modifier.height(2.dp))
+                Text(
+                    text = memo.timestamp,
+                    fontSize = 10.sp,
+                    color = Color(0xFF999999)
+                )
+            }
+
+            Icon(
+                imageVector = Icons.Default.Delete,
+                contentDescription = "삭제",
+                tint = Color(0xFFC62828),
+                modifier = Modifier
+                    .padding(start = 8.dp)
+                    .clickable { onDelete() }
+            )
+        }
+    }
+}
+
+@Composable
+private fun MemoInputDialog(
+    onDismiss: () -> Unit,
+    onSave: (String) -> Unit
+) {
+    var memoText by remember { mutableStateOf("") }
+
+    Dialog(onDismissRequest = onDismiss) {
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            shape = RoundedCornerShape(16.dp),
+            backgroundColor = Color.White,
+            elevation = 8.dp
+        ) {
+            Column(
+                modifier = Modifier.padding(20.dp)
+            ) {
+                Text(
+                    text = "📝 빠른 메모",
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFF6A1B9A)
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                OutlinedTextField(
+                    value = memoText,
+                    onValueChange = { memoText = it },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(120.dp),
+                    placeholder = {
+                        Text(
+                            "메모를 입력하세요...",
+                            color = Color.Gray
+                        )
+                    },
+                    colors = TextFieldDefaults.outlinedTextFieldColors(
+                        focusedBorderColor = Color(0xFF6A1B9A),
+                        cursorColor = Color(0xFF6A1B9A)
+                    ),
+                    shape = RoundedCornerShape(8.dp)
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Button(
+                        onClick = onDismiss,
+                        modifier = Modifier.weight(1f),
+                        colors = ButtonDefaults.buttonColors(
+                            backgroundColor = Color(0xFFE0E0E0)
+                        ),
+                        shape = RoundedCornerShape(8.dp)
+                    ) {
+                        Text("취소", color = Color(0xFF666666))
+                    }
+
+                    Button(
+                        onClick = {
+                            if (memoText.isNotBlank()) {
+                                onSave(memoText)
+                            }
+                        },
+                        modifier = Modifier.weight(1f),
+                        colors = ButtonDefaults.buttonColors(
+                            backgroundColor = Color(0xFF6A1B9A)
+                        ),
+                        shape = RoundedCornerShape(8.dp),
+                        enabled = memoText.isNotBlank()
+                    ) {
+                        Text("저장", color = Color.White)
                     }
                 }
             }
