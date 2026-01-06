@@ -10,12 +10,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
-/**
- * Timer Tile Service
- *
- * 마이크로 인터랙션 패턴 - 타이머 타일
- * 클릭하면 타이머가 시작/정지됩니다.
- */
 @RequiresApi(Build.VERSION_CODES.N)
 class TimerTileService : TileService() {
 

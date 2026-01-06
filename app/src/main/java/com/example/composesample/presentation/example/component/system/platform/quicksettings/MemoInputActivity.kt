@@ -34,10 +34,6 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 
-/**
- * 메모 입력을 위한 투명 Activity
- * Quick Settings 타일에서 호출됩니다.
- */
 class MemoInputActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {

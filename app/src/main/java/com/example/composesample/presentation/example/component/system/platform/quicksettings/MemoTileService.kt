@@ -13,12 +13,6 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-/**
- * Memo Tile Service
- *
- * 마이크로 인터랙션 패턴 - 메모 타일
- * 클릭하면 메모 입력 다이얼로그를 띄우는 Activity로 이동합니다.
- */
 @RequiresApi(Build.VERSION_CODES.N)
 class MemoTileService : TileService() {
 
@@ -60,13 +54,11 @@ class MemoTileService : TileService() {
 
     override fun onClick() {
         super.onClick()
-        // 메모 입력 Activity 실행
         val intent = Intent(this, MemoInputActivity::class.java).apply {
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-            // Android 14+ requires PendingIntent
             val pendingIntent = PendingIntent.getActivity(
                 this,
                 0,

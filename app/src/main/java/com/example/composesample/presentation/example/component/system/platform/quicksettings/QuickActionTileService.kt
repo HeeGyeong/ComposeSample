@@ -11,13 +11,6 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-/**
- * Quick Action Tile Service
- *
- * 마이크로 인터랙션 패턴 - 퀵 액션 타일
- * 클릭하면 즉시 특정 액션을 실행합니다.
- * 예: 클립보드에 현재 시간 복사, 특정 이벤트 트리거 등
- */
 @RequiresApi(Build.VERSION_CODES.N)
 class QuickActionTileService : TileService() {
 
