@@ -625,9 +625,9 @@ fun exampleObjectList(): ArrayList<ExampleObject> {
 
     insertExampleObject.add(
         ExampleObject(
-            lastUpdate = "26. 01. 08",
+            lastUpdate = "26. 01. 10",
             title = "Quick Settings Tile",
-            description = "빠른 설정 타일을 활용한 마이크로 인터랙션 패턴: TileService 구현",
+            description = "빠른 설정 타일을 활용한 마이크로 인터랙션 패턴 구현",
             blogUrl = "",
             exampleType = ConstValue.QuickSettingsTileExample
         )
