@@ -20,8 +20,9 @@ class ConstValue {
         const val SSEWikiURL = "https://stream.wikimedia.org/v2/stream/recentchange"
 
         // ==================== UI 컴포넌트 예제 ====================
-        // LazyColumn(키보드 이슈), ClickEvent(중복 방지), FlexBox(유동 레이아웃), WebView(YouTube), TextStyle(스타일링), StickyHeader(고정 헤더), ReverseLazyColumn(역방향), AutoSizingText(자동 크기), CardCorners(모서리 스타일), ButtonGroup(M3 Expressive), Visibility(가시성 처리)
+        // LazyColumn(키보드 이슈), ClickEvent(중복 방지), FlexBox(유동 레이아웃), WebView(YouTube), TextStyle(스타일링), StickyHeader(고정 헤더), ReverseLazyColumn(역방향), AutoSizingText(자동 크기), CardCorners(모서리 스타일), ButtonGroup(M3 Expressive), Visibility(가시성 처리), FancyTopAppBar(고급 TopAppBar)
         const val LazyColumnExample = "lazyColumnExample"
+        const val FancyTopAppBarExample = "fancyTopAppBarExample"
         const val ClickEventExample = "clickEventExample"
         const val FlexBoxLayoutExample = "flexBoxLayoutExample"
         const val WebViewIssueExample = "webViewIssueExample"

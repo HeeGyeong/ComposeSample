@@ -633,6 +633,16 @@ fun exampleObjectList(): ArrayList<ExampleObject> {
         )
     )
 
+    insertExampleObject.add(
+        ExampleObject(
+            lastUpdate = "26. 01. 14",
+            title = "Fancy TopAppBar",
+            description = "Collapsing Toolbar와 다양한 스크롤 동작을 가진 고급 TopAppBar 구현",
+            blogUrl = "",
+            exampleType = ConstValue.FancyTopAppBarExample
+        )
+    )
+
     return insertExampleObject
 }
 

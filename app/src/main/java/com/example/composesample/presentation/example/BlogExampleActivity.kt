@@ -102,6 +102,7 @@ import com.example.composesample.presentation.example.component.ui.layout.header
 import com.example.composesample.presentation.example.component.ui.layout.lazycolumn.LazyColumnFlingBehaviorExample
 import com.example.composesample.presentation.example.component.ui.layout.lazycolumn.LazyColumnIssueUI
 import com.example.composesample.presentation.example.component.ui.layout.lazycolumn.ReverseLazyColumnExampleUI
+import com.example.composesample.presentation.example.component.ui.layout.topappbar.FancyTopAppBarExampleUI
 import com.example.composesample.presentation.example.component.ui.layout.pager.PullScreenPagerUI
 import com.example.composesample.presentation.example.component.ui.media.lottie.LottieExampleUI
 import com.example.composesample.presentation.example.component.ui.media.shimmer.ShimmerExampleUI
@@ -143,6 +144,7 @@ import com.example.composesample.util.ConstValue.Companion.CustomBottomSheetExam
 import com.example.composesample.util.ConstValue.Companion.DataCacheExample
 import com.example.composesample.util.ConstValue.Companion.DragAndDropExample
 import com.example.composesample.util.ConstValue.Companion.ExampleType
+import com.example.composesample.util.ConstValue.Companion.FancyTopAppBarExample
 import com.example.composesample.util.ConstValue.Companion.FlexBoxLayoutExample
 import com.example.composesample.util.ConstValue.Companion.FlingBehaviorExample
 import com.example.composesample.util.ConstValue.Companion.FocusRestorerExample
@@ -981,6 +983,10 @@ fun ExampleCaseUI(
 
                         QuickSettingsTileExample -> {
                             QuickSettingsTileExampleUI(onBackEvent)
+                        }
+
+                        FancyTopAppBarExample -> {
+                            FancyTopAppBarExampleUI(onBackEvent)
                         }
 
                         else -> {
