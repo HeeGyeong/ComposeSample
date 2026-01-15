@@ -19,7 +19,6 @@ import androidx.compose.material.Card
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
-import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -51,8 +50,6 @@ import androidx.compose.ui.unit.sp
 
 /**
  * Fancy TopAppBar Example UI
- *
- * 다양한 TopAppBarScrollBehavior를 시연하는 예제입니다.
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -66,14 +63,12 @@ fun FancyTopAppBarExampleUI(
             .fillMaxSize()
             .background(Color(0xFFF5F5F5))
     ) {
-        // Example Selector
         ExampleSelectorCard(
             selectedExample = selectedExample,
             onExampleSelected = { selectedExample = it },
             onBackEvent = onBackEvent
         )
 
-        // Show selected example
         when (selectedExample) {
             0 -> PinnedScrollBehaviorExample()
             1 -> EnterAlwaysScrollBehaviorExample()
@@ -177,11 +172,6 @@ private fun ExampleButton(
     }
 }
 
-/**
- * 1. Pinned Scroll Behavior
- * - TopAppBar가 항상 고정됨
- * - 스크롤해도 위치 변하지 않음
- */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun PinnedScrollBehaviorExample() {
@@ -240,11 +230,6 @@ private fun PinnedScrollBehaviorExample() {
     }
 }
 
-/**
- * 2. Enter Always Scroll Behavior
- * - 아래로 스크롤 시 TopAppBar 즉시 나타남
- * - 위로 스크롤 시 TopAppBar 숨겨짐
- */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun EnterAlwaysScrollBehaviorExample() {
@@ -298,22 +283,16 @@ private fun EnterAlwaysScrollBehaviorExample() {
         DemoListContent(
             paddingValues = paddingValues,
             title = "Enter Always Scroll Behavior",
-            description = "위로 스크롤하면 TopAppBar가 숨겨지고,\n아래로 스크롤하면 즉시 나타납니다.\n(Quick Return 패턴)"
+            description = "위로 스크롤하면 TopAppBar가 숨겨지고,\n아래로 스크롤하면 즉시 나타납니다."
         )
     }
 }
 
-/**
- * 3. Exit Until Collapsed (Medium TopAppBar)
- * - 위로 스크롤 시 TopAppBar 축소됨
- * - Medium 크기 (112dp)
- */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ExitUntilCollapsedMediumExample() {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 
-    // 스크롤 진행률 계산
     val scrollFraction by remember {
         derivedStateOf {
             val offset = scrollBehavior.state.heightOffset
@@ -386,17 +365,11 @@ private fun ExitUntilCollapsedMediumExample() {
     }
 }
 
-/**
- * 4. Exit Until Collapsed (Large TopAppBar)
- * - 위로 스크롤 시 TopAppBar 크게 축소됨
- * - Large 크기 (152dp)
- */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ExitUntilCollapsedLargeExample() {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 
-    // 스크롤 진행률 계산
     val scrollFraction by remember {
         derivedStateOf {
             val offset = scrollBehavior.state.heightOffset
@@ -485,7 +458,6 @@ private fun DemoListContent(
         ),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        // Description Card
         item {
             Card(
                 modifier = Modifier.fillMaxWidth(),
@@ -513,7 +485,6 @@ private fun DemoListContent(
             }
         }
 
-        // Demo Items
         items(30) { index ->
             DemoListItem(index = index + 1)
         }
@@ -532,7 +503,6 @@ private fun DemoListItem(index: Int) {
             modifier = Modifier.padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Avatar
             Box(
                 modifier = Modifier
                     .size(48.dp)
@@ -569,7 +539,7 @@ private fun DemoListItem(index: Int) {
                 Spacer(modifier = Modifier.height(4.dp))
 
                 Text(
-                    text = "위아래로 스크롤하여 TopAppBar의 동작을 확인하세요",
+                    text = "List Item Description",
                     fontSize = 13.sp,
                     color = Color(0xFF999999)
                 )
