@@ -48,9 +48,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-/**
- * Fancy TopAppBar Example UI
- */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FancyTopAppBarExampleUI(
@@ -116,7 +113,7 @@ private fun ExampleSelectorCard(
             Spacer(modifier = Modifier.height(12.dp))
 
             ExampleButton(
-                text = "Pinned (항상 고정)",
+                text = "항상 고정",
                 isSelected = selectedExample == 0,
                 onClick = { onExampleSelected(0) }
             )
@@ -124,7 +121,7 @@ private fun ExampleSelectorCard(
             Spacer(modifier = Modifier.height(8.dp))
 
             ExampleButton(
-                text = "Enter Always (즉시 나타남)",
+                text = "스크롤 시 즉시 나타남",
                 isSelected = selectedExample == 1,
                 onClick = { onExampleSelected(1) }
             )
@@ -132,7 +129,7 @@ private fun ExampleSelectorCard(
             Spacer(modifier = Modifier.height(8.dp))
 
             ExampleButton(
-                text = "Exit Until Collapsed (Medium)",
+                text = "Medium Size Collapsed",
                 isSelected = selectedExample == 2,
                 onClick = { onExampleSelected(2) }
             )
@@ -140,7 +137,7 @@ private fun ExampleSelectorCard(
             Spacer(modifier = Modifier.height(8.dp))
 
             ExampleButton(
-                text = "Exit Until Collapsed (Large)",
+                text = "Large Size Collapsed",
                 isSelected = selectedExample == 3,
                 onClick = { onExampleSelected(3) }
             )
@@ -311,7 +308,7 @@ private fun ExitUntilCollapsedMediumExample() {
             MediumTopAppBar(
                 title = {
                     Text(
-                        "Medium Collapsing Toolbar",
+                        "Medium Collapsing TopAppBar",
                         color = Color.White,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
@@ -360,7 +357,7 @@ private fun ExitUntilCollapsedMediumExample() {
         DemoListContent(
             paddingValues = paddingValues,
             title = "Exit Until Collapsed (Medium)",
-            description = "위로 스크롤하면 TopAppBar가 축소되어\nSmall 크기로 변합니다.\n(Collapsing Toolbar 효과)"
+            description = "위로 스크롤하면 TopAppBar가 축소되어\nSmall 크기로 변합니다.\n(Collapsing TopAppBar 효과)"
         )
     }
 }
@@ -388,7 +385,7 @@ private fun ExitUntilCollapsedLargeExample() {
             LargeTopAppBar(
                 title = {
                     Text(
-                        "Large Collapsing Toolbar",
+                        "Large Collapsing TopAppBar",
                         color = Color.White,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
