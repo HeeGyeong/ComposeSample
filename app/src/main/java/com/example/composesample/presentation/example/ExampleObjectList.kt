@@ -635,7 +635,7 @@ fun exampleObjectList(): ArrayList<ExampleObject> {
 
     insertExampleObject.add(
         ExampleObject(
-            lastUpdate = "26. 01. 14",
+            lastUpdate = "26. 01. 17",
             title = "Fancy TopAppBar",
             description = "Collapsing Toolbar와 다양한 스크롤 동작을 가진 고급 TopAppBar 구현",
             blogUrl = "",
