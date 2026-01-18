@@ -34,7 +34,6 @@ import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Slider
 import androidx.compose.material.SliderDefaults
-import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -754,7 +753,8 @@ private fun WaveAnimationCard() {
                 val path2 = Path().apply {
                     moveTo(0f, size.height / 2)
                     for (x in 0..size.width.toInt() step 5) {
-                        val y = size.height / 2 + sin((x + phase * 2 + 90) * PI / 180) * 30.dp.toPx()
+                        val y =
+                            size.height / 2 + sin((x + phase * 2 + 90) * PI / 180) * 30.dp.toPx()
                         lineTo(x.toFloat(), y.toFloat())
                     }
                 }
@@ -847,7 +847,10 @@ private fun TransformDemoCard() {
                             rotate(degrees = scale * 360f, pivot = center) {
                                 drawRect(
                                     color = Color(0xFF4CAF50),
-                                    topLeft = Offset(center.x - rectSize / 2, center.y - rectSize / 2),
+                                    topLeft = Offset(
+                                        center.x - rectSize / 2,
+                                        center.y - rectSize / 2
+                                    ),
                                     size = Size(rectSize, rectSize)
                                 )
                             }
