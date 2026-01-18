@@ -643,6 +643,16 @@ fun exampleObjectList(): ArrayList<ExampleObject> {
         )
     )
 
+    insertExampleObject.add(
+        ExampleObject(
+            lastUpdate = "26. 01. 18",
+            title = "Canvas Shapes & Animations",
+            description = "Canvas를 활용한 도형 그리기와 애니메이션 기초",
+            blogUrl = "",
+            exampleType = ConstValue.CanvasShapesExample
+        )
+    )
+
     return insertExampleObject
 }
 
