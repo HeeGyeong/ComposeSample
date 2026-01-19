@@ -125,6 +125,7 @@ import com.example.composesample.presentation.example.component.architecture.nav
 import com.example.composesample.presentation.example.component.architecture.modularization.ModularizationExampleUI
 import com.example.composesample.presentation.example.component.ui.button.ButtonGroupExampleUI
 import com.example.composesample.presentation.example.component.ui.canvas.CanvasShapesExampleUI
+import com.example.composesample.presentation.example.component.ui.tab.ResponsiveTabRowExampleUI
 import com.example.composesample.presentation.example.component.ui.visibility.VisibilityExampleUI
 import com.example.composesample.presentation.example.component.ui.text.AutoSizingTextExampleUI
 import com.example.composesample.presentation.example.component.ui.text.TextStyleUI
@@ -201,6 +202,7 @@ import com.example.composesample.util.ConstValue.Companion.SwipeToDismissExample
 import com.example.composesample.util.ConstValue.Companion.TargetSDK34PermissionExample
 import com.example.composesample.util.ConstValue.Companion.QuickSettingsTileExample
 import com.example.composesample.util.ConstValue.Companion.RecompositionTestExample
+import com.example.composesample.util.ConstValue.Companion.ResponsiveTabRowExample
 import com.example.composesample.util.ConstValue.Companion.TestExample
 import com.example.composesample.util.ConstValue.Companion.TextOverflowExample
 import com.example.composesample.util.ConstValue.Companion.TextShimmerExample
@@ -993,6 +995,10 @@ fun ExampleCaseUI(
 
                         CanvasShapesExample -> {
                             CanvasShapesExampleUI(onBackEvent)
+                        }
+
+                        ResponsiveTabRowExample -> {
+                            ResponsiveTabRowExampleUI(onBackEvent)
                         }
 
                         else -> {

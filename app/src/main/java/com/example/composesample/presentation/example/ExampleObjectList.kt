@@ -653,6 +653,16 @@ fun exampleObjectList(): ArrayList<ExampleObject> {
         )
     )
 
+    insertExampleObject.add(
+        ExampleObject(
+            lastUpdate = "26. 01. 20",
+            title = "Responsive TabRow",
+            description = "SubcomposeLayout을 활용한 반응형 탭 구현",
+            blogUrl = "",
+            exampleType = ConstValue.ResponsiveTabRowExample
+        )
+    )
+
     return insertExampleObject
 }
 
