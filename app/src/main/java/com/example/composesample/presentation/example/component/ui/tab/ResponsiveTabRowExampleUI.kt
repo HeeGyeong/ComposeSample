@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -344,7 +343,10 @@ private fun ComparisonCard() {
     var selectedTab1 by remember { mutableIntStateOf(0) }
     var selectedTab2 by remember { mutableIntStateOf(0) }
     var selectedTab3 by remember { mutableIntStateOf(0) }
-    val tabs = listOf("일반 설정", "알림 설정", "개인정보 보호")
+
+    val longTabs = listOf("개인정보 보호 설정", "알림 및 권한 관리", "보안 및 계정 설정")
+    val shortTabs = listOf("홈", "탐색", "알림")
+    val mixedTabs = listOf("프로필", "설정", "알림 관리")
 
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -354,7 +356,7 @@ private fun ComparisonCard() {
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(
-                text = "비교: 일반 TabRow vs ScrollableTabRow vs ResponsiveTabRow",
+                text = "비교",
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color(0xFF1976D2)
@@ -362,9 +364,8 @@ private fun ComparisonCard() {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // 일반 TabRow
             Text(
-                text = "1. 일반 TabRow (텍스트 잘림)",
+                text = "1. 일반 TabRow (긴 텍스트 → 잘림)",
                 fontSize = 13.sp,
                 fontWeight = FontWeight.Medium,
                 color = Color(0xFF333333)
@@ -375,7 +376,7 @@ private fun ComparisonCard() {
                 backgroundColor = Color(0xFFFFF3E0),
                 contentColor = Color(0xFFFF6F00)
             ) {
-                tabs.forEachIndexed { index, title ->
+                longTabs.forEachIndexed { index, title ->
                     Tab(
                         selected = selectedTab1 == index,
                         onClick = { selectedTab1 = index },
@@ -393,9 +394,8 @@ private fun ComparisonCard() {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // ScrollableTabRow
             Text(
-                text = "2. ScrollableTabRow (불필요한 스크롤)",
+                text = "2. ScrollableTabRow (짧은 텍스트 → 불필요한 스크롤)",
                 fontSize = 13.sp,
                 fontWeight = FontWeight.Medium,
                 color = Color(0xFF333333)
@@ -407,7 +407,7 @@ private fun ComparisonCard() {
                 contentColor = Color(0xFF7B1FA2),
                 edgePadding = 0.dp
             ) {
-                tabs.forEachIndexed { index, title ->
+                shortTabs.forEachIndexed { index, title ->
                     Tab(
                         selected = selectedTab2 == index,
                         onClick = { selectedTab2 = index },
@@ -423,9 +423,8 @@ private fun ComparisonCard() {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // ResponsiveTabRow
             Text(
-                text = "3. ResponsiveTabRow (자동 최적화)",
+                text = "3. ResponsiveTabRow (중간 길이 → 자동 최적화)",
                 fontSize = 13.sp,
                 fontWeight = FontWeight.Medium,
                 color = Color(0xFF333333)
@@ -433,7 +432,7 @@ private fun ComparisonCard() {
             Spacer(modifier = Modifier.height(8.dp))
             ResponsiveTabRow(
                 selectedTabIndex = selectedTab3,
-                tabTitles = tabs,
+                tabTitles = mixedTabs,
                 containerColor = Color(0xFFE8F5E9),
                 contentColor = Color(0xFF2E7D32),
                 onTabClick = { selectedTab3 = it }
@@ -479,7 +478,6 @@ fun ResponsiveTabRow(
         val availableWidthPx = constraints.maxWidth
         val numberOfTabs = tabTitles.size
 
-        // 1단계: 각 탭의 선호 너비 측정
         val tabPreferredWidths = mutableListOf<Int>()
         subcompose("MEASURE_INDIVIDUAL_TABS") {
             tabTitles.forEachIndexed { index, title ->
@@ -502,13 +500,11 @@ fun ResponsiveTabRow(
             )
         }
 
-        // 2단계: TabRow 타입 결정
         val widthPerTabIfFixed = availableWidthPx / numberOfTabs
         val useScrollable = tabPreferredWidths.any { preferredWidth ->
             preferredWidth > widthPerTabIfFixed
         }
 
-        // 3단계: 적절한 컴포넌트 렌더링
         val layoutContent = @Composable {
             if (useScrollable) {
                 ScrollableTabRow(
