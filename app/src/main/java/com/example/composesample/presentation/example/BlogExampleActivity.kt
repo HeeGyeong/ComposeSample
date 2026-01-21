@@ -126,6 +126,7 @@ import com.example.composesample.presentation.example.component.architecture.mod
 import com.example.composesample.presentation.example.component.ui.button.ButtonGroupExampleUI
 import com.example.composesample.presentation.example.component.ui.canvas.CanvasShapesExampleUI
 import com.example.composesample.presentation.example.component.ui.tab.ResponsiveTabRowExampleUI
+import com.example.composesample.presentation.example.component.ui.text.CustomTextRenderingExampleUI
 import com.example.composesample.presentation.example.component.ui.visibility.VisibilityExampleUI
 import com.example.composesample.presentation.example.component.ui.text.AutoSizingTextExampleUI
 import com.example.composesample.presentation.example.component.ui.text.TextStyleUI
@@ -144,6 +145,7 @@ import com.example.composesample.util.ConstValue.Companion.CoordinatorExample
 import com.example.composesample.util.ConstValue.Companion.CoroutineExample
 import com.example.composesample.util.ConstValue.Companion.CursorIDEExample
 import com.example.composesample.util.ConstValue.Companion.CustomBottomSheetExample
+import com.example.composesample.util.ConstValue.Companion.CustomTextRenderingExample
 import com.example.composesample.util.ConstValue.Companion.DataCacheExample
 import com.example.composesample.util.ConstValue.Companion.DragAndDropExample
 import com.example.composesample.util.ConstValue.Companion.ExampleType
@@ -999,6 +1001,10 @@ fun ExampleCaseUI(
 
                         ResponsiveTabRowExample -> {
                             ResponsiveTabRowExampleUI(onBackEvent)
+                        }
+
+                        CustomTextRenderingExample -> {
+                            CustomTextRenderingExampleUI(onBackEvent)
                         }
 
                         else -> {
