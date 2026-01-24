@@ -665,7 +665,7 @@ fun exampleObjectList(): ArrayList<ExampleObject> {
 
     insertExampleObject.add(
         ExampleObject(
-            lastUpdate = "26. 01. 21",
+            lastUpdate = "26. 01. 25",
             title = "Custom Text Rendering",
             description = "TextMeasurer와 Canvas를 활용한 커스텀 텍스트 렌더링",
             blogUrl = "",
