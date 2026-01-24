@@ -22,6 +22,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Card
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -32,7 +34,9 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -240,6 +244,8 @@ private fun AnimatedWarpedTextCard() {
 
 @Composable
 private fun TypewriterTextCard() {
+    var isRepeating by remember { mutableStateOf(false) }
+
     Card(
         modifier = Modifier.fillMaxWidth(),
         elevation = 4.dp,
@@ -265,6 +271,39 @@ private fun TypewriterTextCard() {
 
             Spacer(modifier = Modifier.height(16.dp))
 
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Button(
+                    onClick = { isRepeating = false },
+                    colors = ButtonDefaults.buttonColors(
+                        backgroundColor = if (!isRepeating) Color(0xFF9C27B0) else Color(0xFFE0E0E0)
+                    ),
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text(
+                        text = "1회 실행",
+                        color = if (!isRepeating) Color.White else Color(0xFF666666)
+                    )
+                }
+
+                Button(
+                    onClick = { isRepeating = true },
+                    colors = ButtonDefaults.buttonColors(
+                        backgroundColor = if (isRepeating) Color(0xFF9C27B0) else Color(0xFFE0E0E0)
+                    ),
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text(
+                        text = "무한 반복",
+                        color = if (isRepeating) Color.White else Color(0xFF666666)
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
             TypewriterText(
                 text = "안녕하세요! Jetpack Compose로 구현한 타이핑 효과입니다. " +
                         "각 글자가 순차적으로 나타나는 것을 확인할 수 있습니다.",
@@ -273,7 +312,8 @@ private fun TypewriterTextCard() {
                     color = Color(0xFF9C27B0),
                     lineHeight = 22.sp
                 ),
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                repeat = isRepeating
             )
         }
     }
@@ -454,21 +494,38 @@ fun AnimatedWarpedText(
 fun TypewriterText(
     text: String,
     textStyle: TextStyle,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    repeat: Boolean = false
 ) {
     BoxWithConstraints(modifier) {
         val density = LocalDensity.current
         val constraints = constraints
 
         val animatedCharacterCount = remember { Animatable(0f) }
-        LaunchedEffect(text) {
-            animatedCharacterCount.animateTo(
-                targetValue = text.length.toFloat(),
-                animationSpec = tween(
-                    durationMillis = text.length * 50,
-                    easing = LinearEasing
+        LaunchedEffect(text, repeat) {
+            if (repeat) {
+                // 무한 반복
+                while (true) {
+                    animatedCharacterCount.animateTo(
+                        targetValue = text.length.toFloat(),
+                        animationSpec = tween(
+                            durationMillis = text.length * 50,
+                            easing = LinearEasing
+                        )
+                    )
+                    animatedCharacterCount.snapTo(0f)
+                }
+            } else {
+                // 1회 실행
+                animatedCharacterCount.snapTo(0f)
+                animatedCharacterCount.animateTo(
+                    targetValue = text.length.toFloat(),
+                    animationSpec = tween(
+                        durationMillis = text.length * 50,
+                        easing = LinearEasing
+                    )
                 )
-            )
+            }
         }
 
         val textMeasurer = rememberTextMeasurer()
