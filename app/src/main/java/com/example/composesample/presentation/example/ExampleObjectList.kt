@@ -673,6 +673,16 @@ fun exampleObjectList(): ArrayList<ExampleObject> {
         )
     )
 
+    insertExampleObject.add(
+        ExampleObject(
+            lastUpdate = "26. 01. 26",
+            title = "Swipe to Dismiss (Material 3)",
+            description = "Material 3의 SwipeToDismissBox를 활용한 스와이프 제스처",
+            blogUrl = "",
+            exampleType = ConstValue.SwipeToDismissM3Example
+        )
+    )
+
     return insertExampleObject
 }
 

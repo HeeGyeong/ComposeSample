@@ -80,6 +80,7 @@ import com.example.composesample.presentation.example.component.interaction.clic
 import com.example.composesample.presentation.example.component.interaction.drag.DragAndDropExampleUI
 import com.example.composesample.presentation.example.component.interaction.refresh.PullToRefreshUI
 import com.example.composesample.presentation.example.component.interaction.swipe.SwipeToDismissUI
+import com.example.composesample.presentation.example.component.interaction.swipe.SwipeToDismissM3ExampleUI
 import com.example.composesample.presentation.example.component.navigation.BottomNavigationActivity
 import com.example.composesample.presentation.example.component.system.background.workmanager.WorkManagerUI
 import com.example.composesample.presentation.example.component.system.media.recorder.AudioRecorderUI
@@ -201,6 +202,7 @@ import com.example.composesample.util.ConstValue.Companion.SideEffectExample
 import com.example.composesample.util.ConstValue.Companion.SnapshotFlowExample
 import com.example.composesample.util.ConstValue.Companion.StickyHeaderExample
 import com.example.composesample.util.ConstValue.Companion.SwipeToDismissExample
+import com.example.composesample.util.ConstValue.Companion.SwipeToDismissM3Example
 import com.example.composesample.util.ConstValue.Companion.TargetSDK34PermissionExample
 import com.example.composesample.util.ConstValue.Companion.QuickSettingsTileExample
 import com.example.composesample.util.ConstValue.Companion.RecompositionTestExample
@@ -769,6 +771,10 @@ fun ExampleCaseUI(
 
                         SwipeToDismissExample -> {
                             SwipeToDismissUI(onBackEvent)
+                        }
+
+                        SwipeToDismissM3Example -> {
+                            SwipeToDismissM3ExampleUI(onBackEvent)
                         }
 
                         SideEffectExample -> {
