@@ -2,7 +2,10 @@ package com.example.composesample.presentation.example.component.interaction.swi
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -51,6 +54,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -89,6 +93,7 @@ fun SwipeToDismissM3ExampleUI(
             item { BasicSwipeToDismissCard() }
             item { TwoWaySwipeCard() }
             item { ConditionalSwipeCard() }
+            item { M2StyleAnimationCard() }
         }
     }
 }
@@ -375,6 +380,239 @@ private fun ConditionalSwipeCard() {
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                 }
+            }
+        }
+    }
+}
+
+// ==================== M2 스타일 애니메이션 (M3 API로 구현) ====================
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun M2StyleAnimationCard() {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(containerColor = Color.White),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        shape = RoundedCornerShape(12.dp)
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Text(
+                text = "4. M2 Style Animation with M3",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color(0xFF212121)
+            )
+            Text(
+                text = "M2의 복잡한 애니메이션을 M3 API로 구현",
+                fontSize = 14.sp,
+                color = Color(0xFF757575)
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            
+            // M2와 M3의 차이점 설명
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(Color(0xFFFFF3E0), RoundedCornerShape(8.dp))
+                    .padding(12.dp)
+            ) {
+                Text(
+                    text = "💡 M2 vs M3 차이점",
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFFE65100)
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = "• M2: SwipeToDismiss + DismissState + FractionalThreshold",
+                    fontSize = 12.sp,
+                    color = Color(0xFF5D4037)
+                )
+                Text(
+                    text = "• M3: SwipeToDismissBox + rememberSwipeToDismissBoxState",
+                    fontSize = 12.sp,
+                    color = Color(0xFF5D4037)
+                )
+                Text(
+                    text = "• M2: Animatable로 multi-stage 애니메이션",
+                    fontSize = 12.sp,
+                    color = Color(0xFF5D4037)
+                )
+                Text(
+                    text = "• M3: 간단한 animateFloatAsState 권장",
+                    fontSize = 12.sp,
+                    color = Color(0xFF5D4037)
+                )
+                Text(
+                    text = "• 아래 예제는 M2의 복잡한 방식을 M3로 재현",
+                    fontSize = 12.sp,
+                    color = Color(0xFF5D4037),
+                    fontWeight = FontWeight.Bold
+                )
+            }
+            
+            Spacer(modifier = Modifier.height(16.dp))
+
+            val items = remember {
+                mutableStateListOf(
+                    EmailItem(12, "Leo", "M2 Style Animation", "원형 확장 + Bounce 효과"),
+                    EmailItem(13, "Mia", "Complex Animation", "Animatable 사용"),
+                    EmailItem(14, "Noah", "Color Inversion", "색상 반전 애니메이션"),
+                )
+            }
+
+            items.forEach { item ->
+                var show by remember { mutableStateOf(true) }
+                val coroutineScope = rememberCoroutineScope()
+                
+                val dismissState = rememberSwipeToDismissBoxState(
+                    confirmValueChange = { dismissValue ->
+                        when (dismissValue) {
+                            SwipeToDismissBoxValue.StartToEnd -> {
+                                item.isFavorite = !item.isFavorite
+                                false
+                            }
+                            SwipeToDismissBoxValue.EndToStart -> {
+                                coroutineScope.launch {
+                                    delay(500)
+                                    show = false
+                                }
+                                true
+                            }
+                            else -> false
+                        }
+                    }
+                )
+
+                // M2 스타일: snapshotFlow로 offset 추적
+                var thresholdReached by remember { mutableStateOf(false) }
+                LaunchedEffect(Unit) {
+                    snapshotFlow { dismissState.currentValue }
+                        .collect { value ->
+                            thresholdReached = value != SwipeToDismissBoxValue.Settled
+                        }
+                }
+
+                AnimatedVisibility(
+                    visible = show,
+                    exit = fadeOut() + slideOutVertically()
+                ) {
+                    SwipeToDismissBox(
+                        state = dismissState,
+                        enableDismissFromStartToEnd = true,
+                        enableDismissFromEndToStart = true,
+                        backgroundContent = {
+                            M2StyleBackground(
+                                currentValue = dismissState.currentValue,
+                                thresholdReached = thresholdReached
+                            )
+                        },
+                        content = {
+                            EmailItemCard(item)
+                        }
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun M2StyleBackground(
+    currentValue: SwipeToDismissBoxValue,
+    thresholdReached: Boolean
+) {
+    // M2 스타일: Animatable을 사용한 복잡한 multi-stage 애니메이션
+    val backgroundScale = remember { Animatable(0f) }
+    val iconScale = remember { Animatable(0.8f) }
+    
+    LaunchedEffect(thresholdReached) {
+        if (thresholdReached) {
+            // M2의 특징적인 multi-stage 애니메이션
+            // 1. 배경을 0으로 리셋
+            backgroundScale.snapTo(0f)
+            // 2. 배경을 확장
+            launch {
+                backgroundScale.animateTo(
+                    targetValue = 1f,
+                    animationSpec = tween(durationMillis = 400)
+                )
+            }
+            // 3. 아이콘을 작게 시작
+            iconScale.snapTo(0.8f)
+            // 4. 아이콘을 크게 (bounce 효과)
+            iconScale.animateTo(
+                targetValue = 1.25f,
+                animationSpec = spring(dampingRatio = Spring.DampingRatioMediumBouncy)
+            )
+            // 5. 아이콘을 원래 크기로
+            iconScale.animateTo(targetValue = 1f)
+        } else {
+            // 애니메이션 리셋
+            backgroundScale.snapTo(0f)
+            iconScale.snapTo(0.8f)
+        }
+    }
+    
+    // M2 스타일: 색상 반전 로직
+    val backgroundColor = when (currentValue) {
+        SwipeToDismissBoxValue.StartToEnd -> if (thresholdReached) Color(0xFFFFFF00) else Color.Black
+        SwipeToDismissBoxValue.EndToStart -> if (thresholdReached) Color(0xFF8B0000) else Color.Black
+        else -> Color.Transparent
+    }
+    
+    val iconColor = when (currentValue) {
+        SwipeToDismissBoxValue.StartToEnd -> if (thresholdReached) Color.Black else Color(0xFFFFFF00)
+        SwipeToDismissBoxValue.EndToStart -> if (thresholdReached) Color.Black else Color(0xFF8B0000)
+        else -> Color.White
+    }
+    
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .clip(
+                // M2의 CircleAnimationPath 사용
+                CircleAnimationPath(
+                    visible = backgroundScale.value,
+                    startPosition = currentValue == SwipeToDismissBoxValue.StartToEnd
+                )
+            )
+            .background(backgroundColor)
+            .padding(horizontal = 20.dp)
+    ) {
+        val alignment = when (currentValue) {
+            SwipeToDismissBoxValue.StartToEnd -> Alignment.CenterStart
+            SwipeToDismissBoxValue.EndToStart -> Alignment.CenterEnd
+            else -> Alignment.Center
+        }
+        
+        Box(
+            modifier = Modifier
+                .align(alignment)
+                .scale(iconScale.value),
+            contentAlignment = Alignment.Center
+        ) {
+            when (currentValue) {
+                SwipeToDismissBoxValue.StartToEnd -> {
+                    Icon(
+                        imageVector = Icons.Default.Favorite,
+                        contentDescription = "Favorite",
+                        modifier = Modifier.size(32.dp),
+                        tint = iconColor
+                    )
+                }
+                SwipeToDismissBoxValue.EndToStart -> {
+                    Icon(
+                        imageVector = Icons.Default.Delete,
+                        contentDescription = "Delete",
+                        modifier = Modifier.size(32.dp),
+                        tint = iconColor
+                    )
+                }
+                else -> {}
             }
         }
     }
