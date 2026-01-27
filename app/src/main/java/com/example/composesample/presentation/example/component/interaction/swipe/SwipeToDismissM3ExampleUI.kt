@@ -7,9 +7,7 @@ import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -24,7 +22,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -32,17 +29,13 @@ import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SwipeToDismissBox
-import androidx.compose.material3.SwipeToDismissBoxDefaults
 import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberSwipeToDismissBoxState
@@ -137,7 +130,6 @@ private fun HeaderCard(onBackEvent: () -> Unit) {
     }
 }
 
-// ==================== 기본 Swipe to Dismiss ====================
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun BasicSwipeToDismissCard() {
@@ -180,6 +172,7 @@ private fun BasicSwipeToDismissCard() {
                                 show = false
                                 true
                             }
+
                             else -> false
                         }
                     }
@@ -213,8 +206,6 @@ private fun BasicSwipeToDismissCard() {
     }
 }
 
-// ==================== 양방향 Swipe ====================
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun TwoWaySwipeCard() {
@@ -240,8 +231,20 @@ private fun TwoWaySwipeCard() {
 
             val items = remember {
                 mutableStateListOf(
-                    EmailItem(6, "Frank", "Project update", "Here's the latest progress...", isFavorite = false),
-                    EmailItem(7, "Grace", "Team meeting", "Don't forget tomorrow's meeting...", isFavorite = true),
+                    EmailItem(
+                        6,
+                        "Frank",
+                        "Project update",
+                        "Here's the latest progress...",
+                        isFavorite = false
+                    ),
+                    EmailItem(
+                        7,
+                        "Grace",
+                        "Team meeting",
+                        "Don't forget tomorrow's meeting...",
+                        isFavorite = true
+                    ),
                     EmailItem(8, "Henry", "Code review", "Please review my PR..."),
                 )
             }
@@ -253,12 +256,14 @@ private fun TwoWaySwipeCard() {
                         when (dismissValue) {
                             SwipeToDismissBoxValue.StartToEnd -> {
                                 item.isFavorite = !item.isFavorite
-                                false // 상태만 변경하고 스와이프는 되돌림
+                                false
                             }
+
                             SwipeToDismissBoxValue.EndToStart -> {
                                 show = false
                                 true
                             }
+
                             else -> false
                         }
                     }
@@ -296,8 +301,6 @@ private fun TwoWaySwipeCard() {
     }
 }
 
-// ==================== 조건부 Swipe ====================
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ConditionalSwipeCard() {
@@ -334,13 +337,14 @@ private fun ConditionalSwipeCard() {
                 val dismissState = rememberSwipeToDismissBoxState(
                     confirmValueChange = { dismissValue ->
                         if (item.isLocked) {
-                            false // 잠긴 아이템은 스와이프 불가
+                            false
                         } else {
                             when (dismissValue) {
                                 SwipeToDismissBoxValue.EndToStart -> {
                                     show = false
                                     true
                                 }
+
                                 else -> false
                             }
                         }
@@ -385,8 +389,6 @@ private fun ConditionalSwipeCard() {
     }
 }
 
-// ==================== M2 스타일 애니메이션 (M3 API로 구현) ====================
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun M2StyleAnimationCard() {
@@ -409,8 +411,7 @@ private fun M2StyleAnimationCard() {
                 color = Color(0xFF757575)
             )
             Spacer(modifier = Modifier.height(8.dp))
-            
-            // M2와 M3의 차이점 설명
+
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -451,7 +452,7 @@ private fun M2StyleAnimationCard() {
                     fontWeight = FontWeight.Bold
                 )
             }
-            
+
             Spacer(modifier = Modifier.height(16.dp))
 
             val items = remember {
@@ -465,7 +466,7 @@ private fun M2StyleAnimationCard() {
             items.forEach { item ->
                 var show by remember { mutableStateOf(true) }
                 val coroutineScope = rememberCoroutineScope()
-                
+
                 val dismissState = rememberSwipeToDismissBoxState(
                     confirmValueChange = { dismissValue ->
                         when (dismissValue) {
@@ -473,6 +474,7 @@ private fun M2StyleAnimationCard() {
                                 item.isFavorite = !item.isFavorite
                                 false
                             }
+
                             SwipeToDismissBoxValue.EndToStart -> {
                                 coroutineScope.launch {
                                     delay(500)
@@ -480,12 +482,12 @@ private fun M2StyleAnimationCard() {
                                 }
                                 true
                             }
+
                             else -> false
                         }
                     }
                 )
 
-                // M2 스타일: snapshotFlow로 offset 추적
                 var thresholdReached by remember { mutableStateOf(false) }
                 LaunchedEffect(Unit) {
                     snapshotFlow { dismissState.currentValue }
@@ -525,56 +527,46 @@ private fun M2StyleBackground(
     currentValue: SwipeToDismissBoxValue,
     thresholdReached: Boolean
 ) {
-    // M2 스타일: Animatable을 사용한 복잡한 multi-stage 애니메이션
     val backgroundScale = remember { Animatable(0f) }
     val iconScale = remember { Animatable(0.8f) }
-    
+
     LaunchedEffect(thresholdReached) {
         if (thresholdReached) {
-            // M2의 특징적인 multi-stage 애니메이션
-            // 1. 배경을 0으로 리셋
             backgroundScale.snapTo(0f)
-            // 2. 배경을 확장
             launch {
                 backgroundScale.animateTo(
                     targetValue = 1f,
                     animationSpec = tween(durationMillis = 400)
                 )
             }
-            // 3. 아이콘을 작게 시작
             iconScale.snapTo(0.8f)
-            // 4. 아이콘을 크게 (bounce 효과)
             iconScale.animateTo(
                 targetValue = 1.25f,
                 animationSpec = spring(dampingRatio = Spring.DampingRatioMediumBouncy)
             )
-            // 5. 아이콘을 원래 크기로
             iconScale.animateTo(targetValue = 1f)
         } else {
-            // 애니메이션 리셋
             backgroundScale.snapTo(0f)
             iconScale.snapTo(0.8f)
         }
     }
-    
-    // M2 스타일: 색상 반전 로직
+
     val backgroundColor = when (currentValue) {
         SwipeToDismissBoxValue.StartToEnd -> if (thresholdReached) Color(0xFFFFFF00) else Color.Black
         SwipeToDismissBoxValue.EndToStart -> if (thresholdReached) Color(0xFF8B0000) else Color.Black
         else -> Color.Transparent
     }
-    
+
     val iconColor = when (currentValue) {
         SwipeToDismissBoxValue.StartToEnd -> if (thresholdReached) Color.Black else Color(0xFFFFFF00)
         SwipeToDismissBoxValue.EndToStart -> if (thresholdReached) Color.Black else Color(0xFF8B0000)
         else -> Color.White
     }
-    
+
     Box(
         modifier = Modifier
             .fillMaxSize()
             .clip(
-                // M2의 CircleAnimationPath 사용
                 CircleAnimationPath(
                     visible = backgroundScale.value,
                     startPosition = currentValue == SwipeToDismissBoxValue.StartToEnd
@@ -588,7 +580,7 @@ private fun M2StyleBackground(
             SwipeToDismissBoxValue.EndToStart -> Alignment.CenterEnd
             else -> Alignment.Center
         }
-        
+
         Box(
             modifier = Modifier
                 .align(alignment)
@@ -604,6 +596,7 @@ private fun M2StyleBackground(
                         tint = iconColor
                     )
                 }
+
                 SwipeToDismissBoxValue.EndToStart -> {
                     Icon(
                         imageVector = Icons.Default.Delete,
@@ -612,13 +605,12 @@ private fun M2StyleBackground(
                         tint = iconColor
                     )
                 }
+
                 else -> {}
             }
         }
     }
 }
-
-// ==================== Helper Composables ====================
 
 @Composable
 private fun EmailItemCard(item: EmailItem) {
@@ -736,8 +728,8 @@ private fun TwoWayDismissBackground(
 ) {
     val color by animateColorAsState(
         targetValue = when (currentValue) {
-            SwipeToDismissBoxValue.StartToEnd -> Color(0xFFFFC107) // Favorite
-            SwipeToDismissBoxValue.EndToStart -> Color(0xFF1976D2) // Send
+            SwipeToDismissBoxValue.StartToEnd -> Color(0xFFFFC107)
+            SwipeToDismissBoxValue.EndToStart -> Color(0xFF1976D2)
             else -> Color.Transparent
         },
         animationSpec = tween(durationMillis = 300),
@@ -756,7 +748,6 @@ private fun TwoWayDismissBackground(
             .background(color)
             .padding(horizontal = 20.dp)
     ) {
-        // Start to End - Favorite Icon
         if (currentValue == SwipeToDismissBoxValue.StartToEnd) {
             Icon(
                 imageVector = Icons.Default.Favorite,
@@ -768,7 +759,6 @@ private fun TwoWayDismissBackground(
                 tint = Color.White
             )
         }
-        // End to Start - Send Icon
         if (currentValue == SwipeToDismissBoxValue.EndToStart) {
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.Send,
@@ -782,8 +772,6 @@ private fun TwoWayDismissBackground(
         }
     }
 }
-
-// ==================== Data Model ====================
 
 data class EmailItem(
     val id: Int,
