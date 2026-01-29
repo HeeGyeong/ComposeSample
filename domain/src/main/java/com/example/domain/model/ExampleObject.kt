@@ -6,7 +6,7 @@ data class ExampleObject(
     val lastUpdate: String = "",
     val title: String,
     val description: String,
-    val blogUrl: String,
+    val blogUrl: String = "",
     val exampleType: String,
 )
 
