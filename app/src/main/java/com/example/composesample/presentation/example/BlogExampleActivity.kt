@@ -93,6 +93,7 @@ import com.example.composesample.presentation.example.component.system.platform.
 import com.example.composesample.presentation.example.component.system.platform.version.TargetSDK34Example
 import com.example.composesample.presentation.example.component.system.platform.webview.WebViewIssueUI
 import com.example.composesample.presentation.example.component.ui.layout.animation.AnimationExampleUI
+import com.example.composesample.presentation.example.component.ui.layout.animation.SharedElementTransitionExampleUI
 import com.example.composesample.presentation.example.component.ui.layout.bottomsheet.BottomSheetUI
 import com.example.composesample.presentation.example.component.ui.layout.bottomsheet.CustomBottomSheetUI
 import com.example.composesample.presentation.example.component.ui.layout.bottomsheet.ModalBottomSheetUI
@@ -170,6 +171,7 @@ import com.example.composesample.util.ConstValue.Companion.ModalDrawExample
 import com.example.composesample.util.ConstValue.Companion.NestedRoutesNav3Example
 import com.example.composesample.util.ConstValue.Companion.NestedScrollingExample
 import com.example.composesample.util.ConstValue.Companion.NewShadowApiExample
+import com.example.composesample.util.ConstValue.Companion.SharedElementTransitionExample
 import com.example.composesample.util.ConstValue.Companion.SnapNotifyExample
 import com.example.composesample.util.ConstValue.Companion.CardCornersExample
 import com.example.composesample.util.ConstValue.Companion.AutoCloseableExample
@@ -823,6 +825,10 @@ fun ExampleCaseUI(
 
                         AnimationExample -> {
                             AnimationExampleUI(onBackEvent)
+                        }
+
+                        SharedElementTransitionExample -> {
+                            SharedElementTransitionExampleUI(onBackEvent)
                         }
 
                         SSEExample -> {

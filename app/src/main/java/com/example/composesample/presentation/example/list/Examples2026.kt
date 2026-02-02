@@ -39,5 +39,11 @@ val examples2026 = listOf(
         title = "Swipe to Dismiss (Material 3)",
         description = "Material 3의 SwipeToDismissBox를 활용한 스와이프 제스처",
         exampleType = ConstValue.SwipeToDismissM3Example
+    ),
+    ExampleObject(
+        lastUpdate = "26. 02. 02",
+        title = "Shared Element Transitions",
+        description = "화면 간 요소를 부드럽게 전환하는 공유 요소 애니메이션",
+        exampleType = ConstValue.SharedElementTransitionExample
     )
 )
