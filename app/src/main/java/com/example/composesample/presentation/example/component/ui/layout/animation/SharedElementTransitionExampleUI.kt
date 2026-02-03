@@ -2,7 +2,6 @@ package com.example.composesample.presentation.example.component.ui.layout.anima
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedContentScope
-import androidx.compose.animation.BoundsTransform
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.animation.SharedTransitionScope
@@ -30,17 +29,14 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -82,7 +78,6 @@ fun SharedElementTransitionExampleUI(
             contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            item { GuideCard() }
             item { ImageExpansionExample() }
             item { ListToDetailExample() }
         }
@@ -127,37 +122,6 @@ private fun HeaderCard(onBackEvent: () -> Unit) {
         }
     }
 }
-
-@Composable
-private fun GuideCard() {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFFF3E5F5)),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-        shape = RoundedCornerShape(12.dp)
-    ) {
-        Row(
-            modifier = Modifier.padding(16.dp),
-            verticalAlignment = Alignment.Top
-        ) {
-            Icon(
-                imageVector = Icons.Default.Info,
-                contentDescription = null,
-                tint = Color(0xFF7B1FA2),
-                modifier = Modifier.size(24.dp)
-            )
-            Spacer(modifier = Modifier.size(12.dp))
-            Text(
-                text = SharedElementTransitionGuide.GUIDE_INFO,
-                fontSize = 13.sp,
-                lineHeight = 18.sp,
-                color = Color(0xFF4A148C)
-            )
-        }
-    }
-}
-
-// ==================== 이미지 확대 예제 ====================
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
@@ -294,8 +258,6 @@ private fun ExpandedImageView(
         }
     }
 }
-
-// ==================== 리스트 → 상세 화면 예제 ====================
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
@@ -533,8 +495,6 @@ private fun DetailView(
         }
     }
 }
-
-// ==================== 데이터 모델 ====================
 
 data class PhotoItem(
     val id: Int,
