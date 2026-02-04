@@ -10,7 +10,11 @@ import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
+import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.Image
@@ -80,6 +84,8 @@ fun SharedElementTransitionExampleUI(
         ) {
             item { ImageExpansionExample() }
             item { ListToDetailExample() }
+            item { TextTransformationExample() }
+            item { MultipleElementsExample() }
         }
     }
 }
@@ -287,7 +293,7 @@ private fun ListToDetailExample() {
                 color = Color(0xFF212121)
             )
             Text(
-                text = "아이템을 클릭하면 상세 화면으로 확장됩니다.",
+                text = "아이템마다 다른 애니메이션으로 전환됩니다.",
                 fontSize = 14.sp,
                 color = Color(0xFF757575)
             )
@@ -297,8 +303,22 @@ private fun ListToDetailExample() {
                 AnimatedContent(
                     targetState = selectedItem,
                     transitionSpec = {
-                        (fadeIn(tween(300)) + slideInVertically(tween(300)) { it / 2 })
-                            .togetherWith(fadeOut(tween(200)) + slideOutVertically(tween(200)) { -it / 2 })
+                        // 아이템 ID에 따라 다른 애니메이션 적용
+                        val enterTransition = when (targetState) {
+                            1 -> fadeIn(tween(300)) + slideInVertically(tween(300)) { -it / 2 }  // 위에서 아래로
+                            2 -> fadeIn(tween(300)) + slideInHorizontally(tween(300)) { -it }    // 왼쪽에서 오른쪽으로
+                            3 -> fadeIn(tween(300)) + slideInVertically(tween(300)) { it }       // 아래에서 위로
+                            4 -> fadeIn(tween(300)) + scaleIn(tween(300), initialScale = 0.8f)   // 스케일 + 페이드
+                            else -> fadeIn(tween(300))
+                        }
+                        val exitTransition = when (initialState) {
+                            1 -> fadeOut(tween(200)) + slideOutVertically(tween(200)) { it / 2 }
+                            2 -> fadeOut(tween(200)) + slideOutHorizontally(tween(200)) { it }
+                            3 -> fadeOut(tween(200)) + slideOutVertically(tween(200)) { -it }
+                            4 -> fadeOut(tween(200)) + scaleOut(tween(200), targetScale = 0.8f)
+                            else -> fadeOut(tween(200))
+                        }
+                        enterTransition togetherWith exitTransition
                     },
                     label = "list_detail"
                 ) { selected ->
@@ -496,10 +516,355 @@ private fun DetailView(
     }
 }
 
+@OptIn(ExperimentalSharedTransitionApi::class)
+@Composable
+private fun TextTransformationExample() {
+    var isExpanded by remember { mutableStateOf(false) }
+
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(containerColor = Color.White),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        shape = RoundedCornerShape(12.dp)
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Text(
+                text = "3. Text Transformation",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color(0xFF212121)
+            )
+            Text(
+                text = "텍스트를 클릭하면 크기와 위치가 변환됩니다.",
+                fontSize = 14.sp,
+                color = Color(0xFF757575)
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+
+            SharedTransitionLayout {
+                AnimatedContent(
+                    targetState = isExpanded,
+                    transitionSpec = {
+                        fadeIn(tween(400)) togetherWith fadeOut(tween(300))
+                    },
+                    label = "text_transform"
+                ) { expanded ->
+                    if (expanded) {
+                        ExpandedTextView(
+                            sharedTransitionScope = this@SharedTransitionLayout,
+                            animatedContentScope = this@AnimatedContent,
+                            onClick = { isExpanded = false }
+                        )
+                    } else {
+                        CollapsedTextView(
+                            sharedTransitionScope = this@SharedTransitionLayout,
+                            animatedContentScope = this@AnimatedContent,
+                            onClick = { isExpanded = true }
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalSharedTransitionApi::class)
+@Composable
+private fun CollapsedTextView(
+    sharedTransitionScope: SharedTransitionScope,
+    animatedContentScope: AnimatedContentScope,
+    onClick: () -> Unit
+) {
+    with(sharedTransitionScope) {
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable(onClick = onClick),
+            colors = CardDefaults.cardColors(containerColor = Color(0xFFFFF3E0)),
+            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+            shape = RoundedCornerShape(8.dp)
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+            ) {
+                Text(
+                    text = "Jetpack Compose",
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFFFF6F00),
+                    modifier = Modifier.sharedElement(
+                        rememberSharedContentState(key = "text_title"),
+                        animatedVisibilityScope = animatedContentScope
+                    )
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = "클릭하여 확장",
+                    fontSize = 12.sp,
+                    color = Color(0xFF757575)
+                )
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalSharedTransitionApi::class)
+@Composable
+private fun ExpandedTextView(
+    sharedTransitionScope: SharedTransitionScope,
+    animatedContentScope: AnimatedContentScope,
+    onClick: () -> Unit
+) {
+    with(sharedTransitionScope) {
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable(onClick = onClick),
+            colors = CardDefaults.cardColors(containerColor = Color(0xFFFFF3E0)),
+            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+            shape = RoundedCornerShape(8.dp)
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(24.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = "Jetpack Compose",
+                    fontSize = 32.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFFFF6F00),
+                    modifier = Modifier.sharedElement(
+                        rememberSharedContentState(key = "text_title"),
+                        animatedVisibilityScope = animatedContentScope
+                    )
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                Text(
+                    text = "Modern toolkit for building native Android UI",
+                    fontSize = 14.sp,
+                    color = Color(0xFF757575),
+                    lineHeight = 20.sp
+                )
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalSharedTransitionApi::class)
+@Composable
+private fun MultipleElementsExample() {
+    var selectedProfile by remember { mutableStateOf<ProfileItem?>(null) }
+
+    val profiles = remember {
+        listOf(
+            ProfileItem(1, "Alice Johnson", "UX Designer", Color(0xFFE91E63)),
+            ProfileItem(2, "Bob Smith", "Developer", Color(0xFF9C27B0)),
+        )
+    }
+
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(containerColor = Color.White),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        shape = RoundedCornerShape(12.dp)
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Text(
+                text = "4. Multiple Elements",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color(0xFF212121)
+            )
+            Text(
+                text = "여러 요소가 동시에 전환됩니다.",
+                fontSize = 14.sp,
+                color = Color(0xFF757575)
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+
+            SharedTransitionLayout {
+                AnimatedContent(
+                    targetState = selectedProfile,
+                    transitionSpec = {
+                        (fadeIn(tween(400)) + slideInVertically(tween(400)) { it })
+                            .togetherWith(fadeOut(tween(300)) + slideOutVertically(tween(300)) { -it })
+                    },
+                    label = "profile"
+                ) { profile ->
+                    if (profile != null) {
+                        ProfileDetailView(
+                            profile = profile,
+                            sharedTransitionScope = this@SharedTransitionLayout,
+                            animatedContentScope = this@AnimatedContent,
+                            onBack = { selectedProfile = null }
+                        )
+                    } else {
+                        ProfileListView(
+                            profiles = profiles,
+                            sharedTransitionScope = this@SharedTransitionLayout,
+                            animatedContentScope = this@AnimatedContent,
+                            onProfileClick = { selectedProfile = it }
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalSharedTransitionApi::class)
+@Composable
+private fun ProfileListView(
+    profiles: List<ProfileItem>,
+    sharedTransitionScope: SharedTransitionScope,
+    animatedContentScope: AnimatedContentScope,
+    onProfileClick: (ProfileItem) -> Unit
+) {
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        profiles.forEach { profile ->
+            with(sharedTransitionScope) {
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable { onProfileClick(profile) },
+                    colors = CardDefaults.cardColors(containerColor = Color(0xFFFAFAFA)),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+                    shape = RoundedCornerShape(8.dp)
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(12.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .size(50.dp)
+                                .sharedElement(
+                                    rememberSharedContentState(key = "avatar_${profile.id}"),
+                                    animatedVisibilityScope = animatedContentScope
+                                )
+                                .clip(CircleShape)
+                                .background(profile.color)
+                        )
+                        Spacer(modifier = Modifier.size(12.dp))
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text(
+                                text = profile.name,
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = Color(0xFF212121),
+                                modifier = Modifier.sharedElement(
+                                    rememberSharedContentState(key = "name_${profile.id}"),
+                                    animatedVisibilityScope = animatedContentScope
+                                )
+                            )
+                            Text(
+                                text = profile.role,
+                                fontSize = 14.sp,
+                                color = Color(0xFF757575),
+                                modifier = Modifier.sharedElement(
+                                    rememberSharedContentState(key = "role_${profile.id}"),
+                                    animatedVisibilityScope = animatedContentScope
+                                )
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalSharedTransitionApi::class)
+@Composable
+private fun ProfileDetailView(
+    profile: ProfileItem,
+    sharedTransitionScope: SharedTransitionScope,
+    animatedContentScope: AnimatedContentScope,
+    onBack: () -> Unit
+) {
+    with(sharedTransitionScope) {
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            colors = CardDefaults.cardColors(containerColor = Color(0xFFFAFAFA)),
+            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+            shape = RoundedCornerShape(8.dp)
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(120.dp)
+                        .sharedElement(
+                            rememberSharedContentState(key = "avatar_${profile.id}"),
+                            animatedVisibilityScope = animatedContentScope
+                        )
+                        .clip(CircleShape)
+                        .background(profile.color)
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                Text(
+                    text = profile.name,
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFF212121),
+                    modifier = Modifier.sharedElement(
+                        rememberSharedContentState(key = "name_${profile.id}"),
+                        animatedVisibilityScope = animatedContentScope
+                    )
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = profile.role,
+                    fontSize = 18.sp,
+                    color = Color(0xFF757575),
+                    modifier = Modifier.sharedElement(
+                        rememberSharedContentState(key = "role_${profile.id}"),
+                        animatedVisibilityScope = animatedContentScope
+                    )
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                Text(
+                    text = "About: Passionate professional with extensive experience in ${profile.role.lowercase()} and creative problem solving.",
+                    fontSize = 14.sp,
+                    color = Color(0xFF9E9E9E),
+                    lineHeight = 20.sp
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                androidx.compose.material3.Button(
+                    onClick = onBack,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("뒤로 가기")
+                }
+            }
+        }
+    }
+}
+
 data class PhotoItem(
     val id: Int,
     val title: String,
     val description: String,
+    val color: Color
+)
+
+data class ProfileItem(
+    val id: Int,
+    val name: String,
+    val role: String,
     val color: Color
 )
 
