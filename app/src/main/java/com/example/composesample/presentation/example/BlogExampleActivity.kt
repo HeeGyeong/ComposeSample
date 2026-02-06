@@ -92,6 +92,7 @@ import com.example.composesample.presentation.example.component.system.platform.
 import com.example.composesample.presentation.example.component.system.platform.shortcut.ShortcutExampleUI
 import com.example.composesample.presentation.example.component.system.platform.version.TargetSDK34Example
 import com.example.composesample.presentation.example.component.system.platform.webview.WebViewIssueUI
+import com.example.composesample.presentation.example.component.ui.canvas.DialComponentExampleUI
 import com.example.composesample.presentation.example.component.ui.layout.animation.AnimationExampleUI
 import com.example.composesample.presentation.example.component.ui.layout.animation.SharedElementTransitionExampleUI
 import com.example.composesample.presentation.example.component.ui.layout.bottomsheet.BottomSheetUI
@@ -141,6 +142,7 @@ import com.example.composesample.util.ConstValue.Companion.AudioRecorderExample
 import com.example.composesample.util.ConstValue.Companion.BottomNavigationExample
 import com.example.composesample.util.ConstValue.Companion.BottomSheetExample
 import com.example.composesample.util.ConstValue.Companion.CanvasShapesExample
+import com.example.composesample.util.ConstValue.Companion.DialComponentExample
 import com.example.composesample.util.ConstValue.Companion.ClickEventExample
 import com.example.composesample.util.ConstValue.Companion.CompositionLocalExample
 import com.example.composesample.util.ConstValue.Companion.CoordinatorExample
@@ -1009,6 +1011,10 @@ fun ExampleCaseUI(
 
                         CanvasShapesExample -> {
                             CanvasShapesExampleUI(onBackEvent)
+                        }
+
+                        DialComponentExample -> {
+                            DialComponentExampleUI(onBackEvent)
                         }
 
                         ResponsiveTabRowExample -> {

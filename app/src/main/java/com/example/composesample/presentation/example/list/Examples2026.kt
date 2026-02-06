@@ -45,5 +45,11 @@ val examples2026 = listOf(
         title = "Shared Element Transitions",
         description = "화면 간 요소를 부드럽게 전환하는 공유 요소 애니메이션",
         exampleType = ConstValue.SharedElementTransitionExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 02. 07",
+        title = "Dial Component",
+        description = "Canvas로 구현하는 원형 다이얼: 범위 설정, 스냅, 멀티턴",
+        exampleType = ConstValue.DialComponentExample
     )
 )
