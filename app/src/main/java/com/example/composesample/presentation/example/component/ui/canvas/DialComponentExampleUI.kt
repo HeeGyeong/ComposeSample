@@ -54,6 +54,7 @@ import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.roundToInt
 import kotlin.math.sin
+import androidx.compose.ui.graphics.lerp
 
 /**
  * Dial Component Example UI
@@ -81,6 +82,8 @@ fun DialComponentExampleUI(
             item { RangeDialCard() }
             item { SnappingDialCard() }
             item { MultiTurnDialCard() }
+            item { GradientDialCard() }
+            item { MultiTurnOverlayDialCard() }
         }
     }
 }
@@ -328,7 +331,7 @@ private fun MultiTurnDialCard() {
                     // 회전 수 감지 (0→360 또는 360→0 경계 통과 시)
                     val delta = newDegree - prevDegree
                     if (delta < -180f) {
-                        turns = (turns + 1).coerceAtMost(3)
+                        turns = (turns + 1).coerceAtMost(4)
                     } else if (delta > 180f) {
                         turns = (turns - 1).coerceAtLeast(0)
                     }
@@ -377,6 +380,167 @@ private fun MultiTurnDialCard() {
                     fontSize = 14.sp,
                     color = Color(0xFF757575)
                 )
+            }
+        }
+    }
+}
+
+// ==================== 5. Gradient Dial ====================
+
+@Composable
+private fun GradientDialCard() {
+    var degree by remember { mutableFloatStateOf(0f) }
+    val gradientColors = listOf(
+        Color(0xFF2196F3),
+        Color(0xFF00BCD4),
+        Color(0xFF4CAF50),
+        Color(0xFFFFEB3B),
+        Color(0xFFFF9800),
+        Color(0xFFF44336),
+    )
+
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(containerColor = Color.White),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        shape = RoundedCornerShape(12.dp)
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = "5. Gradient Dial",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color(0xFF212121),
+                modifier = Modifier.fillMaxWidth()
+            )
+            Text(
+                text = "진행도에 따라 그라데이션 색상이 변하는 다이얼입니다.",
+                fontSize = 14.sp,
+                color = Color(0xFF757575),
+                modifier = Modifier.fillMaxWidth()
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+
+            GradientDial(
+                degree = degree,
+                onDegreeChanged = { degree = it },
+                gradientColors = gradientColors,
+                modifier = Modifier
+                    .fillMaxWidth(0.6f)
+                    .aspectRatio(1f)
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+            val percentage = (degree / 360f * 100).roundToInt()
+            val displayColor = lerpMultiColor(
+                gradientColors,
+                (degree / 360f).coerceIn(0f, 1f)
+            )
+            Text(
+                text = "$percentage%",
+                fontSize = 24.sp,
+                fontWeight = FontWeight.Bold,
+                color = displayColor
+            )
+        }
+    }
+}
+
+// ==================== 6. Multi-Turn Overlay Dial ====================
+
+@Composable
+private fun MultiTurnOverlayDialCard() {
+    var degree by remember { mutableFloatStateOf(0f) }
+    var turns by remember { mutableIntStateOf(0) }
+    var prevDegree by remember { mutableFloatStateOf(0f) }
+    val maxTurns = 4
+
+    val turnColors = listOf(
+        Color(0xFF2196F3), // Turn 1: Blue
+        Color(0xFF4CAF50), // Turn 2: Green
+        Color(0xFFFF9800), // Turn 3: Orange
+        Color(0xFFF44336), // Turn 4: Red
+    )
+
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(containerColor = Color.White),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        shape = RoundedCornerShape(12.dp)
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = "6. Multi-Turn Overlay Dial",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color(0xFF212121),
+                modifier = Modifier.fillMaxWidth()
+            )
+            Text(
+                text = "바퀴별 다른 색상이 오버레이되는 다이얼. 이전 바퀴 색상이 테두리로 유지됩니다.",
+                fontSize = 14.sp,
+                color = Color(0xFF757575),
+                modifier = Modifier.fillMaxWidth()
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+
+            MultiTurnOverlayDial(
+                degree = degree,
+                turns = turns,
+                maxTurns = maxTurns,
+                turnColors = turnColors,
+                onDegreeChanged = { newDegree ->
+                    val delta = newDegree - prevDegree
+                    if (delta < -180f) {
+                        turns = (turns + 1).coerceAtMost(maxTurns)
+                    } else if (delta > 180f) {
+                        turns = (turns - 1).coerceAtLeast(0)
+                    }
+                    prevDegree = newDegree
+                    degree = newDegree
+                },
+                modifier = Modifier
+                    .fillMaxWidth(0.6f)
+                    .aspectRatio(1f)
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+            val totalDegree = turns * 360 + degree.roundToInt()
+            val currentColor = turnColors[turns.coerceAtMost(maxTurns - 1)]
+            Text(
+                text = "${turns}바퀴 + ${degree.roundToInt()}° (${totalDegree}°)",
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
+                color = currentColor
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // Color legend
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                turnColors.forEachIndexed { index, color ->
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(3.dp)
+                    ) {
+                        Canvas(modifier = Modifier.size(12.dp)) {
+                            drawCircle(color = color)
+                        }
+                        Text(
+                            text = "${index + 1}바퀴",
+                            fontSize = 12.sp,
+                            color = Color(0xFF757575)
+                        )
+                    }
+                }
             }
         }
     }
@@ -634,6 +798,267 @@ private fun DrawScope.drawCenterLabel(
         ),
         style = textStyle
     )
+}
+
+// ==================== Gradient Dial Composable ====================
+
+/**
+ * 그라데이션 색상 트랙을 사용하는 Dial 컴포넌트.
+ * 진행도에 따라 색상이 점진적으로 변합니다.
+ */
+@Composable
+private fun GradientDial(
+    degree: Float,
+    onDegreeChanged: (Float) -> Unit,
+    gradientColors: List<Color>,
+    modifier: Modifier = Modifier,
+    trackColor: Color = Color(0xFFE0E0E0),
+) {
+    val textMeasurer = rememberTextMeasurer()
+
+    Box(
+        modifier = modifier
+            .pointerInput(Unit) {
+                detectDragGestures { change, _ ->
+                    change.consume()
+                    val touchAngle = calculateAngle(
+                        centerX = size.width / 2f,
+                        centerY = size.height / 2f,
+                        touchX = change.position.x,
+                        touchY = change.position.y
+                    )
+                    onDegreeChanged(touchAngle)
+                }
+            },
+        contentAlignment = Alignment.Center
+    ) {
+        Canvas(modifier = Modifier.fillMaxSize()) {
+            val strokeWidth = size.minDimension * 0.06f
+            val thumbRadius = size.minDimension * 0.055f
+            val padding = thumbRadius + strokeWidth / 2f + 4f
+            val dialSize = Size(
+                size.width - padding * 2,
+                size.height - padding * 2
+            )
+            val topLeft = Offset(padding, padding)
+
+            // Background track
+            drawArc(
+                color = trackColor,
+                startAngle = -90f,
+                sweepAngle = 360f,
+                useCenter = false,
+                topLeft = topLeft,
+                size = dialSize,
+                style = Stroke(width = strokeWidth, cap = StrokeCap.Round)
+            )
+
+            // Gradient progress - drawn as small arc segments
+            if (degree > 0f) {
+                val step = 3f
+                var angle = 0f
+                while (angle < degree) {
+                    val sweep = minOf(step, degree - angle)
+                    val fraction = (angle / 360f).coerceIn(0f, 1f)
+                    val segmentColor = lerpMultiColor(gradientColors, fraction)
+                    drawArc(
+                        color = segmentColor,
+                        startAngle = -90f + angle,
+                        sweepAngle = sweep + 0.5f,
+                        useCenter = false,
+                        topLeft = topLeft,
+                        size = dialSize,
+                        style = Stroke(width = strokeWidth, cap = StrokeCap.Butt)
+                    )
+                    angle += step
+                }
+            }
+
+            // Thumb
+            val currentColor = lerpMultiColor(
+                gradientColors,
+                (degree / 360f).coerceIn(0f, 1f)
+            )
+            val thumbAngleRad = Math.toRadians((degree - 90f).toDouble())
+            val thumbX =
+                center.x + (dialSize.width / 2f) * cos(thumbAngleRad).toFloat()
+            val thumbY =
+                center.y + (dialSize.height / 2f) * sin(thumbAngleRad).toFloat()
+
+            drawCircle(
+                color = Color.Black.copy(alpha = 0.15f),
+                radius = thumbRadius + 2f,
+                center = Offset(thumbX + 1f, thumbY + 2f)
+            )
+            drawCircle(
+                color = currentColor,
+                radius = thumbRadius,
+                center = Offset(thumbX, thumbY)
+            )
+            drawCircle(
+                color = Color.White,
+                radius = thumbRadius * 0.45f,
+                center = Offset(thumbX, thumbY)
+            )
+
+            // Center label
+            drawCenterLabel(
+                textMeasurer = textMeasurer,
+                degree = degree,
+                sweepDegrees = 360f,
+                activeColor = currentColor,
+                center = center
+            )
+        }
+    }
+}
+
+// ==================== Multi-Turn Overlay Dial Composable ====================
+
+/**
+ * 바퀴별 색상이 오버레이되는 Multi-Turn Dial 컴포넌트.
+ *
+ * 각 바퀴의 완료된 트랙을 점진적으로 얇은 스트로크로 그려서
+ * 이전 바퀴의 색상이 테두리로 보이는 오버레이 효과를 구현합니다.
+ */
+@Composable
+private fun MultiTurnOverlayDial(
+    degree: Float,
+    turns: Int,
+    maxTurns: Int,
+    turnColors: List<Color>,
+    onDegreeChanged: (Float) -> Unit,
+    modifier: Modifier = Modifier,
+    trackColor: Color = Color(0xFFE0E0E0),
+) {
+    val textMeasurer = rememberTextMeasurer()
+
+    Box(
+        modifier = modifier
+            .pointerInput(Unit) {
+                detectDragGestures { change, _ ->
+                    change.consume()
+                    val touchAngle = calculateAngle(
+                        centerX = size.width / 2f,
+                        centerY = size.height / 2f,
+                        touchX = change.position.x,
+                        touchY = change.position.y
+                    )
+                    onDegreeChanged(touchAngle)
+                }
+            },
+        contentAlignment = Alignment.Center
+    ) {
+        Canvas(modifier = Modifier.fillMaxSize()) {
+            val baseStrokeWidth = size.minDimension * 0.1f
+            val thumbRadius = size.minDimension * 0.055f
+            val padding = thumbRadius + baseStrokeWidth / 2f + 4f
+            val dialSize = Size(
+                size.width - padding * 2,
+                size.height - padding * 2
+            )
+            val topLeft = Offset(padding, padding)
+
+            // Background track
+            drawArc(
+                color = trackColor,
+                startAngle = -90f,
+                sweepAngle = 360f,
+                useCenter = false,
+                topLeft = topLeft,
+                size = dialSize,
+                style = Stroke(width = baseStrokeWidth, cap = StrokeCap.Round)
+            )
+
+            // Draw completed turns as overlay layers (decreasing stroke width)
+            val completedTurns = turns.coerceAtMost(maxTurns)
+            for (i in 0 until completedTurns) {
+                val layerWidth = baseStrokeWidth * (1f - i * 0.2f)
+                drawArc(
+                    color = turnColors[i % turnColors.size],
+                    startAngle = -90f,
+                    sweepAngle = 360f,
+                    useCenter = false,
+                    topLeft = topLeft,
+                    size = dialSize,
+                    style = Stroke(width = layerWidth, cap = StrokeCap.Round)
+                )
+            }
+
+            // Draw current turn progress
+            if (turns < maxTurns && degree > 0f) {
+                val currentTurnIndex = turns
+                val layerWidth = baseStrokeWidth * (1f - currentTurnIndex * 0.2f)
+                drawArc(
+                    color = turnColors[currentTurnIndex % turnColors.size],
+                    startAngle = -90f,
+                    sweepAngle = degree,
+                    useCenter = false,
+                    topLeft = topLeft,
+                    size = dialSize,
+                    style = Stroke(width = layerWidth, cap = StrokeCap.Round)
+                )
+            }
+
+            // Thumb
+            val currentTurnIndex = turns.coerceAtMost(maxTurns - 1)
+            val currentColor = turnColors[currentTurnIndex % turnColors.size]
+            val thumbAngleRad = Math.toRadians((degree - 90f).toDouble())
+            val thumbX =
+                center.x + (dialSize.width / 2f) * cos(thumbAngleRad).toFloat()
+            val thumbY =
+                center.y + (dialSize.height / 2f) * sin(thumbAngleRad).toFloat()
+
+            drawCircle(
+                color = Color.Black.copy(alpha = 0.15f),
+                radius = thumbRadius + 2f,
+                center = Offset(thumbX + 1f, thumbY + 2f)
+            )
+            drawCircle(
+                color = currentColor,
+                radius = thumbRadius,
+                center = Offset(thumbX, thumbY)
+            )
+            drawCircle(
+                color = Color.White,
+                radius = thumbRadius * 0.45f,
+                center = Offset(thumbX, thumbY)
+            )
+
+            // Center label - show total percentage
+            val totalPercent = ((turns * 360f + degree) / (maxTurns * 360f) * 100f)
+                .roundToInt().coerceIn(0, 100)
+            val text = "$totalPercent%"
+            val textStyle = TextStyle(
+                fontSize = (size.minDimension * 0.08f).sp,
+                fontWeight = FontWeight.Bold,
+                color = currentColor,
+                textAlign = TextAlign.Center
+            )
+            val textLayoutResult = textMeasurer.measure(text = text, style = textStyle)
+            drawText(
+                textMeasurer = textMeasurer,
+                text = text,
+                topLeft = Offset(
+                    x = center.x - textLayoutResult.size.width / 2f,
+                    y = center.y - textLayoutResult.size.height / 2f
+                ),
+                style = textStyle
+            )
+        }
+    }
+}
+
+/**
+ * 여러 색상을 fraction(0~1) 기준으로 선형 보간합니다.
+ */
+private fun lerpMultiColor(colors: List<Color>, fraction: Float): Color {
+    if (colors.size < 2) return colors.firstOrNull() ?: Color.Black
+    val clampedFraction = fraction.coerceIn(0f, 1f)
+    val scaledFraction = clampedFraction * (colors.size - 1)
+    val index = scaledFraction.toInt().coerceIn(0, colors.size - 2)
+    val localFraction = scaledFraction - index
+    return lerp(colors[index], colors[index + 1], localFraction)
 }
 
 @Preview(showBackground = true)
