@@ -20,13 +20,14 @@ class ConstValue {
         const val SSEWikiURL = "https://stream.wikimedia.org/v2/stream/recentchange"
 
         // ==================== UI 컴포넌트 예제 ====================
-        // LazyColumn(키보드 이슈), ClickEvent(중복 방지), FlexBox(유동 레이아웃), WebView(YouTube), TextStyle(스타일링), StickyHeader(고정 헤더), ReverseLazyColumn(역방향), AutoSizingText(자동 크기), CardCorners(모서리 스타일), ButtonGroup(M3 Expressive), Visibility(가시성 처리), FancyTopAppBar(고급 TopAppBar), CanvasShapes(Canvas 도형 그리기), ResponsiveTabRow(반응형 탭), CustomTextRendering(커스텀 텍스트 렌더링), DialComponent(Dial 컴포넌트)
+        // LazyColumn(키보드 이슈), ClickEvent(중복 방지), FlexBox(유동 레이아웃), WebView(YouTube), TextStyle(스타일링), StickyHeader(고정 헤더), ReverseLazyColumn(역방향), AutoSizingText(자동 크기), CardCorners(모서리 스타일), ButtonGroup(M3 Expressive), Visibility(가시성 처리), FancyTopAppBar(고급 TopAppBar), CanvasShapes(Canvas 도형 그리기), ResponsiveTabRow(반응형 탭), CustomTextRendering(커스텀 텍스트 렌더링), DialComponent(Dial 컴포넌트), EmbeddedPhotoPicker(임베디드 포토 피커)
         const val LazyColumnExample = "lazyColumnExample"
         const val FancyTopAppBarExample = "fancyTopAppBarExample"
         const val CanvasShapesExample = "canvasShapesExample"
         const val ResponsiveTabRowExample = "responsiveTabRowExample"
         const val CustomTextRenderingExample = "customTextRenderingExample"
         const val DialComponentExample = "dialComponentExample"
+        const val EmbeddedPhotoPickerExample = "embeddedPhotoPickerExample"
         const val ClickEventExample = "clickEventExample"
         const val FlexBoxLayoutExample = "flexBoxLayoutExample"
         const val WebViewIssueExample = "webViewIssueExample"

@@ -51,5 +51,12 @@ val examples2026 = listOf(
         title = "Dial Component",
         description = "Canvas로 구현하는 원형 다이얼: 범위 설정, 스냅, 멀티턴",
         exampleType = ConstValue.DialComponentExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 02. 10",
+        title = "Embedded Photo Picker",
+        description = "앱 내에서 직접 포토 피커를 임베드하여 사진/영상을 선택하는 방법",
+        blogUrl = "",
+        exampleType = ConstValue.EmbeddedPhotoPickerExample
     )
 )

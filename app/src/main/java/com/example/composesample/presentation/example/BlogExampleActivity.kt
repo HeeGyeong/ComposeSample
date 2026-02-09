@@ -128,6 +128,7 @@ import com.example.composesample.presentation.example.component.architecture.nav
 import com.example.composesample.presentation.example.component.architecture.modularization.ModularizationExampleUI
 import com.example.composesample.presentation.example.component.ui.button.ButtonGroupExampleUI
 import com.example.composesample.presentation.example.component.ui.canvas.CanvasShapesExampleUI
+import com.example.composesample.presentation.example.component.ui.media.picker.EmbeddedPhotoPickerExampleUI
 import com.example.composesample.presentation.example.component.ui.tab.ResponsiveTabRowExampleUI
 import com.example.composesample.presentation.example.component.ui.text.CustomTextRenderingExampleUI
 import com.example.composesample.presentation.example.component.ui.visibility.VisibilityExampleUI
@@ -143,6 +144,7 @@ import com.example.composesample.util.ConstValue.Companion.BottomNavigationExamp
 import com.example.composesample.util.ConstValue.Companion.BottomSheetExample
 import com.example.composesample.util.ConstValue.Companion.CanvasShapesExample
 import com.example.composesample.util.ConstValue.Companion.DialComponentExample
+import com.example.composesample.util.ConstValue.Companion.EmbeddedPhotoPickerExample
 import com.example.composesample.util.ConstValue.Companion.ClickEventExample
 import com.example.composesample.util.ConstValue.Companion.CompositionLocalExample
 import com.example.composesample.util.ConstValue.Companion.CoordinatorExample
@@ -1015,6 +1017,10 @@ fun ExampleCaseUI(
 
                         DialComponentExample -> {
                             DialComponentExampleUI(onBackEvent)
+                        }
+
+                        EmbeddedPhotoPickerExample -> {
+                            EmbeddedPhotoPickerExampleUI(onBackEvent)
                         }
 
                         ResponsiveTabRowExample -> {
