@@ -45,6 +45,10 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberBottomSheetScaffoldState
+import androidx.compose.material3.Slider
+import androidx.compose.material3.SliderDefaults
+import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -93,10 +97,10 @@ fun EmbeddedPhotoPickerExampleUI(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+            horizontalArrangement = Arrangement.spacedBy(6.dp)
         ) {
             ExampleTab(
-                text = "BottomSheet",
+                text = "Sheet",
                 isSelected = selectedExample == 0,
                 onClick = { selectedExample = 0 },
                 modifier = Modifier.weight(1f)
@@ -108,9 +112,15 @@ fun EmbeddedPhotoPickerExampleUI(
                 modifier = Modifier.weight(1f)
             )
             ExampleTab(
-                text = "Concepts",
+                text = "Filter",
                 isSelected = selectedExample == 2,
                 onClick = { selectedExample = 2 },
+                modifier = Modifier.weight(1f)
+            )
+            ExampleTab(
+                text = "Config",
+                isSelected = selectedExample == 3,
+                onClick = { selectedExample = 3 },
                 modifier = Modifier.weight(1f)
             )
         }
@@ -120,6 +130,8 @@ fun EmbeddedPhotoPickerExampleUI(
         when (selectedExample) {
             0 -> BottomSheetPickerDemo()
             1 -> OrderedSelectionDemo()
+            2 -> MimeTypeFilterDemo()
+            3 -> ConfigurationPlaygroundDemo()
         }
     }
 }
@@ -553,6 +565,480 @@ private fun OrderedSelectionDemo() {
                 }
             }
         }
+    }
+}
+
+private enum class MediaTypeFilter(val label: String) {
+    ALL("전체"),
+    PHOTO("사진"),
+    VIDEO("동영상"),
+    GIF("GIF")
+}
+
+private data class SimulatedMedia(
+    val id: Int,
+    val color: Color,
+    val label: String,
+    val mediaType: MediaTypeFilter
+)
+
+@Composable
+private fun MimeTypeFilterDemo() {
+    var selectedFilter by remember { mutableStateOf(MediaTypeFilter.ALL) }
+    val selectedMedia = remember { mutableStateListOf<SimulatedMedia>() }
+    val maxSelection = 6
+
+    val allMedia = remember {
+        List(30) { index ->
+            val type = when {
+                index % 7 == 0 -> MediaTypeFilter.GIF
+                index % 4 == 0 -> MediaTypeFilter.VIDEO
+                else -> MediaTypeFilter.PHOTO
+            }
+            SimulatedMedia(
+                id = index,
+                color = generatePhotoColor(index + 50),
+                label = when (type) {
+                    MediaTypeFilter.PHOTO -> "IMG_${1000 + index}"
+                    MediaTypeFilter.VIDEO -> "VID_${2000 + index}"
+                    MediaTypeFilter.GIF -> "GIF_${3000 + index}"
+                    else -> "FILE_$index"
+                },
+                mediaType = type
+            )
+        }
+    }
+
+    val filteredMedia = if (selectedFilter == MediaTypeFilter.ALL) allMedia
+    else allMedia.filter { it.mediaType == selectedFilter }
+
+    LazyColumn(
+        modifier = Modifier.fillMaxSize(),
+        contentPadding = PaddingValues(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        item {
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(containerColor = Color.White),
+                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+                shape = RoundedCornerShape(12.dp)
+            ) {
+                Column(modifier = Modifier.padding(16.dp)) {
+                    Text(
+                        text = "MIME Type Filter",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFF212121)
+                    )
+                    Text(
+                        text = "setMimeTypes()를 사용하여 표시할 미디어 유형을 필터링합니다.\n" +
+                                "사진, 동영상, GIF 등 원하는 유형만 선택적으로 표시할 수 있습니다.",
+                        fontSize = 14.sp,
+                        color = Color(0xFF757575),
+                        lineHeight = 20.sp
+                    )
+
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        MediaTypeFilter.entries.forEach { filter ->
+                            FilterChipItem(
+                                text = filter.label,
+                                isSelected = selectedFilter == filter,
+                                onClick = {
+                                    selectedFilter = filter
+                                    selectedMedia.clear()
+                                }
+                            )
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    Text(
+                        text = "${filteredMedia.size}개 항목 | ${selectedMedia.size} / $maxSelection 선택됨",
+                        fontSize = 13.sp,
+                        color = Color(0xFF757575)
+                    )
+                }
+            }
+        }
+
+        item {
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(containerColor = Color.White),
+                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+                shape = RoundedCornerShape(12.dp)
+            ) {
+                LazyVerticalGrid(
+                    columns = GridCells.Fixed(3),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(480.dp)
+                        .padding(8.dp),
+                    verticalArrangement = Arrangement.spacedBy(4.dp),
+                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    itemsIndexed(filteredMedia) { _, media ->
+                        SimulatedMediaItem(
+                            media = media,
+                            isSelected = selectedMedia.contains(media),
+                            onToggle = {
+                                if (selectedMedia.contains(media)) {
+                                    selectedMedia.remove(media)
+                                } else if (selectedMedia.size < maxSelection) {
+                                    selectedMedia.add(media)
+                                }
+                            }
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun ConfigurationPlaygroundDemo() {
+    var maxCount by remember { mutableIntStateOf(5) }
+    var orderedSelection by remember { mutableStateOf(true) }
+    var accentColorIndex by remember { mutableIntStateOf(0) }
+    val selectedPhotos = remember { mutableStateListOf<SimulatedPhoto>() }
+
+    val accentColors = listOf(
+        Color(0xFF1976D2),
+        Color(0xFFF44336),
+        Color(0xFF4CAF50),
+        Color(0xFFFF9800),
+        Color(0xFF9C27B0),
+    )
+    val currentAccent = accentColors[accentColorIndex]
+
+    val photos = remember {
+        List(20) { index ->
+            SimulatedPhoto(
+                id = index,
+                color = generatePhotoColor(index + 100),
+                label = "Photo ${index + 1}"
+            )
+        }
+    }
+
+    LazyColumn(
+        modifier = Modifier.fillMaxSize(),
+        contentPadding = PaddingValues(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        item {
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(containerColor = Color.White),
+                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+                shape = RoundedCornerShape(12.dp)
+            ) {
+                Column(modifier = Modifier.padding(16.dp)) {
+                    Text(
+                        text = "Configuration Playground",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFF212121)
+                    )
+                    Text(
+                        text = "EmbeddedPhotoPickerFeatureInfo의 각 설정을 실시간으로 변경하며 동작을 확인합니다.",
+                        fontSize = 14.sp,
+                        color = Color(0xFF757575),
+                        lineHeight = 20.sp
+                    )
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "setMaxCount",
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Medium,
+                            color = Color(0xFF424242)
+                        )
+                        Text(
+                            text = "$maxCount",
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = currentAccent
+                        )
+                    }
+                    val minAllowed = maxOf(1, selectedPhotos.size)
+                    Slider(
+                        value = maxCount.toFloat(),
+                        onValueChange = { maxCount = maxOf(it.toInt(), minAllowed) },
+                        valueRange = minAllowed.toFloat()..10f,
+                        steps = maxOf(0, 10 - minAllowed - 1),
+                        colors = SliderDefaults.colors(
+                            thumbColor = currentAccent,
+                            activeTrackColor = currentAccent
+                        )
+                    )
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "setOrderedSelection",
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Medium,
+                            color = Color(0xFF424242)
+                        )
+                        Switch(
+                            checked = orderedSelection,
+                            onCheckedChange = { orderedSelection = it },
+                            colors = SwitchDefaults.colors(
+                                checkedThumbColor = currentAccent,
+                                checkedTrackColor = currentAccent.copy(alpha = 0.5f)
+                            )
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    Text(
+                        text = "setAccentColor",
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Medium,
+                        color = Color(0xFF424242)
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        accentColors.forEachIndexed { index, color ->
+                            Box(
+                                modifier = Modifier
+                                    .size(28.dp)
+                                    .clip(CircleShape)
+                                    .background(color)
+                                    .then(
+                                        if (index == accentColorIndex)
+                                            Modifier.border(3.dp, Color.Black, CircleShape)
+                                        else Modifier.border(1.dp, Color.LightGray, CircleShape)
+                                    )
+                                    .clickable { accentColorIndex = index }
+                            )
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    Text(
+                        text = "${selectedPhotos.size} / $maxCount 선택됨",
+                        fontSize = 14.sp,
+                        color = currentAccent,
+                        fontWeight = FontWeight.Medium
+                    )
+                }
+            }
+        }
+
+        item {
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(containerColor = Color.White),
+                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+                shape = RoundedCornerShape(12.dp)
+            ) {
+                LazyVerticalGrid(
+                    columns = GridCells.Fixed(4),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(400.dp)
+                        .padding(8.dp),
+                    verticalArrangement = Arrangement.spacedBy(4.dp),
+                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    itemsIndexed(photos) { _, photo ->
+                        SimulatedPhotoItem(
+                            photo = photo,
+                            isSelected = selectedPhotos.contains(photo),
+                            selectionOrder = if (orderedSelection) selectedPhotos.indexOf(photo) + 1 else 0,
+                            accentColor = currentAccent,
+                            onToggle = {
+                                if (selectedPhotos.contains(photo)) {
+                                    selectedPhotos.remove(photo)
+                                } else if (selectedPhotos.size < maxCount) {
+                                    selectedPhotos.add(photo)
+                                }
+                            }
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun SimulatedMediaItem(
+    media: SimulatedMedia,
+    isSelected: Boolean,
+    onToggle: () -> Unit
+) {
+    val borderAlpha by animateFloatAsState(
+        targetValue = if (isSelected) 1f else 0f,
+        label = "mediaBorder"
+    )
+
+    Box(
+        modifier = Modifier
+            .aspectRatio(1f)
+            .clip(RoundedCornerShape(4.dp))
+            .then(
+                if (isSelected) Modifier.border(
+                    3.dp,
+                    Color(0xFF1976D2).copy(alpha = borderAlpha),
+                    RoundedCornerShape(4.dp)
+                )
+                else Modifier
+            )
+            .clickable { onToggle() }
+    ) {
+        Canvas(modifier = Modifier.fillMaxSize()) {
+            drawRoundRect(
+                color = media.color,
+                cornerRadius = CornerRadius(4.dp.toPx())
+            )
+
+            val iconSize = size.minDimension * 0.3f
+            val iconX = (size.width - iconSize) / 2f
+            val iconY = (size.height - iconSize) / 2f
+
+            when (media.mediaType) {
+                MediaTypeFilter.VIDEO -> {
+                    val playPath = Path().apply {
+                        moveTo(iconX, iconY)
+                        lineTo(iconX + iconSize, iconY + iconSize / 2f)
+                        lineTo(iconX, iconY + iconSize)
+                        close()
+                    }
+                    drawPath(
+                        path = playPath,
+                        color = Color.White.copy(alpha = 0.6f)
+                    )
+                }
+                MediaTypeFilter.GIF -> {
+                    drawCircle(
+                        color = Color.White.copy(alpha = 0.4f),
+                        radius = iconSize * 0.5f,
+                        center = Offset(size.width / 2f, size.height / 2f)
+                    )
+                }
+                else -> {
+                    val mountainPath = Path().apply {
+                        moveTo(iconX, iconY + iconSize)
+                        lineTo(iconX + iconSize * 0.4f, iconY + iconSize * 0.3f)
+                        lineTo(iconX + iconSize * 0.6f, iconY + iconSize * 0.6f)
+                        lineTo(iconX + iconSize * 0.8f, iconY + iconSize * 0.2f)
+                        lineTo(iconX + iconSize, iconY + iconSize)
+                        close()
+                    }
+                    drawPath(
+                        path = mountainPath,
+                        color = Color.White.copy(alpha = 0.4f)
+                    )
+                    drawCircle(
+                        color = Color.White.copy(alpha = 0.4f),
+                        radius = iconSize * 0.12f,
+                        center = Offset(iconX + iconSize * 0.25f, iconY + iconSize * 0.25f)
+                    )
+                }
+            }
+        }
+
+        if (media.mediaType == MediaTypeFilter.VIDEO) {
+            Box(
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(4.dp)
+                    .clip(RoundedCornerShape(4.dp))
+                    .background(Color.Black.copy(alpha = 0.6f))
+                    .padding(horizontal = 4.dp, vertical = 2.dp)
+            ) {
+                Text(
+                    text = "0:${(10 + media.id % 50).toString().padStart(2, '0')}",
+                    fontSize = 9.sp,
+                    color = Color.White
+                )
+            }
+        }
+
+        if (media.mediaType == MediaTypeFilter.GIF) {
+            Box(
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(4.dp)
+                    .clip(RoundedCornerShape(4.dp))
+                    .background(Color.Black.copy(alpha = 0.6f))
+                    .padding(horizontal = 4.dp, vertical = 2.dp)
+            ) {
+                Text(
+                    text = "GIF",
+                    fontSize = 9.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White
+                )
+            }
+        }
+
+        AnimatedVisibility(
+            visible = isSelected,
+            enter = scaleIn() + fadeIn(),
+            exit = scaleOut() + fadeOut(),
+            modifier = Modifier
+                .align(Alignment.TopEnd)
+                .padding(4.dp)
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(24.dp)
+                    .clip(CircleShape)
+                    .background(Color(0xFF1976D2)),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Check,
+                    contentDescription = "Selected",
+                    tint = Color.White,
+                    modifier = Modifier.size(16.dp)
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun FilterChipItem(
+    text: String,
+    isSelected: Boolean,
+    onClick: () -> Unit
+) {
+    Box(
+        modifier = Modifier
+            .clip(RoundedCornerShape(16.dp))
+            .background(if (isSelected) Color(0xFF1976D2) else Color(0xFFE0E0E0))
+            .clickable { onClick() }
+            .padding(horizontal = 12.dp, vertical = 6.dp)
+    ) {
+        Text(
+            text = text,
+            fontSize = 13.sp,
+            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
+            color = if (isSelected) Color.White else Color(0xFF616161)
+        )
     }
 }
 
