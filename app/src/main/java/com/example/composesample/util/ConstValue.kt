@@ -82,10 +82,11 @@ class ConstValue {
         const val ModularizationExample = "modularizationExample"
 
         // ==================== Compose 상태 & Side Effect 예제 ====================
-        // SideEffect(부수 효과 함수들), CompositionLocal(암시적 전달), StaticDynamicCompositionLocal(Static vs Dynamic), SnapshotFlow(Flow 변환), InitTest(초기화 케이스)
+        // SideEffect(부수 효과 함수들), CompositionLocal(암시적 전달), StaticDynamicCompositionLocal(Static vs Dynamic), CompositionLocalTree(트리 시각화), SnapshotFlow(Flow 변환), InitTest(초기화 케이스)
         const val SideEffectExample = "sideEffectExample"
         const val CompositionLocalExample = "compositonLocalExample"
         const val StaticDynamicCompositionLocalExample = "staticDynamicCompositionLocalExample"
+        const val CompositionLocalTreeExample = "compositionLocalTreeExample"
         const val SnapshotFlowExample = "snapshotFlowExample"
         const val InitTestExample = "initTestExample"
 

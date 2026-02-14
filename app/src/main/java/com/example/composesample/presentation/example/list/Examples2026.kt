@@ -58,5 +58,12 @@ val examples2026 = listOf(
         description = "앱 내에서 직접 포토 피커를 임베드하여 사진/영상을 선택하는 방법",
         blogUrl = "",
         exampleType = ConstValue.EmbeddedPhotoPickerExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 02. 14",
+        title = "CompositionLocal Tree Visualization",
+        description = "Composition Tree에서 CompositionLocal의 데이터 흐름, 룩업, 섀도잉을 시각화",
+        blogUrl = "",
+        exampleType = ConstValue.CompositionLocalTreeExample
     )
 )
