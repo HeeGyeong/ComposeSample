@@ -1,13 +1,8 @@
 package com.example.composesample.presentation.example.component.architecture.pattern.compositionLocal.tree
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -22,7 +17,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -54,7 +48,6 @@ import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.DrawScope
-import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.TextMeasurer
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.drawText
@@ -75,7 +68,6 @@ import kotlinx.coroutines.delay
 
 // === 예제용 CompositionLocal 정의 ===
 private val LocalThemeColor = compositionLocalOf { Color(0xFF1976D2) }
-private val LocalUserName = compositionLocalOf { "Default User" }
 private val LocalCounter = compositionLocalOf { 0 }
 
 @Composable
@@ -222,7 +214,9 @@ private fun TreeStructureDemo() {
                     Button(
                         onClick = { showProvider = !showProvider },
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = if (showProvider) Color(0xFF4CAF50) else Color(0xFF1976D2)
+                            containerColor = if (showProvider) Color(0xFF4CAF50) else Color(
+                                0xFF1976D2
+                            )
                         ),
                         shape = RoundedCornerShape(8.dp)
                     ) {
@@ -250,40 +244,6 @@ private fun TreeStructureDemo() {
                         .padding(16.dp)
                 ) {
                     drawTreeStructure(textMeasurer, showProvider)
-                }
-            }
-        }
-
-        item {
-            // Locals map explanation
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(
-                    containerColor = if (showProvider) Color(0xFFE8F5E9) else Color(0xFFFFF8E1)
-                ),
-                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-                shape = RoundedCornerShape(12.dp)
-            ) {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    Text(
-                        text = if (showProvider) "✅ Provider 활성" else "📋 Provider 없음",
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = if (showProvider) Color(0xFF2E7D32) else Color(0xFFF57F17)
-                    )
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Text(
-                        text = if (showProvider)
-                            "Provider 노드에 { LocalTheme → Dark } 맵이 부착되었습니다.\n" +
-                                    "하위 노드들은 이 값을 '상속'하는 것이 아니라, " +
-                                    "필요할 때 트리를 올라가며 찾습니다."
-                        else
-                            "Provider가 없으면 모든 노드의 locals map이 비어있습니다.\n" +
-                                    ".current 호출 시 기본값(defaultValue)을 사용합니다.",
-                        fontSize = 13.sp,
-                        color = Color(0xFF424242),
-                        lineHeight = 20.sp
-                    )
                 }
             }
         }
@@ -316,12 +276,16 @@ private fun DrawScope.drawTreeStructure(textMeasurer: TextMeasurer, showProvider
         drawTreeNode(textMeasurer, providerPos, "Provider", nodeRadius + 4f, Color(0xFF4CAF50))
         // Locals map annotation
         val mapText = "{ LocalTheme → Dark }"
-        val mapStyle = TextStyle(fontSize = 11.sp, color = Color(0xFF2E7D32), fontWeight = FontWeight.Bold)
+        val mapStyle =
+            TextStyle(fontSize = 11.sp, color = Color(0xFF2E7D32), fontWeight = FontWeight.Bold)
         val mapLayout = textMeasurer.measure(mapText, mapStyle)
         drawText(
             textMeasurer = textMeasurer,
             text = mapText,
-            topLeft = Offset(providerPos.x + nodeRadius + 12f, providerPos.y - mapLayout.size.height / 2f),
+            topLeft = Offset(
+                providerPos.x + nodeRadius + 12f,
+                providerPos.y - mapLayout.size.height / 2f
+            ),
             style = mapStyle
         )
     } else {
@@ -332,7 +296,10 @@ private fun DrawScope.drawTreeStructure(textMeasurer: TextMeasurer, showProvider
         drawText(
             textMeasurer = textMeasurer,
             text = emptyText,
-            topLeft = Offset(providerPos.x + nodeRadius + 12f, providerPos.y - emptyLayout.size.height / 2f),
+            topLeft = Offset(
+                providerPos.x + nodeRadius + 12f,
+                providerPos.y - emptyLayout.size.height / 2f
+            ),
             style = emptyStyle
         )
     }
@@ -342,7 +309,8 @@ private fun DrawScope.drawTreeStructure(textMeasurer: TextMeasurer, showProvider
     drawTreeNode(textMeasurer, textPos, "Text", nodeRadius, Color(0xFF546E7A))
 
     // Empty locals annotation for children
-    val childAnnotations = listOf(screenPos to "상속 아님, 룩업", cardPos to "locals: { }", textPos to "locals: { }")
+    val childAnnotations =
+        listOf(screenPos to "상속 아님, 룩업", cardPos to "locals: { }", textPos to "locals: { }")
     childAnnotations.forEach { (pos, label) ->
         val style = TextStyle(fontSize = 10.sp, color = Color(0xFF9E9E9E))
         val layout = textMeasurer.measure(label, style)
@@ -363,7 +331,11 @@ private fun DrawScope.drawTreeNode(
     color: Color
 ) {
     // Shadow
-    drawCircle(color = Color.Black.copy(alpha = 0.1f), radius = radius + 2f, center = Offset(center.x + 1f, center.y + 2f))
+    drawCircle(
+        color = Color.Black.copy(alpha = 0.1f),
+        radius = radius + 2f,
+        center = Offset(center.x + 1f, center.y + 2f)
+    )
     // Node circle
     drawCircle(color = color, radius = radius, center = center)
     // Label
@@ -476,56 +448,6 @@ private fun LookupWalkDemo() {
                 }
             }
         }
-
-        item {
-            // Step description
-            val stepDescriptions = listOf(
-                "1️⃣ [Text]에서 시작: \"LocalTheme가 필요해\"",
-                "2️⃣ [Card] 확인 → 없음, 부모로 이동...",
-                "3️⃣ [Screen(Provider)] 확인 → 찾았다! LocalTheme → Dark ✓",
-                "✅ 값 반환: Dark (트리 위쪽에서 가장 먼저 찾은 값)"
-            )
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(
-                    containerColor = if (lookupStep >= 0) Color(0xFFFFF3E0) else Color.White
-                ),
-                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-                shape = RoundedCornerShape(12.dp)
-            ) {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    if (lookupStep in 0..3) {
-                        Text(
-                            text = stepDescriptions[lookupStep],
-                            fontSize = 15.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = Color(0xFFE65100),
-                            lineHeight = 22.sp
-                        )
-                    } else {
-                        Text(
-                            text = "버튼을 눌러 룩업 과정을 확인하세요.",
-                            fontSize = 14.sp,
-                            color = Color(0xFF757575)
-                        )
-                    }
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(
-                        text = "lookup(key, nodeIndex):\n" +
-                                "  current = nodeIndex\n" +
-                                "  while current != null:\n" +
-                                "    if current.locals.contains(key):\n" +
-                                "      return current.locals[key]\n" +
-                                "    current = current.parentIndex\n" +
-                                "  return key.defaultValue",
-                        fontSize = 12.sp,
-                        color = Color(0xFF616161),
-                        fontFamily = FontFamily.Monospace,
-                        lineHeight = 18.sp
-                    )
-                }
-            }
-        }
     }
 }
 
@@ -579,7 +501,8 @@ private fun DrawScope.drawLookupTree(textMeasurer: TextMeasurer, lookupStep: Int
 
     // Provider label
     val provLabel = "{ LocalTheme → Dark }"
-    val provStyle = TextStyle(fontSize = 10.sp, color = Color(0xFF2E7D32), fontWeight = FontWeight.Bold)
+    val provStyle =
+        TextStyle(fontSize = 10.sp, color = Color(0xFF2E7D32), fontWeight = FontWeight.Bold)
     val provLayout = textMeasurer.measure(provLabel, provStyle)
     drawText(
         textMeasurer = textMeasurer,
@@ -605,7 +528,10 @@ private fun DrawScope.drawLookupTree(textMeasurer: TextMeasurer, lookupStep: Int
             drawText(
                 textMeasurer = textMeasurer,
                 text = label,
-                topLeft = Offset(pos.x - nodeRadius - layout.size.width - 8f, pos.y - layout.size.height / 2f),
+                topLeft = Offset(
+                    pos.x - nodeRadius - layout.size.width - 8f,
+                    pos.y - layout.size.height / 2f
+                ),
                 style = style
             )
         }
@@ -635,8 +561,14 @@ private fun DrawScope.drawLookupArrow(from: Offset, to: Offset, nodeRadius: Floa
     val arrowSize = 10f
     val arrowPath = Path().apply {
         moveTo(endOffset.x, endOffset.y)
-        lineTo(endOffset.x - nx * arrowSize - ny * arrowSize * 0.5f, endOffset.y - ny * arrowSize + nx * arrowSize * 0.5f)
-        lineTo(endOffset.x - nx * arrowSize + ny * arrowSize * 0.5f, endOffset.y - ny * arrowSize - nx * arrowSize * 0.5f)
+        lineTo(
+            endOffset.x - nx * arrowSize - ny * arrowSize * 0.5f,
+            endOffset.y - ny * arrowSize + nx * arrowSize * 0.5f
+        )
+        lineTo(
+            endOffset.x - nx * arrowSize + ny * arrowSize * 0.5f,
+            endOffset.y - ny * arrowSize - nx * arrowSize * 0.5f
+        )
         close()
     }
     drawPath(arrowPath, color = color)
@@ -685,7 +617,9 @@ private fun ShadowingDemo() {
                         Button(
                             onClick = { innerTheme = "Light" },
                             colors = ButtonDefaults.buttonColors(
-                                containerColor = if (innerTheme == "Light") Color(0xFFFFB300) else Color(0xFFE0E0E0)
+                                containerColor = if (innerTheme == "Light") Color(0xFFFFB300) else Color(
+                                    0xFFE0E0E0
+                                )
                             ),
                             shape = RoundedCornerShape(8.dp)
                         ) {
@@ -697,7 +631,9 @@ private fun ShadowingDemo() {
                         Button(
                             onClick = { innerTheme = "Red" },
                             colors = ButtonDefaults.buttonColors(
-                                containerColor = if (innerTheme == "Red") Color(0xFFF44336) else Color(0xFFE0E0E0)
+                                containerColor = if (innerTheme == "Red") Color(0xFFF44336) else Color(
+                                    0xFFE0E0E0
+                                )
                             ),
                             shape = RoundedCornerShape(8.dp)
                         ) {
@@ -725,39 +661,6 @@ private fun ShadowingDemo() {
                         .padding(16.dp)
                 ) {
                     drawShadowingTree(textMeasurer, innerTheme)
-                }
-            }
-        }
-
-        // Live demo with actual CompositionLocalProvider
-        item {
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(containerColor = Color.White),
-                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-                shape = RoundedCornerShape(12.dp)
-            ) {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    Text(
-                        text = "실제 동작 확인",
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color(0xFF212121)
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-
-                    // Outer Provider: Dark (Blue)
-                    CompositionLocalProvider(LocalThemeColor provides Color(0xFF1976D2)) {
-                        ThemeColorBox(label = "Outer: Dark (Blue)", depth = 0)
-
-                        Spacer(modifier = Modifier.height(8.dp))
-
-                        // Inner Provider: shadows with different color
-                        val innerColor = if (innerTheme == "Light") Color(0xFFFFB300) else Color(0xFFF44336)
-                        CompositionLocalProvider(LocalThemeColor provides innerColor) {
-                            ThemeColorBox(label = "Inner: $innerTheme (Shadowed)", depth = 1)
-                        }
-                    }
                 }
             }
         }
@@ -826,13 +729,17 @@ private fun DrawScope.drawShadowingTree(textMeasurer: TextMeasurer, innerTheme: 
     drawTreeNode(textMeasurer, rightText, "Text", nodeRadius, Color(0xFF546E7A))
 
     // Annotations
-    val darkStyle = TextStyle(fontSize = 10.sp, color = Color(0xFF1565C0), fontWeight = FontWeight.Bold)
+    val darkStyle =
+        TextStyle(fontSize = 10.sp, color = Color(0xFF1565C0), fontWeight = FontWeight.Bold)
     val darkLabel = "{ Theme → Dark }"
     val darkLayout = textMeasurer.measure(darkLabel, darkStyle)
     drawText(
         textMeasurer = textMeasurer,
         text = darkLabel,
-        topLeft = Offset(outerProvPos.x + nodeRadius + 8f, outerProvPos.y - darkLayout.size.height / 2f),
+        topLeft = Offset(
+            outerProvPos.x + nodeRadius + 8f,
+            outerProvPos.y - darkLayout.size.height / 2f
+        ),
         style = darkStyle
     )
 
@@ -842,39 +749,54 @@ private fun DrawScope.drawShadowingTree(textMeasurer: TextMeasurer, innerTheme: 
     drawText(
         textMeasurer = textMeasurer,
         text = innerLabel,
-        topLeft = Offset(innerProvPos.x + nodeRadius + 8f, innerProvPos.y - innerLayout.size.height / 2f),
+        topLeft = Offset(
+            innerProvPos.x + nodeRadius + 8f,
+            innerProvPos.y - innerLayout.size.height / 2f
+        ),
         style = innerStyle
     )
 
     // Result annotations
     val leftResult = "= Dark"
-    val leftResultStyle = TextStyle(fontSize = 10.sp, color = Color(0xFF1565C0), fontWeight = FontWeight.Bold)
+    val leftResultStyle =
+        TextStyle(fontSize = 10.sp, color = Color(0xFF1565C0), fontWeight = FontWeight.Bold)
     val leftResultLayout = textMeasurer.measure(leftResult, leftResultStyle)
     drawText(
         textMeasurer = textMeasurer,
         text = leftResult,
-        topLeft = Offset(leftText.x - nodeRadius - leftResultLayout.size.width - 6f, leftText.y - leftResultLayout.size.height / 2f),
+        topLeft = Offset(
+            leftText.x - nodeRadius - leftResultLayout.size.width - 6f,
+            leftText.y - leftResultLayout.size.height / 2f
+        ),
         style = leftResultStyle
     )
 
     val rightResult = "= $innerTheme"
-    val rightResultStyle = TextStyle(fontSize = 10.sp, color = innerColor, fontWeight = FontWeight.Bold)
+    val rightResultStyle =
+        TextStyle(fontSize = 10.sp, color = innerColor, fontWeight = FontWeight.Bold)
     val rightResultLayout = textMeasurer.measure(rightResult, rightResultStyle)
     drawText(
         textMeasurer = textMeasurer,
         text = rightResult,
-        topLeft = Offset(rightText.x + nodeRadius + 6f, rightText.y - rightResultLayout.size.height / 2f),
+        topLeft = Offset(
+            rightText.x + nodeRadius + 6f,
+            rightText.y - rightResultLayout.size.height / 2f
+        ),
         style = rightResultStyle
     )
 
     // "SHADOWED" label
     val shadowLabel = "SHADOWED ↑"
-    val shadowStyle = TextStyle(fontSize = 9.sp, color = Color(0xFFF44336), fontWeight = FontWeight.Bold)
+    val shadowStyle =
+        TextStyle(fontSize = 9.sp, color = Color(0xFFF44336), fontWeight = FontWeight.Bold)
     val shadowLayout = textMeasurer.measure(shadowLabel, shadowStyle)
     drawText(
         textMeasurer = textMeasurer,
         text = shadowLabel,
-        topLeft = Offset(rightText.x + nodeRadius + 6f, rightText.y + rightResultLayout.size.height / 2f + 2f),
+        topLeft = Offset(
+            rightText.x + nodeRadius + 6f,
+            rightText.y + rightResultLayout.size.height / 2f + 2f
+        ),
         style = shadowStyle
     )
 }
@@ -964,65 +886,6 @@ private fun RecompositionScopeDemo() {
                         ReaderComponent(name = "Progress Bar", reads = true)
                         NonReaderComponent(name = "Icon Button")
                     }
-                }
-            }
-        }
-
-        // Visual tree diagram
-        item {
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(containerColor = Color(0xFFFAFAFA)),
-                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-                shape = RoundedCornerShape(12.dp)
-            ) {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    Text(
-                        text = "리컴포지션 범위 시각화",
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color(0xFF212121)
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(
-                        text = "Provider(LocalCounter → $counter)\n" +
-                                "  │\n" +
-                                "  ├─ [Counter Display]  ← 읽음 → 리컴포지션 ✅\n" +
-                                "  ├─ [Static Label]     ← 안 읽음 → 스킵 ❌\n" +
-                                "  ├─ [Progress Bar]     ← 읽음 → 리컴포지션 ✅\n" +
-                                "  └─ [Icon Button]      ← 안 읽음 → 스킵 ❌\n\n" +
-                                "  ※ 실제로 .current를 읽는 컴포저블만 리컴포지션!",
-                        fontSize = 12.sp,
-                        fontFamily = FontFamily.Monospace,
-                        color = Color(0xFF424242),
-                        lineHeight = 18.sp
-                    )
-                }
-            }
-        }
-
-        // Guide
-        item {
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(containerColor = Color(0xFFFFF8E1)),
-                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-                shape = RoundedCornerShape(12.dp)
-            ) {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    Text(
-                        text = "💡 핵심 인사이트",
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color(0xFFF57F17)
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(
-                        text = CompositionLocalTreeGuide.GUIDE_INFO.trimIndent(),
-                        fontSize = 13.sp,
-                        color = Color(0xFF424242),
-                        lineHeight = 20.sp
-                    )
                 }
             }
         }
