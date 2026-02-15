@@ -60,7 +60,7 @@ val examples2026 = listOf(
         exampleType = ConstValue.EmbeddedPhotoPickerExample
     ),
     ExampleObject(
-        lastUpdate = "26. 02. 14",
+        lastUpdate = "26. 02. 16",
         title = "CompositionLocal Tree Visualization",
         description = "Composition Tree에서 CompositionLocal의 데이터 흐름, 룩업, 섀도잉을 시각화",
         blogUrl = "",

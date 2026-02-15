@@ -66,7 +66,6 @@ import kotlinx.coroutines.delay
  * Composition Tree에서 CompositionLocal이 어떻게 동작하는지 시각적으로 보여줍니다.
  */
 
-// === 예제용 CompositionLocal 정의 ===
 private val LocalThemeColor = compositionLocalOf { Color(0xFF1976D2) }
 private val LocalCounter = compositionLocalOf { 0 }
 
@@ -173,8 +172,6 @@ private fun TabItem(
     }
 }
 
-// ==================== 1. Tree Structure Demo ====================
-
 /**
  * Composition Tree 구조와 CompositionLocalProvider가
  * 노드에 데이터를 부착하는 방식을 시각화합니다.
@@ -256,25 +253,21 @@ private fun DrawScope.drawTreeStructure(textMeasurer: TextMeasurer, showProvider
     val levelGap = 75f
     val startY = 40f
 
-    // Node positions
     val appPos = Offset(centerX, startY)
     val providerPos = Offset(centerX, startY + levelGap)
     val screenPos = Offset(centerX, startY + levelGap * 2)
     val cardPos = Offset(centerX - 80f, startY + levelGap * 3)
     val textPos = Offset(centerX + 80f, startY + levelGap * 3)
 
-    // Edges
     drawTreeEdge(appPos, providerPos, nodeRadius)
     drawTreeEdge(providerPos, screenPos, nodeRadius)
     drawTreeEdge(screenPos, cardPos, nodeRadius)
     drawTreeEdge(screenPos, textPos, nodeRadius)
 
-    // Nodes
     drawTreeNode(textMeasurer, appPos, "App", nodeRadius, Color(0xFF546E7A))
 
     if (showProvider) {
         drawTreeNode(textMeasurer, providerPos, "Provider", nodeRadius + 4f, Color(0xFF4CAF50))
-        // Locals map annotation
         val mapText = "{ LocalTheme → Dark }"
         val mapStyle =
             TextStyle(fontSize = 11.sp, color = Color(0xFF2E7D32), fontWeight = FontWeight.Bold)
@@ -308,7 +301,6 @@ private fun DrawScope.drawTreeStructure(textMeasurer: TextMeasurer, showProvider
     drawTreeNode(textMeasurer, cardPos, "Card", nodeRadius, Color(0xFF546E7A))
     drawTreeNode(textMeasurer, textPos, "Text", nodeRadius, Color(0xFF546E7A))
 
-    // Empty locals annotation for children
     val childAnnotations =
         listOf(screenPos to "상속 아님, 룩업", cardPos to "locals: { }", textPos to "locals: { }")
     childAnnotations.forEach { (pos, label) ->
@@ -330,13 +322,11 @@ private fun DrawScope.drawTreeNode(
     radius: Float,
     color: Color
 ) {
-    // Shadow
     drawCircle(
         color = Color.Black.copy(alpha = 0.1f),
         radius = radius + 2f,
         center = Offset(center.x + 1f, center.y + 2f)
     )
-    // Node circle
     drawCircle(color = color, radius = radius, center = center)
     // Label
     val style = TextStyle(fontSize = 11.sp, color = Color.White, fontWeight = FontWeight.Bold)
@@ -364,8 +354,6 @@ private fun DrawScope.drawTreeEdge(from: Offset, to: Offset, nodeRadius: Float) 
         cap = StrokeCap.Round
     )
 }
-
-// ==================== 2. Lookup Walk Demo ====================
 
 /**
  * LocalTheme.current 호출 시 트리를 위로 올라가며 탐색하는
@@ -462,12 +450,10 @@ private fun DrawScope.drawLookupTree(textMeasurer: TextMeasurer, lookupStep: Int
     val cardPos = Offset(centerX, startY + levelGap * 2)
     val textPos = Offset(centerX, startY + levelGap * 3)
 
-    // Edges
     drawTreeEdge(appPos, screenPos, nodeRadius)
     drawTreeEdge(screenPos, cardPos, nodeRadius)
     drawTreeEdge(cardPos, textPos, nodeRadius)
 
-    // Step-dependent colors
     val appColor = if (lookupStep >= 3) Color(0xFF9E9E9E) else Color(0xFF546E7A)
     val screenColor = when {
         lookupStep == 2 || lookupStep == 3 -> Color(0xFF4CAF50) // Found!
@@ -482,7 +468,6 @@ private fun DrawScope.drawLookupTree(textMeasurer: TextMeasurer, lookupStep: Int
         else -> Color(0xFF546E7A)
     }
 
-    // Draw lookup arrow animation
     if (lookupStep >= 0) {
         val positions = listOf(textPos, cardPos, screenPos, appPos)
         val targetIdx = lookupStep.coerceAtMost(2) // Found at screen(index 2)
@@ -493,13 +478,11 @@ private fun DrawScope.drawLookupTree(textMeasurer: TextMeasurer, lookupStep: Int
         }
     }
 
-    // Nodes
     drawTreeNode(textMeasurer, appPos, "App", nodeRadius, appColor)
     drawTreeNode(textMeasurer, screenPos, "Screen", nodeRadius + 2f, screenColor)
     drawTreeNode(textMeasurer, cardPos, "Card", nodeRadius, cardColor)
     drawTreeNode(textMeasurer, textPos, "Text", nodeRadius, textColor)
 
-    // Provider label
     val provLabel = "{ LocalTheme → Dark }"
     val provStyle =
         TextStyle(fontSize = 10.sp, color = Color(0xFF2E7D32), fontWeight = FontWeight.Bold)
@@ -511,12 +494,12 @@ private fun DrawScope.drawLookupTree(textMeasurer: TextMeasurer, lookupStep: Int
         style = provStyle
     )
 
-    // Step markers
     val markers = listOf(
         textPos to "1. Start",
         cardPos to "2. 없음 ↑",
         screenPos to "3. 찾음! ✓"
     )
+
     markers.forEachIndexed { idx, (pos, label) ->
         if (lookupStep >= idx) {
             val style = TextStyle(
@@ -557,7 +540,6 @@ private fun DrawScope.drawLookupArrow(from: Offset, to: Offset, nodeRadius: Floa
         pathEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 8f))
     )
 
-    // Arrowhead
     val arrowSize = 10f
     val arrowPath = Path().apply {
         moveTo(endOffset.x, endOffset.y)
@@ -573,8 +555,6 @@ private fun DrawScope.drawLookupArrow(from: Offset, to: Offset, nodeRadius: Floa
     }
     drawPath(arrowPath, color = color)
 }
-
-// ==================== 3. Shadowing Demo ====================
 
 /**
  * 중첩된 Provider에서 같은 키를 다시 제공할 때
@@ -667,30 +647,6 @@ private fun ShadowingDemo() {
     }
 }
 
-@Composable
-private fun ThemeColorBox(label: String, depth: Int) {
-    val themeColor = LocalThemeColor.current
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = (depth * 24).dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        Box(
-            modifier = Modifier
-                .size(24.dp)
-                .clip(CircleShape)
-                .background(themeColor)
-        )
-        Text(
-            text = "$label → LocalThemeColor.current",
-            fontSize = 13.sp,
-            color = Color(0xFF424242)
-        )
-    }
-}
-
 private fun DrawScope.drawShadowingTree(textMeasurer: TextMeasurer, innerTheme: String) {
     val centerX = size.width / 2f
     val nodeRadius = 26f
@@ -707,7 +663,6 @@ private fun DrawScope.drawShadowingTree(textMeasurer: TextMeasurer, innerTheme: 
     val leftText = Offset(centerX - branchOffset, startY + levelGap * 4)
     val rightText = Offset(centerX + branchOffset, startY + levelGap * 4)
 
-    // Edges
     drawTreeEdge(appPos, outerProvPos, nodeRadius)
     drawTreeEdge(outerProvPos, leftBranch, nodeRadius)
     drawTreeEdge(outerProvPos, innerProvPos, nodeRadius)
@@ -716,7 +671,6 @@ private fun DrawScope.drawShadowingTree(textMeasurer: TextMeasurer, innerTheme: 
     drawTreeEdge(leftCard, leftText, nodeRadius)
     drawTreeEdge(rightScreen, rightText, nodeRadius)
 
-    // Nodes
     drawTreeNode(textMeasurer, appPos, "App", nodeRadius, Color(0xFF546E7A))
     drawTreeNode(textMeasurer, outerProvPos, "Prov₁", nodeRadius + 2f, Color(0xFF1976D2))
     drawTreeNode(textMeasurer, leftBranch, "Screen", nodeRadius, Color(0xFF546E7A))
@@ -728,7 +682,6 @@ private fun DrawScope.drawShadowingTree(textMeasurer: TextMeasurer, innerTheme: 
     drawTreeNode(textMeasurer, leftText, "Text", nodeRadius, Color(0xFF546E7A))
     drawTreeNode(textMeasurer, rightText, "Text", nodeRadius, Color(0xFF546E7A))
 
-    // Annotations
     val darkStyle =
         TextStyle(fontSize = 10.sp, color = Color(0xFF1565C0), fontWeight = FontWeight.Bold)
     val darkLabel = "{ Theme → Dark }"
@@ -756,7 +709,6 @@ private fun DrawScope.drawShadowingTree(textMeasurer: TextMeasurer, innerTheme: 
         style = innerStyle
     )
 
-    // Result annotations
     val leftResult = "= Dark"
     val leftResultStyle =
         TextStyle(fontSize = 10.sp, color = Color(0xFF1565C0), fontWeight = FontWeight.Bold)
@@ -785,11 +737,10 @@ private fun DrawScope.drawShadowingTree(textMeasurer: TextMeasurer, innerTheme: 
         style = rightResultStyle
     )
 
-    // "SHADOWED" label
     val shadowLabel = "SHADOWED ↑"
     val shadowStyle =
         TextStyle(fontSize = 9.sp, color = Color(0xFFF44336), fontWeight = FontWeight.Bold)
-    val shadowLayout = textMeasurer.measure(shadowLabel, shadowStyle)
+
     drawText(
         textMeasurer = textMeasurer,
         text = shadowLabel,
@@ -800,8 +751,6 @@ private fun DrawScope.drawShadowingTree(textMeasurer: TextMeasurer, innerTheme: 
         style = shadowStyle
     )
 }
-
-// ==================== 4. Recomposition Scope Demo ====================
 
 /**
  * compositionLocalOf 사용 시, 값을 실제로 읽는 노드만
@@ -861,7 +810,6 @@ private fun RecompositionScopeDemo() {
         }
 
         item {
-            // Live demo
             CompositionLocalProvider(LocalCounter provides counter) {
                 Card(
                     modifier = Modifier.fillMaxWidth(),
@@ -956,7 +904,6 @@ private fun ReaderComponent(name: String, reads: Boolean) {
  */
 @Composable
 private fun NonReaderComponent(name: String) {
-    // LocalCounter.current를 호출하지 않음!
     var recomposeCount by remember { mutableIntStateOf(0) }
 
     LaunchedEffect(Unit) {
