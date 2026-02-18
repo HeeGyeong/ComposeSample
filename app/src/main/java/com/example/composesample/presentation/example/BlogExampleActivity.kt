@@ -120,6 +120,7 @@ import com.example.composesample.presentation.example.component.ui.shapes.CardCo
 import com.example.composesample.presentation.example.component.architecture.lifecycle.AutoCloseableExampleUI
 import com.example.composesample.presentation.example.component.architecture.pattern.compositionLocal.StaticDynamicCompositionLocalExampleUI
 import com.example.composesample.presentation.example.component.architecture.pattern.compositionLocal.tree.CompositionLocalTreeExampleUI
+import com.example.composesample.presentation.example.component.architecture.pattern.retain.RetainApiExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.performance.InlineValueClassExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.language.SealedClassInterfaceExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.concurrency.CoroutinesInternalsExampleUI
@@ -182,6 +183,7 @@ import com.example.composesample.util.ConstValue.Companion.CardCornersExample
 import com.example.composesample.util.ConstValue.Companion.AutoCloseableExample
 import com.example.composesample.util.ConstValue.Companion.StaticDynamicCompositionLocalExample
 import com.example.composesample.util.ConstValue.Companion.CompositionLocalTreeExample
+import com.example.composesample.util.ConstValue.Companion.RetainApiExample
 import com.example.composesample.util.ConstValue.Companion.InlineValueClassExample
 import com.example.composesample.util.ConstValue.Companion.SealedClassInterfaceExample
 import com.example.composesample.util.ConstValue.Companion.CoroutinesInternalsExample
@@ -967,6 +969,10 @@ fun ExampleCaseUI(
 
                         CompositionLocalTreeExample -> {
                             CompositionLocalTreeExampleUI(onBackEvent)
+                        }
+
+                        RetainApiExample -> {
+                            RetainApiExampleUI(onBackEvent)
                         }
 
                         InlineValueClassExample -> {
