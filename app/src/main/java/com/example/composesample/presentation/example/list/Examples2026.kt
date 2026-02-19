@@ -67,7 +67,7 @@ val examples2026 = listOf(
         exampleType = ConstValue.CompositionLocalTreeExample
     ),
     ExampleObject(
-        lastUpdate = "26. 02. 16",
+        lastUpdate = "26. 02. 19",
         title = "Retain API (Goodbye ViewModel)",
         description = "Compose 1.10 retain API로 ViewModel 없이 상태 보존하는 패턴",
         blogUrl = "",

@@ -1,14 +1,9 @@
 package com.example.composesample.presentation.example.component.architecture.pattern.retain
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
-import androidx.compose.animation.expandVertically
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -32,7 +27,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Refresh
@@ -44,9 +38,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
@@ -58,12 +51,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -87,48 +77,10 @@ import kotlinx.coroutines.launch
  * 이 예제는 개념 이해를 위한 시뮬레이션입니다.
  */
 
-// ==================== Simulated retain API ====================
-
-/**
- * retain API의 RetainObserver를 시뮬레이션합니다.
- * 실제 API에서는 Compose 런타임이 이 콜백들을 호출합니다.
- */
-interface SimulatedRetainObserver {
-    fun onRetained()
-    fun onEnteredComposition()
-    fun onExitedComposition()
-    fun onUnused()
-    fun onRetired()
-}
-
-/**
- * Presenter 인터페이스 - 정리(cleanup) 메서드를 정의합니다.
- * ViewModel의 onCleared() 역할을 합니다.
- */
 interface Presenter {
     fun close()
 }
 
-/**
- * RetainObserver를 구현하여 Presenter의 라이프사이클을 관리합니다.
- * onRetired() 호출 시 Presenter를 정리합니다.
- */
-class RetainedPresenterObserver<P : Presenter>(val value: P) : SimulatedRetainObserver {
-    override fun onRetained() = Unit
-    override fun onEnteredComposition() = Unit
-    override fun onExitedComposition() = Unit
-    override fun onUnused() = Unit
-    override fun onRetired() {
-        value.close()
-    }
-}
-
-// ==================== Simulated Presenters ====================
-
-/**
- * ViewModel 없는 간단한 Presenter.
- * 일반 Kotlin 클래스로 상태를 관리합니다.
- */
 class CounterPresenter : Presenter {
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
 
@@ -186,8 +138,6 @@ class TodoPresenter : Presenter {
         scope.cancel()
     }
 }
-
-// ==================== Main UI ====================
 
 @Composable
 fun RetainApiExampleUI(
@@ -292,8 +242,6 @@ private fun TabItem(
     }
 }
 
-// ==================== 1. ViewModel vs retain 비교 ====================
-
 @Composable
 private fun ViewModelVsRetainDemo() {
     LazyColumn(
@@ -328,7 +276,6 @@ private fun ViewModelVsRetainDemo() {
             }
         }
 
-        // ViewModel approach
         item {
             CodeComparisonCard(
                 title = "기존: ViewModel 방식",
@@ -360,7 +307,6 @@ entry<Route.Auth> {
             )
         }
 
-        // retain approach
         item {
             CodeComparisonCard(
                 title = "새로운: retain 방식",
@@ -389,7 +335,6 @@ entry<Route.Auth> {
             )
         }
 
-        // Comparison table
         item {
             ComparisonTableCard()
         }
@@ -570,8 +515,6 @@ private fun ComparisonTableCard() {
     }
 }
 
-// ==================== 2. Retain Lifecycle Demo ====================
-
 @Composable
 private fun RetainLifecycleDemo() {
     val lifecycleEvents = remember { mutableStateListOf<Pair<String, Color>>() }
@@ -608,7 +551,6 @@ private fun RetainLifecycleDemo() {
             }
         }
 
-        // Lifecycle callbacks
         item {
             Card(
                 modifier = Modifier.fillMaxWidth(),
@@ -710,7 +652,6 @@ private fun RetainLifecycleDemo() {
             }
         }
 
-        // Event log
         item {
             Card(
                 modifier = Modifier.fillMaxWidth(),
@@ -749,7 +690,6 @@ private fun RetainLifecycleDemo() {
             }
         }
 
-        // ViewModel comparison
         item {
             Card(
                 modifier = Modifier.fillMaxWidth(),
@@ -836,15 +776,11 @@ private fun LifecycleButton(
     }
 }
 
-// ==================== 3. Presenter Pattern Demo ====================
-
 @Composable
 private fun PresenterPatternDemo() {
-    // 시뮬레이션: retain { CounterPresenter() } 와 동일한 효과
     val presenter = remember { CounterPresenter() }
     val todoPresenter = remember { TodoPresenter() }
 
-    // 시뮬레이션: onRetired() 호출
     DisposableEffect(Unit) {
         onDispose {
             presenter.close()
@@ -882,57 +818,12 @@ private fun PresenterPatternDemo() {
             }
         }
 
-        // Counter Presenter demo
         item {
             CounterPresenterCard(presenter)
         }
 
-        // Todo Presenter demo
         item {
             TodoPresenterCard(todoPresenter)
-        }
-
-        // Code comparison
-        item {
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(containerColor = Color(0xFF263238)),
-                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-                shape = RoundedCornerShape(12.dp)
-            ) {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    Text(
-                        text = "retainPresenter 헬퍼 함수",
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color(0xFF80CBC4)
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(
-                        text = """@Composable
-inline fun <reified P : Presenter>
-retainPresenter(
-    noinline calculation: () -> P
-): P {
-    return retain {
-        RetainedPresenterObserver(
-            calculation()
-        )
-    }.value
-}
-
-// 사용 예:
-val presenter = retainPresenter {
-    CounterPresenter()
-}
-// Config Change 후에도 상태 유지!""",
-                        fontSize = 11.sp,
-                        color = Color(0xFFE0E0E0),
-                        fontFamily = FontFamily.Monospace,
-                        lineHeight = 16.sp
-                    )
-                }
-            }
         }
     }
 }
@@ -1008,7 +899,11 @@ private fun CounterPresenterCard(presenter: CounterPresenter) {
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1976D2)),
                     shape = RoundedCornerShape(8.dp)
                 ) {
-                    Icon(Icons.Filled.Add, contentDescription = null, modifier = Modifier.size(18.dp))
+                    Icon(
+                        Icons.Filled.Add,
+                        contentDescription = null,
+                        modifier = Modifier.size(18.dp)
+                    )
                 }
                 Button(
                     onClick = { presenter.asyncIncrement() },
@@ -1023,7 +918,11 @@ private fun CounterPresenterCard(presenter: CounterPresenter) {
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF616161)),
                     shape = RoundedCornerShape(8.dp)
                 ) {
-                    Icon(Icons.Filled.Refresh, contentDescription = null, modifier = Modifier.size(18.dp))
+                    Icon(
+                        Icons.Filled.Refresh,
+                        contentDescription = null,
+                        modifier = Modifier.size(18.dp)
+                    )
                 }
             }
         }
@@ -1033,7 +932,6 @@ private fun CounterPresenterCard(presenter: CounterPresenter) {
 @Composable
 private fun TodoPresenterCard(presenter: TodoPresenter) {
     val todos by presenter.todos.collectAsState()
-    var newTodoText by remember { mutableStateOf("") }
     var todoCounter by remember { mutableIntStateOf(1) }
 
     Card(
@@ -1070,7 +968,11 @@ private fun TodoPresenterCard(presenter: TodoPresenter) {
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4CAF50)),
                     shape = RoundedCornerShape(8.dp)
                 ) {
-                    Icon(Icons.Filled.Add, contentDescription = null, modifier = Modifier.size(16.dp))
+                    Icon(
+                        Icons.Filled.Add,
+                        contentDescription = null,
+                        modifier = Modifier.size(16.dp)
+                    )
                     Spacer(modifier = Modifier.width(4.dp))
                     Text("추가", fontSize = 13.sp)
                 }
@@ -1080,7 +982,11 @@ private fun TodoPresenterCard(presenter: TodoPresenter) {
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF616161)),
                     shape = RoundedCornerShape(8.dp)
                 ) {
-                    Icon(Icons.Filled.Delete, contentDescription = null, modifier = Modifier.size(16.dp))
+                    Icon(
+                        Icons.Filled.Delete,
+                        contentDescription = null,
+                        modifier = Modifier.size(16.dp)
+                    )
                     Spacer(modifier = Modifier.width(4.dp))
                     Text("전체 삭제", fontSize = 13.sp)
                 }
@@ -1147,8 +1053,6 @@ private fun TodoPresenterCard(presenter: TodoPresenter) {
     }
 }
 
-// ==================== 4. Navigation 3 Support Demo ====================
-
 @Composable
 private fun NavigationSupportDemo() {
     LazyColumn(
@@ -1181,12 +1085,10 @@ private fun NavigationSupportDemo() {
             }
         }
 
-        // Backstack simulation
         item {
             BackstackSimulation()
         }
 
-        // Nav3 code comparison
         item {
             Card(
                 modifier = Modifier.fillMaxWidth(),
@@ -1218,73 +1120,6 @@ private fun NavigationSupportDemo() {
             }
         }
 
-        // Code example
-        item {
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(containerColor = Color(0xFF263238)),
-                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-                shape = RoundedCornerShape(12.dp)
-            ) {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    Text(
-                        text = "Nav3 + retain 전체 예시",
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color(0xFF80CBC4)
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(
-                        text = """// Route 정의
-sealed class Route {
-    data object Auth : Route()
-    data class Profile(val id: String) : Route()
-}
-
-// Presenter (일반 Kotlin 클래스)
-@Inject
-class AuthPresenter(...) : Presenter {
-    val state: StateFlow<UiState>
-    fun login(creds: Credentials) { .. }
-    override fun close() { scope.cancel() }
-}
-
-// DI 모듈
-interface AuthModule {
-    @IntoSet
-    @Provides
-    fun provideRoute(
-        presenter: Provider<AuthPresenter>
-    ): RouteEntryProviderScope = {
-        entry<Route.Auth> {
-            AuthScreen(
-                presenter = retainPresenter {
-                    presenter()
-                }
-            )
-        }
-    }
-}
-
-// NavDisplay 설정
-NavDisplay(
-    backStack = backStack,
-    entryDecorators = listOf(
-        // retain 지원
-        rememberRetainedValuesStore...,
-        // 기타 데코레이터
-    )
-)""",
-                        fontSize = 11.sp,
-                        color = Color(0xFFE0E0E0),
-                        fontFamily = FontFamily.Monospace,
-                        lineHeight = 16.sp
-                    )
-                }
-            }
-        }
-
-        // Guide
         item {
             Card(
                 modifier = Modifier.fillMaxWidth(),
@@ -1434,7 +1269,6 @@ private fun BackstackSimulation() {
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // Backstack visualization
             Text(
                 text = "백스택 (${backstack.size}개)",
                 fontSize = 14.sp,
@@ -1500,7 +1334,6 @@ private fun BackstackSimulation() {
                 }
             }
 
-            // Retired screens
             if (retiredScreens.isNotEmpty()) {
                 Spacer(modifier = Modifier.height(12.dp))
                 Text(
