@@ -110,6 +110,7 @@ import com.example.composesample.presentation.example.component.ui.layout.pager.
 import com.example.composesample.presentation.example.component.ui.media.lottie.LottieExampleUI
 import com.example.composesample.presentation.example.component.ui.media.shimmer.ShimmerExampleUI
 import com.example.composesample.presentation.example.component.ui.media.shimmer.TextShimmerExampleUI
+import com.example.composesample.presentation.example.component.ui.scroll.CustomScrollBehaviorExampleUI
 import com.example.composesample.presentation.example.component.ui.scroll.NestedScrollingExampleUI
 import com.example.composesample.presentation.example.component.architecture.state.SnapshotFlowExampleUI
 import com.example.composesample.presentation.example.component.system.ui.widget.GlanceWidgetExampleUI
@@ -175,6 +176,7 @@ import com.example.composesample.util.ConstValue.Companion.MVIExample
 import com.example.composesample.util.ConstValue.Companion.ModalBottomSheetExample
 import com.example.composesample.util.ConstValue.Companion.ModalDrawExample
 import com.example.composesample.util.ConstValue.Companion.NestedRoutesNav3Example
+import com.example.composesample.util.ConstValue.Companion.CustomScrollBehaviorExample
 import com.example.composesample.util.ConstValue.Companion.NestedScrollingExample
 import com.example.composesample.util.ConstValue.Companion.NewShadowApiExample
 import com.example.composesample.util.ConstValue.Companion.SharedElementTransitionExample
@@ -929,6 +931,10 @@ fun ExampleCaseUI(
 
                         NestedScrollingExample -> {
                             NestedScrollingExampleUI(onBackEvent)
+                        }
+
+                        CustomScrollBehaviorExample -> {
+                            CustomScrollBehaviorExampleUI(onBackEvent)
                         }
 
                         SnapshotFlowExample -> {

@@ -72,5 +72,12 @@ val examples2026 = listOf(
         description = "Compose 1.10 retain API로 ViewModel 없이 상태 보존하는 패턴",
         blogUrl = "",
         exampleType = ConstValue.RetainApiExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 02. 20",
+        title = "Custom TopAppBarScrollBehavior",
+        description = "RecyclerView 스크롤 이벤트를 커스텀 TopAppBarScrollBehavior로 처리하는 패턴",
+        blogUrl = "",
+        exampleType = ConstValue.CustomScrollBehaviorExample
     )
 )
