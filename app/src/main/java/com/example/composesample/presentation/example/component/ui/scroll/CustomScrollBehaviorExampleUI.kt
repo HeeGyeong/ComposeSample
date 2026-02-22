@@ -68,8 +68,6 @@ import kotlin.math.abs
  * 부분 렌더링 없이 완전 숨김/표시, 애니메이션, 스크롤 버퍼, 중복 방지 플래그를 구현합니다.
  */
 
-// ==================== Custom Scroll Behaviors ====================
-
 /**
  * 기본 EnterAlways: 즉시 스냅 (애니메이션 없음)
  * 스크롤 방향에 따라 즉시 완전히 숨기거나 표시합니다.
@@ -275,8 +273,6 @@ class FullExitUntilCollapsedScrollBehavior(
     private var animationInProgress: Boolean = false
 }
 
-// ==================== Main UI ====================
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CustomScrollBehaviorExampleUI(
@@ -381,8 +377,6 @@ private fun TabItem(
     }
 }
 
-// ==================== 1. Basic Snap Demo ====================
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun BasicSnapDemo() {
@@ -394,13 +388,7 @@ private fun BasicSnapDemo() {
             title = "1단계: 기본 스냅 (즉시 전환)",
             description = "스크롤 방향에 따라 TopAppBar가 애니메이션 없이 즉시 숨겨지거나 나타납니다.\n" +
                     "모든 미세한 스크롤에도 반응합니다.",
-            problemText = "⚠️ 문제: 애니메이션 없이 뚝뚝 끊김, 미세 스크롤에도 반응",
-            codeSnippet = """onPreScroll(available, source):
-  if (available.y == 0f) return Zero
-  val newOffset = 
-    if (available.y > 0) 0f    // 펼침
-    else heightOffsetLimit      // 접힘
-  state.heightOffset = newOffset"""
+            problemText = "⚠️ 문제: 애니메이션 없이 뚝뚝 끊김, 미세 스크롤에도 반응"
         )
 
         TopAppBarDemoScaffold(
@@ -410,8 +398,6 @@ private fun BasicSnapDemo() {
         )
     }
 }
-
-// ==================== 2. Animated Buffer Demo ====================
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -428,19 +414,7 @@ private fun AnimatedBufferDemo() {
             description = "tween(150ms) 애니메이션으로 부드럽게 전환됩니다.\n" +
                     "100px 이상 누적 스크롤이 있어야 반응합니다.\n" +
                     "이미 완전히 펼쳐졌거나 접혀있으면 무시합니다.",
-            problemText = "⚠️ 문제: 느린 스크롤 시 애니메이션이 중복 실행될 수 있음",
-            codeSnippet = """// 얼리 리턴 패턴
-if (expanded && scrollDown) return
-if (collapsed && scrollUp) return
-
-// 스크롤 버퍼
-accumulation += abs(available.y)
-if (accumulation < 100f) return
-
-// 애니메이션
-launch {
-  animate(prev, target, tween(150))
-}"""
+            problemText = "⚠️ 문제: 느린 스크롤 시 애니메이션이 중복 실행될 수 있음"
         )
 
         TopAppBarDemoScaffold(
@@ -450,8 +424,6 @@ launch {
         )
     }
 }
-
-// ==================== 3. Full EnterAlways Demo ====================
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -475,17 +447,7 @@ private fun FullEnterAlwaysDemo() {
             description = "animationInProgress 플래그로 애니메이션 중복을 방지합니다.\n" +
                     "느린 스크롤에서도 깔끔하게 동작합니다.\n" +
                     "이것이 블로그에서 제안하는 최종 구현입니다.",
-            problemText = "✅ 해결: 부드러운 애니메이션 + 스크롤 버퍼 + 중복 방지",
-            codeSnippet = """if (animationInProgress) return Zero
-
-launch {
-  animationInProgress = true
-  try {
-    animate(prev, target, tween(150))
-  } finally {
-    animationInProgress = false
-  }
-}"""
+            problemText = "✅ 해결: 부드러운 애니메이션 + 스크롤 버퍼 + 중복 방지"
         )
 
         ParameterControlCard(
@@ -508,8 +470,6 @@ launch {
     }
 }
 
-// ==================== 4. Exit Until Collapsed Demo ====================
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ExitUntilCollapsedDemo() {
@@ -525,14 +485,7 @@ private fun ExitUntilCollapsedDemo() {
             description = "위로 스크롤하면 TopAppBar가 숨겨집니다.\n" +
                     "더 이상 아래로 스크롤할 수 없을 때(리스트 맨 위 도달) 다시 나타납니다.\n" +
                     "onPreScroll에서 숨기고, onPostScroll에서 표시합니다.",
-            problemText = "💡 핵심: available == Offset.Zero → 스크롤 끝 → 바 표시",
-            codeSnippet = """// onPreScroll: 위로만 처리
-if (available.y >= 0f) return Zero
-
-// onPostScroll: 스크롤 끝 도달
-if (available != Offset.Zero) return
-// → available == Zero = 끝!
-animate(current, 0f, tween(150))"""
+            problemText = "💡 핵심: available == Offset.Zero → 스크롤 끝 → 바 표시"
         )
 
         TopAppBarDemoScaffold(
@@ -543,14 +496,11 @@ animate(current, 0f, tween(150))"""
     }
 }
 
-// ==================== Common Components ====================
-
 @Composable
 private fun DescriptionCard(
     title: String,
     description: String,
     problemText: String,
-    codeSnippet: String
 ) {
     Card(
         modifier = Modifier
@@ -584,20 +534,6 @@ private fun DescriptionCard(
                 else Color(0xFFE53935),
                 lineHeight = 16.sp
             )
-            Spacer(modifier = Modifier.height(8.dp))
-            Card(
-                colors = CardDefaults.cardColors(containerColor = Color(0xFF263238)),
-                shape = RoundedCornerShape(8.dp)
-            ) {
-                Text(
-                    text = codeSnippet,
-                    modifier = Modifier.padding(10.dp),
-                    fontSize = 11.sp,
-                    color = Color(0xFFE0E0E0),
-                    fontFamily = FontFamily.Monospace,
-                    lineHeight = 15.sp
-                )
-            }
         }
     }
 }
