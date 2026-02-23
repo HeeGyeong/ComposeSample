@@ -40,7 +40,7 @@ class ConstValue {
         const val VisibilityExample = "visibilityExample"
 
         // ==================== 스크롤 & 제스처 예제 ====================
-        // PullToRefresh(당겨서 새로고침), PullScreenPager(풀스크린 페이저), FlingBehavior(스크롤 커스텀), SwipeToDismiss(스와이프 삭제), SwipeToDismissM3(M3 스와이프 삭제), DragAndDrop(드래그 앤 드롭), NestedScrolling(중첩 스크롤), CustomScrollBehavior(커스텀 TopAppBarScrollBehavior)
+        // PullToRefresh(당겨서 새로고침), PullScreenPager(풀스크린 페이저), FlingBehavior(스크롤 커스텀), SwipeToDismiss(스와이프 삭제), SwipeToDismissM3(M3 스와이프 삭제), DragAndDrop(드래그 앤 드롭), NestedScrolling(중첩 스크롤), CustomScrollBehavior(커스텀 TopAppBarScrollBehavior), StickerCanvas(스티커 제스처 캔버스)
         const val PullToRefreshExample = "pullToRefreshExample"
         const val PullScreenPager = "pullScreenPager"
         const val FlingBehaviorExample = "flingBehaviorExample"
@@ -49,6 +49,7 @@ class ConstValue {
         const val DragAndDropExample = "dragAndDropExample"
         const val NestedScrollingExample = "nestedScrollingExample"
         const val CustomScrollBehaviorExample = "customScrollBehaviorExample"
+        const val StickerCanvasExample = "stickerCanvasExample"
 
         // ==================== BottomSheet 예제 ====================
         // BottomSheet(Scaffold), ModalBottomSheet(Modal), CustomBottomSheet(커스텀)

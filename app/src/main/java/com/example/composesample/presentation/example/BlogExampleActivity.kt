@@ -80,6 +80,7 @@ import com.example.composesample.presentation.example.component.interaction.clic
 import com.example.composesample.presentation.example.component.interaction.drag.DragAndDropExampleUI
 import com.example.composesample.presentation.example.component.interaction.refresh.PullToRefreshUI
 import com.example.composesample.presentation.example.component.interaction.swipe.SwipeToDismissUI
+import com.example.composesample.presentation.example.component.interaction.sticker.StickerCanvasExampleUI
 import com.example.composesample.presentation.example.component.interaction.swipe.SwipeToDismissM3ExampleUI
 import com.example.composesample.presentation.example.component.navigation.BottomNavigationActivity
 import com.example.composesample.presentation.example.component.system.background.workmanager.WorkManagerUI
@@ -212,6 +213,7 @@ import com.example.composesample.util.ConstValue.Companion.ShortCutTypeXML
 import com.example.composesample.util.ConstValue.Companion.ShortcutExample
 import com.example.composesample.util.ConstValue.Companion.SideEffectExample
 import com.example.composesample.util.ConstValue.Companion.SnapshotFlowExample
+import com.example.composesample.util.ConstValue.Companion.StickerCanvasExample
 import com.example.composesample.util.ConstValue.Companion.StickyHeaderExample
 import com.example.composesample.util.ConstValue.Companion.SwipeToDismissExample
 import com.example.composesample.util.ConstValue.Companion.SwipeToDismissM3Example
@@ -935,6 +937,10 @@ fun ExampleCaseUI(
 
                         CustomScrollBehaviorExample -> {
                             CustomScrollBehaviorExampleUI(onBackEvent)
+                        }
+
+                        StickerCanvasExample -> {
+                            StickerCanvasExampleUI(onBackEvent)
                         }
 
                         SnapshotFlowExample -> {
