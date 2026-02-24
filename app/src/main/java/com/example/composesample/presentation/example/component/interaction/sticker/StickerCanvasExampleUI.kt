@@ -29,7 +29,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Button
@@ -205,8 +204,6 @@ private fun TabItem(
     }
 }
 
-// ==================== 1. Full Canvas Demo ====================
-
 @Composable
 private fun FullCanvasDemo() {
     val stickers = remember { mutableStateListOf<StickerItem>() }
@@ -242,7 +239,6 @@ private fun FullCanvasDemo() {
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            // Sticker tray
             StickerTray(
                 onStickerSelected = { emoji, color ->
                     zIndexCounter++
@@ -268,7 +264,6 @@ private fun FullCanvasDemo() {
 
             Spacer(modifier = Modifier.height(4.dp))
 
-            // Canvas area
             Box(
                 modifier = Modifier
                     .fillMaxSize()
@@ -292,8 +287,14 @@ private fun FullCanvasDemo() {
                         sticker = sticker,
                         onOffsetChange = { dx, dy ->
                             stickers[index] = sticker.copy(
-                                offsetX = (sticker.offsetX + dx).coerceIn(0f, canvasSize.width.toFloat()),
-                                offsetY = (sticker.offsetY + dy).coerceIn(0f, canvasSize.height.toFloat()),
+                                offsetX = (sticker.offsetX + dx).coerceIn(
+                                    0f,
+                                    canvasSize.width.toFloat()
+                                ),
+                                offsetY = (sticker.offsetY + dy).coerceIn(
+                                    0f,
+                                    canvasSize.height.toFloat()
+                                ),
                             )
                         },
                         onScaleRotateChange = { scaleDelta, rotDelta ->
@@ -322,7 +323,6 @@ private fun FullCanvasDemo() {
             }
         }
 
-        // Clear button
         if (stickers.isNotEmpty()) {
             FloatingActionButton(
                 onClick = { stickers.clear() },
@@ -368,7 +368,10 @@ private fun StickerTray(onStickerSelected: (String, Color) -> Unit) {
                         shape = RoundedCornerShape(10.dp),
                         elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
                     ) {
-                        Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
+                        Box(
+                            contentAlignment = Alignment.Center,
+                            modifier = Modifier.fillMaxSize()
+                        ) {
                             Text(text = emoji, fontSize = 24.sp)
                         }
                     }
@@ -388,7 +391,6 @@ private fun DraggableSticker(
     onDragStart: () -> Unit,
     onDragEnd: () -> Unit,
 ) {
-    // Peel-off animation
     val animatedElevation by animateDpAsState(
         targetValue = if (sticker.isDragging) 16.dp else 4.dp,
         animationSpec = spring(dampingRatio = Spring.DampingRatioMediumBouncy),
@@ -453,7 +455,6 @@ private fun DraggableSticker(
                 }
             }
     ) {
-        // Die-cut sticker rendering
         Box(
             modifier = Modifier
                 .size(80.dp)
@@ -469,8 +470,6 @@ private fun DraggableSticker(
         }
     }
 }
-
-// ==================== 2. Gesture Demo ====================
 
 @Composable
 private fun GestureDemo() {
@@ -736,8 +735,6 @@ private fun GestureDemoCard(
     }
 }
 
-// ==================== 3. Spring Physics Demo ====================
-
 @Composable
 private fun SpringPhysicsDemo() {
     LazyColumn(
@@ -836,7 +833,10 @@ private fun PeelOffDemo() {
                         .shadow(animatedElevation, RoundedCornerShape(14.dp))
                         .background(Color.White, RoundedCornerShape(14.dp))
                         .padding(5.dp)
-                        .background(Color(0xFFFF6B35).copy(alpha = 0.12f), RoundedCornerShape(10.dp))
+                        .background(
+                            Color(0xFFFF6B35).copy(alpha = 0.12f),
+                            RoundedCornerShape(10.dp)
+                        )
                         .size(80.dp)
                         .pointerInput(Unit) {
                             detectTransformGestures { _, pan, _, _ ->
@@ -860,7 +860,6 @@ private fun PeelOffDemo() {
                     Text("🔥", fontSize = 40.sp)
                 }
 
-                // Status indicators
                 Column(
                     modifier = Modifier
                         .align(Alignment.BottomCenter)
@@ -876,7 +875,12 @@ private fun PeelOffDemo() {
                         color = if (isDragging) Color(0xFFE53935) else Color(0xFF2E7D32)
                     )
                     Text(
-                        text = "Shadow: ${animatedElevation}  Scale: ${String.format("%.2f", animatedScale)}  Alpha: ${String.format("%.2f", animatedAlpha)}",
+                        text = "Shadow: ${animatedElevation}  Scale: ${
+                            String.format(
+                                "%.2f",
+                                animatedScale
+                            )
+                        }  Alpha: ${String.format("%.2f", animatedAlpha)}",
                         fontSize = 10.sp,
                         color = Color(0xFF757575)
                     )
@@ -934,7 +938,11 @@ private fun SpringComparisonDemo() {
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1976D2)),
                     contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp)
                 ) {
-                    Icon(Icons.Default.Refresh, contentDescription = null, modifier = Modifier.size(16.dp))
+                    Icon(
+                        Icons.Default.Refresh,
+                        contentDescription = null,
+                        modifier = Modifier.size(16.dp)
+                    )
                     Spacer(modifier = Modifier.width(4.dp))
                     Text("토글", fontSize = 12.sp)
                 }
@@ -986,8 +994,6 @@ private fun SpringBall(label: String, scale: Float, color: Color) {
     }
 }
 
-// ==================== 4. Die-Cut Demo ====================
-
 @Composable
 private fun DieCutDemo() {
     LazyColumn(
@@ -1022,7 +1028,6 @@ private fun DieCutDemo() {
 
         item { DieCutStylesCard() }
         item { ZOrderingCard() }
-        item { StickerDataModelCard() }
     }
 }
 
@@ -1047,85 +1052,89 @@ private fun DieCutStylesCard() {
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                // No die-cut
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Box(
-                        modifier = Modifier
-                            .size(72.dp)
-                            .background(Color(0xFFFFEB3B).copy(alpha = 0.3f), RoundedCornerShape(12.dp)),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text("⭐", fontSize = 36.sp)
-                    }
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Text("테두리 없음", fontSize = 10.sp, color = Color(0xFF757575))
+                Box(
+                    modifier = Modifier
+                        .size(72.dp)
+                        .background(
+                            Color(0xFFFFEB3B).copy(alpha = 0.3f),
+                            RoundedCornerShape(12.dp)
+                        ),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text("⭐", fontSize = 36.sp)
                 }
-
-                // With die-cut
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Box(
-                        modifier = Modifier
-                            .size(72.dp)
-                            .shadow(4.dp, RoundedCornerShape(14.dp))
-                            .background(Color.White, RoundedCornerShape(14.dp))
-                            .padding(4.dp)
-                            .background(
-                                Color(0xFFFFEB3B).copy(alpha = 0.15f),
-                                RoundedCornerShape(10.dp)
-                            ),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text("⭐", fontSize = 36.sp)
-                    }
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Text("Die-Cut", fontSize = 10.sp, color = Color(0xFF757575))
-                }
-
-                // With die-cut + shadow
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Box(
-                        modifier = Modifier
-                            .size(72.dp)
-                            .shadow(12.dp, RoundedCornerShape(14.dp))
-                            .background(Color.White, RoundedCornerShape(14.dp))
-                            .padding(5.dp)
-                            .background(
-                                Color(0xFFFFEB3B).copy(alpha = 0.15f),
-                                RoundedCornerShape(10.dp)
-                            ),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text("⭐", fontSize = 36.sp)
-                    }
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Text("Die-Cut\n+ 강한 그림자", fontSize = 10.sp, color = Color(0xFF757575), textAlign = TextAlign.Center, lineHeight = 13.sp)
-                }
+                Spacer(modifier = Modifier.height(4.dp))
+                Text("테두리 없음", fontSize = 10.sp, color = Color(0xFF757575))
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Box(
+                    modifier = Modifier
+                        .size(72.dp)
+                        .shadow(4.dp, RoundedCornerShape(14.dp))
+                        .background(Color.White, RoundedCornerShape(14.dp))
+                        .padding(4.dp)
+                        .background(
+                            Color(0xFFFFEB3B).copy(alpha = 0.15f),
+                            RoundedCornerShape(10.dp)
+                        ),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text("⭐", fontSize = 36.sp)
+                }
+                Spacer(modifier = Modifier.height(4.dp))
+                Text("Die-Cut", fontSize = 10.sp, color = Color(0xFF757575))
+            }
 
-            Text(
-                text = "구현 방법",
-                fontSize = 13.sp,
-                fontWeight = FontWeight.SemiBold,
-                color = Color(0xFF424242)
-            )
-            Spacer(modifier = Modifier.height(4.dp))
-
-            val steps = listOf(
-                "1. shadow()로 드롭 섀도우 적용",
-                "2. 흰색 배경 + RoundedCornerShape로 Die-Cut 테두리",
-                "3. 내부 padding으로 흰색 테두리 두께 조절",
-                "4. 콘텐츠 배경으로 스티커 색상 적용",
-            )
-            steps.forEach { step ->
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Box(
+                    modifier = Modifier
+                        .size(72.dp)
+                        .shadow(12.dp, RoundedCornerShape(14.dp))
+                        .background(Color.White, RoundedCornerShape(14.dp))
+                        .padding(5.dp)
+                        .background(
+                            Color(0xFFFFEB3B).copy(alpha = 0.15f),
+                            RoundedCornerShape(10.dp)
+                        ),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text("⭐", fontSize = 36.sp)
+                }
+                Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = step,
-                    fontSize = 12.sp,
-                    color = Color(0xFF616161),
-                    modifier = Modifier.padding(vertical = 1.dp)
+                    "Die-Cut\n+ 강한 그림자",
+                    fontSize = 10.sp,
+                    color = Color(0xFF757575),
+                    textAlign = TextAlign.Center,
+                    lineHeight = 13.sp
                 )
             }
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Text(
+            text = "구현 방법",
+            fontSize = 13.sp,
+            fontWeight = FontWeight.SemiBold,
+            color = Color(0xFF424242)
+        )
+        Spacer(modifier = Modifier.height(4.dp))
+
+        val steps = listOf(
+            "1. shadow()로 드롭 섀도우 적용",
+            "2. 흰색 배경 + RoundedCornerShape로 Die-Cut 테두리",
+            "3. 내부 padding으로 흰색 테두리 두께 조절",
+            "4. 콘텐츠 배경으로 스티커 색상 적용",
+        )
+        steps.forEach { step ->
+            Text(
+                text = step,
+                fontSize = 12.sp,
+                color = Color(0xFF616161),
+                modifier = Modifier.padding(vertical = 1.dp)
+            )
         }
     }
 }
@@ -1200,47 +1209,6 @@ private fun ZOrderingCard() {
                     }
                 }
             }
-        }
-    }
-}
-
-@Composable
-private fun StickerDataModelCard() {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFF263238)),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-        shape = RoundedCornerShape(12.dp)
-    ) {
-        Column(modifier = Modifier.padding(14.dp)) {
-            Text(
-                text = "스티커 데이터 모델",
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color(0xFF80CBC4)
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = """data class StickerItem(
-    val id: Int,
-    val type: StickerType,
-    val initialFractionX: Float,  // 0..1 상대좌표
-    val initialFractionY: Float,
-    val rotation: Float = 0f,
-    val offsetX: Float = Float.NaN, // 드래그 후 픽셀
-    val offsetY: Float = Float.NaN,
-    val pinchScale: Float = 1f,   // 0.5x ~ 3x
-    val zIndex: Float = 0f,       // 단조 증가
-)
-
-// 새 스티커: 비율 좌표 → 어떤 화면에서든 동작
-// 드래그 시: Float.NaN 체크 후 픽셀 좌표 전환
-// 탭 시: zIndex++ → Modifier.zIndex()로 최상위""",
-                fontSize = 11.sp,
-                color = Color(0xFFE0E0E0),
-                fontFamily = androidx.compose.ui.text.font.FontFamily.Monospace,
-                lineHeight = 15.sp
-            )
         }
     }
 }

@@ -81,7 +81,7 @@ val examples2026 = listOf(
         exampleType = ConstValue.CustomScrollBehaviorExample
     ),
     ExampleObject(
-        lastUpdate = "26. 02. 23",
+        lastUpdate = "26. 02. 24",
         title = "Sticker Canvas (Gestures & Physics)",
         description = "드래그, 핀치 리사이즈, 회전, 스프링 물리, 필오프 애니메이션을 구현한 스티커 캔버스",
         blogUrl = "",
