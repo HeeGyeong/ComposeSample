@@ -1,5 +1,6 @@
 package com.example.composesample.presentation.example.component.interaction.sticker
 
+import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
@@ -7,6 +8,7 @@ import androidx.compose.animation.core.spring
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.gestures.detectTransformGestures
 import androidx.compose.foundation.layout.Arrangement
@@ -46,11 +48,14 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
@@ -64,6 +69,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import kotlin.math.roundToInt
+import kotlinx.coroutines.launch
 
 /**
  * Sticker Canvas Example UI
@@ -124,6 +130,7 @@ fun StickerCanvasExampleUI(
             TabItem("제스처", selectedExample == 1, { selectedExample = 1 }, Modifier.weight(1f))
             TabItem("물리", selectedExample == 2, { selectedExample = 2 }, Modifier.weight(1f))
             TabItem("Die-Cut", selectedExample == 3, { selectedExample = 3 }, Modifier.weight(1f))
+            TabItem("고급", selectedExample == 4, { selectedExample = 4 }, Modifier.weight(1f))
         }
 
         Spacer(modifier = Modifier.height(8.dp))
@@ -133,6 +140,7 @@ fun StickerCanvasExampleUI(
             1 -> GestureDemo()
             2 -> SpringPhysicsDemo()
             3 -> DieCutDemo()
+            4 -> AdvancedDemo()
         }
     }
 }
@@ -507,6 +515,8 @@ private fun GestureDemo() {
         item { PinchZoomDemo() }
         item { RotateDemo() }
         item { TapDoubleTapDemo() }
+        item { CombinedGestureDemo() }
+        item { LongPressDemo() }
     }
 }
 
@@ -769,6 +779,8 @@ private fun SpringPhysicsDemo() {
 
         item { PeelOffDemo() }
         item { SpringComparisonDemo() }
+        item { SpringStiffnessDemo() }
+        item { SnapBackDemo() }
     }
 }
 
@@ -1027,6 +1039,7 @@ private fun DieCutDemo() {
         }
 
         item { DieCutStylesCard() }
+        item { DieCutShapeVariantsCard() }
         item { ZOrderingCard() }
     }
 }
@@ -1207,6 +1220,879 @@ private fun ZOrderingCard() {
                             )
                         }
                     }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun CombinedGestureDemo() {
+    var offsetX by remember { mutableFloatStateOf(0f) }
+    var offsetY by remember { mutableFloatStateOf(0f) }
+    var scale by remember { mutableFloatStateOf(1f) }
+    var rotation by remember { mutableFloatStateOf(0f) }
+
+    GestureDemoCard(
+        title = "5️⃣ 복합 제스처 (드래그 + 핀치 + 회전)",
+        description = "detectTransformGestures 하나로 pan·zoom·rotation을 동시에 처리합니다."
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(250.dp)
+                .clip(RoundedCornerShape(12.dp))
+                .background(Color(0xFFECEFF1)),
+            contentAlignment = Alignment.Center
+        ) {
+            Box(
+                modifier = Modifier
+                    .offset { IntOffset(offsetX.roundToInt(), offsetY.roundToInt()) }
+                    .graphicsLayer {
+                        scaleX = scale
+                        scaleY = scale
+                        rotationZ = rotation
+                    }
+                    .size(80.dp)
+                    .shadow(6.dp, RoundedCornerShape(14.dp))
+                    .background(Color.White, RoundedCornerShape(14.dp))
+                    .padding(4.dp)
+                    .background(
+                        Color(0xFF00BCD4).copy(alpha = 0.12f),
+                        RoundedCornerShape(10.dp)
+                    )
+                    .pointerInput(Unit) {
+                        detectTransformGestures { _, pan, zoom, rot ->
+                            offsetX += pan.x
+                            offsetY += pan.y
+                            scale = (scale * zoom).coerceIn(0.5f, 3f)
+                            rotation += rot
+                        }
+                    },
+                contentAlignment = Alignment.Center
+            ) {
+                Text("🎨", fontSize = 36.sp)
+            }
+
+            Column(
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .padding(8.dp)
+                    .background(
+                        Color.White.copy(alpha = 0.9f),
+                        RoundedCornerShape(8.dp)
+                    )
+                    .padding(horizontal = 12.dp, vertical = 6.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = "X: ${offsetX.toInt()}  Y: ${offsetY.toInt()}",
+                    fontSize = 11.sp,
+                    color = Color(0xFF616161)
+                )
+                Text(
+                    text = "Scale: ${String.format("%.2f", scale)}x  Rot: ${rotation.toInt()}°",
+                    fontSize = 11.sp,
+                    color = Color(0xFF616161)
+                )
+            }
+
+            Button(
+                onClick = {
+                    offsetX = 0f
+                    offsetY = 0f
+                    scale = 1f
+                    rotation = 0f
+                },
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .padding(8.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1976D2)),
+                contentPadding = PaddingValues(horizontal = 10.dp, vertical = 4.dp)
+            ) {
+                Icon(
+                    Icons.Default.Refresh,
+                    contentDescription = null,
+                    modifier = Modifier.size(14.dp)
+                )
+                Spacer(modifier = Modifier.width(4.dp))
+                Text("리셋", fontSize = 11.sp)
+            }
+        }
+    }
+}
+
+@Composable
+private fun LongPressDemo() {
+    var selectedIndex by remember { mutableIntStateOf(-1) }
+    val emojis = listOf(
+        "🌈" to Color(0xFF4CAF50),
+        "💎" to Color(0xFF3F51B5),
+        "🎵" to Color(0xFFFF9800),
+        "🦋" to Color(0xFF7B1FA2)
+    )
+
+    GestureDemoCard(
+        title = "6️⃣ 롱 프레스 (길게 누르기)",
+        description = "onLongPress로 선택 상태를 토글합니다. 선택된 스티커에 하이라이트가 적용됩니다."
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(200.dp)
+                .clip(RoundedCornerShape(12.dp))
+                .background(Color(0xFFECEFF1)),
+            contentAlignment = Alignment.Center
+        ) {
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                emojis.forEachIndexed { index, (emoji, color) ->
+                    val isSelected = selectedIndex == index
+                    val animatedScale by animateFloatAsState(
+                        targetValue = if (isSelected) 1.2f else 1f,
+                        animationSpec = spring(dampingRatio = Spring.DampingRatioMediumBouncy),
+                        label = "selectScale_$index"
+                    )
+
+                    Box(
+                        modifier = Modifier
+                            .graphicsLayer {
+                                scaleX = animatedScale
+                                scaleY = animatedScale
+                            }
+                            .size(64.dp)
+                            .shadow(
+                                if (isSelected) 10.dp else 4.dp,
+                                RoundedCornerShape(14.dp)
+                            )
+                            .background(Color.White, RoundedCornerShape(14.dp))
+                            .then(
+                                if (isSelected) {
+                                    Modifier.border(
+                                        3.dp,
+                                        Color(0xFF1976D2),
+                                        RoundedCornerShape(14.dp)
+                                    )
+                                } else {
+                                    Modifier
+                                }
+                            )
+                            .padding(4.dp)
+                            .background(
+                                color.copy(alpha = 0.12f),
+                                RoundedCornerShape(10.dp)
+                            )
+                            .pointerInput(Unit) {
+                                detectTapGestures(
+                                    onLongPress = {
+                                        selectedIndex =
+                                            if (selectedIndex == index) -1 else index
+                                    }
+                                )
+                            },
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(emoji, fontSize = 28.sp)
+                    }
+                }
+            }
+
+            Text(
+                text = if (selectedIndex >= 0) "선택됨: ${emojis[selectedIndex].first}"
+                else "길게 눌러 선택하세요",
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .padding(8.dp),
+                fontSize = 12.sp,
+                color = Color(0xFF616161)
+            )
+        }
+    }
+}
+
+@Composable
+private fun SpringStiffnessDemo() {
+    var trigger by remember { mutableStateOf(false) }
+
+    val veryLow by animateFloatAsState(
+        targetValue = if (trigger) 1.5f else 1f,
+        animationSpec = spring(stiffness = Spring.StiffnessVeryLow),
+        label = "veryLow"
+    )
+    val low by animateFloatAsState(
+        targetValue = if (trigger) 1.5f else 1f,
+        animationSpec = spring(stiffness = Spring.StiffnessLow),
+        label = "stiffLow"
+    )
+    val medium by animateFloatAsState(
+        targetValue = if (trigger) 1.5f else 1f,
+        animationSpec = spring(stiffness = Spring.StiffnessMedium),
+        label = "stiffMedium"
+    )
+    val high by animateFloatAsState(
+        targetValue = if (trigger) 1.5f else 1f,
+        animationSpec = spring(stiffness = Spring.StiffnessHigh),
+        label = "stiffHigh"
+    )
+
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(containerColor = Color.White),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+        shape = RoundedCornerShape(12.dp)
+    ) {
+        Column(modifier = Modifier.padding(14.dp)) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "Spring Stiffness 비교",
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFF212121)
+                )
+                Button(
+                    onClick = { trigger = !trigger },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFF1976D2)
+                    ),
+                    contentPadding = PaddingValues(
+                        horizontal = 12.dp,
+                        vertical = 4.dp
+                    )
+                ) {
+                    Icon(
+                        Icons.Default.Refresh,
+                        contentDescription = null,
+                        modifier = Modifier.size(16.dp)
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text("토글", fontSize = 12.sp)
+                }
+            }
+            Text(
+                text = "Stiffness가 높을수록 빠르게 목표에 도달합니다. DampingRatio는 동일(기본값)합니다.",
+                fontSize = 12.sp,
+                color = Color(0xFF757575),
+                lineHeight = 16.sp
+            )
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                SpringBall("Very\nLow", veryLow, Color(0xFF9C27B0))
+                SpringBall("Low", low, Color(0xFF2196F3))
+                SpringBall("Medium", medium, Color(0xFF4CAF50))
+                SpringBall("High", high, Color(0xFFFF5722))
+            }
+        }
+    }
+}
+
+@Composable
+private fun SnapBackDemo() {
+    val scope = rememberCoroutineScope()
+    val offsetX = remember { Animatable(0f) }
+    val offsetY = remember { Animatable(0f) }
+
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(containerColor = Color.White),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+        shape = RoundedCornerShape(12.dp)
+    ) {
+        Column(modifier = Modifier.padding(14.dp)) {
+            Text(
+                text = "스냅백 (Snap-Back to Center)",
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color(0xFF212121)
+            )
+            Text(
+                text = "Animatable + spring()으로 놓으면 중앙에 바운시하게 복귀합니다.",
+                fontSize = 12.sp,
+                color = Color(0xFF757575),
+                lineHeight = 16.sp
+            )
+            Spacer(modifier = Modifier.height(10.dp))
+
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(250.dp)
+                    .clip(RoundedCornerShape(12.dp))
+                    .background(Color(0xFFECEFF1)),
+                contentAlignment = Alignment.Center
+            ) {
+                Box(
+                    modifier = Modifier
+                        .offset {
+                            IntOffset(
+                                offsetX.value.roundToInt(),
+                                offsetY.value.roundToInt()
+                            )
+                        }
+                        .size(80.dp)
+                        .shadow(6.dp, RoundedCornerShape(14.dp))
+                        .background(Color.White, RoundedCornerShape(14.dp))
+                        .padding(4.dp)
+                        .background(
+                            Color(0xFF4CAF50).copy(alpha = 0.12f),
+                            RoundedCornerShape(10.dp)
+                        )
+                        .pointerInput(Unit) {
+                            detectDragGestures(
+                                onDrag = { change, dragAmount ->
+                                    change.consume()
+                                    scope.launch {
+                                        offsetX.snapTo(offsetX.value + dragAmount.x)
+                                        offsetY.snapTo(offsetY.value + dragAmount.y)
+                                    }
+                                },
+                                onDragEnd = {
+                                    scope.launch {
+                                        launch {
+                                            offsetX.animateTo(
+                                                0f,
+                                                spring(
+                                                    dampingRatio = Spring.DampingRatioMediumBouncy,
+                                                    stiffness = Spring.StiffnessMedium
+                                                )
+                                            )
+                                        }
+                                        launch {
+                                            offsetY.animateTo(
+                                                0f,
+                                                spring(
+                                                    dampingRatio = Spring.DampingRatioMediumBouncy,
+                                                    stiffness = Spring.StiffnessMedium
+                                                )
+                                            )
+                                        }
+                                    }
+                                }
+                            )
+                        },
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text("🌈", fontSize = 40.sp)
+                }
+
+                Text(
+                    text = "드래그 후 놓아보세요",
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .padding(8.dp),
+                    fontSize = 12.sp,
+                    color = Color(0xFF616161)
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun DieCutShapeVariantsCard() {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(containerColor = Color.White),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+        shape = RoundedCornerShape(12.dp)
+    ) {
+        Column(modifier = Modifier.padding(14.dp)) {
+            Text(
+                text = "Die-Cut 형태 변형",
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color(0xFF212121)
+            )
+            Text(
+                text = "Shape에 따라 Die-Cut 테두리 느낌이 달라집니다.",
+                fontSize = 12.sp,
+                color = Color(0xFF757575)
+            )
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Box(
+                        modifier = Modifier
+                            .size(72.dp)
+                            .shadow(6.dp, CircleShape)
+                            .background(Color.White, CircleShape)
+                            .padding(4.dp)
+                            .background(
+                                Color(0xFFE91E63).copy(alpha = 0.15f),
+                                CircleShape
+                            ),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text("🌸", fontSize = 32.sp)
+                    }
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text("Circle", fontSize = 10.sp, color = Color(0xFF757575))
+                }
+
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Box(
+                        modifier = Modifier
+                            .size(72.dp)
+                            .shadow(6.dp, RoundedCornerShape(6.dp))
+                            .background(Color.White, RoundedCornerShape(6.dp))
+                            .padding(4.dp)
+                            .background(
+                                Color(0xFF2E7D32).copy(alpha = 0.15f),
+                                RoundedCornerShape(4.dp)
+                            ),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text("🍀", fontSize = 32.sp)
+                    }
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        "Small\nRadius",
+                        fontSize = 10.sp,
+                        color = Color(0xFF757575),
+                        textAlign = TextAlign.Center,
+                        lineHeight = 13.sp
+                    )
+                }
+
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Box(
+                        modifier = Modifier
+                            .size(72.dp)
+                            .shadow(6.dp, RoundedCornerShape(24.dp))
+                            .background(Color.White, RoundedCornerShape(24.dp))
+                            .padding(5.dp)
+                            .background(
+                                Color(0xFF1976D2).copy(alpha = 0.15f),
+                                RoundedCornerShape(20.dp)
+                            ),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text("💎", fontSize = 32.sp)
+                    }
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        "Large\nRadius",
+                        fontSize = 10.sp,
+                        color = Color(0xFF757575),
+                        textAlign = TextAlign.Center,
+                        lineHeight = 13.sp
+                    )
+                }
+
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Box(
+                        modifier = Modifier
+                            .size(72.dp)
+                            .shadow(6.dp, RoundedCornerShape(14.dp))
+                            .background(Color.White, RoundedCornerShape(14.dp))
+                            .padding(8.dp)
+                            .background(
+                                Color(0xFFFF9800).copy(alpha = 0.15f),
+                                RoundedCornerShape(8.dp)
+                            ),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text("🎵", fontSize = 28.sp)
+                    }
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        "Thick\nBorder",
+                        fontSize = 10.sp,
+                        color = Color(0xFF757575),
+                        textAlign = TextAlign.Center,
+                        lineHeight = 13.sp
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun AdvancedDemo() {
+    LazyColumn(
+        modifier = Modifier.fillMaxSize(),
+        contentPadding = PaddingValues(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        item {
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(containerColor = Color.White),
+                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+                shape = RoundedCornerShape(12.dp)
+            ) {
+                Column(modifier = Modifier.padding(14.dp)) {
+                    Text(
+                        text = "고급 인터랙션",
+                        fontSize = 15.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFF212121)
+                    )
+                    Text(
+                        text = "실제 앱에서 자주 사용되는 고급 스티커 인터랙션 패턴입니다.\n" +
+                                "스냅 투 그리드, 경계 제한, 3D 플립 등을 구현합니다.",
+                        fontSize = 13.sp,
+                        color = Color(0xFF757575),
+                        lineHeight = 18.sp
+                    )
+                }
+            }
+        }
+
+        item { SnapToGridDemo() }
+        item { BoundaryConstraintDemo() }
+        item { StickerFlipDemo() }
+    }
+}
+
+@Composable
+private fun SnapToGridDemo() {
+    val gridSize = 60f
+    val scope = rememberCoroutineScope()
+    val offsetX = remember { Animatable(0f) }
+    val offsetY = remember { Animatable(0f) }
+
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(containerColor = Color.White),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+        shape = RoundedCornerShape(12.dp)
+    ) {
+        Column(modifier = Modifier.padding(14.dp)) {
+            Text(
+                text = "스냅 투 그리드 (Snap-to-Grid)",
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color(0xFF212121)
+            )
+            Text(
+                text = "드래그 후 놓으면 가장 가까운 격자점으로 스냅됩니다.",
+                fontSize = 12.sp,
+                color = Color(0xFF757575),
+                lineHeight = 16.sp
+            )
+            Spacer(modifier = Modifier.height(10.dp))
+
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(280.dp)
+                    .clip(RoundedCornerShape(12.dp))
+                    .background(Color(0xFFECEFF1))
+                    .drawBehind {
+                        val gridColor = Color(0xFFB0BEC5)
+                        var x = 0f
+                        while (x <= size.width) {
+                            drawLine(
+                                gridColor,
+                                Offset(x, 0f),
+                                Offset(x, size.height),
+                                strokeWidth = 1f
+                            )
+                            x += gridSize
+                        }
+                        var y = 0f
+                        while (y <= size.height) {
+                            drawLine(
+                                gridColor,
+                                Offset(0f, y),
+                                Offset(size.width, y),
+                                strokeWidth = 1f
+                            )
+                            y += gridSize
+                        }
+                    }
+            ) {
+                Box(
+                    modifier = Modifier
+                        .offset {
+                            IntOffset(
+                                offsetX.value.roundToInt(),
+                                offsetY.value.roundToInt()
+                            )
+                        }
+                        .size(56.dp)
+                        .shadow(6.dp, RoundedCornerShape(14.dp))
+                        .background(Color.White, RoundedCornerShape(14.dp))
+                        .padding(4.dp)
+                        .background(
+                            Color(0xFFE53935).copy(alpha = 0.12f),
+                            RoundedCornerShape(10.dp)
+                        )
+                        .pointerInput(Unit) {
+                            detectDragGestures(
+                                onDrag = { change, dragAmount ->
+                                    change.consume()
+                                    scope.launch {
+                                        offsetX.snapTo(offsetX.value + dragAmount.x)
+                                        offsetY.snapTo(offsetY.value + dragAmount.y)
+                                    }
+                                },
+                                onDragEnd = {
+                                    val snappedX =
+                                        (offsetX.value / gridSize).roundToInt() * gridSize
+                                    val snappedY =
+                                        (offsetY.value / gridSize).roundToInt() * gridSize
+                                    scope.launch {
+                                        launch {
+                                            offsetX.animateTo(
+                                                snappedX,
+                                                spring(
+                                                    dampingRatio = Spring.DampingRatioMediumBouncy,
+                                                    stiffness = Spring.StiffnessMedium
+                                                )
+                                            )
+                                        }
+                                        launch {
+                                            offsetY.animateTo(
+                                                snappedY,
+                                                spring(
+                                                    dampingRatio = Spring.DampingRatioMediumBouncy,
+                                                    stiffness = Spring.StiffnessMedium
+                                                )
+                                            )
+                                        }
+                                    }
+                                }
+                            )
+                        },
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text("🎯", fontSize = 28.sp)
+                }
+
+                Text(
+                    text = "Grid: ${(offsetX.value / gridSize).roundToInt()}, ${(offsetY.value / gridSize).roundToInt()}",
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .padding(8.dp)
+                        .background(
+                            Color.White.copy(alpha = 0.9f),
+                            RoundedCornerShape(8.dp)
+                        )
+                        .padding(horizontal = 12.dp, vertical = 4.dp),
+                    fontSize = 12.sp,
+                    color = Color(0xFF616161)
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun BoundaryConstraintDemo() {
+    var offsetX by remember { mutableFloatStateOf(0f) }
+    var offsetY by remember { mutableFloatStateOf(0f) }
+    var containerSize by remember { mutableStateOf(IntSize.Zero) }
+    val stickerSizePx = 160f
+
+    val isAtBoundaryX = offsetX <= 0f ||
+            (containerSize.width > 0 && offsetX >= containerSize.width - stickerSizePx)
+    val isAtBoundaryY = offsetY <= 0f ||
+            (containerSize.height > 0 && offsetY >= containerSize.height - stickerSizePx)
+    val isAtBoundary = isAtBoundaryX || isAtBoundaryY
+
+    val animatedBorderWidth by animateDpAsState(
+        targetValue = if (isAtBoundary) 3.dp else 2.dp,
+        animationSpec = spring(dampingRatio = Spring.DampingRatioMediumBouncy),
+        label = "boundaryBorder"
+    )
+
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(containerColor = Color.White),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+        shape = RoundedCornerShape(12.dp)
+    ) {
+        Column(modifier = Modifier.padding(14.dp)) {
+            Text(
+                text = "경계 제한 (Boundary Constraint)",
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color(0xFF212121)
+            )
+            Text(
+                text = "coerceIn으로 스티커가 영역 밖으로 나가지 못하게 제한합니다. 경계에 닿으면 테두리 색이 변합니다.",
+                fontSize = 12.sp,
+                color = Color(0xFF757575),
+                lineHeight = 16.sp
+            )
+            Spacer(modifier = Modifier.height(10.dp))
+
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(280.dp)
+                    .clip(RoundedCornerShape(12.dp))
+                    .background(Color(0xFFECEFF1))
+                    .border(
+                        animatedBorderWidth,
+                        if (isAtBoundary) Color(0xFFE53935) else Color(0xFFB0BEC5),
+                        RoundedCornerShape(12.dp)
+                    )
+                    .onSizeChanged { containerSize = it }
+            ) {
+                Box(
+                    modifier = Modifier
+                        .offset {
+                            IntOffset(offsetX.roundToInt(), offsetY.roundToInt())
+                        }
+                        .size(64.dp)
+                        .shadow(6.dp, RoundedCornerShape(14.dp))
+                        .background(Color.White, RoundedCornerShape(14.dp))
+                        .padding(4.dp)
+                        .background(
+                            Color(0xFF7B1FA2).copy(alpha = 0.12f),
+                            RoundedCornerShape(10.dp)
+                        )
+                        .pointerInput(Unit) {
+                            detectTransformGestures { _, pan, _, _ ->
+                                val maxX =
+                                    (containerSize.width - stickerSizePx).coerceAtLeast(0f)
+                                val maxY =
+                                    (containerSize.height - stickerSizePx).coerceAtLeast(0f)
+                                offsetX = (offsetX + pan.x).coerceIn(0f, maxX)
+                                offsetY = (offsetY + pan.y).coerceIn(0f, maxY)
+                            }
+                        },
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text("🦋", fontSize = 28.sp)
+                }
+
+                Text(
+                    text = if (isAtBoundary) "경계 도달!" else "자유롭게 드래그하세요",
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .padding(8.dp)
+                        .background(
+                            Color.White.copy(alpha = 0.9f),
+                            RoundedCornerShape(8.dp)
+                        )
+                        .padding(horizontal = 12.dp, vertical = 4.dp),
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = if (isAtBoundary) Color(0xFFE53935) else Color(0xFF616161)
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun StickerFlipDemo() {
+    var isFlipped by remember { mutableStateOf(false) }
+    val flipRotation by animateFloatAsState(
+        targetValue = if (isFlipped) 180f else 0f,
+        animationSpec = spring(
+            dampingRatio = Spring.DampingRatioLowBouncy,
+            stiffness = Spring.StiffnessLow
+        ),
+        label = "flipRotation"
+    )
+
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(containerColor = Color.White),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+        shape = RoundedCornerShape(12.dp)
+    ) {
+        Column(modifier = Modifier.padding(14.dp)) {
+            Text(
+                text = "3D 플립 (Sticker Flip)",
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color(0xFF212121)
+            )
+            Text(
+                text = "graphicsLayer의 rotationY와 cameraDistance로 3D 카드 플립을 구현합니다.",
+                fontSize = 12.sp,
+                color = Color(0xFF757575),
+                lineHeight = 16.sp
+            )
+            Spacer(modifier = Modifier.height(10.dp))
+
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(220.dp)
+                    .clip(RoundedCornerShape(12.dp))
+                    .background(Color(0xFFECEFF1)),
+                contentAlignment = Alignment.Center
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(100.dp)
+                        .graphicsLayer {
+                            rotationY = flipRotation
+                            cameraDistance = 12f * density
+                        }
+                        .clickable { isFlipped = !isFlipped }
+                        .shadow(8.dp, RoundedCornerShape(16.dp))
+                        .background(
+                            if (flipRotation <= 90f) Color.White else Color(0xFF1976D2),
+                            RoundedCornerShape(16.dp)
+                        )
+                        .padding(6.dp)
+                        .background(
+                            if (flipRotation <= 90f) Color(0xFFE53935).copy(alpha = 0.12f)
+                            else Color.White.copy(alpha = 0.15f),
+                            RoundedCornerShape(12.dp)
+                        ),
+                    contentAlignment = Alignment.Center
+                ) {
+                    if (flipRotation <= 90f) {
+                        Text("🎯", fontSize = 48.sp)
+                    } else {
+                        Column(
+                            modifier = Modifier.graphicsLayer { rotationY = 180f },
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Text(
+                                "BACK",
+                                fontSize = 14.sp,
+                                color = Color.White,
+                                fontWeight = FontWeight.Bold
+                            )
+                            Text(
+                                "뒷면",
+                                fontSize = 11.sp,
+                                color = Color.White.copy(alpha = 0.7f)
+                            )
+                        }
+                    }
+                }
+
+                Column(
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .padding(8.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = if (isFlipped) "뒷면 (탭하여 뒤집기)" else "앞면 (탭하여 뒤집기)",
+                        fontSize = 12.sp,
+                        color = Color(0xFF616161)
+                    )
+                    Text(
+                        text = "rotationY: ${flipRotation.toInt()}°",
+                        fontSize = 11.sp,
+                        color = Color(0xFF90A4AE)
+                    )
                 }
             }
         }
