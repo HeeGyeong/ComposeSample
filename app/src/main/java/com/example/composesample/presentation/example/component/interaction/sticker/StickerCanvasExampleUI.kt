@@ -68,8 +68,8 @@ import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
-import kotlin.math.roundToInt
 import kotlinx.coroutines.launch
+import kotlin.math.roundToInt
 
 /**
  * Sticker Canvas Example UI
@@ -221,32 +221,6 @@ private fun FullCanvasDemo() {
 
     Box(modifier = Modifier.fillMaxSize()) {
         Column(modifier = Modifier.fillMaxSize()) {
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
-                colors = CardDefaults.cardColors(containerColor = Color.White),
-                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-                shape = RoundedCornerShape(12.dp)
-            ) {
-                Column(modifier = Modifier.padding(14.dp)) {
-                    Text(
-                        text = "스티커 캔버스",
-                        fontSize = 15.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color(0xFF212121)
-                    )
-                    Text(
-                        text = "아래에서 스티커를 추가하고, 드래그·핀치·회전·탭·더블 탭으로 조작하세요.",
-                        fontSize = 12.sp,
-                        color = Color(0xFF757575),
-                        lineHeight = 16.sp
-                    )
-                }
-            }
-
-            Spacer(modifier = Modifier.height(8.dp))
-
             StickerTray(
                 onStickerSelected = { emoji, color ->
                     zIndexCounter++
@@ -486,31 +460,6 @@ private fun GestureDemo() {
         contentPadding = PaddingValues(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        item {
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(containerColor = Color.White),
-                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-                shape = RoundedCornerShape(12.dp)
-            ) {
-                Column(modifier = Modifier.padding(14.dp)) {
-                    Text(
-                        text = "제스처 시스템",
-                        fontSize = 15.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color(0xFF212121)
-                    )
-                    Text(
-                        text = "각 제스처의 개별 동작을 확인합니다. detectTransformGestures로 " +
-                                "드래그·핀치·회전을 동시에 처리하고, detectTapGestures로 탭·더블 탭을 처리합니다.",
-                        fontSize = 13.sp,
-                        color = Color(0xFF757575),
-                        lineHeight = 18.sp
-                    )
-                }
-            }
-        }
-
         item { DragOnlyDemo() }
         item { PinchZoomDemo() }
         item { RotateDemo() }
@@ -752,31 +701,6 @@ private fun SpringPhysicsDemo() {
         contentPadding = PaddingValues(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        item {
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(containerColor = Color.White),
-                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-                shape = RoundedCornerShape(12.dp)
-            ) {
-                Column(modifier = Modifier.padding(14.dp)) {
-                    Text(
-                        text = "Spring 물리 & 필오프 애니메이션",
-                        fontSize = 15.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color(0xFF212121)
-                    )
-                    Text(
-                        text = "스티커를 잡으면 들어올리는 듯한 필오프 효과가 적용됩니다.\n" +
-                                "그림자 크기 증가 + 스케일 증가 + 알파 감소로 구현합니다.",
-                        fontSize = 13.sp,
-                        color = Color(0xFF757575),
-                        lineHeight = 18.sp
-                    )
-                }
-            }
-        }
-
         item { PeelOffDemo() }
         item { SpringComparisonDemo() }
         item { SpringStiffnessDemo() }
@@ -1013,31 +937,6 @@ private fun DieCutDemo() {
         contentPadding = PaddingValues(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        item {
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(containerColor = Color.White),
-                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-                shape = RoundedCornerShape(12.dp)
-            ) {
-                Column(modifier = Modifier.padding(14.dp)) {
-                    Text(
-                        text = "Die-Cut 렌더링 & Z-Ordering",
-                        fontSize = 15.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color(0xFF212121)
-                    )
-                    Text(
-                        text = "실제 비닐 스티커처럼 흰색 테두리(die-cut border)와 그림자를 적용합니다.\n" +
-                                "Z-ordering으로 스티커 간 겹침 순서를 제어합니다.",
-                        fontSize = 13.sp,
-                        color = Color(0xFF757575),
-                        lineHeight = 18.sp
-                    )
-                }
-            }
-        }
-
         item { DieCutStylesCard() }
         item { DieCutShapeVariantsCard() }
         item { ZOrderingCard() }
@@ -1123,31 +1022,6 @@ private fun DieCutStylesCard() {
                     lineHeight = 13.sp
                 )
             }
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Text(
-            text = "구현 방법",
-            fontSize = 13.sp,
-            fontWeight = FontWeight.SemiBold,
-            color = Color(0xFF424242)
-        )
-        Spacer(modifier = Modifier.height(4.dp))
-
-        val steps = listOf(
-            "1. shadow()로 드롭 섀도우 적용",
-            "2. 흰색 배경 + RoundedCornerShape로 Die-Cut 테두리",
-            "3. 내부 padding으로 흰색 테두리 두께 조절",
-            "4. 콘텐츠 배경으로 스티커 색상 적용",
-        )
-        steps.forEach { step ->
-            Text(
-                text = step,
-                fontSize = 12.sp,
-                color = Color(0xFF616161),
-                modifier = Modifier.padding(vertical = 1.dp)
-            )
         }
     }
 }
@@ -1728,31 +1602,6 @@ private fun AdvancedDemo() {
         contentPadding = PaddingValues(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        item {
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(containerColor = Color.White),
-                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-                shape = RoundedCornerShape(12.dp)
-            ) {
-                Column(modifier = Modifier.padding(14.dp)) {
-                    Text(
-                        text = "고급 인터랙션",
-                        fontSize = 15.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color(0xFF212121)
-                    )
-                    Text(
-                        text = "실제 앱에서 자주 사용되는 고급 스티커 인터랙션 패턴입니다.\n" +
-                                "스냅 투 그리드, 경계 제한, 3D 플립 등을 구현합니다.",
-                        fontSize = 13.sp,
-                        color = Color(0xFF757575),
-                        lineHeight = 18.sp
-                    )
-                }
-            }
-        }
-
         item { SnapToGridDemo() }
         item { BoundaryConstraintDemo() }
         item { StickerFlipDemo() }
