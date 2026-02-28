@@ -71,13 +71,6 @@ import androidx.compose.ui.zIndex
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
-/**
- * Sticker Canvas Example UI
- *
- * 스티커 캔버스 앱에서 사용되는 제스처 시스템, 스프링 물리, 필오프 애니메이션,
- * 다이컷 렌더링, Z-ordering을 구현하는 예제입니다.
- */
-
 data class StickerItem(
     val id: Int,
     val emoji: String,
