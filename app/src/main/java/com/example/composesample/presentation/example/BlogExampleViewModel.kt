@@ -36,7 +36,6 @@ class BlogExampleViewModel(
     private val _previewExampleData = MutableStateFlow("")
     val previewExampleData: StateFlow<String> = _previewExampleData.asStateFlow()
 
-    // Search results
     val searchExampleList = searchText.combine(exampleObjectList) { query, list ->
         when {
             query.isBlank() -> list
@@ -44,16 +43,8 @@ class BlogExampleViewModel(
         }
     }
 
-    // UI Events
     fun initExampleObject() {
         _exampleObjectList.update { exampleObjectList() }
-    }
-
-    private val _studyType = MutableStateFlow(ExampleMoveType.UI)
-    val studyType: StateFlow<ExampleMoveType> = _studyType.asStateFlow()
-
-    fun setStudyType(moveType: ExampleMoveType) {
-        _studyType.value = moveType
     }
 
     fun setSubCategoryList(

@@ -60,7 +60,6 @@ class MainActivity : ComponentActivity() {
     private fun updateWidget() {
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                // 모든 위젯 타입을 갱신
                 StreaksWidget().updateAll(this@MainActivity)
                 SmallWidget().updateAll(this@MainActivity)
                 MediumWidget().updateAll(this@MainActivity)
