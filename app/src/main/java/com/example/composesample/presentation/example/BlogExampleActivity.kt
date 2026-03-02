@@ -81,6 +81,7 @@ import com.example.composesample.presentation.example.component.interaction.drag
 import com.example.composesample.presentation.example.component.interaction.refresh.PullToRefreshUI
 import com.example.composesample.presentation.example.component.interaction.swipe.SwipeToDismissUI
 import com.example.composesample.presentation.example.component.interaction.sticker.StickerCanvasExampleUI
+import com.example.composesample.presentation.example.component.ui.accessibility.LargeContentViewerExampleUI
 import com.example.composesample.presentation.example.component.interaction.swipe.SwipeToDismissM3ExampleUI
 import com.example.composesample.presentation.example.component.navigation.BottomNavigationActivity
 import com.example.composesample.presentation.example.component.system.background.workmanager.WorkManagerUI
@@ -215,6 +216,7 @@ import com.example.composesample.util.ConstValue.Companion.SideEffectExample
 import com.example.composesample.util.ConstValue.Companion.SnapshotFlowExample
 import com.example.composesample.util.ConstValue.Companion.StickerCanvasExample
 import com.example.composesample.util.ConstValue.Companion.StickyHeaderExample
+import com.example.composesample.util.ConstValue.Companion.LargeContentViewerExample
 import com.example.composesample.util.ConstValue.Companion.SwipeToDismissExample
 import com.example.composesample.util.ConstValue.Companion.SwipeToDismissM3Example
 import com.example.composesample.util.ConstValue.Companion.TargetSDK34PermissionExample
@@ -254,13 +256,6 @@ class BlogExampleActivity : ComponentActivity() {
                 context.intent.getStringExtra(ShortCutKey) == ShortCutTypePin -> 3
                 else -> 0
             }
-
-            blogExampleViewModel.setStudyType(
-                when (type) {
-                    ExampleType -> ExampleMoveType.UI
-                    else -> ExampleMoveType.EMPTY
-                }
-            )
 
             // targetSDK 35 example case
 //            Scaffold(
@@ -941,6 +936,10 @@ fun ExampleCaseUI(
 
                         StickerCanvasExample -> {
                             StickerCanvasExampleUI(onBackEvent)
+                        }
+
+                        LargeContentViewerExample -> {
+                            LargeContentViewerExampleUI(onBackEvent)
                         }
 
                         SnapshotFlowExample -> {

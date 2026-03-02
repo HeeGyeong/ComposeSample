@@ -20,7 +20,7 @@ class ConstValue {
         const val SSEWikiURL = "https://stream.wikimedia.org/v2/stream/recentchange"
 
         // ==================== UI 컴포넌트 예제 ====================
-        // LazyColumn(키보드 이슈), ClickEvent(중복 방지), FlexBox(유동 레이아웃), WebView(YouTube), TextStyle(스타일링), StickyHeader(고정 헤더), ReverseLazyColumn(역방향), AutoSizingText(자동 크기), CardCorners(모서리 스타일), ButtonGroup(M3 Expressive), Visibility(가시성 처리), FancyTopAppBar(고급 TopAppBar), CanvasShapes(Canvas 도형 그리기), ResponsiveTabRow(반응형 탭), CustomTextRendering(커스텀 텍스트 렌더링), DialComponent(Dial 컴포넌트), EmbeddedPhotoPicker(임베디드 포토 피커)
+        // LazyColumn(키보드 이슈), ClickEvent(중복 방지), FlexBox(유동 레이아웃), WebView(YouTube), TextStyle(스타일링), StickyHeader(고정 헤더), ReverseLazyColumn(역방향), AutoSizingText(자동 크기), CardCorners(모서리 스타일), ButtonGroup(M3 Expressive), Visibility(가시성 처리), FancyTopAppBar(고급 TopAppBar), CanvasShapes(Canvas 도형 그리기), ResponsiveTabRow(반응형 탭), CustomTextRendering(커스텀 텍스트 렌더링), DialComponent(Dial 컴포넌트), EmbeddedPhotoPicker(임베디드 포토 피커), LargeContentViewer(Large Content Viewer 접근성)
         const val LazyColumnExample = "lazyColumnExample"
         const val FancyTopAppBarExample = "fancyTopAppBarExample"
         const val CanvasShapesExample = "canvasShapesExample"
@@ -38,6 +38,7 @@ class ConstValue {
         const val CardCornersExample = "cardCornersExample"
         const val ButtonGroupExample = "buttonGroupExample"
         const val VisibilityExample = "visibilityExample"
+        const val LargeContentViewerExample = "largeContentViewerExample"
 
         // ==================== 스크롤 & 제스처 예제 ====================
         // PullToRefresh(당겨서 새로고침), PullScreenPager(풀스크린 페이저), FlingBehavior(스크롤 커스텀), SwipeToDismiss(스와이프 삭제), SwipeToDismissM3(M3 스와이프 삭제), DragAndDrop(드래그 앤 드롭), NestedScrolling(중첩 스크롤), CustomScrollBehavior(커스텀 TopAppBarScrollBehavior), StickerCanvas(스티커 제스처 캔버스)
