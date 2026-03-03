@@ -202,8 +202,6 @@ private fun TabItem(
     }
 }
 
-// ==================== 1. Long-Press Preview Demo ====================
-
 @Composable
 private fun LongPressPreviewDemo() {
     var previewedItem by remember { mutableStateOf<NavItem?>(null) }
@@ -256,7 +254,6 @@ private fun LongPressPreviewDemo() {
                     )
                     Spacer(modifier = Modifier.height(12.dp))
 
-                    // Preview popup
                     AnimatedVisibility(
                         visible = previewedItem != null,
                         enter = scaleIn(spring(dampingRatio = Spring.DampingRatioMediumBouncy)) + fadeIn(),
@@ -297,7 +294,6 @@ private fun LongPressPreviewDemo() {
                         }
                     }
 
-                    // Navigation bar simulation
                     Card(
                         colors = CardDefaults.cardColors(containerColor = Color(0xFFF5F5F5)),
                         shape = RoundedCornerShape(12.dp)
@@ -349,8 +345,6 @@ private fun LongPressPreviewDemo() {
         }
     }
 }
-
-// ==================== 2. Keyboard Navigation Demo ====================
 
 @Composable
 private fun KeyboardNavigationDemo() {
@@ -410,7 +404,6 @@ private fun KeyboardNavigationDemo() {
                     )
                     Spacer(modifier = Modifier.height(12.dp))
 
-                    // Preview popup
                     AnimatedVisibility(
                         visible = previewedItem != null,
                         enter = scaleIn(spring(dampingRatio = Spring.DampingRatioMediumBouncy)) + fadeIn(),
@@ -456,7 +449,6 @@ private fun KeyboardNavigationDemo() {
                         }
                     }
 
-                    // Navigation bar with keyboard focus support
                     Card(
                         colors = CardDefaults.cardColors(containerColor = Color(0xFFF5F5F5)),
                         shape = RoundedCornerShape(12.dp)
@@ -529,7 +521,6 @@ private fun KeyboardNavigationDemo() {
 
                     Spacer(modifier = Modifier.height(8.dp))
 
-                    // Focus state indicator
                     Card(
                         colors = CardDefaults.cardColors(
                             containerColor = Color(0xFFE8F5E9)
@@ -602,8 +593,6 @@ private fun KeyboardNavigationDemo() {
     }
 }
 
-// ==================== 3. Screen Reader Demo ====================
-
 @Composable
 private fun ScreenReaderDemo() {
     var previewedItem by remember { mutableStateOf<NavItem?>(null) }
@@ -662,7 +651,6 @@ private fun ScreenReaderDemo() {
                     )
                     Spacer(modifier = Modifier.height(12.dp))
 
-                    // Preview popup
                     AnimatedVisibility(
                         visible = previewedItem != null,
                         enter = scaleIn(spring(dampingRatio = Spring.DampingRatioMediumBouncy)) + fadeIn(),
@@ -708,7 +696,6 @@ private fun ScreenReaderDemo() {
                         }
                     }
 
-                    // Navigation bar with semantics custom actions
                     Card(
                         colors = CardDefaults.cardColors(containerColor = Color(0xFFF5F5F5)),
                         shape = RoundedCornerShape(12.dp)
@@ -737,7 +724,6 @@ private fun ScreenReaderDemo() {
                                             )
                                         }
                                         .clickable {
-                                            // Simulate TalkBack action trigger via tap
                                             previewedItem = if (previewedItem == item) null else item
                                             actionLog = actionLog + "Custom Action: Preview ${item.label}"
                                         }
@@ -761,7 +747,6 @@ private fun ScreenReaderDemo() {
                         }
                     }
 
-                    // Action log
                     if (actionLog.isNotEmpty()) {
                         Spacer(modifier = Modifier.height(8.dp))
                         Card(
@@ -789,39 +774,8 @@ private fun ScreenReaderDemo() {
                 }
             }
         }
-
-        item {
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(containerColor = Color(0xFFE8EAF6)),
-                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-                shape = RoundedCornerShape(12.dp)
-            ) {
-                Column(modifier = Modifier.padding(14.dp)) {
-                    Text(
-                        text = "💡 스크린 리더 사용자에 대한 이해",
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color(0xFF283593)
-                    )
-                    Spacer(modifier = Modifier.height(6.dp))
-                    Text(
-                        text = "\"모든 스크린 리더 사용자가 시각 장애인은 아닙니다.\"\n" +
-                                "시력은 스펙트럼이며, 일부 스크린 리더 사용자는 아이콘 프리뷰를 " +
-                                "볼 수 있습니다. 따라서 이 기능은 스크린 리더 사용자에게도 유용합니다.\n\n" +
-                                "또한 스크린 리더 사용자는 의도적으로 액션을 트리거하므로 " +
-                                "long-press 딜레이를 적용하지 않습니다.",
-                        fontSize = 12.sp,
-                        color = Color(0xFF37474F),
-                        lineHeight = 18.sp
-                    )
-                }
-            }
-        }
     }
 }
-
-// ==================== 4. Integrated Demo ====================
 
 @Composable
 private fun IntegratedDemo() {
@@ -878,7 +832,6 @@ private fun IntegratedDemo() {
                     )
                     Spacer(modifier = Modifier.height(4.dp))
 
-                    // Input method indicators
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceEvenly
@@ -891,7 +844,6 @@ private fun IntegratedDemo() {
 
                     Spacer(modifier = Modifier.height(12.dp))
 
-                    // Preview popup
                     AnimatedVisibility(
                         visible = previewedItem != null,
                         enter = scaleIn(spring(dampingRatio = Spring.DampingRatioMediumBouncy)) + fadeIn(),
@@ -948,7 +900,6 @@ private fun IntegratedDemo() {
                         }
                     }
 
-                    // Integrated navigation bar
                     Card(
                         colors = CardDefaults.cardColors(containerColor = Color(0xFFF5F5F5)),
                         shape = RoundedCornerShape(12.dp)
@@ -965,7 +916,6 @@ private fun IntegratedDemo() {
 
                                 Column(
                                     modifier = Modifier
-                                        // 1. Keyboard support: onFocusChanged
                                         .onFocusChanged { focusState ->
                                             if (focusState.isFocused) {
                                                 focusedItem = item.label
@@ -987,7 +937,6 @@ private fun IntegratedDemo() {
                                             }
                                         }
                                         .focusable()
-                                        // 2. Screen reader support: semantics
                                         .semantics {
                                             customActions = listOf(
                                                 CustomAccessibilityAction(
@@ -1002,7 +951,6 @@ private fun IntegratedDemo() {
                                                 )
                                             )
                                         }
-                                        // 3. Touch support: pointerInput
                                         .pointerInput(item.label) {
                                             detectTapGestures(
                                                 onLongPress = {
@@ -1074,35 +1022,6 @@ private fun IntegratedDemo() {
         }
 
         item {
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(containerColor = Color(0xFFE0F2F1)),
-                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-                shape = RoundedCornerShape(12.dp)
-            ) {
-                Column(modifier = Modifier.padding(14.dp)) {
-                    Text(
-                        text = "🎤 Voice Access 지원",
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color(0xFF00695C)
-                    )
-                    Spacer(modifier = Modifier.height(6.dp))
-                    Text(
-                        text = "Voice Access는 별도의 코드가 필요하지 않습니다!\n\n" +
-                                "\"Long press Home\" 같은 음성 명령으로 pointerInput의 " +
-                                "onLongPress가 자동으로 트리거됩니다.\n\n" +
-                                "이미 터치 long-press를 구현했으므로 Voice Access는 무료로 지원됩니다.",
-                        fontSize = 12.sp,
-                        color = Color(0xFF37474F),
-                        lineHeight = 18.sp
-                    )
-                }
-            }
-        }
-
-        item {
-            // Accessibility Approach Comparison
             AccessibilityComparisonCard()
         }
     }
@@ -1145,7 +1064,6 @@ private fun ToolbarDemo() {
             )
             Spacer(modifier = Modifier.height(12.dp))
 
-            // Preview
             AnimatedVisibility(
                 visible = previewedItem != null,
                 enter = scaleIn(spring(dampingRatio = Spring.DampingRatioMediumBouncy)) + fadeIn(),
@@ -1193,7 +1111,6 @@ private fun ToolbarDemo() {
                 }
             }
 
-            // Toolbar simulation
             Card(
                 colors = CardDefaults.cardColors(containerColor = Color(0xFF37474F)),
                 shape = RoundedCornerShape(10.dp)
