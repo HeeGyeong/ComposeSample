@@ -23,51 +23,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 
-/**
- * 배경에 Shimmer 효과를 추가하는 기본적인 Modifier입니다.
- *
- * 애니메이션 변수를 직접 설정할 필요 없이, 색상 리스트와 너비 비율(ratio)만 지정하면 됩니다.
- *
- * @param colorList Shimmer 효과에 사용할 색상 리스트입니다.
- * @param ratio 화면 너비에 대한 Shimmer 효과의 비율입니다.
- */
-fun Modifier.defaultShimmer(
-    colorList: List<Color> = listOf(
-        Color.LightGray.copy(alpha = 0.2f),
-        Color.LightGray.copy(alpha = 0.9f),
-        Color.LightGray.copy(alpha = 0.2f)
-    ),
-    ratio: Float = 0.6f
-): Modifier = composed {
-    val transition = rememberInfiniteTransition(label = "")
-    val translateAnim by transition.animateFloat(
-        initialValue = 0f,
-        targetValue = 1000f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(
-                durationMillis = 1200,
-                easing = FastOutSlowInEasing
-            ),
-            repeatMode = RepeatMode.Reverse
-        ), label = "Shimmer"
-    )
-
-    val configuration = LocalConfiguration.current
-    val screenWidthDp = configuration.screenWidthDp.dp
-    val shimmerWidth = screenWidthDp * ratio
-
-    background(
-        brush = Brush.linearGradient(
-            colors = colorList,
-            start = Offset(
-                x = translateAnim - shimmerWidth.value,
-                y = translateAnim - shimmerWidth.value
-            ),
-            end = Offset(x = translateAnim, y = translateAnim)
-        )
-    )
-}
-
 fun Modifier.shimmer(
     colorList: List<Color> = listOf(
         Color.LightGray.copy(alpha = 0.2f),

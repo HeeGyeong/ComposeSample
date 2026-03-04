@@ -77,7 +77,6 @@ import kotlinx.coroutines.launch
  * iOS의 Large Content Viewer를 Compose로 구현하고,
  * 키보드 내비게이션, 스크린 리더(TalkBack), Voice Access 지원을 추가합니다.
  */
-
 private data class NavItem(
     val icon: ImageVector,
     val label: String,
