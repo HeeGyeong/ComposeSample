@@ -556,39 +556,6 @@ private fun KeyboardNavigationDemo() {
                 }
             }
         }
-
-        item {
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(containerColor = Color(0xFFFFF3E0)),
-                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-                shape = RoundedCornerShape(12.dp)
-            ) {
-                Column(modifier = Modifier.padding(14.dp)) {
-                    Text(
-                        text = "💡 핵심 포인트",
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color(0xFFE65100)
-                    )
-                    Spacer(modifier = Modifier.height(6.dp))
-                    val points = listOf(
-                        "viewConfiguration.longPressTimeoutMillis로 시스템 long-press 시간 사용",
-                        "포커스 해제 시 Job.cancel()로 코루틴 누수 방지",
-                        "isFocused 상태에 따라 포커스 링(border) 표시",
-                    )
-                    points.forEach { point ->
-                        Text(
-                            text = "• $point",
-                            fontSize = 12.sp,
-                            color = Color(0xFF795548),
-                            lineHeight = 16.sp,
-                            modifier = Modifier.padding(vertical = 2.dp)
-                        )
-                    }
-                }
-            }
-        }
     }
 }
 
