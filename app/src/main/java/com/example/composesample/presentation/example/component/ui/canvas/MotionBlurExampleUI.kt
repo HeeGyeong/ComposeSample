@@ -72,14 +72,14 @@ import kotlin.math.min
  */
 
 private val wheelColors = listOf(
-    Color(0xFFE53935), // Red
-    Color(0xFFFF9800), // Orange
-    Color(0xFFFFEB3B), // Yellow
-    Color(0xFF4CAF50), // Green
-    Color(0xFF2196F3), // Blue
-    Color(0xFF9C27B0), // Purple
-    Color(0xFF00BCD4), // Cyan
-    Color(0xFFFF5722), // Deep Orange
+    Color(0xFFE53935),
+    Color(0xFFFF9800),
+    Color(0xFFFFEB3B),
+    Color(0xFF4CAF50),
+    Color(0xFF2196F3),
+    Color(0xFF9C27B0),
+    Color(0xFF00BCD4),
+    Color(0xFFFF5722),
 )
 
 @Composable
@@ -186,8 +186,6 @@ private fun TabItem(
     }
 }
 
-// ==================== Common: Spinning Wheel DrawScope helper ====================
-
 private fun DrawScope.drawWheelSectors(
     rotationOffset: Float = 0f,
     alpha: Float = 1f
@@ -211,7 +209,6 @@ private fun DrawScope.drawWheelSectors(
         }
     }
 
-    // Center hub
     drawCircle(
         color = Color.White.copy(alpha = alpha),
         radius = radius * 0.12f,
@@ -224,7 +221,6 @@ private fun DrawScope.drawWheelSectors(
     )
 }
 
-// ==================== 1. Ghost Frames Demo ====================
 
 @Composable
 private fun GhostFramesDemo() {
@@ -283,7 +279,6 @@ private fun GhostFramesDemo() {
                     modifier = Modifier.padding(14.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    // No blur vs Ghost blur side-by-side
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceEvenly
@@ -311,7 +306,6 @@ private fun GhostFramesDemo() {
                             )
                             Spacer(modifier = Modifier.height(6.dp))
                             Canvas(modifier = Modifier.size(130.dp)) {
-                                // Ghost frames: draw from oldest (faintest) to newest (most opaque)
                                 for (i in ghostCount downTo 0) {
                                     val ghostRotation = rotation - i * ghostDelta
                                     val alpha = (1f - i.toFloat() / (ghostCount + 1)) * 0.85f
@@ -327,7 +321,6 @@ private fun GhostFramesDemo() {
 
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    // Controls
                     ControlRow(
                         label = "Ghost 수: $ghostCount",
                         value = ghostCount.toFloat(),
@@ -353,29 +346,8 @@ private fun GhostFramesDemo() {
             }
         }
 
-        item {
-            DarkCodeCard(
-                title = "Ghost Frames 구현 코드",
-                code = """// ghostCount개의 반투명 복사본을 겹쳐 그림
-for (i in ghostCount downTo 0) {
-    val ghostRotation = rotation - i * ghostDelta
-    val alpha = (1f - i / (ghostCount + 1f)) * 0.85f
-
-    withTransform({
-        rotate(ghostRotation, pivot = center)
-    }) {
-        drawWheelSectors(alpha = alpha)
     }
 }
-
-// 핵심: 오래된 프레임일수록 더 뒤쪽에 그려지고
-//       alpha가 낮아져 희미하게 보임"""
-            )
-        }
-    }
-}
-
-// ==================== 2. BlurMaskFilter Demo ====================
 
 @Composable
 private fun BlurMaskFilterDemo() {
@@ -438,7 +410,6 @@ private fun BlurMaskFilterDemo() {
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceEvenly
                     ) {
-                        // Normal style
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
                             Text(
                                 "NORMAL",
@@ -454,7 +425,6 @@ private fun BlurMaskFilterDemo() {
                             )
                         }
 
-                        // Solid style
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
                             Text(
                                 "SOLID",
@@ -470,7 +440,6 @@ private fun BlurMaskFilterDemo() {
                             )
                         }
 
-                        // Outer style
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
                             Text(
                                 "OUTER",
@@ -552,44 +521,6 @@ private fun BlurMaskFilterDemo() {
             }
         }
 
-        item {
-            DarkCodeCard(
-                title = "BlurMaskFilter 구현 코드",
-                code = """Modifier
-    .graphicsLayer {
-        rotationZ = rotation
-        // 소프트웨어 레이어 필수!
-        renderEffect = null
-    }
-    .drawWithContent {
-        val paint = Paint().apply {
-            asFrameworkPaint().apply {
-                isAntiAlias = true
-                maskFilter = BlurMaskFilter(
-                    blurRadius,
-                    BlurMaskFilter.Blur.NORMAL
-                )
-                // 블러는 색상 없이 마스크 역할
-                color = android.graphics.Color
-                    .TRANSPARENT
-                setShadowLayer(
-                    blurRadius, 0f, 0f,
-                    0xFF000000.toInt()
-                )
-            }
-        }
-        drawContext.canvas.drawIntoCanvas {
-            it.drawRect(
-                left = 0f, top = 0f,
-                right = size.width,
-                bottom = size.height,
-                paint = paint
-            )
-        }
-        drawContent()
-    }"""
-            )
-        }
     }
 }
 
@@ -605,7 +536,6 @@ private fun BlurWheelCanvas(
         modifier = Modifier.size(110.dp),
         contentAlignment = Alignment.Center
     ) {
-        // Blur layer (drawn behind, offset slightly)
         Canvas(
             modifier = Modifier
                 .size(110.dp)
@@ -647,7 +577,6 @@ private fun BlurWheelCanvas(
             }
         }
 
-        // Sharp wheel on top
         Canvas(
             modifier = Modifier
                 .size(90.dp)
@@ -657,8 +586,6 @@ private fun BlurWheelCanvas(
         }
     }
 }
-
-// ==================== 3. RenderEffect Demo ====================
 
 @Composable
 private fun RenderEffectDemo() {
@@ -753,7 +680,6 @@ private fun RenderEffectDemo() {
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceEvenly
                     ) {
-                        // No blur
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
                             Text("블러 없음", fontSize = 11.sp, color = Color(0xFF757575))
                             Spacer(modifier = Modifier.height(6.dp))
@@ -766,7 +692,6 @@ private fun RenderEffectDemo() {
                             }
                         }
 
-                        // RenderEffect blur
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
                             Text(
                                 "RenderEffect",
@@ -800,7 +725,6 @@ private fun RenderEffectDemo() {
                             }
                         }
 
-                        // Ghost comparison
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
                             Text(
                                 "Ghost (비교)",
@@ -864,31 +788,8 @@ private fun RenderEffectDemo() {
             }
         }
 
-        item {
-            DarkCodeCard(
-                title = "RenderEffect 구현 코드",
-                code = """Modifier.graphicsLayer {
-    rotationZ = rotation
-
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-        renderEffect = BlurEffect(
-            // X: 접선 방향 블러 (회전 방향)
-            radiusX = blurRadius * density,
-            // Y: 반경 방향 블러 (최소화)
-            radiusY = 2f * density,
-            edgeTreatment = TileMode.Decal
-        )
     }
 }
-
-// BlurEffect는 graphicsLayer 내에서 직접 사용
-// 회전과 블러가 동일 레이어에서 처리됨"""
-            )
-        }
-    }
-}
-
-// ==================== 4. Comparison Demo ====================
 
 @Composable
 private fun ComparisonDemo() {
@@ -948,8 +849,7 @@ private fun ComparisonDemo() {
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceEvenly
                     ) {
-                        WheelVariant("없음", Color(0xFF757575)) {
-                            Canvas(modifier = Modifier.size(80.dp).graphicsLayer { rotationZ = rotation }) {
+                        WheelVariant("없음", Color(0xFF757575)) {                            Canvas(modifier = Modifier.size(80.dp).graphicsLayer { rotationZ = rotation }) {
                                 drawWheelSectors()
                             }
                         }
@@ -1001,7 +901,6 @@ private fun ComparisonDemo() {
                                         }
                                     }
 
-                                    // Hub
                                     drawCircle(Color.White, radius * 0.12f, center)
                                     drawCircle(Color(0xFF212121), radius * 0.06f, center)
                                 }
@@ -1145,8 +1044,6 @@ private fun ComparisonTableCard() {
     }
 }
 
-// ==================== Common Components ====================
-
 @Composable
 private fun ControlRow(
     label: String,
@@ -1174,32 +1071,6 @@ private fun ControlRow(
     }
 }
 
-@Composable
-private fun DarkCodeCard(title: String, code: String) {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFF263238)),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-        shape = RoundedCornerShape(12.dp)
-    ) {
-        Column(modifier = Modifier.padding(14.dp)) {
-            Text(
-                text = title,
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color(0xFF80CBC4)
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = code,
-                fontSize = 11.sp,
-                color = Color(0xFFE0E0E0),
-                fontFamily = FontFamily.Monospace,
-                lineHeight = 15.sp
-            )
-        }
-    }
-}
 
 @Preview(showBackground = true)
 @Composable
