@@ -2,6 +2,7 @@ package com.example.composesample.presentation.example.component.ui.canvas
 
 import android.graphics.BlurMaskFilter
 import android.os.Build
+import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
@@ -11,6 +12,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -24,6 +26,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -98,13 +101,15 @@ fun MotionBlurExampleUI(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp),
+                .padding(horizontal = 16.dp)
+                .horizontalScroll(rememberScrollState()),
             horizontalArrangement = Arrangement.spacedBy(6.dp)
         ) {
-            TabItem("Ghost\nFrames", selectedTab == 0, { selectedTab = 0 }, Modifier.weight(1f))
-            TabItem("Blur\nFilter", selectedTab == 1, { selectedTab = 1 }, Modifier.weight(1f))
-            TabItem("Render\nEffect", selectedTab == 2, { selectedTab = 2 }, Modifier.weight(1f))
-            TabItem("비교", selectedTab == 3, { selectedTab = 3 }, Modifier.weight(1f))
+            TabItem("Ghost\nFrames", selectedTab == 0, { selectedTab = 0 }, Modifier.width(80.dp))
+            TabItem("Blur\nFilter", selectedTab == 1, { selectedTab = 1 }, Modifier.width(80.dp))
+            TabItem("Render\nEffect", selectedTab == 2, { selectedTab = 2 }, Modifier.width(80.dp))
+            TabItem("선형\n이동", selectedTab == 3, { selectedTab = 3 }, Modifier.width(80.dp))
+            TabItem("비교", selectedTab == 4, { selectedTab = 4 }, Modifier.width(70.dp))
         }
 
         Spacer(modifier = Modifier.height(8.dp))
@@ -113,7 +118,8 @@ fun MotionBlurExampleUI(
             0 -> GhostFramesDemo()
             1 -> BlurMaskFilterDemo()
             2 -> RenderEffectDemo()
-            3 -> ComparisonDemo()
+            3 -> LinearMotionBlurDemo()
+            4 -> ComparisonDemo()
         }
     }
 }
@@ -788,6 +794,183 @@ private fun RenderEffectDemo() {
             }
         }
 
+    }
+}
+
+@Composable
+private fun LinearMotionBlurDemo() {
+    var ghostCount by remember { mutableIntStateOf(6) }
+    var ghostDelta by remember { mutableFloatStateOf(0.04f) }
+    var speed by remember { mutableIntStateOf(1000) }
+    var blurX by remember { mutableFloatStateOf(18f) }
+
+    val infiniteTransition = rememberInfiniteTransition(label = "linearMotion")
+    val progress by infiniteTransition.animateFloat(
+        initialValue = 0f,
+        targetValue = 1f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(durationMillis = speed, easing = FastOutSlowInEasing),
+            repeatMode = RepeatMode.Reverse
+        ),
+        label = "linearProgress"
+    )
+
+    LazyColumn(
+        modifier = Modifier.fillMaxSize(),
+        contentPadding = PaddingValues(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        item {
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(containerColor = Color.White),
+                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+                shape = RoundedCornerShape(12.dp)
+            ) {
+                Column(modifier = Modifier.padding(14.dp)) {
+                    Text(
+                        text = "선형 이동 모션 블러",
+                        fontSize = 15.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFF212121)
+                    )
+                    Text(
+                        text = "직선으로 왕복하는 오브젝트에 모션 블러를 적용합니다.\n" +
+                                "FastOutSlowIn easing으로 가속·감속 구간에서\n" +
+                                "Ghost 퍼짐 정도가 달라지는 것을 확인할 수 있습니다.",
+                        fontSize = 13.sp,
+                        color = Color(0xFF757575),
+                        lineHeight = 18.sp
+                    )
+                }
+            }
+        }
+
+        item {
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(containerColor = Color.White),
+                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+                shape = RoundedCornerShape(12.dp)
+            ) {
+                Column(
+                    modifier = Modifier.padding(14.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text("블러 없음", fontSize = 12.sp, color = Color(0xFF757575))
+                    Spacer(modifier = Modifier.height(6.dp))
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(60.dp)
+                            .background(Color(0xFFF5F5F5), RoundedCornerShape(8.dp))
+                    ) {
+                        Canvas(modifier = Modifier.fillMaxSize()) {
+                            val r = size.height * 0.35f
+                            val cx = r + progress * (size.width - r * 2)
+                            drawCircle(Color(0xFF9E9E9E), r, Offset(cx, size.height / 2f))
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(14.dp))
+
+                    Text(
+                        "Ghost Frames",
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFF1976D2)
+                    )
+                    Spacer(modifier = Modifier.height(6.dp))
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(60.dp)
+                            .background(Color(0xFFF5F5F5), RoundedCornerShape(8.dp))
+                    ) {
+                        Canvas(modifier = Modifier.fillMaxSize()) {
+                            val r = size.height * 0.35f
+                            for (i in ghostCount downTo 0) {
+                                val gp = (progress - i * ghostDelta).coerceIn(0f, 1f)
+                                val cx = r + gp * (size.width - r * 2)
+                                val alpha = (1f - i.toFloat() / (ghostCount + 1)) * 0.85f
+                                drawCircle(
+                                    color = Color(0xFF1976D2).copy(alpha = alpha),
+                                    radius = r,
+                                    center = Offset(cx, size.height / 2f)
+                                )
+                            }
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(14.dp))
+
+                    Text(
+                        text = "RenderEffect" + if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) " (API 31+)" else "",
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFF00695C)
+                    )
+                    Spacer(modifier = Modifier.height(6.dp))
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(60.dp)
+                            .background(Color(0xFFF5F5F5), RoundedCornerShape(8.dp))
+                    ) {
+                        Canvas(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .graphicsLayer {
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                                        renderEffect = androidx.compose.ui.graphics.BlurEffect(
+                                            radiusX = blurX * density,
+                                            radiusY = 3f * density,
+                                            edgeTreatment = TileMode.Decal
+                                        )
+                                    }
+                                }
+                        ) {
+                            val r = size.height * 0.35f
+                            val cx = r + progress * (size.width - r * 2)
+                            drawCircle(Color(0xFF00695C), r, Offset(cx, size.height / 2f))
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    ControlRow(
+                        label = "Ghost 수: $ghostCount",
+                        value = ghostCount.toFloat(),
+                        range = 2f..16f,
+                        color = Color(0xFF1976D2),
+                        onValueChange = { ghostCount = it.toInt() }
+                    )
+                    ControlRow(
+                        label = "Ghost 간격: ${(ghostDelta * 100).toInt()}%",
+                        value = ghostDelta,
+                        range = 0.01f..0.12f,
+                        color = Color(0xFF1976D2),
+                        onValueChange = { ghostDelta = it }
+                    )
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                        ControlRow(
+                            label = "Blur X: ${blurX.toInt()}px",
+                            value = blurX,
+                            range = 1f..40f,
+                            color = Color(0xFF00695C),
+                            onValueChange = { blurX = it }
+                        )
+                    }
+                    ControlRow(
+                        label = "속도: ${speed}ms",
+                        value = speed.toFloat(),
+                        range = 300f..3000f,
+                        color = Color(0xFF616161),
+                        onValueChange = { speed = it.toInt() }
+                    )
+                }
+            }
+        }
     }
 }
 
