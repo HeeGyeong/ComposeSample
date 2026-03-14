@@ -100,5 +100,12 @@ val examples2026 = listOf(
         description = "스피닝 휠에 모션 블러를 적용하는 방법: Ghost Frames, BlurMaskFilter, RenderEffect 비교",
         blogUrl = "",
         exampleType = ConstValue.MotionBlurExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 03. 15",
+        title = "LocalContext for Strings (Anti-Pattern)",
+        description = "Compose에서 문자열에 LocalContext 사용 금지: stringResource vs UiText sealed class 패턴",
+        blogUrl = "",
+        exampleType = ConstValue.LocalContextStringsExample
     )
 )

@@ -83,6 +83,7 @@ import com.example.composesample.presentation.example.component.interaction.swip
 import com.example.composesample.presentation.example.component.interaction.sticker.StickerCanvasExampleUI
 import com.example.composesample.presentation.example.component.ui.accessibility.LargeContentViewerExampleUI
 import com.example.composesample.presentation.example.component.ui.canvas.MotionBlurExampleUI
+import com.example.composesample.presentation.example.component.ui.text.LocalContextStringsExampleUI
 import com.example.composesample.presentation.example.component.interaction.swipe.SwipeToDismissM3ExampleUI
 import com.example.composesample.presentation.example.component.navigation.BottomNavigationActivity
 import com.example.composesample.presentation.example.component.system.background.workmanager.WorkManagerUI
@@ -219,6 +220,7 @@ import com.example.composesample.util.ConstValue.Companion.StickerCanvasExample
 import com.example.composesample.util.ConstValue.Companion.StickyHeaderExample
 import com.example.composesample.util.ConstValue.Companion.LargeContentViewerExample
 import com.example.composesample.util.ConstValue.Companion.MotionBlurExample
+import com.example.composesample.util.ConstValue.Companion.LocalContextStringsExample
 import com.example.composesample.util.ConstValue.Companion.SwipeToDismissExample
 import com.example.composesample.util.ConstValue.Companion.SwipeToDismissM3Example
 import com.example.composesample.util.ConstValue.Companion.TargetSDK34PermissionExample
@@ -946,6 +948,10 @@ fun ExampleCaseUI(
 
                         MotionBlurExample -> {
                             MotionBlurExampleUI(onBackEvent)
+                        }
+
+                        LocalContextStringsExample -> {
+                            LocalContextStringsExampleUI(onBackEvent)
                         }
 
                         SnapshotFlowExample -> {
