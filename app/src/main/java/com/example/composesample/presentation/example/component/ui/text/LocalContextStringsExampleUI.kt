@@ -41,7 +41,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -58,21 +57,15 @@ import com.example.composesample.R
  * stringResource()와 UiText 패턴으로 올바르게 처리하는 방법을 보여줍니다.
  */
 
-// ==================== UiText sealed class ====================
-// ViewModel에서 문자열을 타입 안전하게 표현하기 위한 sealed class
-
 sealed class UiText {
-    /** 이미 해결된 동적 문자열 (API 응답, 사용자 입력 등) */
     data class DynamicString(val value: String) : UiText()
 
-    /** 아직 해결되지 않은 리소스 ID 기반 문자열 */
     class StringResource(
         @StringRes val id: Int,
         vararg val args: Any
     ) : UiText()
 }
 
-/** UI 레이어에서만 호출: stringResource를 통해 문자열을 해결 */
 @Composable
 fun UiText.asString(): String {
     return when (this) {
@@ -80,8 +73,6 @@ fun UiText.asString(): String {
         is UiText.StringResource -> stringResource(id, *args)
     }
 }
-
-// ==================== Fake ViewModel State (데모용) ====================
 
 private sealed class FakeNetworkState {
     object Idle : FakeNetworkState()
@@ -101,7 +92,6 @@ fun LocalContextStringsExampleUI(
             .fillMaxSize()
             .background(Color(0xFFF5F5F5))
     ) {
-        // Header
         Card(
             modifier = Modifier
                 .fillMaxWidth()
@@ -138,7 +128,6 @@ fun LocalContextStringsExampleUI(
             }
         }
 
-        // Tab row
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -192,15 +181,8 @@ private fun StringTab(text: String, isSelected: Boolean, onClick: () -> Unit) {
     }
 }
 
-// ==================== 1. Anti-Pattern Demo ====================
-
 @Composable
 private fun AntiPatternDemo() {
-    val context = LocalContext.current
-
-    // ❌ 안티패턴: LocalContext를 통해 getString()으로 문자열 가져오기
-    val antiPatternTitle = context.getString(R.string.app_name)
-
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
         contentPadding = PaddingValues(16.dp),
@@ -231,113 +213,11 @@ private fun AntiPatternDemo() {
                 }
             }
         }
-
-        item {
-            ProblemCard(
-                number = "1",
-                title = "Preview 미지원",
-                description = "@Preview는 실제 Android 환경이 아니므로 Context가 제한됩니다.\n" +
-                        "LocalContext.current.getString()은 Preview를 깨뜨릴 수 있습니다.",
-                badCode = """// ❌ Preview에서 런타임 에러 가능
-@Composable
-fun TitleText() {
-    val context = LocalContext.current
-    Text(text = context.getString(R.string.title))
-}
-
-@Preview
-@Composable
-fun TitleTextPreview() {
-    TitleText() // Context가 없어 오류 발생 가능
-}"""
-            )
-        }
-
-        item {
-            ProblemCard(
-                number = "2",
-                title = "Locale 변경에 무반응",
-                description = "런타임에 앱 언어를 변경해도 LocalContext를 통한 문자열은\n" +
-                        "자동으로 리컴포지션되지 않습니다.",
-                badCode = """// ❌ Locale 변경 시 UI가 업데이트되지 않음
-val context = LocalContext.current
-// locale 변경 후에도 이 값은 그대로임
-val text = context.getString(R.string.hello)
-Text(text = text)"""
-            )
-        }
-
-        item {
-            ProblemCard(
-                number = "3",
-                title = "ViewModel 오염",
-                description = "ViewModel에서 Context를 들고 있으면\n테스트 불가능하고 Context 누수 위험이 있습니다.",
-                badCode = """// ❌ ViewModel에서 Context 직접 사용
-class MyViewModel(
-    private val context: Context  // 절대 금지!
-) : ViewModel() {
-
-    val errorMsg = context.getString(
-        R.string.error_network  // Context 오염
-    )
-}"""
-            )
-        }
-
-        item {
-            // Live demo of the anti-pattern
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(containerColor = Color.White),
-                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-                shape = RoundedCornerShape(12.dp)
-            ) {
-                Column(modifier = Modifier.padding(14.dp)) {
-                    Text(
-                        text = "실제 동작 (안티패턴)",
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color(0xFF212121)
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Card(
-                        colors = CardDefaults.cardColors(containerColor = Color(0xFF263238)),
-                        shape = RoundedCornerShape(8.dp)
-                    ) {
-                        Column(modifier = Modifier.padding(12.dp)) {
-                            Text(
-                                text = "context.getString(R.string.app_name)",
-                                fontSize = 11.sp,
-                                color = Color(0xFF80CBC4),
-                                fontFamily = FontFamily.Monospace
-                            )
-                            Text(
-                                text = "→ \"$antiPatternTitle\"",
-                                fontSize = 13.sp,
-                                color = Color(0xFFFFEB3B),
-                                fontFamily = FontFamily.Monospace,
-                                fontWeight = FontWeight.Bold
-                            )
-                        }
-                    }
-                    Spacer(modifier = Modifier.height(6.dp))
-                    Text(
-                        text = "⚠️ 실제로 작동하더라도, Preview와 테스트에서 문제가 생깁니다.",
-                        fontSize = 12.sp,
-                        color = Color(0xFFE64A19),
-                        lineHeight = 16.sp
-                    )
-                }
-            }
-        }
     }
 }
 
-// ==================== 2. stringResource Demo ====================
-
 @Composable
 private fun StringResourceDemo() {
-    // ✅ 올바른 Compose 방식
     val appName = stringResource(R.string.app_name)
     var counter by remember { mutableIntStateOf(1) }
 
@@ -373,42 +253,6 @@ private fun StringResourceDemo() {
         }
 
         item {
-            GoodCard(
-                title = "기본 사용",
-                goodCode = """@Composable
-fun TitleText() {
-    // ✅ Context 없이 바로 사용
-    val title = stringResource(R.string.screen_title)
-    Text(text = title)
-}
-
-// ✅ Preview에서도 완벽 동작
-@Preview
-@Composable
-fun TitleTextPreview() {
-    TitleText()
-}"""
-            )
-        }
-
-        item {
-            GoodCard(
-                title = "포맷 인자 (Format Args)",
-                goodCode = """// strings.xml
-// <string name="welcome">안녕하세요, %s님!</string>
-
-@Composable
-fun WelcomeText(username: String) {
-    val message = stringResource(
-        R.string.welcome, username  // 인자 전달
-    )
-    Text(text = message)
-}"""
-            )
-        }
-
-        item {
-            // Live demo
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 colors = CardDefaults.cardColors(containerColor = Color.White),
@@ -432,7 +276,6 @@ fun WelcomeText(username: String) {
 
                     Spacer(modifier = Modifier.height(8.dp))
 
-                    // Simulated format args
                     val countText = "아이템 $counter 개"
                     ResultDisplay(
                         label = "동적 카운터 (Compose 리컴포지션 연동)",
@@ -488,8 +331,6 @@ fun WelcomeText(username: String) {
     }
 }
 
-// ==================== 3. UiText Demo ====================
-
 @Composable
 private fun UiTextDemo() {
     var networkState by remember {
@@ -528,59 +369,6 @@ private fun UiTextDemo() {
         }
 
         item {
-            GoodCard(
-                title = "UiText 정의",
-                goodCode = """sealed class UiText {
-    // API 응답 등 이미 만들어진 문자열
-    data class DynamicString(val value: String) : UiText()
-
-    // 리소스 ID (아직 미해결)
-    class StringResource(
-        @StringRes val id: Int,
-        vararg val args: Any
-    ) : UiText()
-}
-
-// UI 레이어 확장 함수
-@Composable
-fun UiText.asString(): String = when (this) {
-    is UiText.DynamicString -> value
-    is UiText.StringResource -> stringResource(id, *args)
-}"""
-            )
-        }
-
-        item {
-            GoodCard(
-                title = "ViewModel에서 사용",
-                goodCode = """class MyViewModel : ViewModel() {
-    private val _state = MutableStateFlow<UiText?>(null)
-    val state = _state.asStateFlow()
-
-    // ✅ Context 없이! 리소스 ID만 저장
-    fun onNetworkError() {
-        _state.value = UiText.StringResource(
-            R.string.error_network
-        )
-    }
-
-    // API가 돌려준 동적 메시지
-    fun onApiError(serverMessage: String) {
-        _state.value = UiText.DynamicString(serverMessage)
-    }
-}
-
-// UI: 여기서만 stringResource 호출
-@Composable
-fun MyScreen() {
-    val msg by viewModel.state.collectAsState()
-    msg?.let { Text(text = it.asString()) }
-}"""
-            )
-        }
-
-        item {
-            // Live UiText demo
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 colors = CardDefaults.cardColors(containerColor = Color.White),
@@ -596,7 +384,6 @@ fun MyScreen() {
                     )
                     Spacer(modifier = Modifier.height(8.dp))
 
-                    // State display
                     AnimatedContent(
                         targetState = networkState,
                         transitionSpec = { fadeIn() togetherWith fadeOut() },
@@ -615,12 +402,12 @@ fun MyScreen() {
                             )
                             is FakeNetworkState.Success -> Triple(
                                 Color(0xFFE8F5E9),
-                                state.message.asString(),  // ✅ UI에서만 해결
+                                state.message.asString(),
                                 "✅"
                             )
                             is FakeNetworkState.Error -> Triple(
                                 Color(0xFFFFEBEE),
-                                state.message.asString(),  // ✅ UI에서만 해결
+                                state.message.asString(),
                                 "❌"
                             )
                         }
@@ -649,7 +436,6 @@ fun MyScreen() {
 
                     Spacer(modifier = Modifier.height(10.dp))
 
-                    // UiText type indicator
                     if (networkState is FakeNetworkState.Success || networkState is FakeNetworkState.Error) {
                         val uiTextType = when (networkState) {
                             is FakeNetworkState.Success ->
@@ -669,12 +455,10 @@ fun MyScreen() {
                         }
                     }
 
-                    // Action buttons
                     Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
                         Button(
                             onClick = {
                                 networkState = FakeNetworkState.Success(
-                                    // StringResource: 리소스 ID 저장 (ViewModel 역할)
                                     UiText.StringResource(R.string.app_name)
                                 )
                             },
@@ -689,7 +473,6 @@ fun MyScreen() {
                         Button(
                             onClick = {
                                 networkState = FakeNetworkState.Error(
-                                    // DynamicString: API가 준 오류 메시지 (ViewModel 역할)
                                     UiText.DynamicString("서버 오류: 네트워크 연결을 확인하세요 (500)")
                                 )
                             },
@@ -713,8 +496,6 @@ fun MyScreen() {
         }
     }
 }
-
-// ==================== 4. Comparison Demo ====================
 
 @Composable
 private fun ComparisonDemo() {
@@ -782,46 +563,6 @@ private fun ComparisonDemo() {
             }
         }
 
-        item {
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(containerColor = Color(0xFF263238)),
-                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-                shape = RoundedCornerShape(12.dp)
-            ) {
-                Column(modifier = Modifier.padding(14.dp)) {
-                    Text(
-                        text = "✅ LocalContext 적절한 사용 예",
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color(0xFF80CBC4)
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(
-                        text = """@Composable
-fun ShareButton(text: String) {
-    val context = LocalContext.current // ✅ Context 필요
-    Button(onClick = {
-        val intent = Intent(Intent.ACTION_SEND).apply {
-            type = "text/plain"
-            putExtra(Intent.EXTRA_TEXT, text)
-        }
-        context.startActivity(
-            Intent.createChooser(intent, null)
-        )
-    }) {
-        // ✅ 문자열은 stringResource로
-        Text(stringResource(R.string.share))
-    }
-}""",
-                        fontSize = 11.sp,
-                        color = Color(0xFFE0E0E0),
-                        fontFamily = FontFamily.Monospace,
-                        lineHeight = 15.sp
-                    )
-                }
-            }
-        }
     }
 }
 
@@ -842,7 +583,6 @@ private fun ComparisonTableCard() {
                 listOf("StringResolver\n인터페이스", "✅", "✅", "✅", "최고"),
             )
 
-            // Header
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -897,106 +637,6 @@ private fun ComparisonTableCard() {
                 color = Color(0xFF757575),
                 lineHeight = 15.sp
             )
-        }
-    }
-}
-
-// ==================== Common Components ====================
-
-@Composable
-private fun ProblemCard(
-    number: String,
-    title: String,
-    description: String,
-    badCode: String
-) {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-        shape = RoundedCornerShape(12.dp)
-    ) {
-        Column(modifier = Modifier.padding(14.dp)) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                Card(
-                    colors = CardDefaults.cardColors(containerColor = Color(0xFFEF5350)),
-                    shape = RoundedCornerShape(6.dp)
-                ) {
-                    Text(
-                        text = " $number ",
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.White,
-                        modifier = Modifier.padding(horizontal = 4.dp, vertical = 2.dp)
-                    )
-                }
-                Text(
-                    text = title,
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color(0xFF212121)
-                )
-            }
-            Spacer(modifier = Modifier.height(6.dp))
-            Text(
-                text = description,
-                fontSize = 12.sp,
-                color = Color(0xFF757575),
-                lineHeight = 17.sp
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Card(
-                colors = CardDefaults.cardColors(containerColor = Color(0xFF263238)),
-                shape = RoundedCornerShape(8.dp)
-            ) {
-                Text(
-                    text = badCode,
-                    modifier = Modifier.padding(10.dp),
-                    fontSize = 11.sp,
-                    color = Color(0xFFEF9A9A),
-                    fontFamily = FontFamily.Monospace,
-                    lineHeight = 15.sp
-                )
-            }
-        }
-    }
-}
-
-@Composable
-private fun GoodCard(
-    title: String,
-    goodCode: String
-) {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-        shape = RoundedCornerShape(12.dp)
-    ) {
-        Column(modifier = Modifier.padding(14.dp)) {
-            Text(
-                text = title,
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color(0xFF212121)
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Card(
-                colors = CardDefaults.cardColors(containerColor = Color(0xFF1B5E20)),
-                shape = RoundedCornerShape(8.dp)
-            ) {
-                Text(
-                    text = goodCode,
-                    modifier = Modifier.padding(10.dp),
-                    fontSize = 11.sp,
-                    color = Color(0xFFA5D6A7),
-                    fontFamily = FontFamily.Monospace,
-                    lineHeight = 15.sp
-                )
-            }
         }
     }
 }
