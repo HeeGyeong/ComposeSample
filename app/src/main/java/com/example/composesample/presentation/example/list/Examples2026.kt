@@ -107,5 +107,12 @@ val examples2026 = listOf(
         description = "Compose에서 문자열에 LocalContext 사용 금지: stringResource vs UiText sealed class 패턴",
         blogUrl = "",
         exampleType = ConstValue.LocalContextStringsExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 03. 17",
+        title = "Embedded Photo Picker (Compose 통합)",
+        description = "BottomSheet 통합 아키텍처, 선택 동기화 오너십 모델, URI 수명 관리, setCurrentExpanded 패턴",
+        blogUrl = "",
+        exampleType = ConstValue.EmbeddedPickerComposeExample
     )
 )
