@@ -82,8 +82,6 @@ import androidx.compose.ui.unit.sp
  * minSdk 34이 필요합니다.
  */
 
-// ==================== 시뮬레이션용 가짜 데이터 ====================
-
 private data class FakeMedia(
     val id: Int,
     val color: Color,
@@ -114,7 +112,6 @@ fun EmbeddedPickerComposeExampleUI(
             .fillMaxSize()
             .background(Color(0xFFF5F5F5))
     ) {
-        // Header
         Card(
             modifier = Modifier
                 .fillMaxWidth()
@@ -151,12 +148,10 @@ fun EmbeddedPickerComposeExampleUI(
             }
         }
 
-        // Availability badge
         AvailabilityBadge()
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // Tab row
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -183,8 +178,6 @@ fun EmbeddedPickerComposeExampleUI(
         }
     }
 }
-
-// ==================== Availability Badge ====================
 
 @Composable
 private fun AvailabilityBadge() {
@@ -224,8 +217,6 @@ private fun AvailabilityBadge() {
     }
 }
 
-// ==================== Tab ====================
-
 @Composable
 private fun PickerTab(text: String, isSelected: Boolean, onClick: () -> Unit) {
     Card(
@@ -252,17 +243,13 @@ private fun PickerTab(text: String, isSelected: Boolean, onClick: () -> Unit) {
     }
 }
 
-// ==================== 1. BottomSheet Integration Demo ====================
-
 @Composable
 private fun BottomSheetIntegrationDemo() {
-    // 시뮬레이션용 상태
     var isSheetVisible by remember { mutableStateOf(false) }
     var isSheetExpanded by remember { mutableStateOf(false) }
     val attachments = remember { mutableStateListOf<FakeMedia>() }
     val maxSelection = 5
 
-    // 실제 코드에서의 setCurrentExpanded 시뮬레이션
     val pickerExpandedState by remember(isSheetExpanded) {
         derivedStateOf { isSheetExpanded }
     }
@@ -298,7 +285,6 @@ private fun BottomSheetIntegrationDemo() {
             }
         }
 
-        // Simulated composer UI
         item {
             Card(
                 modifier = Modifier.fillMaxWidth(),
@@ -315,7 +301,6 @@ private fun BottomSheetIntegrationDemo() {
                     )
                     Spacer(modifier = Modifier.height(10.dp))
 
-                    // Attachment grid (앱이 owns)
                     if (attachments.isNotEmpty()) {
                         Text(
                             text = "첨부 파일 (${attachments.size}/${maxSelection}) — 앱이 소유",
@@ -337,7 +322,6 @@ private fun BottomSheetIntegrationDemo() {
                                         .clip(RoundedCornerShape(6.dp))
                                         .background(media.color)
                                         .clickable {
-                                            // ✅ 올바른 해제: 피커에 알림 + 앱 state 직접 업데이트
                                             attachments.remove(media)
                                         },
                                     contentAlignment = Alignment.Center
@@ -363,7 +347,6 @@ private fun BottomSheetIntegrationDemo() {
                         Spacer(modifier = Modifier.height(10.dp))
                     }
 
-                    // Action buttons
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -376,7 +359,7 @@ private fun BottomSheetIntegrationDemo() {
                             Text("갤러리 추가", fontSize = 12.sp)
                         }
                         Button(
-                            onClick = { /* send */ },
+                            onClick = { },
                             modifier = Modifier.weight(1f),
                             enabled = attachments.isNotEmpty(),
                             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1976D2))
@@ -388,7 +371,6 @@ private fun BottomSheetIntegrationDemo() {
             }
         }
 
-        // Simulated BottomSheet picker
         item {
             AnimatedVisibility(
                 visible = isSheetVisible,
@@ -402,7 +384,6 @@ private fun BottomSheetIntegrationDemo() {
                     shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)
                 ) {
                     Column(modifier = Modifier.padding(14.dp)) {
-                        // Sheet handle + expand toggle
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.SpaceBetween,
@@ -441,7 +422,6 @@ private fun BottomSheetIntegrationDemo() {
                             }
                         }
 
-                        // setCurrentExpanded 상태 표시
                         Text(
                             text = "setCurrentExpanded(${pickerExpandedState}) ← SideEffect로 동기화",
                             fontSize = 10.sp,
@@ -451,7 +431,6 @@ private fun BottomSheetIntegrationDemo() {
 
                         Spacer(modifier = Modifier.height(8.dp))
 
-                        // Fake media grid
                         val gridHeight = if (isSheetExpanded) 280.dp else 160.dp
                         LazyVerticalGrid(
                             columns = GridCells.Fixed(4),
@@ -471,7 +450,6 @@ private fun BottomSheetIntegrationDemo() {
                                             else media.color
                                         )
                                         .clickable(enabled = !isAtLimit) {
-                                            // 선택 → onUriPermissionGranted 콜백 시뮬레이션
                                             attachments.add(media)
                                         },
                                     contentAlignment = Alignment.Center
@@ -521,8 +499,6 @@ BottomSheetScaffold(
     }
 }
 
-// ==================== 2. Selection Sync Demo ====================
-
 @Composable
 private fun SelectionSyncDemo() {
     val pickerSelections = remember { mutableStateListOf<FakeMedia>() }
@@ -561,12 +537,10 @@ private fun SelectionSyncDemo() {
         }
 
         item {
-            // Ownership model visualization
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                // Picker owns
                 Card(
                     modifier = Modifier.weight(1f),
                     colors = CardDefaults.cardColors(containerColor = Color(0xFFE3F2FD)),
@@ -630,7 +604,6 @@ private fun SelectionSyncDemo() {
         }
 
         item {
-            // Simulate picker selection
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 colors = CardDefaults.cardColors(containerColor = Color.White),
@@ -669,7 +642,6 @@ private fun SelectionSyncDemo() {
                                             pickerSelections.remove(media)
                                         } else {
                                             pickerSelections.add(media)
-                                            // onUriPermissionGranted 시뮬레이션
                                             if (media !in appAttachments) {
                                                 appAttachments.add(media)
                                                 syncLog += "✅ onUriPermissionGranted: ${media.label}\n"
@@ -696,7 +668,6 @@ private fun SelectionSyncDemo() {
         }
 
         item {
-            // ❌ Wrong vs ✅ Right deselect
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 colors = CardDefaults.cardColors(containerColor = Color.White),
@@ -743,7 +714,6 @@ private fun SelectionSyncDemo() {
                                 Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
                                     OutlinedButton(
                                         onClick = {
-                                            // ❌ 잘못된 방법: 앱 state만 삭제 (피커는 모름)
                                             appAttachments.remove(media)
                                             syncLog += "❌ 앱 state만 삭제 (피커 불일치!): ${media.label}\n"
                                         },
@@ -754,9 +724,8 @@ private fun SelectionSyncDemo() {
                                     }
                                     Button(
                                         onClick = {
-                                            // ✅ 올바른 방법: deselectUri + 앱 state 업데이트
-                                            pickerSelections.remove(media)   // deselectUri 시뮬레이션
-                                            appAttachments.remove(media)     // 앱 state 직접 업데이트
+                                            pickerSelections.remove(media)
+                                            appAttachments.remove(media)
                                             syncLog += "✅ deselectUri + 앱 state 모두 업데이트: ${media.label}\n"
                                         },
                                         contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp),
@@ -773,7 +742,6 @@ private fun SelectionSyncDemo() {
             }
         }
 
-        // Event log
         if (syncLog.isNotEmpty()) {
             item {
                 Card(
@@ -828,8 +796,6 @@ scope.launch {
     }
 }
 
-// ==================== 3. URI Lifetime Demo ====================
-
 @Composable
 private fun UriLifetimeDemo() {
     var grantCount by remember { mutableIntStateOf(0) }
@@ -867,7 +833,6 @@ private fun UriLifetimeDemo() {
         }
 
         item {
-            // URI lifetime types
             val lifetimeTypes = listOf(
                 Triple("기본 (Default)", "앱 종료 또는 기기 재시작까지", Color(0xFFE3F2FD)),
                 Triple("지속 가능 (Persistable)", "takePersistableUriPermission() 호출 후 영구 접근", Color(0xFFE8F5E9)),
@@ -910,7 +875,6 @@ contentResolver.releasePersistableUriPermission(
         }
 
         item {
-            // 5000 grant cap simulator
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 colors = CardDefaults.cardColors(containerColor = Color.White),
@@ -934,7 +898,6 @@ contentResolver.releasePersistableUriPermission(
                     )
                     Spacer(modifier = Modifier.height(10.dp))
 
-                    // Progress bar
                     val progress = (grantCount.toFloat() / maxGrants).coerceIn(0f, 1f)
                     val barColor = when {
                         progress > 0.9f -> Color(0xFFE53935)
@@ -1009,8 +972,6 @@ contentResolver.releasePersistableUriPermission(
     }
 }
 
-// ==================== 4. Architecture Overview Demo ====================
-
 @Composable
 private fun ArchitectureOverviewDemo() {
     LazyColumn(
@@ -1043,7 +1004,6 @@ private fun ArchitectureOverviewDemo() {
         }
 
         item {
-            // Architecture diagram
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 colors = CardDefaults.cardColors(containerColor = Color(0xFF263238)),
@@ -1122,7 +1082,6 @@ SideEffect {
         }
 
         item {
-            // Testing section
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 colors = CardDefaults.cardColors(containerColor = Color(0xFFF3E5F5)),
@@ -1157,7 +1116,6 @@ val photoPickerRule =
         }
 
         item {
-            // Key differences from classic picker
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 colors = CardDefaults.cardColors(containerColor = Color(0xFFE8F5E9)),
@@ -1195,8 +1153,6 @@ val photoPickerRule =
         }
     }
 }
-
-// ==================== Common Components ====================
 
 @Composable
 private fun CodeCard(title: String, code: String) {
