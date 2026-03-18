@@ -59,7 +59,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
@@ -469,33 +468,6 @@ private fun BottomSheetIntegrationDemo() {
                 }
             }
         }
-
-        item {
-            CodeCard(
-                title = "SideEffect + setCurrentExpanded",
-                code = """// 피커 확장 상태를 BottomSheet와 동기화
-SideEffect {
-    val expanded =
-        sheetState.bottomSheetState.targetValue
-            == SheetValue.Expanded
-    // 피커가 확장 가능한 상태임을 알림
-    pickerState.setCurrentExpanded(expanded)
-}
-
-// 피커를 BottomSheet에 배치
-BottomSheetScaffold(
-    sheetContent = {
-        EmbeddedPhotoPicker(
-            modifier = Modifier
-                .fillMaxWidth()
-                .heightIn(min = 240.dp),
-            state = pickerState,
-            embeddedPhotoPickerFeatureInfo = featureInfo
-        )
-    }
-) { /* 앱 컨텐츠 */ }"""
-            )
-        }
     }
 }
 
@@ -777,21 +749,36 @@ private fun SelectionSyncDemo() {
         }
 
         item {
-            CodeCard(
-                title = "deselectUri 올바른 사용법",
-                code = """// ❌ 잘못됨: onUriPermissionRevoked가 호출되지 않음!
-pickerState.deselectUri(uri)
-
-// ✅ 올바름: 둘 다 해야 함
-scope.launch {
-    pickerState.deselectUri(uri)  // 피커에게 알림
-    attachments = attachments - uri  // 앱 state 직접 업데이트
-}
-
-// 오너십 명확화:
-// - 피커 owns: 선택 가능한 항목들 (selectables)
-// - 앱 owns: 선택의 표현과 영속화"""
-            )
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(containerColor = Color(0xFFE3F2FD)),
+                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+                shape = RoundedCornerShape(12.dp)
+            ) {
+                Column(modifier = Modifier.padding(14.dp)) {
+                    Text(
+                        text = "💡 올바른 해제 방법",
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFF0D47A1)
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    val points = listOf(
+                        "deselectUri()만 호출하면 onUriPermissionRevoked가 자동 호출되지 않습니다.",
+                        "해제 시 피커에 알림(deselectUri)과 앱 state 업데이트를 반드시 함께 해야 합니다.",
+                        "피커는 선택 가능한 항목을 소유하고, 앱은 선택의 표현과 영속화를 소유합니다.",
+                    )
+                    points.forEach { point ->
+                        Row(
+                            modifier = Modifier.padding(vertical = 3.dp),
+                            horizontalArrangement = Arrangement.spacedBy(6.dp)
+                        ) {
+                            Text("•", fontSize = 12.sp, color = Color(0xFF1565C0))
+                            Text(point, fontSize = 12.sp, color = Color(0xFF37474F), lineHeight = 17.sp)
+                        }
+                    }
+                }
+            }
         }
     }
 }
@@ -855,23 +842,36 @@ private fun UriLifetimeDemo() {
         }
 
         item {
-            CodeCard(
-                title = "takePersistableUriPermission",
-                code = """// 드래프트, 업로드 큐 등 장기 접근 필요 시
-contentResolver.takePersistableUriPermission(
-    uri,
-    Intent.FLAG_GRANT_READ_URI_PERMISSION
-)
-
-// 주의: 영구 grant 개수 확인
-val persistedPerms = contentResolver
-    .persistedUriPermissions
-// 필요 없는 grant는 명시적으로 해제
-contentResolver.releasePersistableUriPermission(
-    uri,
-    Intent.FLAG_GRANT_READ_URI_PERMISSION
-)"""
-            )
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(containerColor = Color(0xFFE8F5E9)),
+                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+                shape = RoundedCornerShape(12.dp)
+            ) {
+                Column(modifier = Modifier.padding(14.dp)) {
+                    Text(
+                        text = "💡 영구 접근 관리 포인트",
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFF1B5E20)
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    val points = listOf(
+                        "드래프트·업로드 큐 등 장기 보관이 필요한 경우 takePersistableUriPermission()을 호출하세요.",
+                        "contentResolver.persistedUriPermissions로 현재 영구 grant 목록을 확인할 수 있습니다.",
+                        "불필요한 grant는 releasePersistableUriPermission()으로 명시적으로 해제해야 합니다.",
+                    )
+                    points.forEach { point ->
+                        Row(
+                            modifier = Modifier.padding(vertical = 3.dp),
+                            horizontalArrangement = Arrangement.spacedBy(6.dp)
+                        ) {
+                            Text("•", fontSize = 12.sp, color = Color(0xFF2E7D32))
+                            Text(point, fontSize = 12.sp, color = Color(0xFF37474F), lineHeight = 17.sp)
+                        }
+                    }
+                }
+            }
         }
 
         item {
@@ -1006,79 +1006,64 @@ private fun ArchitectureOverviewDemo() {
         item {
             Card(
                 modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(containerColor = Color(0xFF263238)),
-                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+                colors = CardDefaults.cardColors(containerColor = Color(0xFFE3F2FD)),
+                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
                 shape = RoundedCornerShape(12.dp)
             ) {
                 Column(modifier = Modifier.padding(14.dp)) {
                     Text(
-                        text = "아키텍처 다이어그램",
-                        fontSize = 13.sp,
+                        text = "🏗 컴포넌트 구조",
+                        fontSize = 14.sp,
                         fontWeight = FontWeight.Bold,
-                        color = Color(0xFF80CBC4)
+                        color = Color(0xFF0D47A1)
                     )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(
-                        text = """BottomSheetScaffold
-├── sheetContent
-│   └── EmbeddedPhotoPicker (시스템 SurfaceView)
-│         ↕ 콜백
-│         ├── onUriPermissionGranted(uris)
-│         │     → attachments += uris
-│         ├── onUriPermissionRevoked(uris)
-│         │     → attachments -= uris.toSet()
-│         └── onSelectionComplete
-│               → sheetState.hide()
-│               → onDone(attachments)
-└── content
-    ├── 첨부 파일 그리드 (앱이 소유)
-    │     → 탭으로 제거:
-    │       deselectUri(uri) +
-    │       attachments -= uri  (둘 다 필요!)
-    └── 행동 버튼들 (갤러리 추가, 전송)
+                    Spacer(modifier = Modifier.height(10.dp))
 
-확장 동기화:
-  SideEffect {
-    pickerState.setCurrentExpanded(
-      sheetState.targetValue == Expanded
-    )
-  }""",
-                        fontSize = 10.sp,
-                        color = Color(0xFFB0BEC5),
-                        fontFamily = FontFamily.Monospace,
-                        lineHeight = 14.sp
+                    ArchFlowItem(
+                        label = "BottomSheetScaffold",
+                        color = Color(0xFF1976D2),
+                        textColor = Color.White
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+
+                    Row {
+                        Spacer(modifier = Modifier.width(16.dp))
+                        Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                            ArchFlowItem(
+                                label = "sheetContent → EmbeddedPhotoPicker (시스템 SurfaceView)",
+                                color = Color(0xFF1565C0),
+                                textColor = Color.White
+                            )
+                            Row {
+                                Spacer(modifier = Modifier.width(16.dp))
+                                Column(verticalArrangement = Arrangement.spacedBy(3.dp)) {
+                                    ArchFlowItem("콜백: onUriPermissionGranted → attachments 추가", Color(0xFFBBDEFB), Color(0xFF0D47A1))
+                                    ArchFlowItem("콜백: onUriPermissionRevoked → attachments 제거", Color(0xFFBBDEFB), Color(0xFF0D47A1))
+                                    ArchFlowItem("콜백: onSelectionComplete → 시트 닫기 + 완료 처리", Color(0xFFBBDEFB), Color(0xFF0D47A1))
+                                }
+                            }
+                            ArchFlowItem(
+                                label = "content → 앱 UI (첨부 그리드 + 버튼)",
+                                color = Color(0xFF42A5F5),
+                                textColor = Color.White
+                            )
+                            Row {
+                                Spacer(modifier = Modifier.width(16.dp))
+                                Column(verticalArrangement = Arrangement.spacedBy(3.dp)) {
+                                    ArchFlowItem("항목 제거: deselectUri + attachments 직접 업데이트 필수", Color(0xFFBBDEFB), Color(0xFF0D47A1))
+                                }
+                            }
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(6.dp))
+                    ArchFlowItem(
+                        label = "SideEffect → 피커 확장 상태를 시트 상태와 동기화",
+                        color = Color(0xFF0288D1),
+                        textColor = Color.White
                     )
                 }
             }
-        }
-
-        item {
-            CodeCard(
-                title = "전체 스캐폴드 구조",
-                code = """EmbeddedPickerHost(
-    maxSelection = 5,
-    onDone = { uris -> viewModel.send(uris) }
-)
-
-// 내부 구조:
-val pickerState = rememberEmbeddedPhotoPickerState(
-    onSelectionComplete = { scope.launch { sheetState.hide() }; onDone(attachments) },
-    onUriPermissionGranted = { attachments += it },
-    onUriPermissionRevoked = { attachments -= it.toSet() }
-)
-val featureInfo = remember {
-    EmbeddedPhotoPickerFeatureInfo.Builder()
-        .setMaxSelectionLimit(maxSelection)
-        .setOrderedSelection(true)
-        .build()
-}
-SideEffect {
-    pickerState.setCurrentExpanded(
-        sheetState.bottomSheetState.targetValue
-            == SheetValue.Expanded
-    )
-}"""
-            )
         }
 
         item {
@@ -1095,22 +1080,21 @@ SideEffect {
                         fontWeight = FontWeight.Bold,
                         color = Color(0xFF4A148C)
                     )
-                    Spacer(modifier = Modifier.height(6.dp))
-                    Text(
-                        text = """// 테스트 의존성 추가
-androidTestImplementation(
-    "androidx.photopicker:photopicker-testing:1.0.0-alpha01"
-)
-
-// 테스트에서 가짜 피커 주입
-@get:Rule
-val photoPickerRule =
-    TestEmbeddedPhotoPickerProvider.createRule()""",
-                        fontSize = 11.sp,
-                        color = Color(0xFF4A148C),
-                        fontFamily = FontFamily.Monospace,
-                        lineHeight = 15.sp
+                    Spacer(modifier = Modifier.height(8.dp))
+                    val points = listOf(
+                        "androidx.photopicker:photopicker-testing 라이브러리로 테스트 환경을 구성합니다.",
+                        "TestEmbeddedPhotoPickerProvider.createRule()로 실제 시스템 피커 없이 가짜 피커를 주입할 수 있습니다.",
+                        "피커 로직을 격리된 컴포저블로 분리하면 나머지 화면 로직을 독립적으로 테스트할 수 있습니다.",
                     )
+                    points.forEach { point ->
+                        Row(
+                            modifier = Modifier.padding(vertical = 3.dp),
+                            horizontalArrangement = Arrangement.spacedBy(6.dp)
+                        ) {
+                            Text("•", fontSize = 12.sp, color = Color(0xFF7B1FA2))
+                            Text(point, fontSize = 12.sp, color = Color(0xFF37474F), lineHeight = 17.sp)
+                        }
+                    }
                 }
             }
         }
@@ -1155,29 +1139,15 @@ val photoPickerRule =
 }
 
 @Composable
-private fun CodeCard(title: String, code: String) {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFF263238)),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-        shape = RoundedCornerShape(12.dp)
+private fun ArchFlowItem(label: String, color: Color, textColor: Color) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(6.dp))
+            .background(color)
+            .padding(horizontal = 10.dp, vertical = 6.dp)
     ) {
-        Column(modifier = Modifier.padding(14.dp)) {
-            Text(
-                text = title,
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color(0xFF80CBC4)
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = code,
-                fontSize = 11.sp,
-                color = Color(0xFFE0E0E0),
-                fontFamily = FontFamily.Monospace,
-                lineHeight = 15.sp
-            )
-        }
+        Text(label, fontSize = 11.sp, color = textColor, lineHeight = 15.sp)
     }
 }
 
