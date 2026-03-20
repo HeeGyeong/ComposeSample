@@ -10,7 +10,7 @@ import org.koin.core.module.Module
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
-val RepositoryModule: Module = module {
+val repositoryModule: Module = module {
     single<PostDataSource> { PostDataSourceImpl(get(named("post"))) }
     single<PostRepository> { PostRepositoryImpl(get()) }
     single<MVIExampleRepository> { MVIExampleRepositoryImpl() }

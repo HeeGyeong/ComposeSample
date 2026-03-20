@@ -1,6 +1,8 @@
 package com.example.composesample.di
 
 import com.example.composesample.presentation.example.BlogExampleViewModel
+import com.example.coordinator.CoordinatorViewModel
+import com.example.core.BaseViewModel
 import com.example.composesample.presentation.example.component.architecture.development.init.InitTestViewModel
 import com.example.composesample.presentation.example.component.architecture.development.type.TypeExampleViewModel
 import com.example.composesample.presentation.example.component.architecture.pattern.compositionLocal.CompositionLocalViewModel
@@ -46,7 +48,9 @@ val viewModelModule: Module = module {
     viewModel { TypeExampleViewModel() }
     viewModel { SafFileSelectionViewModel() }
     viewModel { SnapshotFlowExampleViewModel() }
-    viewModel { 
+    viewModel { BaseViewModel(get(), get()) }
+    viewModel { CoordinatorViewModel(get(), get()) }
+    viewModel {
         AutoCloseableExampleViewModel(
             RealItemsService(),
             RealCustomersService(),

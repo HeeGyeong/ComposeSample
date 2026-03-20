@@ -1,6 +1,6 @@
 package com.example.composesample.di
 
-import com.example.composesample.util.ConstValue.Companion.SSEWikiURL
+import com.example.composesample.util.ConstValue.SSEWikiURL
 import com.example.composesample.util.NetworkInterceptor
 import com.example.composesample.util.NetworkStatusLiveData
 import com.example.composesample.util.NetworkUtil

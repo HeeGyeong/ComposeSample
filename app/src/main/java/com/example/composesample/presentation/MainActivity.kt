@@ -28,8 +28,8 @@ import com.example.composesample.presentation.example.component.system.ui.widget
 import com.example.composesample.presentation.example.component.system.ui.widget.MediumWidget
 import com.example.composesample.presentation.example.component.system.ui.widget.LargeWidget
 import com.example.composesample.presentation.legacy.LegacyActivity
-import com.example.composesample.util.ConstValue.Companion.ExampleType
-import com.example.composesample.util.ConstValue.Companion.IntentType
+import com.example.composesample.util.ConstValue.ExampleType
+import com.example.composesample.util.ConstValue.IntentType
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

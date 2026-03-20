@@ -3,7 +3,7 @@ package com.example.composesample.presentation.example.component.data.sse
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.composesample.util.ConstValue.Companion.SSEWikiURL
+import com.example.composesample.util.ConstValue.SSEWikiURL
 import com.launchdarkly.eventsource.EventHandler
 import com.launchdarkly.eventsource.EventSource
 import com.launchdarkly.eventsource.MessageEvent

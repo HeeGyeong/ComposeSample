@@ -13,9 +13,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import com.example.composesample.presentation.MainHeader
 import com.example.composesample.presentation.example.BlogExampleActivity
-import com.example.composesample.util.ConstValue.Companion.ExampleType
-import com.example.composesample.util.ConstValue.Companion.IntentType
-import com.example.composesample.util.ConstValue.Companion.ShortCutKey
+import com.example.composesample.util.ConstValue.ExampleType
+import com.example.composesample.util.ConstValue.IntentType
+import com.example.composesample.util.ConstValue.ShortCutKey
 import com.example.composesample.util.createDynamicShortcut
 import com.example.composesample.util.createPinShortcut
 
