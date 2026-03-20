@@ -54,7 +54,7 @@ import com.example.composesample.util.videoAlbumIntent
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun TargetSDK34Example(
+fun TargetSDK34ExampleUI(
     onBackButtonClick: () -> Unit
 ) {
     val listState = rememberLazyListState()

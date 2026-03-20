@@ -31,7 +31,7 @@ import kotlinx.parcelize.Parcelize
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalAnimationApi::class)
 @Composable
-fun PassingIntentDataExample(
+fun PassingIntentDataExampleUI(
     onBackButtonClick: () -> Unit
 ) {
     val listState = rememberLazyListState()

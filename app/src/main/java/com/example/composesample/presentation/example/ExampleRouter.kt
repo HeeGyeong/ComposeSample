@@ -27,7 +27,7 @@ import com.example.composesample.presentation.example.component.architecture.dev
 import com.example.composesample.presentation.example.component.architecture.development.compose17.PathGraphicsExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.compose17.TextOverflowExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.coordinator.CoordinatorExampleUI
-import com.example.composesample.presentation.example.component.architecture.development.cursor.CursorIDEExample
+import com.example.composesample.presentation.example.component.architecture.development.cursor.CursorIDEExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.init.InitTestExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.test.RecompositionTestExampleUI
 import com.example.composesample.presentation.example.component.system.platform.quicksettings.QuickSettingsTileExampleUI
@@ -51,12 +51,12 @@ import com.example.composesample.presentation.example.component.navigation.Botto
 import com.example.composesample.presentation.example.component.system.background.workmanager.WorkManagerUI
 import com.example.composesample.presentation.example.component.system.media.recorder.AudioRecorderUI
 import com.example.composesample.presentation.example.component.system.platform.file.SafFileSelectionUI
-import com.example.composesample.presentation.example.component.system.platform.intent.PassingIntentDataExample
+import com.example.composesample.presentation.example.component.system.platform.intent.PassingIntentDataExampleUI
 import com.example.composesample.presentation.example.component.system.platform.language.LanguageSettingExampleUI
 import com.example.composesample.presentation.example.component.system.platform.language.LocalLanguageChangeExampleUI
 import com.example.composesample.presentation.example.component.system.platform.powersave.PowerSaveModeExampleUI
 import com.example.composesample.presentation.example.component.system.platform.shortcut.ShortcutExampleUI
-import com.example.composesample.presentation.example.component.system.platform.version.TargetSDK34Example
+import com.example.composesample.presentation.example.component.system.platform.version.TargetSDK34ExampleUI
 import com.example.composesample.presentation.example.component.system.platform.webview.WebViewIssueUI
 import com.example.composesample.presentation.example.component.system.ui.widget.GlanceWidgetExampleUI
 import com.example.composesample.presentation.example.component.ui.accessibility.LargeContentViewerExampleUI
@@ -317,11 +317,11 @@ fun ExampleCaseUI(
                         }
 
                         TargetSDK34PermissionExample -> {
-                            TargetSDK34Example(onBackEvent)
+                            TargetSDK34ExampleUI(onBackEvent)
                         }
 
                         PassingIntentDataExample -> {
-                            PassingIntentDataExample(onBackEvent)
+                            PassingIntentDataExampleUI(onBackEvent)
                         }
 
                         LottieExample -> {
@@ -333,7 +333,7 @@ fun ExampleCaseUI(
                         }
 
                         CursorIDEExample -> {
-                            CursorIDEExample(onBackEvent)
+                            CursorIDEExampleUI(onBackEvent)
                         }
 
                         KtorExample -> {

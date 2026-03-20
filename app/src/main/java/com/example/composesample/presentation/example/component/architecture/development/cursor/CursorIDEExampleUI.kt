@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun CursorIDEExample(
+fun CursorIDEExampleUI(
     onBackButtonClick: () -> Unit
 ) {
     var text by remember { mutableStateOf("") }

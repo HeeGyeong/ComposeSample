@@ -56,16 +56,6 @@ fun subCategoryList(): ArrayList<ExampleObject> {
 
     insertExampleObject.add(
         ExampleObject(
-            subCategory = ConstValue.FlingBehavior,
-            title = "LazyColumn FlingBehavior Example",
-            description = "LazyList에서 스크롤 이벤트를 커스텀하기 위해 FlingBehavior를 사용해보는 예제",
-            blogUrl = blogUrl(156),
-            exampleType = ConstValue.FlingBehaviorExample
-        )
-    )
-
-    insertExampleObject.add(
-        ExampleObject(
             subCategory = ConstValue.BottomSheet,
             title = "BottomSheetScaffold Example",
             description = "다양한 방법으로 구현해보는 BottomSheet - BottomSheetScaffold 예제",

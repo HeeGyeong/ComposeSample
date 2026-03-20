@@ -20,7 +20,7 @@ import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasExtra
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.example.composesample.presentation.example.component.intent.PassingIntentDataActivity
-import com.example.composesample.presentation.example.component.intent.PassingIntentDataExample
+import com.example.composesample.presentation.example.component.system.platform.intent.PassingIntentDataExampleUI
 import org.hamcrest.CoreMatchers.allOf
 import org.junit.Before
 import org.junit.Rule
@@ -45,7 +45,7 @@ class PassingIntentDataExampleTest {
         backButtonClicked = false
         // 테스트할 Compose UI 컴포넌트 설정
         composeTestRule.setContent {
-            PassingIntentDataExample(
+            PassingIntentDataExampleUI(
                 onBackButtonClick = { backButtonClicked = true }
             )
         }
