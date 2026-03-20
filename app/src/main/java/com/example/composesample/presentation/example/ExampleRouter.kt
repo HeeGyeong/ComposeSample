@@ -74,7 +74,7 @@ import com.example.composesample.presentation.example.component.ui.layout.drawer
 import com.example.composesample.presentation.example.component.ui.layout.drawer.ScaffoldDrawerUI
 import com.example.composesample.presentation.example.component.ui.layout.flexbox.FlexBoxUI
 import com.example.composesample.presentation.example.component.ui.layout.header.StickyHeaderExampleUI
-import com.example.composesample.presentation.example.component.ui.layout.lazycolumn.LazyColumnFlingBehaviorExample
+import com.example.composesample.presentation.example.component.ui.layout.lazycolumn.LazyColumnFlingBehaviorExampleUI
 import com.example.composesample.presentation.example.component.ui.layout.lazycolumn.LazyColumnIssueUI
 import com.example.composesample.presentation.example.component.ui.layout.lazycolumn.ReverseLazyColumnExampleUI
 import com.example.composesample.presentation.example.component.ui.layout.pager.PullScreenPagerUI
@@ -265,7 +265,7 @@ fun ExampleCaseUI(
                         }
 
                         FlingBehaviorExample -> {
-                            LazyColumnFlingBehaviorExample(onBackEvent)
+                            LazyColumnFlingBehaviorExampleUI(onBackEvent)
                         }
 
                         BottomSheetExample -> {
