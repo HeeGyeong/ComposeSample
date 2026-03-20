@@ -18,6 +18,14 @@ Jetpack Compose를 공부하고 실무에 적용하면서 발생했던 이슈와
 Clean Architecture 기반으로 구성되어 있으며, 컴포넌트들은 기능별로 체계적으로 분류되어 있어 원하는 예제를 쉽게 찾을 수 있습니다.
 
 - **최신 업데이트**
+  - 2026.03: 신규 예제 추가 (MotionBlur, LargeContentViewer, EmbeddedPicker 등)
+  - 2026.02: 신규 예제 추가 (Transition, Dial, Photo Picker, Sticker Canvas 등)
+  - 2026.01: UI 컴포넌트 예제 추가 (Quick Setting, TopAppBar, Canvas Shapes, Responsive TabRow 등)
+  - 2025.12: Compose 고급 예제 추가 (ButtonGroup, WithContext, Path Hit, Recomposition 등)
+  - 2025.11: Kotlin 패턴 예제 추가 (Sealed Class Interface, 코루틴 내부 동작, Modularization 등)
+  - 2025.10: 예제 추가 (CompositionLocal, AutoCloseable, Inline 등)
+  - 2025.09: 신규 예제 추가 (Navigation3, Shadow API, SnapNotify, 카드 모서리 스타일 등)
+  - 2025.08: 신규 예제 추가 (Text AutoSizing 등)
   - 2025.07: 컴포넌트 패키지 구조 대분류별 정리
   - 2025.06: 버전 최신화 및 Cursor Rules mdc 파일 추가 (9개 규칙 파일)
   - 2025.03: Cursor IDE 용 원본 문서 추가
