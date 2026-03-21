@@ -41,7 +41,7 @@ import kotlin.math.abs
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun LazyColumnFlingBehaviorExample(onBackButtonClick: () -> Unit) {
+fun LazyColumnFlingBehaviorExampleUI(onBackButtonClick: () -> Unit) {
     val lazyListState = rememberLazyListState()
     val repeatCount = 1000
 
