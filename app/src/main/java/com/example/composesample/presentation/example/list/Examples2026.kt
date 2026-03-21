@@ -114,5 +114,12 @@ val examples2026 = listOf(
         description = "BottomSheet 통합 아키텍처, 선택 동기화 오너십 모델, URI 수명 관리, setCurrentExpanded 패턴",
         blogUrl = "",
         exampleType = ConstValue.EmbeddedPickerComposeExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 03. 21",
+        title = "Rebound - 리컴포지션 모니터링",
+        description = "역할 기반 리컴포지션 예산 할당: Screen·Leaf·Animated 등 6가지 역할별 기준으로 과도한 리컴포지션을 감지",
+        blogUrl = "",
+        exampleType = ConstValue.ReboundExample
     )
 )

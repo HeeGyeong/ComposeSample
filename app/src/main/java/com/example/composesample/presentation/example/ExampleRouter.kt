@@ -29,6 +29,7 @@ import com.example.composesample.presentation.example.component.architecture.dev
 import com.example.composesample.presentation.example.component.architecture.development.coordinator.CoordinatorExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.cursor.CursorIDEExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.init.InitTestExampleUI
+import com.example.composesample.presentation.example.component.architecture.development.rebound.ReboundExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.test.RecompositionTestExampleUI
 import com.example.composesample.presentation.example.component.system.platform.quicksettings.QuickSettingsTileExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.type.TypeExampleUI
@@ -165,6 +166,7 @@ import com.example.composesample.util.ConstValue.PowerSaveModeExample
 import com.example.composesample.util.ConstValue.PullScreenPager
 import com.example.composesample.util.ConstValue.PullToRefreshExample
 import com.example.composesample.util.ConstValue.QuickSettingsTileExample
+import com.example.composesample.util.ConstValue.ReboundExample
 import com.example.composesample.util.ConstValue.RecompositionTestExample
 import com.example.composesample.util.ConstValue.ResponsiveTabRowExample
 import com.example.composesample.util.ConstValue.RetainApiExample
@@ -546,6 +548,10 @@ fun ExampleCaseUI(
 
                         RecompositionTestExample -> {
                             RecompositionTestExampleUI(onBackEvent)
+                        }
+
+                        ReboundExample -> {
+                            ReboundExampleUI(onBackEvent)
                         }
 
                         QuickSettingsTileExample -> {
