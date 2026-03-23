@@ -147,10 +147,11 @@ object ConstValue {
     const val GlanceWidgetExample = "glanceWidgetExample"
 
     // ==================== 테스트 예제 ====================
-    // Test(UI 테스트 TDD), RecompositionTest(과도한 Recomposition 감지), Rebound(역할 기반 리컴포지션 예산 모니터링)
+    // Test(UI 테스트 TDD), RecompositionTest(과도한 Recomposition 감지), Rebound(역할 기반 리컴포지션 예산 모니터링), TurbineFlowTest(StateFlow/SharedFlow 테스트 패턴 비교)
     const val TestExample = "testExample"
     const val RecompositionTestExample = "recompositionTestExample"
     const val ReboundExample = "reboundExample"
+    const val TurbineFlowTestExample = "turbineFlowTestExample"
 
     // ==================== 유틸리티 & 라이브러리 예제 ====================
     // CursorIDE(AI IDE 활용), SnapNotify(Snackbar 간소화), AutoCloseable(자동 리소스 정리)

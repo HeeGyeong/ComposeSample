@@ -121,5 +121,12 @@ val examples2026 = listOf(
         description = "역할 기반 리컴포지션 예산 할당: Screen·Leaf·Animated 등 6가지 역할별 기준으로 과도한 리컴포지션을 감지",
         blogUrl = "",
         exampleType = ConstValue.ReboundExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 03. 23",
+        title = "Coroutine Flow Testing (Turbine)",
+        description = "StateFlow는 상태별 독립 테스트로, SharedFlow 이벤트는 Turbine으로: 과명세화 없는 코루틴 테스트 패턴",
+        blogUrl = "",
+        exampleType = ConstValue.TurbineFlowTestExample
     )
 )
