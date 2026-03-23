@@ -128,5 +128,12 @@ val examples2026 = listOf(
         description = "StateFlow는 상태별 독립 테스트로, SharedFlow 이벤트는 Turbine으로: 과명세화 없는 코루틴 테스트 패턴",
         blogUrl = "",
         exampleType = ConstValue.TurbineFlowTestExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 03. 24",
+        title = "Compose Preview Internals",
+        description = "@Preview 렌더링 파이프라인 5단계, LocalInspectionMode, 내장 MultiPreview 어노테이션, PreviewParameter 고급 활용",
+        blogUrl = "",
+        exampleType = ConstValue.PreviewInternalsExample
     )
 )
