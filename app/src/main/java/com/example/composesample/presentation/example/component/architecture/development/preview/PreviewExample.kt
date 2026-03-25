@@ -10,9 +10,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.compositionLocalOf
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
@@ -182,10 +181,10 @@ fun ViewModelPreview3() {
 /**
  * Preview에서 viewModel을 사용하는 방법 응용
  *
- * CompositionLocalProvider를 사용하여 preview로 보여줄 UI를 분기처리하여 만들기.
+ * LocalInspectionMode.current를 사용하여 preview 환경을 감지하는 표준 방법.
+ * @Preview 환경에서 LocalInspectionMode.current는 자동으로 true가 되므로
+ * 커스텀 CompositionLocal 없이도 preview 분기 처리가 가능합니다.
  */
-val LocalPreviewMode = compositionLocalOf { false }
-
 @Composable
 fun ViewModelPreview4() {
     val blogExampleViewModel = BlogExampleViewModel(
@@ -193,7 +192,8 @@ fun ViewModelPreview4() {
         application = Application()
     )
     val viewModelData = blogExampleViewModel.previewExampleData.collectAsState().value
-    if (LocalPreviewMode.current) {
+    // @Preview 환경에서 자동으로 true — 커스텀 CompositionLocal 불필요
+    if (LocalInspectionMode.current) {
         // Preview 용 구현
         blogExampleViewModel.setPreviewExampleData("Sample Data4")
         Text(viewModelData)
@@ -207,9 +207,8 @@ fun ViewModelPreview4() {
 @Preview
 @Composable
 fun MyScreenPreview() {
-    CompositionLocalProvider(LocalPreviewMode provides true) {
-        ViewModelPreview4()
-    }
+    // LocalInspectionMode.current가 자동으로 true이므로 별도 Provider 불필요
+    ViewModelPreview4()
 }
 
 /**
