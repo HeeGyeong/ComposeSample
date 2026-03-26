@@ -148,9 +148,13 @@ ERROR_HANDLING_RULES:
 ### 1. API Dependency
 ```kotlin
 // PATTERN: ViewModel with API dependency
+// Koin uses named() qualifier in the module — do NOT use @Named annotation
 class SampleViewModel(
-    @Named("apiName") private val api: ApiInterface
+    private val api: ApiInterface  // injected via named() in ViewModelModule
 ) : ViewModel()
+
+// ViewModelModule.kt
+viewModel { SampleViewModel(api = get(named("apiName"))) }
 ```
 
 ### 2. Global State Usage

@@ -20,7 +20,7 @@ Text(
     style = getTextStyle(12)
 )
 ```
-- **ViewModel 사용 시**: @DIRules.md 파일 참조
+- **ViewModel 사용 시**: `app/src/main/java/com/example/composesample/docs/di/DIRules.md` 참조
 - **ViewModel 사용 시**: Koin을 DI로 사용
 
 ## UI 분석

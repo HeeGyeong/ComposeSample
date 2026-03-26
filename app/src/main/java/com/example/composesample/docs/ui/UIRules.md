@@ -1,7 +1,7 @@
 # UI System Guide
 
 ## 📋 Basic Rules
-- All code must follow the coding conventions defined in the `.cursorrules.md` file at the project root.
+- All code must follow the coding conventions defined in `CLAUDE.md` at the project root.
 - Separate UI code and business logic according to the rules below.
 
 ### Incorrect Example

@@ -172,7 +172,8 @@ data class UserData(
 
 ### Complex Data Class Example
 ```kotlin
-// Example of a complex data class with inheritance
+// Kotlin data classes cannot extend other data classes.
+// Use composition instead of inheritance.
 @Parcelize
 data class AdvancedUserData(
     @SerializedName("user_id")
@@ -185,9 +186,9 @@ data class AdvancedUserData(
     val roles: List<String> = emptyList(),
     @SerializedName("permissions")
     val permissions: Map<String, Boolean> = emptyMap()
-) : UserData(userId, userName, isActive, roles), Parcelable
+) : Parcelable
 ```
 
 ### Real-World Use Case
 - **Scenario**: Managing user profiles in a social media app where users have dynamic roles and permissions.
-- **Implementation**: Use `AdvancedUserData` to store and manage user information efficiently, leveraging inheritance for shared properties.
+- **Implementation**: Use `AdvancedUserData` as a standalone data class. Share common fields via interfaces or separate sealed class hierarchies rather than data class inheritance.
