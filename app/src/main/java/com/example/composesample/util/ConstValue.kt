@@ -79,6 +79,10 @@ object ConstValue {
     const val Navigation3Example = "navigation3Example"
     const val NestedRoutesNav3Example = "nestedRoutesNav3Example"
 
+    // ==================== 앱 시작 최적화 예제 ====================
+    // StartupOptimization(App Startup / Baseline Profile / Koin 지연 초기화 비교)
+    const val StartupOptimizationExample = "startupOptimizationExample"
+
     // ==================== 아키텍처 패턴 예제 ====================
     // MVI(단방향 데이터 흐름), Coordinator(화면 전환 패턴), Modularization(모듈화 전략), PreviewInternals(@Preview 내부 동작 원리)
     const val MVIExample = "mviExample"
