@@ -16,10 +16,20 @@ android {
         applicationId "com.example.composesample"
         versionCode libs.versions.versionCode.get().toInteger()
         versionName libs.versions.versionName.get()
+
+        // local.properties에서 API 키 로드
+        def localProperties = new Properties()
+        def localPropertiesFile = rootProject.file('local.properties')
+        if (localPropertiesFile.exists()) {
+            localProperties.load(new FileInputStream(localPropertiesFile))
+        }
+        buildConfigField "String", "NAVER_CLIENT_ID", "\"${localProperties['NAVER_CLIENT_ID'] ?: ''}\""
+        buildConfigField "String", "NAVER_CLIENT_SECRET", "\"${localProperties['NAVER_CLIENT_SECRET'] ?: ''}\""
     }
 
     buildFeatures {
         compose true
+        buildConfig true
     }
 
     namespace 'com.example.composesample'

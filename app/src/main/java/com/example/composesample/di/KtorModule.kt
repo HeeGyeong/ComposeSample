@@ -11,7 +11,7 @@ import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.plugins.DefaultRequest
 import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.request.header
-import org.koin.android.BuildConfig
+import com.example.composesample.BuildConfig
 
 // 네트워크 설정 상수
 private object NetworkConstants {
@@ -26,7 +26,7 @@ val ktorModule = module {
 
             defaultRequest {
                 url(NetworkConstants.BASE_URL)
-                header("X-Naver-Client-Id", "33chRuAiqlSn5hn8tIme")
+                header("X-Naver-Client-Id", BuildConfig.NAVER_CLIENT_ID)
             }
 
             /**
@@ -35,7 +35,7 @@ val ktorModule = module {
              * DefaultRequest를 사용.
              */
             install(DefaultRequest) { // defaultRequest { ... } 와 동일한 역할
-                header("X-Naver-Client-Secret", "fyfwt9PCUN")
+                header("X-Naver-Client-Secret", BuildConfig.NAVER_CLIENT_SECRET)
             }
 
 

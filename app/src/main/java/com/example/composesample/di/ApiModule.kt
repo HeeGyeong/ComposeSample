@@ -8,7 +8,7 @@ import com.example.composesample.util.NetworkInterceptor
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
-import org.koin.android.BuildConfig
+import com.example.composesample.BuildConfig
 import org.koin.core.module.Module
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
@@ -56,8 +56,8 @@ val apiModule: Module = module {
         Interceptor { chain ->
             with(chain) {
                 val newRequest = request().newBuilder()
-                    .addHeader("X-Naver-Client-Id", "33chRuAiqlSn5hn8tIme")
-                    .addHeader("X-Naver-Client-Secret", "fyfwt9PCUN")
+                    .addHeader("X-Naver-Client-Id", BuildConfig.NAVER_CLIENT_ID)
+                    .addHeader("X-Naver-Client-Secret", BuildConfig.NAVER_CLIENT_SECRET)
                     .build()
                 proceed(newRequest)
             }
