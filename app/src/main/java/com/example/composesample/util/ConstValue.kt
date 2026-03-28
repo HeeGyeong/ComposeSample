@@ -79,6 +79,10 @@ object ConstValue {
     const val Navigation3Example = "navigation3Example"
     const val NestedRoutesNav3Example = "nestedRoutesNav3Example"
 
+    // ==================== 앱 시작 최적화 예제 ====================
+    // StartupOptimization(App Startup / Baseline Profile / Koin 지연 초기화 비교)
+    const val StartupOptimizationExample = "startupOptimizationExample"
+
     // ==================== 아키텍처 패턴 예제 ====================
     // MVI(단방향 데이터 흐름), Coordinator(화면 전환 패턴), Modularization(모듈화 전략), PreviewInternals(@Preview 내부 동작 원리)
     const val MVIExample = "mviExample"
@@ -87,7 +91,7 @@ object ConstValue {
     const val PreviewInternalsExample = "previewInternalsExample"
 
     // ==================== Compose 상태 & Side Effect 예제 ====================
-    // SideEffect(부수 효과 함수들), CompositionLocal(암시적 전달), StaticDynamicCompositionLocal(Static vs Dynamic), CompositionLocalTree(트리 시각화), RetainApi(retain API), SnapshotFlow(Flow 변환), InitTest(초기화 케이스), LocalContextStrings(LocalContext 문자열 안티패턴)
+    // SideEffect(부수 효과 함수들), CompositionLocal(암시적 전달), StaticDynamicCompositionLocal(Static vs Dynamic), CompositionLocalTree(트리 시각화), RetainApi(retain API), SnapshotFlow(Flow 변환), InitTest(초기화 케이스), LocalContextStrings(LocalContext 문자열 안티패턴), RememberPatterns(rememberSaveable/rememberUpdatedState/derivedStateOf 비교)
     const val SideEffectExample = "sideEffectExample"
     const val CompositionLocalExample = "compositonLocalExample"
     const val StaticDynamicCompositionLocalExample = "staticDynamicCompositionLocalExample"
@@ -96,6 +100,7 @@ object ConstValue {
     const val SnapshotFlowExample = "snapshotFlowExample"
     const val InitTestExample = "initTestExample"
     const val LocalContextStringsExample = "localContextStringsExample"
+    const val RememberPatternsExample = "rememberPatternsExample"
 
     // ==================== 코루틴 & 동시성 예제 ====================
     // Coroutine(기본 특징), CoroutinesInternals(내부 동작 원리), WithContext(withContext vs launch)

@@ -135,5 +135,19 @@ val examples2026 = listOf(
         description = "@Preview 렌더링 파이프라인 5단계, LocalInspectionMode, 내장 MultiPreview 어노테이션, PreviewParameter 고급 활용",
         blogUrl = "",
         exampleType = ConstValue.PreviewInternalsExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 03. 27",
+        title = "Startup Optimization",
+        description = "App Startup 라이브러리, Baseline Profile, Koin 지연 초기화로 앱 시작 속도를 최적화하는 패턴",
+        blogUrl = "",
+        exampleType = ConstValue.StartupOptimizationExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 03. 27",
+        title = "Remember Patterns",
+        description = "rememberSaveable(회전 생존), rememberUpdatedState(콜백 최신화), derivedStateOf(계산 최적화) 비교",
+        blogUrl = "",
+        exampleType = ConstValue.RememberPatternsExample
     )
 )

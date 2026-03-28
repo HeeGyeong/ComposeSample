@@ -29,6 +29,7 @@ import com.example.composesample.presentation.example.component.architecture.dev
 import com.example.composesample.presentation.example.component.architecture.development.coordinator.CoordinatorExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.cursor.CursorIDEExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.init.InitTestExampleUI
+import com.example.composesample.presentation.example.component.architecture.development.init.StartupOptimizationExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.preview.PreviewInternalsExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.rebound.ReboundExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.test.TurbineFlowTestExampleUI
@@ -108,6 +109,7 @@ import com.example.composesample.presentation.example.component.architecture.mod
 import com.example.composesample.presentation.example.component.architecture.lifecycle.AutoCloseableExampleUI
 import com.example.composesample.presentation.example.component.architecture.pattern.compositionLocal.StaticDynamicCompositionLocalExampleUI
 import com.example.composesample.presentation.example.component.architecture.pattern.compositionLocal.tree.CompositionLocalTreeExampleUI
+import com.example.composesample.presentation.example.component.architecture.pattern.remember.RememberPatternsExampleUI
 import com.example.composesample.presentation.example.component.architecture.pattern.retain.RetainApiExampleUI
 import com.example.composesample.presentation.example.component.architecture.state.SnapshotFlowExampleUI
 import com.example.composesample.util.ConstValue.AnimationExample
@@ -169,6 +171,8 @@ import com.example.composesample.util.ConstValue.PullScreenPager
 import com.example.composesample.util.ConstValue.PullToRefreshExample
 import com.example.composesample.util.ConstValue.QuickSettingsTileExample
 import com.example.composesample.util.ConstValue.PreviewInternalsExample
+import com.example.composesample.util.ConstValue.StartupOptimizationExample
+import com.example.composesample.util.ConstValue.RememberPatternsExample
 import com.example.composesample.util.ConstValue.ReboundExample
 import com.example.composesample.util.ConstValue.TurbineFlowTestExample
 import com.example.composesample.util.ConstValue.RecompositionTestExample
@@ -564,6 +568,14 @@ fun ExampleCaseUI(
 
                         PreviewInternalsExample -> {
                             PreviewInternalsExampleUI(onBackEvent)
+                        }
+
+                        StartupOptimizationExample -> {
+                            StartupOptimizationExampleUI(onBackEvent)
+                        }
+
+                        RememberPatternsExample -> {
+                            RememberPatternsExampleUI(onBackEvent)
                         }
 
                         QuickSettingsTileExample -> {
