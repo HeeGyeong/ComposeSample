@@ -44,7 +44,7 @@ fun PreviewInternalsExampleUI(onBackEvent: () -> Unit) {
             .fillMaxSize()
             .background(Color(0xFF1E1E1E))
     ) {
-        MainHeader(title = "Compose Preview Internals", onBackEvent = onBackEvent)
+        MainHeader(title = "Compose Preview Internals", onBackIconClicked = onBackEvent)
 
         LazyColumn(
             modifier = Modifier.fillMaxSize(),

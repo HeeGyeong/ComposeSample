@@ -140,7 +140,7 @@ class AnalyticsInitializer : Initializer<Unit> {
             """// AndroidManifest.xml — ContentProvider 단 1개
 <provider
     android:name="androidx.startup.InitializationProvider"
-    android:authorities="\${applicationId}.startup">
+    android:authorities="${'$'}{applicationId}.startup">
     <meta-data
         android:name=".TimberInitializer"
         android:value="androidx.startup" />

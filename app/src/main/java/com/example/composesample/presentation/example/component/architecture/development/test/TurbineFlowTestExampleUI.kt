@@ -46,7 +46,7 @@ fun TurbineFlowTestExampleUI(onBackEvent: () -> Unit) {
             .fillMaxSize()
             .background(Color(0xFF1E1E1E))
     ) {
-        MainHeader(title = "Coroutine Flow Testing", onBackEvent = onBackEvent)
+        MainHeader(title = "Coroutine Flow Testing", onBackIconClicked = onBackEvent)
 
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
