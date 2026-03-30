@@ -137,6 +137,13 @@ val examples2026 = listOf(
         exampleType = ConstValue.PreviewInternalsExample
     ),
     ExampleObject(
+        lastUpdate = "26. 03. 30",
+        title = "AnimatedContent 심화",
+        description = "탭 전환, 숫자 카운터, 상태 전환 UI 등 AnimatedContent의 다양한 transitionSpec 패턴 비교",
+        blogUrl = "",
+        exampleType = ConstValue.AnimatedContentExample
+    ),
+    ExampleObject(
         lastUpdate = "26. 03. 27",
         title = "Startup Optimization",
         description = "App Startup 라이브러리, Baseline Profile, Koin 지연 초기화로 앱 시작 속도를 최적화하는 패턴",

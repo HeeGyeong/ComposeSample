@@ -65,8 +65,9 @@ object ConstValue {
     const val ModalDrawExample = "modalDrawExample"
 
     // ==================== 애니메이션 & 효과 예제 ====================
-    // Animation(다양한 애니메이션), Lottie(Lottie/GIF), UIShimmer(로딩 효과), TextShimmer(텍스트 효과), NewShadowApi(Compose 1.9 Shadow), SharedElementTransition(공유 요소 전환)
+    // Animation(다양한 애니메이션), AnimatedContent(콘텐츠 전환 심화), Lottie(Lottie/GIF), UIShimmer(로딩 효과), TextShimmer(텍스트 효과), NewShadowApi(Compose 1.9 Shadow), SharedElementTransition(공유 요소 전환)
     const val AnimationExample = "animationExample"
+    const val AnimatedContentExample = "animatedContentExample"
     const val LottieExample = "lottieExample"
     const val UIShimmerExample = "uiShimmerExample"
     const val TextShimmerExample = "textShimmerExample"

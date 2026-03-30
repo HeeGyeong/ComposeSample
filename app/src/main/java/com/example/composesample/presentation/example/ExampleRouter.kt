@@ -70,6 +70,7 @@ import com.example.composesample.presentation.example.component.ui.canvas.Canvas
 import com.example.composesample.presentation.example.component.ui.canvas.DialComponentExampleUI
 import com.example.composesample.presentation.example.component.ui.canvas.MotionBlurExampleUI
 import com.example.composesample.presentation.example.component.ui.graphics.NewShadowApiExampleUI
+import com.example.composesample.presentation.example.component.ui.layout.animation.AnimatedContentExampleUI
 import com.example.composesample.presentation.example.component.ui.layout.animation.AnimationExampleUI
 import com.example.composesample.presentation.example.component.ui.layout.animation.SharedElementTransitionExampleUI
 import com.example.composesample.presentation.example.component.ui.layout.bottomsheet.BottomSheetUI
@@ -113,6 +114,7 @@ import com.example.composesample.presentation.example.component.architecture.pat
 import com.example.composesample.presentation.example.component.architecture.pattern.remember.RememberPatternsExampleUI
 import com.example.composesample.presentation.example.component.architecture.pattern.retain.RetainApiExampleUI
 import com.example.composesample.presentation.example.component.architecture.state.SnapshotFlowExampleUI
+import com.example.composesample.util.ConstValue.AnimatedContentExample
 import com.example.composesample.util.ConstValue.AnimationExample
 import com.example.composesample.util.ConstValue.ApiDisconnectExample
 import com.example.composesample.util.ConstValue.AutoCloseableExample
@@ -353,6 +355,10 @@ fun ExampleCaseUI(
 
                         AnimationExample -> {
                             AnimationExampleUI(onBackEvent)
+                        }
+
+                        AnimatedContentExample -> {
+                            AnimatedContentExampleUI(onBackEvent)
                         }
 
                         SharedElementTransitionExample -> {
