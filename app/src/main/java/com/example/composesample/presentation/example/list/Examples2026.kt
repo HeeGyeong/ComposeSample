@@ -137,13 +137,6 @@ val examples2026 = listOf(
         exampleType = ConstValue.PreviewInternalsExample
     ),
     ExampleObject(
-        lastUpdate = "26. 03. 31",
-        title = "Claude Code 활용",
-        description = "CLAUDE.md 자동 로드, 메모리 시스템, Hooks, 효과적인 프롬프트 패턴 등 Claude Code 핵심 기능 가이드",
-        blogUrl = "",
-        exampleType = ConstValue.ClaudeCodeExample
-    ),
-    ExampleObject(
         lastUpdate = "26. 03. 30",
         title = "AnimatedContent 심화",
         description = "탭 전환, 숫자 카운터, 상태 전환 UI 등 AnimatedContent의 다양한 transitionSpec 패턴 비교",

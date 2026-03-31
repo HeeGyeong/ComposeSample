@@ -227,3 +227,4 @@ viewModel { FeatureViewModel(api = get(named("ApiName"))) }
 - **API 생성 가이드**: `app/src/main/java/com/example/composesample/docs/prompt/CreateAPIGuide.md`
 - **API+UI 바인딩**: `app/src/main/java/com/example/composesample/docs/prompt/CreateAPIAndUIBindingGuide.md`
 - **UI 코드 생성**: `app/src/main/java/com/example/composesample/docs/prompt/CreateUICodeSnippet.md`
+- **Claude Code 활용**: `app/src/main/java/com/example/composesample/docs/claudecode/ClaudeCodeGuide.md`

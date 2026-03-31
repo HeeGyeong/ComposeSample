@@ -161,9 +161,8 @@ object ConstValue {
     const val TurbineFlowTestExample = "turbineFlowTestExample"
 
     // ==================== 유틸리티 & 라이브러리 예제 ====================
-    // CursorIDE(AI IDE 활용), ClaudeCode(Claude Code 활용), SnapNotify(Snackbar 간소화), AutoCloseable(자동 리소스 정리)
+    // CursorIDE(AI IDE 활용), SnapNotify(Snackbar 간소화), AutoCloseable(자동 리소스 정리)
     const val CursorIDEExample = "cursorIDEExample"
-    const val ClaudeCodeExample = "claudeCodeExample"
     const val SnapNotifyExample = "snapNotifyExample"
     const val AutoCloseableExample = "autoCloseableExample"
 
