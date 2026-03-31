@@ -27,6 +27,7 @@ import com.example.composesample.presentation.example.component.architecture.dev
 import com.example.composesample.presentation.example.component.architecture.development.compose17.PathGraphicsExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.compose17.TextOverflowExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.coordinator.CoordinatorExampleUI
+import com.example.composesample.presentation.example.component.architecture.development.claudecode.ClaudeCodeExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.cursor.CursorIDEExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.init.InitTestExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.init.StartupOptimizationExampleUI
@@ -115,6 +116,7 @@ import com.example.composesample.presentation.example.component.architecture.pat
 import com.example.composesample.presentation.example.component.architecture.pattern.retain.RetainApiExampleUI
 import com.example.composesample.presentation.example.component.architecture.state.SnapshotFlowExampleUI
 import com.example.composesample.util.ConstValue.AnimatedContentExample
+import com.example.composesample.util.ConstValue.ClaudeCodeExample
 import com.example.composesample.util.ConstValue.AnimationExample
 import com.example.composesample.util.ConstValue.ApiDisconnectExample
 import com.example.composesample.util.ConstValue.AutoCloseableExample
@@ -347,6 +349,10 @@ fun ExampleCaseUI(
 
                         CursorIDEExample -> {
                             CursorIDEExampleUI(onBackEvent)
+                        }
+
+                        ClaudeCodeExample -> {
+                            ClaudeCodeExampleUI(onBackEvent)
                         }
 
                         KtorExample -> {
