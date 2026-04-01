@@ -123,11 +123,23 @@ NewFeatureExample -> {
 
 ---
 
-## 빌드 환경 제약
+## 빌드 환경
 
-- `gradlew.bat`만 존재 (Unix `gradlew` 스크립트 없음)
-- Java 17 툴체인 필요 → **CLI 빌드 불가, Android Studio에서만 빌드 가능**
-- 커맨드라인 빌드 검증 없이 커밋/푸시 진행 (사용자 승인 필요 시 확인)
+- `gradlew` (Unix) 및 `gradlew.bat` (Windows) 모두 존재
+- Java 21 툴체인 사용 (`gradle/libs.versions.toml`의 `javaVersion = "21"`)
+- Android SDK 경로: `local.properties`의 `sdk.dir` 참조
+- CLI 빌드 명령: `./gradlew assembleDebug`
+
+---
+
+## 작업 후 빌드 검증 규칙
+
+코드 추가/수정/개선 작업이 완료된 후에는 **반드시** 아래 절차를 따릅니다:
+
+1. `./gradlew assembleDebug` 빌드 실행
+2. 컴파일 에러 발생 시 즉시 원인 분석 후 수정
+3. 빌드 성공할 때까지 1-2 반복
+4. 빌드 성공 확인 후 커밋/푸시 진행
 
 ---
 
