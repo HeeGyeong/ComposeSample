@@ -13,10 +13,7 @@ import com.example.domain.model.PostData
 import io.ktor.client.HttpClient
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
-import retrofit2.Call
-import retrofit2.Callback
 import retrofit2.HttpException
-import retrofit2.Response
 import java.io.IOException
 
 class ApiExampleViewModel(
@@ -51,28 +48,23 @@ class ApiExampleViewModel(
     // 기존 Retrofit 호출 함수
     fun fetchPosts() {
         viewModelScope.launch(handler) {
-            postApiInterface.getPosts().enqueue(object : Callback<List<PostData>> {
-                override fun onResponse(
-                    call: Call<List<PostData>>,
-                    response: Response<List<PostData>>
-                ) {
-                    Log.d("NetworkLog", "Api call Comp")
-                    if (response.isSuccessful) {
-                        _posts.postValue(response.body())
-                    }
-                }
-
-                override fun onFailure(call: Call<List<PostData>>, t: Throwable) {
-                    // Handle error
-                    Log.d("NetworkLog", "onFailure : $call : t? $t")
-                }
-            })
+            try {
+                _isLoading.postValue(true)
+                val result = postApiInterface.getPosts()
+                _posts.postValue(result)
+                Log.d("NetworkLog", "Api call Comp")
+            } catch (e: Exception) {
+                Log.e("NetworkLog", "fetchPosts 실패: ${e.message}", e)
+                _errorMessage.postValue("오류 발생: ${e.message}")
+            } finally {
+                _isLoading.postValue(false)
+            }
         }
     }
 
     // Ktor을 사용한 API 호출 함수
     suspend fun fetchPostsWithKtor() {
-        if (getNetworkStatus().value == false) {
+        if (networkStatusLiveData.value == false) {
             _errorMessage.postValue("No network connection")
             return
         }

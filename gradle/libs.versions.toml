@@ -7,7 +7,7 @@ versionCode = "1"
 versionName = "1.0"
 
 # Java
-javaVersion = "17"
+javaVersion = "21"
 
 # Kotlin & KSP
 kotlinVersion = "2.1.0"

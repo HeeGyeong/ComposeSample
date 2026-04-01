@@ -10,9 +10,6 @@ import com.example.composesample.util.NetworkStatusLiveData
 import com.example.domain.model.PostData
 import com.example.domain.useCase.GetPostUseCase
 import kotlinx.coroutines.launch
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 /**
  * ApiExampleViewModel를 그대로 사용하였습니다.
@@ -33,24 +30,13 @@ class ApiExampleUseCaseViewModel(
 
     fun fetchPosts() {
         viewModelScope.launch {
-            getPostUseCase.invoke().enqueue(
-                object : Callback<List<PostData>> {
-                    override fun onResponse(
-                        call: Call<List<PostData>>,
-                        response: Response<List<PostData>>
-                    ) {
-                        Log.d("NetworkLog", "Api call Comp")
-                        if (response.isSuccessful) {
-                            _posts.postValue(response.body())
-                        }
-                    }
-
-                    override fun onFailure(call: Call<List<PostData>>, t: Throwable) {
-                        // Handle error
-                        Log.d("NetworkLog", "onFailure : $call : t? $t")
-                    }
-                }
-            )
+            try {
+                val result = getPostUseCase.invoke()
+                _posts.postValue(result)
+                Log.d("NetworkLog", "Api call Comp")
+            } catch (e: Exception) {
+                Log.e("NetworkLog", "fetchPosts 실패: ${e.message}", e)
+            }
         }
     }
 }

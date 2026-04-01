@@ -6,6 +6,7 @@ import android.media.AudioManager
 import android.media.MediaPlayer
 import android.media.MediaRecorder
 import android.net.Uri
+import android.util.Log
 import androidx.compose.runtime.MutableState
 import java.io.File
 import java.io.IOException
@@ -57,7 +58,7 @@ fun startMediaRecorder(
             start()
         }
     } catch (e: IOException) {
-        e.printStackTrace()
+        Log.e("AudioRecorder", "녹음 시작 실패: ${e.message}", e)
     }
 }
 

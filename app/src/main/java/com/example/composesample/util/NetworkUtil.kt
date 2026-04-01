@@ -4,7 +4,6 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.net.NetworkRequest
-import android.os.Build
 import androidx.lifecycle.LiveData
 import okhttp3.Interceptor
 import okhttp3.Response
@@ -13,14 +12,9 @@ import java.io.IOException
 class NetworkUtil(private val context: Context) {
     fun isNetworkConnected(): Boolean {
         val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            val activeNetwork = connectivityManager.activeNetwork ?: return false
-            val isActiveNetwork = connectivityManager.getNetworkCapabilities(activeNetwork) ?: return false
-            isActiveNetwork.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) || isActiveNetwork.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)
-        } else {
-            val networkInfo = connectivityManager.activeNetworkInfo ?: return false
-            networkInfo.isConnected
-        }
+        val activeNetwork = connectivityManager.activeNetwork ?: return false
+        val isActiveNetwork = connectivityManager.getNetworkCapabilities(activeNetwork) ?: return false
+        return isActiveNetwork.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) || isActiveNetwork.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)
     }
 }
 
@@ -60,7 +54,8 @@ class NetworkStatusLiveData(context: Context) : LiveData<Boolean>() {
     }
 
     private fun isNetworkAvailable(): Boolean {
-        val activeNetwork = connectivityManager.activeNetworkInfo
-        return activeNetwork?.isConnectedOrConnecting == true
+        val activeNetwork = connectivityManager.activeNetwork ?: return false
+        val capabilities = connectivityManager.getNetworkCapabilities(activeNetwork) ?: return false
+        return capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
     }
 }

@@ -63,11 +63,11 @@ class SSEViewModel() : ViewModel() {
     val cycleCount = _cycleCount.asStateFlow()
 
     fun updateCurrentChars(value: String) {
-        _currentChars.value += value
+        _currentChars.update { it + value }
     }
 
     fun incrementCycleCount() {
-        _cycleCount.value += 1
+        _cycleCount.update { it + 1 }
     }
 
     private val _uiState = MutableStateFlow(SSEUIState())

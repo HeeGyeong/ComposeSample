@@ -5,5 +5,5 @@ import com.example.domain.repository.PostRepository
 class GetPostUseCase(
     private val postRepository: PostRepository
 ) {
-    operator fun invoke() = postRepository.getPosts()
+    suspend operator fun invoke() = postRepository.getPosts()
 }

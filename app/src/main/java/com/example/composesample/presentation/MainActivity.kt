@@ -7,6 +7,7 @@ import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import android.util.Log
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.WindowInsets
@@ -65,7 +66,7 @@ class MainActivity : ComponentActivity() {
                 MediumWidget().updateAll(this@MainActivity)
                 LargeWidget().updateAll(this@MainActivity)
             } catch (e: Exception) {
-                e.printStackTrace()
+                Log.e("MainActivity", "위젯 업데이트 실패: ${e.message}", e)
             }
         }
     }

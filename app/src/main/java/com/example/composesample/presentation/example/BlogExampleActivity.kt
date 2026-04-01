@@ -70,7 +70,9 @@ class BlogExampleActivity : ComponentActivity() {
             val type = intent.getStringExtra(IntentType) ?: ExampleType
             val blogExampleViewModel: BlogExampleViewModel = koinViewModel()
 
-            blogExampleViewModel.initExampleObject()
+            LaunchedEffect(Unit) {
+                blogExampleViewModel.initExampleObject()
+            }
 
             val enterShortcutCase = when {
                 context.intent.getStringExtra(ShortCutKey) == ShortCutTypeXML -> 1
