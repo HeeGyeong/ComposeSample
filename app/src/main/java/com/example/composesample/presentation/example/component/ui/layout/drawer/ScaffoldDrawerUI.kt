@@ -18,7 +18,7 @@ import androidx.compose.material.SnackbarDuration
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.PlayArrow
@@ -70,7 +70,7 @@ fun ScaffoldDrawerUI(
                                 onBackButtonClick.invoke()
                             }
                         ) {
-                            Icon(Icons.Filled.ArrowBack, contentDescription = "")
+                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "")
                         }
                     }
                 )

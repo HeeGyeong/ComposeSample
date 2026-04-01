@@ -14,7 +14,7 @@ import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -41,7 +41,7 @@ fun ClickEventUI(onBackButtonClick: () -> Unit) {
                             onBackButtonClick.invoke()
                         }
                     ) {
-                        Icon(Icons.Filled.ArrowBack, contentDescription = "")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "")
                     }
                 }
             }

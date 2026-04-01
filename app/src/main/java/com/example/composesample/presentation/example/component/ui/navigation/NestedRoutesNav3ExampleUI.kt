@@ -25,7 +25,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Menu
@@ -88,7 +88,7 @@ sealed class AppRoute(val title: String, val icon: ImageVector) {
     object Home : AppRoute("Home", Icons.Filled.Home)
     object Prayers : AppRoute("Prayers", Icons.Filled.Menu)
     object Plans : AppRoute("Plans", Icons.Filled.Settings)
-    object User : AppRoute("User", Icons.Filled.ArrowBack)
+    object User : AppRoute("User", Icons.AutoMirrored.Filled.ArrowBack)
 }
 
 @Stable
@@ -447,7 +447,7 @@ private fun RealNavBackStackDemoCard() {
                     colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFFF5722))
                 ) {
                     Icon(
-                        imageVector = Icons.Filled.ArrowBack,
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = "Pop",
                         modifier = Modifier.size(16.dp),
                         tint = Color.White

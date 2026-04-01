@@ -17,7 +17,7 @@ import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
@@ -81,7 +81,7 @@ fun PullToRefreshUI(
                                 onBackButtonClick.invoke()
                             }
                         ) {
-                            Icon(Icons.Filled.ArrowBack, contentDescription = "")
+                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "")
                         }
                     }
                 }

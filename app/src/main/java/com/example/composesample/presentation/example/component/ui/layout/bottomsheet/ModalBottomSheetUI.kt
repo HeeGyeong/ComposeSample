@@ -18,7 +18,7 @@ import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -117,7 +117,7 @@ fun BackgroundScreen(
                         onBackButtonClick.invoke()
                     }
                 ) {
-                    Icon(Icons.Filled.ArrowBack, contentDescription = "")
+                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "")
                 }
             }
 

@@ -35,7 +35,7 @@ import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -95,7 +95,7 @@ class BottomNavigationActivity : ComponentActivity() {
                                     finish()
                                 }
                             ) {
-                                Icon(Icons.Filled.ArrowBack, contentDescription = "")
+                                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "")
                             }
 
                             Spacer(modifier = Modifier.width(20.dp))

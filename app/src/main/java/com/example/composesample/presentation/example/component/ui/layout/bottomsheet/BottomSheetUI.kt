@@ -26,7 +26,7 @@ import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.rememberBottomSheetScaffoldState
 import androidx.compose.material.rememberBottomSheetState
 import androidx.compose.runtime.Composable
@@ -80,7 +80,7 @@ fun BottomSheetUI(
                             onBackButtonClick.invoke()
                         }
                     ) {
-                        Icon(Icons.Filled.ArrowBack, contentDescription = "")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "")
                     }
                 }
             }

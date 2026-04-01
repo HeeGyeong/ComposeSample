@@ -12,7 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
@@ -52,7 +52,7 @@ fun StartupOptimizationExampleUI(onBackEvent: () -> Unit) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             IconButton(onClick = onBackEvent) {
-                Icon(Icons.Filled.ArrowBack, contentDescription = "뒤로가기")
+                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "뒤로가기")
             }
             Text(
                 text = "Startup Optimization",

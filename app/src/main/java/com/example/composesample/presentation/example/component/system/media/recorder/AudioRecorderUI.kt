@@ -19,7 +19,7 @@ import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Call
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Clear
@@ -64,7 +64,7 @@ fun AudioRecorderUI(
                             onBackButtonClick.invoke()
                         }
                     ) {
-                        Icon(Icons.Filled.ArrowBack, contentDescription = "")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "")
                     }
                 }
             }

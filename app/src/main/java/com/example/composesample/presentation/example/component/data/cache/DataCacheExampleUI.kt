@@ -23,7 +23,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.runtime.Composable
@@ -71,7 +71,7 @@ fun DataCacheExampleUI(
                                 onBackButtonClick.invoke()
                             }
                         ) {
-                            Icon(Icons.Filled.ArrowBack, contentDescription = "")
+                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "")
                         }
                     }
 

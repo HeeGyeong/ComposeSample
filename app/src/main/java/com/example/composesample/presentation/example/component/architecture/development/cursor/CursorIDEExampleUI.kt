@@ -9,7 +9,7 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -37,7 +37,7 @@ fun CursorIDEExampleUI(
             ) {
                 Row(modifier = Modifier.fillMaxWidth()) {
                     IconButton(onClick = onBackButtonClick) {
-                        Icon(Icons.Filled.ArrowBack, contentDescription = "")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "")
                     }
                 }
             }

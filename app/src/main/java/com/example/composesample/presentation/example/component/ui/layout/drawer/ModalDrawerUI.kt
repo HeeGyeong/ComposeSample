@@ -15,7 +15,7 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.ModalDrawer
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.rememberDrawerState
 import androidx.compose.runtime.Composable
@@ -91,7 +91,7 @@ fun ModalDrawerUI(
                                     onBackButtonClick.invoke()
                                 }
                             ) {
-                                Icon(Icons.Filled.ArrowBack, contentDescription = "")
+                                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "")
                             }
                         }
 

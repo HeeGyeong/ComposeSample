@@ -19,7 +19,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
@@ -53,7 +53,7 @@ fun RememberPatternsExampleUI(onBackEvent: () -> Unit) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             IconButton(onClick = onBackEvent) {
-                Icon(Icons.Filled.ArrowBack, contentDescription = "뒤로가기")
+                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "뒤로가기")
             }
             Text(
                 text = "Remember Patterns",

@@ -5,8 +5,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
@@ -14,8 +14,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextLinkStyles
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.withLink
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import com.example.composesample.R
@@ -125,41 +128,37 @@ fun HashtagsMentionsTextView(
     }
 
     // 구분한 subStringList의 Tag에 따라 TextStyle 설정을 해주는 부분.
+    // LinkAnnotation.Clickable을 사용하여 클릭 이벤트를 각 구간에 직접 바인딩.
     val annotatedString = buildAnnotatedString {
-        subStringList.forEach {
-            when (it.tag) {
+        subStringList.forEach { range ->
+            when (range.tag) {
                 TagType.HashTag.name -> {
-                    pushStringAnnotation(tag = it.tag, annotation = it.item)
-                    withStyle(style = hashTagStyle) { append(it.item) }
-                    /*
-                    하나의 스타일을 변경 후 pop을 하지 않으면,
-                    이후에 별도로 추가할 Style에 대하여 정상 동작을 하지 않습니다.
-                     */
-                    pop()
+                    withLink(
+                        LinkAnnotation.Clickable(
+                            tag = range.tag,
+                            styles = TextLinkStyles(style = hashTagStyle),
+                            linkInteractionListener = { onClick(range.item + " ${TagType.HashTag.name}") }
+                        )
+                    ) { append(range.item) }
                 }
                 TagType.Mention.name -> {
-                    pushStringAnnotation(tag = it.tag, annotation = it.item)
-                    withStyle(style = mentionStyle) { append(it.item) }
-                    pop()
+                    withLink(
+                        LinkAnnotation.Clickable(
+                            tag = range.tag,
+                            styles = TextLinkStyles(style = mentionStyle),
+                            linkInteractionListener = { onClick(range.item + " ${TagType.Mention.name}") }
+                        )
+                    ) { append(range.item) }
                 }
                 TagType.Normal.name -> {
-                    withStyle(style = normalStyle) { append(it.item) }
+                    withStyle(style = normalStyle) { append(range.item) }
                 }
             }
         }
     }
 
-    ClickableText(
+    Text(
         text = annotatedString,
         style = MaterialTheme.typography.body2,
-        onClick = { position ->
-            val annotatedStringRange =
-                subStringList.first { it.start < position && position < it.end }
-            if (annotatedStringRange.tag == TagType.HashTag.name) {
-                onClick(annotatedStringRange.item + " ${TagType.HashTag.name}")
-            } else if (annotatedStringRange.tag == TagType.Mention.name) {
-                onClick(annotatedStringRange.item + " ${TagType.Mention.name}")
-            }
-        }
     )
 }
