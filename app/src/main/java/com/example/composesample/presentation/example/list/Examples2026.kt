@@ -156,5 +156,12 @@ val examples2026 = listOf(
         description = "rememberSaveable(회전 생존), rememberUpdatedState(콜백 최신화), derivedStateOf(계산 최적화) 비교",
         blogUrl = "",
         exampleType = ConstValue.RememberPatternsExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 04. 01",
+        title = "LazyStaggeredGrid (폭포수 그리드)",
+        description = "LazyVerticalStaggeredGrid로 Pinterest 스타일 폭포수 레이아웃 구현: 동적 높이, 스팬 제어, 필터링 애니메이션",
+        blogUrl = "",
+        exampleType = ConstValue.LazyStaggeredGridExample
     )
 )

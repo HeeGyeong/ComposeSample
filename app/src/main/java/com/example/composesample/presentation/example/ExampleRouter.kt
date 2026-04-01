@@ -82,6 +82,7 @@ import com.example.composesample.presentation.example.component.ui.layout.flexbo
 import com.example.composesample.presentation.example.component.ui.layout.header.StickyHeaderExampleUI
 import com.example.composesample.presentation.example.component.ui.layout.lazycolumn.LazyColumnFlingBehaviorExampleUI
 import com.example.composesample.presentation.example.component.ui.layout.lazycolumn.LazyColumnIssueUI
+import com.example.composesample.presentation.example.component.ui.layout.lazycolumn.LazyStaggeredGridExampleUI
 import com.example.composesample.presentation.example.component.ui.layout.lazycolumn.ReverseLazyColumnExampleUI
 import com.example.composesample.presentation.example.component.ui.layout.pager.PullScreenPagerUI
 import com.example.composesample.presentation.example.component.ui.layout.topappbar.FancyTopAppBarExampleUI
@@ -153,6 +154,7 @@ import com.example.composesample.util.ConstValue.KtorExample
 import com.example.composesample.util.ConstValue.LargeContentViewerExample
 import com.example.composesample.util.ConstValue.LanguageSettingExample
 import com.example.composesample.util.ConstValue.LazyColumnExample
+import com.example.composesample.util.ConstValue.LazyStaggeredGridExample
 import com.example.composesample.util.ConstValue.LocalContextStringsExample
 import com.example.composesample.util.ConstValue.LocalLanguageChangeExample
 import com.example.composesample.util.ConstValue.LookaheadScopeExample
@@ -243,6 +245,10 @@ fun ExampleCaseUI(
                     when (exampleType.value) {
                         LazyColumnExample -> {
                             LazyColumnIssueUI(onBackEvent)
+                        }
+
+                        LazyStaggeredGridExample -> {
+                            LazyStaggeredGridExampleUI(onBackEvent)
                         }
 
                         ClickEventExample -> {
