@@ -1,23 +1,24 @@
 package com.example.composesample.di
 
-import io.ktor.client.*
-import io.ktor.client.engine.android.*
-import io.ktor.client.plugins.contentnegotiation.*
-import io.ktor.client.plugins.logging.*
-import io.ktor.serialization.gson.*
-import org.koin.dsl.module
 import android.util.Log
+import com.example.composesample.BuildConfig
+import com.example.data.api.ApiClient
+import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.plugins.DefaultRequest
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
+import io.ktor.client.plugins.logging.LogLevel
+import io.ktor.client.plugins.logging.Logger
+import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.request.header
-import com.example.composesample.BuildConfig
+import io.ktor.serialization.gson.gson
+import org.koin.dsl.module
 
-// 네트워크 설정 상수
+// 네트워크 설정 상수 (BASE_URL은 ApiClient.NEW_BASE_URL 사용)
 private object NetworkConstants {
     const val CONNECT_TIMEOUT = 60_000
     const val SOCKET_TIMEOUT = 60_000
-    const val BASE_URL = "https://jsonplaceholder.typicode.com"
 }
 
 val ktorModule = module {
@@ -25,7 +26,7 @@ val ktorModule = module {
         HttpClient(OkHttp) {
 
             defaultRequest {
-                url(NetworkConstants.BASE_URL)
+                url(ApiClient.NEW_BASE_URL)
                 header("X-Naver-Client-Id", BuildConfig.NAVER_CLIENT_ID)
             }
 
