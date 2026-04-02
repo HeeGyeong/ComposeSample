@@ -55,6 +55,7 @@ import com.example.composesample.presentation.example.component.interaction.swip
 import com.example.composesample.presentation.example.component.interaction.swipe.SwipeToDismissUI
 import com.example.composesample.presentation.example.component.navigation.BottomNavigationActivity
 import com.example.composesample.presentation.example.component.system.deeplink.DynamicAppLinksExampleUI
+import com.example.composesample.presentation.example.component.system.platform.predictiveback.PredictiveBackExampleUI
 import com.example.composesample.presentation.example.component.system.background.workmanager.WorkManagerUI
 import com.example.composesample.presentation.example.component.system.media.recorder.AudioRecorderUI
 import com.example.composesample.presentation.example.component.system.platform.file.SafFileSelectionUI
@@ -73,6 +74,7 @@ import com.example.composesample.presentation.example.component.ui.canvas.DialCo
 import com.example.composesample.presentation.example.component.ui.canvas.MotionBlurExampleUI
 import com.example.composesample.presentation.example.component.ui.graphics.NewShadowApiExampleUI
 import com.example.composesample.presentation.example.component.ui.layout.animation.AnimatedContentExampleUI
+import com.example.composesample.presentation.example.component.ui.layout.animation.SpringTweenSnapExampleUI
 import com.example.composesample.presentation.example.component.ui.layout.animation.AnimationExampleUI
 import com.example.composesample.presentation.example.component.ui.layout.animation.SharedElementTransitionExampleUI
 import com.example.composesample.presentation.example.component.ui.layout.bottomsheet.BottomSheetUI
@@ -217,6 +219,8 @@ import com.example.composesample.util.ConstValue.WebViewIssueExample
 import com.example.composesample.util.ConstValue.WithContextExample
 import com.example.composesample.util.ConstValue.WorkManagerExample
 import com.example.composesample.util.ConstValue.DynamicAppLinksExample
+import com.example.composesample.util.ConstValue.PredictiveBackExample
+import com.example.composesample.util.ConstValue.SpringTweenSnapExample
 import com.example.composesample.util.ConstValue.AdaptiveLayoutExample
 import com.example.composesample.util.ConstValue.Compose17FeaturesExample
 import com.example.composesample.util.ConstValue.ComposeSnapshotExample
@@ -659,6 +663,14 @@ fun ExampleCaseUI(
 
                         ComposeTestingExample -> {
                             ComposeTestingExampleUI(onBackEvent)
+                        }
+
+                        PredictiveBackExample -> {
+                            PredictiveBackExampleUI(onBackEvent)
+                        }
+
+                        SpringTweenSnapExample -> {
+                            SpringTweenSnapExampleUI(onBackEvent)
                         }
 
                         else -> {

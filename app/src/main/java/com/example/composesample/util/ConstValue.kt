@@ -68,7 +68,7 @@ object ConstValue {
     const val ModalDrawExample = "modalDrawExample"
 
     // ==================== 애니메이션 & 효과 예제 ====================
-    // Animation(다양한 애니메이션), AnimatedContent(콘텐츠 전환 심화), Lottie(Lottie/GIF), UIShimmer(로딩 효과), TextShimmer(텍스트 효과), NewShadowApi(Compose 1.9 Shadow), SharedElementTransition(공유 요소 전환)
+    // Animation(다양한 애니메이션), AnimatedContent(콘텐츠 전환 심화), Lottie(Lottie/GIF), UIShimmer(로딩 효과), TextShimmer(텍스트 효과), NewShadowApi(Compose 1.9 Shadow), SharedElementTransition(공유 요소 전환), SpringTweenSnap(spring/tween/snap/keyframes 비교)
     const val AnimationExample = "animationExample"
     const val AnimatedContentExample = "animatedContentExample"
     const val LottieExample = "lottieExample"
@@ -76,6 +76,7 @@ object ConstValue {
     const val TextShimmerExample = "textShimmerExample"
     const val NewShadowApiExample = "newShadowApiExample"
     const val SharedElementTransitionExample = "sharedElementTransitionExample"
+    const val SpringTweenSnapExample = "springTweenSnapExample"
 
     // ==================== 네비게이션 예제 ====================
     // BottomNavigation(하단 탭), Navigation3(새 Navigation), NestedRoutesNav3(중첩 라우팅)
@@ -135,7 +136,7 @@ object ConstValue {
     const val PagingExample = "pagingExample"
 
     // ==================== 시스템 & 설정 예제 ====================
-    // PowerSaveMode(절전 모드), TargetSDK34Permission(권한 처리), PassingIntentData(Intent 전달), LanguageSetting(시스템 언어), LocalLanguageChange(앱 내 언어), Shortcut(앱 숏컷), QuickSettingsTile(빠른 설정 타일), DynamicAppLinks(동적 앱 링크)
+    // PowerSaveMode(절전 모드), TargetSDK34Permission(권한 처리), PassingIntentData(Intent 전달), LanguageSetting(시스템 언어), LocalLanguageChange(앱 내 언어), Shortcut(앱 숏컷), QuickSettingsTile(빠른 설정 타일), DynamicAppLinks(동적 앱 링크), PredictiveBack(예측형 뒤로가기 제스처)
     const val PowerSaveModeExample = "powerSaveModeExample"
     const val QuickSettingsTileExample = "quickSettingsTileExample"
     const val TargetSDK34PermissionExample = "targetSDK34PermissionExample"
@@ -144,6 +145,7 @@ object ConstValue {
     const val LocalLanguageChangeExample = "localLanguageChangeExample"
     const val ShortcutExample = "shortcutExample"
     const val DynamicAppLinksExample = "dynamicAppLinksExample"
+    const val PredictiveBackExample = "predictiveBackExample"
 
     // ==================== 백그라운드 작업 예제 ====================
     // WorkManager(백그라운드 작업), AudioRecorder(음성 녹음/재생)

@@ -205,5 +205,19 @@ val examples2026 = listOf(
         description = "createComposeRule, onNodeWithTag, performClick, assertIsDisplayed 등 Compose UI 테스트 패턴 가이드",
         blogUrl = "",
         exampleType = ConstValue.ComposeTestingExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 04. 02",
+        title = "Predictive Back Gesture",
+        description = "Android 14+ PredictiveBackHandler로 엣지 스와이프 진행률을 Flow로 수신하여 실시간 애니메이션과 연동하는 패턴",
+        blogUrl = "",
+        exampleType = ConstValue.PredictiveBackExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 04. 02",
+        title = "Spring / Tween / Snap 애니메이션",
+        description = "AnimationSpec 네 가지(spring, tween, snap, keyframes) 비교: 물리 기반 바운스, 시간 기반 이징, 즉시 전환, 구간별 커스텀 타이밍",
+        blogUrl = "",
+        exampleType = ConstValue.SpringTweenSnapExample
     )
 )
