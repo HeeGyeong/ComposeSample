@@ -54,6 +54,7 @@ import com.example.composesample.presentation.example.component.interaction.stic
 import com.example.composesample.presentation.example.component.interaction.swipe.SwipeToDismissM3ExampleUI
 import com.example.composesample.presentation.example.component.interaction.swipe.SwipeToDismissUI
 import com.example.composesample.presentation.example.component.navigation.BottomNavigationActivity
+import com.example.composesample.presentation.example.component.system.deeplink.DynamicAppLinksExampleUI
 import com.example.composesample.presentation.example.component.system.background.workmanager.WorkManagerUI
 import com.example.composesample.presentation.example.component.system.media.recorder.AudioRecorderUI
 import com.example.composesample.presentation.example.component.system.platform.file.SafFileSelectionUI
@@ -212,6 +213,7 @@ import com.example.composesample.util.ConstValue.VisibilityExample
 import com.example.composesample.util.ConstValue.WebViewIssueExample
 import com.example.composesample.util.ConstValue.WithContextExample
 import com.example.composesample.util.ConstValue.WorkManagerExample
+import com.example.composesample.util.ConstValue.DynamicAppLinksExample
 import com.example.composesample.util.ConstValue.AdaptiveLayoutExample
 import com.example.composesample.util.ConstValue.CustomLayoutExample
 import com.example.composesample.util.ConstValue.ScreenshotTestingExample
@@ -623,6 +625,10 @@ fun ExampleCaseUI(
 
                         CustomTextRenderingExample -> {
                             CustomTextRenderingExampleUI(onBackEvent)
+                        }
+
+                        DynamicAppLinksExample -> {
+                            DynamicAppLinksExampleUI(onBackEvent)
                         }
 
                         AdaptiveLayoutExample -> {

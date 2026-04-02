@@ -180,6 +180,13 @@ val examples2026 = listOf(
     ),
     ExampleObject(
         lastUpdate = "26. 04. 02",
+        title = "Dynamic App Links",
+        description = "Android 15+에서 서버의 Digital Asset Links JSON으로 앱 업데이트 없이 딥링킹 동작을 실시간 제어하는 패턴",
+        blogUrl = "",
+        exampleType = ConstValue.DynamicAppLinksExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 04. 02",
         title = "Screenshot Testing (Paparazzi / Roborazzi)",
         description = "Paparazzi와 Roborazzi를 활용한 Compose UI 스크린샷 테스트: 회귀 방지, 골든 이미지 관리, 실기기 없는 렌더링 검증",
         blogUrl = "",

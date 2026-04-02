@@ -134,7 +134,7 @@ object ConstValue {
     const val PagingExample = "pagingExample"
 
     // ==================== 시스템 & 설정 예제 ====================
-    // PowerSaveMode(절전 모드), TargetSDK34Permission(권한 처리), PassingIntentData(Intent 전달), LanguageSetting(시스템 언어), LocalLanguageChange(앱 내 언어), Shortcut(앱 숏컷), QuickSettingsTile(빠른 설정 타일)
+    // PowerSaveMode(절전 모드), TargetSDK34Permission(권한 처리), PassingIntentData(Intent 전달), LanguageSetting(시스템 언어), LocalLanguageChange(앱 내 언어), Shortcut(앱 숏컷), QuickSettingsTile(빠른 설정 타일), DynamicAppLinks(동적 앱 링크)
     const val PowerSaveModeExample = "powerSaveModeExample"
     const val QuickSettingsTileExample = "quickSettingsTileExample"
     const val TargetSDK34PermissionExample = "targetSDK34PermissionExample"
@@ -142,6 +142,7 @@ object ConstValue {
     const val LanguageSettingExample = "languageSettingExample"
     const val LocalLanguageChangeExample = "localLanguageChangeExample"
     const val ShortcutExample = "shortcutExample"
+    const val DynamicAppLinksExample = "dynamicAppLinksExample"
 
     // ==================== 백그라운드 작업 예제 ====================
     // WorkManager(백그라운드 작업), AudioRecorder(음성 녹음/재생)

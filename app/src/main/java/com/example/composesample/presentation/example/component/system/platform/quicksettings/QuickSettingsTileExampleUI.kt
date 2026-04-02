@@ -3,6 +3,7 @@ package com.example.composesample.presentation.example.component.system.platform
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import android.graphics.drawable.Icon
 import android.os.Build
 import android.provider.Settings
@@ -851,7 +852,7 @@ private fun requestAddTile(context: Context, serviceClass: Class<*>, label: Stri
             // 결과 처리
         }
     } catch (e: Exception) {
-        e.printStackTrace()
+        Log.e("QuickSettingsTile", "타일 업데이트 실패: ${e.message}", e)
     }
 }
 
