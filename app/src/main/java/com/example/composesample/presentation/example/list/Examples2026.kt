@@ -240,5 +240,12 @@ val examples2026 = listOf(
         description = "receiveContent modifier로 TextField에서 이미지·파일 붙여넣기 처리: 키보드(IME), 클립보드, 드래그&드롭 출처별 콘텐츠 소비 패턴",
         blogUrl = "",
         exampleType = ConstValue.RichContentTextInputExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 04. 03",
+        title = "FlowRow / FlowColumn (Compose Flexbox)",
+        description = "CSS Flexbox에서 영감받은 공식 레이아웃: FlowRow의 줄바꿈 배치, maxItemsInEachRow 제한, weight 공간 분배, FlowColumn 세로 흐름 비교",
+        blogUrl = "",
+        exampleType = ConstValue.FlowRowLayoutExample
     )
 )

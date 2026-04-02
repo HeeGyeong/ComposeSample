@@ -84,6 +84,7 @@ import com.example.composesample.presentation.example.component.ui.layout.bottom
 import com.example.composesample.presentation.example.component.ui.layout.drawer.ModalDrawerUI
 import com.example.composesample.presentation.example.component.ui.layout.drawer.ScaffoldDrawerUI
 import com.example.composesample.presentation.example.component.ui.layout.flexbox.FlexBoxUI
+import com.example.composesample.presentation.example.component.ui.layout.flexbox.FlowRowLayoutExampleUI
 import com.example.composesample.presentation.example.component.ui.layout.header.StickyHeaderExampleUI
 import com.example.composesample.presentation.example.component.ui.layout.lazycolumn.LazyColumnFlingBehaviorExampleUI
 import com.example.composesample.presentation.example.component.ui.layout.lazycolumn.LazyColumnIssueUI
@@ -228,6 +229,7 @@ import com.example.composesample.util.ConstValue.PredictiveBackExample
 import com.example.composesample.util.ConstValue.SpringTweenSnapExample
 import com.example.composesample.util.ConstValue.AdaptiveLayoutExample
 import com.example.composesample.util.ConstValue.Compose17FeaturesExample
+import com.example.composesample.util.ConstValue.FlowRowLayoutExample
 import com.example.composesample.util.ConstValue.RichContentTextInputExample
 import com.example.composesample.util.ConstValue.ComposeSnapshotExample
 import com.example.composesample.util.ConstValue.ComposeTestingExample
@@ -281,6 +283,10 @@ fun ExampleCaseUI(
 
                         FlexBoxLayoutExample -> {
                             FlexBoxUI(onBackEvent)
+                        }
+
+                        FlowRowLayoutExample -> {
+                            FlowRowLayoutExampleUI(onBackEvent)
                         }
 
                         WebViewIssueExample -> {
