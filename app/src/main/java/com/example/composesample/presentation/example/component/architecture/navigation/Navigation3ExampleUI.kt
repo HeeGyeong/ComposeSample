@@ -32,7 +32,7 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowForward
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
@@ -163,7 +163,7 @@ private fun BasicNavigationDemoCard() {
                             is DemoScreen.Detail -> ScreenContent(
                                 title = "📄 Detail Screen",
                                 subtitle = "Item: ${screen.itemId}",
-                                icon = Icons.Default.ArrowForward,
+                                icon = Icons.AutoMirrored.Filled.ArrowForward,
                                 color = Color(0xFF00897B)
                             )
                         }
@@ -217,7 +217,7 @@ private fun BasicNavigationDemoCard() {
             ) {
                 NavigationButton(
                     text = "Detail",
-                    icon = Icons.Default.ArrowForward,
+                    icon = Icons.AutoMirrored.Filled.ArrowForward,
                     color = Color(0xFF00897B),
                     onClick = {
                         backStack = backStack + DemoScreen.Detail("item_${backStack.size}")
