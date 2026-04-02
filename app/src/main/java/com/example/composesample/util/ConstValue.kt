@@ -95,7 +95,7 @@ object ConstValue {
     const val PreviewInternalsExample = "previewInternalsExample"
 
     // ==================== Compose 상태 & Side Effect 예제 ====================
-    // SideEffect(부수 효과 함수들), CompositionLocal(암시적 전달), StaticDynamicCompositionLocal(Static vs Dynamic), CompositionLocalTree(트리 시각화), RetainApi(retain API), SnapshotFlow(Flow 변환), InitTest(초기화 케이스), LocalContextStrings(LocalContext 문자열 안티패턴), RememberPatterns(rememberSaveable/rememberUpdatedState/derivedStateOf 비교)
+    // SideEffect(부수 효과 함수들), CompositionLocal(암시적 전달), StaticDynamicCompositionLocal(Static vs Dynamic), CompositionLocalTree(트리 시각화), RetainApi(retain API), SnapshotFlow(Flow 변환), InitTest(초기화 케이스), LocalContextStrings(LocalContext 문자열 안티패턴), RememberPatterns(rememberSaveable/rememberUpdatedState/derivedStateOf 비교), ComposeSnapshot(Snapshot 시스템 내부 동작)
     const val SideEffectExample = "sideEffectExample"
     const val CompositionLocalExample = "compositonLocalExample"
     const val StaticDynamicCompositionLocalExample = "staticDynamicCompositionLocalExample"
@@ -105,6 +105,7 @@ object ConstValue {
     const val InitTestExample = "initTestExample"
     const val LocalContextStringsExample = "localContextStringsExample"
     const val RememberPatternsExample = "rememberPatternsExample"
+    const val ComposeSnapshotExample = "composeSnapshotExample"
 
     // ==================== 코루틴 & 동시성 예제 ====================
     // Coroutine(기본 특징), CoroutinesInternals(내부 동작 원리), WithContext(withContext vs launch)
@@ -158,12 +159,13 @@ object ConstValue {
     const val GlanceWidgetExample = "glanceWidgetExample"
 
     // ==================== 테스트 예제 ====================
-    // Test(UI 테스트 TDD), RecompositionTest(과도한 Recomposition 감지), Rebound(역할 기반 리컴포지션 예산 모니터링), TurbineFlowTest(StateFlow/SharedFlow 테스트 패턴 비교), ScreenshotTesting(Paparazzi/Roborazzi 스크린샷 테스트)
+    // Test(UI 테스트 TDD), RecompositionTest(과도한 Recomposition 감지), Rebound(역할 기반 리컴포지션 예산 모니터링), TurbineFlowTest(StateFlow/SharedFlow 테스트 패턴 비교), ScreenshotTesting(Paparazzi/Roborazzi 스크린샷 테스트), ComposeTesting(Compose UI 테스트 패턴)
     const val TestExample = "testExample"
     const val RecompositionTestExample = "recompositionTestExample"
     const val ReboundExample = "reboundExample"
     const val TurbineFlowTestExample = "turbineFlowTestExample"
     const val ScreenshotTestingExample = "screenshotTestingExample"
+    const val ComposeTestingExample = "composeTestingExample"
 
     // ==================== 유틸리티 & 라이브러리 예제 ====================
     // CursorIDE(AI IDE 활용), SnapNotify(Snackbar 간소화), AutoCloseable(자동 리소스 정리)

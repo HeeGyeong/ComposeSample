@@ -118,6 +118,9 @@ import com.example.composesample.presentation.example.component.architecture.pat
 import com.example.composesample.presentation.example.component.architecture.pattern.compositionLocal.tree.CompositionLocalTreeExampleUI
 import com.example.composesample.presentation.example.component.architecture.pattern.remember.RememberPatternsExampleUI
 import com.example.composesample.presentation.example.component.architecture.pattern.retain.RetainApiExampleUI
+import com.example.composesample.presentation.example.component.architecture.development.compose17.Compose17FeaturesExampleUI
+import com.example.composesample.presentation.example.component.architecture.development.test.ComposeTestingExampleUI
+import com.example.composesample.presentation.example.component.architecture.state.ComposeSnapshotExampleUI
 import com.example.composesample.presentation.example.component.architecture.state.SnapshotFlowExampleUI
 import com.example.composesample.util.ConstValue.AnimatedContentExample
 import com.example.composesample.util.ConstValue.AnimationExample
@@ -215,6 +218,9 @@ import com.example.composesample.util.ConstValue.WithContextExample
 import com.example.composesample.util.ConstValue.WorkManagerExample
 import com.example.composesample.util.ConstValue.DynamicAppLinksExample
 import com.example.composesample.util.ConstValue.AdaptiveLayoutExample
+import com.example.composesample.util.ConstValue.Compose17FeaturesExample
+import com.example.composesample.util.ConstValue.ComposeSnapshotExample
+import com.example.composesample.util.ConstValue.ComposeTestingExample
 import com.example.composesample.util.ConstValue.CustomLayoutExample
 import com.example.composesample.util.ConstValue.ScreenshotTestingExample
 import com.example.domain.model.ExampleMoveType
@@ -641,6 +647,18 @@ fun ExampleCaseUI(
 
                         ScreenshotTestingExample -> {
                             ScreenshotTestingExampleUI(onBackEvent)
+                        }
+
+                        Compose17FeaturesExample -> {
+                            Compose17FeaturesExampleUI(onBackEvent)
+                        }
+
+                        ComposeSnapshotExample -> {
+                            ComposeSnapshotExampleUI(onBackEvent)
+                        }
+
+                        ComposeTestingExample -> {
+                            ComposeTestingExampleUI(onBackEvent)
                         }
 
                         else -> {

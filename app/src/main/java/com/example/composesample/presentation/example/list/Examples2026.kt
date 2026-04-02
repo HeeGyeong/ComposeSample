@@ -191,5 +191,19 @@ val examples2026 = listOf(
         description = "Paparazzi와 Roborazzi를 활용한 Compose UI 스크린샷 테스트: 회귀 방지, 골든 이미지 관리, 실기기 없는 렌더링 검증",
         blogUrl = "",
         exampleType = ConstValue.ScreenshotTestingExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 04. 02",
+        title = "Compose Snapshot System",
+        description = "State<T> 내부 동작 원리: Snapshot 격리 모델, derivedStateOf 최적화, withMutableSnapshot 원자적 상태 변경",
+        blogUrl = "",
+        exampleType = ConstValue.ComposeSnapshotExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 04. 02",
+        title = "Compose UI Testing",
+        description = "createComposeRule, onNodeWithTag, performClick, assertIsDisplayed 등 Compose UI 테스트 패턴 가이드",
+        blogUrl = "",
+        exampleType = ConstValue.ComposeTestingExample
     )
 )
