@@ -219,5 +219,19 @@ val examples2026 = listOf(
         description = "AnimationSpec 네 가지(spring, tween, snap, keyframes) 비교: 물리 기반 바운스, 시간 기반 이징, 즉시 전환, 구간별 커스텀 타이밍",
         blogUrl = "",
         exampleType = ConstValue.SpringTweenSnapExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 04. 02",
+        title = "Haptic Feedback",
+        description = "LocalHapticFeedback(Compose)과 HapticFeedbackConstants(Android View API)를 사용한 다양한 진동 피드백 타입 비교 및 API 레벨별 지원 범위",
+        blogUrl = "",
+        exampleType = ConstValue.HapticFeedbackExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 04. 02",
+        title = "Stability Annotations (@Stable / @Immutable)",
+        description = "Compose 컴파일러의 안정성 분석 원리, @Stable과 @Immutable 어노테이션으로 불필요한 리컴포지션을 방지하는 패턴",
+        blogUrl = "",
+        exampleType = ConstValue.StabilityAnnotationsExample
     )
 )

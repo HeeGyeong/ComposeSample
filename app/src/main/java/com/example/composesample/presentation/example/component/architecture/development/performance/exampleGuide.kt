@@ -18,4 +18,20 @@ package com.example.composesample.presentation.example.component.architecture.de
  * 주의사항:
  * - nullable 또는 제네릭 타입으로 사용 시 박싱 발생 (성능 이점 사라짐)
  * - 인터페이스 구현 시 박싱 발생
+ *
+ * ---
+ *
+ * ## Stability Annotations (@Stable / @Immutable)
+ * - 공식 문서: https://developer.android.com/develop/ui/compose/performance/stability
+ * - Compose Compiler Metrics로 안정성 보고서 확인 가능
+ *
+ * 핵심 개념:
+ * - @Immutable: 생성 후 모든 public 프로퍼티가 절대 변경되지 않음을 보장 (가장 강함)
+ * - @Stable: equals()가 안정적이고 State 변화 시 Compose에 알림 보장 (var 허용)
+ * - List<T>는 MutableList 구현 가능 → 컴파일러가 불안정으로 판단
+ * - kotlinx.collections.immutable의 ImmutableList 사용 시 어노테이션 없이도 안정 판단
+ *
+ * Strong Skipping Mode (Compose 1.7+):
+ * - 불안정한 람다를 포함해도 스킵 가능하도록 컴파일러 동작 개선
+ * - gradle.properties: composeCompiler.enableStrongSkippingMode=true
  */

@@ -89,11 +89,12 @@ object ConstValue {
     const val StartupOptimizationExample = "startupOptimizationExample"
 
     // ==================== 아키텍처 패턴 예제 ====================
-    // MVI(단방향 데이터 흐름), Coordinator(화면 전환 패턴), Modularization(모듈화 전략), PreviewInternals(@Preview 내부 동작 원리)
+    // MVI(단방향 데이터 흐름), Coordinator(화면 전환 패턴), Modularization(모듈화 전략), PreviewInternals(@Preview 내부 동작 원리), StabilityAnnotations(@Stable/@Immutable 리컴포지션 최적화)
     const val MVIExample = "mviExample"
     const val CoordinatorExample = "coordinatorExample"
     const val ModularizationExample = "modularizationExample"
     const val PreviewInternalsExample = "previewInternalsExample"
+    const val StabilityAnnotationsExample = "stabilityAnnotationsExample"
 
     // ==================== Compose 상태 & Side Effect 예제 ====================
     // SideEffect(부수 효과 함수들), CompositionLocal(암시적 전달), StaticDynamicCompositionLocal(Static vs Dynamic), CompositionLocalTree(트리 시각화), RetainApi(retain API), SnapshotFlow(Flow 변환), InitTest(초기화 케이스), LocalContextStrings(LocalContext 문자열 안티패턴), RememberPatterns(rememberSaveable/rememberUpdatedState/derivedStateOf 비교), ComposeSnapshot(Snapshot 시스템 내부 동작)
@@ -136,7 +137,7 @@ object ConstValue {
     const val PagingExample = "pagingExample"
 
     // ==================== 시스템 & 설정 예제 ====================
-    // PowerSaveMode(절전 모드), TargetSDK34Permission(권한 처리), PassingIntentData(Intent 전달), LanguageSetting(시스템 언어), LocalLanguageChange(앱 내 언어), Shortcut(앱 숏컷), QuickSettingsTile(빠른 설정 타일), DynamicAppLinks(동적 앱 링크), PredictiveBack(예측형 뒤로가기 제스처)
+    // PowerSaveMode(절전 모드), TargetSDK34Permission(권한 처리), PassingIntentData(Intent 전달), LanguageSetting(시스템 언어), LocalLanguageChange(앱 내 언어), Shortcut(앱 숏컷), QuickSettingsTile(빠른 설정 타일), DynamicAppLinks(동적 앱 링크), PredictiveBack(예측형 뒤로가기 제스처), HapticFeedback(햅틱 피드백)
     const val PowerSaveModeExample = "powerSaveModeExample"
     const val QuickSettingsTileExample = "quickSettingsTileExample"
     const val TargetSDK34PermissionExample = "targetSDK34PermissionExample"
@@ -146,6 +147,7 @@ object ConstValue {
     const val ShortcutExample = "shortcutExample"
     const val DynamicAppLinksExample = "dynamicAppLinksExample"
     const val PredictiveBackExample = "predictiveBackExample"
+    const val HapticFeedbackExample = "hapticFeedbackExample"
 
     // ==================== 백그라운드 작업 예제 ====================
     // WorkManager(백그라운드 작업), AudioRecorder(음성 녹음/재생)

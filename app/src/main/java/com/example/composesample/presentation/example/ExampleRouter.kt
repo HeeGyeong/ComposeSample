@@ -55,6 +55,7 @@ import com.example.composesample.presentation.example.component.interaction.swip
 import com.example.composesample.presentation.example.component.interaction.swipe.SwipeToDismissUI
 import com.example.composesample.presentation.example.component.navigation.BottomNavigationActivity
 import com.example.composesample.presentation.example.component.system.deeplink.DynamicAppLinksExampleUI
+import com.example.composesample.presentation.example.component.system.platform.haptic.HapticFeedbackExampleUI
 import com.example.composesample.presentation.example.component.system.platform.predictiveback.PredictiveBackExampleUI
 import com.example.composesample.presentation.example.component.system.background.workmanager.WorkManagerUI
 import com.example.composesample.presentation.example.component.system.media.recorder.AudioRecorderUI
@@ -121,6 +122,7 @@ import com.example.composesample.presentation.example.component.architecture.pat
 import com.example.composesample.presentation.example.component.architecture.pattern.remember.RememberPatternsExampleUI
 import com.example.composesample.presentation.example.component.architecture.pattern.retain.RetainApiExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.compose17.Compose17FeaturesExampleUI
+import com.example.composesample.presentation.example.component.architecture.development.performance.StabilityAnnotationsExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.test.ComposeTestingExampleUI
 import com.example.composesample.presentation.example.component.architecture.state.ComposeSnapshotExampleUI
 import com.example.composesample.presentation.example.component.architecture.state.SnapshotFlowExampleUI
@@ -219,6 +221,8 @@ import com.example.composesample.util.ConstValue.WebViewIssueExample
 import com.example.composesample.util.ConstValue.WithContextExample
 import com.example.composesample.util.ConstValue.WorkManagerExample
 import com.example.composesample.util.ConstValue.DynamicAppLinksExample
+import com.example.composesample.util.ConstValue.HapticFeedbackExample
+import com.example.composesample.util.ConstValue.StabilityAnnotationsExample
 import com.example.composesample.util.ConstValue.PredictiveBackExample
 import com.example.composesample.util.ConstValue.SpringTweenSnapExample
 import com.example.composesample.util.ConstValue.AdaptiveLayoutExample
@@ -671,6 +675,14 @@ fun ExampleCaseUI(
 
                         SpringTweenSnapExample -> {
                             SpringTweenSnapExampleUI(onBackEvent)
+                        }
+
+                        HapticFeedbackExample -> {
+                            HapticFeedbackExampleUI(onBackEvent)
+                        }
+
+                        StabilityAnnotationsExample -> {
+                            StabilityAnnotationsExampleUI(onBackEvent)
                         }
 
                         else -> {
