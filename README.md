@@ -18,7 +18,7 @@ Jetpack Compose를 공부하고 실무에 적용하면서 발생했던 이슈와
 Clean Architecture 기반으로 구성되어 있으며, 컴포넌트들은 기능별로 체계적으로 분류되어 있어 원하는 예제를 쉽게 찾을 수 있습니다.
 
 - **최신 업데이트**
-  - 2026.04: 신규 예제 추가 (LazyStaggeredGrid 폭포수 그리드, Adaptive Layout WindowSizeClass, Custom Layout MeasurePolicy, Screenshot Testing Paparazzi/Roborazzi 등)
+  - 2026.04: 신규 예제 추가 (LazyStaggeredGrid 폭포수 그리드, Adaptive Layout WindowSizeClass, Custom Layout MeasurePolicy, Dynamic App Links, Screenshot Testing Paparazzi/Roborazzi, Compose Snapshot System, Compose UI Testing 등)
   - 2026.03: 신규 예제 추가 (MotionBlur, LargeContentViewer, LocalContextStrings, EmbeddedPicker Compose 통합, Rebound 리컴포지션 모니터링, Coroutine Flow Testing with Turbine, Compose Preview Internals, Remember Patterns, Startup Optimization, AnimatedContent 심화 등)
   - 2026.02: 신규 예제 추가 (Transition, Dial, Photo Picker, Sticker Canvas 등)
   - 2026.01: UI 컴포넌트 예제 추가 (Quick Setting, TopAppBar, Canvas Shapes, Responsive TabRow 등)

@@ -1,6 +1,5 @@
 package com.example.composesample.presentation
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -37,7 +36,6 @@ import kotlinx.coroutines.launch
 
 @ExperimentalAnimationApi
 class MainActivity : ComponentActivity() {
-    @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         updateWidget()
@@ -46,6 +44,7 @@ class MainActivity : ComponentActivity() {
             Surface(
                 color = Color.White
             ) {
+                // windowInsetsPadding이 systemBars를 처리하므로 content padding 불필요
                 Scaffold(
                     modifier = Modifier
                         .fillMaxSize()

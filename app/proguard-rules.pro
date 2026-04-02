@@ -5,6 +5,15 @@
 # For more details, see
 #   http://developer.android.com/guide/developing/tools/proguard.html
 
+# 릴리즈 빌드에서 Log 호출 제거 (예제 앱의 의도적인 로그는 개발용으로만 사용)
+-assumenosideeffects class android.util.Log {
+    public static int v(...);
+    public static int d(...);
+    public static int i(...);
+    public static int w(...);
+    public static int e(...);
+}
+
 # If your project uses WebView with JS, uncomment the following
 # and specify the fully qualified class name to the JavaScript interface
 # class:

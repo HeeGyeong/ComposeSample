@@ -22,6 +22,8 @@ android {
 dependencies {
     implementation(project(':core'))
 
+    // coordinator 모듈은 CoordinatorActivity + Composable UI를 포함하므로
+    // Compose 의존성을 직접 선언합니다.
     def composeBom = platform(libs.composeBom)
     implementation(composeBom)
 

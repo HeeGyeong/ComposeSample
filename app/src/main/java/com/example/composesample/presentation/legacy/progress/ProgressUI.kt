@@ -1,7 +1,5 @@
 package com.example.composesample.presentation.legacy.progress
 
-import android.os.Handler
-import android.os.Looper
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.Arrangement
@@ -19,6 +17,9 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
@@ -36,8 +37,7 @@ fun Progress() {
     val isEnable = remember { mutableStateOf(true) }
     val result = remember { mutableStateOf("") }
     val waitText = stringResource(id = R.string.progress_wait)
-
-    val handler = Handler(Looper.getMainLooper())
+    val scope = rememberCoroutineScope()
 
     Column(
         modifier = Modifier
@@ -51,15 +51,12 @@ fun Progress() {
                 isEnable.value = false
                 result.value = waitText
 
-                Thread {
-                    Thread.sleep(3 * 1000)
-
-                    handler.post {
-                        isVisible.value = false
-                        result.value = "Task finished."
-                        isEnable.value = true
-                    }
-                }.start()
+                scope.launch {
+                    delay(3 * 1000)
+                    isVisible.value = false
+                    result.value = "Task finished."
+                    isEnable.value = true
+                }
             },
             enabled = isEnable.value
         ) {
@@ -95,17 +92,14 @@ fun Progress() {
                 isLineEnable.value = false
                 resultLine.value = "Task running...."
 
-                Thread {
+                scope.launch {
                     while (progressLine.value < 1) {
-                        Thread.sleep(1 * 100)
+                        delay(1 * 100)
                         progressLine.value = progressLine.value + 0.01F
-
-                        handler.post {
-                            val finished = (progressLine.value * 100).toInt()
-                            resultLine.value = "Done $finished of 100 tasks"
-                        }
+                        val finished = (progressLine.value * 100).toInt()
+                        resultLine.value = "Done $finished of 100 tasks"
                     }
-                }.start()
+                }
             },
             enabled = isLineEnable.value
         ) {
@@ -131,9 +125,9 @@ fun Progress() {
                 isEnableCircle.value = false
                 resultCircle.value = "Task running...."
 
-                Thread {
+                scope.launch {
                     while (progressCircle.value < 1) {
-                        Thread.sleep(1 * 100)
+                        delay(1 * 100)
                         progressCircle.value = progressCircle.value + 0.01F
 
                         if (progressCircle.value >= 1F) {
@@ -142,7 +136,7 @@ fun Progress() {
                         val finished = (progressCircle.value * 100).toInt()
                         resultCircle.value = "Done $finished of 100 tasks"
                     }
-                }.start()
+                }
             },
             enabled = isEnableCircle.value
         ) {
