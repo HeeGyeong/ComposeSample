@@ -233,5 +233,12 @@ val examples2026 = listOf(
         description = "Compose 컴파일러의 안정성 분석 원리, @Stable과 @Immutable 어노테이션으로 불필요한 리컴포지션을 방지하는 패턴",
         blogUrl = "",
         exampleType = ConstValue.StabilityAnnotationsExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 04. 03",
+        title = "Rich Content in Text Input",
+        description = "receiveContent modifier로 TextField에서 이미지·파일 붙여넣기 처리: 키보드(IME), 클립보드, 드래그&드롭 출처별 콘텐츠 소비 패턴",
+        blogUrl = "",
+        exampleType = ConstValue.RichContentTextInputExample
     )
 )
