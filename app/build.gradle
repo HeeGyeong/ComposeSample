@@ -79,6 +79,9 @@ dependencies {
     // SSE
     implementation(libs.okhttpEventSource)
 
+    // Adaptive Layout
+    implementation(libs.material3WindowSizeClass)
+
     // Paging
     implementation(libs.bundles.paging)
 

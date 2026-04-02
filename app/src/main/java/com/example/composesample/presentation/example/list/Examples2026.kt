@@ -163,5 +163,26 @@ val examples2026 = listOf(
         description = "LazyVerticalStaggeredGrid로 Pinterest 스타일 폭포수 레이아웃 구현: 동적 높이, 스팬 제어, 필터링 애니메이션",
         blogUrl = "",
         exampleType = ConstValue.LazyStaggeredGridExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 04. 02",
+        title = "Adaptive Layout (WindowSizeClass)",
+        description = "WindowSizeClass(Compact/Medium/Expanded)로 폰·태블릿·폴더블 화면 크기에 반응하는 적응형 레이아웃 구현",
+        blogUrl = "",
+        exampleType = ConstValue.AdaptiveLayoutExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 04. 02",
+        title = "Custom Layout (MeasurePolicy)",
+        description = "Layout composable과 MeasurePolicy로 SubcomposeLayout 없이 직접 측정·배치하는 커스텀 레이아웃 구현",
+        blogUrl = "",
+        exampleType = ConstValue.CustomLayoutExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 04. 02",
+        title = "Screenshot Testing (Paparazzi / Roborazzi)",
+        description = "Paparazzi와 Roborazzi를 활용한 Compose UI 스크린샷 테스트: 회귀 방지, 골든 이미지 관리, 실기기 없는 렌더링 검증",
+        blogUrl = "",
+        exampleType = ConstValue.ScreenshotTestingExample
     )
 )

@@ -2,7 +2,7 @@ package com.example.composesample.util
 
 object ConstValue {
     // ==================== 기본 설정 ====================
-    const val UpdateDate = "26년 3월"
+    const val UpdateDate = "26년 4월"
 
     // ==================== Intent & Code Type ====================
     const val IntentType = "type"
@@ -19,7 +19,7 @@ object ConstValue {
     const val SSEWikiURL = "https://stream.wikimedia.org/v2/stream/recentchange"
 
     // ==================== UI 컴포넌트 예제 ====================
-    // LazyColumn(키보드 이슈), LazyStaggeredGrid(폭포수 그리드), ClickEvent(중복 방지), FlexBox(유동 레이아웃), WebView(YouTube), TextStyle(스타일링), StickyHeader(고정 헤더), ReverseLazyColumn(역방향), AutoSizingText(자동 크기), CardCorners(모서리 스타일), ButtonGroup(M3 Expressive), Visibility(가시성 처리), FancyTopAppBar(고급 TopAppBar), CanvasShapes(Canvas 도형 그리기), ResponsiveTabRow(반응형 탭), CustomTextRendering(커스텀 텍스트 렌더링), DialComponent(Dial 컴포넌트), EmbeddedPhotoPicker(임베디드 포토 피커), LargeContentViewer(Large Content Viewer 접근성), MotionBlur(스피닝 휠 모션 블러), EmbeddedPickerCompose(BottomSheet 통합 + URI 수명 + 선택 동기화)
+    // LazyColumn(키보드 이슈), LazyStaggeredGrid(폭포수 그리드), ClickEvent(중복 방지), FlexBox(유동 레이아웃), WebView(YouTube), TextStyle(스타일링), StickyHeader(고정 헤더), ReverseLazyColumn(역방향), AutoSizingText(자동 크기), CardCorners(모서리 스타일), ButtonGroup(M3 Expressive), Visibility(가시성 처리), FancyTopAppBar(고급 TopAppBar), CanvasShapes(Canvas 도형 그리기), ResponsiveTabRow(반응형 탭), CustomTextRendering(커스텀 텍스트 렌더링), DialComponent(Dial 컴포넌트), EmbeddedPhotoPicker(임베디드 포토 피커), LargeContentViewer(Large Content Viewer 접근성), MotionBlur(스피닝 휠 모션 블러), EmbeddedPickerCompose(BottomSheet 통합 + URI 수명 + 선택 동기화), AdaptiveLayout(WindowSizeClass 반응형 레이아웃), CustomLayout(MeasurePolicy 커스텀 레이아웃)
     const val LazyColumnExample = "lazyColumnExample"
     const val LazyStaggeredGridExample = "lazyStaggeredGridExample"
     const val FancyTopAppBarExample = "fancyTopAppBarExample"
@@ -41,6 +41,8 @@ object ConstValue {
     const val LargeContentViewerExample = "largeContentViewerExample"
     const val MotionBlurExample = "motionBlurExample"
     const val EmbeddedPickerComposeExample = "embeddedPickerComposeExample"
+    const val AdaptiveLayoutExample = "adaptiveLayoutExample"
+    const val CustomLayoutExample = "customLayoutExample"
 
     // ==================== 스크롤 & 제스처 예제 ====================
     // PullToRefresh(당겨서 새로고침), PullScreenPager(풀스크린 페이저), FlingBehavior(스크롤 커스텀), SwipeToDismiss(스와이프 삭제), SwipeToDismissM3(M3 스와이프 삭제), DragAndDrop(드래그 앤 드롭), NestedScrolling(중첩 스크롤), CustomScrollBehavior(커스텀 TopAppBarScrollBehavior), StickerCanvas(스티커 제스처 캔버스)
@@ -155,11 +157,12 @@ object ConstValue {
     const val GlanceWidgetExample = "glanceWidgetExample"
 
     // ==================== 테스트 예제 ====================
-    // Test(UI 테스트 TDD), RecompositionTest(과도한 Recomposition 감지), Rebound(역할 기반 리컴포지션 예산 모니터링), TurbineFlowTest(StateFlow/SharedFlow 테스트 패턴 비교)
+    // Test(UI 테스트 TDD), RecompositionTest(과도한 Recomposition 감지), Rebound(역할 기반 리컴포지션 예산 모니터링), TurbineFlowTest(StateFlow/SharedFlow 테스트 패턴 비교), ScreenshotTesting(Paparazzi/Roborazzi 스크린샷 테스트)
     const val TestExample = "testExample"
     const val RecompositionTestExample = "recompositionTestExample"
     const val ReboundExample = "reboundExample"
     const val TurbineFlowTestExample = "turbineFlowTestExample"
+    const val ScreenshotTestingExample = "screenshotTestingExample"
 
     // ==================== 유틸리티 & 라이브러리 예제 ====================
     // CursorIDE(AI IDE 활용), SnapNotify(Snackbar 간소화), AutoCloseable(자동 리소스 정리)

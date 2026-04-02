@@ -34,6 +34,7 @@ import com.example.composesample.presentation.example.component.architecture.dev
 import com.example.composesample.presentation.example.component.architecture.development.rebound.ReboundExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.test.TurbineFlowTestExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.test.RecompositionTestExampleUI
+import com.example.composesample.presentation.example.component.architecture.development.test.ScreenshotTestingExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.test.UITestExampleUI
 import com.example.composesample.presentation.example.component.system.platform.quicksettings.QuickSettingsTileExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.type.TypeExampleUI
@@ -97,6 +98,8 @@ import com.example.composesample.presentation.example.component.ui.scroll.Custom
 import com.example.composesample.presentation.example.component.ui.scroll.NestedScrollingExampleUI
 import com.example.composesample.presentation.example.component.ui.shapes.CardCornersExampleUI
 import com.example.composesample.presentation.example.component.ui.tab.ResponsiveTabRowExampleUI
+import com.example.composesample.presentation.example.component.ui.layout.adaptive.AdaptiveLayoutExampleUI
+import com.example.composesample.presentation.example.component.ui.layout.custom.CustomLayoutExampleUI
 import com.example.composesample.presentation.example.component.ui.text.AutoSizingTextExampleUI
 import com.example.composesample.presentation.example.component.ui.text.CustomTextRenderingExampleUI
 import com.example.composesample.presentation.example.component.ui.text.LocalContextStringsExampleUI
@@ -209,6 +212,9 @@ import com.example.composesample.util.ConstValue.VisibilityExample
 import com.example.composesample.util.ConstValue.WebViewIssueExample
 import com.example.composesample.util.ConstValue.WithContextExample
 import com.example.composesample.util.ConstValue.WorkManagerExample
+import com.example.composesample.util.ConstValue.AdaptiveLayoutExample
+import com.example.composesample.util.ConstValue.CustomLayoutExample
+import com.example.composesample.util.ConstValue.ScreenshotTestingExample
 import com.example.domain.model.ExampleMoveType
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -617,6 +623,18 @@ fun ExampleCaseUI(
 
                         CustomTextRenderingExample -> {
                             CustomTextRenderingExampleUI(onBackEvent)
+                        }
+
+                        AdaptiveLayoutExample -> {
+                            AdaptiveLayoutExampleUI(onBackEvent)
+                        }
+
+                        CustomLayoutExample -> {
+                            CustomLayoutExampleUI(onBackEvent)
+                        }
+
+                        ScreenshotTestingExample -> {
+                            ScreenshotTestingExampleUI(onBackEvent)
                         }
 
                         else -> {
