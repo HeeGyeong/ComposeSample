@@ -31,6 +31,7 @@ import com.example.composesample.presentation.example.component.architecture.dev
 import com.example.composesample.presentation.example.component.architecture.development.init.InitTestExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.init.StartupOptimizationExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.preview.PreviewInternalsExampleUI
+import com.example.composesample.presentation.example.component.architecture.development.preview.PreviewOnlyAnnotationExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.rebound.ReboundExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.test.TurbineFlowTestExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.test.RecompositionTestExampleUI
@@ -230,6 +231,7 @@ import com.example.composesample.util.ConstValue.SpringTweenSnapExample
 import com.example.composesample.util.ConstValue.AdaptiveLayoutExample
 import com.example.composesample.util.ConstValue.Compose17FeaturesExample
 import com.example.composesample.util.ConstValue.FlowRowLayoutExample
+import com.example.composesample.util.ConstValue.PreviewOnlyAnnotationExample
 import com.example.composesample.util.ConstValue.RichContentTextInputExample
 import com.example.composesample.util.ConstValue.ComposeSnapshotExample
 import com.example.composesample.util.ConstValue.ComposeTestingExample
@@ -615,6 +617,10 @@ fun ExampleCaseUI(
 
                         PreviewInternalsExample -> {
                             PreviewInternalsExampleUI(onBackEvent)
+                        }
+
+                        PreviewOnlyAnnotationExample -> {
+                            PreviewOnlyAnnotationExampleUI(onBackEvent)
                         }
 
                         StartupOptimizationExample -> {

@@ -247,5 +247,12 @@ val examples2026 = listOf(
         description = "CSS Flexbox에서 영감받은 공식 레이아웃: FlowRow의 줄바꿈 배치, maxItemsInEachRow 제한, weight 공간 분배, FlowColumn 세로 흐름 비교",
         blogUrl = "",
         exampleType = ConstValue.FlowRowLayoutExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 04. 03",
+        title = "Preview-only Composable (@RequiresOptIn)",
+        description = "@RequiresOptIn으로 Preview 전용 Composable을 컴파일 타임에 강제 제한: @PreviewOnly 어노테이션 정의, @OptIn 허용 패턴, LocalInspectionMode와의 차이",
+        blogUrl = "",
+        exampleType = ConstValue.PreviewOnlyAnnotationExample
     )
 )
