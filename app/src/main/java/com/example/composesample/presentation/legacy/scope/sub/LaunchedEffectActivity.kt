@@ -9,8 +9,8 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.composesample.presentation.legacy.base.BottomBar
 import com.example.composesample.presentation.legacy.base.DrawerItem
@@ -32,8 +32,7 @@ class LaunchedEffectActivity : ComponentActivity() {
 
             val viewModel = viewModel<LaunchedEffectViewModel>()
 
-            // implementation "androidx.compose.runtime:runtime-livedata:$compose_version"
-            val isGo by viewModel.isGo.observeAsState()
+            val isGo by viewModel.isGo.collectAsStateWithLifecycle()
 
             Scaffold(
                 scaffoldState = scaffoldState,
@@ -44,7 +43,7 @@ class LaunchedEffectActivity : ComponentActivity() {
                     BottomBar()
                 },
                 content = { padding ->
-                    if (isGo == true) {
+                    if (isGo) {
                         // LaunchedEffect 사용 시, 최초 실행을 제외하고 param 값이 변경될 때 취소되고 재 시작 된다.
                         // param 의 갯수는 제한되어 있지 않다.
                         LaunchedEffect(isGo) {

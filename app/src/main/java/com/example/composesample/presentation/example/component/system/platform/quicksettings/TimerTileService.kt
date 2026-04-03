@@ -1,14 +1,18 @@
 package com.example.composesample.presentation.example.component.system.platform.quicksettings
 
 import android.os.Build
-import android.os.Handler
-import android.os.Looper
 import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService
 import androidx.annotation.RequiresApi
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 
 @RequiresApi(Build.VERSION_CODES.N)
 class TimerTileService : TileService() {
@@ -20,8 +24,8 @@ class TimerTileService : TileService() {
         private val _isRunningFlow = MutableStateFlow(false)
         val isRunningFlow: StateFlow<Boolean> = _isRunningFlow.asStateFlow()
 
-        private var handler: Handler? = null
-        private var runnable: Runnable? = null
+        private val timerScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
+        private var timerJob: Job? = null
 
         fun resetTimer() {
             stopTimer()
@@ -38,25 +42,19 @@ class TimerTileService : TileService() {
 
         private fun startTimer() {
             if (_isRunningFlow.value) return
-
             _isRunningFlow.value = true
-            handler = Handler(Looper.getMainLooper())
-            runnable = object : Runnable {
-                override fun run() {
-                    if (_isRunningFlow.value) {
-                        _timerSecondsFlow.value++
-                        handler?.postDelayed(this, 1000)
-                    }
+            timerJob = timerScope.launch {
+                while (_isRunningFlow.value) {
+                    delay(1000)
+                    _timerSecondsFlow.value++
                 }
             }
-            handler?.post(runnable!!)
         }
 
         private fun stopTimer() {
             _isRunningFlow.value = false
-            runnable?.let { handler?.removeCallbacks(it) }
-            handler = null
-            runnable = null
+            timerJob?.cancel()
+            timerJob = null
         }
 
         fun formatTime(seconds: Int): String {

@@ -23,8 +23,8 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -48,8 +48,8 @@ fun ApiDisconnectExampleUI(
         koinViewModel<ApiExampleViewModel>(owner = viewModelStoreOwner)
     val apiExampleUseCaseViewModel =
         koinViewModel<ApiExampleUseCaseViewModel>(owner = viewModelStoreOwner)
-    val posts by apiExampleViewModel.posts.observeAsState(initial = emptyList())
-    val useCasePosts by apiExampleUseCaseViewModel.posts.observeAsState(initial = emptyList())
+    val posts by apiExampleViewModel.posts.collectAsStateWithLifecycle()
+    val useCasePosts by apiExampleUseCaseViewModel.posts.collectAsStateWithLifecycle()
 
     val networkUtil: NetworkUtil = get()
     val isConnectNetwork = remember { mutableStateOf(networkUtil.isNetworkConnected()) }

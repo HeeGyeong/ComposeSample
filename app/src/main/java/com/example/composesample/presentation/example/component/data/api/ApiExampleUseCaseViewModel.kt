@@ -4,11 +4,13 @@ import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.composesample.util.NetworkStatusLiveData
 import com.example.domain.model.PostData
 import com.example.domain.useCase.GetPostUseCase
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 /**
@@ -25,14 +27,14 @@ class ApiExampleUseCaseViewModel(
     fun getNetworkStatus(): LiveData<Boolean> = networkStatusLiveData
 
     // Api Data
-    private val _posts = MutableLiveData<List<PostData>>()
-    val posts: LiveData<List<PostData>> get() = _posts
+    private val _posts = MutableStateFlow<List<PostData>>(emptyList())
+    val posts: StateFlow<List<PostData>> get() = _posts.asStateFlow()
 
     fun fetchPosts() {
         viewModelScope.launch {
             try {
                 val result = getPostUseCase.invoke()
-                _posts.postValue(result)
+                _posts.value = result
                 Log.d("NetworkLog", "Api call Comp")
             } catch (e: Exception) {
                 Log.e("NetworkLog", "fetchPosts 실패: ${e.message}", e)

@@ -26,8 +26,8 @@ import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -44,9 +44,9 @@ fun KtorExampleUI(
     val viewModelStoreOwner = checkNotNull(LocalViewModelStoreOwner.current)
     val apiExampleViewModel = koinViewModel<ApiExampleViewModel>(owner = viewModelStoreOwner)
     val coroutineScope = rememberCoroutineScope()
-    val ktorPosts by apiExampleViewModel.ktorPosts.observeAsState(initial = emptyList())
-    val isLoading by apiExampleViewModel.isLoading.observeAsState(initial = false)
-    val errorMessage by apiExampleViewModel.errorMessage.observeAsState()
+    val ktorPosts by apiExampleViewModel.ktorPosts.collectAsStateWithLifecycle()
+    val isLoading by apiExampleViewModel.isLoading.collectAsStateWithLifecycle()
+    val errorMessage by apiExampleViewModel.errorMessage.collectAsStateWithLifecycle()
 
     val pullRefreshState = rememberPullRefreshState(
         refreshing = isLoading,
