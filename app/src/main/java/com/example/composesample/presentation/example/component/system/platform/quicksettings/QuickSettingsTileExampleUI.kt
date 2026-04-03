@@ -35,7 +35,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.ui.window.Dialog
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -62,13 +62,13 @@ fun QuickSettingsTileExampleUI(
     onBackEvent: () -> Unit
 ) {
     val context = LocalContext.current
-    val counterValue by CounterTileService.counterFlow.collectAsState()
-    val toggleState by ToggleTileService.toggleStateFlow.collectAsState()
-    val timerSeconds by TimerTileService.timerSecondsFlow.collectAsState()
-    val timerRunning by TimerTileService.isRunningFlow.collectAsState()
-    val actionCount by QuickActionTileService.actionCountFlow.collectAsState()
-    val lastActionTime by QuickActionTileService.lastActionTimeFlow.collectAsState()
-    val memos by MemoTileService.memosFlow.collectAsState()
+    val counterValue by CounterTileService.counterFlow.collectAsStateWithLifecycle()
+    val toggleState by ToggleTileService.toggleStateFlow.collectAsStateWithLifecycle()
+    val timerSeconds by TimerTileService.timerSecondsFlow.collectAsStateWithLifecycle()
+    val timerRunning by TimerTileService.isRunningFlow.collectAsStateWithLifecycle()
+    val actionCount by QuickActionTileService.actionCountFlow.collectAsStateWithLifecycle()
+    val lastActionTime by QuickActionTileService.lastActionTimeFlow.collectAsStateWithLifecycle()
+    val memos by MemoTileService.memosFlow.collectAsStateWithLifecycle()
 
     var showMemoDialog by remember { mutableStateOf(false) }
 

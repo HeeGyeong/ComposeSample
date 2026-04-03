@@ -33,7 +33,7 @@ import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.collectAsState
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -121,10 +121,10 @@ fun BlogExampleScreen(
     val context = LocalContext.current
     val exampleType = remember { mutableStateOf("") }
     val exampleMoveType = remember { mutableStateOf(ExampleMoveType.UI) }
-    val exampleObjectList = blogExampleViewModel.exampleObjectList.collectAsState().value
-    val searchText by blogExampleViewModel.searchText.collectAsState()
-    val searchExampleList = blogExampleViewModel.searchExampleList.collectAsState(listOf()).value
-    val subCategoryList = blogExampleViewModel.subCategoryList.collectAsState(listOf()).value
+    val exampleObjectList = blogExampleViewModel.exampleObjectList.collectAsStateWithLifecycle().value
+    val searchText by blogExampleViewModel.searchText.collectAsStateWithLifecycle()
+    val searchExampleList = blogExampleViewModel.searchExampleList.collectAsStateWithLifecycle(initialValue = listOf()).value
+    val subCategoryList = blogExampleViewModel.subCategoryList.collectAsStateWithLifecycle().value
 
     LaunchedEffect(Unit) {
         blogExampleViewModel.reverseExampleList()

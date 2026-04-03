@@ -1,0 +1,881 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.example.composesample"
+4    android:versionCode="1"
+5    android:versionName="1.0" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="24"
+9        android:targetSdkVersion="35" />
+10
+11    <uses-permission android:name="android.permission.INTERNET" />
+11-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:5:5-67
+11-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:5:22-64
+12    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+12-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:6:5-71
+12-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:6:22-68
+13    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+13-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:7:5-76
+13-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:7:22-73
+14    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+14-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:8:5-79
+14-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:8:22-76
+15    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+15-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:9:5-81
+15-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:9:22-78
+16
+17    <uses-feature
+17-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:11:5-13:36
+18        android:name="android.hardware.camera"
+18-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:12:9-47
+19        android:required="false" />
+19-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:13:9-33
+20
+21    <uses-permission android:name="android.permission.CAMERA" />
+21-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:14:5-65
+21-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:14:22-62
+22
+23    <!-- targetSDK 32 이하 -->
+24    <uses-permission
+24-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:17:5-19:38
+25        android:name="android.permission.READ_EXTERNAL_STORAGE"
+25-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:18:9-64
+26        android:maxSdkVersion="32" />
+26-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:19:9-35
+27
+28    <!-- targetSDK 33 부터 -->
+29    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+29-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:22:5-76
+29-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:22:22-73
+30    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
+30-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:23:5-75
+30-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:23:22-72
+31
+32    <!-- targetSDK 34 이면서 Android OS 14 인 경우 -->
+33    <uses-permission android:name="android.permission.READ_MEDIA_VISUAL_USER_SELECTED" />
+33-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:26:5-90
+33-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:26:22-87
+34    <uses-permission android:name="android.permission.WAKE_LOCK" />
+34-->[androidx.work:work-runtime:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/4225851788451b47f96d82ebbaa0a5ef/transformed/work-runtime-2.9.1/AndroidManifest.xml:23:5-68
+34-->[androidx.work:work-runtime:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/4225851788451b47f96d82ebbaa0a5ef/transformed/work-runtime-2.9.1/AndroidManifest.xml:23:22-65
+35    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+35-->[androidx.work:work-runtime:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/4225851788451b47f96d82ebbaa0a5ef/transformed/work-runtime-2.9.1/AndroidManifest.xml:24:5-79
+35-->[androidx.work:work-runtime:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/4225851788451b47f96d82ebbaa0a5ef/transformed/work-runtime-2.9.1/AndroidManifest.xml:24:22-76
+36    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+36-->[androidx.work:work-runtime:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/4225851788451b47f96d82ebbaa0a5ef/transformed/work-runtime-2.9.1/AndroidManifest.xml:25:5-81
+36-->[androidx.work:work-runtime:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/4225851788451b47f96d82ebbaa0a5ef/transformed/work-runtime-2.9.1/AndroidManifest.xml:25:22-78
+37    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+37-->[androidx.work:work-runtime:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/4225851788451b47f96d82ebbaa0a5ef/transformed/work-runtime-2.9.1/AndroidManifest.xml:26:5-77
+37-->[androidx.work:work-runtime:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/4225851788451b47f96d82ebbaa0a5ef/transformed/work-runtime-2.9.1/AndroidManifest.xml:26:22-74
+38    <uses-permission android:name="android.permission.REORDER_TASKS" />
+38-->[androidx.test:core:1.6.1] /Users/heegyeong/.gradle/caches/8.9/transforms/ac82d376fa7efab435b186400c554c02/transformed/core-1.6.1/AndroidManifest.xml:24:5-72
+38-->[androidx.test:core:1.6.1] /Users/heegyeong/.gradle/caches/8.9/transforms/ac82d376fa7efab435b186400c554c02/transformed/core-1.6.1/AndroidManifest.xml:24:22-69
+39
+40    <permission
+40-->[androidx.core:core:1.15.0] /Users/heegyeong/.gradle/caches/8.9/transforms/985ca83fa4b276698a7aeb993ce92bee/transformed/core-1.15.0/AndroidManifest.xml:22:5-24:47
+41        android:name="com.example.composesample.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+41-->[androidx.core:core:1.15.0] /Users/heegyeong/.gradle/caches/8.9/transforms/985ca83fa4b276698a7aeb993ce92bee/transformed/core-1.15.0/AndroidManifest.xml:23:9-81
+42        android:protectionLevel="signature" />
+42-->[androidx.core:core:1.15.0] /Users/heegyeong/.gradle/caches/8.9/transforms/985ca83fa4b276698a7aeb993ce92bee/transformed/core-1.15.0/AndroidManifest.xml:24:9-44
+43
+44    <uses-permission android:name="com.example.composesample.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
+44-->[androidx.core:core:1.15.0] /Users/heegyeong/.gradle/caches/8.9/transforms/985ca83fa4b276698a7aeb993ce92bee/transformed/core-1.15.0/AndroidManifest.xml:26:5-97
+44-->[androidx.core:core:1.15.0] /Users/heegyeong/.gradle/caches/8.9/transforms/985ca83fa4b276698a7aeb993ce92bee/transformed/core-1.15.0/AndroidManifest.xml:26:22-94
+45
+46    <queries>
+46-->[androidx.test:runner:1.5.2] /Users/heegyeong/.gradle/caches/8.9/transforms/5cea27f05da0c52d19d54b102ffbcc06/transformed/runner-1.5.2/AndroidManifest.xml:24:5-28:15
+47        <package android:name="androidx.test.orchestrator" />
+47-->[androidx.test:runner:1.5.2] /Users/heegyeong/.gradle/caches/8.9/transforms/5cea27f05da0c52d19d54b102ffbcc06/transformed/runner-1.5.2/AndroidManifest.xml:25:9-62
+47-->[androidx.test:runner:1.5.2] /Users/heegyeong/.gradle/caches/8.9/transforms/5cea27f05da0c52d19d54b102ffbcc06/transformed/runner-1.5.2/AndroidManifest.xml:25:18-59
+48        <package android:name="androidx.test.services" />
+48-->[androidx.test:runner:1.5.2] /Users/heegyeong/.gradle/caches/8.9/transforms/5cea27f05da0c52d19d54b102ffbcc06/transformed/runner-1.5.2/AndroidManifest.xml:26:9-58
+48-->[androidx.test:runner:1.5.2] /Users/heegyeong/.gradle/caches/8.9/transforms/5cea27f05da0c52d19d54b102ffbcc06/transformed/runner-1.5.2/AndroidManifest.xml:26:18-55
+49        <package android:name="com.google.android.apps.common.testing.services" />
+49-->[androidx.test:runner:1.5.2] /Users/heegyeong/.gradle/caches/8.9/transforms/5cea27f05da0c52d19d54b102ffbcc06/transformed/runner-1.5.2/AndroidManifest.xml:27:9-83
+49-->[androidx.test:runner:1.5.2] /Users/heegyeong/.gradle/caches/8.9/transforms/5cea27f05da0c52d19d54b102ffbcc06/transformed/runner-1.5.2/AndroidManifest.xml:27:18-80
+50    </queries>
+51
+52    <application
+52-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:28:5-235:19
+53        android:name="com.example.composesample.application.BaseApplication"
+53-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:29:9-52
+54        android:allowBackup="true"
+54-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:30:9-35
+55        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+55-->[androidx.core:core:1.15.0] /Users/heegyeong/.gradle/caches/8.9/transforms/985ca83fa4b276698a7aeb993ce92bee/transformed/core-1.15.0/AndroidManifest.xml:28:18-86
+56        android:debuggable="true"
+57        android:extractNativeLibs="false"
+58        android:icon="@mipmap/ic_launcher"
+58-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:31:9-43
+59        android:label="@string/app_name"
+59-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:32:9-41
+60        android:roundIcon="@mipmap/ic_launcher_round"
+60-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:33:9-54
+61        android:supportsRtl="true"
+61-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:34:9-35
+62        android:theme="@style/Theme.ComposeSample" >
+62-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:35:9-51
+63        <activity
+63-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:36:9-51:20
+64            android:name="com.example.composesample.presentation.MainActivity"
+64-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:37:13-54
+65            android:exported="true"
+65-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:38:13-36
+66            android:label="@string/app_name"
+66-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:39:13-45
+67            android:theme="@style/Theme.ComposeSample" >
+67-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:40:13-55
+68            <intent-filter>
+68-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:41:13-45:29
+69                <action android:name="android.intent.action.MAIN" />
+69-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:42:17-69
+69-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:42:25-66
+70
+71                <category android:name="android.intent.category.LAUNCHER" />
+71-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:44:17-77
+71-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:44:27-74
+72            </intent-filter>
+73
+74            <!-- shortCut 추가 -->
+75            <meta-data
+75-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:48:13-50:53
+76                android:name="android.app.shortcuts"
+76-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:49:17-53
+77                android:resource="@xml/shortcuts" />
+77-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:50:17-50
+78        </activity>
+79
+80        <!-- Legacy sample activity -->
+81        <activity
+81-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:54:9-56:58
+82            android:name="com.example.composesample.presentation.legacy.sub.SubActivity"
+82-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:55:13-64
+83            android:theme="@style/Theme.ComposeSample" />
+83-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:56:13-55
+84        <activity
+84-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:58:9-60:58
+85            android:name="com.example.composesample.presentation.legacy.progress.ProgressActivity"
+85-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:59:13-74
+86            android:theme="@style/Theme.ComposeSample" />
+86-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:60:13-55
+87        <activity
+87-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:62:9-64:58
+88            android:name="com.example.composesample.presentation.legacy.cal.CalActivity"
+88-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:63:13-64
+89            android:theme="@style/Theme.ComposeSample" />
+89-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:64:13-55
+90        <activity
+90-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:66:9-68:58
+91            android:name="com.example.composesample.presentation.legacy.scope.ScopeActivity"
+91-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:67:13-68
+92            android:theme="@style/Theme.ComposeSample" />
+92-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:68:13-55
+93        <activity
+93-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:70:9-72:58
+94            android:name="com.example.composesample.presentation.legacy.scope.sub.RememberCoroutineActivity"
+94-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:71:13-84
+95            android:theme="@style/Theme.ComposeSample" />
+95-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:72:13-55
+96        <activity
+96-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:74:9-76:58
+97            android:name="com.example.composesample.presentation.legacy.scope.sub.LaunchedEffectActivity"
+97-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:75:13-81
+98            android:theme="@style/Theme.ComposeSample" />
+98-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:76:13-55
+99        <activity
+99-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:78:9-80:58
+100            android:name="com.example.composesample.presentation.legacy.scope.sub.ProduceStateActivity"
+100-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:79:13-79
+101            android:theme="@style/Theme.ComposeSample" />
+101-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:80:13-55
+102        <activity
+102-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:82:9-84:58
+103            android:name="com.example.composesample.presentation.legacy.movie.MovieActivity"
+103-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:83:13-68
+104            android:theme="@style/Theme.ComposeSample" />
+104-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:84:13-55
+105        <activity
+105-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:86:9-88:58
+106            android:name="com.example.composesample.presentation.legacy.hash.HashTagActivity"
+106-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:87:13-69
+107            android:theme="@style/Theme.ComposeSample" />
+107-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:88:13-55
+108        <activity
+108-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:90:9-92:58
+109            android:name="com.example.composesample.presentation.legacy.LegacyActivity"
+109-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:91:13-63
+110            android:theme="@style/Theme.ComposeSample" />
+110-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:92:13-55
+111
+112        <!-- Blog example activity -->
+113        <activity
+113-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:95:9-98:58
+114            android:name="com.example.composesample.presentation.example.BlogExampleActivity"
+114-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:96:13-69
+115            android:theme="@style/Theme.ComposeSample"
+115-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:97:13-55
+116            android:windowSoftInputMode="adjustResize" />
+116-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:98:13-55
+117        <activity
+117-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:99:9-102:58
+118            android:name="com.example.composesample.presentation.example.component.intent.PassingIntentDataActivity"
+118-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:100:13-92
+119            android:theme="@style/Theme.ComposeSample"
+119-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:101:13-55
+120            android:windowSoftInputMode="adjustResize" />
+120-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:102:13-55
+121        <activity
+121-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:103:9-106:58
+122            android:name="com.example.composesample.presentation.example.component.navigation.BottomNavigationActivity"
+122-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:104:13-95
+123            android:theme="@style/Theme.ComposeSample"
+123-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:105:13-55
+124            android:windowSoftInputMode="adjustResize" />
+124-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:106:13-55
+125        <activity
+125-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:107:9-110:58
+126            android:name="com.example.composesample.presentation.example.component.language.LanguageTestActivity"
+126-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:108:13-89
+127            android:theme="@style/Theme.ComposeSample"
+127-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:109:13-55
+128            android:windowSoftInputMode="adjustResize" />
+128-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:110:13-55
+129
+130        <provider
+130-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:112:9-120:20
+131            android:name="androidx.core.content.FileProvider"
+131-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:113:13-62
+132            android:authorities="com.example.composesample"
+132-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:114:13-60
+133            android:exported="false"
+133-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:115:13-37
+134            android:grantUriPermissions="true" >
+134-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:116:13-47
+135            <meta-data
+135-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:117:13-119:54
+136                android:name="android.support.FILE_PROVIDER_PATHS"
+136-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:118:17-67
+137                android:resource="@xml/file_paths" />
+137-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:119:17-51
+138        </provider>
+139
+140        <!-- Glance Widget Receiver -->
+141        <receiver
+141-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:123:9-132:20
+142            android:name="com.example.composesample.presentation.example.component.system.ui.widget.StreaksWidgetReceiver"
+142-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:124:13-98
+143            android:exported="true" >
+143-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:125:13-36
+144            <intent-filter>
+144-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:126:13-128:29
+145                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+145-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:127:17-84
+145-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:127:25-81
+146            </intent-filter>
+147
+148            <meta-data
+148-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:129:13-131:63
+149                android:name="android.appwidget.provider"
+149-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:130:17-58
+150                android:resource="@xml/streaks_widget_info" />
+150-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:131:17-60
+151        </receiver>
+152
+153        <!-- Small Widget (2x1) -->
+154        <receiver
+154-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:135:9-144:20
+155            android:name="com.example.composesample.presentation.example.component.system.ui.widget.SmallWidgetReceiver"
+155-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:136:13-96
+156            android:exported="true" >
+156-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:137:13-36
+157            <intent-filter>
+157-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:126:13-128:29
+158                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+158-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:127:17-84
+158-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:127:25-81
+159            </intent-filter>
+160
+161            <meta-data
+161-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:129:13-131:63
+162                android:name="android.appwidget.provider"
+162-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:130:17-58
+163                android:resource="@xml/small_widget_info" />
+163-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:131:17-60
+164        </receiver>
+165
+166        <!-- Medium Widget (2x2) -->
+167        <receiver
+167-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:147:9-156:20
+168            android:name="com.example.composesample.presentation.example.component.system.ui.widget.MediumWidgetReceiver"
+168-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:148:13-97
+169            android:exported="true" >
+169-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:149:13-36
+170            <intent-filter>
+170-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:126:13-128:29
+171                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+171-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:127:17-84
+171-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:127:25-81
+172            </intent-filter>
+173
+174            <meta-data
+174-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:129:13-131:63
+175                android:name="android.appwidget.provider"
+175-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:130:17-58
+176                android:resource="@xml/medium_widget_info" />
+176-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:131:17-60
+177        </receiver>
+178
+179        <!-- Large Widget (3x2+) -->
+180        <receiver
+180-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:159:9-168:20
+181            android:name="com.example.composesample.presentation.example.component.system.ui.widget.LargeWidgetReceiver"
+181-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:160:13-96
+182            android:exported="true" >
+182-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:161:13-36
+183            <intent-filter>
+183-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:126:13-128:29
+184                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+184-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:127:17-84
+184-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:127:25-81
+185            </intent-filter>
+186
+187            <meta-data
+187-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:129:13-131:63
+188                android:name="android.appwidget.provider"
+188-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:130:17-58
+189                android:resource="@xml/large_widget_info" />
+189-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:131:17-60
+190        </receiver>
+191
+192        <!-- Quick Settings Tile - Counter -->
+193        <service
+193-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:171:9-180:19
+194            android:name="com.example.composesample.presentation.example.component.system.platform.quicksettings.CounterTileService"
+194-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:172:13-108
+195            android:exported="true"
+195-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:176:13-36
+196            android:icon="@drawable/ic_launcher_foreground"
+196-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:174:13-60
+197            android:label="Counter"
+197-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:173:13-36
+198            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE" >
+198-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:175:13-77
+199            <intent-filter>
+199-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:177:13-179:29
+200                <action android:name="android.service.quicksettings.action.QS_TILE" />
+200-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:178:17-87
+200-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:178:25-84
+201            </intent-filter>
+202        </service>
+203
+204        <!-- Quick Settings Tile - Toggle -->
+205        <service
+205-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:183:9-192:19
+206            android:name="com.example.composesample.presentation.example.component.system.platform.quicksettings.ToggleTileService"
+206-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:184:13-107
+207            android:exported="true"
+207-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:188:13-36
+208            android:icon="@drawable/ic_launcher_foreground"
+208-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:186:13-60
+209            android:label="Toggle"
+209-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:185:13-35
+210            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE" >
+210-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:187:13-77
+211            <intent-filter>
+211-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:177:13-179:29
+212                <action android:name="android.service.quicksettings.action.QS_TILE" />
+212-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:178:17-87
+212-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:178:25-84
+213            </intent-filter>
+214        </service>
+215
+216        <!-- Quick Settings Tile - Timer -->
+217        <service
+217-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:195:9-204:19
+218            android:name="com.example.composesample.presentation.example.component.system.platform.quicksettings.TimerTileService"
+218-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:196:13-106
+219            android:exported="true"
+219-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:200:13-36
+220            android:icon="@drawable/ic_launcher_foreground"
+220-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:198:13-60
+221            android:label="Timer"
+221-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:197:13-34
+222            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE" >
+222-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:199:13-77
+223            <intent-filter>
+223-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:177:13-179:29
+224                <action android:name="android.service.quicksettings.action.QS_TILE" />
+224-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:178:17-87
+224-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:178:25-84
+225            </intent-filter>
+226        </service>
+227
+228        <!-- Quick Settings Tile - Quick Action -->
+229        <service
+229-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:207:9-216:19
+230            android:name="com.example.composesample.presentation.example.component.system.platform.quicksettings.QuickActionTileService"
+230-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:208:13-112
+231            android:exported="true"
+231-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:212:13-36
+232            android:icon="@drawable/ic_launcher_foreground"
+232-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:210:13-60
+233            android:label="Quick Action"
+233-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:209:13-41
+234            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE" >
+234-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:211:13-77
+235            <intent-filter>
+235-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:177:13-179:29
+236                <action android:name="android.service.quicksettings.action.QS_TILE" />
+236-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:178:17-87
+236-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:178:25-84
+237            </intent-filter>
+238        </service>
+239
+240        <!-- Quick Settings Tile - Memo -->
+241        <service
+241-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:219:9-228:19
+242            android:name="com.example.composesample.presentation.example.component.system.platform.quicksettings.MemoTileService"
+242-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:220:13-105
+243            android:exported="true"
+243-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:224:13-36
+244            android:icon="@drawable/ic_launcher_foreground"
+244-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:222:13-60
+245            android:label="Memo"
+245-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:221:13-33
+246            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE" >
+246-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:223:13-77
+247            <intent-filter>
+247-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:177:13-179:29
+248                <action android:name="android.service.quicksettings.action.QS_TILE" />
+248-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:178:17-87
+248-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:178:25-84
+249            </intent-filter>
+250        </service>
+251
+252        <!-- Memo Input Activity (for Quick Settings Tile) -->
+253        <activity
+253-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:231:9-234:40
+254            android:name="com.example.composesample.presentation.example.component.system.platform.quicksettings.MemoInputActivity"
+254-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:232:13-107
+255            android:exported="false"
+255-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:234:13-37
+256            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+256-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:233:13-72
+257
+258        <service
+258-->[androidx.room:room-runtime:2.6.1] /Users/heegyeong/.gradle/caches/8.9/transforms/41910fc0a6bf748a2b0a4ea1337117cf/transformed/room-runtime-2.6.1/AndroidManifest.xml:24:9-28:63
+259            android:name="androidx.room.MultiInstanceInvalidationService"
+259-->[androidx.room:room-runtime:2.6.1] /Users/heegyeong/.gradle/caches/8.9/transforms/41910fc0a6bf748a2b0a4ea1337117cf/transformed/room-runtime-2.6.1/AndroidManifest.xml:25:13-74
+260            android:directBootAware="true"
+260-->[androidx.room:room-runtime:2.6.1] /Users/heegyeong/.gradle/caches/8.9/transforms/41910fc0a6bf748a2b0a4ea1337117cf/transformed/room-runtime-2.6.1/AndroidManifest.xml:26:13-43
+261            android:exported="false" />
+261-->[androidx.room:room-runtime:2.6.1] /Users/heegyeong/.gradle/caches/8.9/transforms/41910fc0a6bf748a2b0a4ea1337117cf/transformed/room-runtime-2.6.1/AndroidManifest.xml:27:13-37
+262
+263        <activity
+263-->[androidx.glance:glance-appwidget:1.1.1] /Users/heegyeong/.gradle/caches/8.9/transforms/0ce8228493de54945fabb6c498adb2af/transformed/glance-appwidget-1.1.1/AndroidManifest.xml:23:9-28:62
+264            android:name="androidx.glance.appwidget.action.ActionTrampolineActivity"
+264-->[androidx.glance:glance-appwidget:1.1.1] /Users/heegyeong/.gradle/caches/8.9/transforms/0ce8228493de54945fabb6c498adb2af/transformed/glance-appwidget-1.1.1/AndroidManifest.xml:24:13-85
+265            android:enabled="true"
+265-->[androidx.glance:glance-appwidget:1.1.1] /Users/heegyeong/.gradle/caches/8.9/transforms/0ce8228493de54945fabb6c498adb2af/transformed/glance-appwidget-1.1.1/AndroidManifest.xml:25:13-35
+266            android:excludeFromRecents="true"
+266-->[androidx.glance:glance-appwidget:1.1.1] /Users/heegyeong/.gradle/caches/8.9/transforms/0ce8228493de54945fabb6c498adb2af/transformed/glance-appwidget-1.1.1/AndroidManifest.xml:26:13-46
+267            android:exported="false"
+267-->[androidx.glance:glance-appwidget:1.1.1] /Users/heegyeong/.gradle/caches/8.9/transforms/0ce8228493de54945fabb6c498adb2af/transformed/glance-appwidget-1.1.1/AndroidManifest.xml:27:13-37
+268            android:theme="@android:style/Theme.NoDisplay" />
+268-->[androidx.glance:glance-appwidget:1.1.1] /Users/heegyeong/.gradle/caches/8.9/transforms/0ce8228493de54945fabb6c498adb2af/transformed/glance-appwidget-1.1.1/AndroidManifest.xml:28:13-59
+269        <activity
+269-->[androidx.glance:glance-appwidget:1.1.1] /Users/heegyeong/.gradle/caches/8.9/transforms/0ce8228493de54945fabb6c498adb2af/transformed/glance-appwidget-1.1.1/AndroidManifest.xml:29:9-36:81
+270            android:name="androidx.glance.appwidget.action.InvisibleActionTrampolineActivity"
+270-->[androidx.glance:glance-appwidget:1.1.1] /Users/heegyeong/.gradle/caches/8.9/transforms/0ce8228493de54945fabb6c498adb2af/transformed/glance-appwidget-1.1.1/AndroidManifest.xml:30:13-94
+271            android:enabled="true"
+271-->[androidx.glance:glance-appwidget:1.1.1] /Users/heegyeong/.gradle/caches/8.9/transforms/0ce8228493de54945fabb6c498adb2af/transformed/glance-appwidget-1.1.1/AndroidManifest.xml:31:13-35
+272            android:exported="false"
+272-->[androidx.glance:glance-appwidget:1.1.1] /Users/heegyeong/.gradle/caches/8.9/transforms/0ce8228493de54945fabb6c498adb2af/transformed/glance-appwidget-1.1.1/AndroidManifest.xml:32:13-37
+273            android:launchMode="singleInstance"
+273-->[androidx.glance:glance-appwidget:1.1.1] /Users/heegyeong/.gradle/caches/8.9/transforms/0ce8228493de54945fabb6c498adb2af/transformed/glance-appwidget-1.1.1/AndroidManifest.xml:33:13-48
+274            android:noHistory="true"
+274-->[androidx.glance:glance-appwidget:1.1.1] /Users/heegyeong/.gradle/caches/8.9/transforms/0ce8228493de54945fabb6c498adb2af/transformed/glance-appwidget-1.1.1/AndroidManifest.xml:34:13-37
+275            android:taskAffinity="androidx.glance.appwidget.ListAdapterCallbackTrampoline"
+275-->[androidx.glance:glance-appwidget:1.1.1] /Users/heegyeong/.gradle/caches/8.9/transforms/0ce8228493de54945fabb6c498adb2af/transformed/glance-appwidget-1.1.1/AndroidManifest.xml:35:13-91
+276            android:theme="@style/Widget.Glance.AppWidget.CallbackTrampoline" />
+276-->[androidx.glance:glance-appwidget:1.1.1] /Users/heegyeong/.gradle/caches/8.9/transforms/0ce8228493de54945fabb6c498adb2af/transformed/glance-appwidget-1.1.1/AndroidManifest.xml:36:13-78
+277
+278        <receiver
+278-->[androidx.glance:glance-appwidget:1.1.1] /Users/heegyeong/.gradle/caches/8.9/transforms/0ce8228493de54945fabb6c498adb2af/transformed/glance-appwidget-1.1.1/AndroidManifest.xml:38:9-41:40
+279            android:name="androidx.glance.appwidget.action.ActionCallbackBroadcastReceiver"
+279-->[androidx.glance:glance-appwidget:1.1.1] /Users/heegyeong/.gradle/caches/8.9/transforms/0ce8228493de54945fabb6c498adb2af/transformed/glance-appwidget-1.1.1/AndroidManifest.xml:39:13-92
+280            android:enabled="true"
+280-->[androidx.glance:glance-appwidget:1.1.1] /Users/heegyeong/.gradle/caches/8.9/transforms/0ce8228493de54945fabb6c498adb2af/transformed/glance-appwidget-1.1.1/AndroidManifest.xml:40:13-35
+281            android:exported="false" />
+281-->[androidx.glance:glance-appwidget:1.1.1] /Users/heegyeong/.gradle/caches/8.9/transforms/0ce8228493de54945fabb6c498adb2af/transformed/glance-appwidget-1.1.1/AndroidManifest.xml:41:13-37
+282        <receiver
+282-->[androidx.glance:glance-appwidget:1.1.1] /Users/heegyeong/.gradle/caches/8.9/transforms/0ce8228493de54945fabb6c498adb2af/transformed/glance-appwidget-1.1.1/AndroidManifest.xml:42:9-45:40
+283            android:name="androidx.glance.appwidget.UnmanagedSessionReceiver"
+283-->[androidx.glance:glance-appwidget:1.1.1] /Users/heegyeong/.gradle/caches/8.9/transforms/0ce8228493de54945fabb6c498adb2af/transformed/glance-appwidget-1.1.1/AndroidManifest.xml:43:13-78
+284            android:enabled="true"
+284-->[androidx.glance:glance-appwidget:1.1.1] /Users/heegyeong/.gradle/caches/8.9/transforms/0ce8228493de54945fabb6c498adb2af/transformed/glance-appwidget-1.1.1/AndroidManifest.xml:44:13-35
+285            android:exported="false" />
+285-->[androidx.glance:glance-appwidget:1.1.1] /Users/heegyeong/.gradle/caches/8.9/transforms/0ce8228493de54945fabb6c498adb2af/transformed/glance-appwidget-1.1.1/AndroidManifest.xml:45:13-37
+286        <receiver
+286-->[androidx.glance:glance-appwidget:1.1.1] /Users/heegyeong/.gradle/caches/8.9/transforms/0ce8228493de54945fabb6c498adb2af/transformed/glance-appwidget-1.1.1/AndroidManifest.xml:46:9-53:20
+287            android:name="androidx.glance.appwidget.MyPackageReplacedReceiver"
+287-->[androidx.glance:glance-appwidget:1.1.1] /Users/heegyeong/.gradle/caches/8.9/transforms/0ce8228493de54945fabb6c498adb2af/transformed/glance-appwidget-1.1.1/AndroidManifest.xml:47:13-79
+288            android:enabled="true"
+288-->[androidx.glance:glance-appwidget:1.1.1] /Users/heegyeong/.gradle/caches/8.9/transforms/0ce8228493de54945fabb6c498adb2af/transformed/glance-appwidget-1.1.1/AndroidManifest.xml:48:13-35
+289            android:exported="false" >
+289-->[androidx.glance:glance-appwidget:1.1.1] /Users/heegyeong/.gradle/caches/8.9/transforms/0ce8228493de54945fabb6c498adb2af/transformed/glance-appwidget-1.1.1/AndroidManifest.xml:49:13-37
+290            <intent-filter>
+290-->[androidx.glance:glance-appwidget:1.1.1] /Users/heegyeong/.gradle/caches/8.9/transforms/0ce8228493de54945fabb6c498adb2af/transformed/glance-appwidget-1.1.1/AndroidManifest.xml:50:13-52:29
+291                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+291-->[androidx.glance:glance-appwidget:1.1.1] /Users/heegyeong/.gradle/caches/8.9/transforms/0ce8228493de54945fabb6c498adb2af/transformed/glance-appwidget-1.1.1/AndroidManifest.xml:51:17-84
+291-->[androidx.glance:glance-appwidget:1.1.1] /Users/heegyeong/.gradle/caches/8.9/transforms/0ce8228493de54945fabb6c498adb2af/transformed/glance-appwidget-1.1.1/AndroidManifest.xml:51:25-81
+292            </intent-filter>
+293        </receiver>
+294
+295        <service
+295-->[androidx.glance:glance-appwidget:1.1.1] /Users/heegyeong/.gradle/caches/8.9/transforms/0ce8228493de54945fabb6c498adb2af/transformed/glance-appwidget-1.1.1/AndroidManifest.xml:55:9-58:72
+296            android:name="androidx.glance.appwidget.GlanceRemoteViewsService"
+296-->[androidx.glance:glance-appwidget:1.1.1] /Users/heegyeong/.gradle/caches/8.9/transforms/0ce8228493de54945fabb6c498adb2af/transformed/glance-appwidget-1.1.1/AndroidManifest.xml:56:13-78
+297            android:exported="true"
+297-->[androidx.glance:glance-appwidget:1.1.1] /Users/heegyeong/.gradle/caches/8.9/transforms/0ce8228493de54945fabb6c498adb2af/transformed/glance-appwidget-1.1.1/AndroidManifest.xml:57:13-36
+298            android:permission="android.permission.BIND_REMOTEVIEWS" />
+298-->[androidx.glance:glance-appwidget:1.1.1] /Users/heegyeong/.gradle/caches/8.9/transforms/0ce8228493de54945fabb6c498adb2af/transformed/glance-appwidget-1.1.1/AndroidManifest.xml:58:13-69
+299
+300        <provider
+300-->[androidx.work:work-runtime:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/4225851788451b47f96d82ebbaa0a5ef/transformed/work-runtime-2.9.1/AndroidManifest.xml:29:9-37:20
+301            android:name="androidx.startup.InitializationProvider"
+301-->[androidx.work:work-runtime:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/4225851788451b47f96d82ebbaa0a5ef/transformed/work-runtime-2.9.1/AndroidManifest.xml:30:13-67
+302            android:authorities="com.example.composesample.androidx-startup"
+302-->[androidx.work:work-runtime:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/4225851788451b47f96d82ebbaa0a5ef/transformed/work-runtime-2.9.1/AndroidManifest.xml:31:13-68
+303            android:exported="false" >
+303-->[androidx.work:work-runtime:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/4225851788451b47f96d82ebbaa0a5ef/transformed/work-runtime-2.9.1/AndroidManifest.xml:32:13-37
+304            <meta-data
+304-->[androidx.work:work-runtime:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/4225851788451b47f96d82ebbaa0a5ef/transformed/work-runtime-2.9.1/AndroidManifest.xml:34:13-36:52
+305                android:name="androidx.work.WorkManagerInitializer"
+305-->[androidx.work:work-runtime:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/4225851788451b47f96d82ebbaa0a5ef/transformed/work-runtime-2.9.1/AndroidManifest.xml:35:17-68
+306                android:value="androidx.startup" />
+306-->[androidx.work:work-runtime:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/4225851788451b47f96d82ebbaa0a5ef/transformed/work-runtime-2.9.1/AndroidManifest.xml:36:17-49
+307            <meta-data
+307-->[androidx.emoji2:emoji2:1.4.0] /Users/heegyeong/.gradle/caches/8.9/transforms/9e2708b5b0ade0013e4c965ffa9894c3/transformed/emoji2-1.4.0/AndroidManifest.xml:29:13-31:52
+308                android:name="androidx.emoji2.text.EmojiCompatInitializer"
+308-->[androidx.emoji2:emoji2:1.4.0] /Users/heegyeong/.gradle/caches/8.9/transforms/9e2708b5b0ade0013e4c965ffa9894c3/transformed/emoji2-1.4.0/AndroidManifest.xml:30:17-75
+309                android:value="androidx.startup" />
+309-->[androidx.emoji2:emoji2:1.4.0] /Users/heegyeong/.gradle/caches/8.9/transforms/9e2708b5b0ade0013e4c965ffa9894c3/transformed/emoji2-1.4.0/AndroidManifest.xml:31:17-49
+310            <meta-data
+310-->[androidx.lifecycle:lifecycle-process:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/84613002a576c7228152d7cf9ae06cb0/transformed/lifecycle-process-2.9.1/AndroidManifest.xml:29:13-31:52
+311                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
+311-->[androidx.lifecycle:lifecycle-process:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/84613002a576c7228152d7cf9ae06cb0/transformed/lifecycle-process-2.9.1/AndroidManifest.xml:30:17-78
+312                android:value="androidx.startup" />
+312-->[androidx.lifecycle:lifecycle-process:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/84613002a576c7228152d7cf9ae06cb0/transformed/lifecycle-process-2.9.1/AndroidManifest.xml:31:17-49
+313            <meta-data
+313-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/heegyeong/.gradle/caches/8.9/transforms/02729e5ff8d0ba870ac9a846d789a494/transformed/profileinstaller-1.4.0/AndroidManifest.xml:29:13-31:52
+314                android:name="androidx.profileinstaller.ProfileInstallerInitializer"
+314-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/heegyeong/.gradle/caches/8.9/transforms/02729e5ff8d0ba870ac9a846d789a494/transformed/profileinstaller-1.4.0/AndroidManifest.xml:30:17-85
+315                android:value="androidx.startup" />
+315-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/heegyeong/.gradle/caches/8.9/transforms/02729e5ff8d0ba870ac9a846d789a494/transformed/profileinstaller-1.4.0/AndroidManifest.xml:31:17-49
+316        </provider>
+317
+318        <service
+318-->[androidx.work:work-runtime:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/4225851788451b47f96d82ebbaa0a5ef/transformed/work-runtime-2.9.1/AndroidManifest.xml:39:9-45:35
+319            android:name="androidx.work.impl.background.systemalarm.SystemAlarmService"
+319-->[androidx.work:work-runtime:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/4225851788451b47f96d82ebbaa0a5ef/transformed/work-runtime-2.9.1/AndroidManifest.xml:40:13-88
+320            android:directBootAware="false"
+320-->[androidx.work:work-runtime:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/4225851788451b47f96d82ebbaa0a5ef/transformed/work-runtime-2.9.1/AndroidManifest.xml:41:13-44
+321            android:enabled="@bool/enable_system_alarm_service_default"
+321-->[androidx.work:work-runtime:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/4225851788451b47f96d82ebbaa0a5ef/transformed/work-runtime-2.9.1/AndroidManifest.xml:42:13-72
+322            android:exported="false" />
+322-->[androidx.work:work-runtime:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/4225851788451b47f96d82ebbaa0a5ef/transformed/work-runtime-2.9.1/AndroidManifest.xml:43:13-37
+323        <service
+323-->[androidx.work:work-runtime:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/4225851788451b47f96d82ebbaa0a5ef/transformed/work-runtime-2.9.1/AndroidManifest.xml:46:9-52:35
+324            android:name="androidx.work.impl.background.systemjob.SystemJobService"
+324-->[androidx.work:work-runtime:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/4225851788451b47f96d82ebbaa0a5ef/transformed/work-runtime-2.9.1/AndroidManifest.xml:47:13-84
+325            android:directBootAware="false"
+325-->[androidx.work:work-runtime:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/4225851788451b47f96d82ebbaa0a5ef/transformed/work-runtime-2.9.1/AndroidManifest.xml:48:13-44
+326            android:enabled="@bool/enable_system_job_service_default"
+326-->[androidx.work:work-runtime:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/4225851788451b47f96d82ebbaa0a5ef/transformed/work-runtime-2.9.1/AndroidManifest.xml:49:13-70
+327            android:exported="true"
+327-->[androidx.work:work-runtime:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/4225851788451b47f96d82ebbaa0a5ef/transformed/work-runtime-2.9.1/AndroidManifest.xml:50:13-36
+328            android:permission="android.permission.BIND_JOB_SERVICE" />
+328-->[androidx.work:work-runtime:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/4225851788451b47f96d82ebbaa0a5ef/transformed/work-runtime-2.9.1/AndroidManifest.xml:51:13-69
+329        <service
+329-->[androidx.work:work-runtime:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/4225851788451b47f96d82ebbaa0a5ef/transformed/work-runtime-2.9.1/AndroidManifest.xml:53:9-59:35
+330            android:name="androidx.work.impl.foreground.SystemForegroundService"
+330-->[androidx.work:work-runtime:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/4225851788451b47f96d82ebbaa0a5ef/transformed/work-runtime-2.9.1/AndroidManifest.xml:54:13-81
+331            android:directBootAware="false"
+331-->[androidx.work:work-runtime:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/4225851788451b47f96d82ebbaa0a5ef/transformed/work-runtime-2.9.1/AndroidManifest.xml:55:13-44
+332            android:enabled="@bool/enable_system_foreground_service_default"
+332-->[androidx.work:work-runtime:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/4225851788451b47f96d82ebbaa0a5ef/transformed/work-runtime-2.9.1/AndroidManifest.xml:56:13-77
+333            android:exported="false" />
+333-->[androidx.work:work-runtime:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/4225851788451b47f96d82ebbaa0a5ef/transformed/work-runtime-2.9.1/AndroidManifest.xml:57:13-37
+334
+335        <receiver
+335-->[androidx.work:work-runtime:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/4225851788451b47f96d82ebbaa0a5ef/transformed/work-runtime-2.9.1/AndroidManifest.xml:61:9-66:35
+336            android:name="androidx.work.impl.utils.ForceStopRunnable$BroadcastReceiver"
+336-->[androidx.work:work-runtime:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/4225851788451b47f96d82ebbaa0a5ef/transformed/work-runtime-2.9.1/AndroidManifest.xml:62:13-88
+337            android:directBootAware="false"
+337-->[androidx.work:work-runtime:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/4225851788451b47f96d82ebbaa0a5ef/transformed/work-runtime-2.9.1/AndroidManifest.xml:63:13-44
+338            android:enabled="true"
+338-->[androidx.work:work-runtime:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/4225851788451b47f96d82ebbaa0a5ef/transformed/work-runtime-2.9.1/AndroidManifest.xml:64:13-35
+339            android:exported="false" />
+339-->[androidx.work:work-runtime:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/4225851788451b47f96d82ebbaa0a5ef/transformed/work-runtime-2.9.1/AndroidManifest.xml:65:13-37
+340        <receiver
+340-->[androidx.work:work-runtime:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/4225851788451b47f96d82ebbaa0a5ef/transformed/work-runtime-2.9.1/AndroidManifest.xml:67:9-77:20
+341            android:name="androidx.work.impl.background.systemalarm.ConstraintProxy$BatteryChargingProxy"
+341-->[androidx.work:work-runtime:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/4225851788451b47f96d82ebbaa0a5ef/transformed/work-runtime-2.9.1/AndroidManifest.xml:68:13-106
+342            android:directBootAware="false"
+342-->[androidx.work:work-runtime:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/4225851788451b47f96d82ebbaa0a5ef/transformed/work-runtime-2.9.1/AndroidManifest.xml:69:13-44
+343            android:enabled="false"
+343-->[androidx.work:work-runtime:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/4225851788451b47f96d82ebbaa0a5ef/transformed/work-runtime-2.9.1/AndroidManifest.xml:70:13-36
+344            android:exported="false" >
+344-->[androidx.work:work-runtime:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/4225851788451b47f96d82ebbaa0a5ef/transformed/work-runtime-2.9.1/AndroidManifest.xml:71:13-37
+345            <intent-filter>
+345-->[androidx.work:work-runtime:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/4225851788451b47f96d82ebbaa0a5ef/transformed/work-runtime-2.9.1/AndroidManifest.xml:73:13-76:29
+346                <action android:name="android.intent.action.ACTION_POWER_CONNECTED" />
+346-->[androidx.work:work-runtime:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/4225851788451b47f96d82ebbaa0a5ef/transformed/work-runtime-2.9.1/AndroidManifest.xml:74:17-87
+346-->[androidx.work:work-runtime:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/4225851788451b47f96d82ebbaa0a5ef/transformed/work-runtime-2.9.1/AndroidManifest.xml:74:25-84
+347                <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED" />
+347-->[androidx.work:work-runtime:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/4225851788451b47f96d82ebbaa0a5ef/transformed/work-runtime-2.9.1/AndroidManifest.xml:75:17-90
+347-->[androidx.work:work-runtime:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/4225851788451b47f96d82ebbaa0a5ef/transformed/work-runtime-2.9.1/AndroidManifest.xml:75:25-87
+348            </intent-filter>
+349        </receiver>
+350        <receiver
+350-->[androidx.work:work-runtime:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/4225851788451b47f96d82ebbaa0a5ef/transformed/work-runtime-2.9.1/AndroidManifest.xml:78:9-88:20
+351            android:name="androidx.work.impl.background.systemalarm.ConstraintProxy$BatteryNotLowProxy"
+351-->[androidx.work:work-runtime:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/4225851788451b47f96d82ebbaa0a5ef/transformed/work-runtime-2.9.1/AndroidManifest.xml:79:13-104
+352            android:directBootAware="false"
+352-->[androidx.work:work-runtime:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/4225851788451b47f96d82ebbaa0a5ef/transformed/work-runtime-2.9.1/AndroidManifest.xml:80:13-44
+353            android:enabled="false"
+353-->[androidx.work:work-runtime:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/4225851788451b47f96d82ebbaa0a5ef/transformed/work-runtime-2.9.1/AndroidManifest.xml:81:13-36
+354            android:exported="false" >
+354-->[androidx.work:work-runtime:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/4225851788451b47f96d82ebbaa0a5ef/transformed/work-runtime-2.9.1/AndroidManifest.xml:82:13-37
+355            <intent-filter>
+355-->[androidx.work:work-runtime:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/4225851788451b47f96d82ebbaa0a5ef/transformed/work-runtime-2.9.1/AndroidManifest.xml:84:13-87:29
+356                <action android:name="android.intent.action.BATTERY_OKAY" />
+356-->[androidx.work:work-runtime:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/4225851788451b47f96d82ebbaa0a5ef/transformed/work-runtime-2.9.1/AndroidManifest.xml:85:17-77
+356-->[androidx.work:work-runtime:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/4225851788451b47f96d82ebbaa0a5ef/transformed/work-runtime-2.9.1/AndroidManifest.xml:85:25-74
+357                <action android:name="android.intent.action.BATTERY_LOW" />
+357-->[androidx.work:work-runtime:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/4225851788451b47f96d82ebbaa0a5ef/transformed/work-runtime-2.9.1/AndroidManifest.xml:86:17-76
+357-->[androidx.work:work-runtime:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/4225851788451b47f96d82ebbaa0a5ef/transformed/work-runtime-2.9.1/AndroidManifest.xml:86:25-73
+358            </intent-filter>
+359        </receiver>
+360        <receiver
+360-->[androidx.work:work-runtime:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/4225851788451b47f96d82ebbaa0a5ef/transformed/work-runtime-2.9.1/AndroidManifest.xml:89:9-99:20
+361            android:name="androidx.work.impl.background.systemalarm.ConstraintProxy$StorageNotLowProxy"
+361-->[androidx.work:work-runtime:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/4225851788451b47f96d82ebbaa0a5ef/transformed/work-runtime-2.9.1/AndroidManifest.xml:90:13-104
+362            android:directBootAware="false"
+362-->[androidx.work:work-runtime:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/4225851788451b47f96d82ebbaa0a5ef/transformed/work-runtime-2.9.1/AndroidManifest.xml:91:13-44
+363            android:enabled="false"
+363-->[androidx.work:work-runtime:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/4225851788451b47f96d82ebbaa0a5ef/transformed/work-runtime-2.9.1/AndroidManifest.xml:92:13-36
+364            android:exported="false" >
+364-->[androidx.work:work-runtime:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/4225851788451b47f96d82ebbaa0a5ef/transformed/work-runtime-2.9.1/AndroidManifest.xml:93:13-37
+365            <intent-filter>
+365-->[androidx.work:work-runtime:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/4225851788451b47f96d82ebbaa0a5ef/transformed/work-runtime-2.9.1/AndroidManifest.xml:95:13-98:29
+366                <action android:name="android.intent.action.DEVICE_STORAGE_LOW" />
+366-->[androidx.work:work-runtime:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/4225851788451b47f96d82ebbaa0a5ef/transformed/work-runtime-2.9.1/AndroidManifest.xml:96:17-83
+366-->[androidx.work:work-runtime:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/4225851788451b47f96d82ebbaa0a5ef/transformed/work-runtime-2.9.1/AndroidManifest.xml:96:25-80
+367                <action android:name="android.intent.action.DEVICE_STORAGE_OK" />
+367-->[androidx.work:work-runtime:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/4225851788451b47f96d82ebbaa0a5ef/transformed/work-runtime-2.9.1/AndroidManifest.xml:97:17-82
+367-->[androidx.work:work-runtime:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/4225851788451b47f96d82ebbaa0a5ef/transformed/work-runtime-2.9.1/AndroidManifest.xml:97:25-79
+368            </intent-filter>
+369        </receiver>
+370        <receiver
+370-->[androidx.work:work-runtime:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/4225851788451b47f96d82ebbaa0a5ef/transformed/work-runtime-2.9.1/AndroidManifest.xml:100:9-109:20
+371            android:name="androidx.work.impl.background.systemalarm.ConstraintProxy$NetworkStateProxy"
+371-->[androidx.work:work-runtime:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/4225851788451b47f96d82ebbaa0a5ef/transformed/work-runtime-2.9.1/AndroidManifest.xml:101:13-103
+372            android:directBootAware="false"
+372-->[androidx.work:work-runtime:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/4225851788451b47f96d82ebbaa0a5ef/transformed/work-runtime-2.9.1/AndroidManifest.xml:102:13-44
+373            android:enabled="false"
+373-->[androidx.work:work-runtime:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/4225851788451b47f96d82ebbaa0a5ef/transformed/work-runtime-2.9.1/AndroidManifest.xml:103:13-36
+374            android:exported="false" >
+374-->[androidx.work:work-runtime:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/4225851788451b47f96d82ebbaa0a5ef/transformed/work-runtime-2.9.1/AndroidManifest.xml:104:13-37
+375            <intent-filter>
+375-->[androidx.work:work-runtime:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/4225851788451b47f96d82ebbaa0a5ef/transformed/work-runtime-2.9.1/AndroidManifest.xml:106:13-108:29
+376                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+376-->[androidx.work:work-runtime:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/4225851788451b47f96d82ebbaa0a5ef/transformed/work-runtime-2.9.1/AndroidManifest.xml:107:17-79
+376-->[androidx.work:work-runtime:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/4225851788451b47f96d82ebbaa0a5ef/transformed/work-runtime-2.9.1/AndroidManifest.xml:107:25-76
+377            </intent-filter>
+378        </receiver>
+379        <receiver
+379-->[androidx.work:work-runtime:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/4225851788451b47f96d82ebbaa0a5ef/transformed/work-runtime-2.9.1/AndroidManifest.xml:110:9-121:20
+380            android:name="androidx.work.impl.background.systemalarm.RescheduleReceiver"
+380-->[androidx.work:work-runtime:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/4225851788451b47f96d82ebbaa0a5ef/transformed/work-runtime-2.9.1/AndroidManifest.xml:111:13-88
+381            android:directBootAware="false"
+381-->[androidx.work:work-runtime:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/4225851788451b47f96d82ebbaa0a5ef/transformed/work-runtime-2.9.1/AndroidManifest.xml:112:13-44
+382            android:enabled="false"
+382-->[androidx.work:work-runtime:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/4225851788451b47f96d82ebbaa0a5ef/transformed/work-runtime-2.9.1/AndroidManifest.xml:113:13-36
+383            android:exported="false" >
+383-->[androidx.work:work-runtime:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/4225851788451b47f96d82ebbaa0a5ef/transformed/work-runtime-2.9.1/AndroidManifest.xml:114:13-37
+384            <intent-filter>
+384-->[androidx.work:work-runtime:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/4225851788451b47f96d82ebbaa0a5ef/transformed/work-runtime-2.9.1/AndroidManifest.xml:116:13-120:29
+385                <action android:name="android.intent.action.BOOT_COMPLETED" />
+385-->[androidx.work:work-runtime:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/4225851788451b47f96d82ebbaa0a5ef/transformed/work-runtime-2.9.1/AndroidManifest.xml:117:17-79
+385-->[androidx.work:work-runtime:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/4225851788451b47f96d82ebbaa0a5ef/transformed/work-runtime-2.9.1/AndroidManifest.xml:117:25-76
+386                <action android:name="android.intent.action.TIME_SET" />
+386-->[androidx.work:work-runtime:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/4225851788451b47f96d82ebbaa0a5ef/transformed/work-runtime-2.9.1/AndroidManifest.xml:118:17-73
+386-->[androidx.work:work-runtime:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/4225851788451b47f96d82ebbaa0a5ef/transformed/work-runtime-2.9.1/AndroidManifest.xml:118:25-70
+387                <action android:name="android.intent.action.TIMEZONE_CHANGED" />
+387-->[androidx.work:work-runtime:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/4225851788451b47f96d82ebbaa0a5ef/transformed/work-runtime-2.9.1/AndroidManifest.xml:119:17-81
+387-->[androidx.work:work-runtime:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/4225851788451b47f96d82ebbaa0a5ef/transformed/work-runtime-2.9.1/AndroidManifest.xml:119:25-78
+388            </intent-filter>
+389        </receiver>
+390        <receiver
+390-->[androidx.work:work-runtime:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/4225851788451b47f96d82ebbaa0a5ef/transformed/work-runtime-2.9.1/AndroidManifest.xml:122:9-131:20
+391            android:name="androidx.work.impl.background.systemalarm.ConstraintProxyUpdateReceiver"
+391-->[androidx.work:work-runtime:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/4225851788451b47f96d82ebbaa0a5ef/transformed/work-runtime-2.9.1/AndroidManifest.xml:123:13-99
+392            android:directBootAware="false"
+392-->[androidx.work:work-runtime:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/4225851788451b47f96d82ebbaa0a5ef/transformed/work-runtime-2.9.1/AndroidManifest.xml:124:13-44
+393            android:enabled="@bool/enable_system_alarm_service_default"
+393-->[androidx.work:work-runtime:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/4225851788451b47f96d82ebbaa0a5ef/transformed/work-runtime-2.9.1/AndroidManifest.xml:125:13-72
+394            android:exported="false" >
+394-->[androidx.work:work-runtime:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/4225851788451b47f96d82ebbaa0a5ef/transformed/work-runtime-2.9.1/AndroidManifest.xml:126:13-37
+395            <intent-filter>
+395-->[androidx.work:work-runtime:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/4225851788451b47f96d82ebbaa0a5ef/transformed/work-runtime-2.9.1/AndroidManifest.xml:128:13-130:29
+396                <action android:name="androidx.work.impl.background.systemalarm.UpdateProxies" />
+396-->[androidx.work:work-runtime:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/4225851788451b47f96d82ebbaa0a5ef/transformed/work-runtime-2.9.1/AndroidManifest.xml:129:17-98
+396-->[androidx.work:work-runtime:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/4225851788451b47f96d82ebbaa0a5ef/transformed/work-runtime-2.9.1/AndroidManifest.xml:129:25-95
+397            </intent-filter>
+398        </receiver>
+399        <receiver
+399-->[androidx.work:work-runtime:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/4225851788451b47f96d82ebbaa0a5ef/transformed/work-runtime-2.9.1/AndroidManifest.xml:132:9-142:20
+400            android:name="androidx.work.impl.diagnostics.DiagnosticsReceiver"
+400-->[androidx.work:work-runtime:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/4225851788451b47f96d82ebbaa0a5ef/transformed/work-runtime-2.9.1/AndroidManifest.xml:133:13-78
+401            android:directBootAware="false"
+401-->[androidx.work:work-runtime:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/4225851788451b47f96d82ebbaa0a5ef/transformed/work-runtime-2.9.1/AndroidManifest.xml:134:13-44
+402            android:enabled="true"
+402-->[androidx.work:work-runtime:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/4225851788451b47f96d82ebbaa0a5ef/transformed/work-runtime-2.9.1/AndroidManifest.xml:135:13-35
+403            android:exported="true"
+403-->[androidx.work:work-runtime:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/4225851788451b47f96d82ebbaa0a5ef/transformed/work-runtime-2.9.1/AndroidManifest.xml:136:13-36
+404            android:permission="android.permission.DUMP" >
+404-->[androidx.work:work-runtime:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/4225851788451b47f96d82ebbaa0a5ef/transformed/work-runtime-2.9.1/AndroidManifest.xml:137:13-57
+405            <intent-filter>
+405-->[androidx.work:work-runtime:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/4225851788451b47f96d82ebbaa0a5ef/transformed/work-runtime-2.9.1/AndroidManifest.xml:139:13-141:29
+406                <action android:name="androidx.work.diagnostics.REQUEST_DIAGNOSTICS" />
+406-->[androidx.work:work-runtime:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/4225851788451b47f96d82ebbaa0a5ef/transformed/work-runtime-2.9.1/AndroidManifest.xml:140:17-88
+406-->[androidx.work:work-runtime:2.9.1] /Users/heegyeong/.gradle/caches/8.9/transforms/4225851788451b47f96d82ebbaa0a5ef/transformed/work-runtime-2.9.1/AndroidManifest.xml:140:25-85
+407            </intent-filter>
+408        </receiver>
+409
+410        <activity
+410-->[androidx.compose.ui:ui-test-manifest:1.9.0] /Users/heegyeong/.gradle/caches/8.9/transforms/522b9e7cfdb5a478dd9e5dfff134d7d8/transformed/ui-test-manifest-1.9.0/AndroidManifest.xml:23:9-26:79
+411            android:name="androidx.activity.ComponentActivity"
+411-->[androidx.compose.ui:ui-test-manifest:1.9.0] /Users/heegyeong/.gradle/caches/8.9/transforms/522b9e7cfdb5a478dd9e5dfff134d7d8/transformed/ui-test-manifest-1.9.0/AndroidManifest.xml:24:13-63
+412            android:exported="true"
+412-->[androidx.compose.ui:ui-test-manifest:1.9.0] /Users/heegyeong/.gradle/caches/8.9/transforms/522b9e7cfdb5a478dd9e5dfff134d7d8/transformed/ui-test-manifest-1.9.0/AndroidManifest.xml:25:13-36
+413            android:theme="@android:style/Theme.Material.Light.NoActionBar" />
+413-->[androidx.compose.ui:ui-test-manifest:1.9.0] /Users/heegyeong/.gradle/caches/8.9/transforms/522b9e7cfdb5a478dd9e5dfff134d7d8/transformed/ui-test-manifest-1.9.0/AndroidManifest.xml:26:13-76
+414        <activity
+414-->[androidx.test:core:1.6.1] /Users/heegyeong/.gradle/caches/8.9/transforms/ac82d376fa7efab435b186400c554c02/transformed/core-1.6.1/AndroidManifest.xml:27:9-34:20
+415            android:name="androidx.test.core.app.InstrumentationActivityInvoker$BootstrapActivity"
+415-->[androidx.test:core:1.6.1] /Users/heegyeong/.gradle/caches/8.9/transforms/ac82d376fa7efab435b186400c554c02/transformed/core-1.6.1/AndroidManifest.xml:28:13-99
+416            android:exported="true"
+416-->[androidx.test:core:1.6.1] /Users/heegyeong/.gradle/caches/8.9/transforms/ac82d376fa7efab435b186400c554c02/transformed/core-1.6.1/AndroidManifest.xml:29:13-36
+417            android:theme="@style/WhiteBackgroundTheme" >
+417-->[androidx.test:core:1.6.1] /Users/heegyeong/.gradle/caches/8.9/transforms/ac82d376fa7efab435b186400c554c02/transformed/core-1.6.1/AndroidManifest.xml:30:13-56
+418            <intent-filter android:priority="-100" >
+418-->[androidx.test:core:1.6.1] /Users/heegyeong/.gradle/caches/8.9/transforms/ac82d376fa7efab435b186400c554c02/transformed/core-1.6.1/AndroidManifest.xml:31:13-33:29
+418-->[androidx.test:core:1.6.1] /Users/heegyeong/.gradle/caches/8.9/transforms/ac82d376fa7efab435b186400c554c02/transformed/core-1.6.1/AndroidManifest.xml:31:28-51
+419                <category android:name="android.intent.category.LAUNCHER" />
+419-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:44:17-77
+419-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:44:27-74
+420            </intent-filter>
+421        </activity>
+422        <activity
+422-->[androidx.test:core:1.6.1] /Users/heegyeong/.gradle/caches/8.9/transforms/ac82d376fa7efab435b186400c554c02/transformed/core-1.6.1/AndroidManifest.xml:35:9-42:20
+423            android:name="androidx.test.core.app.InstrumentationActivityInvoker$EmptyActivity"
+423-->[androidx.test:core:1.6.1] /Users/heegyeong/.gradle/caches/8.9/transforms/ac82d376fa7efab435b186400c554c02/transformed/core-1.6.1/AndroidManifest.xml:36:13-95
+424            android:exported="true"
+424-->[androidx.test:core:1.6.1] /Users/heegyeong/.gradle/caches/8.9/transforms/ac82d376fa7efab435b186400c554c02/transformed/core-1.6.1/AndroidManifest.xml:37:13-36
+425            android:theme="@style/WhiteBackgroundTheme" >
+425-->[androidx.test:core:1.6.1] /Users/heegyeong/.gradle/caches/8.9/transforms/ac82d376fa7efab435b186400c554c02/transformed/core-1.6.1/AndroidManifest.xml:38:13-56
+426            <intent-filter android:priority="-100" >
+426-->[androidx.test:core:1.6.1] /Users/heegyeong/.gradle/caches/8.9/transforms/ac82d376fa7efab435b186400c554c02/transformed/core-1.6.1/AndroidManifest.xml:31:13-33:29
+426-->[androidx.test:core:1.6.1] /Users/heegyeong/.gradle/caches/8.9/transforms/ac82d376fa7efab435b186400c554c02/transformed/core-1.6.1/AndroidManifest.xml:31:28-51
+427                <category android:name="android.intent.category.LAUNCHER" />
+427-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:44:17-77
+427-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:44:27-74
+428            </intent-filter>
+429        </activity>
+430        <activity
+430-->[androidx.test:core:1.6.1] /Users/heegyeong/.gradle/caches/8.9/transforms/ac82d376fa7efab435b186400c554c02/transformed/core-1.6.1/AndroidManifest.xml:43:9-50:20
+431            android:name="androidx.test.core.app.InstrumentationActivityInvoker$EmptyFloatingActivity"
+431-->[androidx.test:core:1.6.1] /Users/heegyeong/.gradle/caches/8.9/transforms/ac82d376fa7efab435b186400c554c02/transformed/core-1.6.1/AndroidManifest.xml:44:13-103
+432            android:exported="true"
+432-->[androidx.test:core:1.6.1] /Users/heegyeong/.gradle/caches/8.9/transforms/ac82d376fa7efab435b186400c554c02/transformed/core-1.6.1/AndroidManifest.xml:45:13-36
+433            android:theme="@style/WhiteBackgroundDialogTheme" >
+433-->[androidx.test:core:1.6.1] /Users/heegyeong/.gradle/caches/8.9/transforms/ac82d376fa7efab435b186400c554c02/transformed/core-1.6.1/AndroidManifest.xml:46:13-62
+434            <intent-filter android:priority="-100" >
+434-->[androidx.test:core:1.6.1] /Users/heegyeong/.gradle/caches/8.9/transforms/ac82d376fa7efab435b186400c554c02/transformed/core-1.6.1/AndroidManifest.xml:31:13-33:29
+434-->[androidx.test:core:1.6.1] /Users/heegyeong/.gradle/caches/8.9/transforms/ac82d376fa7efab435b186400c554c02/transformed/core-1.6.1/AndroidManifest.xml:31:28-51
+435                <category android:name="android.intent.category.LAUNCHER" />
+435-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:44:17-77
+435-->/Users/heegyeong/ComposeSample/app/src/main/AndroidManifest.xml:44:27-74
+436            </intent-filter>
+437        </activity>
+438
+439        <service
+439-->[androidx.core:core-remoteviews:1.1.0] /Users/heegyeong/.gradle/caches/8.9/transforms/ce74c358b7aca42f1b8ef6a92bccf5ae/transformed/core-remoteviews-1.1.0/AndroidManifest.xml:24:9-27:63
+440            android:name="androidx.core.widget.RemoteViewsCompatService"
+440-->[androidx.core:core-remoteviews:1.1.0] /Users/heegyeong/.gradle/caches/8.9/transforms/ce74c358b7aca42f1b8ef6a92bccf5ae/transformed/core-remoteviews-1.1.0/AndroidManifest.xml:25:13-73
+441            android:permission="android.permission.BIND_REMOTEVIEWS" />
+441-->[androidx.core:core-remoteviews:1.1.0] /Users/heegyeong/.gradle/caches/8.9/transforms/ce74c358b7aca42f1b8ef6a92bccf5ae/transformed/core-remoteviews-1.1.0/AndroidManifest.xml:26:13-69
+442
+443        <uses-library
+443-->[androidx.window:window:1.0.0] /Users/heegyeong/.gradle/caches/8.9/transforms/0bccff380f13b4de9a782a42daff1f73/transformed/window-1.0.0/AndroidManifest.xml:25:9-27:40
+444            android:name="androidx.window.extensions"
+444-->[androidx.window:window:1.0.0] /Users/heegyeong/.gradle/caches/8.9/transforms/0bccff380f13b4de9a782a42daff1f73/transformed/window-1.0.0/AndroidManifest.xml:26:13-54
+445            android:required="false" />
+445-->[androidx.window:window:1.0.0] /Users/heegyeong/.gradle/caches/8.9/transforms/0bccff380f13b4de9a782a42daff1f73/transformed/window-1.0.0/AndroidManifest.xml:27:13-37
+446        <uses-library
+446-->[androidx.window:window:1.0.0] /Users/heegyeong/.gradle/caches/8.9/transforms/0bccff380f13b4de9a782a42daff1f73/transformed/window-1.0.0/AndroidManifest.xml:28:9-30:40
+447            android:name="androidx.window.sidecar"
+447-->[androidx.window:window:1.0.0] /Users/heegyeong/.gradle/caches/8.9/transforms/0bccff380f13b4de9a782a42daff1f73/transformed/window-1.0.0/AndroidManifest.xml:29:13-51
+448            android:required="false" />
+448-->[androidx.window:window:1.0.0] /Users/heegyeong/.gradle/caches/8.9/transforms/0bccff380f13b4de9a782a42daff1f73/transformed/window-1.0.0/AndroidManifest.xml:30:13-37
+449
+450        <activity
+450-->[androidx.compose.ui:ui-tooling-android:1.9.0] /Users/heegyeong/.gradle/caches/8.9/transforms/d26644234c46190f9ebd0553aff4ea89/transformed/ui-tooling/AndroidManifest.xml:23:9-25:39
+451            android:name="androidx.compose.ui.tooling.PreviewActivity"
+451-->[androidx.compose.ui:ui-tooling-android:1.9.0] /Users/heegyeong/.gradle/caches/8.9/transforms/d26644234c46190f9ebd0553aff4ea89/transformed/ui-tooling/AndroidManifest.xml:24:13-71
+452            android:exported="true" />
+452-->[androidx.compose.ui:ui-tooling-android:1.9.0] /Users/heegyeong/.gradle/caches/8.9/transforms/d26644234c46190f9ebd0553aff4ea89/transformed/ui-tooling/AndroidManifest.xml:25:13-36
+453
+454        <receiver
+454-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/heegyeong/.gradle/caches/8.9/transforms/02729e5ff8d0ba870ac9a846d789a494/transformed/profileinstaller-1.4.0/AndroidManifest.xml:34:9-52:20
+455            android:name="androidx.profileinstaller.ProfileInstallReceiver"
+455-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/heegyeong/.gradle/caches/8.9/transforms/02729e5ff8d0ba870ac9a846d789a494/transformed/profileinstaller-1.4.0/AndroidManifest.xml:35:13-76
+456            android:directBootAware="false"
+456-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/heegyeong/.gradle/caches/8.9/transforms/02729e5ff8d0ba870ac9a846d789a494/transformed/profileinstaller-1.4.0/AndroidManifest.xml:36:13-44
+457            android:enabled="true"
+457-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/heegyeong/.gradle/caches/8.9/transforms/02729e5ff8d0ba870ac9a846d789a494/transformed/profileinstaller-1.4.0/AndroidManifest.xml:37:13-35
+458            android:exported="true"
+458-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/heegyeong/.gradle/caches/8.9/transforms/02729e5ff8d0ba870ac9a846d789a494/transformed/profileinstaller-1.4.0/AndroidManifest.xml:38:13-36
+459            android:permission="android.permission.DUMP" >
+459-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/heegyeong/.gradle/caches/8.9/transforms/02729e5ff8d0ba870ac9a846d789a494/transformed/profileinstaller-1.4.0/AndroidManifest.xml:39:13-57
+460            <intent-filter>
+460-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/heegyeong/.gradle/caches/8.9/transforms/02729e5ff8d0ba870ac9a846d789a494/transformed/profileinstaller-1.4.0/AndroidManifest.xml:40:13-42:29
+461                <action android:name="androidx.profileinstaller.action.INSTALL_PROFILE" />
+461-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/heegyeong/.gradle/caches/8.9/transforms/02729e5ff8d0ba870ac9a846d789a494/transformed/profileinstaller-1.4.0/AndroidManifest.xml:41:17-91
+461-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/heegyeong/.gradle/caches/8.9/transforms/02729e5ff8d0ba870ac9a846d789a494/transformed/profileinstaller-1.4.0/AndroidManifest.xml:41:25-88
+462            </intent-filter>
+463            <intent-filter>
+463-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/heegyeong/.gradle/caches/8.9/transforms/02729e5ff8d0ba870ac9a846d789a494/transformed/profileinstaller-1.4.0/AndroidManifest.xml:43:13-45:29
+464                <action android:name="androidx.profileinstaller.action.SKIP_FILE" />
+464-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/heegyeong/.gradle/caches/8.9/transforms/02729e5ff8d0ba870ac9a846d789a494/transformed/profileinstaller-1.4.0/AndroidManifest.xml:44:17-85
+464-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/heegyeong/.gradle/caches/8.9/transforms/02729e5ff8d0ba870ac9a846d789a494/transformed/profileinstaller-1.4.0/AndroidManifest.xml:44:25-82
+465            </intent-filter>
+466            <intent-filter>
+466-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/heegyeong/.gradle/caches/8.9/transforms/02729e5ff8d0ba870ac9a846d789a494/transformed/profileinstaller-1.4.0/AndroidManifest.xml:46:13-48:29
+467                <action android:name="androidx.profileinstaller.action.SAVE_PROFILE" />
+467-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/heegyeong/.gradle/caches/8.9/transforms/02729e5ff8d0ba870ac9a846d789a494/transformed/profileinstaller-1.4.0/AndroidManifest.xml:47:17-88
+467-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/heegyeong/.gradle/caches/8.9/transforms/02729e5ff8d0ba870ac9a846d789a494/transformed/profileinstaller-1.4.0/AndroidManifest.xml:47:25-85
+468            </intent-filter>
+469            <intent-filter>
+469-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/heegyeong/.gradle/caches/8.9/transforms/02729e5ff8d0ba870ac9a846d789a494/transformed/profileinstaller-1.4.0/AndroidManifest.xml:49:13-51:29
+470                <action android:name="androidx.profileinstaller.action.BENCHMARK_OPERATION" />
+470-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/heegyeong/.gradle/caches/8.9/transforms/02729e5ff8d0ba870ac9a846d789a494/transformed/profileinstaller-1.4.0/AndroidManifest.xml:50:17-95
+470-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/heegyeong/.gradle/caches/8.9/transforms/02729e5ff8d0ba870ac9a846d789a494/transformed/profileinstaller-1.4.0/AndroidManifest.xml:50:25-92
+471            </intent-filter>
+472        </receiver>
+473    </application>
+474
+475</manifest>

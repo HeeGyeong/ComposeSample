@@ -39,7 +39,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.collectAsState
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
@@ -830,8 +830,8 @@ private fun PresenterPatternDemo() {
 
 @Composable
 private fun CounterPresenterCard(presenter: CounterPresenter) {
-    val count by presenter.count.collectAsState()
-    val isLoading by presenter.isLoading.collectAsState()
+    val count by presenter.count.collectAsStateWithLifecycle()
+    val isLoading by presenter.isLoading.collectAsStateWithLifecycle()
 
     val scale by animateFloatAsState(
         targetValue = if (count > 0) 1f else 0.95f,
@@ -931,7 +931,7 @@ private fun CounterPresenterCard(presenter: CounterPresenter) {
 
 @Composable
 private fun TodoPresenterCard(presenter: TodoPresenter) {
-    val todos by presenter.todos.collectAsState()
+    val todos by presenter.todos.collectAsStateWithLifecycle()
     var todoCounter by remember { mutableIntStateOf(1) }
 
     Card(

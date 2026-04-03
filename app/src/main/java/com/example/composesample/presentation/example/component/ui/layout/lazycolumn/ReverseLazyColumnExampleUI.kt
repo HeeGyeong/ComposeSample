@@ -17,7 +17,7 @@ import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshotFlow
@@ -49,10 +49,10 @@ fun ReverseLazyColumnExampleUI(onBackEvent: () -> Unit) {
 @Composable
 fun UseNormalLayoutStyle(onBackEvent: () -> Unit) {
     val sseViewModel: SSEViewModel = koinViewModel()
-    val uiState = sseViewModel.uiState.collectAsState().value
+    val uiState = sseViewModel.uiState.collectAsStateWithLifecycle().value
     val clickCount = remember { mutableStateOf(0) }
     val listState = rememberLazyListState()
-    val loadMoreFlag = sseViewModel.loadMoreFlag.collectAsState().value
+    val loadMoreFlag = sseViewModel.loadMoreFlag.collectAsStateWithLifecycle().value
 
     // 새 아이템이 추가될 때 스크롤 가장 아래로
     LaunchedEffect(uiState.messageList.size) {
@@ -173,7 +173,7 @@ fun UseNormalLayoutStyle(onBackEvent: () -> Unit) {
 @Composable
 fun UseReverseLayoutFlag(onBackEvent: () -> Unit) {
     val sseViewModel: SSEViewModel = koinViewModel()
-    val uiState = sseViewModel.uiState.collectAsState().value
+    val uiState = sseViewModel.uiState.collectAsStateWithLifecycle().value
     val clickCount = remember { mutableStateOf(0) }
     val listState = rememberLazyListState()
 

@@ -35,7 +35,7 @@ import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -56,11 +56,11 @@ fun AutoCloseableExampleUI(
     onBackEvent: () -> Unit,
     viewModel: AutoCloseableExampleViewModel = koinViewModel()
 ) {
-    val items by viewModel.items.collectAsState()
-    val customers by viewModel.customers.collectAsState()
-    val networkStatus by viewModel.networkStatus.collectAsState()
-    val serviceStatus by viewModel.serviceStatus.collectAsState()
-    val lastClosedService by viewModel.lastClosedService.collectAsState()
+    val items by viewModel.items.collectAsStateWithLifecycle()
+    val customers by viewModel.customers.collectAsStateWithLifecycle()
+    val networkStatus by viewModel.networkStatus.collectAsStateWithLifecycle()
+    val serviceStatus by viewModel.serviceStatus.collectAsStateWithLifecycle()
+    val lastClosedService by viewModel.lastClosedService.collectAsStateWithLifecycle()
 
     // 현재 시간을 표시하여 UI가 살아있음을 보여줌
     var currentTime by remember { mutableStateOf(System.currentTimeMillis()) }

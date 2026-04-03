@@ -10,7 +10,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
@@ -120,10 +120,10 @@ fun ViewModelPreview1(
     )
 ) {
     calViewModel.addCounter()
-    val counterData = calViewModel.counter.collectAsState().value
+    val counterData = calViewModel.counter.collectAsStateWithLifecycle().value
 
     blogExampleViewModel.setPreviewExampleData("Sample Data1")
-    val viewModelData = blogExampleViewModel.previewExampleData.collectAsState().value
+    val viewModelData = blogExampleViewModel.previewExampleData.collectAsStateWithLifecycle().value
 
     Column {
         Text("$counterData")
@@ -151,7 +151,7 @@ fun ViewModelPreview2(
     @PreviewParameter(PreviewViewModelProvider::class) blogExampleViewModel: BlogExampleViewModel
 ) {
     blogExampleViewModel.setPreviewExampleData("Sample Data2")
-    val viewModelData = blogExampleViewModel.previewExampleData.collectAsState().value
+    val viewModelData = blogExampleViewModel.previewExampleData.collectAsStateWithLifecycle().value
 
     Text(viewModelData)
 }
@@ -170,7 +170,7 @@ fun ViewModelPreview3() {
     )
 
     blogExampleViewModel.setPreviewExampleData("Sample Data3")
-    val viewModelData = blogExampleViewModel.previewExampleData.collectAsState().value
+    val viewModelData = blogExampleViewModel.previewExampleData.collectAsStateWithLifecycle().value
 
     Text(viewModelData)
 }
@@ -189,7 +189,7 @@ fun ViewModelPreview4() {
         navigation = mockNavigation,
         application = Application()
     )
-    val viewModelData = blogExampleViewModel.previewExampleData.collectAsState().value
+    val viewModelData = blogExampleViewModel.previewExampleData.collectAsStateWithLifecycle().value
     // @Preview 환경에서 자동으로 true — 커스텀 CompositionLocal 불필요
     if (LocalInspectionMode.current) {
         // Preview 용 구현

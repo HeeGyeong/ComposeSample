@@ -28,7 +28,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -55,9 +55,9 @@ fun SafFileSelectionUI(onBackButtonClick: () -> Unit) {
     var selectedFileExtension by remember { mutableStateOf<String?>(null) }
     
     // ViewModel에서 데이터 수집
-    val extractedText by viewModel.extractedText.collectAsState()
-    val isLoading by viewModel.isLoading.collectAsState()
-    val viewModelError by viewModel.errorMessage.collectAsState()
+    val extractedText by viewModel.extractedText.collectAsStateWithLifecycle()
+    val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
+    val viewModelError by viewModel.errorMessage.collectAsStateWithLifecycle()
     
     // ViewModel 에러 메시지를 UI 에러 메시지로 설정
     LaunchedEffect(viewModelError) {

@@ -15,7 +15,7 @@ import androidx.compose.material.Button
 import androidx.compose.material.Card
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -35,7 +35,7 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun SSEExampleUI(onBackEvent: () -> Unit) {
     val sseViewModel: SSEViewModel = koinViewModel()
-    val uiState = sseViewModel.uiState.collectAsState().value
+    val uiState = sseViewModel.uiState.collectAsStateWithLifecycle().value
     val clickCount = remember { mutableStateOf(0) }
 
     Column(

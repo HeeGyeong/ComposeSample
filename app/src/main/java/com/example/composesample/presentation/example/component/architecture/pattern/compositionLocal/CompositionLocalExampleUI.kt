@@ -16,7 +16,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.ProvidableCompositionLocal
-import androidx.compose.runtime.collectAsState
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -103,7 +103,7 @@ fun CompositionLocalViewModelCase(viewModel: CompositionLocalViewModel) {
     CompositionLocalProvider(LocalViewModel provides viewModel) {
         val compositionLocalViewModel = LocalViewModel.current
 
-        val text = compositionLocalViewModel.compositionLocalTextData.collectAsState().value
+        val text = compositionLocalViewModel.compositionLocalTextData.collectAsStateWithLifecycle().value
         MutableTextPrintUI(text)
 
         ButtonUI(
