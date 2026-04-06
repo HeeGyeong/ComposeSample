@@ -18,6 +18,7 @@ import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Card
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Divider
+import androidx.compose.material.LinearProgressIndicator
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -35,7 +36,10 @@ import androidx.compose.ui.unit.sp
 import com.example.composesample.presentation.MainHeader
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withTimeout
@@ -63,6 +67,14 @@ interface ProgressCallback {
     fun onProgress(step: Int, total: Int)
     fun onComplete(result: String)
     fun onError(error: Exception)
+}
+
+// 다운로드 진행 상태
+sealed class DownloadState {
+    object Idle : DownloadState()
+    data class Progress(val step: Int, val total: Int) : DownloadState()
+    data class Done(val result: String) : DownloadState()
+    data class Error(val message: String) : DownloadState()
 }
 
 // ──────────────────────────────────────────────
@@ -227,6 +239,37 @@ suspend fun fetchDataWithError(): String =
         continuation.invokeOnCancellation { task.cancel() }
     }
 
+/**
+ * callbackFlow — 다중 값 콜백 → Flow 변환
+ *
+ * suspendCoroutine/suspendCancellableCoroutine은 단일 값 반환만 가능
+ * 진행률처럼 여러 번 값을 방출하는 콜백은 callbackFlow로 변환
+ *
+ * trySend: Flow에 값 방출 (채널이 닫혀 있으면 무시)
+ * close(): Flow 정상 종료
+ * close(throwable): Flow 에러 종료
+ * awaitClose: Flow 수집 종료 시 리소스 정리
+ */
+fun downloadWithCallbackFlow(): Flow<DownloadState> = callbackFlow {
+    val task = LegacyApiSimulator.downloadWithProgress(object : ProgressCallback {
+        override fun onProgress(step: Int, total: Int) {
+            trySend(DownloadState.Progress(step, total))
+        }
+
+        override fun onComplete(result: String) {
+            trySend(DownloadState.Done(result))
+            close()
+        }
+
+        override fun onError(error: Exception) {
+            close(error)
+        }
+    })
+
+    // Flow 수집이 취소되거나 완료될 때 레거시 API 작업도 함께 정리
+    awaitClose { task.cancel() }
+}
+
 // ──────────────────────────────────────────────
 // UI
 // ──────────────────────────────────────────────
@@ -253,6 +296,7 @@ fun CoroutineBridgesExampleUI(onBackEvent: () -> Unit) {
             item { SuspendCancellableCoroutineSection() }
             item { ErrorHandlingSection() }
             item { CancellationDemoSection() }
+            item { CallbackFlowSection() }
             item { ComparisonSection() }
             item { Spacer(modifier = Modifier.height(32.dp)) }
         }
@@ -518,6 +562,127 @@ val result = withTimeout(1000L) {
     }
 }
 
+// ── callbackFlow 섹션 ──
+@Composable
+private fun CallbackFlowSection() {
+    val scope = rememberCoroutineScope()
+    var downloadState by remember { mutableStateOf<DownloadState>(DownloadState.Idle) }
+    var isRunning by remember { mutableStateOf(false) }
+    var currentJob by remember { mutableStateOf<Job?>(null) }
+
+    SectionCard(title = "5. callbackFlow (다중 값 콜백 → Flow)") {
+        InfoText("suspendCoroutine은 단일 값만 반환합니다.\n진행률처럼 여러 번 값을 방출하는 콜백은 callbackFlow로 Flow로 변환합니다.")
+        Spacer(modifier = Modifier.height(8.dp))
+        CodeBlock(
+            """
+fun downloadProgress(): Flow<DownloadState> = callbackFlow {
+    val task = legacyApi.downloadWithProgress(
+        object : ProgressCallback {
+            override fun onProgress(step: Int, total: Int) {
+                trySend(DownloadState.Progress(step, total))
+            }
+            override fun onComplete(result: String) {
+                trySend(DownloadState.Done(result))
+                close()       // Flow 정상 종료
+            }
+            override fun onError(e: Exception) {
+                close(e)      // Flow 에러 종료
+            }
+        }
+    )
+    awaitClose { task.cancel() }  // 수집 취소 시 정리
+}
+
+// 수집 (UI)
+scope.launch {
+    downloadProgress().collect { state ->
+        when (state) {
+            is DownloadState.Progress ->
+                updateProgress(state.step, state.total)
+            is DownloadState.Done ->
+                showResult(state.result)
+            is DownloadState.Error ->
+                showError(state.message)
+        }
+    }
+}
+            """.trimIndent()
+        )
+        Spacer(modifier = Modifier.height(12.dp))
+
+        // 진행 상태 표시
+        when (val state = downloadState) {
+            is DownloadState.Idle -> {
+                InfoText("다운로드 시작 버튼을 눌러 진행률을 확인하세요.")
+            }
+            is DownloadState.Progress -> {
+                val progress = state.step.toFloat() / state.total.toFloat()
+                Text(
+                    text = "진행 중: ${state.step} / ${state.total} (${(progress * 100).toInt()}%)",
+                    color = Color(0xFF00D4FF),
+                    fontSize = 13.sp
+                )
+                Spacer(modifier = Modifier.height(6.dp))
+                LinearProgressIndicator(
+                    progress = progress,
+                    modifier = Modifier.fillMaxWidth(),
+                    color = Color(0xFF00D4FF),
+                    backgroundColor = Color(0xFF333333)
+                )
+            }
+            is DownloadState.Done -> {
+                Text(
+                    text = "✅ ${state.result}",
+                    color = Color(0xFF00FF88),
+                    fontSize = 13.sp
+                )
+            }
+            is DownloadState.Error -> {
+                Text(
+                    text = "❌ ${state.message}",
+                    color = Color(0xFFFF5722),
+                    fontSize = 13.sp
+                )
+            }
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            ActionButton(
+                text = "다운로드 시작",
+                color = Color(0xFF009688),
+                enabled = !isRunning,
+                modifier = Modifier.weight(1f)
+            ) {
+                val job = scope.launch {
+                    isRunning = true
+                    downloadState = DownloadState.Idle
+                    try {
+                        downloadWithCallbackFlow().collect { state ->
+                            downloadState = state
+                        }
+                    } catch (e: CancellationException) {
+                        downloadState = DownloadState.Error("취소됨")
+                    } catch (e: Exception) {
+                        downloadState = DownloadState.Error(e.message ?: "알 수 없는 오류")
+                    } finally {
+                        isRunning = false
+                    }
+                }
+                currentJob = job
+            }
+            ActionButton(
+                text = "취소",
+                color = Color(0xFFFF9800),
+                enabled = isRunning,
+                modifier = Modifier.weight(1f)
+            ) {
+                currentJob?.cancel()
+            }
+        }
+    }
+}
+
 // ── 비교 섹션 ──
 @Composable
 private fun ComparisonSection() {
@@ -554,6 +719,17 @@ private fun ComparisonSection() {
         )
         Spacer(modifier = Modifier.height(8.dp))
         InfoText("💡 실제 Android API 예시:\n• FusedLocationProviderClient.lastLocation\n• BiometricPrompt 인증 콜백\n• BluetoothGattCallback\n• CameraX ImageCapture\n• WorkManager ListenableFuture")
+        Spacer(modifier = Modifier.height(12.dp))
+        Divider(color = Color(0xFF444444))
+        Spacer(modifier = Modifier.height(12.dp))
+        Text(
+            text = "callbackFlow — 다중 값 콜백",
+            color = Color(0xFF00FF88),
+            fontSize = 13.sp,
+            fontWeight = FontWeight.Bold
+        )
+        Spacer(modifier = Modifier.height(4.dp))
+        InfoText("위 두 함수는 모두 단일 값을 반환합니다.\n여러 번 값을 방출하는 콜백(진행률, 센서, 위치 스트림 등)은\ncallbackFlow { } + awaitClose { } 패턴으로 Flow로 변환합니다.")
     }
 }
 
