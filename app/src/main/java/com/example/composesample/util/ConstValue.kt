@@ -113,10 +113,11 @@ object ConstValue {
     const val ComposeSnapshotExample = "composeSnapshotExample"
 
     // ==================== 코루틴 & 동시성 예제 ====================
-    // Coroutine(기본 특징), CoroutinesInternals(내부 동작 원리), WithContext(withContext vs launch)
+    // Coroutine(기본 특징), CoroutinesInternals(내부 동작 원리), WithContext(withContext vs launch), CoroutineBridges(콜백→suspend 변환 패턴)
     const val CoroutineExample = "coroutineExample"
     const val CoroutinesInternalsExample = "coroutinesInternalsExample"
     const val WithContextExample = "withContextExample"
+    const val CoroutineBridgesExample = "coroutineBridgesExample"
 
     // ==================== Flow 예제 ====================
     // FlatMap(flatMap vs flatMapLatest 비교)

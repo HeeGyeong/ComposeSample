@@ -254,5 +254,12 @@ val examples2026 = listOf(
         description = "@RequiresOptIn으로 Preview 전용 Composable을 컴파일 타임에 강제 제한: @PreviewOnly 어노테이션 정의, @OptIn 허용 패턴, LocalInspectionMode와의 차이",
         blogUrl = "",
         exampleType = ConstValue.PreviewOnlyAnnotationExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 04. 06",
+        title = "Coroutine Bridges (콜백 → suspend 변환)",
+        description = "suspendCoroutine과 suspendCancellableCoroutine으로 콜백 기반 Android API를 suspend 함수로 변환하는 패턴: 성공/실패 처리, 취소 전파, invokeOnCancellation 리소스 정리",
+        blogUrl = "",
+        exampleType = ConstValue.CoroutineBridgesExample
     )
 )

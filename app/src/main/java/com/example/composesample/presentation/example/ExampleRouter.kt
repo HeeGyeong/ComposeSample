@@ -116,6 +116,7 @@ import com.example.composesample.presentation.example.component.architecture.dev
 import com.example.composesample.presentation.example.component.architecture.development.language.SealedClassInterfaceExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.concurrency.CoroutinesInternalsExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.concurrency.WithContextExampleUI
+import com.example.composesample.presentation.example.component.architecture.development.concurrency.CoroutineBridgesExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.flow.FlatMapExampleUI
 import com.example.composesample.presentation.example.component.architecture.navigation.Navigation3ExampleUI
 import com.example.composesample.presentation.example.component.architecture.modularization.ModularizationExampleUI
@@ -222,6 +223,7 @@ import com.example.composesample.util.ConstValue.UIShimmerExample
 import com.example.composesample.util.ConstValue.VisibilityExample
 import com.example.composesample.util.ConstValue.WebViewIssueExample
 import com.example.composesample.util.ConstValue.WithContextExample
+import com.example.composesample.util.ConstValue.CoroutineBridgesExample
 import com.example.composesample.util.ConstValue.WorkManagerExample
 import com.example.composesample.util.ConstValue.DynamicAppLinksExample
 import com.example.composesample.util.ConstValue.HapticFeedbackExample
@@ -593,6 +595,10 @@ fun ExampleCaseUI(
 
                         WithContextExample -> {
                             WithContextExampleUI(onBackEvent)
+                        }
+
+                        CoroutineBridgesExample -> {
+                            CoroutineBridgesExampleUI(onBackEvent)
                         }
 
                         ButtonGroupExample -> {
