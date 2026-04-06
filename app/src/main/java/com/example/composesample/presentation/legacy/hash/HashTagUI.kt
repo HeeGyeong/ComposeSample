@@ -44,7 +44,7 @@ fun HashTagUI() {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         HashtagsMentionsTextView(string) {
-            println(it)
+            Log.d("HashTagUI", it)
         }
     }
 }

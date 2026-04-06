@@ -1,5 +1,6 @@
 package com.example.composesample.presentation.example.component.architecture.development.init
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -24,7 +25,7 @@ fun InitTestExampleUI(
         initTestViewModel.changeLaunchedEffectLoading()
     }
 
-    println("initLoading flag : ${initLoadingFlag.value}")
+    Log.d("InitTestExampleUI", "initLoading flag : ${initLoadingFlag.value}")
 
     Column(
         modifier = Modifier

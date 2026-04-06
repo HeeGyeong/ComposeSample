@@ -7,7 +7,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -15,8 +15,7 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun AddCounter(viewModel: CalViewModel) {
-//    val viewModel = viewModel<CalViewModel>()
-    val counter = viewModel.counter.collectAsState()
+    val counter = viewModel.counter.collectAsStateWithLifecycle()
 
     Column(
         Modifier
