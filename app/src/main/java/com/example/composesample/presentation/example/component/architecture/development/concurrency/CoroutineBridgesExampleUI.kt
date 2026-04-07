@@ -33,12 +33,18 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.asFlow
+import androidx.lifecycle.asLiveData
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.composesample.presentation.MainHeader
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
@@ -297,6 +303,7 @@ fun CoroutineBridgesExampleUI(onBackEvent: () -> Unit) {
             item { ErrorHandlingSection() }
             item { CancellationDemoSection() }
             item { CallbackFlowSection() }
+            item { PrebuiltBridgesSection() }
             item { ComparisonSection() }
             item { Spacer(modifier = Modifier.height(32.dp)) }
         }
@@ -680,6 +687,133 @@ scope.launch {
                 currentJob?.cancel()
             }
         }
+    }
+}
+
+// ── 기존 라이브러리 브릿지 섹션 ──
+@Composable
+private fun PrebuiltBridgesSection() {
+    // LiveData.asFlow() 데모용 LiveData
+    val liveData = remember { MutableLiveData("초기값") }
+    val liveDataAsFlow by liveData.asFlow().collectAsStateWithLifecycle(initialValue = "...")
+
+    // Flow.asLiveData() 데모용 StateFlow
+    val stateFlow = remember { MutableStateFlow(0) }
+    val flowAsLiveData = remember { stateFlow.asLiveData() }
+    val flowAsLiveDataValue by flowAsLiveData.observeAsState(initial = 0)
+    val scope = rememberCoroutineScope()
+
+    SectionCard(title = "6. 기존 라이브러리 브릿지 활용") {
+        InfoText("직접 브릿지를 만들기 전에, 라이브러리가 제공하는 기존 브릿지를 먼저 확인하세요.\n대부분의 경우 이미 완성된 브릿지가 존재합니다.")
+        Spacer(modifier = Modifier.height(12.dp))
+
+        // ── LiveData.asFlow() ──
+        Text(
+            text = "① LiveData.asFlow()",
+            color = Color(0xFFFFAA00),
+            fontSize = 13.sp,
+            fontWeight = FontWeight.Bold
+        )
+        Spacer(modifier = Modifier.height(4.dp))
+        InfoText("lifecycle-livedata-ktx 제공. LiveData를 cold Flow로 변환합니다.\nLifecycle이 STARTED 이상일 때만 값을 방출합니다.")
+        Spacer(modifier = Modifier.height(6.dp))
+        CodeBlock(
+            """
+// LiveData → Flow 변환
+val liveData: MutableLiveData<String> = MutableLiveData("초기값")
+val flow: Flow<String> = liveData.asFlow()
+
+// Compose에서 수집
+val value by liveData.asFlow()
+    .collectAsStateWithLifecycle(initialValue = "")
+            """.trimIndent()
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        ResultRow(label = "LiveData → Flow", value = liveDataAsFlow, isLoading = false)
+        Spacer(modifier = Modifier.height(6.dp))
+        ActionButton(
+            text = "LiveData 값 변경",
+            color = Color(0xFFFFAA00),
+            enabled = true
+        ) {
+            liveData.value = "업데이트: ${System.currentTimeMillis() % 10000}"
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+        Divider(color = Color(0xFF333333))
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // ── Flow.asLiveData() ──
+        Text(
+            text = "② Flow.asLiveData()",
+            color = Color(0xFF00D4FF),
+            fontSize = 13.sp,
+            fontWeight = FontWeight.Bold
+        )
+        Spacer(modifier = Modifier.height(4.dp))
+        InfoText("Flow를 LiveData로 변환합니다. ViewModel에서 Flow를 LiveData로\n노출할 때 또는 LiveData 기반 기존 코드와 통합할 때 사용합니다.")
+        Spacer(modifier = Modifier.height(6.dp))
+        CodeBlock(
+            """
+// Flow → LiveData 변환
+val stateFlow = MutableStateFlow(0)
+val liveData: LiveData<Int> = stateFlow.asLiveData()
+
+// XML / Compose 모두에서 observe 가능
+val value by liveData.observeAsState(initial = 0)
+            """.trimIndent()
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        ResultRow(label = "Flow → LiveData", value = flowAsLiveDataValue.toString(), isLoading = false)
+        Spacer(modifier = Modifier.height(6.dp))
+        ActionButton(
+            text = "StateFlow 값 증가",
+            color = Color(0xFF00D4FF),
+            enabled = true
+        ) {
+            scope.launch { stateFlow.emit(stateFlow.value + 1) }
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+        Divider(color = Color(0xFF333333))
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // ── ListenableFuture.await() ──
+        Text(
+            text = "③ ListenableFuture.await()",
+            color = Color(0xFF00FF88),
+            fontSize = 13.sp,
+            fontWeight = FontWeight.Bold
+        )
+        Spacer(modifier = Modifier.height(4.dp))
+        InfoText("kotlinx-coroutines-guava 제공. CameraX, WorkManager 등\nGuava ListenableFuture를 suspend 함수로 변환합니다.")
+        Spacer(modifier = Modifier.height(6.dp))
+        CodeBlock(
+            """
+// kotlinx-coroutines-guava 의존성 필요
+// implementation "org.jetbrains.kotlinx:kotlinx-coroutines-guava"
+
+// CameraX 예시 — ImageCapture
+suspend fun takePhoto(imageCapture: ImageCapture): Uri =
+    suspendCancellableCoroutine { cont ->
+        // ❌ 직접 구현 — 불필요
+    }
+
+// ✅ 기존 브릿지 활용
+suspend fun takePhoto(imageCapture: ImageCapture): Uri {
+    val outputOptions = ImageCapture.OutputFileOptions
+        .Builder(file).build()
+    // ListenableFuture.await() 가 suspendCancellableCoroutine을
+    // 내부적으로 구현하여 취소 전파까지 처리
+    val result = imageCapture
+        .takePicture(outputOptions, executor)
+        .await()          // kotlinx-coroutines-guava 확장 함수
+    return result.savedUri ?: Uri.EMPTY
+}
+            """.trimIndent()
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        InfoText("💡 기타 기존 브릿지:\n• Room: suspend fun, Flow 직접 지원\n• Retrofit: suspend fun 직접 지원\n• WorkManager: workInfo.asFlow()\n• DataStore: preferences.data (이미 Flow)")
     }
 }
 

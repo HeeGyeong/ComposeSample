@@ -24,6 +24,7 @@ composeAnimation = "1.9.0"
 
 # Lifecycle
 lifecycleRuntimeKtx = "2.9.1"
+lifecycleLivedataKtx = "2.9.1"
 lifecycleViewmodelKtx = "2.9.1"
 lifecycleViewmodelCompose = "2.9.1"
 
@@ -158,6 +159,7 @@ activityCompose = { module = "androidx.activity:activity-compose", version.ref =
 lifecycleViewmodelKtx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycleViewmodelKtx" }
 lifecycleViewmodelCompose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycleViewmodelCompose" }
 lifecycleRuntimeKtx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
+lifecycleLivedataKtx = { module = "androidx.lifecycle:lifecycle-livedata-ktx", version.ref = "lifecycleLivedataKtx" }
 
 # Dependency Injection - Koin
 koinCore = { module = "io.insert-koin:koin-core", version.ref = "koinCore" }
@@ -270,6 +272,7 @@ reactive = [
 
 lifecycle = [
     "lifecycleRuntimeKtx",
+    "lifecycleLivedataKtx",
     "lifecycleViewmodelCompose",
     "lifecycleViewmodelKtx"
 ]
