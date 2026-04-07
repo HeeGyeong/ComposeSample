@@ -15,7 +15,7 @@ import androidx.compose.material.ScaffoldState
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
@@ -56,7 +56,7 @@ fun GoSubActivity() {
         emit(getTime())
     }
 
-    val currentTime = timerFlow.collectAsState(initial = getTime())
+    val currentTime = timerFlow.collectAsStateWithLifecycle(initialValue = getTime())
 
     Column {
         Text(

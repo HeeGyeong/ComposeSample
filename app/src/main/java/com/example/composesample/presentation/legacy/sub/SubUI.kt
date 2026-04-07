@@ -25,7 +25,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -45,7 +45,7 @@ fun MainContent() {
     val model =
         koinViewModel<SubActivityViewModel>(owner = viewModelStoreOwner)
     val textState = remember { mutableStateOf("") }
-    val list = model.search(textState.value).collectAsState(initial = emptyList())
+    val list = model.search(textState.value).collectAsStateWithLifecycle(initialValue = emptyList())
 
     Column(
         modifier = Modifier.padding(12.dp),
