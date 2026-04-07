@@ -173,9 +173,6 @@ fun ModalExpandedBottomSheet() {
         Column(modifier = Modifier
             .fillMaxSize()
             .onGloballyPositioned { coordinates -> // MaxSize라서 처음부터 다 그려둔다
-//                columnHeightPx = coordinates.size.height.toFloat()
-//                columnHeightDp = with(localDensity) { coordinates.size.height.toDp() }
-
                 Log.d( // 현재 보여지고 있는 BottomSheet의 Height.
                     "ModalBottomSheetUI",
                     "onGloballyPositioned ? :: ${coordinates.boundsInWindow().height}"

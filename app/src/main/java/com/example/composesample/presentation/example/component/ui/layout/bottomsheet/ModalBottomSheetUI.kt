@@ -45,9 +45,6 @@ fun ModalBottomSheetUI(
     val sheetContentHeight = remember { mutableStateOf(0) }
 
     Log.d("ModalBottomSheetUI", "-----------------------------------------------------")
-//    Log.d("ModalBottomSheetUI", "bottomState.currentValue : ${bottomState.currentValue} ? ${bottomState.currentValue.name} ?? ${bottomState.currentValue.ordinal}")
-//    Log.d("ModalBottomSheetUI", "bottomState.targetValue : ${bottomState.targetValue}")
-//    Log.d("ModalBottomSheetUI", "bottomState.progress : ${bottomState.progress}")
 
     Box(
         modifier = Modifier

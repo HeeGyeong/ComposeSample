@@ -196,13 +196,6 @@ fun UseReverseLayoutFlag(onBackEvent: () -> Unit) {
                         "SSE",
                         "First item became visible from $previousIndex to $currentIndex"
                     )
-//                    if (!uiState.isConnected) {
-//                        clickCount.value += 1
-//                        sseViewModel.incrementCycleCount()
-//                        sseViewModel.startSSEConnection(clickCount.value)
-//                    } else {
-//                        sseViewModel.closeSSEConnection()
-//                    }
                 }
                 previousIndex = currentIndex
             }
