@@ -72,6 +72,7 @@ import com.example.composesample.presentation.example.component.system.ui.widget
 import com.example.composesample.presentation.example.component.ui.accessibility.LargeContentViewerExampleUI
 import com.example.composesample.presentation.example.component.ui.button.ButtonGroupExampleUI
 import com.example.composesample.presentation.example.component.ui.canvas.CanvasShapesExampleUI
+import com.example.composesample.presentation.example.component.ui.canvas.ComposeLoadersExampleUI
 import com.example.composesample.presentation.example.component.ui.canvas.DialComponentExampleUI
 import com.example.composesample.presentation.example.component.ui.canvas.MotionBlurExampleUI
 import com.example.composesample.presentation.example.component.ui.graphics.NewShadowApiExampleUI
@@ -232,6 +233,7 @@ import com.example.composesample.util.ConstValue.PredictiveBackExample
 import com.example.composesample.util.ConstValue.SpringTweenSnapExample
 import com.example.composesample.util.ConstValue.AdaptiveLayoutExample
 import com.example.composesample.util.ConstValue.Compose17FeaturesExample
+import com.example.composesample.util.ConstValue.ComposeLoadersExample
 import com.example.composesample.util.ConstValue.FlowRowLayoutExample
 import com.example.composesample.util.ConstValue.PreviewOnlyAnnotationExample
 import com.example.composesample.util.ConstValue.RichContentTextInputExample
@@ -291,6 +293,10 @@ fun ExampleCaseUI(
 
                         FlowRowLayoutExample -> {
                             FlowRowLayoutExampleUI(onBackEvent)
+                        }
+
+                        ComposeLoadersExample -> {
+                            ComposeLoadersExampleUI(onBackEvent)
                         }
 
                         WebViewIssueExample -> {

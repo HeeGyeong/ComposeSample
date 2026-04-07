@@ -261,5 +261,12 @@ val examples2026 = listOf(
         description = "suspendCoroutine과 suspendCancellableCoroutine으로 콜백 기반 Android API를 suspend 함수로 변환하는 패턴: 성공/실패 처리, 취소 전파, invokeOnCancellation 리소스 정리",
         blogUrl = "",
         exampleType = ConstValue.CoroutineBridgesExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 04. 08",
+        title = "Compose Loaders (수학 곡선 애니메이션)",
+        description = "Canvas와 삼각함수로 구현하는 수학 로딩 애니메이션: Rose Curve(r=cos(kθ)), Lissajous, Lemniscate(∞), Spirograph(Hypotrochoid), Cardioid 5가지 곡선",
+        blogUrl = "",
+        exampleType = ConstValue.ComposeLoadersExample
     )
 )
