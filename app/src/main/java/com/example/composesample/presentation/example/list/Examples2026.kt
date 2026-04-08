@@ -268,5 +268,12 @@ val examples2026 = listOf(
         description = "Canvas와 삼각함수로 구현하는 수학 로딩 애니메이션: Rose Curve(r=cos(kθ)), Lissajous, Lemniscate(∞), Spirograph(Hypotrochoid), Cardioid, Butterfly Curve 6가지 곡선",
         blogUrl = "",
         exampleType = ConstValue.ComposeLoadersExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 04. 09",
+        title = "TextField Max Length 숨겨진 버그",
+        description = "InputTransformation.maxLength()가 프로그래매틱 state 변경에는 적용되지 않는 버그 재현 + LaunchedEffect + snapshotFlow로 상태를 관찰하여 길이를 강제하는 올바른 해결책",
+        blogUrl = "",
+        exampleType = ConstValue.TextFieldMaxLengthExample
     )
 )
