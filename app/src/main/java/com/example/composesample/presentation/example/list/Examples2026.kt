@@ -265,7 +265,7 @@ val examples2026 = listOf(
     ExampleObject(
         lastUpdate = "26. 04. 08",
         title = "Compose Loaders (수학 곡선 애니메이션)",
-        description = "Canvas와 삼각함수로 구현하는 수학 로딩 애니메이션: Rose Curve(r=cos(kθ)), Lissajous, Lemniscate(∞), Spirograph(Hypotrochoid), Cardioid 5가지 곡선",
+        description = "Canvas와 삼각함수로 구현하는 수학 로딩 애니메이션: Rose Curve(r=cos(kθ)), Lissajous, Lemniscate(∞), Spirograph(Hypotrochoid), Cardioid, Butterfly Curve 6가지 곡선",
         blogUrl = "",
         exampleType = ConstValue.ComposeLoadersExample
     )
