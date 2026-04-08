@@ -707,9 +707,7 @@ private fun RenderEffectDemo() {
                             )
                             Spacer(modifier = Modifier.height(6.dp))
 
-                            @Suppress("UNUSED_VARIABLE")
                             val blurXDp = blurX
-                            @Suppress("UNUSED_VARIABLE")
                             val blurYDp = blurY
 
                             Canvas(
