@@ -26,7 +26,7 @@ import com.example.core.navigation.NavigationInterface
  */
 @Composable
 fun DynamicColor() {
-    Button(onClick = { /*TODO*/ }) {
+    Button(onClick = { }) {
         Text(text = "Hellow Word")
     }
 }
@@ -219,7 +219,7 @@ fun LightThemePreview() {
     MaterialTheme(colorScheme = lightColorScheme()) {
         Column {
             Text("Light Theme", style = MaterialTheme.typography.titleLarge)
-            Button(onClick = { /*TODO*/ }) {
+            Button(onClick = { }) {
                 Text("Click Me")
             }
         }
@@ -236,7 +236,7 @@ fun DarkThemePreview() {
     MaterialTheme(colorScheme = darkColorScheme()) {
         Column {
             Text("Dark Theme", style = MaterialTheme.typography.titleLarge)
-            Button(onClick = { /*TODO*/ }) {
+            Button(onClick = { }) {
                 Text("Click Me")
             }
         }
