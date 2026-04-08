@@ -19,4 +19,12 @@ package com.example.composesample.presentation.example.component.architecture.de
  * - launch vs withContext: launch는 새 코루틴 생성, withContext는 같은 코루틴에서 전환
  * - withContext는 결과값 반환 가능 (val result = withContext(IO) { computeResult() })
  * - UI 업데이트: withContext(Dispatchers.Main) { view.text = result }
+ *
+ * ## CoroutineBridges (콜백 → suspend 변환 패턴)
+ * - 출처: https://www.revenuecat.com/blog/engineering/kotlin-coroutine-bridge/
+ * 핵심 개념:
+ * - suspendCoroutine { cont -> } : 콜백 기반 API를 suspend 함수로 래핑. 성공 시 cont.resume(value), 실패 시 cont.resumeWithException(e)
+ * - suspendCancellableCoroutine { cont -> } : 취소 전파 지원. cont.invokeOnCancellation { } 블록에서 리소스 정리
+ * - suspendCoroutine vs suspendCancellableCoroutine: 취소 가능 여부 차이. 장기 실행 작업엔 후자 권장
+ * - invokeOnCancellation: 코루틴 취소 시 콜백 해제, 연결 종료 등 정리 작업 수행 지점
  */
