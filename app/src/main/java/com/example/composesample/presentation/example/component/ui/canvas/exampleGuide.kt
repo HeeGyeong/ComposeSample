@@ -12,6 +12,7 @@ package com.example.composesample.presentation.example.component.ui.canvas
  * - Lemniscate:     (x²+y²)² = a²(x²-y²)  — 베르누이 무한대(∞) 곡선
  * - Spirograph:     Hypotrochoid, x = (R-r)cos(t)+d·cos((R-r)/r·t)
  * - Cardioid:       r = a(1 - cosθ)  — 하트 모양 곡선
+ * - Butterfly:      r = e^(cosθ) - 2·cos(4θ) - sin⁵(θ/12), θ ∈ [0, 24π]  — Temple H. Fay 나비 곡선
  *
  * ### 애니메이션 패턴
  * - `rememberInfiniteTransition` + `animateFloat` (0→1, LinearEasing)

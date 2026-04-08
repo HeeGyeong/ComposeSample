@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.sp
 import com.example.composesample.presentation.MainHeader
 import kotlin.math.PI
 import kotlin.math.cos
+import kotlin.math.exp
 import kotlin.math.sin
 
 @Composable
@@ -98,6 +99,15 @@ fun ComposeLoadersExampleUI(onBackEvent: () -> Unit) {
                     description = "반지름이 같은 두 원이 서로 접하며 굴러갈 때 한 점이 그리는 하트 모양 곡선입니다."
                 ) {
                     CardioidLoader(color = Color(0xFFFF4444))
+                }
+            }
+            item {
+                LoaderSection(
+                    title = "Butterfly Curve",
+                    formula = "r = e^(cosθ) - 2·cos(4θ) - sin⁵(θ/12),  θ ∈ [0, 24π]",
+                    description = "Temple H. Fay가 발견한 나비 날개 모양 극좌표 곡선. 24π 주기로 복잡한 대칭 패턴이 완성됩니다."
+                ) {
+                    ButterflyLoader(color = Color(0xFFBB86FC))
                 }
             }
             item { Spacer(modifier = Modifier.height(32.dp)) }
@@ -307,6 +317,38 @@ private fun SpirographLoader(color: Color) {
     Canvas(modifier = Modifier.size(160.dp)) {
         val headIdx = (progress * points.size).toInt().coerceIn(0, points.size - 1)
         drawTrail(points, headIdx, points.size / 4, color, size.width * 0.42f / maxRadius)
+    }
+}
+
+// ── Butterfly Curve: r = e^(cosθ) - 2·cos(4θ) - sin⁵(θ/12) ──
+@Composable
+private fun ButterflyLoader(color: Color) {
+    val steps = 1200
+    // θ: 0 ~ 24π, 24π 주기로 나비 날개 패턴이 완성됨
+    val points = remember {
+        List(steps) { i ->
+            val theta = (i.toFloat() / steps) * 24f * PI.toFloat()
+            val expPart = exp(cos(theta).toDouble()).toFloat()
+            val cosPart = 2f * cos(4f * theta)
+            val s = sin(theta / 12f)
+            val sinPart = s * s * s * s * s  // sin⁵(θ/12)
+            val r = expPart - cosPart - sinPart
+            Offset(r * cos(theta), r * sin(theta))
+        }
+    }
+    val infiniteTransition = rememberInfiniteTransition(label = "butterfly")
+    val progress by infiniteTransition.animateFloat(
+        initialValue = 0f,
+        targetValue = 1f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(durationMillis = 6000, easing = LinearEasing),
+            repeatMode = RepeatMode.Restart
+        ),
+        label = "butterfly_p"
+    )
+    Canvas(modifier = Modifier.size(160.dp)) {
+        val headIdx = (progress * points.size).toInt().coerceIn(0, points.size - 1)
+        drawTrail(points, headIdx, points.size / 4, color, size.width * 0.09f)
     }
 }
 
