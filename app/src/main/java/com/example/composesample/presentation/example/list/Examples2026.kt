@@ -56,7 +56,7 @@ val examples2026 = listOf(
         lastUpdate = "26. 02. 13",
         title = "Embedded Photo Picker",
         description = "앱 내에서 직접 포토 피커를 임베드하여 사진/영상을 선택하는 방법",
-        blogUrl = "",
+        blogUrl = "https://heegs.tistory.com/190",
         exampleType = ConstValue.EmbeddedPhotoPickerExample
     ),
     ExampleObject(
