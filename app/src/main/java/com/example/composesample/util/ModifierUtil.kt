@@ -77,7 +77,7 @@ fun <T> singleClickEvent(
         }
     )
 
-    LaunchedEffect(true) {
+    LaunchedEffect(Unit) {
         debounceState
             // 0.3초의 시간동안 추가적인 입력이 없으면 가장 마지막의 이벤트를 발생시킨다.
             .debounce(300L)
