@@ -22,6 +22,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import androidx.glance.appwidget.updateAll
+import androidx.lifecycle.lifecycleScope
 import com.example.composesample.presentation.example.BlogExampleActivity
 import com.example.composesample.presentation.example.component.system.ui.widget.StreaksWidget
 import com.example.composesample.presentation.example.component.system.ui.widget.SmallWidget
@@ -30,7 +31,6 @@ import com.example.composesample.presentation.example.component.system.ui.widget
 import com.example.composesample.presentation.legacy.LegacyActivity
 import com.example.composesample.util.ConstValue.ExampleType
 import com.example.composesample.util.ConstValue.IntentType
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -58,7 +58,8 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun updateWidget() {
-        CoroutineScope(Dispatchers.IO).launch {
+        // Activity 수명주기에 종속되도록 lifecycleScope 사용 (생명주기 외 실행 방지)
+        lifecycleScope.launch(Dispatchers.IO) {
             try {
                 StreaksWidget().updateAll(this@MainActivity)
                 SmallWidget().updateAll(this@MainActivity)
