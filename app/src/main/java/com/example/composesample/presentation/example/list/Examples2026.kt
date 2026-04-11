@@ -63,7 +63,7 @@ val examples2026 = listOf(
         lastUpdate = "26. 02. 16",
         title = "CompositionLocal Tree Visualization",
         description = "Composition Tree에서 CompositionLocal의 데이터 흐름, 룩업, 섀도잉을 시각화",
-        blogUrl = "",
+        blogUrl = "https://heegs.tistory.com/191",
         exampleType = ConstValue.CompositionLocalTreeExample
     ),
     ExampleObject(
