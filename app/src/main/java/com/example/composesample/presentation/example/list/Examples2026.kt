@@ -70,7 +70,7 @@ val examples2026 = listOf(
         lastUpdate = "26. 02. 19",
         title = "Retain API (Goodbye ViewModel)",
         description = "Compose 1.10 retain API로 ViewModel 없이 상태 보존하는 패턴",
-        blogUrl = "",
+        blogUrl = "https://heegs.tistory.com/192",
         exampleType = ConstValue.RetainApiExample
     ),
     ExampleObject(
