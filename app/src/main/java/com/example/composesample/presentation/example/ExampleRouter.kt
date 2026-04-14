@@ -115,6 +115,7 @@ import com.example.composesample.presentation.example.component.ui.text.TextFiel
 import com.example.composesample.presentation.example.component.ui.text.TextStyleUI
 import com.example.composesample.presentation.example.component.ui.visibility.VisibilityExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.performance.InlineValueClassExampleUI
+import com.example.composesample.presentation.example.component.architecture.development.language.NameBasedDestructuringExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.language.SealedClassInterfaceExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.concurrency.CoroutinesInternalsExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.concurrency.WithContextExampleUI
@@ -204,6 +205,7 @@ import com.example.composesample.util.ConstValue.ReverseLazyColumnExample
 import com.example.composesample.util.ConstValue.SSEExample
 import com.example.composesample.util.ConstValue.SafFileExample
 import com.example.composesample.util.ConstValue.ScaffoldDrawExample
+import com.example.composesample.util.ConstValue.NameBasedDestructuringExample
 import com.example.composesample.util.ConstValue.SealedClassInterfaceExample
 import com.example.composesample.util.ConstValue.SharedElementTransitionExample
 import com.example.composesample.util.ConstValue.ShortcutExample
@@ -587,6 +589,10 @@ fun ExampleCaseUI(
 
                         SealedClassInterfaceExample -> {
                             SealedClassInterfaceExampleUI(onBackEvent)
+                        }
+
+                        NameBasedDestructuringExample -> {
+                            NameBasedDestructuringExampleUI(onBackEvent)
                         }
 
                         CoroutinesInternalsExample -> {

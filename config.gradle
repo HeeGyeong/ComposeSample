@@ -29,5 +29,9 @@ kotlin {
         languageVersion.set(JavaLanguageVersion.of(libs.versions.javaVersion.get().toInteger()))
     }
     jvmToolchain(libs.versions.javaVersion.get().toInteger())
+
+    // Kotlin 2.3.20 Name-Based Destructuring (Experimental)
+    // 프로젝트 전역 적용은 기존 Pair/Triple 구조 분해와 충돌 → 예제에서 개념만 시연
+    // 실제 적용 시: compilerOptions { freeCompilerArgs.add("-Xname-based-destructuring=complete") }
 }
 

@@ -275,5 +275,12 @@ val examples2026 = listOf(
         description = "InputTransformation.maxLength()가 프로그래매틱 state 변경에는 적용되지 않는 버그 재현 + LaunchedEffect + snapshotFlow로 상태를 관찰하여 길이를 강제하는 올바른 해결책",
         blogUrl = "",
         exampleType = ConstValue.TextFieldMaxLengthExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 04. 14",
+        title = "Kotlin Name-Based Destructuring",
+        description = "Kotlin 2.3.20의 이름 기반 구조 분해: 위치가 아닌 프로퍼티 이름으로 변수를 매칭하여 리팩토링 안전성과 가독성을 확보하는 패턴",
+        blogUrl = "",
+        exampleType = ConstValue.NameBasedDestructuringExample
     )
 )

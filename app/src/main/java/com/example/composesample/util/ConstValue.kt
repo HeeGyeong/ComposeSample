@@ -126,10 +126,11 @@ object ConstValue {
     const val FlatMapExample = "flatMapExample"
 
     // ==================== Kotlin 언어 기능 예제 ====================
-    // Type(변수 타입 활용), InlineValueClass(성능 최적화), SealedClassInterface(타입 안전 계층)
+    // Type(변수 타입 활용), InlineValueClass(성능 최적화), SealedClassInterface(타입 안전 계층), NameBasedDestructuring(이름 기반 구조 분해 — Kotlin 2.3.20)
     const val TypeExample = "typeExample"
     const val InlineValueClassExample = "inlineValueClassExample"
     const val SealedClassInterfaceExample = "sealedClassInterfaceExample"
+    const val NameBasedDestructuringExample = "nameBasedDestructuringExample"
 
     // ==================== 네트워크 & API 예제 ====================
     // Ktor(API 호출), SSE(실시간 통신), ApiDisconnect(연결 해제 처리)
