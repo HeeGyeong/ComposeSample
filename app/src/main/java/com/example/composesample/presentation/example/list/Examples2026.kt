@@ -282,5 +282,12 @@ val examples2026 = listOf(
         description = "Kotlin 2.3.20의 이름 기반 구조 분해: 위치가 아닌 프로퍼티 이름으로 변수를 매칭하여 리팩토링 안전성과 가독성을 확보하는 패턴",
         blogUrl = "",
         exampleType = ConstValue.NameBasedDestructuringExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 04. 15",
+        title = "Material 3 Expressive (1.4.0 신규)",
+        description = "Material3 1.4.0 신규 컴포넌트: SecureTextField(비밀번호 입력 + 난독화 모드), FloatingToolbar(플로팅 액션 바), VerticalDragHandle, ButtonGroup 개선사항",
+        blogUrl = "",
+        exampleType = ConstValue.Material3ExpressiveExample
     )
 )

@@ -87,6 +87,7 @@ import com.example.composesample.presentation.example.component.ui.layout.drawer
 import com.example.composesample.presentation.example.component.ui.layout.drawer.ScaffoldDrawerUI
 import com.example.composesample.presentation.example.component.ui.layout.flexbox.FlexBoxUI
 import com.example.composesample.presentation.example.component.ui.layout.flexbox.FlowRowLayoutExampleUI
+import com.example.composesample.presentation.example.component.ui.material3.Material3ExpressiveExampleUI
 import com.example.composesample.presentation.example.component.ui.layout.header.StickyHeaderExampleUI
 import com.example.composesample.presentation.example.component.ui.layout.lazycolumn.LazyColumnFlingBehaviorExampleUI
 import com.example.composesample.presentation.example.component.ui.layout.lazycolumn.LazyColumnIssueUI
@@ -178,6 +179,7 @@ import com.example.composesample.util.ConstValue.LocalLanguageChangeExample
 import com.example.composesample.util.ConstValue.LookaheadScopeExample
 import com.example.composesample.util.ConstValue.LottieExample
 import com.example.composesample.util.ConstValue.MVIExample
+import com.example.composesample.util.ConstValue.Material3ExpressiveExample
 import com.example.composesample.util.ConstValue.ModalBottomSheetExample
 import com.example.composesample.util.ConstValue.ModalDrawExample
 import com.example.composesample.util.ConstValue.ModularizationExample
@@ -549,6 +551,10 @@ fun ExampleCaseUI(
 
                         TextFieldMaxLengthExample -> {
                             TextFieldMaxLengthExampleUI(onBackEvent)
+                        }
+
+                        Material3ExpressiveExample -> {
+                            Material3ExpressiveExampleUI(onBackEvent)
                         }
 
                         NestedRoutesNav3Example -> {
