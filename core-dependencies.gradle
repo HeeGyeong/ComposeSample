@@ -7,6 +7,8 @@ dependencies {
     implementation(libs.coreKtx)
     implementation(libs.appcompat)
     implementation(libs.material)
+    implementation(libs.materialIconsCore)
+    implementation(libs.materialIconsExtended)
     implementation(libs.material3)
     implementation(libs.material3WindowSizeClass)
 
