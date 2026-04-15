@@ -212,14 +212,16 @@ private fun ReceiveContentTextFieldCard(
                         .contentReceiver(receiveContentListener),
                     textStyle = TextStyle(fontSize = 14.sp, color = Color(0xFF212121)),
                     decorationBox = { innerTextField ->
-                        if (text.isEmpty()) {
-                            Text(
-                                text = "텍스트 입력 또는 이미지 붙여넣기...",
-                                fontSize = 14.sp,
-                                color = Color(0xFFBDBDBD)
-                            )
+                        Box {
+                            if (text.isEmpty()) {
+                                Text(
+                                    text = "텍스트 입력 또는 이미지 붙여넣기...",
+                                    fontSize = 14.sp,
+                                    color = Color(0xFFBDBDBD)
+                                )
+                            }
+                            innerTextField()
                         }
-                        innerTextField()
                     }
                 )
             }

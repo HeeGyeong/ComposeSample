@@ -695,7 +695,9 @@ scope.launch {
 private fun PrebuiltBridgesSection() {
     // LiveData.asFlow() 데모용 LiveData
     val liveData = remember { MutableLiveData("초기값") }
-    val liveDataAsFlow by liveData.asFlow().collectAsStateWithLifecycle(initialValue = "...")
+    // remember로 Flow 인스턴스 캐싱 — 리컴포지션 시 재생성 방지
+    val liveDataFlow = remember(liveData) { liveData.asFlow() }
+    val liveDataAsFlow by liveDataFlow.collectAsStateWithLifecycle(initialValue = "...")
 
     // Flow.asLiveData() 데모용 StateFlow
     val stateFlow = remember { MutableStateFlow(0) }

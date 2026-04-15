@@ -86,7 +86,7 @@ private fun ConceptCard() {
 
             val comparisons = listOf(
                 Triple("위치 기반 (기존)", "val (a, b) = obj", "순서 의존 — 리팩토링 위험"),
-                Triple("이름 기반 (2.3.20)", "val (a = propA, b = propB) = obj", "이름 매칭 — 순서 무관")
+                Triple("이름 기반 (2.3.20)", "(val a = propA, val b = propB) = obj", "이름 매칭 — 순서 무관")
             )
             comparisons.forEach { (label, syntax, note) ->
                 Row(
@@ -147,9 +147,9 @@ private fun PositionBasedBugCard() {
             )
             Spacer(modifier = Modifier.height(12.dp))
 
-            ResultRow(label = "email 변수값", value = email, expected = "alice@example.com", isCorrect = false)
+            ResultRow(label = "email 변수값", value = email, isCorrect = false)
             Spacer(modifier = Modifier.height(4.dp))
-            ResultRow(label = "username 변수값", value = username, expected = "alice", isCorrect = false)
+            ResultRow(label = "username 변수값", value = username, isCorrect = false)
         }
     }
 }
@@ -185,19 +185,21 @@ private fun NameBasedSolutionCard() {
 
             CodeBlock(
                 code = "// Kotlin 2.3.20 Name-Based Destructuring\n" +
-                        "// 컴파일러 플래그: -Xname-based-destructuring=complete\n\n" +
-                        "val (mail = email, name = username) = user\n" +
+                        "// 컴파일러 플래그: -Xname-based-destructuring\n\n" +
+                        "// explicit form (only-syntax / name-mismatch)\n" +
+                        "(val mail = email, val name = username) = user\n" +
                         "// mail → user.email = \"alice@example.com\" ✅\n" +
                         "// name → user.username = \"alice\"          ✅\n\n" +
-                        "// 위치 기반이 필요하면 [] 구문 사용\n" +
-                        "val [first, second] = user  // component1(), component2()",
+                        "// complete 모드: () 구문이 이름 기반으로 재정의\n" +
+                        "val (email, username) = user // 이름으로 매칭\n" +
+                        "val [first, second] = user   // 위치 기반(componentN)",
                 borderColor = Color(0xFF388E3C)
             )
             Spacer(modifier = Modifier.height(12.dp))
 
-            ResultRow(label = "mail 변수값", value = mail, expected = "alice@example.com", isCorrect = true)
+            ResultRow(label = "mail 변수값", value = mail, isCorrect = true)
             Spacer(modifier = Modifier.height(4.dp))
-            ResultRow(label = "name 변수값", value = name, expected = "alice", isCorrect = true)
+            ResultRow(label = "name 변수값", value = name, isCorrect = true)
         }
     }
 }
@@ -247,26 +249,26 @@ private fun SyntaxComparisonCard() {
                             ")\n\n" +
                             "// ❌ 위치 기반: 순서 기억 필요\n" +
                             "val (status, message, data) = response\n\n" +
-                            "// ✅ 이름 기반: 이름으로 매칭\n" +
-                            "val (code = status, msg = message,\n" +
-                            "     body = data) = response",
+                            "// ✅ 이름 기반 (explicit form)\n" +
+                            "(val code = status, val msg = message,\n" +
+                            " val body = data) = response",
                     borderColor = Color(0xFF1976D2)
                 )
                 1 -> CodeBlock(
                     code = "data class Point(val x: Float, val y: Float)\n\n" +
                             "// ❌ 위치 기반: x, y 뒤바뀔 수 있음\n" +
                             "val (y, x) = point  // 실수로 뒤바뀜!\n\n" +
-                            "// ✅ 이름 기반: 항상 안전\n" +
-                            "val (px = x, py = y) = point",
+                            "// ✅ 이름 기반 (explicit form)\n" +
+                            "(val px = x, val py = y) = point",
                     borderColor = Color(0xFF1976D2)
                 )
                 2 -> CodeBlock(
                     code = "// Map 엔트리 구조 분해에도 적용 가능\n" +
-                            "for ((k = key, v = value) in map) {\n" +
+                            "for ((val k = key, val v = value) in map) {\n" +
                             "    println(\"\$k: \$v\")\n" +
                             "}\n\n" +
-                            "// 기존 위치 기반도 유지\n" +
-                            "for ([k, v] in map) { ... }  // [] = 위치 기반",
+                            "// complete 모드: 기존 () 이름 기반, [] 위치 기반\n" +
+                            "for ([k, v] in map) { ... }",
                     borderColor = Color(0xFF1976D2)
                 )
             }
@@ -306,7 +308,7 @@ private fun CompilerModesCard() {
             val modes = listOf(
                 Triple("only-syntax", "명시적 형태만 허용", "기존 코드 영향 없음. 점진적 마이그레이션에 안전"),
                 Triple("name-mismatch", "이름 불일치 시 경고", "기존 위치 기반도 동작하지만 불일치를 감지"),
-                Triple("complete", "이름 기반이 기본 동작", "위치 기반은 [] 구문으로 전환. 가장 급진적")
+                Triple("complete", "val (a, b)가 이름 기반으로 재정의", "Pair/Triple 등 이름 불일치 시 컴파일 오류. 위치 기반은 val [a, b]로 전환")
             )
             modes.forEach { (mode, behavior, note) ->
                 Column(
@@ -373,7 +375,7 @@ private fun SummaryCard() {
 }
 
 @Composable
-private fun ResultRow(label: String, value: String, expected: String, isCorrect: Boolean) {
+private fun ResultRow(label: String, value: String, isCorrect: Boolean) {
     val bgColor = if (isCorrect) Color(0xFFE8F5E9) else Color(0xFFFFEBEE)
     val textColor = if (isCorrect) Color(0xFF388E3C) else Color(0xFFD32F2F)
     val icon = if (isCorrect) "✅" else "❌"

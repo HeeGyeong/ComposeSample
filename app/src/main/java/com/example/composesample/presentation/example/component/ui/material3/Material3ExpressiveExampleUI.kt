@@ -18,15 +18,14 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.input.TextObfuscationMode
 import androidx.compose.foundation.text.input.rememberTextFieldState
-import androidx.compose.material.Card
-import androidx.compose.material.Text
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.OutlinedSecureTextField
 import androidx.compose.material3.SecureTextField
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -69,7 +68,7 @@ fun Material3ExpressiveExampleUI(onBackEvent: () -> Unit) {
 private fun OverviewCard() {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -144,7 +143,7 @@ private fun SecureTextFieldDemoCard() {
 
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -168,15 +167,13 @@ private fun SecureTextFieldDemoCard() {
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            MaterialTheme {
-                SecureTextField(
-                    state = state,
-                    label = { androidx.compose.material3.Text("비밀번호") },
-                    placeholder = { androidx.compose.material3.Text("입력해보세요") },
-                    textObfuscationMode = currentMode,
-                    modifier = Modifier.fillMaxWidth()
-                )
-            }
+            SecureTextField(
+                state = state,
+                label = { Text("비밀번호") },
+                placeholder = { Text("입력해보세요") },
+                textObfuscationMode = currentMode,
+                modifier = Modifier.fillMaxWidth()
+            )
 
             Spacer(modifier = Modifier.height(8.dp))
             ObfuscationModeDescription(selectedMode)
@@ -197,7 +194,7 @@ private fun OutlinedSecureTextFieldDemoCard() {
 
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -220,15 +217,13 @@ private fun OutlinedSecureTextFieldDemoCard() {
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            MaterialTheme {
-                OutlinedSecureTextField(
-                    state = state,
-                    label = { androidx.compose.material3.Text("비밀번호") },
-                    placeholder = { androidx.compose.material3.Text("입력해보세요") },
-                    textObfuscationMode = currentMode,
-                    modifier = Modifier.fillMaxWidth()
-                )
-            }
+            OutlinedSecureTextField(
+                state = state,
+                label = { Text("비밀번호") },
+                placeholder = { Text("입력해보세요") },
+                textObfuscationMode = currentMode,
+                modifier = Modifier.fillMaxWidth()
+            )
 
             Spacer(modifier = Modifier.height(8.dp))
             ObfuscationModeDescription(selectedMode)
@@ -282,7 +277,7 @@ private fun ObfuscationModeDescription(selectedMode: Int) {
 private fun ObfuscationModeComparisonCard() {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -331,7 +326,7 @@ private fun ObfuscationModeComparisonCard() {
 private fun CodeExampleCard() {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -382,7 +377,7 @@ private fun CodeExampleCard() {
 private fun SummaryCard() {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
