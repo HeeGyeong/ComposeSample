@@ -347,7 +347,7 @@ private fun ExitUntilCollapsedMediumExample() {
                     }
                 },
                 scrollBehavior = scrollBehavior,
-                colors = TopAppBarDefaults.mediumTopAppBarColors(
+                colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = Color(0xFFFF6F00),
                     scrolledContainerColor = Color(0xFFE65100)
                 )
@@ -424,7 +424,7 @@ private fun ExitUntilCollapsedLargeExample() {
                     }
                 },
                 scrollBehavior = scrollBehavior,
-                colors = TopAppBarDefaults.largeTopAppBarColors(
+                colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = Color(0xFF7B1FA2),
                     scrolledContainerColor = Color(0xFF6A1B9A)
                 )

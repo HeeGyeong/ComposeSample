@@ -173,7 +173,7 @@ private fun LargeTopBar(
             onBackButtonClick = onBackButtonClick
         )
     },
-    colors = TopAppBarDefaults.mediumTopAppBarColors(
+    colors = TopAppBarDefaults.topAppBarColors(
         containerColor = Color.DarkGray, // Expanded
         scrolledContainerColor = Color.DarkGray, // Collapsed
         titleContentColor = Color.LightGray
