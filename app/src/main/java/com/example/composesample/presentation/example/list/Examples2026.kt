@@ -77,7 +77,7 @@ val examples2026 = listOf(
         lastUpdate = "26. 02. 22",
         title = "Custom TopAppBarScrollBehavior",
         description = "RecyclerView 스크롤 이벤트를 커스텀 TopAppBarScrollBehavior로 처리하는 패턴",
-        blogUrl = "",
+        blogUrl = "https://heegs.tistory.com/193",
         exampleType = ConstValue.CustomScrollBehaviorExample
     ),
     ExampleObject(
