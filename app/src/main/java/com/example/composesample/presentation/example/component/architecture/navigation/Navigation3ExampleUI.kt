@@ -23,13 +23,14 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.Card
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
@@ -93,8 +94,8 @@ private fun BasicNavigationDemoCard() {
 
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        backgroundColor = Color(0xFFE8F5E9),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFE8F5E9)),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -120,7 +121,7 @@ private fun BasicNavigationDemoCard() {
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(8.dp),
                 color = Color.White,
-                elevation = 2.dp
+                shadowElevation = 2.dp
             ) {
                 Box(
                     modifier = Modifier
@@ -232,7 +233,7 @@ private fun BasicNavigationDemoCard() {
                         }
                     },
                     enabled = backStack.size > 1,
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFFF5722)),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFF5722)),
                     shape = RoundedCornerShape(8.dp),
                     modifier = Modifier.weight(1f)
                 ) {
@@ -291,7 +292,7 @@ private fun NavigationButton(
 ) {
     Button(
         onClick = onClick,
-        colors = ButtonDefaults.buttonColors(backgroundColor = color),
+        colors = ButtonDefaults.buttonColors(containerColor = color),
         shape = RoundedCornerShape(8.dp),
         modifier = modifier,
         contentPadding = PaddingValues(vertical = 12.dp, horizontal = 8.dp)
@@ -367,8 +368,8 @@ private fun BackStackVisualizationCard() {
 
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        backgroundColor = Color(0xFFFFF3E0),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFFFF3E0)),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -407,7 +408,7 @@ private fun BackStackVisualizationCard() {
                             },
                         shape = RoundedCornerShape(8.dp),
                         color = if (isTop) Color(0xFFE65100).copy(alpha = 0.2f) else Color.White,
-                        elevation = if (isTop) 4.dp else 2.dp
+                        shadowElevation = if (isTop) 4.dp else 2.dp
                     ) {
                         Row(
                             modifier = Modifier
@@ -518,7 +519,7 @@ private fun BackStackVisualizationCard() {
                         ).random()
                         backStack = backStack + newScreen
                     },
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFE65100)),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFE65100)),
                     shape = RoundedCornerShape(8.dp),
                     modifier = Modifier.weight(1f)
                 ) {
@@ -532,7 +533,7 @@ private fun BackStackVisualizationCard() {
                         }
                     },
                     enabled = backStack.size > 1,
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFFF5722)),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFF5722)),
                     shape = RoundedCornerShape(8.dp),
                     modifier = Modifier.weight(1f)
                 ) {
@@ -542,7 +543,7 @@ private fun BackStackVisualizationCard() {
                 Button(
                     onClick = { backStack = listOf(DemoScreen.Home) },
                     enabled = backStack.size > 1,
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF757575)),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF757575)),
                     shape = RoundedCornerShape(8.dp),
                     modifier = Modifier.weight(1f)
                 ) {
@@ -584,8 +585,8 @@ private fun TypeSafeNavigationCard() {
 
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        backgroundColor = Color(0xFFE1F5FE),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFE1F5FE)),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -611,7 +612,7 @@ private fun TypeSafeNavigationCard() {
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(8.dp),
                 color = Color.White,
-                elevation = 2.dp
+                shadowElevation = 2.dp
             ) {
                 Column(modifier = Modifier.padding(12.dp)) {
                     Text(
@@ -683,7 +684,7 @@ private fun TypeSafeNavigationCard() {
                             navigatedUserId = userId
                         },
                         colors = ButtonDefaults.buttonColors(
-                            backgroundColor = if (navigatedUserId == userId) Color(0xFF0277BD) else Color(0xFF90CAF9)
+                            containerColor = if (navigatedUserId == userId) Color(0xFF0277BD) else Color(0xFF90CAF9)
                         ),
                         shape = RoundedCornerShape(8.dp),
                         modifier = Modifier.weight(1f),
@@ -744,8 +745,8 @@ private fun NestedNavigationCard() {
 
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        backgroundColor = Color(0xFFFCE4EC),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFFCE4EC)),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -771,7 +772,7 @@ private fun NestedNavigationCard() {
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(8.dp),
                 color = Color.White,
-                elevation = 2.dp
+                shadowElevation = 2.dp
             ) {
                 Column(modifier = Modifier.padding(12.dp)) {
                     Row(
@@ -818,7 +819,7 @@ private fun NestedNavigationCard() {
                     ) {
                         Button(
                             onClick = { parentBackStack = parentBackStack + "Profile" },
-                            colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFC2185B)),
+                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFC2185B)),
                             shape = RoundedCornerShape(6.dp),
                             modifier = Modifier.weight(1f),
                             contentPadding = PaddingValues(vertical = 6.dp)
@@ -829,7 +830,7 @@ private fun NestedNavigationCard() {
                         Button(
                             onClick = { if (parentBackStack.size > 1) parentBackStack = parentBackStack.dropLast(1) },
                             enabled = parentBackStack.size > 1,
-                            colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFE91E63)),
+                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFE91E63)),
                             shape = RoundedCornerShape(6.dp),
                             modifier = Modifier.weight(1f),
                             contentPadding = PaddingValues(vertical = 6.dp)
@@ -847,7 +848,7 @@ private fun NestedNavigationCard() {
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(8.dp),
                 color = Color.White,
-                elevation = 2.dp
+                shadowElevation = 2.dp
             ) {
                 Column(modifier = Modifier.padding(12.dp)) {
                     Row(
@@ -894,7 +895,7 @@ private fun NestedNavigationCard() {
                     ) {
                         Button(
                             onClick = { childBackStack = childBackStack + "Notifications" },
-                            colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFAD1457)),
+                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFAD1457)),
                             shape = RoundedCornerShape(6.dp),
                             modifier = Modifier.weight(1f),
                             contentPadding = PaddingValues(vertical = 6.dp)
@@ -905,7 +906,7 @@ private fun NestedNavigationCard() {
                         Button(
                             onClick = { if (childBackStack.size > 1) childBackStack = childBackStack.dropLast(1) },
                             enabled = childBackStack.size > 1,
-                            colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFC2185B)),
+                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFC2185B)),
                             shape = RoundedCornerShape(6.dp),
                             modifier = Modifier.weight(1f),
                             contentPadding = PaddingValues(vertical = 6.dp)

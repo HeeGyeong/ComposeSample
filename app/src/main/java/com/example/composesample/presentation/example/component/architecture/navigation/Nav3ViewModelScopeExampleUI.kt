@@ -13,17 +13,19 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.Card
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
@@ -73,8 +75,8 @@ fun Nav3ViewModelScopeExampleUI(
 private fun IntroCard() {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        backgroundColor = Color(0xFFEDE7F6),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFEDE7F6)),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -98,8 +100,9 @@ private fun IntroCard() {
 }
 
 // 간단한 카운터 ViewModel 모델 (실제 ViewModel 대신 시뮬레이션)
+// count 는 Compose 가 변경을 추적할 수 있도록 mutableStateOf 로 구성
 private class CounterViewModel(val screenName: String) {
-    var count: Int = 0
+    var count by mutableStateOf(0)
         private set
 
     fun increment() {
@@ -119,8 +122,8 @@ private fun Nav2AutoScopeCard() {
 
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        backgroundColor = Color(0xFFE8F5E9),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFE8F5E9)),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -163,7 +166,7 @@ private fun Nav2AutoScopeCard() {
                     onClick = {
                         backStack = backStack + "Detail"
                     },
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF2E7D32)),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2E7D32)),
                     shape = RoundedCornerShape(8.dp),
                     modifier = Modifier.weight(1f)
                 ) {
@@ -179,7 +182,7 @@ private fun Nav2AutoScopeCard() {
                         }
                     },
                     enabled = backStack.size > 1,
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFFF7043)),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFF7043)),
                     shape = RoundedCornerShape(8.dp),
                     modifier = Modifier.weight(1f)
                 ) {
@@ -202,8 +205,8 @@ private fun Nav3DefaultCard() {
 
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        backgroundColor = Color(0xFFFFEBEE),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFFFEBEE)),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -246,7 +249,7 @@ private fun Nav3DefaultCard() {
                     onClick = {
                         backStack = backStack + "Detail"
                     },
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFC62828)),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFC62828)),
                     shape = RoundedCornerShape(8.dp),
                     modifier = Modifier.weight(1f)
                 ) {
@@ -260,7 +263,7 @@ private fun Nav3DefaultCard() {
                         }
                     },
                     enabled = backStack.size > 1,
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFFF7043)),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFF7043)),
                     shape = RoundedCornerShape(8.dp),
                     modifier = Modifier.weight(1f)
                 ) {
@@ -289,8 +292,8 @@ private fun Nav3RestoreScopeCard() {
 
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        backgroundColor = Color(0xFFE3F2FD),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFE3F2FD)),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -333,7 +336,7 @@ private fun Nav3RestoreScopeCard() {
                     onClick = {
                         backStack = backStack + "Detail"
                     },
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF1565C0)),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1565C0)),
                     shape = RoundedCornerShape(8.dp),
                     modifier = Modifier.weight(1f)
                 ) {
@@ -352,7 +355,7 @@ private fun Nav3RestoreScopeCard() {
                         }
                     },
                     enabled = backStack.size > 1,
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFFF7043)),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFF7043)),
                     shape = RoundedCornerShape(8.dp),
                     modifier = Modifier.weight(1f)
                 ) {
@@ -395,7 +398,7 @@ private fun CounterBox(
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
-        verticalAlignment = androidx.compose.ui.Alignment.CenterVertically,
+        verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         Column(modifier = Modifier.weight(1f)) {
@@ -410,7 +413,7 @@ private fun CounterBox(
         }
         Button(
             onClick = onIncrement,
-            colors = ButtonDefaults.buttonColors(backgroundColor = color),
+            colors = ButtonDefaults.buttonColors(containerColor = color),
             shape = RoundedCornerShape(8.dp)
         ) {
             Text("+1", fontSize = 12.sp, color = Color.White)
