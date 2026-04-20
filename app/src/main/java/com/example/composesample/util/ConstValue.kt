@@ -84,10 +84,11 @@ object ConstValue {
     const val SpringTweenSnapExample = "springTweenSnapExample"
 
     // ==================== 네비게이션 예제 ====================
-    // BottomNavigation(하단 탭), Navigation3(새 Navigation), NestedRoutesNav3(중첩 라우팅)
+    // BottomNavigation(하단 탭), Navigation3(새 Navigation), NestedRoutesNav3(중첩 라우팅), Nav3ViewModelScope(Nav3 ViewModel 스코프 변화 + 복원 패턴)
     const val BottomNavigationExample = "bottomNavigationExample"
     const val Navigation3Example = "navigation3Example"
     const val NestedRoutesNav3Example = "nestedRoutesNav3Example"
+    const val Nav3ViewModelScopeExample = "nav3ViewModelScopeExample"
 
     // ==================== 앱 시작 최적화 예제 ====================
     // StartupOptimization(App Startup / Baseline Profile / Koin 지연 초기화 비교)

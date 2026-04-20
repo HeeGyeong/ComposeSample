@@ -290,5 +290,12 @@ val examples2026 = listOf(
         description = "Material3 1.4.0 신규 컴포넌트: SecureTextField(비밀번호 입력 + 난독화 모드), FloatingToolbar(플로팅 액션 바), VerticalDragHandle, ButtonGroup 개선사항",
         blogUrl = "",
         exampleType = ConstValue.Material3ExpressiveExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 04. 20",
+        title = "Nav3 ViewModel Scope",
+        description = "Navigation 3 에서 ViewModel 스코프가 어떻게 달라지는지 시뮬레이션: Nav2 Auto-Scope vs Nav3 기본 동작(스코프 없음) vs NavKey 단위 Store 매핑으로 이전 동작을 복원하는 패턴 비교",
+        blogUrl = "",
+        exampleType = ConstValue.Nav3ViewModelScopeExample
     )
 )

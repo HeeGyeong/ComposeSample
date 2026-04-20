@@ -122,6 +122,7 @@ import com.example.composesample.presentation.example.component.architecture.dev
 import com.example.composesample.presentation.example.component.architecture.development.concurrency.WithContextExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.concurrency.CoroutineBridgesExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.flow.FlatMapExampleUI
+import com.example.composesample.presentation.example.component.architecture.navigation.Nav3ViewModelScopeExampleUI
 import com.example.composesample.presentation.example.component.architecture.navigation.Navigation3ExampleUI
 import com.example.composesample.presentation.example.component.architecture.modularization.ModularizationExampleUI
 import com.example.composesample.presentation.example.component.architecture.lifecycle.AutoCloseableExampleUI
@@ -184,6 +185,7 @@ import com.example.composesample.util.ConstValue.ModalBottomSheetExample
 import com.example.composesample.util.ConstValue.ModalDrawExample
 import com.example.composesample.util.ConstValue.ModularizationExample
 import com.example.composesample.util.ConstValue.MotionBlurExample
+import com.example.composesample.util.ConstValue.Nav3ViewModelScopeExample
 import com.example.composesample.util.ConstValue.Navigation3Example
 import com.example.composesample.util.ConstValue.NestedRoutesNav3Example
 import com.example.composesample.util.ConstValue.NestedScrollingExample
@@ -611,6 +613,10 @@ fun ExampleCaseUI(
 
                         Navigation3Example -> {
                             Navigation3ExampleUI(onBackEvent)
+                        }
+
+                        Nav3ViewModelScopeExample -> {
+                            Nav3ViewModelScopeExampleUI(onBackEvent)
                         }
 
                         ModularizationExample -> {
