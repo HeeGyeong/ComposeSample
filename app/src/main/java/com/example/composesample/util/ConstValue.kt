@@ -95,13 +95,14 @@ object ConstValue {
     const val StartupOptimizationExample = "startupOptimizationExample"
 
     // ==================== 아키텍처 패턴 예제 ====================
-    // MVI(단방향 데이터 흐름), Coordinator(화면 전환 패턴), Modularization(모듈화 전략), PreviewInternals(@Preview 내부 동작 원리), StabilityAnnotations(@Stable/@Immutable 리컴포지션 최적화), PreviewOnlyAnnotation(@RequiresOptIn으로 Preview 전용 Composable 제한)
+    // MVI(단방향 데이터 흐름), Coordinator(화면 전환 패턴), Modularization(모듈화 전략), PreviewInternals(@Preview 내부 동작 원리), StabilityAnnotations(@Stable/@Immutable 리컴포지션 최적화), PreviewOnlyAnnotation(@RequiresOptIn으로 Preview 전용 Composable 제한), KoinCompilerPlugin(Koin Annotations KSP로 컴파일 타임 DI 검증)
     const val MVIExample = "mviExample"
     const val CoordinatorExample = "coordinatorExample"
     const val ModularizationExample = "modularizationExample"
     const val PreviewInternalsExample = "previewInternalsExample"
     const val StabilityAnnotationsExample = "stabilityAnnotationsExample"
     const val PreviewOnlyAnnotationExample = "previewOnlyAnnotationExample"
+    const val KoinCompilerPluginExample = "koinCompilerPluginExample"
 
     // ==================== Compose 상태 & Side Effect 예제 ====================
     // SideEffect(부수 효과 함수들), CompositionLocal(암시적 전달), StaticDynamicCompositionLocal(Static vs Dynamic), CompositionLocalTree(트리 시각화), RetainApi(retain API), SnapshotFlow(Flow 변환), InitTest(초기화 케이스), LocalContextStrings(LocalContext 문자열 안티패턴), RememberPatterns(rememberSaveable/rememberUpdatedState/derivedStateOf 비교), ComposeSnapshot(Snapshot 시스템 내부 동작)

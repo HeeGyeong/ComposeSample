@@ -292,6 +292,13 @@ val examples2026 = listOf(
         exampleType = ConstValue.Material3ExpressiveExample
     ),
     ExampleObject(
+        lastUpdate = "26. 04. 21",
+        title = "Koin Compiler Plugin (Annotations)",
+        description = "Koin Annotations(KSP)로 @Module·@Single·@Factory·@KoinViewModel을 사용해 DI를 컴파일 타임에 검증: 수동 DSL vs 애노테이션 방식 비교, 생성 코드 구조, 전환 전략",
+        blogUrl = "",
+        exampleType = ConstValue.KoinCompilerPluginExample
+    ),
+    ExampleObject(
         lastUpdate = "26. 04. 20",
         title = "Nav3 ViewModel Scope",
         description = "Navigation 3 에서 ViewModel 스코프가 어떻게 달라지는지 시뮬레이션: Nav2 Auto-Scope vs Nav3 기본 동작(스코프 없음) vs NavKey 단위 Store 매핑으로 이전 동작을 복원하는 패턴 비교",

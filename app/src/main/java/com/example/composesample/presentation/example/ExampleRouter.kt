@@ -28,6 +28,7 @@ import com.example.composesample.presentation.example.component.architecture.dev
 import com.example.composesample.presentation.example.component.architecture.development.compose17.TextOverflowExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.coordinator.CoordinatorExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.cursor.CursorIDEExampleUI
+import com.example.composesample.presentation.example.component.architecture.development.di.KoinCompilerPluginExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.init.InitTestExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.init.StartupOptimizationExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.preview.PreviewInternalsExampleUI
@@ -170,6 +171,7 @@ import com.example.composesample.util.ConstValue.GlanceWidgetExample
 import com.example.composesample.util.ConstValue.GraphicsLayerExample
 import com.example.composesample.util.ConstValue.InitTestExample
 import com.example.composesample.util.ConstValue.InlineValueClassExample
+import com.example.composesample.util.ConstValue.KoinCompilerPluginExample
 import com.example.composesample.util.ConstValue.KtorExample
 import com.example.composesample.util.ConstValue.LargeContentViewerExample
 import com.example.composesample.util.ConstValue.LanguageSettingExample
@@ -737,6 +739,10 @@ fun ExampleCaseUI(
 
                         StabilityAnnotationsExample -> {
                             StabilityAnnotationsExampleUI(onBackEvent)
+                        }
+
+                        KoinCompilerPluginExample -> {
+                            KoinCompilerPluginExampleUI(onBackEvent)
                         }
 
                         else -> {
