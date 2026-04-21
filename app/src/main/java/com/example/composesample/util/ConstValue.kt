@@ -27,6 +27,7 @@ object ConstValue {
     const val ResponsiveTabRowExample = "responsiveTabRowExample"
     const val CustomTextRenderingExample = "customTextRenderingExample"
     const val DialComponentExample = "dialComponentExample"
+    const val MonthPickerDialExample = "monthPickerDialExample"
     const val EmbeddedPhotoPickerExample = "embeddedPhotoPickerExample"
     const val ClickEventExample = "clickEventExample"
     const val FlexBoxLayoutExample = "flexBoxLayoutExample"

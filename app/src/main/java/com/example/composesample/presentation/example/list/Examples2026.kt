@@ -292,6 +292,13 @@ val examples2026 = listOf(
         exampleType = ConstValue.Material3ExpressiveExample
     ),
     ExampleObject(
+        lastUpdate = "26. 04. 22",
+        title = "Month Picker Dial (Airbnb ChromaDial)",
+        description = "Canvas + atan2 각도 계산과 제스처 조합으로 Airbnb 스타일 원형 월 선택기 구현: 드래그 회전, 스냅 애니메이션, 선택된 월 하이라이트, 12개월 세그먼트 시각화",
+        blogUrl = "",
+        exampleType = ConstValue.MonthPickerDialExample
+    ),
+    ExampleObject(
         lastUpdate = "26. 04. 21",
         title = "Koin Compiler Plugin (Annotations)",
         description = "Koin Annotations(KSP)로 @Module·@Single·@Factory·@KoinViewModel을 사용해 DI를 컴파일 타임에 검증: 수동 DSL vs 애노테이션 방식 비교, 생성 코드 구조, 전환 전략",

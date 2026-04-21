@@ -75,6 +75,7 @@ import com.example.composesample.presentation.example.component.ui.button.Button
 import com.example.composesample.presentation.example.component.ui.canvas.CanvasShapesExampleUI
 import com.example.composesample.presentation.example.component.ui.canvas.ComposeLoadersExampleUI
 import com.example.composesample.presentation.example.component.ui.canvas.DialComponentExampleUI
+import com.example.composesample.presentation.example.component.ui.canvas.MonthPickerDialExampleUI
 import com.example.composesample.presentation.example.component.ui.canvas.MotionBlurExampleUI
 import com.example.composesample.presentation.example.component.ui.graphics.NewShadowApiExampleUI
 import com.example.composesample.presentation.example.component.ui.layout.animation.AnimatedContentExampleUI
@@ -184,6 +185,7 @@ import com.example.composesample.util.ConstValue.LottieExample
 import com.example.composesample.util.ConstValue.MVIExample
 import com.example.composesample.util.ConstValue.Material3ExpressiveExample
 import com.example.composesample.util.ConstValue.ModalBottomSheetExample
+import com.example.composesample.util.ConstValue.MonthPickerDialExample
 import com.example.composesample.util.ConstValue.ModalDrawExample
 import com.example.composesample.util.ConstValue.ModularizationExample
 import com.example.composesample.util.ConstValue.MotionBlurExample
@@ -683,6 +685,10 @@ fun ExampleCaseUI(
 
                         DialComponentExample -> {
                             DialComponentExampleUI(onBackEvent)
+                        }
+
+                        MonthPickerDialExample -> {
+                            MonthPickerDialExampleUI(onBackEvent)
                         }
 
                         EmbeddedPhotoPickerExample -> {
