@@ -8,7 +8,6 @@ import android.content.pm.PackageManager
 import android.location.Geocoder
 import android.location.LocationManager
 import android.net.wifi.WifiManager
-import android.os.Build
 import android.provider.Settings
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -420,27 +419,14 @@ fun LanguageInfoRow(label: String, value: String) {
     }
 }
 
+// minSdk 24(N) 이상이므로 `configuration.locales[0]`을 직접 사용한다.
 // 현재 로케일 가져오기 (지역명)
-@SuppressLint("ObsoleteSdkInt")
-fun getCurrentLocale(context: Context): String {
-    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-        context.resources.configuration.locales[0].displayCountry
-    } else {
-        @Suppress("DEPRECATION")
-        context.resources.configuration.locale.displayCountry
-    }
-}
+fun getCurrentLocale(context: Context): String =
+    context.resources.configuration.locales[0].displayCountry
 
 // 현재 언어 가져오기 (언어명)
-@SuppressLint("ObsoleteSdkInt")
-fun getCurrentLanguage(context: Context): String {
-    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-        context.resources.configuration.locales[0].displayLanguage
-    } else {
-        @Suppress("DEPRECATION")
-        context.resources.configuration.locale.displayLanguage
-    }
-}
+fun getCurrentLanguage(context: Context): String =
+    context.resources.configuration.locales[0].displayLanguage
 
 /**
  * 로케일 코드 (예: ko-KR, en-US)
@@ -449,37 +435,16 @@ fun getCurrentLanguage(context: Context): String {
  * 예: 한국어(ko) → ko-KR, 태국어(th) → th-TH, 영어(en) → en-US
  * 따라서 언어만 변경해도 국가 코드가 함께 변경될 수 있습니다.
  */
-@SuppressLint("ObsoleteSdkInt")
-fun getLocaleCode(context: Context): String {
-    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-        context.resources.configuration.locales[0].toString()
-    } else {
-        @Suppress("DEPRECATION")
-        context.resources.configuration.locale.toString()
-    }
-}
+fun getLocaleCode(context: Context): String =
+    context.resources.configuration.locales[0].toString()
 
 // 언어 코드만 (예: ko, en)
-@SuppressLint("ObsoleteSdkInt")
-fun getLanguageCode(context: Context): String {
-    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-        context.resources.configuration.locales[0].language
-    } else {
-        @Suppress("DEPRECATION")
-        context.resources.configuration.locale.language
-    }
-}
+fun getLanguageCode(context: Context): String =
+    context.resources.configuration.locales[0].language
 
 // 국가 코드만 (예: KR, US)
-@SuppressLint("ObsoleteSdkInt")
-fun getCountryCode(context: Context): String {
-    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-        context.resources.configuration.locales[0].country
-    } else {
-        @Suppress("DEPRECATION")
-        context.resources.configuration.locale.country
-    }
-}
+fun getCountryCode(context: Context): String =
+    context.resources.configuration.locales[0].country
 
 // 위치 정보 가져오기
 @SuppressLint("MissingPermission")

@@ -1,6 +1,6 @@
 package com.example.composesample.presentation.example.component.ui.scroll
 
-import android.annotation.SuppressLint
+import java.util.Locale
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -231,7 +231,6 @@ fun NestedScrollingExampleUI(
     }
 }
 
-@SuppressLint("DefaultLocale")
 @Composable
 private fun ScrollStatusCard(
     preScrollCount: Int,
@@ -328,13 +327,13 @@ private fun ScrollStatusCard(
 
                 if (lastCalledFunction.contains("Scroll")) {
                     Text(
-                        text = "Delta: ${String.format("%.1f", lastScrollDelta)}",
+                        text = "Delta: ${String.format(Locale.US, "%.1f", lastScrollDelta)}",
                         fontSize = 12.sp,
                         color = Color.Gray
                     )
                 } else if (lastCalledFunction.contains("Fling")) {
                     Text(
-                        text = "Velocity: ${String.format("%.1f", lastFlingVelocity)}",
+                        text = "Velocity: ${String.format(Locale.US, "%.1f", lastFlingVelocity)}",
                         fontSize = 12.sp,
                         color = Color.Gray
                     )
