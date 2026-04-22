@@ -121,10 +121,12 @@ private fun InteractiveDialCard() {
     var selectedMonth by remember { mutableIntStateOf(0) }
 
     // 회전 각도 변화 → 선택된 월 인덱스 동기화 (360 / 12 = 30도 단위)
+    // 라벨은 `index * 30° + rotation - 90°` 위치에 그려지므로,
+    // 12시 방향(-90°)에 오는 라벨의 index를 역산하면 (12 - rotation/30) % 12
     LaunchedEffect(rotation) {
         snapshotFlow { rotation.value }.collectLatest { angle ->
             val normalized = ((angle % 360f) + 360f) % 360f
-            selectedMonth = (normalized / 30f).roundToInt() % 12
+            selectedMonth = (12 - (normalized / 30f).roundToInt()) % 12
         }
     }
 
@@ -215,12 +217,8 @@ private fun InteractiveDialCard() {
                         val x = center.x + labelRadius * cos(angleRad)
                         val y = center.y + labelRadius * sin(angleRad)
 
-                        val isSelected = index == ((rotation.value % 360f + 360f) % 360f / 30f)
-                            .roundToInt() % 12 * -1 + 0
-                        // 단순화: 12시 방향(상단 중앙)에 있는 월이 선택됨
-                        val normalized = ((rotation.value % 360f) + 360f) % 360f
-                        val selectedIndex = (12 - (normalized / 30f).roundToInt()) % 12
-                        val selected = index == selectedIndex
+                        // 12시 방향(상단 중앙)에 위치한 월이 선택됨 — selectedMonth 상태 재사용
+                        val selected = index == selectedMonth
 
                         val labelColor = if (selected) Color(0xFF1976D2) else Color(0xFF9E9E9E)
                         val result = textMeasurer.measure(
@@ -251,16 +249,13 @@ private fun InteractiveDialCard() {
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            val normalized = ((rotation.value % 360f) + 360f) % 360f
-            val selectedIndex = (12 - (normalized / 30f).roundToInt()) % 12
-
             Box(
                 modifier = Modifier
                     .background(Color(0xFFE3F2FD), RoundedCornerShape(12.dp))
                     .padding(horizontal = 24.dp, vertical = 12.dp)
             ) {
                 Text(
-                    text = "선택된 월: ${MONTHS[selectedIndex]}",
+                    text = "선택된 월: ${MONTHS[selectedMonth]}",
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color(0xFF1976D2),
