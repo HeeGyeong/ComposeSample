@@ -97,7 +97,7 @@
             android:theme="@style/Theme.ComposeSample"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".presentation.example.component.intent.PassingIntentDataActivity"
+            android:name=".presentation.example.component.system.platform.intent.PassingIntentDataActivity"
             android:theme="@style/Theme.ComposeSample"
             android:windowSoftInputMode="adjustResize" />
         <activity
@@ -105,7 +105,7 @@
             android:theme="@style/Theme.ComposeSample"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".presentation.example.component.language.LanguageTestActivity"
+            android:name=".presentation.example.component.system.platform.language.LanguageTestActivity"
             android:theme="@style/Theme.ComposeSample"
             android:windowSoftInputMode="adjustResize" />
 
