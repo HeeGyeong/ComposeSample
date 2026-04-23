@@ -26,19 +26,16 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.Lifecycle
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkManager
 import com.example.composesample.util.BackGroundWorker
-import com.example.composesample.util.OnLifecycleEvent
-
-private lateinit var powerSaveModeReceiver: BroadcastReceiver
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -53,58 +50,49 @@ fun PowerSaveModeExampleUI(
         .addTag(uniqueWorkTag)
         .build()
 
-    OnLifecycleEvent { _, event ->
-        when (event) {
-            Lifecycle.Event.ON_CREATE -> {
-                // 절전모드 체크
-                powerSaveModeReceiver = object : BroadcastReceiver() {
-                    override fun onReceive(context: Context?, intent: Intent?) {
-                        // 절전 모드 상태가 변경될 때 호출됩니다.
-                        if (intent?.action == PowerManager.ACTION_POWER_SAVE_MODE_CHANGED) {
-                            checkPowerSaveMode(
-                                context = context!!,
-                                onResultCallBack = {
-                                    Log.d("PowerSaveModeLog", "PowerSave Mode is Changed => $it")
-                                    isPowerSaveMode.value = it
-                                }
-                            )
+    // register/unregister를 Composable의 enter/exit 생명주기와 일치시킨다.
+    // OnLifecycleEvent(ON_DESTROY) 방식은 Activity 생존 중 화면 이탈 시
+    // observer가 먼저 제거되어 ON_DESTROY가 발화되지 않고 receiver가 누수된다.
+    DisposableEffect(Unit) {
+        val receiver = object : BroadcastReceiver() {
+            override fun onReceive(ctx: Context?, intent: Intent?) {
+                if (intent?.action == PowerManager.ACTION_POWER_SAVE_MODE_CHANGED) {
+                    checkPowerSaveMode(
+                        context = ctx!!,
+                        onResultCallBack = {
+                            Log.d("PowerSaveModeLog", "PowerSave Mode is Changed => $it")
+                            isPowerSaveMode.value = it
                         }
-                    }
-                }
-
-                val filter = IntentFilter(PowerManager.ACTION_POWER_SAVE_MODE_CHANGED)
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                    context.registerReceiver(
-                        powerSaveModeReceiver,
-                        filter,
-                        AppCompatActivity.RECEIVER_EXPORTED
                     )
-                } else {
-                    context.registerReceiver(powerSaveModeReceiver, filter)
                 }
-
-                checkPowerSaveMode(
-                    context = context,
-                    onResultCallBack = {
-                        Log.d("PowerSaveModeLog", "First PowerSave Mode : $it")
-                        isPowerSaveMode.value = it
-                    }
-                )
-
-                // Doze 모드는 절전 모드가 아니다.
-                checkDozeMode(
-                    context = context,
-                    onResultCallBack = {
-                        Log.d("PowerSaveModeLog", "check Doze Mode : $it")
-                    }
-                )
             }
+        }
 
-            Lifecycle.Event.ON_DESTROY -> {
-                context.unregisterReceiver(powerSaveModeReceiver)
+        val filter = IntentFilter(PowerManager.ACTION_POWER_SAVE_MODE_CHANGED)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            context.registerReceiver(receiver, filter, AppCompatActivity.RECEIVER_EXPORTED)
+        } else {
+            context.registerReceiver(receiver, filter)
+        }
+
+        checkPowerSaveMode(
+            context = context,
+            onResultCallBack = {
+                Log.d("PowerSaveModeLog", "First PowerSave Mode : $it")
+                isPowerSaveMode.value = it
             }
+        )
 
-            else -> {}
+        // Doze 모드는 절전 모드가 아니다.
+        checkDozeMode(
+            context = context,
+            onResultCallBack = {
+                Log.d("PowerSaveModeLog", "check Doze Mode : $it")
+            }
+        )
+
+        onDispose {
+            runCatching { context.unregisterReceiver(receiver) }
         }
     }
 
