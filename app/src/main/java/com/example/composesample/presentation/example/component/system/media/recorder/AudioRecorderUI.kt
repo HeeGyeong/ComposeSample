@@ -27,6 +27,7 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -50,6 +51,22 @@ fun AudioRecorderUI(
     val outputFile = remember { mutableStateOf<File?>(null) }
     val isPlaying = remember { mutableStateOf(false) }
     val isPause = remember { mutableStateOf(false) }
+
+    // Composable 이탈 시 MediaRecorder/MediaPlayer 네이티브 리소스 해제. 누락 시 네이티브 메모리 누수.
+    DisposableEffect(Unit) {
+        onDispose {
+            mediaRecorder.value?.apply {
+                runCatching { stop() }
+                release()
+            }
+            mediaRecorder.value = null
+            mediaPlayer.value?.apply {
+                runCatching { if (this.isPlaying) stop() }
+                release()
+            }
+            mediaPlayer.value = null
+        }
+    }
 
     LazyColumn(modifier = Modifier.padding(horizontal = 20.dp)) {
         stickyHeader {
