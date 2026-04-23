@@ -15,6 +15,7 @@ val examples2026 = listOf(
         lastUpdate = "26. 01. 17",
         title = "Fancy TopAppBar",
         description = "Collapsing Toolbar와 다양한 스크롤 동작을 가진 고급 TopAppBar 구현",
+        blogUrl = "https://heegs.tistory.com/195",
         exampleType = ConstValue.FancyTopAppBarExample
     ),
     ExampleObject(
