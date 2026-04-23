@@ -56,6 +56,7 @@ import com.example.composesample.presentation.example.component.interaction.stic
 import com.example.composesample.presentation.example.component.interaction.swipe.SwipeToDismissM3ExampleUI
 import com.example.composesample.presentation.example.component.interaction.swipe.SwipeToDismissUI
 import com.example.composesample.presentation.example.component.navigation.BottomNavigationActivity
+import com.example.composesample.presentation.example.component.system.ai.GeminiNanoExampleUI
 import com.example.composesample.presentation.example.component.system.deeplink.DynamicAppLinksExampleUI
 import com.example.composesample.presentation.example.component.system.platform.haptic.HapticFeedbackExampleUI
 import com.example.composesample.presentation.example.component.system.platform.predictiveback.PredictiveBackExampleUI
@@ -168,6 +169,7 @@ import com.example.composesample.util.ConstValue.FlatMapExample
 import com.example.composesample.util.ConstValue.FlexBoxLayoutExample
 import com.example.composesample.util.ConstValue.FlingBehaviorExample
 import com.example.composesample.util.ConstValue.FocusRestorerExample
+import com.example.composesample.util.ConstValue.GeminiNanoExample
 import com.example.composesample.util.ConstValue.GlanceWidgetExample
 import com.example.composesample.util.ConstValue.GraphicsLayerExample
 import com.example.composesample.util.ConstValue.InitTestExample
@@ -705,6 +707,10 @@ fun ExampleCaseUI(
 
                         DynamicAppLinksExample -> {
                             DynamicAppLinksExampleUI(onBackEvent)
+                        }
+
+                        GeminiNanoExample -> {
+                            GeminiNanoExampleUI(onBackEvent)
                         }
 
                         AdaptiveLayoutExample -> {

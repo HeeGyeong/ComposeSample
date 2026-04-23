@@ -292,6 +292,13 @@ val examples2026 = listOf(
         exampleType = ConstValue.Material3ExpressiveExample
     ),
     ExampleObject(
+        lastUpdate = "26. 04. 23",
+        title = "Gemini Nano (ML Kit GenAI 온디바이스)",
+        description = "ML Kit GenAI API 구조와 Feature Availability(AVAILABLE/DOWNLOADABLE/UNAVAILABLE) 플로우, Nano 실패 시 Cloud fallback 하이브리드 라우팅 패턴, 요약(Summarization) Mock 데모 — 실기기 제약을 시뮬레이션으로 재현",
+        blogUrl = "",
+        exampleType = ConstValue.GeminiNanoExample
+    ),
+    ExampleObject(
         lastUpdate = "26. 04. 22",
         title = "Month Picker Dial (Airbnb ChromaDial)",
         description = "Canvas + atan2 각도 계산과 제스처 조합으로 Airbnb 스타일 원형 월 선택기 구현: 드래그 회전, 스냅 애니메이션, 선택된 월 하이라이트, 12개월 세그먼트 시각화",

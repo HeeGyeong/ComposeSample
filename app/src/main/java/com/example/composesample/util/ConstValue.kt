@@ -160,6 +160,10 @@ object ConstValue {
     const val PredictiveBackExample = "predictiveBackExample"
     const val HapticFeedbackExample = "hapticFeedbackExample"
 
+    // ==================== AI / 온디바이스 ML 예제 ====================
+    // GeminiNano(ML Kit GenAI 온디바이스 추론 + Feature 가용성 + Cloud fallback)
+    const val GeminiNanoExample = "geminiNanoExample"
+
     // ==================== 백그라운드 작업 예제 ====================
     // WorkManager(백그라운드 작업), AudioRecorder(음성 녹음/재생)
     const val WorkManagerExample = "workManagerExample"
