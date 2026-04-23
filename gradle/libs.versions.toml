@@ -10,8 +10,8 @@ versionName = "1.0"
 javaVersion = "21"
 
 # Kotlin & KSP
+# kotlin-compose 플러그인(Kotlin 2.x) 사용으로 kotlinCompilerExtension 선언 불필요.
 kotlinVersion = "2.3.20"
-kotlinCompilerExtension = "1.5.15"
 ksp = "2.3.6"
 applicationVersion = "8.13.2"
 libraryVersion = "8.13.2"

@@ -25,9 +25,7 @@ android {
 }
 
 kotlin {
-    jvmToolchain {
-        languageVersion.set(JavaLanguageVersion.of(libs.versions.javaVersion.get().toInteger()))
-    }
+    // jvmToolchain(Int) 오버로드 하나로 JavaLanguageVersion 설정 완결. 람다 블록과 중복 호출 불필요.
     jvmToolchain(libs.versions.javaVersion.get().toInteger())
 
     // Kotlin 2.3.20 Name-Based Destructuring (Experimental)
