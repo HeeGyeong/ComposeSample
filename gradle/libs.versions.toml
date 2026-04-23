@@ -17,10 +17,10 @@ applicationVersion = "8.13.2"
 libraryVersion = "8.13.2"
 
 # Compose
+# Compose BOM이 ui/animation/runtime/foundation/material 등의 개별 버전을 통합 관리한다.
+# 개별 라이브러리 선언에서는 version을 지정하지 않음 — BOM이 전파한 버전을 그대로 사용.
 activityCompose = "1.10.0"
-composeVersion = "1.10.6"
 composeBom = "2026.03.01"
-composeAnimation = "1.10.6"
 
 # Lifecycle
 lifecycleRuntimeKtx = "2.9.1"
@@ -131,8 +131,8 @@ ktorSerializationGson = { module = "io.ktor:ktor-serialization-gson", version.re
 junit = { module = "junit:junit", version.ref = "junit" }
 androidxTestJunit = { module = "androidx.test.ext:junit", version.ref = "androidxTestJunit" }
 espressoCore = { module = "androidx.test.espresso:espresso-core", version.ref = "espressoCore" }
-junit4 = { module = "androidx.compose.ui:ui-test-junit4", version.ref = "composeVersion" }
-uiTooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "composeVersion" }
+junit4 = { module = "androidx.compose.ui:ui-test-junit4" }
+uiTooling = { module = "androidx.compose.ui:ui-tooling" }
 
 # Unit Test Dependency
 coroutinesTest = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutineTest" }
@@ -151,11 +151,11 @@ espressoIntents = { module = "androidx.test.espresso:espresso-intents", version.
 # Module
 # Compose
 composeBom = { module = "androidx.compose:compose-bom", version.ref = "composeBom" }
-composeUi = { module = "androidx.compose.ui:ui", version.ref = "composeVersion" }
-composeAnimation = { module = "androidx.compose.animation:animation", version.ref = "composeAnimation" }
-runtime = { module = "androidx.compose.runtime:runtime", version.ref = "composeVersion" }
-runtimeLiveData = { module = "androidx.compose.runtime:runtime-livedata", version.ref = "composeVersion" }
-uiToolingPreview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "composeVersion" }
+composeUi = { module = "androidx.compose.ui:ui" }
+composeAnimation = { module = "androidx.compose.animation:animation" }
+runtime = { module = "androidx.compose.runtime:runtime" }
+runtimeLiveData = { module = "androidx.compose.runtime:runtime-livedata" }
+uiToolingPreview = { module = "androidx.compose.ui:ui-tooling-preview" }
 activityCompose = { module = "androidx.activity:activity-compose", version.ref = "activityCompose" }
 
 # Lifecycle

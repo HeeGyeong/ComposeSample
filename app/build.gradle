@@ -47,7 +47,8 @@ dependencies {
     implementation(libs.lifecycleRuntimeKtx)
     implementation(libs.activityCompose)
 
-    // Compose
+    // Compose — BOM이 ui/animation/runtime 등 개별 버전을 통합 관리
+    implementation platform(libs.composeBom)
     implementation(libs.composeUi)
     implementation(libs.uiToolingPreview)
     implementation(libs.runtimeLiveData)
