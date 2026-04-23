@@ -38,7 +38,7 @@ class MovieViewModel(
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ data ->
-                _data.value = data.movies
+                _data.value = data.items
             }, {
                 Log.d("ComposeLog", "Error !! $it")
             })
@@ -46,13 +46,13 @@ class MovieViewModel(
 
     suspend fun apiFlowFunction(text: String) {
         _flowData.value = try {
-            apiInterface.getSearchMovieFlow(text).movies as ArrayList<MovieEntity>
+            apiInterface.getSearchMovieFlow(text).items as ArrayList<MovieEntity>
         } catch (e: Exception) {
             Log.d("ComposeLog", "Flow Error 1 !! $e")
             null
         }
         _flowData2.value = try {
-            apiInterface.getSearchMovieFlow(text).movies
+            apiInterface.getSearchMovieFlow(text).items
         } catch (e: Exception) {
             Log.d("ComposeLog", "Flow Error 2 !! $e")
             null

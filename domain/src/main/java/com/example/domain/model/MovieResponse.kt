@@ -1,20 +1,10 @@
 package com.example.domain.model
 
-import com.google.gson.annotations.SerializedName
-
+// domain 모듈은 순수 Kotlin 유지. JSON 키와 프로퍼티명을 맞춰 Gson 어노테이션 없이 역직렬화한다.
 data class MovieResponse(
-    @SerializedName("display")
     val display: Int,
-
-    @SerializedName("items")
-    val movies: List<MovieEntity>,
-
-    @SerializedName("lastBuildDate")
+    val items: List<MovieEntity>,
     val lastBuildDate: String,
-
-    @SerializedName("start")
     val start: Int,
-
-    @SerializedName("total")
     val total: Int
 )
