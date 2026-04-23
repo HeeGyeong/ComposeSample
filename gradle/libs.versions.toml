@@ -29,6 +29,8 @@ lifecycleViewmodelKtx = "2.9.1"
 lifecycleViewmodelCompose = "2.9.1"
 
 # Koin
+# TODO(DI-01): 3.5.x로 업그레이드 시 (1) getViewModel(owner=) API 변경, (2) koin-androidx-compose에서
+# navigation-compose 전이 의존성 제거 → 별도 PR로 분리 필요
 koinCore = "3.2.2"
 koinAndroid = "3.2.2"
 koinAndroidxCompose = "3.2.2"
@@ -60,7 +62,6 @@ espressoIntents = "3.5.1"
 
 # Accompanist
 accompanistSystemUiController = "0.32.0"
-accompanistWebview = "0.24.13-rc"
 
 # Image Loader
 glideCompose = "1.0.0-alpha.1"
@@ -171,7 +172,6 @@ koinAndroidxCompose = { module = "io.insert-koin:koin-androidx-compose", version
 
 # Accompanist
 accompanistSystemUiController = { module = "com.google.accompanist:accompanist-systemuicontroller", version.ref = "accompanistSystemUiController" }
-accompanistWebview = { module = "com.google.accompanist:accompanist-webview", version.ref = "accompanistWebview" }
 
 # Image Loader
 glideCompose = { module = "com.github.bumptech.glide:compose", version.ref = "glideCompose" }
@@ -281,8 +281,7 @@ lifecycle = [
 ]
 
 accompanist = [
-    "accompanistSystemUiController",
-    "accompanistWebview"
+    "accompanistSystemUiController"
 ]
 
 media = [

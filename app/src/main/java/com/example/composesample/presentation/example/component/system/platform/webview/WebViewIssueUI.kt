@@ -1,8 +1,12 @@
 package com.example.composesample.presentation.example.component.system.platform.webview
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.view.View
 import android.view.WindowManager
+import android.webkit.WebChromeClient
+import android.webkit.WebView
+import android.webkit.WebViewClient
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -23,10 +27,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import com.google.accompanist.web.AccompanistWebChromeClient
-import com.google.accompanist.web.AccompanistWebViewClient
-import com.google.accompanist.web.WebView
-import com.google.accompanist.web.rememberWebViewState
+import androidx.compose.ui.viewinterop.AndroidView
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -62,35 +63,41 @@ fun WebViewIssueUI(onBackButtonClick: () -> Unit) {
     }
 }
 
+/**
+ * Accompanist WebView는 공식 지원이 중단되어 표준 AndroidView + android.webkit.WebView로 마이그레이션.
+ * `remember`로 WebView 인스턴스를 1회만 생성하고, `update` 블록에서 URL만 로드하여 리컴포지션 시 재생성을 방지한다.
+ */
+@SuppressLint("SetJavaScriptEnabled")
 @Composable
 fun WebViewYoutubePlayer(youtubeUrl: String) {
     val context = LocalContext.current
     val webChromeClient = remember { YoutubeWebChromeClient(context) }
-    val webViewState = rememberWebViewState(url = youtubeUrl)
-    val webViewClient = AccompanistWebViewClient()
     val configuration = LocalConfiguration.current
     val screenWidth = configuration.screenWidthDp.toFloat()
     val screenHeight = (screenWidth * 9 / 16).dp
 
-    WebView(
+    AndroidView(
         modifier = Modifier
             .height(screenHeight)
             .background(color = Color.Transparent)
             .fillMaxWidth(),
-        state = webViewState,
-        client = webViewClient,
-        chromeClient = webChromeClient,
-        onCreated = { webView ->
-            with(webView) {
+        factory = { ctx ->
+            WebView(ctx).apply {
                 settings.run {
                     javaScriptEnabled = true
                     domStorageEnabled = true
                     javaScriptCanOpenWindowsAutomatically = false
                     mediaPlaybackRequiresUserGesture = false
                 }
-
+                webViewClient = WebViewClient()
+                this.webChromeClient = webChromeClient
                 setLayerType(View.LAYER_TYPE_SOFTWARE, null)
                 setBackgroundColor(0)
+            }
+        },
+        update = { webView ->
+            if (webView.url != youtubeUrl) {
+                webView.loadUrl(youtubeUrl)
             }
         }
     )
@@ -98,7 +105,7 @@ fun WebViewYoutubePlayer(youtubeUrl: String) {
 
 class YoutubeWebChromeClient(
     private val context: Context,
-) : AccompanistWebChromeClient() {
+) : WebChromeClient() {
     private var fullScreenView: View? = null
     private val windowManager: WindowManager by lazy {
         context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
