@@ -99,6 +99,13 @@ fun WebViewYoutubePlayer(youtubeUrl: String) {
             if (webView.url != youtubeUrl) {
                 webView.loadUrl(youtubeUrl)
             }
+        },
+        // Composable 이탈 시 WebView 내부 타이머/미디어/네이티브 리소스 해제. 누락 시 메모리 누수 발생.
+        onRelease = { webView ->
+            webView.stopLoading()
+            webView.loadUrl("about:blank")
+            webView.removeAllViews()
+            webView.destroy()
         }
     )
 }
