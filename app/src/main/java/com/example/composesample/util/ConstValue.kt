@@ -1,5 +1,7 @@
 package com.example.composesample.util
 
+// TODO(UTIL-01): 파일이 200줄 이상으로 커지면서 예제 추가 시 ExampleRouter.kt(import 150+줄)와 함께 수정 충돌 포인트가 됨.
+//  카테고리별 const 파일 분할 또는 sealed class 기반 라우팅 테이블로 재설계 필요 (별도 PR 권장).
 object ConstValue {
     // ==================== 기본 설정 ====================
     const val UpdateDate = "26년 4월"

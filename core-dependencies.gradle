@@ -1,3 +1,5 @@
+// TODO(ARCH-02): domain/core/coordinator 모듈은 Room/Retrofit/Ktor가 불필요함에도 본 파일을 통해 전이적으로 주입됨.
+//  향후 모듈별 build.gradle에서 필요한 의존성만 선택 선언하도록 분리 필요 (별도 PR 권장).
 apply {
     plugin('com.google.devtools.ksp')
 }
