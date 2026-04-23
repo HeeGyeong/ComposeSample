@@ -45,6 +45,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import java.util.Locale
 
 // ===================== 데이터 모델 =====================
 
@@ -330,7 +331,7 @@ private fun DynamicContextMultiplierSection() {
                             color = Color.Gray
                         )
                         Text(
-                            text = "  ×  ${String.format("%.2f", multiplier)}  =  ",
+                            text = "  ×  ${String.format(Locale.US, "%.2f", multiplier)}  =  ",
                             fontSize = 14.sp,
                             color = Color.Gray,
                             modifier = Modifier.padding(bottom = 2.dp)

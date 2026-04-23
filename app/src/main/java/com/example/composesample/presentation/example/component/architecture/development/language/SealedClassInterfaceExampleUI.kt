@@ -49,6 +49,7 @@ import androidx.compose.ui.unit.sp
 import com.example.composesample.presentation.MainHeader
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.util.Locale
 
 
 sealed class ApiResult<out T> {
@@ -1546,7 +1547,7 @@ private fun GenericTypeDemoCard() {
                                             color = Color.Gray
                                         )
                                         Text(
-                                            "• Price: ${String.format("%,.0f", product.price)}원",
+                                            "• Price: ${String.format(Locale.US, "%,.0f", product.price)}원",
                                             fontSize = 11.sp,
                                             color = Color.Gray
                                         )

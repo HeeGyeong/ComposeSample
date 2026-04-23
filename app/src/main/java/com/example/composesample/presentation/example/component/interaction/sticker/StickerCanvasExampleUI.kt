@@ -69,6 +69,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import kotlinx.coroutines.launch
+import java.util.Locale
 import kotlin.math.roundToInt
 
 data class StickerItem(
@@ -539,7 +540,7 @@ private fun PinchZoomDemo() {
             }
 
             Text(
-                text = "Scale: ${String.format("%.2f", scale)}x",
+                text = "Scale: ${String.format(Locale.US, "%.2f", scale)}x",
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
                     .padding(8.dp),
@@ -809,7 +810,7 @@ private fun PeelOffDemo() {
                                 "%.2f",
                                 animatedScale
                             )
-                        }  Alpha: ${String.format("%.2f", animatedAlpha)}",
+                        }  Alpha: ${String.format(Locale.US, "%.2f", animatedAlpha)}",
                         fontSize = 10.sp,
                         color = Color(0xFF757575)
                     )
@@ -906,7 +907,7 @@ private fun SpringBall(label: String, scale: Float, color: Color) {
             contentAlignment = Alignment.Center
         ) {
             Text(
-                text = String.format("%.1f", scale),
+                text = String.format(Locale.US, "%.1f", scale),
                 fontSize = 11.sp,
                 color = Color.White,
                 fontWeight = FontWeight.Bold
@@ -1158,7 +1159,7 @@ private fun CombinedGestureDemo() {
                     color = Color(0xFF616161)
                 )
                 Text(
-                    text = "Scale: ${String.format("%.2f", scale)}x  Rot: ${rotation.toInt()}°",
+                    text = "Scale: ${String.format(Locale.US, "%.2f", scale)}x  Rot: ${rotation.toInt()}°",
                     fontSize = 11.sp,
                     color = Color(0xFF616161)
                 )

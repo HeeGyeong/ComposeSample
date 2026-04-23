@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import java.util.Locale
 
 @RequiresApi(Build.VERSION_CODES.N)
 class TimerTileService : TileService() {
@@ -60,7 +61,7 @@ class TimerTileService : TileService() {
         fun formatTime(seconds: Int): String {
             val mins = seconds / 60
             val secs = seconds % 60
-            return String.format("%02d:%02d", mins, secs)
+            return String.format(Locale.US, "%02d:%02d", mins, secs)
         }
     }
 

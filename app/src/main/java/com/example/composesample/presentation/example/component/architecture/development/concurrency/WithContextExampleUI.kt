@@ -41,6 +41,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.Locale
 import kotlin.system.measureTimeMillis
 
 @Composable
@@ -618,7 +619,7 @@ private fun PerformanceComparisonCard() {
                         )
                         Spacer(modifier = Modifier.height(6.dp))
                         Text(
-                            text = "• 병렬 실행이 약 ${String.format("%.1f", speedup)}배 빠름\n• 독립적인 작업은 병렬 실행 권장\n• 의존적인 작업은 순차 실행 필요",
+                            text = "• 병렬 실행이 약 ${String.format(Locale.US, "%.1f", speedup)}배 빠름\n• 독립적인 작업은 병렬 실행 권장\n• 의존적인 작업은 순차 실행 필요",
                             fontSize = 11.sp,
                             color = Color(0xFF666666),
                             lineHeight = 16.sp
