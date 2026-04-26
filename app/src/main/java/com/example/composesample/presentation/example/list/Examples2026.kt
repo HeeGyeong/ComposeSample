@@ -22,6 +22,7 @@ val examples2026 = listOf(
         lastUpdate = "26. 01. 19",
         title = "Canvas Shapes & Animations",
         description = "Canvas를 활용한 도형 그리기와 애니메이션 기초",
+        blogUrl = "https://heegs.tistory.com/196",
         exampleType = ConstValue.CanvasShapesExample
     ),
     ExampleObject(
