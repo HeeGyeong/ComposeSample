@@ -294,6 +294,13 @@ val examples2026 = listOf(
         exampleType = ConstValue.Material3ExpressiveExample
     ),
     ExampleObject(
+        lastUpdate = "26. 04. 27",
+        title = "Modifier Order in Compose",
+        description = "동일한 modifier 조합도 순서에 따라 layout/draw/hit-test 결과가 달라진다: padding↔background, border↔clip, clickable↔padding, size↔padding 4가지 시나리오를 좌우 나란히 시각 비교",
+        blogUrl = "",
+        exampleType = ConstValue.ModifierOrderExample
+    ),
+    ExampleObject(
         lastUpdate = "26. 04. 23",
         title = "Gemini Nano (ML Kit GenAI 온디바이스)",
         description = "ML Kit GenAI API 구조와 Feature Availability(AVAILABLE/DOWNLOADABLE/UNAVAILABLE) 플로우, Nano 실패 시 Cloud fallback 하이브리드 라우팅 패턴, 요약(Summarization) Mock 데모 — 실기기 제약을 시뮬레이션으로 재현",
