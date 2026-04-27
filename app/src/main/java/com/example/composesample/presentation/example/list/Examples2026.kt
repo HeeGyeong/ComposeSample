@@ -294,6 +294,13 @@ val examples2026 = listOf(
         exampleType = ConstValue.Material3ExpressiveExample
     ),
     ExampleObject(
+        lastUpdate = "26. 04. 28",
+        title = "Flow Operators (Buffer/Conflate/Debounce/Sample)",
+        description = "빠른 producer + 느린 consumer 환경에서 Flow 속도 제어 연산자 4종 비교: 미적용(직렬), buffer(병렬, 모든 값), conflate(최신값만), debounce(입력 종료 후), sample(주기 샘플링) — 타임라인 로그로 시각화",
+        blogUrl = "",
+        exampleType = ConstValue.FlowOperatorsExample
+    ),
+    ExampleObject(
         lastUpdate = "26. 04. 27",
         title = "Modifier Order in Compose",
         description = "동일한 modifier 조합도 순서에 따라 layout/draw/hit-test 결과가 달라진다: padding↔background, border↔clip, clickable↔padding, size↔padding 4가지 시나리오를 좌우 나란히 시각 비교",

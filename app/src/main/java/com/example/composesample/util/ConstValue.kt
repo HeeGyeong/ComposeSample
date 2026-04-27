@@ -129,8 +129,9 @@ object ConstValue {
     const val CoroutineBridgesExample = "coroutineBridgesExample"
 
     // ==================== Flow 예제 ====================
-    // FlatMap(flatMap vs flatMapLatest 비교)
+    // FlatMap(flatMap vs flatMapLatest 비교), FlowOperators(buffer/conflate/debounce/sample 속도 제어 비교)
     const val FlatMapExample = "flatMapExample"
+    const val FlowOperatorsExample = "flowOperatorsExample"
 
     // ==================== Kotlin 언어 기능 예제 ====================
     // Type(변수 타입 활용), InlineValueClass(성능 최적화), SealedClassInterface(타입 안전 계층), NameBasedDestructuring(이름 기반 구조 분해 — Kotlin 2.3.20)
