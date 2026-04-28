@@ -329,6 +329,13 @@ val examples2026 = listOf(
         exampleType = ConstValue.KoinCompilerPluginExample
     ),
     ExampleObject(
+        lastUpdate = "26. 04. 29",
+        title = "Multi-Table Inserts in Room",
+        description = "BaseInsertDao<T> 인터페이스 상속으로 @Insert 보일러플레이트 제거 + db.withTransaction { } 으로 Author/Post/Tag/CrossRef 4개 테이블을 원자적으로 insert (의도적 실패 시 전체 롤백 검증 포함)",
+        blogUrl = "",
+        exampleType = ConstValue.MultiTableInsertExample
+    ),
+    ExampleObject(
         lastUpdate = "26. 04. 20",
         title = "Nav3 ViewModel Scope",
         description = "Navigation 3 에서 ViewModel 스코프가 어떻게 달라지는지 시뮬레이션: Nav2 Auto-Scope vs Nav3 기본 동작(스코프 없음) vs NavKey 단위 Store 매핑으로 이전 동작을 복원하는 패턴 비교",

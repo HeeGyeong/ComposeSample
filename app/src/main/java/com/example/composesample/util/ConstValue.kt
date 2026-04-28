@@ -147,9 +147,10 @@ object ConstValue {
     const val ApiDisconnectExample = "apiDisconnectExample"
 
     // ==================== 데이터 & 캐시 예제 ====================
-    // DataCache(캐시 관리), Paging(무한 스크롤)
+    // DataCache(캐시 관리), Paging(무한 스크롤), MultiTableInsert(Room DAO 인터페이스 상속 + withTransaction 다중 테이블 insert)
     const val DataCacheExample = "dataCacheExample"
     const val PagingExample = "pagingExample"
+    const val MultiTableInsertExample = "multiTableInsertExample"
 
     // ==================== 시스템 & 설정 예제 ====================
     // PowerSaveMode(절전 모드), TargetSDK34Permission(권한 처리), PassingIntentData(Intent 전달), LanguageSetting(시스템 언어), LocalLanguageChange(앱 내 언어), Shortcut(앱 숏컷), QuickSettingsTile(빠른 설정 타일), DynamicAppLinks(동적 앱 링크), PredictiveBack(예측형 뒤로가기 제스처), HapticFeedback(햅틱 피드백)

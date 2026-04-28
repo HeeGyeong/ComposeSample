@@ -48,6 +48,7 @@ import com.example.composesample.presentation.example.component.data.api.ApiDisc
 import com.example.composesample.presentation.example.component.data.api.KtorExampleUI
 import com.example.composesample.presentation.example.component.data.cache.DataCacheExampleUI
 import com.example.composesample.presentation.example.component.data.paging.PagingExampleUI
+import com.example.composesample.presentation.example.component.data.room.MultiTableInsertExampleUI
 import com.example.composesample.presentation.example.component.data.sse.SSEExampleUI
 import com.example.composesample.presentation.example.component.interaction.clickevent.ClickEventUI
 import com.example.composesample.presentation.example.component.interaction.drag.DragAndDropExampleUI
@@ -199,6 +200,7 @@ import com.example.composesample.util.ConstValue.Navigation3Example
 import com.example.composesample.util.ConstValue.NestedRoutesNav3Example
 import com.example.composesample.util.ConstValue.NestedScrollingExample
 import com.example.composesample.util.ConstValue.NewShadowApiExample
+import com.example.composesample.util.ConstValue.MultiTableInsertExample
 import com.example.composesample.util.ConstValue.PagingExample
 import com.example.composesample.util.ConstValue.PassingIntentDataExample
 import com.example.composesample.util.ConstValue.PathGraphicsExample
@@ -479,6 +481,10 @@ fun ExampleCaseUI(
 
                         PagingExample -> {
                             PagingExampleUI(onBackEvent)
+                        }
+
+                        MultiTableInsertExample -> {
+                            MultiTableInsertExampleUI(onBackEvent)
                         }
 
                         TypeExample -> {
