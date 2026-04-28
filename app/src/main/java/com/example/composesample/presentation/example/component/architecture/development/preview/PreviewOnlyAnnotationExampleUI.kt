@@ -16,8 +16,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
-import androidx.compose.material.Text
+import androidx.compose.material3.Card
+import androidx.compose.material3.Text
+import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -74,9 +75,9 @@ fun PreviewOnlyAnnotationExampleUI(onBackEvent: () -> Unit) {
 private fun ProblemCard() {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        backgroundColor = Color(0xFF2D2D2D),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFF2D2D2D)),
         shape = RoundedCornerShape(8.dp),
-        elevation = 2.dp
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Column(modifier = Modifier.padding(14.dp)) {
             Text(
@@ -122,9 +123,9 @@ fun HomeScreen() {
 private fun SolutionAnnotationCard() {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        backgroundColor = Color(0xFF2D2D2D),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFF2D2D2D)),
         shape = RoundedCornerShape(8.dp),
-        elevation = 2.dp
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Column(modifier = Modifier.padding(14.dp)) {
             Text(
@@ -190,9 +191,9 @@ annotation class PreviewOnly"""
 private fun ApplyAnnotationCard() {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        backgroundColor = Color(0xFF2D2D2D),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFF2D2D2D)),
         shape = RoundedCornerShape(8.dp),
-        elevation = 2.dp
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Column(modifier = Modifier.padding(14.dp)) {
             CodeBlock(
@@ -231,9 +232,9 @@ fun HomeScreen() {
 private fun OptInUsageCard() {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        backgroundColor = Color(0xFF2D2D2D),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFF2D2D2D)),
         shape = RoundedCornerShape(8.dp),
-        elevation = 2.dp
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Column(modifier = Modifier.padding(14.dp)) {
             Text(
@@ -279,9 +280,9 @@ fun UserCardDarkPreview() {
 private fun LevelComparisonCard() {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        backgroundColor = Color(0xFF2D2D2D),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFF2D2D2D)),
         shape = RoundedCornerShape(8.dp),
-        elevation = 2.dp
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Column(modifier = Modifier.padding(14.dp)) {
             val levels = listOf(
@@ -332,9 +333,9 @@ private fun LevelComparisonCard() {
 private fun ComparisonWithInspectionModeCard() {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        backgroundColor = Color(0xFF2D2D2D),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFF2D2D2D)),
         shape = RoundedCornerShape(8.dp),
-        elevation = 2.dp
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Column(modifier = Modifier.padding(14.dp)) {
             val comparisons = listOf(
@@ -400,9 +401,9 @@ private fun ComparisonWithInspectionModeCard() {
 private fun PracticalPatternsCard() {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        backgroundColor = Color(0xFF2D2D2D),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFF2D2D2D)),
         shape = RoundedCornerShape(8.dp),
-        elevation = 2.dp
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Column(modifier = Modifier.padding(14.dp)) {
             val patterns = listOf(

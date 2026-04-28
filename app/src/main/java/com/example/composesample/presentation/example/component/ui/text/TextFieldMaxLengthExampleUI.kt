@@ -20,10 +20,11 @@ import androidx.compose.foundation.text.input.InputTransformation
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.maxLength
 import androidx.compose.foundation.text.input.rememberTextFieldState
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.Card
-import androidx.compose.material.Text
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.Text
+import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -68,7 +69,7 @@ fun TextFieldMaxLengthExampleUI(onBackEvent: () -> Unit) {
 private fun ProblemConceptCard() {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -121,7 +122,7 @@ private fun BuggyExampleCard() {
 
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -154,13 +155,13 @@ private fun BuggyExampleCard() {
                             replace(0, length, "This is a long text that exceeds limit")
                         }
                     },
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFD32F2F))
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFD32F2F))
                 ) {
                     Text(text = "긴 텍스트 주입", color = Color.White, fontSize = 12.sp)
                 }
                 Button(
                     onClick = { state.edit { replace(0, length, "") } },
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF757575))
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF757575))
                 ) {
                     Text(text = "Clear", color = Color.White, fontSize = 12.sp)
                 }
@@ -189,7 +190,7 @@ private fun CorrectExampleCard() {
 
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -221,13 +222,13 @@ private fun CorrectExampleCard() {
                             replace(0, length, "This is a long text that exceeds limit")
                         }
                     },
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF388E3C))
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF388E3C))
                 ) {
                     Text(text = "긴 텍스트 주입", color = Color.White, fontSize = 12.sp)
                 }
                 Button(
                     onClick = { state.edit { replace(0, length, "") } },
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF757575))
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF757575))
                 ) {
                     Text(text = "Clear", color = Color.White, fontSize = 12.sp)
                 }
@@ -286,7 +287,7 @@ private fun LengthIndicator(current: Int, isOver: Boolean) {
 private fun CodeComparisonCard() {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -365,7 +366,7 @@ private fun CodeBlock(title: String, code: String, borderColor: Color) {
 private fun SummaryCard() {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {

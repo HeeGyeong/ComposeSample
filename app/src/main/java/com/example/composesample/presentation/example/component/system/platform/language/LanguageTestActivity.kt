@@ -12,12 +12,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.Card
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.Text
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Text
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.runtime.Composable
@@ -84,8 +85,8 @@ fun LanguageTestActivityScreen(onBackClick: () -> Unit) {
         // 새로운 Activity 테스트 카드
         Card(
             modifier = Modifier.fillMaxWidth(),
-            backgroundColor = Color(0xFFE3F2FD),
-            elevation = 4.dp,
+            colors = CardDefaults.cardColors(containerColor = Color(0xFFE3F2FD)),
+            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
             shape = RoundedCornerShape(12.dp)
         ) {
             Column(
@@ -131,8 +132,8 @@ fun LanguageTestActivityScreen(onBackClick: () -> Unit) {
         // 현재 언어 정보 카드
         Card(
             modifier = Modifier.fillMaxWidth(),
-            backgroundColor = Color(0xFFF5F5F5),
-            elevation = 4.dp,
+            colors = CardDefaults.cardColors(containerColor = Color(0xFFF5F5F5)),
+            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
             shape = RoundedCornerShape(12.dp)
         ) {
             Column(
@@ -167,8 +168,7 @@ fun LanguageTestActivityScreen(onBackClick: () -> Unit) {
             modifier = Modifier
                 .fillMaxWidth()
                 .height(50.dp),
-            colors = ButtonDefaults.buttonColors(
-                backgroundColor = Color(0xFF4CAF50),
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4CAF50),
                 contentColor = Color.White
             ),
             shape = RoundedCornerShape(8.dp)
@@ -185,8 +185,8 @@ fun LanguageTestActivityScreen(onBackClick: () -> Unit) {
         // 설명 카드
         Card(
             modifier = Modifier.fillMaxWidth(),
-            backgroundColor = Color(0xFFE8F5E8),
-            elevation = 4.dp,
+            colors = CardDefaults.cardColors(containerColor = Color(0xFFE8F5E8)),
+            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
             shape = RoundedCornerShape(12.dp)
         ) {
             Column(

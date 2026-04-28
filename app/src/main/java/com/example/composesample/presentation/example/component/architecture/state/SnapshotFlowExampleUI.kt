@@ -17,11 +17,12 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.Card
-import androidx.compose.material.LinearProgressIndicator
-import androidx.compose.material.Text
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.Text
+import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -99,7 +100,7 @@ fun SnapshotFlowExampleUI(
 private fun UsageGuideCard() {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(
@@ -166,8 +167,8 @@ private fun CollectAsStateExampleCard(viewModel: SnapshotFlowExampleViewModel) {
 
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        backgroundColor = Color(0xFFF1F8E9),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFF1F8E9)),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(
@@ -203,7 +204,7 @@ private fun CollectAsStateExampleCard(viewModel: SnapshotFlowExampleViewModel) {
 
                 Button(
                     onClick = { viewModel.incrementUserInput() },
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF4CAF50))
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4CAF50))
                 ) {
                     Text("입력", color = Color.White)
                 }
@@ -223,8 +224,8 @@ private fun CollectAsStateWithLifecycleCard(viewModel: SnapshotFlowExampleViewMo
 
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        backgroundColor = Color(0xFFE3F2FD),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFE3F2FD)),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(
@@ -309,8 +310,8 @@ private fun SnapshotFlowExampleCard(viewModel: SnapshotFlowExampleViewModel) {
 
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        backgroundColor = Color(0xFFFFF3E0),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFFFF3E0)),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(
@@ -371,8 +372,8 @@ private fun WrongUsageExampleCard(viewModel: SnapshotFlowExampleViewModel) {
 
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        backgroundColor = Color(0xFFFFEBEE),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFFFEBEE)),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(
@@ -418,7 +419,7 @@ private fun LogMessagesCard(viewModel: SnapshotFlowExampleViewModel) {
 
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(
@@ -437,7 +438,7 @@ private fun LogMessagesCard(viewModel: SnapshotFlowExampleViewModel) {
 
                 Button(
                     onClick = { viewModel.clearLogs() },
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color.Gray)
+                    colors = ButtonDefaults.buttonColors(containerColor = Color.Gray)
                 ) {
                     Text("Clear", color = Color.White, fontSize = 12.sp)
                 }

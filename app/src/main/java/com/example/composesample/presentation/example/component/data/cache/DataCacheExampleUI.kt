@@ -16,12 +16,12 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.Button
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
-import androidx.compose.material.TextField
+import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
@@ -141,7 +141,7 @@ fun DataCacheExampleUI(
                     ) {
                         Text(
                             text = "${item.id}",
-                            style = MaterialTheme.typography.h6
+                            style = MaterialTheme.typography.headlineSmall
                         )
                     }
 
@@ -149,7 +149,7 @@ fun DataCacheExampleUI(
 
                     Text(
                         text = item.userName.take(12),
-                        style = MaterialTheme.typography.h6
+                        style = MaterialTheme.typography.headlineSmall
                     )
 
                     Spacer(modifier = Modifier.weight(1f))

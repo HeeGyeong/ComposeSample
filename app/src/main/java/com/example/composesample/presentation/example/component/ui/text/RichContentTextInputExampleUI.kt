@@ -25,10 +25,11 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.Card
-import androidx.compose.material.Text
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.Text
+import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -98,7 +99,7 @@ fun RichContentTextInputExampleUI(onBackEvent: () -> Unit) {
 private fun RichContentConceptCard() {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -150,7 +151,7 @@ private fun ReceiveContentTextFieldCard(
 
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -237,9 +238,9 @@ private fun ReceivedContentCard(
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         shape = RoundedCornerShape(12.dp),
-        backgroundColor = Color(0xFFE8F5E9)
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFE8F5E9))
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Row(
@@ -255,7 +256,7 @@ private fun ReceivedContentCard(
                 )
                 Button(
                     onClick = onClear,
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFE53935))
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFE53935))
                 ) {
                     Text(text = "초기화", color = Color.White, fontSize = 12.sp)
                 }
@@ -299,7 +300,7 @@ private fun ReceivedContentCard(
 private fun ContentSourceInfoCard() {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -346,9 +347,9 @@ private fun ContentSourceInfoCard() {
 private fun ConsumePatternCard() {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         shape = RoundedCornerShape(12.dp),
-        backgroundColor = Color(0xFFF3F7FF)
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFF3F7FF))
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(
@@ -383,9 +384,9 @@ private fun ConsumePatternCard() {
 private fun ApiRequirementCard() {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         shape = RoundedCornerShape(12.dp),
-        backgroundColor = Color(0xFFFFF3E0)
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFFFF3E0))
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(

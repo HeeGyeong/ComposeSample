@@ -19,10 +19,11 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.Card
-import androidx.compose.material.Text
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.Text
+import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -67,7 +68,7 @@ fun FlowRowLayoutExampleUI(onBackEvent: () -> Unit) {
 private fun FlowRowConceptCard() {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -121,7 +122,7 @@ private fun FlowRowVsRowCard() {
 
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -176,7 +177,7 @@ private fun FlowRowArrangementCard() {
 
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -231,7 +232,7 @@ private fun FlowRowMaxItemsCard() {
 
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -258,7 +259,7 @@ private fun FlowRowMaxItemsCard() {
                 Spacer(modifier = Modifier.weight(1f))
                 Button(
                     onClick = { if (maxItems > 1) maxItems-- },
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFEF6C00)),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFEF6C00)),
                     modifier = Modifier.size(36.dp),
                     contentPadding = PaddingValues(0.dp)
                 ) {
@@ -266,7 +267,7 @@ private fun FlowRowMaxItemsCard() {
                 }
                 Button(
                     onClick = { if (maxItems < 8) maxItems++ },
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFEF6C00)),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFEF6C00)),
                     modifier = Modifier.size(36.dp),
                     contentPadding = PaddingValues(0.dp)
                 ) {
@@ -300,9 +301,9 @@ private fun FlowRowMaxItemsCard() {
 private fun FlowRowWeightCard() {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         shape = RoundedCornerShape(12.dp),
-        backgroundColor = Color(0xFFF3F7FF)
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFF3F7FF))
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(
@@ -389,7 +390,7 @@ private fun FlowColumnCard() {
 
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -452,9 +453,9 @@ private fun PracticalFilterChipsCard() {
 
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         shape = RoundedCornerShape(12.dp),
-        backgroundColor = Color(0xFFFFF8E1)
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFFFF8E1))
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(
@@ -522,8 +523,7 @@ private fun TagChip(label: String, color: Color) {
 private fun FilterChip(label: String, isSelected: Boolean, onClick: () -> Unit) {
     Button(
         onClick = onClick,
-        colors = ButtonDefaults.buttonColors(
-            backgroundColor = if (isSelected) Color(0xFFF57F17) else Color(0xFFFFF3E0)
+        colors = ButtonDefaults.buttonColors(containerColor = if (isSelected) Color(0xFFF57F17) else Color(0xFFFFF3E0)
         ),
         shape = RoundedCornerShape(20.dp),
         elevation = null,

@@ -11,12 +11,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.Card
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.Text
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Text
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.runtime.Composable
@@ -101,8 +102,8 @@ fun LocalLanguageChangeExampleUI(onBackButtonClick: () -> Unit) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(8.dp),
-                backgroundColor = Color.White,
-                elevation = 4.dp,
+                colors = CardDefaults.cardColors(containerColor = Color.White),
+                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
                 shape = RoundedCornerShape(12.dp)
             ) {
                 Column(
@@ -131,8 +132,8 @@ fun LocalLanguageChangeExampleUI(onBackButtonClick: () -> Unit) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(8.dp),
-                backgroundColor = Color.White,
-                elevation = 4.dp,
+                colors = CardDefaults.cardColors(containerColor = Color.White),
+                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
                 shape = RoundedCornerShape(12.dp)
             ) {
                 Column(
@@ -144,8 +145,7 @@ fun LocalLanguageChangeExampleUI(onBackButtonClick: () -> Unit) {
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(50.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            backgroundColor = Color(0xFF2196F3),
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2196F3),
                             contentColor = Color.White
                         ),
                         shape = RoundedCornerShape(8.dp)
@@ -175,8 +175,8 @@ fun LocalLanguageChangeExampleUI(onBackButtonClick: () -> Unit) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(8.dp),
-                backgroundColor = Color(0xFFE1F5FE),
-                elevation = 4.dp,
+                colors = CardDefaults.cardColors(containerColor = Color(0xFFE1F5FE)),
+                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
                 shape = RoundedCornerShape(12.dp)
             ) {
                 Column(
@@ -196,8 +196,7 @@ fun LocalLanguageChangeExampleUI(onBackButtonClick: () -> Unit) {
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(45.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            backgroundColor = Color(0xFF03A9F4),
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF03A9F4),
                             contentColor = Color.White
                         ),
                         shape = RoundedCornerShape(8.dp)
@@ -220,8 +219,7 @@ fun LocalLanguageChangeExampleUI(onBackButtonClick: () -> Unit) {
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(45.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            backgroundColor = Color(0xFF00BCD4),
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF00BCD4),
                             contentColor = Color.White
                         ),
                         shape = RoundedCornerShape(8.dp)
@@ -242,8 +240,8 @@ fun LocalLanguageChangeExampleUI(onBackButtonClick: () -> Unit) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(8.dp),
-                backgroundColor = Color(0xFFF5F5F5),
-                elevation = 4.dp,
+                colors = CardDefaults.cardColors(containerColor = Color(0xFFF5F5F5)),
+                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
                 shape = RoundedCornerShape(12.dp)
             ) {
                 Column(
@@ -279,8 +277,8 @@ fun LocalLanguageChangeExampleUI(onBackButtonClick: () -> Unit) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(8.dp),
-                backgroundColor = Color(0xFFE8F5E8),
-                elevation = 4.dp,
+                colors = CardDefaults.cardColors(containerColor = Color(0xFFE8F5E8)),
+                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
                 shape = RoundedCornerShape(12.dp)
             ) {
                 Column(

@@ -14,13 +14,14 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.Button
-import androidx.compose.material.Card
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
-import androidx.compose.material.TextField
+import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
@@ -94,7 +95,7 @@ fun MainContent() {
             itemsIndexed(list.value) { _, item ->
                 Card(
                     modifier = Modifier.fillMaxWidth(),
-                    backgroundColor = Color(0xFFDCE2C9)
+                    colors = CardDefaults.cardColors(containerColor = Color(0xFFDCE2C9))
                 ) {
                     Row(
                         modifier = Modifier.padding(12.dp),
@@ -109,14 +110,14 @@ fun MainContent() {
                         ) {
                             Text(
                                 text = "${item.id}",
-                                style = MaterialTheme.typography.h6
+                                style = MaterialTheme.typography.headlineSmall
                             )
                         }
 
                         Spacer(modifier = Modifier.width(12.dp))
                         Text(
                             text = item.uniqueId.take(12),
-                            style = MaterialTheme.typography.h6
+                            style = MaterialTheme.typography.headlineSmall
                         )
 
                         Spacer(modifier = Modifier.weight(1F))

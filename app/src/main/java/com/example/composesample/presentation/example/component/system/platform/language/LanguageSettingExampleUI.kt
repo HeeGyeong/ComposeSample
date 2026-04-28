@@ -23,13 +23,14 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.Card
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.Text
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Text
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Refresh
@@ -156,8 +157,8 @@ fun LanguageSettingExampleUI(onBackButtonClick: () -> Unit) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(8.dp),
-                backgroundColor = Color.White,
-                elevation = 4.dp
+                colors = CardDefaults.cardColors(containerColor = Color.White),
+                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
             ) {
                 Column(
                     modifier = Modifier.padding(16.dp)
@@ -192,8 +193,8 @@ fun LanguageSettingExampleUI(onBackButtonClick: () -> Unit) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(8.dp),
-                backgroundColor = Color.White,
-                elevation = 4.dp
+                colors = CardDefaults.cardColors(containerColor = Color.White),
+                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
             ) {
                 Column(
                     modifier = Modifier.padding(16.dp)
@@ -236,8 +237,8 @@ fun LanguageSettingExampleUI(onBackButtonClick: () -> Unit) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(8.dp),
-                backgroundColor = Color.White,
-                elevation = 4.dp
+                colors = CardDefaults.cardColors(containerColor = Color.White),
+                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
             ) {
                 Column(
                     modifier = Modifier.padding(16.dp)
@@ -293,7 +294,7 @@ fun LanguageSettingExampleUI(onBackButtonClick: () -> Unit) {
                                         permissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
                                     },
                                     colors = ButtonDefaults.buttonColors(
-                                        backgroundColor = Color.Blue,
+                                        containerColor = Color.Blue,
                                         contentColor = Color.White
                                     )
                                 ) {
@@ -361,7 +362,7 @@ fun LanguageSettingExampleUI(onBackButtonClick: () -> Unit) {
                     .fillMaxWidth()
                     .height(56.dp),
                 colors = ButtonDefaults.buttonColors(
-                    backgroundColor = Color.DarkGray,
+                    containerColor = Color.DarkGray,
                     contentColor = Color.White
                 )
             ) {
@@ -378,8 +379,8 @@ fun LanguageSettingExampleUI(onBackButtonClick: () -> Unit) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(8.dp),
-                backgroundColor = Color.LightGray.copy(alpha = 0.3f),
-                elevation = 2.dp
+                colors = CardDefaults.cardColors(containerColor = Color.LightGray.copy(alpha = 0.3f)),
+                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
             ) {
                 Text(
                     modifier = Modifier.padding(16.dp),

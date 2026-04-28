@@ -16,12 +16,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.Card
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -87,8 +88,8 @@ private fun StateMachineDemoCard() {
 
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        backgroundColor = Color(0xFFFFF3E0),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFFFF3E0)),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -149,7 +150,7 @@ private fun StateMachineDemoCard() {
                 },
                 modifier = Modifier.fillMaxWidth(),
                 enabled = !isRunning,
-                colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFE65100)),
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFE65100)),
                 shape = RoundedCornerShape(8.dp)
             ) {
                 Text(
@@ -255,8 +256,8 @@ private fun ContinuationDemoCard() {
 
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        backgroundColor = Color(0xFFF3E5F5),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFF3E5F5)),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -308,7 +309,7 @@ private fun ContinuationDemoCard() {
                 },
                 modifier = Modifier.fillMaxWidth(),
                 enabled = !isRunning,
-                colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF7B1FA2)),
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF7B1FA2)),
                 shape = RoundedCornerShape(8.dp)
             ) {
                 Text(
@@ -382,8 +383,8 @@ private fun StructuredConcurrencyDemoCard() {
 
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        backgroundColor = Color(0xFFE8F5E9),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFE8F5E9)),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -409,7 +410,7 @@ private fun StructuredConcurrencyDemoCard() {
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(8.dp),
                 color = Color(0xFF2E7D32),
-                elevation = 2.dp
+                shadowElevation = 2.dp
             ) {
                 Column(modifier = Modifier.padding(12.dp)) {
                     Text(
@@ -473,7 +474,7 @@ private fun StructuredConcurrencyDemoCard() {
                     },
                     modifier = Modifier.weight(1f),
                     enabled = !isRunning,
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF2E7D32)),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2E7D32)),
                     shape = RoundedCornerShape(8.dp)
                 ) {
                     Text("정상 실행", color = Color.White, fontSize = 11.sp)
@@ -504,7 +505,7 @@ private fun StructuredConcurrencyDemoCard() {
                     },
                     modifier = Modifier.weight(1f),
                     enabled = !isRunning,
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFD32F2F)),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFD32F2F)),
                     shape = RoundedCornerShape(8.dp)
                 ) {
                     Text("부모 취소", color = Color.White, fontSize = 11.sp)
@@ -590,8 +591,8 @@ private fun CancellationDemoCard() {
 
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        backgroundColor = Color(0xFFFCE4EC),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFFCE4EC)),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -676,7 +677,7 @@ private fun CancellationDemoCard() {
                     },
                     modifier = Modifier.weight(1f),
                     enabled = !isRunning,
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF2196F3)),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2196F3)),
                     shape = RoundedCornerShape(8.dp)
                 ) {
                     Text("시작", color = Color.White, fontSize = 12.sp)
@@ -690,7 +691,7 @@ private fun CancellationDemoCard() {
                     },
                     modifier = Modifier.weight(1f),
                     enabled = isRunning,
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFFF5722)),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFF5722)),
                     shape = RoundedCornerShape(8.dp)
                 ) {
                     Text("취소", color = Color.White, fontSize = 12.sp)
@@ -733,8 +734,8 @@ private fun DispatchersDemoCard() {
 
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        backgroundColor = Color(0xFFE1F5FE),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFE1F5FE)),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -781,7 +782,7 @@ private fun DispatchersDemoCard() {
                 },
                 modifier = Modifier.fillMaxWidth(),
                 enabled = !isRunning,
-                colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF0277BD)),
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF0277BD)),
                 shape = RoundedCornerShape(8.dp)
             ) {
                 Text(
@@ -856,8 +857,8 @@ private fun ParallelExecutionDemoCard() {
 
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        backgroundColor = Color(0xFFFFF9C4),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFFFF9C4)),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -964,7 +965,7 @@ private fun ParallelExecutionDemoCard() {
                 },
                 modifier = Modifier.fillMaxWidth(),
                 enabled = !isRunning,
-                colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFF57F17)),
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFF57F17)),
                 shape = RoundedCornerShape(8.dp)
             ) {
                 Text(

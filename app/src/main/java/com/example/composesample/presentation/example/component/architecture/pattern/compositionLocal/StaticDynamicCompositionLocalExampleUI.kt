@@ -16,12 +16,13 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.Card
-import androidx.compose.material.Icon
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.runtime.Composable
@@ -106,8 +107,8 @@ private fun ControlPanel(
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        backgroundColor = Color(0xFFFFF3E0),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFFFF3E0)),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(
@@ -138,7 +139,7 @@ private fun ControlPanel(
                 Button(
                     onClick = { onStaticChange(staticCounter + 1) },
                     modifier = Modifier.weight(1f),
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFD32F2F)),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFD32F2F)),
                     shape = RoundedCornerShape(8.dp)
                 ) {
                     Text("Static +1", color = Color.White, fontSize = 12.sp)
@@ -147,7 +148,7 @@ private fun ControlPanel(
                 Button(
                     onClick = { onStaticChange(0) },
                     modifier = Modifier.weight(1f),
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFE57373)),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFE57373)),
                     shape = RoundedCornerShape(8.dp)
                 ) {
                     Icon(
@@ -179,7 +180,7 @@ private fun ControlPanel(
                 Button(
                     onClick = { onDynamicChange(dynamicCounter + 1) },
                     modifier = Modifier.weight(1f),
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF4CAF50)),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4CAF50)),
                     shape = RoundedCornerShape(8.dp)
                 ) {
                     Text("Dynamic +1", color = Color.White, fontSize = 12.sp)
@@ -188,7 +189,7 @@ private fun ControlPanel(
                 Button(
                     onClick = { onDynamicChange(0) },
                     modifier = Modifier.weight(1f),
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF81C784)),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF81C784)),
                     shape = RoundedCornerShape(8.dp)
                 ) {
                     Icon(
@@ -225,8 +226,8 @@ private fun ControlPanel(
 private fun StaticCompositionLocalDemo() {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        backgroundColor = Color(0xFFFFEBEE),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFFFEBEE)),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(
@@ -334,8 +335,8 @@ private fun StaticNonReaderComponent(label: String, modifier: Modifier = Modifie
 private fun DynamicCompositionLocalDemo() {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        backgroundColor = Color(0xFFE8F5E8),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFE8F5E8)),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(
@@ -508,8 +509,8 @@ val LocalNestedValue = compositionLocalOf { 0 }
 private fun NestedProviderDemo(staticCounter: Int, dynamicCounter: Int) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        backgroundColor = Color(0xFFFFF9C4),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFFFF9C4)),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(
@@ -626,8 +627,8 @@ private fun ConditionalReadingDemo(dynamicCounter: Int) {
 
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        backgroundColor = Color(0xFFE1F5FE),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFE1F5FE)),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(
@@ -657,8 +658,7 @@ private fun ConditionalReadingDemo(dynamicCounter: Int) {
             ) {
                 Button(
                     onClick = { showValue = !showValue },
-                    colors = ButtonDefaults.buttonColors(
-                        backgroundColor = if (showValue) Color(0xFF0277BD) else Color.Gray
+                    colors = ButtonDefaults.buttonColors(containerColor = if (showValue) Color(0xFF0277BD) else Color.Gray
                     ),
                     shape = RoundedCornerShape(8.dp)
                 ) {

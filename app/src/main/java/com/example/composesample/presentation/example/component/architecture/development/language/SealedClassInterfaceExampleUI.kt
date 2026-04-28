@@ -20,13 +20,14 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.Card
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.Icon
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.CheckCircle
@@ -146,8 +147,8 @@ private fun ApiResultDemoCard() {
 
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        backgroundColor = Color(0xFFE8F5E9),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFE8F5E9)),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -183,7 +184,7 @@ private fun ApiResultDemoCard() {
                         }
                     },
                     modifier = Modifier.weight(1f),
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF4CAF50)),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4CAF50)),
                     shape = RoundedCornerShape(8.dp)
                 ) {
                     Text("Success", color = Color.White, fontSize = 12.sp)
@@ -198,7 +199,7 @@ private fun ApiResultDemoCard() {
                         }
                     },
                     modifier = Modifier.weight(1f),
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFFF5722)),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFF5722)),
                     shape = RoundedCornerShape(8.dp)
                 ) {
                     Text("Error", color = Color.White, fontSize = 12.sp)
@@ -312,8 +313,8 @@ private fun UiStateDemoCard() {
 
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        backgroundColor = Color(0xFFE1F5FE),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFE1F5FE)),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -395,7 +396,7 @@ private fun androidx.compose.foundation.layout.RowScope.StateButton(
     Button(
         onClick = onClick,
         modifier = Modifier.weight(1f),
-        colors = ButtonDefaults.buttonColors(backgroundColor = color),
+        colors = ButtonDefaults.buttonColors(containerColor = color),
         shape = RoundedCornerShape(8.dp)
     ) {
         Text(text, color = Color.White, fontSize = 11.sp)
@@ -481,8 +482,7 @@ private fun UiStateView(state: UiState, onRetry: () -> Unit) {
                             Spacer(modifier = Modifier.height(8.dp))
                             Button(
                                 onClick = onRetry,
-                                colors = ButtonDefaults.buttonColors(
-                                    backgroundColor = Color(0xFF2196F3)
+                                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2196F3)
                                 ),
                                 shape = RoundedCornerShape(8.dp)
                             ) {
@@ -509,8 +509,8 @@ private fun SealedInterfaceDemoCard() {
 
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        backgroundColor = Color(0xFFF3E5F5),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFF3E5F5)),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -538,7 +538,7 @@ private fun SealedInterfaceDemoCard() {
                 Button(
                     onClick = { networkState = OnlineState("WiFi") },
                     modifier = Modifier.weight(1f),
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF4CAF50)),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4CAF50)),
                     shape = RoundedCornerShape(8.dp)
                 ) {
                     Text("Online", color = Color.White, fontSize = 12.sp)
@@ -547,7 +547,7 @@ private fun SealedInterfaceDemoCard() {
                 Button(
                     onClick = { networkState = OfflineState("No connection") },
                     modifier = Modifier.weight(1f),
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFFF5722)),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFF5722)),
                     shape = RoundedCornerShape(8.dp)
                 ) {
                     Text("Offline", color = Color.White, fontSize = 12.sp)
@@ -563,7 +563,7 @@ private fun SealedInterfaceDemoCard() {
             Button(
                 onClick = { showExplanation = !showExplanation },
                 modifier = Modifier.fillMaxWidth(),
-                colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF9C27B0).copy(alpha = 0.1f)),
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF9C27B0).copy(alpha = 0.1f)),
                 shape = RoundedCornerShape(8.dp)
             ) {
                 Text(
@@ -698,8 +698,8 @@ private fun NavigationEventDemoCard() {
 
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        backgroundColor = Color(0xFFFFF3E0),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFFFF3E0)),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -727,7 +727,7 @@ private fun NavigationEventDemoCard() {
                 Button(
                     onClick = { events = events + NavigationEvent.Back },
                     modifier = Modifier.weight(1f),
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF9E9E9E)),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF9E9E9E)),
                     shape = RoundedCornerShape(8.dp)
                 ) {
                     Text("Back", color = Color.White, fontSize = 11.sp)
@@ -736,7 +736,7 @@ private fun NavigationEventDemoCard() {
                 Button(
                     onClick = { events = events + NavigationEvent.ToDetail("123") },
                     modifier = Modifier.weight(1f),
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF2196F3)),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2196F3)),
                     shape = RoundedCornerShape(8.dp)
                 ) {
                     Text("Detail", color = Color.White, fontSize = 11.sp)
@@ -754,7 +754,7 @@ private fun NavigationEventDemoCard() {
                         events = events + NavigationEvent.ToExternal("https://example.com")
                     },
                     modifier = Modifier.weight(1f),
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF4CAF50)),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4CAF50)),
                     shape = RoundedCornerShape(8.dp)
                 ) {
                     Text("External", color = Color.White, fontSize = 11.sp)
@@ -763,7 +763,7 @@ private fun NavigationEventDemoCard() {
                 Button(
                     onClick = { events = emptyList() },
                     modifier = Modifier.weight(1f),
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFFF5722)),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFF5722)),
                     shape = RoundedCornerShape(8.dp)
                 ) {
                     Text("Clear", color = Color.White, fontSize = 11.sp)
@@ -829,8 +829,8 @@ private fun NestedSealedDemoCard() {
 
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        backgroundColor = Color(0xFFE8EAF6),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFE8EAF6)),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -867,7 +867,7 @@ private fun NestedSealedDemoCard() {
                     }
                 },
                 modifier = Modifier.fillMaxWidth(),
-                colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF3F51B5)),
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF3F51B5)),
                 shape = RoundedCornerShape(8.dp)
             ) {
                 Text("결제 프로세스 시작", color = Color.White, fontSize = 13.sp)
@@ -960,8 +960,8 @@ private fun SealedVsEnumDemoCard() {
 
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        backgroundColor = Color(0xFFFFF8E1),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFFFF8E1)),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -989,8 +989,7 @@ private fun SealedVsEnumDemoCard() {
                 Button(
                     onClick = { useEnum = true },
                     modifier = Modifier.weight(1f),
-                    colors = ButtonDefaults.buttonColors(
-                        backgroundColor = if (useEnum) Color(0xFFF57F17) else Color(0xFFFFE082)
+                    colors = ButtonDefaults.buttonColors(containerColor = if (useEnum) Color(0xFFF57F17) else Color(0xFFFFE082)
                     ),
                     shape = RoundedCornerShape(8.dp)
                 ) {
@@ -1004,8 +1003,7 @@ private fun SealedVsEnumDemoCard() {
                 Button(
                     onClick = { useEnum = false },
                     modifier = Modifier.weight(1f),
-                    colors = ButtonDefaults.buttonColors(
-                        backgroundColor = if (!useEnum) Color(0xFFF57F17) else Color(0xFFFFE082)
+                    colors = ButtonDefaults.buttonColors(containerColor = if (!useEnum) Color(0xFFF57F17) else Color(0xFFFFE082)
                     ),
                     shape = RoundedCornerShape(8.dp)
                 ) {
@@ -1027,7 +1025,7 @@ private fun SealedVsEnumDemoCard() {
                     Button(
                         onClick = { enumStatus = StatusEnum.SUCCESS },
                         modifier = Modifier.weight(1f),
-                        colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF4CAF50)),
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4CAF50)),
                         shape = RoundedCornerShape(8.dp)
                     ) {
                         Text("Success", color = Color.White, fontSize = 11.sp)
@@ -1035,7 +1033,7 @@ private fun SealedVsEnumDemoCard() {
                     Button(
                         onClick = { enumStatus = StatusEnum.ERROR },
                         modifier = Modifier.weight(1f),
-                        colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFFF5722)),
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFF5722)),
                         shape = RoundedCornerShape(8.dp)
                     ) {
                         Text("Error", color = Color.White, fontSize = 11.sp)
@@ -1043,7 +1041,7 @@ private fun SealedVsEnumDemoCard() {
                     Button(
                         onClick = { enumStatus = StatusEnum.LOADING },
                         modifier = Modifier.weight(1f),
-                        colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF2196F3)),
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2196F3)),
                         shape = RoundedCornerShape(8.dp)
                     ) {
                         Text("Loading", color = Color.White, fontSize = 11.sp)
@@ -1095,7 +1093,7 @@ private fun SealedVsEnumDemoCard() {
                             )
                         },
                         modifier = Modifier.weight(1f),
-                        colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF4CAF50)),
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4CAF50)),
                         shape = RoundedCornerShape(8.dp)
                     ) {
                         Text("Success", color = Color.White, fontSize = 11.sp)
@@ -1108,7 +1106,7 @@ private fun SealedVsEnumDemoCard() {
                             )
                         },
                         modifier = Modifier.weight(1f),
-                        colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFFF5722)),
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFF5722)),
                         shape = RoundedCornerShape(8.dp)
                     ) {
                         Text("Error", color = Color.White, fontSize = 11.sp)
@@ -1116,7 +1114,7 @@ private fun SealedVsEnumDemoCard() {
                     Button(
                         onClick = { sealedStatus = StatusSealed.Loading },
                         modifier = Modifier.weight(1f),
-                        colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF2196F3)),
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2196F3)),
                         shape = RoundedCornerShape(8.dp)
                     ) {
                         Text("Loading", color = Color.White, fontSize = 11.sp)
@@ -1231,8 +1229,8 @@ private fun GenericTypeDemoCard() {
 
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        backgroundColor = Color(0xFFE8F5E9),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFE8F5E9)),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -1260,8 +1258,7 @@ private fun GenericTypeDemoCard() {
                 Button(
                     onClick = { selectedType = "String" },
                     modifier = Modifier.weight(1f),
-                    colors = ButtonDefaults.buttonColors(
-                        backgroundColor = if (selectedType == "String") Color(0xFF388E3C) else Color(
+                    colors = ButtonDefaults.buttonColors(containerColor = if (selectedType == "String") Color(0xFF388E3C) else Color(
                             0xFFC8E6C9
                         )
                     ),
@@ -1276,8 +1273,7 @@ private fun GenericTypeDemoCard() {
                 Button(
                     onClick = { selectedType = "User" },
                     modifier = Modifier.weight(1f),
-                    colors = ButtonDefaults.buttonColors(
-                        backgroundColor = if (selectedType == "User") Color(0xFF388E3C) else Color(
+                    colors = ButtonDefaults.buttonColors(containerColor = if (selectedType == "User") Color(0xFF388E3C) else Color(
                             0xFFC8E6C9
                         )
                     ),
@@ -1292,8 +1288,7 @@ private fun GenericTypeDemoCard() {
                 Button(
                     onClick = { selectedType = "Product" },
                     modifier = Modifier.weight(1f),
-                    colors = ButtonDefaults.buttonColors(
-                        backgroundColor = if (selectedType == "Product") Color(0xFF388E3C) else Color(
+                    colors = ButtonDefaults.buttonColors(containerColor = if (selectedType == "Product") Color(0xFF388E3C) else Color(
                             0xFFC8E6C9
                         )
                     ),
@@ -1335,8 +1330,7 @@ private fun GenericTypeDemoCard() {
                                     }
                                 },
                                 modifier = Modifier.fillMaxWidth(),
-                                colors = ButtonDefaults.buttonColors(
-                                    backgroundColor = Color(
+                                colors = ButtonDefaults.buttonColors(containerColor = Color(
                                         0xFF388E3C
                                     )
                                 ),
@@ -1414,8 +1408,7 @@ private fun GenericTypeDemoCard() {
                                     }
                                 },
                                 modifier = Modifier.fillMaxWidth(),
-                                colors = ButtonDefaults.buttonColors(
-                                    backgroundColor = Color(
+                                colors = ButtonDefaults.buttonColors(containerColor = Color(
                                         0xFF388E3C
                                     )
                                 ),
@@ -1513,8 +1506,7 @@ private fun GenericTypeDemoCard() {
                                     }
                                 },
                                 modifier = Modifier.fillMaxWidth(),
-                                colors = ButtonDefaults.buttonColors(
-                                    backgroundColor = Color(
+                                colors = ButtonDefaults.buttonColors(containerColor = Color(
                                         0xFF388E3C
                                     )
                                 ),

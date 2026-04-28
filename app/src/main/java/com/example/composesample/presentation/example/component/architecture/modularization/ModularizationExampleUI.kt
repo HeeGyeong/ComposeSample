@@ -21,12 +21,13 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.Card
-import androidx.compose.material.Icon
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
@@ -78,8 +79,8 @@ private fun ModuleStructureCard() {
 
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        backgroundColor = Color(0xFFE8F5E9),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFE8F5E9)),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -245,7 +246,7 @@ private fun ModuleBox(
             .clickable(onClick = onClick),
         shape = RoundedCornerShape(8.dp),
         color = if (isSelected) color.copy(alpha = 0.2f) else Color.White,
-        elevation = if (isSelected) 4.dp else 2.dp
+        shadowElevation = if (isSelected) 4.dp else 2.dp
     ) {
         Row(
             modifier = Modifier
@@ -290,8 +291,8 @@ private fun ModuleBox(
 private fun BeforeAfterComparisonCard() {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        backgroundColor = Color(0xFFE1F5FE),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFE1F5FE)),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -408,8 +409,8 @@ private fun ComparisonSection(
 private fun DependencyFlowCard() {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        backgroundColor = Color(0xFFF3E5F5),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFF3E5F5)),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -452,7 +453,7 @@ private fun DependencyFlowCard() {
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(8.dp),
                 color = Color.White,
-                elevation = 2.dp
+                shadowElevation = 2.dp
             ) {
                 Column(modifier = Modifier.padding(12.dp)) {
                     Text(
@@ -506,7 +507,7 @@ private fun DependencyFlowItem(name: String, color: Color, level: Int) {
             .padding(start = (level * 16).dp),
         shape = RoundedCornerShape(8.dp),
         color = color.copy(alpha = 0.2f),
-        elevation = 2.dp
+        shadowElevation = 2.dp
     ) {
         Row(
             modifier = Modifier.padding(12.dp),
