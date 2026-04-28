@@ -14,12 +14,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.Card
-import androidx.compose.material.OutlinedTextField
-import androidx.compose.material.Text
-import androidx.compose.material.TextFieldDefaults
+import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -76,8 +78,8 @@ private fun MemoInputDialog(
                     .fillMaxWidth()
                     .padding(16.dp),
                 shape = RoundedCornerShape(16.dp),
-                backgroundColor = Color.White,
-                elevation = 8.dp
+                colors = CardDefaults.cardColors(containerColor = Color.White),
+                elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
             ) {
                 Column(
                     modifier = Modifier.padding(20.dp)
@@ -103,7 +105,7 @@ private fun MemoInputDialog(
                                 color = Color.Gray
                             )
                         },
-                        colors = TextFieldDefaults.outlinedTextFieldColors(
+                        colors = OutlinedTextFieldDefaults.colors(
                             focusedBorderColor = Color(0xFF6A1B9A),
                             cursorColor = Color(0xFF6A1B9A)
                         ),
@@ -119,8 +121,7 @@ private fun MemoInputDialog(
                         Button(
                             onClick = onDismiss,
                             modifier = Modifier.weight(1f),
-                            colors = ButtonDefaults.buttonColors(
-                                backgroundColor = Color(0xFFE0E0E0)
+                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFE0E0E0)
                             ),
                             shape = RoundedCornerShape(8.dp)
                         ) {
@@ -134,8 +135,7 @@ private fun MemoInputDialog(
                                 }
                             },
                             modifier = Modifier.weight(1f),
-                            colors = ButtonDefaults.buttonColors(
-                                backgroundColor = Color(0xFF6A1B9A)
+                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF6A1B9A)
                             ),
                             shape = RoundedCornerShape(8.dp),
                             enabled = memoText.isNotBlank()

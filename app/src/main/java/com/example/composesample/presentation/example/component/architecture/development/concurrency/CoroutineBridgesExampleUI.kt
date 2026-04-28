@@ -13,13 +13,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.Card
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.Divider
-import androidx.compose.material.LinearProgressIndicator
-import androidx.compose.material.Text
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.Text
+import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -631,10 +632,10 @@ scope.launch {
                 )
                 Spacer(modifier = Modifier.height(6.dp))
                 LinearProgressIndicator(
-                    progress = progress,
+                    progress = { progress },
                     modifier = Modifier.fillMaxWidth(),
                     color = Color(0xFF00D4FF),
-                    backgroundColor = Color(0xFF333333)
+                    trackColor = Color(0xFF333333)
                 )
             }
             is DownloadState.Done -> {
@@ -742,7 +743,7 @@ val value by liveData.asFlow()
         }
 
         Spacer(modifier = Modifier.height(16.dp))
-        Divider(color = Color(0xFF333333))
+        HorizontalDivider(color = Color(0xFF333333))
         Spacer(modifier = Modifier.height(16.dp))
 
         // ── Flow.asLiveData() ──
@@ -777,7 +778,7 @@ val value by liveData.observeAsState(initial = 0)
         }
 
         Spacer(modifier = Modifier.height(16.dp))
-        Divider(color = Color(0xFF333333))
+        HorizontalDivider(color = Color(0xFF333333))
         Spacer(modifier = Modifier.height(16.dp))
 
         // ── ListenableFuture.await() ──
@@ -827,7 +828,7 @@ private fun ComparisonSection() {
             left = "suspendCoroutine",
             right = "suspendCancellableCoroutine"
         )
-        Divider(color = Color(0xFF444444), modifier = Modifier.padding(vertical = 8.dp))
+        HorizontalDivider(color = Color(0xFF444444), modifier = Modifier.padding(vertical = 8.dp))
         ComparisonItem(
             aspect = "취소 지원",
             left = "❌ 미지원",
@@ -856,7 +857,7 @@ private fun ComparisonSection() {
         Spacer(modifier = Modifier.height(8.dp))
         InfoText("💡 실제 Android API 예시:\n• FusedLocationProviderClient.lastLocation\n• BiometricPrompt 인증 콜백\n• BluetoothGattCallback\n• CameraX ImageCapture\n• WorkManager ListenableFuture")
         Spacer(modifier = Modifier.height(12.dp))
-        Divider(color = Color(0xFF444444))
+        HorizontalDivider(color = Color(0xFF444444))
         Spacer(modifier = Modifier.height(12.dp))
         Text(
             text = "callbackFlow — 다중 값 콜백",
@@ -876,9 +877,9 @@ private fun ComparisonSection() {
 @Composable
 private fun SectionCard(title: String, content: @Composable () -> Unit) {
     Card(
-        backgroundColor = Color(0xFF16213E),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFF16213E)),
         shape = RoundedCornerShape(12.dp),
-        elevation = 4.dp,
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         modifier = Modifier.fillMaxWidth()
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -897,7 +898,7 @@ private fun SectionCard(title: String, content: @Composable () -> Unit) {
 @Composable
 private fun CodeBlock(code: String) {
     Card(
-        backgroundColor = Color(0xFF0D1117),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFF0D1117)),
         shape = RoundedCornerShape(8.dp),
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -967,8 +968,8 @@ private fun ActionButton(
         onClick = onClick,
         enabled = enabled,
         colors = ButtonDefaults.buttonColors(
-            backgroundColor = color,
-            disabledBackgroundColor = color.copy(alpha = 0.3f)
+            containerColor = color,
+            disabledContainerColor = color.copy(alpha = 0.3f)
         ),
         shape = RoundedCornerShape(8.dp),
         modifier = modifier

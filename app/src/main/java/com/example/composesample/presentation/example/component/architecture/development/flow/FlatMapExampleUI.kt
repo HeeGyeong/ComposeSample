@@ -20,14 +20,16 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.Card
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.OutlinedTextField
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.material.TextFieldDefaults
+import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -104,8 +106,8 @@ private fun FlatMapConcatDemoCard() {
 
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        backgroundColor = Color(0xFFE8F5E9),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFE8F5E9)),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -181,7 +183,7 @@ private fun FlatMapConcatDemoCard() {
                 },
                 modifier = Modifier.fillMaxWidth(),
                 enabled = !isRunning,
-                colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF2E7D32)),
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2E7D32)),
                 shape = RoundedCornerShape(8.dp)
             ) {
                 Text(
@@ -284,8 +286,8 @@ private fun FlatMapMergeDemoCard() {
 
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        backgroundColor = Color(0xFFE3F2FD),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFE3F2FD)),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -361,7 +363,7 @@ private fun FlatMapMergeDemoCard() {
                 },
                 modifier = Modifier.fillMaxWidth(),
                 enabled = !isRunning,
-                colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF1976D2)),
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1976D2)),
                 shape = RoundedCornerShape(8.dp)
             ) {
                 Text(
@@ -464,8 +466,8 @@ private fun FlatMapLatestDemoCard() {
 
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        backgroundColor = Color(0xFFFFF3E0),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFFFF3E0)),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -561,7 +563,7 @@ private fun FlatMapLatestDemoCard() {
                 },
                 modifier = Modifier.fillMaxWidth(),
                 enabled = !isRunning,
-                colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFE65100)),
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFE65100)),
                 shape = RoundedCornerShape(8.dp)
             ) {
                 Text(
@@ -662,8 +664,8 @@ private fun ConcurrencyControlCard() {
 
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        backgroundColor = Color(0xFFE8EAF6),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFE8EAF6)),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -710,8 +712,7 @@ private fun ConcurrencyControlCard() {
                                 onClick = { concurrency = value },
                                 modifier = Modifier.size(40.dp),
                                 enabled = !isRunning,
-                                colors = ButtonDefaults.buttonColors(
-                                    backgroundColor = if (concurrency == value)
+                                colors = ButtonDefaults.buttonColors(containerColor = if (concurrency == value)
                                         Color(0xFF3F51B5)
                                     else
                                         Color(0xFFE0E0E0)
@@ -778,7 +779,7 @@ private fun ConcurrencyControlCard() {
                 },
                 modifier = Modifier.fillMaxWidth(),
                 enabled = !isRunning,
-                colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF3F51B5)),
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF3F51B5)),
                 shape = RoundedCornerShape(8.dp)
             ) {
                 Text(
@@ -877,8 +878,8 @@ private fun ErrorHandlingCard() {
 
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        backgroundColor = Color(0xFFFFEBEE),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFFFEBEE)),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -909,8 +910,7 @@ private fun ErrorHandlingCard() {
                         onClick = { selectedOperator = op },
                         modifier = Modifier.weight(1f),
                         enabled = !isRunning,
-                        colors = ButtonDefaults.buttonColors(
-                            backgroundColor = if (selectedOperator == op)
+                        colors = ButtonDefaults.buttonColors(containerColor = if (selectedOperator == op)
                                 Color(0xFFC62828)
                             else
                                 Color(0xFFE0E0E0)
@@ -979,7 +979,7 @@ private fun ErrorHandlingCard() {
                 },
                 modifier = Modifier.fillMaxWidth(),
                 enabled = !isRunning,
-                colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFC62828)),
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFC62828)),
                 shape = RoundedCornerShape(8.dp)
             ) {
                 Text(
@@ -1125,8 +1125,8 @@ private fun SearchDemoCard() {
 
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        backgroundColor = Color(0xFFF3E5F5),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFF3E5F5)),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -1154,7 +1154,7 @@ private fun SearchDemoCard() {
                 label = { Text("검색어 입력 (2글자 이상)", fontSize = 12.sp) },
                 placeholder = { Text("예: Android", fontSize = 12.sp) },
                 singleLine = true,
-                colors = TextFieldDefaults.outlinedTextFieldColors(
+                colors = OutlinedTextFieldDefaults.colors(
                     focusedBorderColor = Color(0xFF7B1FA2),
                     focusedLabelColor = Color(0xFF7B1FA2)
                 ),
@@ -1275,8 +1275,8 @@ private fun PerformanceComparisonCard() {
 
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        backgroundColor = Color(0xFFFCE4EC),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFFCE4EC)),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -1339,7 +1339,7 @@ private fun PerformanceComparisonCard() {
                 },
                 modifier = Modifier.fillMaxWidth(),
                 enabled = !isRunning,
-                colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFC2185B)),
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFC2185B)),
                 shape = RoundedCornerShape(8.dp)
             ) {
                 Text(

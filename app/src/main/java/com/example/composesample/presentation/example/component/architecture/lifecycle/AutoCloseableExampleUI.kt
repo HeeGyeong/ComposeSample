@@ -17,15 +17,17 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.Card
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.OutlinedTextField
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.material.TextFieldDefaults
+import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.CheckCircle
@@ -113,8 +115,8 @@ fun AutoCloseableExampleUI(
 private fun LiveDemoCard(currentTime: Long) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        backgroundColor = Color(0xFFFFEBEE),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFFFEBEE)),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(
@@ -203,8 +205,8 @@ private fun ManualCloseControlCard(
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        backgroundColor = Color(0xFFFFF8E1),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFFFF8E1)),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(
@@ -244,7 +246,7 @@ private fun ManualCloseControlCard(
                 Button(
                     onClick = { onCloseService("ItemsService") },
                     modifier = Modifier.weight(1f),
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFE65100)),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFE65100)),
                     shape = RoundedCornerShape(8.dp)
                 ) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -256,7 +258,7 @@ private fun ManualCloseControlCard(
                 Button(
                     onClick = { onCloseService("CustomersService") },
                     modifier = Modifier.weight(1f),
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFD32F2F)),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFD32F2F)),
                     shape = RoundedCornerShape(8.dp)
                 ) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -268,7 +270,7 @@ private fun ManualCloseControlCard(
                 Button(
                     onClick = { onCloseService("NetworkService") },
                     modifier = Modifier.weight(1f),
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF7B1FA2)),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF7B1FA2)),
                     shape = RoundedCornerShape(8.dp)
                 ) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -284,7 +286,7 @@ private fun ManualCloseControlCard(
             Button(
                 onClick = onSimulateClear,
                 modifier = Modifier.fillMaxWidth(),
-                colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFD32F2F)),
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFD32F2F)),
                 shape = RoundedCornerShape(8.dp)
             ) {
                 Icon(
@@ -356,8 +358,8 @@ private fun FeatureChip(text: String, color: Color) {
 private fun ServiceStatusCard(serviceStatus: Map<String, ServiceStatusInfo>) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        backgroundColor = Color(0xFFE8F5E8),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFE8F5E8)),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(
@@ -485,8 +487,8 @@ private fun ItemsServiceCard(items: List<String>, onAddItem: (String) -> Unit) {
 
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        backgroundColor = Color(0xFFFFF3E0),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFFFF3E0)),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(
@@ -529,7 +531,7 @@ private fun ItemsServiceCard(items: List<String>, onAddItem: (String) -> Unit) {
                     onValueChange = { newItem = it },
                     modifier = Modifier.weight(1f),
                     placeholder = { Text("새 아이템 입력", fontSize = 12.sp) },
-                    colors = TextFieldDefaults.outlinedTextFieldColors(
+                    colors = OutlinedTextFieldDefaults.colors(
                         focusedBorderColor = Color(0xFFE65100)
                     )
                 )
@@ -646,8 +648,8 @@ private fun CustomersServiceCard(customers: List<String>, onAddCustomer: (String
 
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        backgroundColor = Color(0xFFFFEBEE),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFFFEBEE)),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(
@@ -690,7 +692,7 @@ private fun CustomersServiceCard(customers: List<String>, onAddCustomer: (String
                     onValueChange = { newCustomer = it },
                     modifier = Modifier.weight(1f),
                     placeholder = { Text("새 고객 입력", fontSize = 12.sp) },
-                    colors = TextFieldDefaults.outlinedTextFieldColors(
+                    colors = OutlinedTextFieldDefaults.colors(
                         focusedBorderColor = Color(0xFFD32F2F)
                     )
                 )
@@ -806,8 +808,8 @@ private fun NetworkServiceCard(
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        backgroundColor = Color(0xFFF3E5F5),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFF3E5F5)),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(
@@ -876,7 +878,7 @@ private fun NetworkServiceCard(
                 Button(
                     onClick = onConnect,
                     modifier = Modifier.weight(1f),
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF4CAF50)),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4CAF50)),
                     shape = RoundedCornerShape(8.dp)
                 ) {
                     Text("연결", color = Color.White)
@@ -885,7 +887,7 @@ private fun NetworkServiceCard(
                 Button(
                     onClick = onDisconnect,
                     modifier = Modifier.weight(1f),
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFD32F2F)),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFD32F2F)),
                     shape = RoundedCornerShape(8.dp)
                 ) {
                     Icon(

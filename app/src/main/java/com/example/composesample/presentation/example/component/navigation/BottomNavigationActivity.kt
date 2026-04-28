@@ -28,12 +28,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.material.BottomNavigation
-import androidx.compose.material.BottomNavigationItem
-import androidx.compose.material.Button
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.Text
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Scaffold
@@ -317,12 +317,12 @@ fun BottomNavigationBar(navController: NavController) {
     )
     var selectedItem by remember { mutableStateOf(0) }
 
-    BottomNavigation(
-        backgroundColor = Color.Gray,
-        elevation = 8.dp
+    NavigationBar(
+        containerColor = Color.Gray,
+        tonalElevation = 8.dp
     ) {
         navigationTabList.forEachIndexed { index, item ->
-            BottomNavigationItem(
+            NavigationBarItem(
                 icon = {
                     Icon(
                         imageVector = item.icon,

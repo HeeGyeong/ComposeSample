@@ -15,14 +15,16 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.Card
-import androidx.compose.material.Icon
-import androidx.compose.material.OutlinedTextField
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.material.TextFieldDefaults
+import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -203,8 +205,8 @@ private fun BottomNavigationDemoCard(
 
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        backgroundColor = Color(0xFFE8F5E8),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFE8F5E8)),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(
@@ -222,7 +224,7 @@ private fun BottomNavigationDemoCard(
 
             Card(
                 modifier = Modifier.fillMaxWidth(),
-                elevation = 8.dp,
+                elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
                 shape = RoundedCornerShape(16.dp)
             ) {
                 Row(
@@ -306,8 +308,8 @@ private fun RealNavBackStackDemoCard() {
 
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        backgroundColor = Color(0xFFE3F2FD),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFE3F2FD)),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(
@@ -339,8 +341,7 @@ private fun RealNavBackStackDemoCard() {
                     Button(
                         onClick = { currentRouteComponent = component },
                         modifier = Modifier.weight(1f),
-                        colors = ButtonDefaults.buttonColors(
-                            backgroundColor = if (currentRouteComponent == component)
+                        colors = ButtonDefaults.buttonColors(containerColor = if (currentRouteComponent == component)
                                 Color(0xFF1976D2) else Color(0xFF1976D2).copy(alpha = 0.3f)
                         )
                     ) {
@@ -427,7 +428,7 @@ private fun RealNavBackStackDemoCard() {
                         currentBackStack.push("${subRoutes.random()}Route")
                     },
                     modifier = Modifier.weight(1f),
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF4CAF50))
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4CAF50))
                 ) {
                     Icon(
                         imageVector = Icons.Filled.Add,
@@ -444,7 +445,7 @@ private fun RealNavBackStackDemoCard() {
                         currentBackStack.pop()
                     },
                     modifier = Modifier.weight(1f),
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFFF5722))
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFF5722))
                 ) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
@@ -492,8 +493,8 @@ private fun RealStateManagementDemoCard() {
 
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        backgroundColor = Color(0xFFF3E5F5),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFF3E5F5)),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(
@@ -527,8 +528,7 @@ private fun RealStateManagementDemoCard() {
                             currentRoute = route
                         },
                         modifier = Modifier.weight(1f),
-                        colors = ButtonDefaults.buttonColors(
-                            backgroundColor = if (currentRoute == route)
+                        colors = ButtonDefaults.buttonColors(containerColor = if (currentRoute == route)
                                 Color(0xFF7B1FA2) else Color(0xFF7B1FA2).copy(alpha = 0.3f)
                         )
                     ) {
@@ -588,7 +588,7 @@ private fun RealStateManagementDemoCard() {
                         onValueChange = { inputText = it },
                         label = { Text("rememberSaveable로 저장되는 상태", fontSize = 11.sp) },
                         modifier = Modifier.fillMaxWidth(),
-                        colors = TextFieldDefaults.outlinedTextFieldColors(
+                        colors = OutlinedTextFieldDefaults.colors(
                             focusedBorderColor = Color(0xFF7B1FA2),
                             focusedLabelColor = Color(0xFF7B1FA2)
                         )
@@ -609,7 +609,7 @@ private fun RealStateManagementDemoCard() {
 
                     },
                     modifier = Modifier.weight(1f),
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFFF9800))
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFF9800))
                 ) {
                     Icon(
                         imageVector = Icons.Filled.Refresh,
@@ -631,7 +631,7 @@ private fun RealStateManagementDemoCard() {
                         }
                     },
                     modifier = Modifier.weight(1f),
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFD32F2F))
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFD32F2F))
                 ) {
                     Icon(
                         imageVector = Icons.Filled.Delete,
@@ -670,8 +670,8 @@ private fun RealRouteComponentDemoCard() {
 
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        backgroundColor = Color(0xFFFFEBEE),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFFFEBEE)),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(
@@ -789,8 +789,7 @@ private fun RealRouteComponentDemoCard() {
                                 }
                             },
                             modifier = Modifier.weight(1f),
-                            colors = ButtonDefaults.buttonColors(
-                                backgroundColor = if (isActive) Color(0xFFD32F2F) else Color(
+                            colors = ButtonDefaults.buttonColors(containerColor = if (isActive) Color(0xFFD32F2F) else Color(
                                     0xFF4CAF50
                                 )
                             )

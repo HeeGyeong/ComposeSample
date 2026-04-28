@@ -12,12 +12,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.Card
-import androidx.compose.material.Divider
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.SideEffect
@@ -123,8 +124,8 @@ private fun RecompositionCounterDemoCard() {
 
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        backgroundColor = Color(0xFFE3F2FD),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFE3F2FD)),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -188,7 +189,7 @@ private fun RecompositionCounterDemoCard() {
                 Button(
                     onClick = { clickCount++ },
                     modifier = Modifier.weight(1f),
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF1976D2)),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1976D2)),
                     shape = RoundedCornerShape(8.dp)
                 ) {
                     Text("Click +1", color = Color.White, fontSize = 12.sp)
@@ -197,7 +198,7 @@ private fun RecompositionCounterDemoCard() {
                 Button(
                     onClick = { displayCount = counter.count },
                     modifier = Modifier.weight(1f),
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF4CAF50)),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4CAF50)),
                     shape = RoundedCornerShape(8.dp)
                 ) {
                     Text("Refresh Count", color = Color.White, fontSize = 11.sp)
@@ -210,7 +211,7 @@ private fun RecompositionCounterDemoCard() {
                         clickCount = 0
                     },
                     modifier = Modifier.weight(1f),
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF9E9E9E)),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF9E9E9E)),
                     shape = RoundedCornerShape(8.dp)
                 ) {
                     Text("Reset", color = Color.White, fontSize = 12.sp)
@@ -252,8 +253,8 @@ private fun ParentChildRecompositionCard() {
 
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        backgroundColor = Color(0xFFFCE4EC),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFFCE4EC)),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -318,7 +319,7 @@ private fun ParentChildRecompositionCard() {
                 Button(
                     onClick = { parentState++ },
                     modifier = Modifier.weight(1f),
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFC2185B)),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFC2185B)),
                     shape = RoundedCornerShape(8.dp)
                 ) {
                     Text("Parent +1", color = Color.White, fontSize = 12.sp)
@@ -330,7 +331,7 @@ private fun ParentChildRecompositionCard() {
                         childDisplayCount = childCounter.count
                     },
                     modifier = Modifier.weight(1f),
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF4CAF50)),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4CAF50)),
                     shape = RoundedCornerShape(8.dp)
                 ) {
                     Text("Refresh", color = Color.White, fontSize = 12.sp)
@@ -345,7 +346,7 @@ private fun ParentChildRecompositionCard() {
                         parentState = 0
                     },
                     modifier = Modifier.weight(1f),
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF9E9E9E)),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF9E9E9E)),
                     shape = RoundedCornerShape(8.dp)
                 ) {
                     Text("Reset", color = Color.White, fontSize = 12.sp)
@@ -453,8 +454,8 @@ private fun UnstableTypesDemoCard() {
 
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        backgroundColor = Color(0xFFFFEBEE),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFFFEBEE)),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -537,7 +538,7 @@ val user = UnstableUser(
                 Button(
                     onClick = { trigger++ },
                     modifier = Modifier.weight(1f),
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFC62828)),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFC62828)),
                     shape = RoundedCornerShape(8.dp)
                 ) {
                     Text("Trigger", color = Color.White, fontSize = 11.sp)
@@ -546,7 +547,7 @@ val user = UnstableUser(
                 Button(
                     onClick = { displayCount = counter.count },
                     modifier = Modifier.weight(1f),
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF4CAF50)),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4CAF50)),
                     shape = RoundedCornerShape(8.dp)
                 ) {
                     Text("Refresh", color = Color.White, fontSize = 12.sp)
@@ -559,7 +560,7 @@ val user = UnstableUser(
                         trigger = 0
                     },
                     modifier = Modifier.weight(1f),
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF9E9E9E)),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF9E9E9E)),
                     shape = RoundedCornerShape(8.dp)
                 ) {
                     Text("Reset", color = Color.White, fontSize = 12.sp)
@@ -596,8 +597,8 @@ private fun StableAnnotationDemoCard() {
 
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        backgroundColor = Color(0xFFE8F5E9),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFE8F5E9)),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -649,7 +650,7 @@ data class ImmutableConfig(
                         displayCount = stableDisplayCount
                     )
 
-                    Divider(modifier = Modifier.padding(vertical = 8.dp))
+                    HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
 
                     ImmutableConfigDisplay(
                         config = immutableConfig,
@@ -681,7 +682,7 @@ data class ImmutableConfig(
                 Button(
                     onClick = { trigger++ },
                     modifier = Modifier.weight(1f),
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF2E7D32)),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2E7D32)),
                     shape = RoundedCornerShape(8.dp)
                 ) {
                     Text("Trigger", color = Color.White, fontSize = 12.sp)
@@ -693,7 +694,7 @@ data class ImmutableConfig(
                         immutableDisplayCount = immutableCounter.count
                     },
                     modifier = Modifier.weight(1f),
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF4CAF50)),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4CAF50)),
                     shape = RoundedCornerShape(8.dp)
                 ) {
                     Text("Refresh", color = Color.White, fontSize = 12.sp)
@@ -708,7 +709,7 @@ data class ImmutableConfig(
                         trigger = 0
                     },
                     modifier = Modifier.weight(1f),
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF9E9E9E)),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF9E9E9E)),
                     shape = RoundedCornerShape(8.dp)
                 ) {
                     Text("Reset", color = Color.White, fontSize = 12.sp)
@@ -812,8 +813,8 @@ private fun RememberOptimizationCard() {
 
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        backgroundColor = Color(0xFFFFF3E0),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFFFF3E0)),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -920,7 +921,7 @@ private fun RememberOptimizationCard() {
                 Button(
                     onClick = { trigger++ },
                     modifier = Modifier.weight(1f),
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFE65100)),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFE65100)),
                     shape = RoundedCornerShape(8.dp)
                 ) {
                     Text("Trigger ($trigger)", color = Color.White, fontSize = 11.sp)
@@ -932,7 +933,7 @@ private fun RememberOptimizationCard() {
                         withRememberDisplay = withRememberCounter.count
                     },
                     modifier = Modifier.weight(1f),
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF4CAF50)),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4CAF50)),
                     shape = RoundedCornerShape(8.dp)
                 ) {
                     Text("Refresh", color = Color.White, fontSize = 12.sp)
@@ -947,7 +948,7 @@ private fun RememberOptimizationCard() {
                         trigger = 0
                     },
                     modifier = Modifier.weight(1f),
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF9E9E9E)),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF9E9E9E)),
                     shape = RoundedCornerShape(8.dp)
                 ) {
                     Text("Reset", color = Color.White, fontSize = 12.sp)
@@ -988,8 +989,8 @@ private fun DerivedStateOfCard() {
 
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        backgroundColor = Color(0xFFE1BEE7),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFE1BEE7)),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -1079,7 +1080,7 @@ val filtered by remember(query, items) {
                 Button(
                     onClick = { query = if (query.isEmpty()) "A" else "" },
                     modifier = Modifier.weight(1f),
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF7B1FA2)),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF7B1FA2)),
                     shape = RoundedCornerShape(8.dp)
                 ) {
                     Text("Query", color = Color.White, fontSize = 10.sp)
@@ -1090,7 +1091,7 @@ val filtered by remember(query, items) {
                         items = items + ('A' + items.size).toString()
                     },
                     modifier = Modifier.weight(1f),
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF9C27B0)),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF9C27B0)),
                     shape = RoundedCornerShape(8.dp)
                 ) {
                     Text("Add", color = Color.White, fontSize = 10.sp)
@@ -1102,7 +1103,7 @@ val filtered by remember(query, items) {
                         composableDisplay = composableCounter.count
                     },
                     modifier = Modifier.weight(1f),
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF4CAF50)),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4CAF50)),
                     shape = RoundedCornerShape(8.dp)
                 ) {
                     Text("Refresh", color = Color.White, fontSize = 10.sp)
@@ -1118,7 +1119,7 @@ val filtered by remember(query, items) {
                         composableDisplay = 0
                     },
                     modifier = Modifier.weight(1f),
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF9E9E9E)),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF9E9E9E)),
                     shape = RoundedCornerShape(8.dp)
                 ) {
                     Text("Reset", color = Color.White, fontSize = 10.sp)
@@ -1145,8 +1146,8 @@ private fun LambdaStabilityCard() {
 
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        backgroundColor = Color(0xFFB2EBF2),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFB2EBF2)),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -1232,7 +1233,7 @@ private fun LambdaStabilityCard() {
                 Button(
                     onClick = { trigger++ },
                     modifier = Modifier.weight(1f),
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF00838F)),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF00838F)),
                     shape = RoundedCornerShape(8.dp)
                 ) {
                     Text("Trigger ($trigger)", color = Color.White, fontSize = 11.sp)
@@ -1244,7 +1245,7 @@ private fun LambdaStabilityCard() {
                         goodLambdaDisplay = goodLambdaCounter.count
                     },
                     modifier = Modifier.weight(1f),
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF4CAF50)),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4CAF50)),
                     shape = RoundedCornerShape(8.dp)
                 ) {
                     Text("Refresh", color = Color.White, fontSize = 12.sp)
@@ -1259,7 +1260,7 @@ private fun LambdaStabilityCard() {
                         trigger = 0
                     },
                     modifier = Modifier.weight(1f),
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF9E9E9E)),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF9E9E9E)),
                     shape = RoundedCornerShape(8.dp)
                 ) {
                     Text("Reset", color = Color.White, fontSize = 12.sp)

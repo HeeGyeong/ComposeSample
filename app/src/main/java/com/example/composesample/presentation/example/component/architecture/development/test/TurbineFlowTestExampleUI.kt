@@ -13,13 +13,14 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.Card
-import androidx.compose.material.Divider
-import androidx.compose.material.Switch
-import androidx.compose.material.SwitchDefaults
-import androidx.compose.material.Text
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
+import androidx.compose.material3.Text
+import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.runtime.getValue
@@ -150,9 +151,9 @@ private fun SectionTitle(text: String) {
 private fun ConceptCard(title: String, description: String, color: Color) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        backgroundColor = Color(0xFF2D2D2D),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFF2D2D2D)),
         shape = RoundedCornerShape(8.dp),
-        elevation = 2.dp
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Column(modifier = Modifier.padding(14.dp)) {
             Text(
@@ -187,9 +188,9 @@ private fun StateSimulationCard(
 
     Card(
         modifier = Modifier.fillMaxWidth(),
-        backgroundColor = Color(0xFF2D2D2D),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFF2D2D2D)),
         shape = RoundedCornerShape(8.dp),
-        elevation = 2.dp
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Column(modifier = Modifier.padding(14.dp)) {
             // 현재 상태 표시
@@ -227,7 +228,7 @@ private fun StateSimulationCard(
             }
 
             Spacer(Modifier.height(12.dp))
-            Divider(color = Color(0xFF444444))
+            HorizontalDivider(color = Color(0xFF444444))
             Spacer(Modifier.height(12.dp))
 
             // 실패 시뮬레이션 토글
@@ -253,7 +254,7 @@ private fun StateSimulationCard(
                 Button(
                     onClick = { onFetch(shouldFail) },
                     modifier = Modifier.weight(1f),
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF4A90D9)),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4A90D9)),
                     enabled = uiState !is FlowTestUiState.Loading
                 ) {
                     Text(text = "fetchData()", color = Color.White, fontSize = 12.sp)
@@ -261,7 +262,7 @@ private fun StateSimulationCard(
                 Button(
                     onClick = onReset,
                     modifier = Modifier.weight(1f),
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF555555))
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF555555))
                 ) {
                     Text(text = "reset()", color = Color.White, fontSize = 12.sp)
                 }
@@ -308,9 +309,9 @@ private fun StateSimulationCard(
 private fun AntiPatternCard() {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        backgroundColor = Color(0xFF2D1A1A),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFF2D1A1A)),
         shape = RoundedCornerShape(8.dp),
-        elevation = 2.dp
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Column(modifier = Modifier.padding(14.dp)) {
             Text(
@@ -352,9 +353,9 @@ private fun AntiPatternCard() {
 private fun CorrectPatternCard() {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        backgroundColor = Color(0xFF1A2D1A),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFF1A2D1A)),
         shape = RoundedCornerShape(8.dp),
-        elevation = 2.dp
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Column(modifier = Modifier.padding(14.dp)) {
             Text(
@@ -404,9 +405,9 @@ fun `fetch 완료 후 Success 상태`() = runTest {
 private fun TurbineGoodUseCard() {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        backgroundColor = Color(0xFF1A1A2D),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFF1A1A2D)),
         shape = RoundedCornerShape(8.dp),
-        elevation = 2.dp
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Column(modifier = Modifier.padding(14.dp)) {
             Text(

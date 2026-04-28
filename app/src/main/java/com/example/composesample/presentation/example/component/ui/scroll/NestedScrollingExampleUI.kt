@@ -16,9 +16,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
-import androidx.compose.material.Divider
-import androidx.compose.material.Text
+import androidx.compose.material3.Card
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Text
+import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
@@ -187,7 +188,7 @@ fun NestedScrollingExampleUI(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 16.dp, vertical = 4.dp),
-                        elevation = 4.dp,
+                        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
                         shape = RoundedCornerShape(8.dp)
                     ) {
                         Column(
@@ -249,7 +250,7 @@ private fun ScrollStatusCard(
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp),
-        elevation = 4.dp,
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         shape = RoundedCornerShape(8.dp)
     ) {
         Column(
@@ -316,7 +317,7 @@ private fun ScrollStatusCard(
 
             if (lastCalledFunction != "None") {
                 Spacer(modifier = Modifier.height(8.dp))
-                Divider()
+                HorizontalDivider()
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Text(
@@ -435,7 +436,7 @@ private fun CollapsingToolbar(
 ) {
     Card(
         modifier = modifier,
-        elevation = 8.dp,
+        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
         shape = RoundedCornerShape(bottomStart = 16.dp, bottomEnd = 16.dp)
     ) {
         Box(

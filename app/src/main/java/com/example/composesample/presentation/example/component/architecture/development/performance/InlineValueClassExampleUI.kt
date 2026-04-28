@@ -24,13 +24,14 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.Card
-import androidx.compose.material.Divider
-import androidx.compose.material.Icon
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Delete
@@ -114,8 +115,8 @@ fun InlineValueClassExampleUI(
 private fun InlineExplanationCard() {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        backgroundColor = Color(0xFFE3F2FD),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFE3F2FD)),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -161,7 +162,7 @@ private fun InlineExplanationCard() {
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            Divider(color = Color(0xFF1976D2).copy(alpha = 0.2f))
+            HorizontalDivider(color = Color(0xFF1976D2).copy(alpha = 0.2f))
 
             Spacer(modifier = Modifier.height(12.dp))
 
@@ -252,8 +253,8 @@ private fun UseCaseChip(text: String, color: Color) {
 private fun CodeComparisonCard() {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        backgroundColor = Color(0xFFF3E5F5),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFF3E5F5)),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -422,8 +423,8 @@ private fun PerformanceBenchmarkCard() {
         modifier = Modifier
             .fillMaxWidth()
             .scale(scale),
-        elevation = 4.dp,
-        backgroundColor = Color(0xFFE8EAF6),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFE8EAF6)),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -472,8 +473,7 @@ private fun PerformanceBenchmarkCard() {
                     Button(
                         onClick = { iterations = count },
                         modifier = Modifier.weight(1f),
-                        colors = ButtonDefaults.buttonColors(
-                            backgroundColor = if (iterations == count)
+                        colors = ButtonDefaults.buttonColors(containerColor = if (iterations == count)
                                 Color(0xFF3F51B5) else Color(0xFFC5CAE9)
                         ),
                         shape = RoundedCornerShape(8.dp),
@@ -523,7 +523,7 @@ private fun PerformanceBenchmarkCard() {
                     isRunning = false
                 },
                 modifier = Modifier.fillMaxWidth(),
-                colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF3F51B5)),
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF3F51B5)),
                 shape = RoundedCornerShape(8.dp),
                 enabled = !isRunning
             ) {
@@ -583,7 +583,7 @@ private fun PerformanceBenchmarkCard() {
                     }
 
                     Spacer(modifier = Modifier.height(16.dp))
-                    Divider(color = Color(0xFF3F51B5).copy(alpha = 0.2f))
+                    HorizontalDivider(color = Color(0xFF3F51B5).copy(alpha = 0.2f))
                     Spacer(modifier = Modifier.height(16.dp))
 
                     Text(

@@ -23,14 +23,16 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.Card
-import androidx.compose.material.Icon
-import androidx.compose.material.OutlinedTextField
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.material.TextFieldDefaults
+import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.ui.window.Dialog
@@ -119,8 +121,8 @@ fun QuickSettingsTileExampleUI(
 private fun CounterTileCard(counterValue: Int, context: Context) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        backgroundColor = Color(0xFFE8F5E9),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFE8F5E9)),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -184,7 +186,7 @@ private fun CounterTileCard(counterValue: Int, context: Context) {
                 Button(
                     onClick = { CounterTileService.resetCounter() },
                     modifier = Modifier.weight(1f),
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF2E7D32)),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2E7D32)),
                     shape = RoundedCornerShape(8.dp)
                 ) {
                     Text("카운터 리셋", color = Color.White, fontSize = 12.sp)
@@ -199,7 +201,7 @@ private fun CounterTileCard(counterValue: Int, context: Context) {
                             )
                         },
                         modifier = Modifier.weight(1f),
-                        colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF4CAF50)),
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4CAF50)),
                         shape = RoundedCornerShape(8.dp)
                     ) {
                         Text("타일 새로고침", color = Color.White, fontSize = 11.sp)
@@ -214,8 +216,8 @@ private fun CounterTileCard(counterValue: Int, context: Context) {
 private fun ToggleTileCard(toggleState: Boolean, context: Context) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        backgroundColor = Color(0xFFFCE4EC),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFFCE4EC)),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -282,7 +284,7 @@ private fun ToggleTileCard(toggleState: Boolean, context: Context) {
                         )
                     },
                     modifier = Modifier.fillMaxWidth(),
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFC2185B)),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFC2185B)),
                     shape = RoundedCornerShape(8.dp)
                 ) {
                     Text("타일 새로고침", color = Color.White, fontSize = 12.sp)
@@ -296,8 +298,8 @@ private fun ToggleTileCard(toggleState: Boolean, context: Context) {
 private fun TimerTileCard(timerSeconds: Int, isRunning: Boolean, context: Context) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        backgroundColor = Color(0xFFE1F5FE),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFE1F5FE)),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -362,8 +364,7 @@ private fun TimerTileCard(timerSeconds: Int, isRunning: Boolean, context: Contex
                 Button(
                     onClick = { TimerTileService.toggleTimer() },
                     modifier = Modifier.weight(1f),
-                    colors = ButtonDefaults.buttonColors(
-                        backgroundColor = if (isRunning) Color(0xFFF44336) else Color(0xFF4CAF50)
+                    colors = ButtonDefaults.buttonColors(containerColor = if (isRunning) Color(0xFFF44336) else Color(0xFF4CAF50)
                     ),
                     shape = RoundedCornerShape(8.dp)
                 ) {
@@ -377,7 +378,7 @@ private fun TimerTileCard(timerSeconds: Int, isRunning: Boolean, context: Contex
                 Button(
                     onClick = { TimerTileService.resetTimer() },
                     modifier = Modifier.weight(1f),
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF0277BD)),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF0277BD)),
                     shape = RoundedCornerShape(8.dp)
                 ) {
                     Text("리셋", color = Color.White, fontSize = 12.sp)
@@ -392,7 +393,7 @@ private fun TimerTileCard(timerSeconds: Int, isRunning: Boolean, context: Contex
                             )
                         },
                         modifier = Modifier.weight(1f),
-                        colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF03A9F4)),
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF03A9F4)),
                         shape = RoundedCornerShape(8.dp)
                     ) {
                         Text("새로고침", color = Color.White, fontSize = 11.sp)
@@ -407,8 +408,8 @@ private fun TimerTileCard(timerSeconds: Int, isRunning: Boolean, context: Contex
 private fun QuickActionTileCard(actionCount: Int, lastActionTime: String?, context: Context) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        backgroundColor = Color(0xFFFFF8E1),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFFFF8E1)),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -481,7 +482,7 @@ private fun QuickActionTileCard(actionCount: Int, lastActionTime: String?, conte
                 Button(
                     onClick = { QuickActionTileService.resetActionCount() },
                     modifier = Modifier.weight(1f),
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFFF8F00)),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFF8F00)),
                     shape = RoundedCornerShape(8.dp)
                 ) {
                     Text("카운트 리셋", color = Color.White, fontSize = 12.sp)
@@ -496,7 +497,7 @@ private fun QuickActionTileCard(actionCount: Int, lastActionTime: String?, conte
                             )
                         },
                         modifier = Modifier.weight(1f),
-                        colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFFFC107)),
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFC107)),
                         shape = RoundedCornerShape(8.dp)
                     ) {
                         Text("타일 새로고침", color = Color.White, fontSize = 11.sp)
@@ -517,8 +518,8 @@ private fun MemoTileCard(
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        backgroundColor = Color(0xFFF3E5F5),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFF3E5F5)),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -608,7 +609,7 @@ private fun MemoTileCard(
                 Button(
                     onClick = onAddMemoClick,
                     modifier = Modifier.weight(1f),
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF6A1B9A)),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF6A1B9A)),
                     shape = RoundedCornerShape(8.dp)
                 ) {
                     Text("메모 추가", color = Color.White, fontSize = 12.sp)
@@ -623,7 +624,7 @@ private fun MemoTileCard(
                             )
                         },
                         modifier = Modifier.weight(1f),
-                        colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF9C27B0)),
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF9C27B0)),
                         shape = RoundedCornerShape(8.dp)
                     ) {
                         Text("타일 새로고침", color = Color.White, fontSize = 11.sp)
@@ -691,8 +692,8 @@ private fun MemoInputDialog(
                 .fillMaxWidth()
                 .padding(16.dp),
             shape = RoundedCornerShape(16.dp),
-            backgroundColor = Color.White,
-            elevation = 8.dp
+            colors = CardDefaults.cardColors(containerColor = Color.White),
+            elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
         ) {
             Column(
                 modifier = Modifier.padding(20.dp)
@@ -718,7 +719,7 @@ private fun MemoInputDialog(
                             color = Color.Gray
                         )
                     },
-                    colors = TextFieldDefaults.outlinedTextFieldColors(
+                    colors = OutlinedTextFieldDefaults.colors(
                         focusedBorderColor = Color(0xFF6A1B9A),
                         cursorColor = Color(0xFF6A1B9A)
                     ),
@@ -734,8 +735,7 @@ private fun MemoInputDialog(
                     Button(
                         onClick = onDismiss,
                         modifier = Modifier.weight(1f),
-                        colors = ButtonDefaults.buttonColors(
-                            backgroundColor = Color(0xFFE0E0E0)
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFE0E0E0)
                         ),
                         shape = RoundedCornerShape(8.dp)
                     ) {
@@ -749,8 +749,7 @@ private fun MemoInputDialog(
                             }
                         },
                         modifier = Modifier.weight(1f),
-                        colors = ButtonDefaults.buttonColors(
-                            backgroundColor = Color(0xFF6A1B9A)
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF6A1B9A)
                         ),
                         shape = RoundedCornerShape(8.dp),
                         enabled = memoText.isNotBlank()
@@ -767,8 +766,8 @@ private fun MemoInputDialog(
 private fun HowToAddTileCard(context: Context) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        backgroundColor = Color(0xFFFFF3E0),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFFFF3E0)),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -807,7 +806,7 @@ private fun HowToAddTileCard(context: Context) {
                         context.startActivity(intent)
                     },
                     modifier = Modifier.weight(1f),
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFE65100)),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFE65100)),
                     shape = RoundedCornerShape(8.dp)
                 ) {
                     Text("설정 열기", color = Color.White, fontSize = 12.sp)
@@ -819,7 +818,7 @@ private fun HowToAddTileCard(context: Context) {
                             requestAddTile(context, CounterTileService::class.java, "Counter")
                         },
                         modifier = Modifier.weight(1f),
-                        colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFFF9800)),
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFF9800)),
                         shape = RoundedCornerShape(8.dp)
                     ) {
                         Text("타일 추가 요청", color = Color.White, fontSize = 11.sp)

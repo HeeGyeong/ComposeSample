@@ -7,7 +7,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Icon
@@ -44,7 +44,7 @@ fun ShimmerExampleUI(
         item {
             ShimmerItem()
 
-            Divider(
+            HorizontalDivider(
                 color = Color.Black,
                 thickness = 4.dp,
             )
@@ -58,7 +58,7 @@ fun ShimmerExampleUI(
                 ratio = 0.6f
             )
 
-            Divider(
+            HorizontalDivider(
                 color = Color.Black,
                 thickness = 4.dp,
             )
@@ -67,7 +67,7 @@ fun ShimmerExampleUI(
             ShimmerTestItem(ratio = 0.6f)
             ShimmerTestItem(ratio = 1.0f)
 
-            Divider(
+            HorizontalDivider(
                 color = Color.Black,
                 thickness = 4.dp,
             )

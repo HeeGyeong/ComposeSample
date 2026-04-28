@@ -26,10 +26,12 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
-import androidx.compose.material.OutlinedTextField
-import androidx.compose.material.Text
-import androidx.compose.material.TextFieldDefaults
+import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
@@ -322,14 +324,17 @@ private fun SearchTextField(
             Text(text = "검색할 제목을 입력해주세요.", color = Color.Black)
         },
         shape = RoundedCornerShape(12.dp),
-        colors = TextFieldDefaults.outlinedTextFieldColors(
-            backgroundColor = Color.Transparent,
+        colors = OutlinedTextFieldDefaults.colors(
+            focusedContainerColor = Color.Transparent,
+            unfocusedContainerColor = Color.Transparent,
             cursorColor = Color.Red,
-            placeholderColor = Color.LightGray,
+            focusedPlaceholderColor = Color.LightGray,
+            unfocusedPlaceholderColor = Color.LightGray,
             focusedBorderColor = Color.Black,
             unfocusedBorderColor = Color.Gray,
             errorBorderColor = Color.Red,
-            textColor = Color.Black,
+            focusedTextColor = Color.Black,
+            unfocusedTextColor = Color.Black,
         ),
         singleLine = true,
     )
@@ -386,7 +391,7 @@ fun ExampleCardSection(
             .fillMaxWidth()
             .padding(horizontal = 20.dp, vertical = 10.dp),
         shape = RoundedCornerShape(12.dp),
-        backgroundColor = Color.DarkGray,
+        colors = CardDefaults.cardColors(containerColor = Color.DarkGray),
     ) {
         Column(
             modifier = Modifier.padding(20.dp)
@@ -439,7 +444,7 @@ fun ExampleCardSection(
                             onButtonClick.invoke()
                         },
                     shape = RoundedCornerShape(12.dp),
-                    backgroundColor = Color.White,
+                    colors = CardDefaults.cardColors(containerColor = Color.White),
                 ) {
                     Column {
                         Text(
@@ -470,7 +475,7 @@ fun ExampleCardSection(
                                 )
                             },
                         shape = RoundedCornerShape(12.dp),
-                        backgroundColor = Color.White,
+                        colors = CardDefaults.cardColors(containerColor = Color.White),
                     ) {
                         Column {
                             Text(

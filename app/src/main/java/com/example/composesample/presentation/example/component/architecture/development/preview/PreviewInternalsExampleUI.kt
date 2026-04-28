@@ -17,11 +17,12 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
-import androidx.compose.material.Divider
-import androidx.compose.material.Switch
-import androidx.compose.material.SwitchDefaults
-import androidx.compose.material.Text
+import androidx.compose.material3.Card
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
+import androidx.compose.material3.Text
+import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -56,9 +57,9 @@ fun PreviewInternalsExampleUI(onBackEvent: () -> Unit) {
             item {
                 Card(
                     modifier = Modifier.fillMaxWidth(),
-                    backgroundColor = Color(0xFF2D2D2D),
+                    colors = CardDefaults.cardColors(containerColor = Color(0xFF2D2D2D)),
                     shape = RoundedCornerShape(8.dp),
-                    elevation = 2.dp
+                    elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
                 ) {
                     Column(modifier = Modifier.padding(14.dp)) {
                         Text(
@@ -141,9 +142,9 @@ fun PreviewInternalsExampleUI(onBackEvent: () -> Unit) {
             item {
                 Card(
                     modifier = Modifier.fillMaxWidth(),
-                    backgroundColor = Color(0xFF2D2D2D),
+                    colors = CardDefaults.cardColors(containerColor = Color(0xFF2D2D2D)),
                     shape = RoundedCornerShape(8.dp),
-                    elevation = 2.dp
+                    elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
                 ) {
                     Column(modifier = Modifier.padding(14.dp)) {
                         Text(
@@ -177,7 +178,7 @@ fun PreviewInternalsExampleUI(onBackEvent: () -> Unit) {
                             description = "Dynamic Color 색상 변형 동시 미리보기 (Android 12+)"
                         )
                         Spacer(Modifier.height(12.dp))
-                        Divider(color = Color(0xFF444444))
+                        HorizontalDivider(color = Color(0xFF444444))
                         Spacer(Modifier.height(12.dp))
                         Text(
                             text = "커스텀 MultiPreview 예시 (기존 PreviewExample.kt 참고):",
@@ -204,9 +205,9 @@ fun MyComposable() { ... }"""
             item {
                 Card(
                     modifier = Modifier.fillMaxWidth(),
-                    backgroundColor = Color(0xFF2D2D2D),
+                    colors = CardDefaults.cardColors(containerColor = Color(0xFF2D2D2D)),
                     shape = RoundedCornerShape(8.dp),
-                    elevation = 2.dp
+                    elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
                 ) {
                     Column(modifier = Modifier.padding(14.dp)) {
                         Text(
@@ -268,9 +269,9 @@ private fun LocalInspectionModeDemo() {
 
     Card(
         modifier = Modifier.fillMaxWidth(),
-        backgroundColor = Color(0xFF2D2D2D),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFF2D2D2D)),
         shape = RoundedCornerShape(8.dp),
-        elevation = 2.dp
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Column(modifier = Modifier.padding(14.dp)) {
             Row(
@@ -346,7 +347,7 @@ private fun LocalInspectionModeDemo() {
             }
 
             Spacer(Modifier.height(12.dp))
-            Divider(color = Color(0xFF444444))
+            HorizontalDivider(color = Color(0xFF444444))
             Spacer(Modifier.height(12.dp))
 
             Text(text = "코드 패턴:", color = Color(0xFF888888), fontSize = 12.sp)
@@ -413,9 +414,9 @@ private fun AnnotationPropertyCard(property: String, description: String, color:
 private fun PipelineStep(step: Int, title: String, description: String, color: Color) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        backgroundColor = Color(0xFF2D2D2D),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFF2D2D2D)),
         shape = RoundedCornerShape(8.dp),
-        elevation = 2.dp
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Row(
             modifier = Modifier.padding(12.dp),
