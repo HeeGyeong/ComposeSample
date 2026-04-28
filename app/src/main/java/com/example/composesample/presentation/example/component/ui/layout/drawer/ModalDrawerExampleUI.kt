@@ -34,7 +34,7 @@ import androidx.compose.ui.zIndex
 import kotlinx.coroutines.launch
 
 @Composable
-fun ModalDrawerUI(
+fun ModalDrawerExampleUI(
     onBackButtonClick: () -> Unit
 ) {
     val coroutineScope = rememberCoroutineScope()

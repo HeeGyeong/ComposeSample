@@ -87,8 +87,8 @@ import com.example.composesample.presentation.example.component.ui.layout.animat
 import com.example.composesample.presentation.example.component.ui.layout.bottomsheet.BottomSheetUI
 import com.example.composesample.presentation.example.component.ui.layout.bottomsheet.CustomBottomSheetUI
 import com.example.composesample.presentation.example.component.ui.layout.bottomsheet.ModalBottomSheetUI
-import com.example.composesample.presentation.example.component.ui.layout.drawer.ModalDrawerUI
-import com.example.composesample.presentation.example.component.ui.layout.drawer.ScaffoldDrawerUI
+import com.example.composesample.presentation.example.component.ui.layout.drawer.ModalDrawerExampleUI
+import com.example.composesample.presentation.example.component.ui.layout.drawer.ScaffoldDrawerExampleUI
 import com.example.composesample.presentation.example.component.ui.layout.flexbox.FlexBoxUI
 import com.example.composesample.presentation.example.component.ui.layout.flexbox.FlowRowLayoutExampleUI
 import com.example.composesample.presentation.example.component.ui.material3.Material3ExpressiveExampleUI
@@ -360,11 +360,11 @@ fun ExampleCaseUI(
                         }
 
                         ScaffoldDrawExample -> {
-                            ScaffoldDrawerUI(onBackEvent)
+                            ScaffoldDrawerExampleUI(onBackEvent)
                         }
 
                         ModalDrawExample -> {
-                            ModalDrawerUI(onBackEvent)
+                            ModalDrawerExampleUI(onBackEvent)
                         }
 
                         SwipeToDismissExample -> {

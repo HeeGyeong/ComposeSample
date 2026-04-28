@@ -34,7 +34,7 @@ import com.example.composesample.util.noRippleClickable
 import kotlinx.coroutines.launch
 
 @Composable
-fun ScaffoldDrawerUI(
+fun ScaffoldDrawerExampleUI(
     onBackButtonClick: () -> Unit
 ) {
     Box(
