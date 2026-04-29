@@ -153,7 +153,7 @@ object ConstValue {
     const val MultiTableInsertExample = "multiTableInsertExample"
 
     // ==================== 시스템 & 설정 예제 ====================
-    // PowerSaveMode(절전 모드), TargetSDK34Permission(권한 처리), PassingIntentData(Intent 전달), LanguageSetting(시스템 언어), LocalLanguageChange(앱 내 언어), Shortcut(앱 숏컷), QuickSettingsTile(빠른 설정 타일), DynamicAppLinks(동적 앱 링크), PredictiveBack(예측형 뒤로가기 제스처), HapticFeedback(햅틱 피드백)
+    // PowerSaveMode(절전 모드), TargetSDK34Permission(권한 처리), PassingIntentData(Intent 전달), LanguageSetting(시스템 언어), LocalLanguageChange(앱 내 언어), Shortcut(앱 숏컷), QuickSettingsTile(빠른 설정 타일), DynamicAppLinks(동적 앱 링크), PredictiveBack(예측형 뒤로가기 제스처), HapticFeedback(햅틱 피드백), BiometricAuth(생체 인증 — biometric-compose alpha)
     const val PowerSaveModeExample = "powerSaveModeExample"
     const val QuickSettingsTileExample = "quickSettingsTileExample"
     const val TargetSDK34PermissionExample = "targetSDK34PermissionExample"
@@ -164,6 +164,7 @@ object ConstValue {
     const val DynamicAppLinksExample = "dynamicAppLinksExample"
     const val PredictiveBackExample = "predictiveBackExample"
     const val HapticFeedbackExample = "hapticFeedbackExample"
+    const val BiometricAuthExample = "biometricAuthExample"
 
     // ==================== AI / 온디바이스 ML 예제 ====================
     // GeminiNano(ML Kit GenAI 온디바이스 추론 + Feature 가용성 + Cloud fallback)

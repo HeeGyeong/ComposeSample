@@ -3,6 +3,8 @@
 
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <!-- Biometric Auth (API 28+ 사용 시 권장) -->
+    <uses-permission android:name="android.permission.USE_BIOMETRIC" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />

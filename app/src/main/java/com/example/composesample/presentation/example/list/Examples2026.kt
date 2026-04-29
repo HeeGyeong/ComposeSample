@@ -336,6 +336,13 @@ val examples2026 = listOf(
         exampleType = ConstValue.MultiTableInsertExample
     ),
     ExampleObject(
+        lastUpdate = "26. 04. 30",
+        title = "Biometric Auth in Compose",
+        description = "androidx.biometric-compose(1.4.0-alpha07)의 rememberAuthenticationLauncher + biometricRequest로 생체 인증 처리: BiometricManager 가용성 진단, Class2/Class3 강도, Cancel/DeviceCredential/CustomOption 폴백, AuthenticationResult Success/Error/CustomFallbackSelected sealed 분기",
+        blogUrl = "",
+        exampleType = ConstValue.BiometricAuthExample
+    ),
+    ExampleObject(
         lastUpdate = "26. 04. 20",
         title = "Nav3 ViewModel Scope",
         description = "Navigation 3 에서 ViewModel 스코프가 어떻게 달라지는지 시뮬레이션: Nav2 Auto-Scope vs Nav3 기본 동작(스코프 없음) vs NavKey 단위 Store 매핑으로 이전 동작을 복원하는 패턴 비교",

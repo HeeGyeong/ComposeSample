@@ -90,6 +90,10 @@ dependencies {
     // Glance Widget
     implementation(libs.bundles.glance)
 
+    // Biometric (alpha — Compose 통합)
+    implementation(libs.biometric)
+    implementation(libs.biometricCompose)
+
     // Unit Test
     testImplementation(libs.bundles.unitTest)
 

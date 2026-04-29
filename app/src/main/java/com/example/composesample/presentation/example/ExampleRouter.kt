@@ -59,6 +59,7 @@ import com.example.composesample.presentation.example.component.interaction.swip
 import com.example.composesample.presentation.example.component.navigation.BottomNavigationActivity
 import com.example.composesample.presentation.example.component.system.ai.GeminiNanoExampleUI
 import com.example.composesample.presentation.example.component.system.deeplink.DynamicAppLinksExampleUI
+import com.example.composesample.presentation.example.component.system.platform.biometric.BiometricAuthExampleUI
 import com.example.composesample.presentation.example.component.system.platform.haptic.HapticFeedbackExampleUI
 import com.example.composesample.presentation.example.component.system.platform.predictiveback.PredictiveBackExampleUI
 import com.example.composesample.presentation.example.component.system.background.workmanager.WorkManagerUI
@@ -245,6 +246,7 @@ import com.example.composesample.util.ConstValue.WithContextExample
 import com.example.composesample.util.ConstValue.CoroutineBridgesExample
 import com.example.composesample.util.ConstValue.WorkManagerExample
 import com.example.composesample.util.ConstValue.DynamicAppLinksExample
+import com.example.composesample.util.ConstValue.BiometricAuthExample
 import com.example.composesample.util.ConstValue.HapticFeedbackExample
 import com.example.composesample.util.ConstValue.StabilityAnnotationsExample
 import com.example.composesample.util.ConstValue.PredictiveBackExample
@@ -765,6 +767,10 @@ fun ExampleCaseUI(
 
                         HapticFeedbackExample -> {
                             HapticFeedbackExampleUI(onBackEvent)
+                        }
+
+                        BiometricAuthExample -> {
+                            BiometricAuthExampleUI(onBackEvent)
                         }
 
                         StabilityAnnotationsExample -> {
