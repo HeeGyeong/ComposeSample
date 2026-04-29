@@ -338,7 +338,7 @@ val examples2026 = listOf(
     ExampleObject(
         lastUpdate = "26. 04. 30",
         title = "Biometric Auth in Compose",
-        description = "androidx.biometric-compose(1.4.0-alpha07)의 rememberAuthenticationLauncher + biometricRequest로 생체 인증 처리: BiometricManager 가용성 진단, Class2/Class3 강도, Cancel/DeviceCredential/CustomOption 폴백, AuthenticationResult Success/Error/CustomFallbackSelected sealed 분기",
+        description = "androidx.biometric-compose(1.4.0-alpha05)의 rememberAuthenticationLauncher + biometricRequest로 생체 인증 처리: BiometricManager 가용성 진단, Class2/Class3 강도, NegativeButton/DeviceCredential 폴백, AuthenticationResult Success/Error sealed 분기",
         blogUrl = "",
         exampleType = ConstValue.BiometricAuthExample
     ),
