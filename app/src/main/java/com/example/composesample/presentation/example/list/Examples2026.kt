@@ -29,6 +29,7 @@ val examples2026 = listOf(
         lastUpdate = "26. 01. 20",
         title = "Responsive TabRow",
         description = "SubcomposeLayout을 활용한 반응형 탭 구현",
+        blogUrl = "https://heegs.tistory.com/197",
         exampleType = ConstValue.ResponsiveTabRowExample
     ),
     ExampleObject(
