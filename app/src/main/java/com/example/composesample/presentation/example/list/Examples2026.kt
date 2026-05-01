@@ -36,6 +36,7 @@ val examples2026 = listOf(
         lastUpdate = "26. 01. 25",
         title = "Custom Text Rendering",
         description = "TextMeasurer와 Canvas를 활용한 커스텀 텍스트 렌더링",
+        blogUrl = "https://heegs.tistory.com/198",
         exampleType = ConstValue.CustomTextRenderingExample
     ),
     ExampleObject(
