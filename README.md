@@ -18,6 +18,7 @@ Jetpack Compose를 공부하고 실무에 적용하면서 발생했던 이슈와
 Clean Architecture 기반으로 구성되어 있으며, 컴포넌트들은 기능별로 체계적으로 분류되어 있어 원하는 예제를 쉽게 찾을 수 있습니다.
 
 - **최신 업데이트**
+  - 2026.05: 신규 예제 추가 (Accessible Focus Indicator — 키보드/D-pad 포커스 시각화 4가지 패턴 + IndicationNodeFactory + DrawModifierNode 커스텀 인디케이션)
   - 2026.04: 신규 예제 추가 (LazyStaggeredGrid 폭포수 그리드, Adaptive Layout WindowSizeClass, Custom Layout MeasurePolicy, Dynamic App Links, Screenshot Testing Paparazzi/Roborazzi, Compose Snapshot System, Compose UI Testing, Predictive Back Gesture, Spring/Tween/Snap 애니메이션, Haptic Feedback, Stability Annotations, Rich Content in Text Input, FlowRow/FlowColumn 공식 Flexbox, Preview-only Annotation(@RequiresOptIn), Coroutine Bridges(suspendCoroutine), Compose Loaders 수학 곡선 로딩, TextField Max Length 숨겨진 버그, Kotlin Name-Based Destructuring, Material 3 Expressive SecureTextField, Modifier Order in Compose, Flow Operators(buffer/conflate/debounce/sample), Multi-Table Inserts in Room(DAO 인터페이스 상속) 등). Compose Hot Reload(HotSwan) Gradle 플러그인 적용. Kotlin 2.3.20 + AGP 8.13.2 + Compose BOM 2026.03.01 + Material3 1.4.0 업그레이드.
   - 2026.03: 신규 예제 추가 (MotionBlur, LargeContentViewer, LocalContextStrings, EmbeddedPicker Compose 통합, Rebound 리컴포지션 모니터링, Coroutine Flow Testing with Turbine, Compose Preview Internals, Remember Patterns, Startup Optimization, AnimatedContent 심화 등)
   - 2026.02: 신규 예제 추가 (Transition, Dial, Photo Picker, Sticker Canvas 등)
