@@ -345,6 +345,13 @@ val examples2026 = listOf(
         exampleType = ConstValue.BiometricAuthExample
     ),
     ExampleObject(
+        lastUpdate = "26. 05. 04",
+        title = "Accessible Focus Indicator (Indication API)",
+        description = "키보드/D-pad 사용자를 위한 포커스 시각화 4가지: 기본 indication, Modifier.border + collectIsFocusedAsState 외곽선, scale 강조, IndicationNodeFactory + DrawModifierNode로 구현한 펄스 애니메이션 — 접근성 모범 사례",
+        blogUrl = "",
+        exampleType = ConstValue.AccessibleFocusIndicatorExample
+    ),
+    ExampleObject(
         lastUpdate = "26. 04. 20",
         title = "Nav3 ViewModel Scope",
         description = "Navigation 3 에서 ViewModel 스코프가 어떻게 달라지는지 시뮬레이션: Nav2 Auto-Scope vs Nav3 기본 동작(스코프 없음) vs NavKey 단위 Store 매핑으로 이전 동작을 복원하는 패턴 비교",

@@ -73,6 +73,7 @@ import com.example.composesample.presentation.example.component.system.platform.
 import com.example.composesample.presentation.example.component.system.platform.version.TargetSDK34ExampleUI
 import com.example.composesample.presentation.example.component.system.platform.webview.WebViewIssueUI
 import com.example.composesample.presentation.example.component.system.ui.widget.GlanceWidgetExampleUI
+import com.example.composesample.presentation.example.component.ui.accessibility.AccessibleFocusIndicatorExampleUI
 import com.example.composesample.presentation.example.component.ui.accessibility.LargeContentViewerExampleUI
 import com.example.composesample.presentation.example.component.ui.button.ButtonGroupExampleUI
 import com.example.composesample.presentation.example.component.ui.canvas.CanvasShapesExampleUI
@@ -181,6 +182,7 @@ import com.example.composesample.util.ConstValue.InitTestExample
 import com.example.composesample.util.ConstValue.InlineValueClassExample
 import com.example.composesample.util.ConstValue.KoinCompilerPluginExample
 import com.example.composesample.util.ConstValue.KtorExample
+import com.example.composesample.util.ConstValue.AccessibleFocusIndicatorExample
 import com.example.composesample.util.ConstValue.LargeContentViewerExample
 import com.example.composesample.util.ConstValue.LanguageSettingExample
 import com.example.composesample.util.ConstValue.LazyColumnExample
@@ -535,6 +537,10 @@ fun ExampleCaseUI(
 
                         StickerCanvasExample -> {
                             StickerCanvasExampleUI(onBackEvent)
+                        }
+
+                        AccessibleFocusIndicatorExample -> {
+                            AccessibleFocusIndicatorExampleUI(onBackEvent)
                         }
 
                         LargeContentViewerExample -> {

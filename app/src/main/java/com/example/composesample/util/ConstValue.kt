@@ -4,7 +4,7 @@ package com.example.composesample.util
 //  카테고리별 const 파일 분할 또는 sealed class 기반 라우팅 테이블로 재설계 필요 (별도 PR 권장).
 object ConstValue {
     // ==================== 기본 설정 ====================
-    const val UpdateDate = "26년 4월"
+    const val UpdateDate = "26년 5월"
 
     // ==================== Intent & Code Type ====================
     const val IntentType = "type"
@@ -197,6 +197,10 @@ object ConstValue {
     const val CursorIDEExample = "cursorIDEExample"
     const val SnapNotifyExample = "snapNotifyExample"
     const val AutoCloseableExample = "autoCloseableExample"
+
+    // ==================== 접근성 예제 ====================
+    // AccessibleFocusIndicator(키보드/D-pad 포커스 시각화 — 기본/Outline/Scale/Pulse 4가지 + Indication API 커스텀)
+    const val AccessibleFocusIndicatorExample = "accessibleFocusIndicatorExample"
 
     // ==================== Compose 1.7 새 기능 예제 ====================
     // Compose17Features(새 기능 모음), TextOverflow(Start/Middle Ellipsis), GraphicsLayer(BlendMode/ColorFilter), LookaheadScope(자동 애니메이션), FocusRestorer(포커스 복원), PathGraphics(reverse/contains)
