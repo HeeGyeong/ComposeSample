@@ -28,6 +28,16 @@ package com.example.composesample.presentation.example.component.ui.text
  * - `collectLatest` — 연속 변경 시 이전 재진입 작업을 취소
  * - 불변식(invariant) 강제는 UI 변환이 아닌 상태 관찰 레이어가 담당
  *
+ * ## DocumentEditingTextFieldExampleUI (문서 편집 수준 패턴)
+ * - 출처: https://medium.com/proandroiddev/when-text-input-becomes-document-editing-in-jetpack-compose-fa90be6ff013
+ *
+ * 핵심 개념:
+ * - `state.undoState.undo() / redo()`: TextFieldState에 내장된 편집 이력. 키보드 입력 + edit{} 변경이 동일 히스토리에 누적
+ * - `state.selection: TextRange`: collapsed=커서 단일 위치, !collapsed=범위 선택. edit{} 안에서 selection 직접 대입으로 제어
+ * - `edit { replace(start, end, str) }`: mutating buffer 조작. substring은 외부에서 미리 추출(buffer 내 인덱싱은 시점 의존적)
+ * - AnnotatedString 미리보기: 입력은 평문 유지, snapshotFlow로 관찰하여 별도 영역에 마크다운 토큰을 SpanStyle로 렌더링
+ * - 멀티 커서 시뮬레이션: 오프셋을 sortedDescending 순으로 삽입해야 인덱스 시프트로 깨지지 않음
+ *
  * ## RichContentTextInputExampleUI (리치 콘텐츠 수신)
  * - 공식 문서: https://developer.android.com/jetpack/compose/text/receive-content
  * 핵심 개념:

@@ -120,6 +120,7 @@ import com.example.composesample.presentation.example.component.ui.text.CustomTe
 import com.example.composesample.presentation.example.component.ui.text.LocalContextStringsExampleUI
 import com.example.composesample.presentation.example.component.ui.text.RichContentTextInputExampleUI
 import com.example.composesample.presentation.example.component.ui.text.TextFieldMaxLengthExampleUI
+import com.example.composesample.presentation.example.component.ui.text.DocumentEditingTextFieldExampleUI
 import com.example.composesample.presentation.example.component.ui.text.TextStyleUI
 import com.example.composesample.presentation.example.component.ui.visibility.VisibilityExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.performance.InlineValueClassExampleUI
@@ -260,6 +261,7 @@ import com.example.composesample.util.ConstValue.FlowRowLayoutExample
 import com.example.composesample.util.ConstValue.PreviewOnlyAnnotationExample
 import com.example.composesample.util.ConstValue.RichContentTextInputExample
 import com.example.composesample.util.ConstValue.TextFieldMaxLengthExample
+import com.example.composesample.util.ConstValue.DocumentEditingTextFieldExample
 import com.example.composesample.util.ConstValue.ComposeSnapshotExample
 import com.example.composesample.util.ConstValue.ComposeTestingExample
 import com.example.composesample.util.ConstValue.CustomLayoutExample
@@ -577,6 +579,10 @@ fun ExampleCaseUI(
 
                         TextFieldMaxLengthExample -> {
                             TextFieldMaxLengthExampleUI(onBackEvent)
+                        }
+
+                        DocumentEditingTextFieldExample -> {
+                            DocumentEditingTextFieldExampleUI(onBackEvent)
                         }
 
                         Material3ExpressiveExample -> {

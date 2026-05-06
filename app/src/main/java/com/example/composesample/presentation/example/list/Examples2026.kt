@@ -352,6 +352,13 @@ val examples2026 = listOf(
         exampleType = ConstValue.AccessibleFocusIndicatorExample
     ),
     ExampleObject(
+        lastUpdate = "26. 05. 06",
+        title = "Document Editing TextField",
+        description = "TextFieldState 심화 — undoState로 Undo/Redo, selection(TextRange) 직접 조작으로 전체선택/커서 이동/대문자 변환, snapshotFlow 기반 AnnotatedString 마크다운 미리보기, 멀티 커서 시뮬레이션(뒤에서부터 일괄 삽입)",
+        blogUrl = "",
+        exampleType = ConstValue.DocumentEditingTextFieldExample
+    ),
+    ExampleObject(
         lastUpdate = "26. 04. 20",
         title = "Nav3 ViewModel Scope",
         description = "Navigation 3 에서 ViewModel 스코프가 어떻게 달라지는지 시뮬레이션: Nav2 Auto-Scope vs Nav3 기본 동작(스코프 없음) vs NavKey 단위 Store 매핑으로 이전 동작을 복원하는 패턴 비교",
