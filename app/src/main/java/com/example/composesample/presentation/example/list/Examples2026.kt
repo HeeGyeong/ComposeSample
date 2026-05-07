@@ -359,6 +359,13 @@ val examples2026 = listOf(
         exampleType = ConstValue.DocumentEditingTextFieldExample
     ),
     ExampleObject(
+        lastUpdate = "26. 05. 07",
+        title = "Syntax Highlighting (간소화 데모)",
+        description = "AnnotatedString + 정규식 토크나이저로 Kotlin 코드 하이라이팅 미니 데모: 우선순위 정규식 패턴 + BooleanArray 점유 마스킹으로 주석/문자열 안 키워드 오인식 방지, snapshotFlow 기반 라이브 편집/미리보기 분리, 다크 테마 토큰 색상(키워드/타입/문자열/숫자/주석/함수/어노테이션)",
+        blogUrl = "",
+        exampleType = ConstValue.SyntaxHighlightingExample
+    ),
+    ExampleObject(
         lastUpdate = "26. 04. 20",
         title = "Nav3 ViewModel Scope",
         description = "Navigation 3 에서 ViewModel 스코프가 어떻게 달라지는지 시뮬레이션: Nav2 Auto-Scope vs Nav3 기본 동작(스코프 없음) vs NavKey 단위 Store 매핑으로 이전 동작을 복원하는 패턴 비교",
