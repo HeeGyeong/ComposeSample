@@ -20,6 +20,24 @@ package com.example.composesample.presentation.example.component.ui.canvas
  * - 헤드 인덱스 기준 꼬리(trail) 방식: 뒤로 갈수록 alpha/radius 감소
  * - `Canvas.drawCircle` 반복 호출로 점 기반 트레일 렌더링
  *
+ * ## ParticleEmitterExampleUI (Canvas 기반 물리 파티클 시스템)
+ * - 영감: https://github.com/PiotrPrus/ParticleEmitter (자체 구현은 외부 라이브러리 미사용)
+ *
+ * ### 핵심 개념
+ * - 게임 루프: `LaunchedEffect(Unit) { while(true) { withFrameNanos { ... } } }`
+ *   → frame 간 dt(초) 측정으로 프레임 레이트 변동에 무관한 일정한 체감 속도 보장
+ * - 시간 기반 적분: v += g·dt, p += v·dt — 단순 Euler integration
+ * - 중력: GRAVITY(폭죽 강함) / GRAVITY_LIGHT(별가루 약함)
+ * - 공기 저항(drag): v *= (1 - DRAG·dt) — 별가루의 부드러운 감쇠
+ * - 수명/페이드: life -= dt/maxLife, alpha = life — life ≤ 0이면 listIterator로 제거
+ * - 입력: `pointerInput { detectTapGestures(onPress=...) }`로 탭 위치에서 emit
+ *
+ * ### Canvas vs Layout 트레이드오프
+ * - Canvas: 모든 파티클 단일 DrawScope, drawCircle 반복 호출 — 측정/배치 비용 0
+ *   → 수백~수천 파티클까지 부드럽게 동작 (선택)
+ * - Layout(Box+offset Modifier): 파티클별 Composable — 100개만 넘어도 리컴포지션 비용 급증
+ *   → 시각 효과에는 부적합. 디버그/접근성/개별 입력 처리에만 의미
+ *
  * ## MonthPickerDialExampleUI (Airbnb ChromaDial — Month Picker)
  * - 출처: https://www.sinasamaki.com/month-picker-dial/
  *

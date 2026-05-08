@@ -359,6 +359,13 @@ val examples2026 = listOf(
         exampleType = ConstValue.DocumentEditingTextFieldExample
     ),
     ExampleObject(
+        lastUpdate = "26. 05. 08",
+        title = "Particle Emitter (물리 기반 파티클)",
+        description = "외부 라이브러리 없이 Canvas + withFrameNanos로 구현한 물리 기반 파티클 시스템: 폭죽(360° 방사형 폭발 + 강한 중력) / 별가루(위쪽 흩날림 + 약한 중력 + drag 감쇠) 두 가지 트리거 효과, dt 기반 적분으로 프레임 레이트 변동 보정, life 기반 알파 페이드아웃, Canvas vs Layout 렌더링 트레이드오프 설명",
+        blogUrl = "",
+        exampleType = ConstValue.ParticleEmitterExample
+    ),
+    ExampleObject(
         lastUpdate = "26. 05. 07",
         title = "Syntax Highlighting (간소화 데모)",
         description = "AnnotatedString + 정규식 토크나이저로 Kotlin 코드 하이라이팅 미니 데모: 우선순위 정규식 패턴 + BooleanArray 점유 마스킹으로 주석/문자열 안 키워드 오인식 방지, snapshotFlow 기반 라이브 편집/미리보기 분리, 다크 테마 토큰 색상(키워드/타입/문자열/숫자/주석/함수/어노테이션)",
