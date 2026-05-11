@@ -19,11 +19,23 @@ import androidx.compose.animation.core.FastOutLinearInEasing
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.LinearOutSlowInEasing
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateDp
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.gestures.detectDragGestures
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalDensity
+import kotlinx.coroutines.launch
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -163,6 +175,20 @@ fun AnimationsShowcaseExampleUI(onBackEvent: () -> Unit) {
                             "updateTransition: 하나의 상태 객체를 여러 animateXxx 가 공유 → 모든 속성이 동시에 같은 톤으로 움직임.\n" +
                             "  '여러 속성을 묶어 하나의 상태로 표현' 하고 싶을 때 적합 (e.g. 카드 선택/해제).",
                     bgColor = Color(0xFFEDE7F6)
+                )
+            }
+
+            item { HorizontalDivider() }
+            item { ShowcaseSectionHeader("D. InfiniteTransition + Drag-driven spring") }
+            item { SectionDInfiniteAndDrag(spec) }
+            item {
+                ShowcaseInfoCard(
+                    title = "InfiniteTransition vs Animatable + drag",
+                    description = "rememberInfiniteTransition: 무한 반복 애니메이션(로딩/펄스/회전 등). RepeatMode.Reverse 로 핑퐁, Restart 로 0→1 반복.\n" +
+                            "  → 슬라이더 duration 을 그대로 cycle 길이로 사용한다.\n" +
+                            "Animatable + animateTo: 제스처처럼 '강제로 값을 잡아끄는' 모션에 필요.\n" +
+                            "  drag 중에는 snapTo, 손을 떼면 spring 으로 원점 복귀. tween/spring 어느 쪽도 받을 수 있어 유연.",
+                    bgColor = Color(0xFFE0F2F1)
                 )
             }
 
@@ -401,6 +427,113 @@ private fun SectionCContentAndTransition(spec: ShowcaseSpec) {
         }
     }
 }
+
+@Composable
+private fun SectionDInfiniteAndDrag(spec: ShowcaseSpec) {
+    val tween = tween<Float>(durationMillis = spec.durationMs, easing = spec.easing)
+
+    // InfiniteTransition — duration 슬라이더가 cycle 길이가 된다.
+    val infinite = rememberInfiniteTransition(label = "D_infinite")
+    val pulseScale by infinite.animateFloat(
+        initialValue = 1.0f,
+        targetValue = 1.6f,
+        animationSpec = infiniteRepeatable(animation = tween, repeatMode = RepeatMode.Reverse),
+        label = "D_pulse"
+    )
+    val rotation by infinite.animateFloat(
+        initialValue = 0f,
+        targetValue = 360f,
+        animationSpec = infiniteRepeatable(animation = tween, repeatMode = RepeatMode.Restart),
+        label = "D_rotate"
+    )
+
+    ShowcaseDemoCard(
+        title = "Section D — Infinite + Drag",
+        toggled = false,
+        onToggle = { /* 무한 반복 / 드래그 — 토글 불필요 */ }
+    ) {
+        ShowcaseRow("InfiniteTransition\n(scale pulse)") {
+            Box(
+                modifier = Modifier
+                    .size(24.dp)
+                    .scale(pulseScale)
+                    .clip(CircleShape)
+                    .background(Color(0xFFD81B60))
+            )
+        }
+
+        ShowcaseRow("InfiniteTransition\n(rotation)") {
+            Box(
+                modifier = Modifier
+                    .size(28.dp)
+                    .graphicsLayerRotation(rotation)
+                    .clip(RoundedCornerShape(6.dp))
+                    .background(Color(0xFF00897B))
+            )
+        }
+
+        // Drag-driven Animatable — 손을 떼면 spring 으로 원점 복귀
+        DragSpringRow(spec = spec)
+    }
+}
+
+@Composable
+private fun DragSpringRow(spec: ShowcaseSpec) {
+    val density = LocalDensity.current
+    // 한쪽 한계(px) — Box 너비 약 절반 정도
+    val maxOffsetPx = with(density) { 80.dp.toPx() }
+    val offsetX = remember { Animatable(0f) }
+    val scope = rememberCoroutineScope()
+    // spec.duration 이 바뀌면 tween 으로 복귀할 때 톤이 함께 갱신되도록 LaunchedEffect 로 키로 묶음.
+    LaunchedEffect(spec.durationMs, spec.easing) { /* spec 변화 추적용 */ }
+
+    ShowcaseRow("Animatable + drag\n(놓으면 spring 복귀)") {
+        Box(
+            modifier = Modifier
+                .size(width = 140.dp, height = 32.dp)
+                .clip(RoundedCornerShape(6.dp))
+                .background(Color(0xFFECEFF1))
+                .pointerInput(Unit) {
+                    detectDragGestures(
+                        onDrag = { change, drag ->
+                            change.consume()
+                            scope.launch {
+                                val next = (offsetX.value + drag.x).coerceIn(-maxOffsetPx, maxOffsetPx)
+                                offsetX.snapTo(next)
+                            }
+                        },
+                        onDragEnd = {
+                            scope.launch {
+                                offsetX.animateTo(
+                                    targetValue = 0f,
+                                    animationSpec = spring(
+                                        dampingRatio = 0.5f,
+                                        stiffness = 200f
+                                    )
+                                )
+                            }
+                        },
+                        onDragCancel = {
+                            scope.launch { offsetX.animateTo(0f, animationSpec = spring()) }
+                        }
+                    )
+                },
+            contentAlignment = Alignment.Center
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(24.dp)
+                    .offset { androidx.compose.ui.unit.IntOffset(offsetX.value.toInt(), 0) }
+                    .clip(CircleShape)
+                    .background(Color(0xFF1976D2))
+            )
+        }
+    }
+}
+
+/** Modifier 체인에서 회전만 적용하기 위한 작은 wrapper. */
+private fun Modifier.graphicsLayerRotation(degrees: Float): Modifier =
+    this.then(Modifier.graphicsLayer { rotationZ = degrees })
 
 /**
  * label + content 를 좌우 두 칸으로 배치하는 행 헬퍼.
