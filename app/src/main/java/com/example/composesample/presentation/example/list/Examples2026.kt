@@ -385,5 +385,12 @@ val examples2026 = listOf(
         description = "Navigation 3 에서 ViewModel 스코프가 어떻게 달라지는지 시뮬레이션: Nav2 Auto-Scope vs Nav3 기본 동작(스코프 없음) vs NavKey 단위 Store 매핑으로 이전 동작을 복원하는 패턴 비교",
         blogUrl = "",
         exampleType = ConstValue.Nav3ViewModelScopeExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 05. 12",
+        title = "Compose Animations Showcase (카탈로그)",
+        description = "공통 duration/easing 슬라이더로 5가지 모션 패턴을 한 화면에서 동시 비교: animateXxxAsState(Dp/Color/scale·alpha), AnimatedVisibility(slide+fade combo) + Crossfade, AnimatedContent(SizeTransform) + updateTransition(다중 속성 동기), rememberInfiniteTransition + Drag-driven Animatable spring 복귀",
+        blogUrl = "",
+        exampleType = ConstValue.AnimationsShowcaseExample
     )
 )

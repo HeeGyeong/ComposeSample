@@ -85,6 +85,7 @@ import com.example.composesample.presentation.example.component.ui.canvas.Partic
 import com.example.composesample.presentation.example.component.ui.canvas.MotionBlurExampleUI
 import com.example.composesample.presentation.example.component.ui.graphics.NewShadowApiExampleUI
 import com.example.composesample.presentation.example.component.ui.layout.animation.AnimatedContentExampleUI
+import com.example.composesample.presentation.example.component.ui.layout.animation.AnimationsShowcaseExampleUI
 import com.example.composesample.presentation.example.component.ui.layout.animation.SpringTweenSnapExampleUI
 import com.example.composesample.presentation.example.component.ui.layout.animation.AnimationExampleUI
 import com.example.composesample.presentation.example.component.ui.layout.animation.SharedElementTransitionExampleUI
@@ -259,6 +260,7 @@ import com.example.composesample.util.ConstValue.HapticFeedbackExample
 import com.example.composesample.util.ConstValue.StabilityAnnotationsExample
 import com.example.composesample.util.ConstValue.PredictiveBackExample
 import com.example.composesample.util.ConstValue.SpringTweenSnapExample
+import com.example.composesample.util.ConstValue.AnimationsShowcaseExample
 import com.example.composesample.util.ConstValue.AdaptiveLayoutExample
 import com.example.composesample.util.ConstValue.Compose17FeaturesExample
 import com.example.composesample.util.ConstValue.ComposeLoadersExample
@@ -793,6 +795,10 @@ fun ExampleCaseUI(
 
                         SpringTweenSnapExample -> {
                             SpringTweenSnapExampleUI(onBackEvent)
+                        }
+
+                        AnimationsShowcaseExample -> {
+                            AnimationsShowcaseExampleUI(onBackEvent)
                         }
 
                         HapticFeedbackExample -> {
