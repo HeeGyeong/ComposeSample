@@ -1,20 +1,27 @@
 package com.example.composesample.presentation.example.component.ui.layout.animation
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
+import androidx.compose.animation.SizeTransform
+import androidx.compose.animation.animateColor
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.updateTransition
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.togetherWith
 import androidx.compose.animation.core.Easing
 import androidx.compose.animation.core.FastOutLinearInEasing
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.LinearOutSlowInEasing
+import androidx.compose.animation.core.animateDp
 import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -142,6 +149,20 @@ fun AnimationsShowcaseExampleUI(onBackEvent: () -> Unit) {
                             "Crossfade: 동일 슬롯에서 '키'가 바뀔 때 이전 콘텐츠를 페이드 아웃, 새 콘텐츠를 페이드 인.\n" +
                             "두 API 모두 같은 tween(durationMs, easing) 을 받지만, 입력 트리거가 다르다는 점이 핵심.",
                     bgColor = Color(0xFFFCE4EC)
+                )
+            }
+
+            item { HorizontalDivider() }
+            item { ShowcaseSectionHeader("C. AnimatedContent + updateTransition") }
+            item { SectionCContentAndTransition(spec) }
+            item {
+                ShowcaseInfoCard(
+                    title = "AnimatedContent(SizeTransform) vs updateTransition",
+                    description = "AnimatedContent: '콘텐츠 자체'가 교체될 때 enter/exit 와 함께 컨테이너 크기까지 자연스럽게 보간.\n" +
+                            "  SizeTransform(clip = false) { initialSize, targetSize -> ... } 으로 크기 변화 톤 직접 제어.\n" +
+                            "updateTransition: 하나의 상태 객체를 여러 animateXxx 가 공유 → 모든 속성이 동시에 같은 톤으로 움직임.\n" +
+                            "  '여러 속성을 묶어 하나의 상태로 표현' 하고 싶을 때 적합 (e.g. 카드 선택/해제).",
+                    bgColor = Color(0xFFEDE7F6)
                 )
             }
 
@@ -296,6 +317,87 @@ private fun SectionBVisibilityAndCrossfade(spec: ShowcaseSpec) {
                     )
                 }
             }
+        }
+    }
+}
+
+@Composable
+private fun SectionCContentAndTransition(spec: ShowcaseSpec) {
+    var stateIndex by remember { mutableStateOf(0) }
+    val tween = tween<Float>(durationMillis = spec.durationMs, easing = spec.easing)
+    val dpTween = tween<Dp>(durationMillis = spec.durationMs, easing = spec.easing)
+    val colorTween = tween<Color>(durationMillis = spec.durationMs, easing = spec.easing)
+    val intSizeTween = tween<androidx.compose.ui.unit.IntSize>(durationMillis = spec.durationMs, easing = spec.easing)
+    val labels = listOf("SHORT", "MEDIUM CONTENT", "VERY LONG CONTENT STRING")
+
+    ShowcaseDemoCard(
+        title = "Section C — AnimatedContent / Transition",
+        toggled = stateIndex != 0,
+        onToggle = { stateIndex = (stateIndex + 1) % labels.size }
+    ) {
+        // AnimatedContent — 콘텐츠 변경 + SizeTransform 으로 컨테이너 크기 보간
+        ShowcaseRow("AnimatedContent\n(SizeTransform)") {
+            AnimatedContent(
+                targetState = labels[stateIndex],
+                transitionSpec = {
+                    (fadeIn(animationSpec = tween) togetherWith fadeOut(animationSpec = tween))
+                        .using(SizeTransform(clip = false) { _, _ -> intSizeTween })
+                },
+                label = "C_animatedContent"
+            ) { label ->
+                Box(
+                    modifier = Modifier
+                        .height(28.dp)
+                        .clip(RoundedCornerShape(6.dp))
+                        .background(Color(0xFF3949AB))
+                        .padding(horizontal = 10.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = label,
+                        color = Color.White,
+                        fontSize = 11.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            }
+        }
+
+        // updateTransition — 단일 상태에서 여러 속성을 동시에 보간
+        val transition = updateTransition(targetState = stateIndex, label = "C_transition")
+        val boxSize by transition.animateDp(
+            transitionSpec = { dpTween },
+            label = "C_size"
+        ) { idx ->
+            when (idx) {
+                0 -> 28.dp
+                1 -> 44.dp
+                else -> 64.dp
+            }
+        }
+        val boxColor by transition.animateColor(
+            transitionSpec = { colorTween },
+            label = "C_color"
+        ) { idx ->
+            when (idx) {
+                0 -> Color(0xFF66BB6A)
+                1 -> Color(0xFFFFA726)
+                else -> Color(0xFFEF5350)
+            }
+        }
+        val boxAlpha by transition.animateFloat(
+            transitionSpec = { tween },
+            label = "C_alpha"
+        ) { idx -> if (idx == 0) 1.0f else 0.7f }
+
+        ShowcaseRow("updateTransition\n(size+color+alpha)") {
+            Box(
+                modifier = Modifier
+                    .size(boxSize)
+                    .alpha(boxAlpha)
+                    .clip(RoundedCornerShape(6.dp))
+                    .background(boxColor)
+            )
         }
     }
 }
