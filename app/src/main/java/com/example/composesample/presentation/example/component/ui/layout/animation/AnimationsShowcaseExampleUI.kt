@@ -1,6 +1,14 @@
 package com.example.composesample.presentation.example.component.ui.layout.animation
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.Crossfade
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.core.Easing
 import androidx.compose.animation.core.FastOutLinearInEasing
 import androidx.compose.animation.core.FastOutSlowInEasing
@@ -123,6 +131,20 @@ fun AnimationsShowcaseExampleUI(onBackEvent: () -> Unit) {
                 )
             }
 
+            item { HorizontalDivider() }
+            item { ShowcaseSectionHeader("B. AnimatedVisibility + Crossfade") }
+            item { SectionBVisibilityAndCrossfade(spec) }
+            item {
+                ShowcaseInfoCard(
+                    title = "AnimatedVisibility vs Crossfade",
+                    description = "AnimatedVisibility: 컴포저블의 등장/사라짐을 enter/exit 콤보로 표현.\n" +
+                            "  slideIn + fadeIn 처럼 여러 transition 을 + 연산자로 합성 가능.\n" +
+                            "Crossfade: 동일 슬롯에서 '키'가 바뀔 때 이전 콘텐츠를 페이드 아웃, 새 콘텐츠를 페이드 인.\n" +
+                            "두 API 모두 같은 tween(durationMs, easing) 을 받지만, 입력 트리거가 다르다는 점이 핵심.",
+                    bgColor = Color(0xFFFCE4EC)
+                )
+            }
+
             item { Spacer(modifier = Modifier.height(24.dp)) }
         }
     }
@@ -210,6 +232,106 @@ private fun SectionAAnimateAsState(spec: ShowcaseSpec) {
         ColorBox("Color tint", tint)
         ScaleAlphaBox("scale × alpha", scale = scale, alpha = alpha, color = Color(0xFF9C27B0))
     }
+}
+
+@Composable
+private fun SectionBVisibilityAndCrossfade(spec: ShowcaseSpec) {
+    var toggled by remember { mutableStateOf(false) }
+    val tween = tween<Float>(durationMillis = spec.durationMs, easing = spec.easing)
+    val intOffsetTween = tween<androidx.compose.ui.unit.IntOffset>(durationMillis = spec.durationMs, easing = spec.easing)
+
+    ShowcaseDemoCard(
+        title = "Section B — Visibility / Crossfade",
+        toggled = toggled,
+        onToggle = { toggled = !toggled }
+    ) {
+        ShowcaseRow("AnimatedVisibility\n(slide+fade)") {
+            AnimatedVisibility(
+                visible = toggled,
+                enter = slideInHorizontally(animationSpec = intOffsetTween) { -it } + fadeIn(animationSpec = tween),
+                exit = slideOutHorizontally(animationSpec = intOffsetTween) { -it } + fadeOut(animationSpec = tween)
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(width = 110.dp, height = 28.dp)
+                        .clip(RoundedCornerShape(6.dp))
+                        .background(Color(0xFF00ACC1))
+                )
+            }
+        }
+
+        ShowcaseRow("AnimatedVisibility\n(scale+fade)") {
+            AnimatedVisibility(
+                visible = toggled,
+                enter = scaleIn(animationSpec = tween) + fadeIn(animationSpec = tween),
+                exit = scaleOut(animationSpec = tween) + fadeOut(animationSpec = tween)
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(28.dp)
+                        .clip(CircleShape)
+                        .background(Color(0xFFFF7043))
+                )
+            }
+        }
+
+        ShowcaseRow("Crossfade (콘텐츠 교체)") {
+            Crossfade(
+                targetState = toggled,
+                animationSpec = tween,
+                label = "B_crossfade"
+            ) { isOn ->
+                Box(
+                    modifier = Modifier
+                        .size(width = 120.dp, height = 28.dp)
+                        .clip(RoundedCornerShape(6.dp))
+                        .background(if (isOn) Color(0xFF8E24AA) else Color(0xFF26A69A)),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = if (isOn) "STATE B" else "STATE A",
+                        color = Color.White,
+                        fontSize = 11.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            }
+        }
+    }
+}
+
+/**
+ * label + content 를 좌우 두 칸으로 배치하는 행 헬퍼.
+ * content 람다는 RowScope/BoxScope receiver 가 없는 일반 @Composable 컨텍스트라서,
+ * 내부에서 AnimatedVisibility 같은 scope-확장 함수도 안전하게 호출할 수 있다.
+ */
+@Composable
+private fun ShowcaseRow(label: String, content: @Composable () -> Unit) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = label,
+            fontSize = 11.sp,
+            color = Color.DarkGray,
+            modifier = Modifier.weight(0.7f)
+        )
+        Box(
+            modifier = Modifier
+                .weight(1f)
+                .height(36.dp),
+            contentAlignment = Alignment.CenterStart
+        ) {
+            // BoxScope 안에서 다시 한 번 일반 컴포저블로 감싸 implicit RowScope/BoxScope 를 끊는다.
+            NoScope { content() }
+        }
+    }
+}
+
+@Composable
+private fun NoScope(content: @Composable () -> Unit) {
+    content()
 }
 
 @Composable
