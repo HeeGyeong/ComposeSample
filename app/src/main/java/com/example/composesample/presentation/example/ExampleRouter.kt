@@ -60,6 +60,7 @@ import com.example.composesample.presentation.example.component.navigation.Botto
 import com.example.composesample.presentation.example.component.system.ai.GeminiNanoExampleUI
 import com.example.composesample.presentation.example.component.system.deeplink.DynamicAppLinksExampleUI
 import com.example.composesample.presentation.example.component.system.platform.biometric.BiometricAuthExampleUI
+import com.example.composesample.presentation.example.component.system.security.AppSecurityExampleUI
 import com.example.composesample.presentation.example.component.system.platform.haptic.HapticFeedbackExampleUI
 import com.example.composesample.presentation.example.component.system.platform.predictiveback.PredictiveBackExampleUI
 import com.example.composesample.presentation.example.component.system.background.workmanager.WorkManagerUI
@@ -147,6 +148,7 @@ import com.example.composesample.presentation.example.component.architecture.dev
 import com.example.composesample.presentation.example.component.architecture.state.ComposeSnapshotExampleUI
 import com.example.composesample.presentation.example.component.architecture.state.SnapshotFlowExampleUI
 import com.example.composesample.util.ConstValue.AnimatedContentExample
+import com.example.composesample.util.ConstValue.AppSecurityExample
 import com.example.composesample.util.ConstValue.AnimationExample
 import com.example.composesample.util.ConstValue.ApiDisconnectExample
 import com.example.composesample.util.ConstValue.AutoCloseableExample
@@ -703,6 +705,10 @@ fun ExampleCaseUI(
 
                         StartupOptimizationExample -> {
                             StartupOptimizationExampleUI(onBackEvent)
+                        }
+
+                        AppSecurityExample -> {
+                            AppSecurityExampleUI(onBackEvent)
                         }
 
                         RememberPatternsExample -> {

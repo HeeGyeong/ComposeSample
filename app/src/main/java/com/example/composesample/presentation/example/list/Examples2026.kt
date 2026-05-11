@@ -373,6 +373,13 @@ val examples2026 = listOf(
         exampleType = ConstValue.SyntaxHighlightingExample
     ),
     ExampleObject(
+        lastUpdate = "26. 05. 11",
+        title = "App Security 실무 (Cert Pinning + KeyStore AES-GCM + Play Integrity)",
+        description = "Android 앱 보안 3대 패턴을 한 화면에서 비교: OkHttp CertificatePinner 로 자가 서명 인증서를 동적 생성해 정상/MITM 핀 매칭 시뮬레이션, AndroidKeyStore 에서 export 불가 AES-256 키 생성 후 AES-GCM 으로 평문 암호화/복호화(IV 매 호출 재생성), Play Integrity verdict 페이로드(appRecognition/deviceRecognition/appLicensing/nonceMatched) Mock 디코딩",
+        blogUrl = "",
+        exampleType = ConstValue.AppSecurityExample
+    ),
+    ExampleObject(
         lastUpdate = "26. 04. 20",
         title = "Nav3 ViewModel Scope",
         description = "Navigation 3 에서 ViewModel 스코프가 어떻게 달라지는지 시뮬레이션: Nav2 Auto-Scope vs Nav3 기본 동작(스코프 없음) vs NavKey 단위 Store 매핑으로 이전 동작을 복원하는 패턴 비교",
