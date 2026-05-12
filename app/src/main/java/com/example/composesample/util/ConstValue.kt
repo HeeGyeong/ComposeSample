@@ -171,8 +171,9 @@ object ConstValue {
     const val BiometricAuthExample = "biometricAuthExample"
 
     // ==================== 보안 예제 ====================
-    // AppSecurity(Certificate Pinning + AndroidKeyStore AES-GCM 암호화 저장 + Play Integrity Mock 응답 디코딩)
+    // AppSecurity(Certificate Pinning + AndroidKeyStore AES-GCM 암호화 저장 + Play Integrity Mock 응답 디코딩), HardwareKeystore(TEE/StrongBox 하드웨어 키 보관 검증 — API 23+ isInsideSecureHardware / API 31+ SECURITY_LEVEL)
     const val AppSecurityExample = "appSecurityExample"
+    const val HardwareKeystoreExample = "hardwareKeystoreExample"
 
     // ==================== AI / 온디바이스 ML 예제 ====================
     // GeminiNano(ML Kit GenAI 온디바이스 추론 + Feature 가용성 + Cloud fallback)

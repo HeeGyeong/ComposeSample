@@ -387,6 +387,13 @@ val examples2026 = listOf(
         exampleType = ConstValue.Nav3ViewModelScopeExample
     ),
     ExampleObject(
+        lastUpdate = "26. 05. 13",
+        title = "Hardware-Backed Keystore 검증",
+        description = "AndroidKeyStore 키가 실제 TEE/StrongBox 하드웨어에 보관되는지 런타임 진단: API 23~30 isInsideSecureHardware vs API 31+ securityLevel(SOFTWARE/TRUSTED_ENVIRONMENT/STRONGBOX) 분기, setIsStrongBoxBacked() StrongBoxUnavailableException 폴백, KeyInfo + SecretKeyFactory 메타데이터 조회 패턴",
+        blogUrl = "",
+        exampleType = ConstValue.HardwareKeystoreExample
+    ),
+    ExampleObject(
         lastUpdate = "26. 05. 12",
         title = "Compose Animations Showcase (카탈로그)",
         description = "공통 duration/easing 슬라이더로 5가지 모션 패턴을 한 화면에서 동시 비교: animateXxxAsState(Dp/Color/scale·alpha), AnimatedVisibility(slide+fade combo) + Crossfade, AnimatedContent(SizeTransform) + updateTransition(다중 속성 동기), rememberInfiniteTransition + Drag-driven Animatable spring 복귀",
