@@ -20,7 +20,7 @@ libraryVersion = "8.13.2"
 # Compose BOM이 ui/animation/runtime/foundation/material 등의 개별 버전을 통합 관리한다.
 # 개별 라이브러리 선언에서는 version을 지정하지 않음 — BOM이 전파한 버전을 그대로 사용.
 activityCompose = "1.10.0"
-composeBom = "2026.03.01"
+composeBom = "2026.05.00"
 
 # Lifecycle
 lifecycleRuntimeKtx = "2.9.1"
@@ -38,7 +38,7 @@ koinAndroidxCompose = "3.2.2"
 # Core-dependencies
 coreKtx = "1.13.1"
 appcompat = "1.7.0"
-material = "1.10.6"
+material = "1.11.1"
 material3 = "1.4.0"
 material3WindowSizeClass = "1.4.0"
 room = "2.8.4"
