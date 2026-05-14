@@ -286,7 +286,7 @@ private fun CollectAsStateWithLifecycleCard(viewModel: SnapshotFlowExampleViewMo
             Spacer(modifier = Modifier.height(8.dp))
 
             LinearProgressIndicator(
-                progress = animationProgress,
+                progress = { animationProgress },
                 modifier = Modifier.fillMaxWidth(),
                 color = Color(0xFF1976D2)
             )

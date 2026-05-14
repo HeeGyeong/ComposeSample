@@ -53,6 +53,9 @@ import com.example.composesample.presentation.MainHeader
 /**
  * BottomSheet Component
  */
+// M2 BottomSheetScaffoldState.progress 는 Compose 1.11에서 deprecated 되었지만,
+// 본 예제는 M2 BottomSheet 상태 디버깅 시각화 목적이므로 의도적으로 사용 유지
+@Suppress("DEPRECATION")
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ExpandedBottomSheet(

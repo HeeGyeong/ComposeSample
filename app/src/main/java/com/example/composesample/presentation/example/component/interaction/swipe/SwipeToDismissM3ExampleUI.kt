@@ -130,6 +130,9 @@ private fun HeaderCard(onBackEvent: () -> Unit) {
     }
 }
 
+// rememberSwipeToDismissBoxState 의 confirmValueChange 는 Compose 1.11에서 deprecated 되었으나
+// 본 예제는 dismiss 거부/허용 로직 자체를 시연하므로 동작 보존 위해 사용 유지
+@Suppress("DEPRECATION")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun BasicSwipeToDismissCard() {
@@ -206,6 +209,7 @@ private fun BasicSwipeToDismissCard() {
     }
 }
 
+@Suppress("DEPRECATION")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun TwoWaySwipeCard() {
@@ -301,6 +305,7 @@ private fun TwoWaySwipeCard() {
     }
 }
 
+@Suppress("DEPRECATION")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ConditionalSwipeCard() {
@@ -389,6 +394,7 @@ private fun ConditionalSwipeCard() {
     }
 }
 
+@Suppress("DEPRECATION")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun M2StyleAnimationCard() {

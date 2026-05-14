@@ -107,7 +107,7 @@ fun Progress() {
         }
 
         LinearProgressIndicator(
-            progress = progressLine.value
+            progress = { progressLine.value }
         )
 
         Text(
@@ -144,8 +144,8 @@ fun Progress() {
         }
 
         CircularProgressIndicator(
-            progress = progressCircle.value,
-            Modifier
+            progress = { progressCircle.value },
+            modifier = Modifier
                 .rotate(-90F)
                 .size(200.dp),
             color = Color(0xFF7BB661),

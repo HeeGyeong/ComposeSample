@@ -40,6 +40,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 
+// M2 BottomSheetScaffoldState.progress 는 Compose 1.11에서 deprecated 되었지만,
+// 본 예제는 M2 BottomSheet 상태 디버깅 시각화 목적이므로 의도적으로 사용 유지
+@Suppress("DEPRECATION")
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun BottomSheetUI(
@@ -160,6 +163,7 @@ fun BottomSheetUI(
     }
 }
 
+@Suppress("DEPRECATION")
 @Composable
 @ExperimentalMaterialApi
 fun BottomSheetDataCheckUI(
@@ -196,6 +200,7 @@ fun BottomSheetDataCheckUI(
     }
 }
 
+@Suppress("DEPRECATION")
 @OptIn(ExperimentalMaterialApi::class)
 val BottomSheetScaffoldState.currentFraction: Float
     get() {
