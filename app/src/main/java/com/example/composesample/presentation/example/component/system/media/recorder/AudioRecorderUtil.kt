@@ -6,6 +6,7 @@ import android.media.AudioManager
 import android.media.MediaPlayer
 import android.media.MediaRecorder
 import android.net.Uri
+import android.os.Build
 import android.util.Log
 import androidx.compose.runtime.MutableState
 import java.io.File
@@ -46,7 +47,13 @@ fun startMediaRecorder(
     mediaRecorder: MutableState<MediaRecorder?>,
 ) {
     try {
-        mediaRecorder.value = MediaRecorder()
+        // API 31(S)+ 부터 context-aware constructor 권장. 이하 단말은 deprecated no-arg 사용.
+        mediaRecorder.value = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            MediaRecorder(context)
+        } else {
+            @Suppress("DEPRECATION")
+            MediaRecorder()
+        }
         outputFile.value = createOutputFile(context)
 
         mediaRecorder.value?.apply {

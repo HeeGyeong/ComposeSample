@@ -1,7 +1,9 @@
 package com.example.composesample.presentation.example.component.system.platform.intent
 
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import androidx.core.os.BundleCompat
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.ExperimentalAnimationApi
@@ -49,12 +51,21 @@ class PassingIntentDataActivity : ComponentActivity() {
                         if (passingIntentData != null) {
                             PrintTextComponent("----- Search Key-Value -----")
                             for (key in passingIntentData.keySet()) {
-                                val value = passingIntentData.get(key)
+                                // API 33+ 부터 Bundle.get(String) deprecated → type-safe getter 우선 사용.
+                                val value: Any? = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                                    passingIntentData.getString(key)
+                                        ?: runCatching { passingIntentData.getInt(key) }.getOrNull()
+                                        ?: passingIntentData.getBundle(key)
+                                } else {
+                                    @Suppress("DEPRECATION")
+                                    passingIntentData.get(key)
+                                }
                                 Log.d("Intent Data", "Key: $key, Value: $value")
 
                                 if (key == "BundleData") {
-                                    val bundleData = passingIntentData.getBundle(key)
-                                        ?.getParcelable<ParcelableDataClass>("ParcelableData")
+                                    val bundleData = passingIntentData.getBundle(key)?.let { bundle ->
+                                        BundleCompat.getParcelable(bundle, "ParcelableData", ParcelableDataClass::class.java)
+                                    }
 
                                     PrintTextComponent("Key: $key, Value: $bundleData")
                                 } else {
