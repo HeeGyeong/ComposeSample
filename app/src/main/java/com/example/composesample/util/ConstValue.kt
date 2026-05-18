@@ -56,6 +56,9 @@ object ConstValue {
     const val Material3ExpressiveExample = "material3ExpressiveExample"
     const val ModifierOrderExample = "modifierOrderExample"
 
+    // FoundationStyleApi(Compose 1.11 Foundation Style API: MaterialTheme + CompositionLocal 토큰 확장 vs Style 객체 단일 전달 패턴 비교)
+    const val FoundationStyleApiExample = "foundationStyleApiExample"
+
     // ==================== 스크롤 & 제스처 예제 ====================
     // PullToRefresh(당겨서 새로고침), PullScreenPager(풀스크린 페이저), FlingBehavior(스크롤 커스텀), SwipeToDismiss(스와이프 삭제), SwipeToDismissM3(M3 스와이프 삭제), DragAndDrop(드래그 앤 드롭), NestedScrolling(중첩 스크롤), CustomScrollBehavior(커스텀 TopAppBarScrollBehavior), StickerCanvas(스티커 제스처 캔버스)
     const val PullToRefreshExample = "pullToRefreshExample"

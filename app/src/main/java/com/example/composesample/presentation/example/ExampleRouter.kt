@@ -99,6 +99,7 @@ import com.example.composesample.presentation.example.component.ui.layout.drawer
 import com.example.composesample.presentation.example.component.ui.layout.flexbox.FlexBoxUI
 import com.example.composesample.presentation.example.component.ui.layout.flexbox.FlowRowLayoutExampleUI
 import com.example.composesample.presentation.example.component.ui.material3.Material3ExpressiveExampleUI
+import com.example.composesample.presentation.example.component.ui.style.FoundationStyleApiExampleUI
 import com.example.composesample.presentation.example.component.ui.layout.header.StickyHeaderExampleUI
 import com.example.composesample.presentation.example.component.ui.layout.lazycolumn.LazyColumnFlingBehaviorExampleUI
 import com.example.composesample.presentation.example.component.ui.layout.lazycolumn.LazyColumnIssueUI
@@ -202,6 +203,7 @@ import com.example.composesample.util.ConstValue.LookaheadScopeExample
 import com.example.composesample.util.ConstValue.LottieExample
 import com.example.composesample.util.ConstValue.MVIExample
 import com.example.composesample.util.ConstValue.Material3ExpressiveExample
+import com.example.composesample.util.ConstValue.FoundationStyleApiExample
 import com.example.composesample.util.ConstValue.ModalBottomSheetExample
 import com.example.composesample.util.ConstValue.MonthPickerDialExample
 import com.example.composesample.util.ConstValue.ParticleEmitterExample
@@ -607,6 +609,10 @@ fun ExampleCaseUI(
 
                         Material3ExpressiveExample -> {
                             Material3ExpressiveExampleUI(onBackEvent)
+                        }
+
+                        FoundationStyleApiExample -> {
+                            FoundationStyleApiExampleUI(onBackEvent)
                         }
 
                         NestedRoutesNav3Example -> {

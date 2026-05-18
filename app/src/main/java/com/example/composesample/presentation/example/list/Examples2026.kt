@@ -289,6 +289,13 @@ val examples2026 = listOf(
         exampleType = ConstValue.NameBasedDestructuringExample
     ),
     ExampleObject(
+        lastUpdate = "26. 05. 19",
+        title = "Foundation Style API (Compose 1.11)",
+        description = "디자인 토큰(typography/colors/shapes/spacing)을 단일 Immutable Style 객체로 묶어 하나의 CompositionLocal 로 전파하는 패턴 — Legacy(개별 Local) vs Style API(단일 Local) 비교 + copy() 부분 오버라이드 데모, Light/Dark/Brand 프리셋 토글",
+        blogUrl = "",
+        exampleType = ConstValue.FoundationStyleApiExample
+    ),
+    ExampleObject(
         lastUpdate = "26. 04. 15",
         title = "Material 3 Expressive (1.4.0 신규)",
         description = "Material3 1.4.0 신규 컴포넌트: SecureTextField(비밀번호 입력 + 난독화 모드), FloatingToolbar(플로팅 액션 바), VerticalDragHandle, ButtonGroup 개선사항",
