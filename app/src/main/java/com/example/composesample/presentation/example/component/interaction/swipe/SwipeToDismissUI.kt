@@ -1,3 +1,6 @@
+// M2 SwipeToDismiss / FractionalThreshold 의 의도적 시연 (M3 대체: SwipeToDismissM3ExampleUI)
+@file:Suppress("DEPRECATION")
+
 package com.example.composesample.presentation.example.component.interaction.swipe
 
 import androidx.compose.animation.AnimatedContent
@@ -66,8 +69,6 @@ fun SwipeToDismissUI(
 }
 
 // 아이템 dismiss 시 완전히 view에서 제거 처리 해야함.
-// M2 SwipeToDismiss / FractionalThreshold 의 의도적 시연. M3 대체는 SwipeToDismissM3ExampleUI 참고.
-@Suppress("DEPRECATION")
 @OptIn(ExperimentalMaterialApi::class, ExperimentalFoundationApi::class)
 @Composable
 fun SimpleSwipeToDismissUI(

@@ -5,10 +5,14 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.location.Address
 import android.location.Geocoder
 import android.location.LocationManager
 import android.net.wifi.WifiManager
+import android.os.Build
 import android.provider.Settings
+import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlin.coroutines.resume
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -483,7 +487,18 @@ suspend fun getLocationInfo(
 
             val geocoder = Geocoder(context, Locale.getDefault())
 
-            val addresses = geocoder.getFromLocation(location.latitude, location.longitude, 1)
+            // API 33(TIRAMISU)+ 부터 sync getFromLocation deprecated → async callback 버전을
+            // suspendCancellableCoroutine 으로 감싸 사용. 이하 단말은 sync 호출 유지.
+            val addresses: List<Address>? = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                suspendCancellableCoroutine { cont ->
+                    geocoder.getFromLocation(location.latitude, location.longitude, 1) { result ->
+                        if (cont.isActive) cont.resume(result)
+                    }
+                }
+            } else {
+                @Suppress("DEPRECATION")
+                geocoder.getFromLocation(location.latitude, location.longitude, 1)
+            }
             if (addresses.isNullOrEmpty()) {
                 throw Exception("주소 정보를 가져올 수 없습니다")
             }

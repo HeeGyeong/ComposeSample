@@ -1,8 +1,9 @@
 package com.example.composesample.presentation.example.component.navigation
 
+import android.app.Activity
 import android.content.Context
+import android.content.ContextWrapper
 import android.util.Log
-import android.view.inputmethod.InputMethodManager
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -31,6 +32,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.navigation.NavHostController
 import com.example.composesample.util.noRippleClickable
 
@@ -51,12 +54,23 @@ fun ColumnScope.BottomNavigationAPIComponent(
 
     Text(
         modifier = Modifier.noRippleClickable {
-            val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0)
+            // imm.toggleSoftInput(SHOW_FORCED, ...) 는 Android 11(API 30)+ 에서 deprecated.
+            // WindowInsetsControllerCompat 로 IME 표시 요청하도록 변경.
+            context.findActivity()?.let { activity ->
+                val window = activity.window ?: return@noRippleClickable
+                val decor = window.decorView
+                WindowCompat.getInsetsController(window, decor).show(WindowInsetsCompat.Type.ime())
+            }
         },
         text = "클릭하면 키보드가 올라갑니다.\n키보드를 올려서 위치를 확인하세요.",
         color = Color.Black
     )
+}
+
+private tailrec fun Context.findActivity(): Activity? = when (this) {
+    is Activity -> this
+    is ContextWrapper -> baseContext.findActivity()
+    else -> null
 }
 
 @Composable
