@@ -80,7 +80,7 @@ object ConstValue {
     const val ModalDrawExample = "modalDrawExample"
 
     // ==================== 애니메이션 & 효과 예제 ====================
-    // Animation(다양한 애니메이션), AnimatedContent(콘텐츠 전환 심화), Lottie(Lottie/GIF), UIShimmer(로딩 효과), TextShimmer(텍스트 효과), NewShadowApi(Compose 1.9 Shadow), SharedElementTransition(공유 요소 전환), SpringTweenSnap(spring/tween/snap/keyframes 비교), AnimationsShowcase(공통 duration/easing 슬라이더로 5가지 패턴 동시 비교 — animateXxxAsState / AnimatedVisibility+Crossfade / AnimatedContent+updateTransition / InfiniteTransition+Drag spring)
+    // Animation(다양한 애니메이션), AnimatedContent(콘텐츠 전환 심화), Lottie(Lottie/GIF), UIShimmer(로딩 효과), TextShimmer(텍스트 효과), NewShadowApi(Compose 1.9 Shadow), SharedElementTransition(공유 요소 전환), SharedElementDebugTooling(Compose 1.11 LookaheadAnimationVisualDebugging 오버레이로 matched/multipleMatches/unmatched 시각화 + test coroutine API 안내), SpringTweenSnap(spring/tween/snap/keyframes 비교), AnimationsShowcase(공통 duration/easing 슬라이더로 5가지 패턴 동시 비교 — animateXxxAsState / AnimatedVisibility+Crossfade / AnimatedContent+updateTransition / InfiniteTransition+Drag spring)
     const val AnimationExample = "animationExample"
     const val AnimatedContentExample = "animatedContentExample"
     const val LottieExample = "lottieExample"
@@ -88,6 +88,7 @@ object ConstValue {
     const val TextShimmerExample = "textShimmerExample"
     const val NewShadowApiExample = "newShadowApiExample"
     const val SharedElementTransitionExample = "sharedElementTransitionExample"
+    const val SharedElementDebugToolingExample = "sharedElementDebugToolingExample"
     const val SpringTweenSnapExample = "springTweenSnapExample"
     const val AnimationsShowcaseExample = "animationsShowcaseExample"
 

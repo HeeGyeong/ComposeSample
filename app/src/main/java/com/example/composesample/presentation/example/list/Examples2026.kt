@@ -399,5 +399,12 @@ val examples2026 = listOf(
         description = "공통 duration/easing 슬라이더로 5가지 모션 패턴을 한 화면에서 동시 비교: animateXxxAsState(Dp/Color/scale·alpha), AnimatedVisibility(slide+fade combo) + Crossfade, AnimatedContent(SizeTransform) + updateTransition(다중 속성 동기), rememberInfiniteTransition + Drag-driven Animatable spring 복귀",
         blogUrl = "",
         exampleType = ConstValue.AnimationsShowcaseExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 05. 18",
+        title = "Shared Element Debug Tooling (Compose 1.11)",
+        description = "Compose 1.11 신규 LookaheadAnimationVisualDebugging Composable 로 SharedTransition 매칭 상태를 화면에서 시각화: 정상 매칭(overlayColor) / 동일 key 다중 매칭(multipleMatchesColor) / 한쪽에만 존재하는 미매칭 요소(unmatchedElementColor) 3가지 시나리오를 디버그 토글·색상 프리셋·Key 라벨 표시로 비교. SharedTransition test coroutine API(mainClock.advanceTimeBy / awaitFrame) 스니펫 포함",
+        blogUrl = "",
+        exampleType = ConstValue.SharedElementDebugToolingExample
     )
 )

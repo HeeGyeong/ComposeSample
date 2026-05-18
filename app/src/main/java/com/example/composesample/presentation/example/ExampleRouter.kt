@@ -89,6 +89,7 @@ import com.example.composesample.presentation.example.component.ui.layout.animat
 import com.example.composesample.presentation.example.component.ui.layout.animation.AnimationsShowcaseExampleUI
 import com.example.composesample.presentation.example.component.ui.layout.animation.SpringTweenSnapExampleUI
 import com.example.composesample.presentation.example.component.ui.layout.animation.AnimationExampleUI
+import com.example.composesample.presentation.example.component.ui.layout.animation.SharedElementDebugToolingExampleUI
 import com.example.composesample.presentation.example.component.ui.layout.animation.SharedElementTransitionExampleUI
 import com.example.composesample.presentation.example.component.ui.layout.bottomsheet.BottomSheetUI
 import com.example.composesample.presentation.example.component.ui.layout.bottomsheet.CustomBottomSheetUI
@@ -234,6 +235,7 @@ import com.example.composesample.util.ConstValue.SafFileExample
 import com.example.composesample.util.ConstValue.ScaffoldDrawExample
 import com.example.composesample.util.ConstValue.NameBasedDestructuringExample
 import com.example.composesample.util.ConstValue.SealedClassInterfaceExample
+import com.example.composesample.util.ConstValue.SharedElementDebugToolingExample
 import com.example.composesample.util.ConstValue.SharedElementTransitionExample
 import com.example.composesample.util.ConstValue.ShortcutExample
 import com.example.composesample.util.ConstValue.SideEffectExample
@@ -445,6 +447,10 @@ fun ExampleCaseUI(
 
                         SharedElementTransitionExample -> {
                             SharedElementTransitionExampleUI(onBackEvent)
+                        }
+
+                        SharedElementDebugToolingExample -> {
+                            SharedElementDebugToolingExampleUI(onBackEvent)
                         }
 
                         SSEExample -> {
