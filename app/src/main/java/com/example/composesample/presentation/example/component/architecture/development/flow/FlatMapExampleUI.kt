@@ -947,23 +947,23 @@ private fun ErrorHandlingCard() {
                                     .let { source ->
                                         when (selectedOperator) {
                                             "flatMapConcat" -> source.flatMapConcat { num ->
-                                                createErrorFlow(num, requestStatuses) {
-                                                    requestStatuses = it; log =
-                                                    (log + it) as List<String>
+                                                createErrorFlow(num, requestStatuses) { statuses, message ->
+                                                    requestStatuses = statuses
+                                                    log = log + message
                                                 }
                                             }
 
                                             "flatMapMerge" -> source.flatMapMerge { num ->
-                                                createErrorFlow(num, requestStatuses) {
-                                                    requestStatuses = it; log =
-                                                    (log + it) as List<String>
+                                                createErrorFlow(num, requestStatuses) { statuses, message ->
+                                                    requestStatuses = statuses
+                                                    log = log + message
                                                 }
                                             }
 
                                             else -> source.flatMapLatest { num ->
-                                                createErrorFlow(num, requestStatuses) {
-                                                    requestStatuses = it; log =
-                                                    (log + it) as List<String>
+                                                createErrorFlow(num, requestStatuses) { statuses, message ->
+                                                    requestStatuses = statuses
+                                                    log = log + message
                                                 }
                                             }
                                         }
@@ -1072,25 +1072,34 @@ private fun ErrorHandlingCard() {
 private fun createErrorFlow(
     num: Int,
     currentStatuses: List<RequestStatus>,
-    onUpdate: (List<RequestStatus>) -> Unit
+    onUpdate: (List<RequestStatus>, String) -> Unit
 ): kotlinx.coroutines.flow.Flow<Int> = flow {
     val index = num - 1
-    onUpdate(currentStatuses.mapIndexed { i, status ->
-        if (i == index) status.copy(state = RequestState.RUNNING) else status
-    })
+    onUpdate(
+        currentStatuses.mapIndexed { i, status ->
+            if (i == index) status.copy(state = RequestState.RUNNING) else status
+        },
+        "▶ Request-$num 시작"
+    )
 
     delay(500)
 
     if (num == 2) {
-        onUpdate(currentStatuses.mapIndexed { i, status ->
-            if (i == index) status.copy(state = RequestState.CANCELLED, progress = 0.5f) else status
-        })
+        onUpdate(
+            currentStatuses.mapIndexed { i, status ->
+                if (i == index) status.copy(state = RequestState.CANCELLED, progress = 0.5f) else status
+            },
+            "💥 Request-$num 실패"
+        )
         throw IllegalStateException("Request-2에서 에러 발생 💥")
     }
 
-    onUpdate(currentStatuses.mapIndexed { i, status ->
-        if (i == index) status.copy(state = RequestState.COMPLETED, progress = 1f) else status
-    })
+    onUpdate(
+        currentStatuses.mapIndexed { i, status ->
+            if (i == index) status.copy(state = RequestState.COMPLETED, progress = 1f) else status
+        },
+        "✓ Request-$num 완료"
+    )
 
     emit(num)
 }

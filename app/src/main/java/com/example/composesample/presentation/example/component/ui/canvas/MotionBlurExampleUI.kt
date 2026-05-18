@@ -52,6 +52,7 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Paint
+import androidx.compose.ui.graphics.nativePaint
 import androidx.compose.ui.graphics.TileMode
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.withTransform
@@ -552,7 +553,7 @@ private fun BlurWheelCanvas(
                 }
         ) {
             val paint = Paint()
-            paint.asFrameworkPaint().apply {
+            paint.nativePaint.apply {
                 isAntiAlias = true
                 maskFilter = BlurMaskFilter(blurRadius * density, style)
                 color = blurColor.toArgb()
@@ -565,9 +566,9 @@ private fun BlurWheelCanvas(
             drawIntoCanvas { canvas ->
                 val sweepAngle = 360f / wheelColors.size
                 wheelColors.forEachIndexed { i, color ->
-                    paint.asFrameworkPaint().color =
+                    paint.nativePaint.color =
                         color.copy(alpha = 0.7f).toArgb()
-                    paint.asFrameworkPaint().maskFilter =
+                    paint.nativePaint.maskFilter =
                         BlurMaskFilter(blurRadius * density, style)
                     canvas.drawArc(
                         left = cx - radius,
@@ -1070,7 +1071,7 @@ private fun ComparisonDemo() {
 
                                     drawIntoCanvas { canvas ->
                                         wheelColors.forEachIndexed { i, color ->
-                                            paint.asFrameworkPaint().apply {
+                                            paint.nativePaint.apply {
                                                 this.color = color.copy(alpha = 0.9f).toArgb()
                                                 maskFilter = BlurMaskFilter(6f * density, BlurMaskFilter.Blur.NORMAL)
                                                 isAntiAlias = true
