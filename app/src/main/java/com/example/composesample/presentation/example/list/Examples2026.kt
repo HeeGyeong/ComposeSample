@@ -338,6 +338,13 @@ val examples2026 = listOf(
         exampleType = ConstValue.KoinCompilerPluginExample
     ),
     ExampleObject(
+        lastUpdate = "26. 05. 21",
+        title = "Room FTS4 vs LIKE 검색 성능 비교",
+        description = "@Fts4 가상 테이블의 MATCH 연산자(역색인 기반)와 LIKE '%query%' 전체 스캔의 응답 시간/결과 수를 동일 시드(최대 100k 행)로 측정 — prefix 매칭(kotl*), 시드 행 수 조절, 결과 카드 비교",
+        blogUrl = "",
+        exampleType = ConstValue.RoomFtsSearchExample
+    ),
+    ExampleObject(
         lastUpdate = "26. 04. 29",
         title = "Multi-Table Inserts in Room",
         description = "BaseInsertDao<T> 인터페이스 상속으로 @Insert 보일러플레이트 제거 + db.withTransaction { } 으로 Author/Post/Tag/CrossRef 4개 테이블을 원자적으로 insert (의도적 실패 시 전체 롤백 검증 포함)",
