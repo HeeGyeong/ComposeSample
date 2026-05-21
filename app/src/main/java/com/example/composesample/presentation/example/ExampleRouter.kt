@@ -151,6 +151,7 @@ import com.example.composesample.presentation.example.component.architecture.dev
 import com.example.composesample.presentation.example.component.architecture.development.performance.StabilityAnnotationsExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.test.ComposeTestingExampleUI
 import com.example.composesample.presentation.example.component.architecture.state.ComposeSnapshotExampleUI
+import com.example.composesample.presentation.example.component.architecture.state.PerItemViewModelExampleUI
 import com.example.composesample.presentation.example.component.architecture.state.SnapshotFlowExampleUI
 import com.example.composesample.util.ConstValue.AnimatedContentExample
 import com.example.composesample.util.ConstValue.AppSecurityExample
@@ -279,6 +280,7 @@ import com.example.composesample.util.ConstValue.TextFieldMaxLengthExample
 import com.example.composesample.util.ConstValue.DocumentEditingTextFieldExample
 import com.example.composesample.util.ConstValue.SyntaxHighlightingExample
 import com.example.composesample.util.ConstValue.ComposeSnapshotExample
+import com.example.composesample.util.ConstValue.PerItemViewModelExample
 import com.example.composesample.util.ConstValue.ComposeTestingExample
 import com.example.composesample.util.ConstValue.CustomLayoutExample
 import com.example.composesample.util.ConstValue.ModifierOrderExample
@@ -807,6 +809,10 @@ fun ExampleCaseUI(
 
                         ComposeSnapshotExample -> {
                             ComposeSnapshotExampleUI(onBackEvent)
+                        }
+
+                        PerItemViewModelExample -> {
+                            PerItemViewModelExampleUI(onBackEvent)
                         }
 
                         ComposeTestingExample -> {

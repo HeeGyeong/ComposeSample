@@ -117,7 +117,7 @@ object ConstValue {
     const val KoinCompilerPluginExample = "koinCompilerPluginExample"
 
     // ==================== Compose 상태 & Side Effect 예제 ====================
-    // SideEffect(부수 효과 함수들), CompositionLocal(암시적 전달), StaticDynamicCompositionLocal(Static vs Dynamic), CompositionLocalTree(트리 시각화), RetainApi(retain API), SnapshotFlow(Flow 변환), InitTest(초기화 케이스), LocalContextStrings(LocalContext 문자열 안티패턴), RememberPatterns(rememberSaveable/rememberUpdatedState/derivedStateOf 비교), ComposeSnapshot(Snapshot 시스템 내부 동작)
+    // SideEffect(부수 효과 함수들), CompositionLocal(암시적 전달), StaticDynamicCompositionLocal(Static vs Dynamic), CompositionLocalTree(트리 시각화), RetainApi(retain API), SnapshotFlow(Flow 변환), InitTest(초기화 케이스), LocalContextStrings(LocalContext 문자열 안티패턴), RememberPatterns(rememberSaveable/rememberUpdatedState/derivedStateOf 비교), ComposeSnapshot(Snapshot 시스템 내부 동작), PerItemViewModel(LazyColumn 아이템별 독립 ViewModelStoreOwner)
     const val SideEffectExample = "sideEffectExample"
     const val CompositionLocalExample = "compositionLocalExample"
     const val StaticDynamicCompositionLocalExample = "staticDynamicCompositionLocalExample"
@@ -128,6 +128,7 @@ object ConstValue {
     const val LocalContextStringsExample = "localContextStringsExample"
     const val RememberPatternsExample = "rememberPatternsExample"
     const val ComposeSnapshotExample = "composeSnapshotExample"
+    const val PerItemViewModelExample = "perItemViewModelExample"
 
     // ==================== 코루틴 & 동시성 예제 ====================
     // Coroutine(기본 특징), CoroutinesInternals(내부 동작 원리), WithContext(withContext vs launch), CoroutineBridges(콜백→suspend 변환 패턴)

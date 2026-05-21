@@ -415,6 +415,13 @@ val examples2026 = listOf(
         exampleType = ConstValue.AnimationsShowcaseExample
     ),
     ExampleObject(
+        lastUpdate = "26. 05. 22",
+        title = "Per-Item ViewModels in Compose",
+        description = "LazyColumn 의 각 아이템에 독립 ViewModel 스코프를 부여하는 패턴 — 단일 화면 ViewModel 공유 시 발생하는 상태 결합 vs CompositionLocalProvider(LocalViewModelStoreOwner) + 키별 ViewModelStore 매니저 + DisposableEffect onDispose 의 store.clear() 로 메모리 누수 방지하는 per-key 스코프 비교",
+        blogUrl = "",
+        exampleType = ConstValue.PerItemViewModelExample
+    ),
+    ExampleObject(
         lastUpdate = "26. 05. 18",
         title = "Shared Element Debug Tooling (Compose 1.11)",
         description = "Compose 1.11 신규 LookaheadAnimationVisualDebugging Composable 로 SharedTransition 매칭 상태를 화면에서 시각화: 정상 매칭(overlayColor) / 동일 key 다중 매칭(multipleMatchesColor) / 한쪽에만 존재하는 미매칭 요소(unmatchedElementColor) 3가지 시나리오를 디버그 토글·색상 프리셋·Key 라벨 표시로 비교. SharedTransition test coroutine API(mainClock.advanceTimeBy / awaitFrame) 스니펫 포함",

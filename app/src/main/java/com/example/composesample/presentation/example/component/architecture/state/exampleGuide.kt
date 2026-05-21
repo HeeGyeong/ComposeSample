@@ -25,4 +25,13 @@ package com.example.composesample.presentation.example.component.architecture.st
  * - State<T>는 내부적으로 StateStateRecord를 통해 Snapshot별 값을 관리
  * - Composition은 매 프레임 GlobalSnapshot을 통해 변경된 State를 감지하고 리컴포지션을 예약
  * - derivedStateOf는 내부적으로 DerivedSnapshotState로 구현되며, 읽기 시점에 의존성을 등록
+ *
+ * --- Per-Item ViewModels in Compose ---
+ * - 참고: https://saurabharora.dev/posts/per-item-viewmodels-in-compose/
+ * - 핵심: LazyColumn 의 각 아이템에 독립 ViewModel 스코프를 부여
+ * - 패턴: CompositionLocalProvider(LocalViewModelStoreOwner provides itemOwner) 로 store 교체
+ *         → viewModel() 호출은 그대로 두고 store 출처만 갈아끼움
+ * - 메모리 정리: DisposableEffect onDispose 에서 store.clear() 로 ViewModel.onCleared() 호출
+ * - 주의: Lifecycle 2.11+ 에서는 ViewModelStoreOwner per-key 신규 API 제공 예정.
+ *         현재(2.9.x) 환경에서는 직접 매핑 매니저로 동등 효과 구현 가능.
  */
