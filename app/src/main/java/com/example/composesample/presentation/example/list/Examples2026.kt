@@ -43,6 +43,7 @@ val examples2026 = listOf(
         lastUpdate = "26. 01. 26",
         title = "Swipe to Dismiss (Material 3)",
         description = "Material 3의 SwipeToDismissBox를 활용한 스와이프 제스처",
+        blogUrl = "https://heegs.tistory.com/199",
         exampleType = ConstValue.SwipeToDismissM3Example
     ),
     ExampleObject(
