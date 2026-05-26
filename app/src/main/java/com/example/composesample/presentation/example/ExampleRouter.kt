@@ -50,6 +50,7 @@ import com.example.composesample.presentation.example.component.data.cache.DataC
 import com.example.composesample.presentation.example.component.data.paging.PagingExampleUI
 import com.example.composesample.presentation.example.component.data.room.MultiTableInsertExampleUI
 import com.example.composesample.presentation.example.component.data.room.RoomFtsSearchExampleUI
+import com.example.composesample.presentation.example.component.data.room.RoomIndexExampleUI
 import com.example.composesample.presentation.example.component.data.sse.SSEExampleUI
 import com.example.composesample.presentation.example.component.interaction.clickevent.ClickEventUI
 import com.example.composesample.presentation.example.component.interaction.drag.DragAndDropExampleUI
@@ -219,6 +220,7 @@ import com.example.composesample.util.ConstValue.NestedScrollingExample
 import com.example.composesample.util.ConstValue.NewShadowApiExample
 import com.example.composesample.util.ConstValue.MultiTableInsertExample
 import com.example.composesample.util.ConstValue.RoomFtsSearchExample
+import com.example.composesample.util.ConstValue.RoomIndexExample
 import com.example.composesample.util.ConstValue.PagingExample
 import com.example.composesample.util.ConstValue.PassingIntentDataExample
 import com.example.composesample.util.ConstValue.PathGraphicsExample
@@ -517,6 +519,10 @@ fun ExampleCaseUI(
 
                         RoomFtsSearchExample -> {
                             RoomFtsSearchExampleUI(onBackEvent)
+                        }
+
+                        RoomIndexExample -> {
+                            RoomIndexExampleUI(onBackEvent)
                         }
 
                         TypeExample -> {

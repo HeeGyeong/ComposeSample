@@ -339,6 +339,13 @@ val examples2026 = listOf(
         exampleType = ConstValue.KoinCompilerPluginExample
     ),
     ExampleObject(
+        lastUpdate = "26. 05. 26",
+        title = "Room Database Indices 성능 비교",
+        description = "@Index 단일(age)·복합(city,age) 인덱스를 인덱스 없는 테이블과 동일 시드(최대 100k 행)로 비교 — age 범위 조회/city 등호+정렬 두 시나리오의 응답 시간을 measureNanoTime 으로 측정하고, leftmost prefix 규칙(age 단독은 복합 인덱스 미활용)을 시연",
+        blogUrl = "",
+        exampleType = ConstValue.RoomIndexExample
+    ),
+    ExampleObject(
         lastUpdate = "26. 05. 21",
         title = "Room FTS4 vs LIKE 검색 성능 비교",
         description = "@Fts4 가상 테이블의 MATCH 연산자(역색인 기반)와 LIKE '%query%' 전체 스캔의 응답 시간/결과 수를 동일 시드(최대 100k 행)로 측정 — prefix 매칭(kotl*), 시드 행 수 조절, 결과 카드 비교",
