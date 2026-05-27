@@ -442,5 +442,12 @@ val examples2026 = listOf(
         description = "API 33+ RuntimeShader + graphicsLayer renderEffect 로 AGSL(SkSL) 셰이더를 실시간 튜닝 — noiseScale/colorShift/속도 uniform 을 슬라이더로 조절하고, 셰이더 소스 자체를 TextField 에서 편집하면 remember 키잉으로 즉시 재컴파일(컴파일 에러 표시). minSdk 24 환경을 위해 미지원 단말은 placeholder UI 로 분기",
         blogUrl = "",
         exampleType = ConstValue.AgslShaderTuningExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 05. 28",
+        title = "Type-Safe Feature Flag",
+        description = "외부 라이브러리(KSP/Firebase) 없이 구현한 4가지 패턴: sealed class 기반 type-safe flag 레지스트리(문자열 키 대신 타입으로 정의), StateFlow reactive 토글(collectAsState 구독 UI 자동 재구성), ModalBottomSheet 디버그 메뉴(런타임 강제 오버라이드), Remote Config 시뮬레이션(우선순위 DEBUG > REMOTE > LOCAL)",
+        blogUrl = "",
+        exampleType = ConstValue.FeatureFlagExample
     )
 )

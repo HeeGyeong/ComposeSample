@@ -29,6 +29,7 @@ import com.example.composesample.presentation.example.component.architecture.dev
 import com.example.composesample.presentation.example.component.architecture.development.coordinator.CoordinatorExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.cursor.CursorIDEExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.di.KoinCompilerPluginExampleUI
+import com.example.composesample.presentation.example.component.architecture.development.featureflag.FeatureFlagExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.init.InitTestExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.init.StartupOptimizationExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.preview.PreviewInternalsExampleUI
@@ -196,6 +197,7 @@ import com.example.composesample.util.ConstValue.GraphicsLayerExample
 import com.example.composesample.util.ConstValue.InitTestExample
 import com.example.composesample.util.ConstValue.InlineValueClassExample
 import com.example.composesample.util.ConstValue.KoinCompilerPluginExample
+import com.example.composesample.util.ConstValue.FeatureFlagExample
 import com.example.composesample.util.ConstValue.KtorExample
 import com.example.composesample.util.ConstValue.AccessibleFocusIndicatorExample
 import com.example.composesample.util.ConstValue.LargeContentViewerExample
@@ -857,6 +859,10 @@ fun ExampleCaseUI(
 
                         KoinCompilerPluginExample -> {
                             KoinCompilerPluginExampleUI(onBackEvent)
+                        }
+
+                        FeatureFlagExample -> {
+                            FeatureFlagExampleUI(onBackEvent)
                         }
 
                         else -> {
