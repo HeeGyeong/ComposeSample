@@ -435,5 +435,12 @@ val examples2026 = listOf(
         description = "Compose 1.11 신규 LookaheadAnimationVisualDebugging Composable 로 SharedTransition 매칭 상태를 화면에서 시각화: 정상 매칭(overlayColor) / 동일 key 다중 매칭(multipleMatchesColor) / 한쪽에만 존재하는 미매칭 요소(unmatchedElementColor) 3가지 시나리오를 디버그 토글·색상 프리셋·Key 라벨 표시로 비교. SharedTransition test coroutine API(mainClock.advanceTimeBy / awaitFrame) 스니펫 포함",
         blogUrl = "",
         exampleType = ConstValue.SharedElementDebugToolingExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 05. 27",
+        title = "AGSL Shader Live Tuning",
+        description = "API 33+ RuntimeShader + graphicsLayer renderEffect 로 AGSL(SkSL) 셰이더를 실시간 튜닝 — noiseScale/colorShift/속도 uniform 을 슬라이더로 조절하고, 셰이더 소스 자체를 TextField 에서 편집하면 remember 키잉으로 즉시 재컴파일(컴파일 에러 표시). minSdk 24 환경을 위해 미지원 단말은 placeholder UI 로 분기",
+        blogUrl = "",
+        exampleType = ConstValue.AgslShaderTuningExample
     )
 )

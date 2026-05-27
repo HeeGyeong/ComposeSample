@@ -56,6 +56,9 @@ object ConstValue {
     const val Material3ExpressiveExample = "material3ExpressiveExample"
     const val ModifierOrderExample = "modifierOrderExample"
 
+    // AgslShaderTuning(API 33+ RuntimeShader + graphicsLayer renderEffect 로 AGSL 셰이더 실시간 튜닝: uniform 슬라이더 조절 + 셰이더 소스 라이브 편집/재컴파일, 미지원 단말 placeholder)
+    const val AgslShaderTuningExample = "agslShaderTuningExample"
+
     // FoundationStyleApi(Compose 1.11 Foundation Style API: MaterialTheme + CompositionLocal 토큰 확장 vs Style 객체 단일 전달 패턴 비교)
     const val FoundationStyleApiExample = "foundationStyleApiExample"
 

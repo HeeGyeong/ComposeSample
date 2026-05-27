@@ -101,6 +101,7 @@ import com.example.composesample.presentation.example.component.ui.layout.drawer
 import com.example.composesample.presentation.example.component.ui.layout.flexbox.FlexBoxUI
 import com.example.composesample.presentation.example.component.ui.layout.flexbox.FlowRowLayoutExampleUI
 import com.example.composesample.presentation.example.component.ui.material3.Material3ExpressiveExampleUI
+import com.example.composesample.presentation.example.component.ui.shader.AgslShaderTuningExampleUI
 import com.example.composesample.presentation.example.component.ui.style.FoundationStyleApiExampleUI
 import com.example.composesample.presentation.example.component.ui.layout.header.StickyHeaderExampleUI
 import com.example.composesample.presentation.example.component.ui.layout.lazycolumn.LazyColumnFlingBehaviorExampleUI
@@ -154,6 +155,7 @@ import com.example.composesample.presentation.example.component.architecture.dev
 import com.example.composesample.presentation.example.component.architecture.state.ComposeSnapshotExampleUI
 import com.example.composesample.presentation.example.component.architecture.state.PerItemViewModelExampleUI
 import com.example.composesample.presentation.example.component.architecture.state.SnapshotFlowExampleUI
+import com.example.composesample.util.ConstValue.AgslShaderTuningExample
 import com.example.composesample.util.ConstValue.AnimatedContentExample
 import com.example.composesample.util.ConstValue.AppSecurityExample
 import com.example.composesample.util.ConstValue.HardwareKeystoreExample
@@ -547,6 +549,10 @@ fun ExampleCaseUI(
 
                         GraphicsLayerExample -> {
                             GraphicsLayerExampleUI(onBackEvent)
+                        }
+
+                        AgslShaderTuningExample -> {
+                            AgslShaderTuningExampleUI(onBackEvent)
                         }
 
                         LookaheadScopeExample -> {
