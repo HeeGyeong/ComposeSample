@@ -28,9 +28,9 @@ import org.koin.dsl.module
 val viewModelModule: Module = module {
     viewModel {
         ApiExampleViewModel(
-            get(),
-            get(named("post")),
-            get()
+            application = get(),
+            postApiInterface = get(named("post")),
+            ktorClient = get()
         )
     }
 
