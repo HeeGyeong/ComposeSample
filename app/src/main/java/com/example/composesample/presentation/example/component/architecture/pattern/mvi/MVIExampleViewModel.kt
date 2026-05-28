@@ -66,7 +66,7 @@ class MVIExampleViewModel(private val fetchDataUseCase: FetchDataUseCase) : View
     private fun fetchData() {
         viewModelScope.launch {
             try {
-                val data = fetchDataUseCase.execute()  // API 호출
+                val data = fetchDataUseCase()  // API 호출
                 sendEffect(MVISideEffect.ShowToast("API 데이터 변경됨 !"))
                 reduce {
                     it.copy(
