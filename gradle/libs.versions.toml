@@ -74,7 +74,6 @@ rxAndroid = "2.1.1"
 rxKotlin = "2.3.0"
 
 # Media
-# ffmpegKitFull = "5.1"
 lottieCompose = "6.0.0"
 
 # WorkManager
@@ -187,7 +186,6 @@ rxAndroid = { module = "io.reactivex.rxjava2:rxandroid", version.ref = "rxAndroi
 rxKotlin = { module = "io.reactivex.rxjava2:rxkotlin", version.ref = "rxKotlin" }
 
 # Media
-# ffmpegKitFull = { module = "com.arthenica:ffmpeg-kit-full", version.ref = "ffmpegKitFull" }
 lottieCompose = { module = "com.airbnb.android:lottie-compose", version.ref = "lottieCompose" }
 
 # WorkManager

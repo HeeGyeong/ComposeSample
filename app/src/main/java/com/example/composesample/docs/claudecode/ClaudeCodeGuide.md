@@ -13,11 +13,11 @@
 
 | 항목 | 내용 |
 |------|------|
-| 기술 스택 | Kotlin 2.1.0 / ComposeBom 2025.01.00 / Target SDK 35 |
+| 기술 스택 | Kotlin 2.3.20 / ComposeBom 2026.05.00 / Target SDK 35 |
 | 모듈 구조 | app / data / domain / Core / Coordinator |
 | 예제 추가 방법 | 4단계 워크플로우 (ConstValue → ExampleObject → UI → Router) |
 | 파일 네이밍 | `*ExampleUI.kt` / `exampleGuide.kt` 컨벤션 |
-| 빌드 제약 | CLI 빌드 불가, Android Studio 전용 |
+| 빌드 환경 | `./gradlew assembleDebug` (CLI) 또는 Android Studio |
 | 커밋 컨벤션 | 한국어 + feat/fix/refactor/chore/docs 접두어 |
 
 ### CLAUDE.md 작성 팁
@@ -157,14 +157,14 @@ type: project
 ### 커밋 제어
 ```
 "빌드 확인 후 커밋/푸시까지 진행해주세요"
-→ CLI 빌드 불가 프로젝트에선 별도 확인 필요
+→ `./gradlew assembleDebug`로 빌드 검증 후 커밋/푸시 진행
 ```
 
 ---
 
 ## 주의사항
 
-- CLI 빌드 불가 → Android Studio에서 직접 빌드 검증 필요
+- `./gradlew assembleDebug`(CLI) 또는 Android Studio에서 빌드 검증
 - CLAUDE.md가 없으면 프로젝트 규칙을 매번 설명해야 함
 - 메모리는 점-인-타임 스냅샷 — 코드 변경과 달라질 수 있음
 - 민감한 정보(API 키 등)는 메모리에 저장하지 말 것
