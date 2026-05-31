@@ -1,8 +1,8 @@
 package com.example.composesample.presentation.example.list
 
 import com.example.composesample.util.ConstValue
-import com.example.domain.model.ExampleMoveType
-import com.example.domain.model.ExampleObject
+import com.example.composesample.presentation.example.model.ExampleMoveType
+import com.example.composesample.presentation.example.model.ExampleObject
 
 val examplesWithoutDate = listOf(
     ExampleObject(

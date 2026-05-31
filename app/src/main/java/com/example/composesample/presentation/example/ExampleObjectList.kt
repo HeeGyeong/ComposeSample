@@ -6,7 +6,7 @@ import com.example.composesample.presentation.example.list.examples2025
 import com.example.composesample.presentation.example.list.examples2026
 import com.example.composesample.presentation.example.list.examplesWithoutDate
 import com.example.composesample.util.ConstValue
-import com.example.domain.model.ExampleObject
+import com.example.composesample.presentation.example.model.ExampleObject
 
 fun exampleObjectList(): ArrayList<ExampleObject> {
     val insertExampleObject = ArrayList<ExampleObject>()

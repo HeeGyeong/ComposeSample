@@ -291,7 +291,7 @@ import com.example.composesample.util.ConstValue.ComposeTestingExample
 import com.example.composesample.util.ConstValue.CustomLayoutExample
 import com.example.composesample.util.ConstValue.ModifierOrderExample
 import com.example.composesample.util.ConstValue.ScreenshotTestingExample
-import com.example.domain.model.ExampleMoveType
+import com.example.composesample.presentation.example.model.ExampleMoveType
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable

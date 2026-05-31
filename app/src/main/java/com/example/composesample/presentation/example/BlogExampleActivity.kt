@@ -57,8 +57,8 @@ import com.example.composesample.util.ConstValue.ShortCutTypePin
 import com.example.composesample.util.ConstValue.ShortCutTypeXML
 import com.example.composesample.util.component.Toast
 import com.example.composesample.util.noRippleClickable
-import com.example.domain.model.ExampleMoveType
-import com.example.domain.model.ExampleObject
+import com.example.composesample.presentation.example.model.ExampleMoveType
+import com.example.composesample.presentation.example.model.ExampleObject
 import org.koin.androidx.compose.koinViewModel
 
 @ExperimentalAnimationApi
