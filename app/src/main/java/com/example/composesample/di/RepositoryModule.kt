@@ -2,6 +2,8 @@ package com.example.composesample.di
 
 import com.example.data.repository.MVIExampleRepositoryImpl
 import com.example.data.repository.PostRepositoryImpl
+import com.example.data.repository.UserCacheRepository
+import com.example.data.repository.UserCacheRepositoryImpl
 import com.example.data.repository.dataSource.PostDataSource
 import com.example.data.repository.dataSourceImpl.PostDataSourceImpl
 import com.example.domain.repository.MVIExampleRepository
@@ -14,4 +16,6 @@ val repositoryModule: Module = module {
     single<PostDataSource> { PostDataSourceImpl(get(named("post"))) }
     single<PostRepository> { PostRepositoryImpl(get()) }
     single<MVIExampleRepository> { MVIExampleRepositoryImpl() }
+    // DataCache 예제: ExampleDao(databaseModule 제공)를 주입해 Room 접근을 캡슐화
+    single<UserCacheRepository> { UserCacheRepositoryImpl(get()) }
 }
