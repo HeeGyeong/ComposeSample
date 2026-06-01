@@ -48,7 +48,7 @@
 - **현재**: 1·2차 일괄 전환(약 80파일) 완료. 잔여 32파일은 API 모델 변경이 필요해 도메인별 재작성 대상.
 - **분류**: `BottomSheet*`/`ModalBottomSheet*`(상태 모델 변경), `Drawer`(→`ModalNavigationDrawer`), `TopAppBar`(Slot/scrollBehavior 차이), `Scaffold`, `Snackbar`, `BottomNavigation`(→`NavigationBar`), `ScrollableTabRow` 등.
 - **이유**: 단순 import 치환으로 안 되고 API 호출부 재작성이 필요해 도메인별 PR 분할 권장. 공통 헤더 `MainUIComponent.kt`는 M3-05로 이미 전환 완료(제외).
-- **의도적 잔존**: 일부 M2 예제(BottomSheet/SwipeToDismiss)는 M3 대체 예제와 비교용으로 보존 — [`ARCHITECTURE.md`](../../../../../../ARCHITECTURE.md) "교육용 예외" 참고.
+- **의도적 잔존**: 일부 M2 예제(BottomSheet/SwipeToDismiss)는 M3 대체 예제와 비교용으로 보존 — [`ARCHITECTURE.md`](../../../../../../../../ARCHITECTURE.md) "교육용 예외" 참고.
 
 ---
 
