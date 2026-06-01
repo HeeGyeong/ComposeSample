@@ -1,17 +1,17 @@
-# UI 코드 생성 Snippet
-생성형 AI를 사용할때 하기의 가이드 라인을 따라 프롬프트를 작성합니다.
+# UI Code Generation Snippet
+When using generative AI, write the prompt following the guideline below.
 
-## 기본 정보
-- **작업 유형**: UI 생성/구현/생성
+## Basic Info
+- **Task type**: UI creation/implementation/generation
 
-## 기술 세부사항
-- **언어**: Kotlin
-- **프레임워크**: Jetpack Compose
-- **아키텍처**: MVVM + 클린 아키텍처
-- **주석 작성 시**: 한국어로 작성
-- **파일의 모든 부분을**: 생략하지 않고 작성
-- **제거해야 할 부분이 있다면**: 제거하지 말고 설명 작성
-- **Color 및 Style 사용 예시**:
+## Technical Details
+- **Language**: Kotlin
+- **Framework**: Jetpack Compose
+- **Architecture**: MVVM + Clean Architecture
+- **When writing comments**: write in Korean
+- **All parts of the file**: write without omitting anything
+- **If there is a part that should be removed**: do not remove it; write an explanation instead
+- **Color and Style usage example**:
 ```kotlin
 Text(
     modifier = Modifier,
@@ -20,30 +20,30 @@ Text(
     style = getTextStyle(12)
 )
 ```
-- **ViewModel 사용 시**: `app/src/main/java/com/example/composesample/docs/di/DIRules.md` 참조
-- **ViewModel 사용 시**: Koin을 DI로 사용
+- **When using a ViewModel**: see `app/src/main/java/com/example/composesample/docs/di/DIRules.md`
+- **When using a ViewModel**: use Koin for DI
 
-## UI 분석
-1. [UI 분석 1]
-2. [UI 분석 2]
-3. [UI 분석 3]
+## UI Analysis
+1. [UI analysis 1]
+2. [UI analysis 2]
+3. [UI analysis 3]
 
-## 요구사항
-1. [요구사항 1]
-2. [요구사항 2]
-3. [요구사항 3]
+## Requirements
+1. [requirement 1]
+2. [requirement 2]
+3. [requirement 3]
 
-## 기대되는 동작
-- [기대되는 동작 설명]
-- [주요 기능 설명]
+## Expected Behavior
+- [description of expected behavior]
+- [description of key features]
 
-## 참고자료
-- **프로젝트 규칙**: [관련 규칙 파일 경로]
-- **관련 파일**: [관련 파일 경로]
+## References
+- **Project rules**: [path to the relevant rule file]
+- **Related files**: [path to related files]
 
-## 원하는 결과
-- 이미지와 일치하는 UI 구현
-- 더미 데이터를 사용하여 빌드 유지
-- 질문의 전체 맥락을 표현
-- 읽은 내용을 질문의 맥락에 기반하여 전체 결과로 표현
-- 길이가 너무 길어 표현이 어려운 경우, 다음 질문으로 이어서 진행 
+## Desired Result
+- A UI implementation that matches the image
+- Keep the build working using dummy data
+- Express the full context of the question
+- Express what you read as a complete result based on the question's context
+- If it is too long to express, continue in the next question

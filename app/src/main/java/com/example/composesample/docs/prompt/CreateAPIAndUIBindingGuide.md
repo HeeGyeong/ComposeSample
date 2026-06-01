@@ -1,48 +1,48 @@
-# API 및 UI 바인딩 생성 가이드 라인
+# API and UI Binding Creation Guideline
 
-## 목적
-이 문서는 MVVM 아키텍처를 사용하여 API를 추가하고 Material3 가이드라인에 따라 UI에 데이터를 연결하는 단계를 설명합니다.
+## Purpose
+This document describes the steps to add an API using the MVVM architecture and bind the data to the UI according to the Material3 guidelines.
 
-생성형 AI를 사용할때 하기의 가이드라인을 추가한 후 프롬프트를 작성합니다.
+When using generative AI, add the guideline below and then write the prompt.
 
-## 요구사항
+## Requirements
 
-1. **DTO 생성**
-   - API 문서와 일치하는 DTO를 생성
+1. **Create DTO**
+   - Create a DTO that matches the API document
 
-2. **API 인터페이스**
-   - 이미 선언된 API 인터페이스 내에 API 호출 함수 추가
-   - 적절한 API 인터페이스가 없는 경우에만 새로 생성
+2. **API interface**
+   - Add the API call function inside an already-declared API interface
+   - Create a new one only if no appropriate API interface exists
 
-3. **API 호출 함수**
-   - API 문서와 일치하는 API 호출 함수 구현
+3. **API call function**
+   - Implement an API call function that matches the API document
 
-4. **ViewModel 통합**
-   - 적절한 ViewModel에 API 호출 함수 추가
-   - ViewModel을 통해 API 호출 후 데이터 저장
-   - 저장된 데이터로 UI 렌더링
+4. **ViewModel integration**
+   - Add the API call function to the appropriate ViewModel
+   - Call the API through the ViewModel and store the data
+   - Render the UI with the stored data
 
-## 제약사항
+## Constraints
 
-1. **Import**
-   - 기존 버전 확인 후 임포트문 사용
+1. **Imports**
+   - Check the existing versions, then use imports
 
 2. **Responsiveness**
-   - 코드의 반응성 보장
+   - Ensure the code is responsive
 
-## 기대 결과
+## Expected Result
 
-1. **API 인터페이스**
-   - API 인터페이스에 API 함수 추가됨
+1. **API interface**
+   - The API function is added to the API interface
 
 2. **ViewModel**
-   - 적절한 ViewModel에 API 호출 함수 존재
-   - API 호출 후 데이터 저장됨
+   - The API call function exists in the appropriate ViewModel
+   - Data is stored after the API call
 
-3. **UI 렌더링**
-   - 저장된 데이터로 UI 그리기
+3. **UI rendering**
+   - Draw the UI with the stored data
 
-## 추가 참고사항
+## Additional Notes
 
-- MVVM 아키텍처와 Material3 가이드라인 준수
-- 프로젝트의 기존 패턴과 규칙에 맞게 구현
+- Follow the MVVM architecture and Material3 guidelines
+- Implement consistently with the project's existing patterns and rules

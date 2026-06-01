@@ -1,44 +1,44 @@
-# API 생성 가이드 라인
+# API Creation Guideline
 
-## 목적
-이 문서는 API 문서를 기반으로 MVVM 아키텍처와 Material3 가이드라인을 따르는 API 호출 로직 추가에 대한 가이드라인을 제공합니다.
+## Purpose
+This document provides a guideline for adding API call logic that follows the MVVM architecture and Material3 guidelines, based on an API document.
 
-생성형 AI를 사용할때 하기의 가이드라인을 추가한 후 프롬프트를 작성합니다.
+When using generative AI, add the guideline below and then write the prompt.
 
-## 요구사항
+## Requirements
 
-1. **API 호출 함수**
-   - API 문서와 일치하는 API 호출 함수를 작성합니다.
+1. **API call function**
+   - Write an API call function that matches the API document.
 
-2. **가이드라인**
-   - `Create API and UI Binding Guide`에 명시된 규칙을 따릅니다.
+2. **Guideline**
+   - Follow the rules stated in `Create API and UI Binding Guide`.
 
-## 제약사항
+## Constraints
 
 1. **Imports**
-   - 기존 버전을 확인하고 그에 맞는 임포트문을 사용합니다.
+   - Check the existing versions and use imports that match them.
 
 2. **Responsiveness**
-   - 코드가 반응형이어야 합니다.
+   - The code must be responsive.
 
-3. **API 문서**
-   - 구현을 위해 API 문서가 필요합니다.
+3. **API document**
+   - An API document is required for implementation.
 
-## 기대 결과
+## Expected Result
 
-1. **API 인터페이스**
-   - API 인터페이스에 API 함수가 추가됩니다.
-   - API 인터페이스를 탐색하고 적절한 위치에 함수를 추가합니다.
+1. **API interface**
+   - The API function is added to the API interface.
+   - Explore the API interface and add the function in the appropriate place.
 
 2. **ViewModel**
-   - 적절한 뷰모델에 API 호출 함수가 존재합니다.
-   - 가능한 새로운 뷰모델 생성은 피합니다.
+   - The API call function exists in the appropriate ViewModel.
+   - Avoid creating a new ViewModel when possible.
 
-3. **플로우 구현**
-   - API 문서와 일치하는 플로우를 추가합니다.
-   - 응답이 필요하지 않으므로 `Any` 타입으로 받습니다.
+3. **Flow implementation**
+   - Add a flow that matches the API document.
+   - Since the response is not needed, receive it as the `Any` type.
 
-## 추가 참고사항
+## Additional Notes
 
-- 모든 구현이 프로젝트의 기존 패턴과 규칙에 일관되도록 합니다.
-- MVVM 아키텍처와 Material3 가이드라인을 따릅니다.
+- Keep all implementation consistent with the project's existing patterns and rules.
+- Follow the MVVM architecture and Material3 guidelines.
