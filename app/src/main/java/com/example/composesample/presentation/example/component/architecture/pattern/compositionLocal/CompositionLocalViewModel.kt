@@ -1,7 +1,6 @@
 package com.example.composesample.presentation.example.component.architecture.pattern.compositionLocal
 
 import androidx.lifecycle.ViewModel
-import com.example.domain.useCase.FetchDataUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
