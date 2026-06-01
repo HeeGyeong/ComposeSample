@@ -1,15 +1,15 @@
+// domain 모듈은 Android 프레임워크/Room/Retrofit/Ktor 의존이 전혀 없는 순수 Kotlin 레이어다.
+// (ARCH-04) com.android.library 대신 kotlin("jvm")로 전환하여 core-dependencies.gradle의
+// 불필요한 전이 의존성(Room/Retrofit/Ktor 등) 주입을 제거하고, 미사용 kotlin-parcelize도 삭제한다.
 plugins {
-    alias(libs.plugins.android.library)
-    alias(libs.plugins.kotlin.android)
-
-    id 'kotlin-parcelize'
+    alias(libs.plugins.kotlin.jvm)
 }
 
-apply {
-    from('../config.gradle')
-    from('../core-dependencies.gradle')
+kotlin {
+    // 다른 모듈(config.gradle)과 동일한 Java 툴체인 버전 사용
+    jvmToolchain(libs.versions.javaVersion.get().toInteger())
 }
 
-android {
-    namespace 'com.example.domain'
+dependencies {
+    testImplementation(libs.junit)
 }

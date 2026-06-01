@@ -100,6 +100,7 @@ biometric = "1.4.0-alpha05"
 android-application = { id = "com.android.application", version.ref = "applicationVersion" }
 android-library = { id = "com.android.library", version.ref = "libraryVersion" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlinVersion" }
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlinVersion" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlinVersion" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 hotswan-compiler = { id = "com.github.skydoves.compose.hotswan.compiler", version = "1.2.1" }
