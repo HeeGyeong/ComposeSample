@@ -1,27 +1,27 @@
-# 의존성 주입 아키텍처 문서
+# Dependency Injection Architecture Documentation
 
-## 목차
-- [핵심 사양](#핵심-사양)
-- [모듈 사양](#모듈-사양)
-- [구현 규칙](#구현-규칙)
-- [사용 예시](#사용-예시)
-- [검증 규칙](#검증-규칙)
-- [테스트 전략](#테스트-전략)
-- [성능 모니터링](#성능-모니터링)
+## Table of Contents
+- [Core Specifications](#core-specifications)
+- [Module Specifications](#module-specifications)
+- [Implementation Rules](#implementation-rules)
+- [Usage Examples](#usage-examples)
+- [Validation Rules](#validation-rules)
+- [Testing Strategies](#testing-strategies)
+- [Performance Monitoring](#performance-monitoring)
 
-## 핵심 사양
+## Core Specifications
 
-### 프레임워크 구성
+### Framework Configuration
 ```
 DI_FRAMEWORK: Koin
 SYNTAX: Koin DSL
 ```
 
-## 모듈 사양
+## Module Specifications
 
-### 1. 진입점 모듈 (`InjectModules.kt`)
+### 1. Entry Point Module (`InjectModules.kt`)
 ```kotlin
-// 패턴: 모듈 통합
+// PATTERN: Module aggregation
 val KoinModules = listOf(
     apiModule,
     viewModelModule,
@@ -30,15 +30,15 @@ val KoinModules = listOf(
 )
 ```
 
-### 2. API 모듈 (`ApiModule.kt`)
+### 2. API Module (`ApiModule.kt`)
 ```kotlin
-// 패턴: Retrofit 구성
-구성 요소:
-- HTTP 클라이언트 설정
-- API 인터페이스 구현
-- 인터셉터 구성
+// PATTERN: Retrofit configuration
+COMPONENTS:
+- HTTP client setup
+- API interface implementations
+- Interceptor configuration
 
-// 구현
+// IMPLEMENTATION
 single<Retrofit>(named("DomainName")) {
     Retrofit.Builder()
         .baseUrl("DomainUrl")
@@ -52,15 +52,15 @@ single<APIInterface>(named("InterfaceName")) {
 }
 ```
 
-### 3. ViewModel 모듈 (`ViewModelModule.kt`)
+### 3. ViewModel Module (`ViewModelModule.kt`)
 ```kotlin
-// 패턴: ViewModel 의존성 제공
-규칙:
-- 선언당 하나의 ViewModel
-- API 의존성에는 named 한정자 사용
-- SavedStateHandle은 parametersOf로 전달
+// PATTERN: ViewModel dependency provision
+RULES:
+- One ViewModel per declaration
+- Named qualifiers for API dependencies
+- SavedStateHandle via parametersOf
 
-// 구현
+// IMPLEMENTATION
 viewModel { 
     SampleViewModel(
         api = get(named("ApiName")),
@@ -69,24 +69,24 @@ viewModel {
 }
 ```
 
-### 4. 네트워크 모듈 (`NetworkModule.kt`)
+### 4. Network Module (`NetworkModule.kt`)
 ```kotlin
-// 패턴: 네트워크 유틸리티 제공
-기능:
-- 네트워크 상태 모니터링
-- 인터셉터 관리
-- 유틸리티 함수
+// PATTERN: Network utility provision
+FEATURES:
+- Network status monitoring
+- Interceptor management
+- Utility functions
 
-// 구현 방법
-클래스 수준: private val network: NetworkUtil by inject()
-Compose 수준: val network: NetworkUtil = get()
+// IMPLEMENTATION METHODS
+Class-level: private val network: NetworkUtil by inject()
+Compose-level: val network: NetworkUtil = get()
 ```
 
-## 구현 규칙
+## Implementation Rules
 
-### 1. 초기화
+### 1. Initialization
 ```kotlin
-// 필수: Application 클래스에서 초기화
+// REQUIRED: Application class initialization
 class Application : Application() {
     override fun onCreate() {
         super.onCreate()
@@ -98,105 +98,105 @@ class Application : Application() {
 }
 ```
 
-### 2. 의존성 주입 규칙
+### 2. Dependency Injection Rules
 ```
-네이밍 규칙:
-- API 의존성: named 한정자 반드시 사용
-- ViewModel: 파스칼 케이스 네이밍
+NAMING_RULES:
+- API dependencies: Must use named qualifier
+- ViewModels: Pascal case naming
 
-스코프 규칙:
-- single: 전역 싱글톤
-- factory: 주입할 때마다 새 인스턴스
-- viewModel: 생명주기 인식 인스턴스
-```
-
-### 3. 모범 사례
-```
-필수 사례:
-1. API 의존성:
-   - named 한정자를 반드시 사용
-   - base URL을 반드시 명시
-   - 에러 처리를 반드시 포함
-
-2. ViewModel 의존성:
-   - 필요 시 SavedStateHandle을 반드시 처리
-   - 생명주기 인식을 반드시 준수
-   - 클린 아키텍처를 구현할 것을 권장
-
-3. 네트워크 유틸리티:
-   - 네트워크 상태를 반드시 모니터링
-   - 연결 변경을 반드시 처리
-   - 에러 처리를 반드시 구현
+SCOPE_RULES:
+- single: Global singletons
+- factory: New instance per injection
+- viewModel: Lifecycle-aware instances
 ```
 
-### 4. 에러 처리
+### 3. Best Practices
 ```
-에러 처리 규칙:
-1. 네트워크 에러:
-   - NetworkStatusLiveData로 모니터링
-   - 연결 타임아웃 처리
-   - 재시도 로직 구현
+REQUIRED_PRACTICES:
+1. API Dependencies:
+   - MUST use named qualifiers
+   - MUST specify base URL
+   - MUST include error handling
 
-2. 의존성 에러:
-   - 의미 있는 에러 메시지 제공
-   - 순환 의존성 처리
-   - 폴백 메커니즘 구현
+2. ViewModel Dependencies:
+   - MUST handle SavedStateHandle when needed
+   - MUST follow lifecycle awareness
+   - SHOULD implement clean architecture
+
+3. Network Utilities:
+   - MUST monitor network status
+   - MUST handle connection changes
+   - MUST implement error handling
 ```
 
-## 사용 예시
+### 4. Error Handling
+```
+ERROR_HANDLING_RULES:
+1. Network Errors:
+   - Monitor via NetworkStatusLiveData
+   - Handle connection timeouts
+   - Implement retry logic
 
-### 1. API 의존성
+2. Dependency Errors:
+   - Provide meaningful error messages
+   - Handle circular dependencies
+   - Implement fallback mechanisms
+```
+
+## Usage Examples
+
+### 1. API Dependency
 ```kotlin
-// 패턴: API 의존성을 가진 ViewModel
-// Koin은 모듈에서 named() 한정자를 사용 — @Named 애노테이션은 사용하지 않음
+// PATTERN: ViewModel with API dependency
+// Koin uses named() qualifier in the module — do NOT use @Named annotation
 class SampleViewModel(
-    private val api: ApiInterface  // ViewModelModule에서 named()로 주입
+    private val api: ApiInterface  // injected via named() in ViewModelModule
 ) : ViewModel()
 
 // ViewModelModule.kt
 viewModel { SampleViewModel(api = get(named("apiName"))) }
 ```
 
-### 2. 전역 상태 사용
+### 2. Global State Usage
 ```kotlin
-// 패턴: 전역 상태 접근
+// PATTERN: Global state access
 class SampleComponent {
     private val globalState: GlobalState by inject()
 }
 ```
 
-### 3. 네트워크 유틸리티
+### 3. Network Utility
 ```kotlin
-// 패턴: 네트워크 유틸리티 사용
+// PATTERN: Network utility usage
 class NetworkAwareComponent {
     private val networkUtil: NetworkUtil by inject()
     private val networkViewModel: NetworkViewModel by viewModel()
 }
 ```
 
-## 검증 규칙
+## Validation Rules
 
-1. **의존성 선언**
-   - Koin DSL을 반드시 사용
-   - 네이밍 컨벤션을 반드시 준수
-   - 적절한 스코프를 반드시 명시
+1. **Dependency Declaration**
+   - MUST use Koin DSL
+   - MUST follow naming conventions
+   - MUST specify appropriate scope
 
-2. **모듈 구성**
-   - 관심사를 반드시 분리
-   - 단일 책임을 반드시 유지
-   - 의존성을 반드시 문서화
+2. **Module Organization**
+   - MUST separate concerns
+   - MUST maintain single responsibility
+   - MUST document dependencies
 
-3. **테스트 고려사항**
-   - 의존성 모킹을 반드시 허용
-   - 테스트 구성을 반드시 지원
-   - 단위 테스트 포함을 권장
+3. **Testing Considerations**
+   - MUST allow dependency mocking
+   - MUST support test configurations
+   - SHOULD include unit tests
 
-## 테스트 전략
+## Testing Strategies
 
-- **의존성 모킹**: 단위 테스트에서 MockK나 Mockito 같은 라이브러리로 의존성을 모킹합니다.
-- **통합 테스트**: 애플리케이션 컨텍스트에서 의존성이 올바르게 연결되었는지 검증하는 통합 테스트를 구성합니다.
+- **Mocking Dependencies**: Use libraries like MockK or Mockito to mock dependencies in unit tests.
+- **Integration Tests**: Set up integration tests to verify the correct wiring of dependencies in the application context.
 
-## 성능 모니터링
+## Performance Monitoring
 
-- **시작 시간**: Android Profiler로 DI가 앱 시작 시간에 미치는 영향을 측정합니다.
-- **메모리 사용량**: DI가 메모리 누수나 과도한 오버헤드를 유발하지 않는지 메모리 사용량을 모니터링합니다.
+- **Startup Time**: Measure the impact of DI on app startup time using Android Profiler.
+- **Memory Usage**: Monitor memory usage to ensure DI does not introduce memory leaks or excessive overhead.

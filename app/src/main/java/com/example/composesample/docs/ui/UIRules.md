@@ -1,69 +1,69 @@
-# UI 시스템 가이드
+# UI System Guide
 
-## 📋 기본 규칙
-- 모든 코드는 프로젝트 루트의 `CLAUDE.md`에 정의된 코딩 컨벤션을 따릅니다.
-- 아래 규칙에 따라 UI 코드와 비즈니스 로직을 분리합니다.
+## 📋 Basic Rules
+- All code must follow the coding conventions defined in `CLAUDE.md` at the project root.
+- Separate UI code and business logic according to the rules below.
 
-### 잘못된 예시
+### Incorrect Example
 ```kotlin
 @Composable
 fun PlayerScreen() {
     Button(onClick = {
-        // 비즈니스 로직
+        // Business logic
     }) {
         Text("Button")
     }
 }
 ```
 
-### 올바른 예시
-기능과 관련된 ViewModel 클래스 파일을 동일한 폴더 안에 생성합니다.<br>
-상위 기능의 주제가 정해지면, 더 세분화하지 않고 상위 ViewModel 클래스를 사용합니다.<br>
-ViewModel 클래스 파일명은 기능명 + `ViewModel` 형태로 작성합니다.<br>
-핵심 개념: 상위 기능 단위 구성.<br>
-"Live" 기능을 예로 들어 보겠습니다:
+### Correct Example
+Create a ViewModel class file related to the functionality within the same folder.<br>
+Once the topic of the higher-level functionality is determined, use the higher-level ViewModel class without further subdividing it.<br>
+Name the ViewModel class file as FunctionName + `ViewModel`.<br>
+Key Concept: Higher-Level Feature Organization.<br>
+Let's use the "Live" feature as an example:
 
-Live 기능<br>
+Live Feature<br>
 ├── Streaming<br>
 ├── Settings<br>
 ├── Chat<br>
-└── 그 외 Live 관련 기능<br>
+└── Other Live-related features<br>
 
-규칙 설명:
-이렇게 하세요 ✅
+Rule Explanation:
+DO THIS ✅
 
 ```kotlin
 class LiveViewModel {
-    // 하나의 ViewModel이 Live 관련 모든 기능을 처리
+    // One ViewModel handles all Live-related features
     fun handleStreaming() { ... }
     fun handleSettings() { ... }
     fun handleChat() { ... }
 }
 ```
 
-이렇게 하지 마세요 ❌
+DON'T DO THIS ❌
 
 ```kotlin
-// 하위 기능별로 ViewModel을 분리하지 않습니다
+// Don't create separate ViewModels for sub-features
 class LiveStreamViewModel { ... }
 class LiveSettingViewModel { ... }
 class LiveChatViewModel { ... }
 ```
 
-이 규칙이 존재하는 이유:
-더 나은 코드 구성
-ViewModel 파편화 방지
-더 쉬운 상태 관리
-더 명확한 의존성 주입
-기능 단위에서 단일 책임 원칙 준수
-간단한 판단 기준:
-스스로에게 물어보세요: "이것이 더 큰 기능의 일부인가?"
-그렇다면 → 상위 기능의 ViewModel을 사용
-아니라면 → 새 기능을 위한 새 ViewModel 생성
+Why This Rule Exists:
+Better code organization
+Prevents ViewModel fragmentation
+Easier state management
+Clearer dependency injection
+Following single responsibility principle at the feature level
+Simple Rule of Thumb:
+Ask yourself: "Is this part of a larger feature?"
+If yes → Use the parent feature's ViewModel
+If no → Create a new ViewModel for the new feature
 
 
-ViewModel 클래스는 의존성 주입으로 사용하고 `../di/ViewModelModule.kt` 파일에 등록합니다.<br>
-의존성 주입에는 Koin 프레임워크를 사용합니다.<br>
+Use the ViewModel class with Dependency Injection and register it in the `../di/ViewModelModule.kt` file.<br>
+Use the Koin Framework for Dependency Injection.<br>
 
 ```kotlin
 val viewModelModule: Module = module {
@@ -76,7 +76,7 @@ val viewModelModule: Module = module {
 class PlayerViewModel() : ViewModel() {
     ...
     fun fetchPlayList() {
-        // 비즈니스 로직
+        // Business logic
     }
 }
 
@@ -92,18 +92,18 @@ fun PlayerScreen(
 }
 ```
 
-## 비즈니스 로직과 UI 코드의 분리
+## Separation of Business Logic and UI Code
 
-클린 아키텍처를 유지하고 유지보수성을 높이려면 비즈니스 로직을 UI 코드와 분리하는 것이 매우 중요합니다. 다음은 몇 가지 예시와 가이드라인입니다:
+To maintain clean architecture and improve maintainability, it's crucial to separate business logic from UI code. Here are some examples and guidelines:
 
-### 분리 예시
+### Example of Separation
 
-**잘못된 구현**
+**Incorrect Implementation**
 ```kotlin
 @Composable
 fun UserProfileScreen() {
     Button(onClick = {
-        // UI에 비즈니스 로직을 직접 작성
+        // Business logic directly in UI
         fetchUserProfile()
     }) {
         Text("Load Profile")
@@ -111,11 +111,11 @@ fun UserProfileScreen() {
 }
 ```
 
-**올바른 구현**
+**Correct Implementation**
 ```kotlin
 class UserProfileViewModel : ViewModel() {
     fun fetchUserProfile() {
-        // 비즈니스 로직
+        // Business logic
     }
 }
 
@@ -129,20 +129,20 @@ fun UserProfileScreen(viewModel: UserProfileViewModel = viewModel()) {
 }
 ```
 
-### 가이드라인
-- **ViewModel 사용**: 비즈니스 로직과 상태 관리는 항상 ViewModel에서 처리합니다.
-- **UI 컴포넌트**: UI 컴포넌트는 렌더링과 사용자 상호작용에만 집중합니다.
-- **의존성 주입**: Koin 또는 다른 DI 프레임워크로 ViewModel을 Composable에 주입합니다.
-- **상태 관리**: 필요한 경우 상태 호이스팅(state hoisting)을 사용해 UI 상태를 Composable 외부에서 관리합니다.
+### Guidelines
+- **ViewModel Usage**: Always use a ViewModel to handle business logic and state management.
+- **UI Components**: Keep UI components focused on rendering and user interaction.
+- **Dependency Injection**: Use Koin or another DI framework to inject ViewModels into composables.
+- **State Management**: Use state hoisting to manage UI state outside of composables when necessary.
 
-이 가이드라인을 따르면 코드가 모듈화되고, 테스트 가능하며, 유지보수가 쉬워집니다.
+By following these guidelines, you ensure that your code is modular, testable, and easier to maintain.
 
-## 상태 관리 전략
+## State Management Strategies
 
-- **상태 호이스팅**: 가장 가까운 공통 상위 요소로 상태를 끌어올려 Composable 간에 상태를 공유합니다.
-- **ViewModel 상태**: 구성 변경(configuration change)에도 유지되어야 하는 UI 관련 데이터는 ViewModel로 관리합니다.
+- **State Hoisting**: Lift state up to the nearest common ancestor to share state between composables.
+- **ViewModel State**: Use ViewModel to manage UI-related data that survives configuration changes.
 
-## 성능 최적화 팁
+## Performance Optimization Tips
 
-- **리컴포지션**: 비용이 큰 계산은 `remember`와 `derivedStateOf`를 사용해 리컴포지션을 최소화합니다.
-- **Lazy 컴포넌트**: 목록에는 `LazyColumn`과 `LazyRow`를 사용해 스크롤 성능을 향상시킵니다.
+- **Recomposition**: Minimize recomposition by using `remember` and `derivedStateOf` for expensive calculations.
+- **Lazy Components**: Use `LazyColumn` and `LazyRow` for lists to improve scrolling performance.
