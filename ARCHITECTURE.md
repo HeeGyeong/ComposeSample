@@ -1,68 +1,68 @@
-# ARCHITECTURE.md — 아키텍처 의사결정 기록
+# ARCHITECTURE.md — Architecture Decision Record
 
-ComposeSample의 아키텍처 구조와 **"왜 이렇게 설계했는가"**를 기록합니다.
-규칙(어떻게 작성하는가)은 `CLAUDE.md`, API 나열은 모듈별 README를 참고하세요.
+Records ComposeSample's architecture structure and **"why it is designed this way."**
+For rules (how to write code) see `CLAUDE.md`; for API listings see the per-module READMEs.
 
 ---
 
-## 모듈 구조
+## Module Structure
 
 ```
 ComposeSample
-├── app         # UI 레이어 (Compose, ViewModel, DI 모듈, 예제)
-├── data        # 데이터 레이어 (Repository 구현, API, Room)
-├── domain      # 도메인 레이어 (Repository 인터페이스, UseCase, Model) — 순수 Kotlin(JVM)
-├── Core        # Navigation 인터페이스
-└── Coordinator # Coordinator 패턴 구현
+├── app         # UI layer (Compose, ViewModel, DI modules, examples)
+├── data        # Data layer (Repository implementations, API, Room)
+├── domain      # Domain layer (Repository interfaces, UseCase, Model) — pure Kotlin(JVM)
+├── Core        # Navigation interface
+└── Coordinator # Coordinator pattern implementation
 ```
 
-## 레이어 의존 규칙
+## Layer Dependency Rules
 
-| 레이어 | 의존 허용 | 금지 |
-|--------|-----------|------|
-| domain | 없음 (순수 Kotlin) | Android 프레임워크, Retrofit, Gson |
+| Layer | Allowed dependencies | Forbidden |
+|-------|----------------------|-----------|
+| domain | none (pure Kotlin) | Android framework, Retrofit, Gson |
 | data | domain | presentation |
 | app(presentation) | domain, data | - |
 
-- 의존성 주입은 Koin으로 런타임에 연결하며, 컴파일 의존은 위 표를 벗어나지 않습니다.
-- `Coordinator`/`Core`는 화면 전환 추상화를 위한 보조 모듈입니다.
+- Dependencies are wired at runtime via Koin; compile-time dependencies never go beyond the table above.
+- `Coordinator`/`Core` are auxiliary modules for abstracting screen transitions.
 
 ---
 
-## 주요 아키텍처 의사결정 (ARCH 리팩토링)
+## Key Architecture Decisions (ARCH refactoring)
 
-### ARCH-01 / ARCH-02 — domain에서 Retrofit/Gson 제거
-- **결정**: domain의 Repository 인터페이스가 `retrofit2.Call`을 반환하던 것을 `suspend fun`이 도메인 타입을 반환하도록 전환. `MovieResponse`/`PostData`는 프로퍼티명을 JSON 키와 맞춰 `@SerializedName`(Gson) 의존을 제거.
-- **이유**: 프레임워크 타입이 도메인 계약에 누출되면 domain이 네트워크 구현에 묶여 순수성·테스트 용이성이 깨짐.
+### ARCH-01 / ARCH-02 — Remove Retrofit/Gson from domain
+- **Decision**: domain Repository interfaces, which used to return `retrofit2.Call`, now expose `suspend fun`s that return domain types. `MovieResponse`/`PostData` match their property names to the JSON keys to drop the `@SerializedName`(Gson) dependency.
+- **Why**: if framework types leak into the domain contract, the domain becomes tied to the network implementation, breaking its purity and testability.
 
-### ARCH-03 — presentation → data 직접 참조 제거 (DataCache)
-- **결정**: `DataCacheViewModel`이 `RoomSingleton`을 직접 참조하던 것을 `UserCacheRepository`(인터페이스) + `UserCacheRepositoryImpl`(ExampleDao 위임) 추상화로 분리하고 `RepositoryModule`에 등록.
-- **트레이드오프**: `UserData`가 Room `@Entity`라 순수 Kotlin domain에 둘 수 없어, **추상화 인터페이스를 domain이 아닌 data 레이어에 배치**했습니다(도메인 모델 매핑은 범위에서 제외). 레이어 규칙(presentation은 data 직접참조 대신 추상화 의존)은 준수합니다.
+### ARCH-03 — Remove presentation → data direct reference (DataCache)
+- **Decision**: `DataCacheViewModel`, which used to reference `RoomSingleton` directly, was separated into a `UserCacheRepository` (interface) + `UserCacheRepositoryImpl` (delegating to ExampleDao) abstraction registered in `RepositoryModule`.
+- **Trade-off**: because `UserData` is a Room `@Entity` it cannot live in the pure-Kotlin domain, so the **abstraction interface was placed in the data layer, not domain** (mapping to a domain model was kept out of scope). The layer rule (presentation depends on an abstraction instead of referencing data directly) is still honored.
 
-### ARCH-04 — domain 모듈을 순수 Kotlin(JVM)로 전환
-- **결정**: domain을 `com.android.library` + `kotlin.android`에서 `kotlin("jvm")`으로 전환. config.gradle/core-dependencies.gradle 적용을 제거해 Room/Retrofit/Ktor 전이 의존을 차단.
-- **이유**: domain은 외부 의존이 0(suspend/List만 사용)임을 확인 후, 빌드 시스템 수준에서 프레임워크 의존이 **물리적으로 불가능**하도록 강제. 순수 jvm 미지원인 androidTest 템플릿은 제거하고 `testImplementation(junit)`만 유지.
+### ARCH-04 — Convert the domain module to pure Kotlin(JVM)
+- **Decision**: domain was converted from `com.android.library` + `kotlin.android` to `kotlin("jvm")`. The config.gradle/core-dependencies.gradle application was removed to block transitive Room/Retrofit/Ktor dependencies.
+- **Why**: after confirming domain has zero external dependencies (only suspend/List), framework dependencies are made **physically impossible** at the build-system level. The androidTest template, unsupported in pure jvm, was removed; only `testImplementation(junit)` is kept.
 
-### ARCH-05 — UI 전용 모델을 domain→app으로 이동
-- **결정**: `ExampleObject`/`ExampleMoveType`을 `domain.model`에서 app `presentation.example.model`로 이동(참조 8개 파일 import 갱신).
-- **이유**: 예제 목록 항목·이동 타입은 비즈니스 모델이 아니라 **UI/앱 전용 개념**. domain에는 순수 비즈니스 모델만 남깁니다.
+### ARCH-05 — Move UI-only models from domain to app
+- **Decision**: moved `ExampleObject`/`ExampleMoveType` from `domain.model` to the app `presentation.example.model` package (imports updated across 8 referencing files).
+- **Why**: example-list items and the move type are not business models but **UI/app-only concepts**. Only pure business models remain in domain.
 
-### 보조 결정
-- **DI-04**: `ApiExampleViewModel`의 Koin 등록을 positional이 아닌 `named()` 인자(application/postApiInterface/ktorClient)로 명시 → 인자 순서 오인 리스크 제거.
-- **CONV-04**: UseCase 호출 규약을 `execute()`에서 `operator fun invoke()`로 통일.
-
----
-
-## 의도적으로 남겨둔 예외 (교육용)
-
-리팩토링 대상에서 **일부러 제외**한 코드가 있습니다. "왜 안 고쳤는가"를 명확히 합니다.
-
-- **`ApiExampleViewModel` ↔ `ApiExampleUseCaseViewModel`**: 직접 API 호출 vs UseCase 경유를 비교하는 **대조쌍 예제**(KDoc 명시). 한쪽만 정리하면 비교 의도가 사라지므로 유지.
-- **`legacy/` 영역**(MovieViewModel/SubActivityViewModel/SubUI 등): 과거 패턴을 보여주는 학습 자료로 의도적 보존. `legacy` 패키지에 격리.
-- **Material 2 시연 예제**(BottomSheet M2, SwipeToDismiss M2 등): M3 대체 예제와 **나란히 비교**하기 위한 의도적 잔존(`@Suppress("DEPRECATION")` + 주석으로 명시).
+### Auxiliary decisions
+- **DI-04**: the Koin registration of `ApiExampleViewModel` is now explicit via `named()` arguments (application/postApiInterface/ktorClient) instead of positional → removes the risk of argument-order mistakes.
+- **CONV-04**: the UseCase invocation convention was unified from `execute()` to `operator fun invoke()`.
 
 ---
 
-## 알려진 제약 / 보류
+## Intentionally Kept Exceptions (educational)
 
-버전 업그레이드 보류, 분할 예정 항목 등은 [`docs/KnownLimitations.md`](app/src/main/java/com/example/composesample/docs/KnownLimitations.md)를 참고하세요.
+Some code was **deliberately excluded** from refactoring. We make "why it was not changed" explicit.
+
+- **`ApiExampleViewModel` ↔ `ApiExampleUseCaseViewModel`**: a **contrast pair** comparing a direct API call vs going through a UseCase (noted in KDoc). Cleaning up only one side would lose the comparison, so both are kept.
+- **The `legacy/` area** (MovieViewModel/SubActivityViewModel/SubUI, etc.): intentionally preserved as learning material showing older patterns. Isolated in the `legacy` package.
+- **Material 2 demo examples** (BottomSheet M2, SwipeToDismiss M2, etc.): intentionally kept to compare **side by side** with their M3 replacement examples (made explicit with `@Suppress("DEPRECATION")` + comments).
+
+---
+
+## Known Limitations / Deferrals
+
+For deferred version upgrades, items planned for splitting, etc., see [`docs/KnownLimitations.md`](app/src/main/java/com/example/composesample/docs/KnownLimitations.md).
