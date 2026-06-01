@@ -361,8 +361,11 @@ viewModel { FeatureViewModel(api = get(named("ApiName"))) }
 
 ## 상세 규칙 문서 위치
 
-더 자세한 내용은 아래 문서를 참조하세요:
+전체 문서 목록은 **`app/src/main/java/com/example/composesample/docs/README.md`** (문서 인덱스)를 먼저 참고하세요. 주요 문서는 아래와 같습니다:
 
+- **문서 인덱스**: `app/src/main/java/com/example/composesample/docs/README.md`
+- **아키텍처 의사결정**: `ARCHITECTURE.md` (루트, 레이어 규칙·ARCH 리팩토링 배경)
+- **알려진 제약/보류**: `app/src/main/java/com/example/composesample/docs/KnownLimitations.md`
 - **Data 클래스**: `app/src/main/java/com/example/composesample/docs/data/DataRules.md`
 - **DI (Koin)**: `app/src/main/java/com/example/composesample/docs/di/DIRules.md`
 - **UI 규칙**: `app/src/main/java/com/example/composesample/docs/ui/UIRules.md`
@@ -370,3 +373,5 @@ viewModel { FeatureViewModel(api = get(named("ApiName"))) }
 - **API+UI 바인딩**: `app/src/main/java/com/example/composesample/docs/prompt/CreateAPIAndUIBindingGuide.md`
 - **UI 코드 생성**: `app/src/main/java/com/example/composesample/docs/prompt/CreateUICodeSnippet.md`
 - **Claude Code 활용**: `app/src/main/java/com/example/composesample/docs/claudecode/ClaudeCodeGuide.md`
+- **Compose Hot Reload**: `app/src/main/java/com/example/composesample/docs/devtools/ComposeHotReloadGuide.md`
+- **예제 후보 검토 기록(아카이브)**: `app/src/main/java/com/example/composesample/docs/pending/PendingExamples.md`
