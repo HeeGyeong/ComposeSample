@@ -450,5 +450,12 @@ val examples2026 = listOf(
         description = "외부 라이브러리(KSP/Firebase) 없이 구현한 4가지 패턴: sealed class 기반 type-safe flag 레지스트리(문자열 키 대신 타입으로 정의), StateFlow reactive 토글(collectAsState 구독 UI 자동 재구성), ModalBottomSheet 디버그 메뉴(런타임 강제 오버라이드), Remote Config 시뮬레이션(우선순위 DEBUG > REMOTE > LOCAL)",
         blogUrl = "",
         exampleType = ConstValue.FeatureFlagExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 06. 04",
+        title = "Compose Autofill (semantics API)",
+        description = "Compose Foundation 자동완성: Modifier.semantics { contentType = ... } 로 TextField 에 Username/Password/Email/PostalCode 힌트를 부여하고, LocalAutofillManager 로 commit/cancel 을 트리거 — 로그인/회원가입 폼 시나리오. 실제 자동완성 UI 는 OS/단말 자동완성 서비스에 의존하므로 힌트 부여 패턴과 가용성 설명 중심",
+        blogUrl = "",
+        exampleType = ConstValue.AutofillExample
     )
 )

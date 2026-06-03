@@ -4,7 +4,7 @@ package com.example.composesample.util
 //  카테고리별 const 파일 분할 또는 sealed class 기반 라우팅 테이블로 재설계 필요 (별도 PR 권장).
 object ConstValue {
     // ==================== 기본 설정 ====================
-    const val UpdateDate = "26년 5월"
+    const val UpdateDate = "26년 6월"
 
     // ==================== Intent & Code Type ====================
     const val IntentType = "type"
@@ -55,6 +55,9 @@ object ConstValue {
     const val SyntaxHighlightingExample = "syntaxHighlightingExample"
     const val Material3ExpressiveExample = "material3ExpressiveExample"
     const val ModifierOrderExample = "modifierOrderExample"
+
+    // Autofill(Compose Foundation 자동완성 — Modifier.semantics { contentType } 로 Username/Password/Email/PostalCode 힌트 부여 + LocalAutofillManager commit/cancel 트리거, 가용성은 OS/단말 의존)
+    const val AutofillExample = "autofillExample"
 
     // AgslShaderTuning(API 33+ RuntimeShader + graphicsLayer renderEffect 로 AGSL 셰이더 실시간 튜닝: uniform 슬라이더 조절 + 셰이더 소스 라이브 편집/재컴파일, 미지원 단말 placeholder)
     const val AgslShaderTuningExample = "agslShaderTuningExample"

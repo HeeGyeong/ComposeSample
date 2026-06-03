@@ -78,6 +78,7 @@ import com.example.composesample.presentation.example.component.system.platform.
 import com.example.composesample.presentation.example.component.system.platform.version.TargetSDK34ExampleUI
 import com.example.composesample.presentation.example.component.system.platform.webview.WebViewIssueUI
 import com.example.composesample.presentation.example.component.system.ui.widget.GlanceWidgetExampleUI
+import com.example.composesample.presentation.example.component.ui.autofill.AutofillExampleUI
 import com.example.composesample.presentation.example.component.ui.accessibility.AccessibleFocusIndicatorExampleUI
 import com.example.composesample.presentation.example.component.ui.accessibility.LargeContentViewerExampleUI
 import com.example.composesample.presentation.example.component.ui.button.ButtonGroupExampleUI
@@ -163,6 +164,7 @@ import com.example.composesample.util.ConstValue.HardwareKeystoreExample
 import com.example.composesample.util.ConstValue.AnimationExample
 import com.example.composesample.util.ConstValue.ApiDisconnectExample
 import com.example.composesample.util.ConstValue.AutoCloseableExample
+import com.example.composesample.util.ConstValue.AutofillExample
 import com.example.composesample.util.ConstValue.AutoSizingTextExample
 import com.example.composesample.util.ConstValue.AudioRecorderExample
 import com.example.composesample.util.ConstValue.BottomNavigationExample
@@ -863,6 +865,10 @@ fun ExampleCaseUI(
 
                         FeatureFlagExample -> {
                             FeatureFlagExampleUI(onBackEvent)
+                        }
+
+                        AutofillExample -> {
+                            AutofillExampleUI(onBackEvent)
                         }
 
                         else -> {
