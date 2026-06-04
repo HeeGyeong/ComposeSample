@@ -36,4 +36,23 @@ package com.example.composesample.presentation.example.component.architecture.de
  *
  * 출처: Dave Leeds, "Kotlin Flows: Buffer, Conflate, and Debounce"
  *       https://www.youtube.com/watch?v=rHYlUGC109I
+ *
+ * ## onEachBatch — 크기/시간 기준 배치 집계
+ * Flow 표준 라이브러리에는 없는 커스텀 연산자. 원소를 maxSize 또는 timeout 기준으로
+ * List 로 묶어 일괄 처리한다. DB bulk insert·네트워크 배치 전송처럼 "호출당 고정 오버헤드"가
+ * 큰 작업에서 호출 횟수를 줄여 처리량을 높이는 데 사용.
+ *
+ * 구현 핵심:
+ * - produceIn 으로 업스트림을 채널에 버퍼링 (emit/처리 속도 분리)
+ * - withTimeoutOrNull(timeout) { channel.receiveCatching() } 로 시간 윈도우 구현
+ * - 첫 원소 도착 시 윈도우 시작 → maxSize 도달 시 즉시 flush, timeout 경과 시 미완성 배치 flush
+ * - 업스트림 종료(isClosed) 시 남은 원소를 마지막 배치로 flush (손실 없음)
+ *
+ * buffer/conflate 와의 차이:
+ * - buffer: 원소 1건씩 그대로 전달, 속도만 분리 (개수 보존)
+ * - conflate: 처리 중 중간 값 버리고 최신값만 (개수 손실)
+ * - onEachBatch: 여러 원소를 List 로 묶어 일괄 처리 (개수 보존 + 호출 횟수 감소)
+ *
+ * 출처: kotlin-coroutines-recipes/onEachBatch.kt (Marcin Moskała)
+ *       https://github.com/MarcinMoskala/kotlin-coroutines-recipes
  */

@@ -142,6 +142,7 @@ import com.example.composesample.presentation.example.component.architecture.dev
 import com.example.composesample.presentation.example.component.architecture.development.concurrency.WithContextExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.concurrency.CoroutineBridgesExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.flow.FlatMapExampleUI
+import com.example.composesample.presentation.example.component.architecture.development.flow.FlowBatchingExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.flow.FlowOperatorsExampleUI
 import com.example.composesample.presentation.example.component.architecture.navigation.Nav3ViewModelScopeExampleUI
 import com.example.composesample.presentation.example.component.architecture.navigation.Navigation3ExampleUI
@@ -189,6 +190,7 @@ import com.example.composesample.util.ConstValue.EmbeddedPhotoPickerExample
 import com.example.composesample.util.ConstValue.EmbeddedPickerComposeExample
 import com.example.composesample.util.ConstValue.FancyTopAppBarExample
 import com.example.composesample.util.ConstValue.FlatMapExample
+import com.example.composesample.util.ConstValue.FlowBatchingExample
 import com.example.composesample.util.ConstValue.FlowOperatorsExample
 import com.example.composesample.util.ConstValue.FlexBoxLayoutExample
 import com.example.composesample.util.ConstValue.FlingBehaviorExample
@@ -693,6 +695,10 @@ fun ExampleCaseUI(
 
                         FlowOperatorsExample -> {
                             FlowOperatorsExampleUI(onBackEvent)
+                        }
+
+                        FlowBatchingExample -> {
+                            FlowBatchingExampleUI(onBackEvent)
                         }
 
                         Navigation3Example -> {

@@ -312,6 +312,13 @@ val examples2026 = listOf(
         exampleType = ConstValue.FlowOperatorsExample
     ),
     ExampleObject(
+        lastUpdate = "26. 06. 05",
+        title = "Flow onEachBatch (배치 집계)",
+        description = "커스텀 Flow 확장 onEachBatch — 크기(maxSize)와 시간 윈도우(timeout) 기준으로 원소를 배치(List)로 묶어 일괄 처리. 단건 처리 vs 배치 처리(bulk insert) 처리량 비교 + 미완성 배치 flush + buffer/conflate와의 차이를 타임라인 로그로 시각화",
+        blogUrl = "",
+        exampleType = ConstValue.FlowBatchingExample
+    ),
+    ExampleObject(
         lastUpdate = "26. 04. 27",
         title = "Modifier Order in Compose",
         description = "동일한 modifier 조합도 순서에 따라 layout/draw/hit-test 결과가 달라진다: padding↔background, border↔clip, clickable↔padding, size↔padding 4가지 시나리오를 좌우 나란히 시각 비교",
