@@ -57,6 +57,7 @@ val examples2026 = listOf(
         lastUpdate = "26. 02. 07",
         title = "Dial Component",
         description = "Canvas로 구현하는 원형 다이얼: 범위 설정, 스냅, 멀티턴",
+        blogUrl = "https://heegs.tistory.com/201",
         exampleType = ConstValue.DialComponentExample
     ),
     ExampleObject(
