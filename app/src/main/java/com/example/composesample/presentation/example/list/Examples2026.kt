@@ -320,6 +320,13 @@ val examples2026 = listOf(
         exampleType = ConstValue.FlowBatchingExample
     ),
     ExampleObject(
+        lastUpdate = "26. 06. 08",
+        title = "코루틴 Race Condition 방지",
+        description = "여러 코루틴이 공유 가변 상태를 동시에 증가시킬 때 발생하는 race condition을 재현하고 4가지 보호 전략을 비교: ① 비보호(var, 손실 발생) ② AtomicInteger(CAS) ③ Mutex.withLock(상호 배제) ④ 단일 스레드 confinement(limitedParallelism(1)) — 동일 부하 실행 후 최종값/소요시간 비교",
+        blogUrl = "",
+        exampleType = ConstValue.RaceConditionExample
+    ),
+    ExampleObject(
         lastUpdate = "26. 04. 27",
         title = "Modifier Order in Compose",
         description = "동일한 modifier 조합도 순서에 따라 layout/draw/hit-test 결과가 달라진다: padding↔background, border↔clip, clickable↔padding, size↔padding 4가지 시나리오를 좌우 나란히 시각 비교",

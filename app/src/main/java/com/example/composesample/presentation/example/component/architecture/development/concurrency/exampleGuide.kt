@@ -27,4 +27,15 @@ package com.example.composesample.presentation.example.component.architecture.de
  * - suspendCancellableCoroutine { cont -> } : 취소 전파 지원. cont.invokeOnCancellation { } 블록에서 리소스 정리
  * - suspendCoroutine vs suspendCancellableCoroutine: 취소 가능 여부 차이. 장기 실행 작업엔 후자 권장
  * - invokeOnCancellation: 코루틴 취소 시 콜백 해제, 연결 종료 등 정리 작업 수행 지점
+ *
+ * ## Race Condition (공유 가변 상태 보호 전략)
+ * - 공식 문서: https://kotlinlang.org/docs/shared-mutable-state-and-concurrency.html
+ * - 출처: How to Prevent Race Conditions in Coroutines (Dave Leeds, Android Weekly #730)
+ * 핵심 개념:
+ * - Race condition: 여러 코루틴이 공유 가변 상태를 동시에 read-modify-write 하면 갱신이 겹쳐 유실됨 (counter++ 는 원자적이지 않음)
+ * - AtomicInteger/AtomicLong: CAS(compare-and-set) 기반 원자 연산. 단일 값 카운터/플래그에 가장 가볍고 빠름 (락 없음)
+ * - Mutex.withLock { }: 코루틴 친화적 상호 배제 락. 여러 상태를 함께 일관되게 갱신할 때. 경합 시 직렬화 비용 발생
+ * - 단일 스레드 confinement: Dispatchers.Default.limitedParallelism(1) 디스패처에 갱신을 한정해 동시 접근 자체를 제거
+ * - MutableStateFlow.update { }: CAS 루프로 안전하게 상태 갱신. Compose 에 노출하는 상태에 적합
+ * - 주의: @Synchronized/Java ReentrantLock 은 스레드를 블로킹 → 코루틴에는 Mutex 사용
  */
