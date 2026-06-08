@@ -112,6 +112,10 @@ object ConstValue {
     // StartupOptimization(App Startup / Baseline Profile / Koin 지연 초기화 비교)
     const val StartupOptimizationExample = "startupOptimizationExample"
 
+    // ==================== 개발 도구 / 정책 위반 감지 예제 ====================
+    // StrictMode(메인 스레드 디스크/네트워크 I/O ThreadPolicy + leaked Closeable VmPolicy 위반을 의도적으로 재현하고 penaltyListener 로 감지 — API 28+ 분기)
+    const val StrictModeExample = "strictModeExample"
+
     // ==================== 아키텍처 패턴 예제 ====================
     // MVI(단방향 데이터 흐름), Coordinator(화면 전환 패턴), Modularization(모듈화 전략), PreviewInternals(@Preview 내부 동작 원리), StabilityAnnotations(@Stable/@Immutable 리컴포지션 최적화), PreviewOnlyAnnotation(@RequiresOptIn으로 Preview 전용 Composable 제한), KoinCompilerPlugin(Koin Annotations KSP로 컴파일 타임 DI 검증), FeatureFlag(sealed class type-safe flag 레지스트리 + StateFlow reactive 토글 + ModalBottomSheet 디버그 메뉴 + Remote Config 시뮬레이션)
     const val MVIExample = "mviExample"

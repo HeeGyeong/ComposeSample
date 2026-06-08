@@ -142,6 +142,7 @@ import com.example.composesample.presentation.example.component.architecture.dev
 import com.example.composesample.presentation.example.component.architecture.development.concurrency.WithContextExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.concurrency.CoroutineBridgesExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.concurrency.RaceConditionExampleUI
+import com.example.composesample.presentation.example.component.architecture.development.strictmode.StrictModeExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.flow.FlatMapExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.flow.FlowBatchingExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.flow.FlowOperatorsExampleUI
@@ -274,6 +275,7 @@ import com.example.composesample.util.ConstValue.WebViewIssueExample
 import com.example.composesample.util.ConstValue.WithContextExample
 import com.example.composesample.util.ConstValue.CoroutineBridgesExample
 import com.example.composesample.util.ConstValue.RaceConditionExample
+import com.example.composesample.util.ConstValue.StrictModeExample
 import com.example.composesample.util.ConstValue.WorkManagerExample
 import com.example.composesample.util.ConstValue.DynamicAppLinksExample
 import com.example.composesample.util.ConstValue.BiometricAuthExample
@@ -725,6 +727,10 @@ fun ExampleCaseUI(
 
                         RaceConditionExample -> {
                             RaceConditionExampleUI(onBackEvent)
+                        }
+
+                        StrictModeExample -> {
+                            StrictModeExampleUI(onBackEvent)
                         }
 
                         ButtonGroupExample -> {

@@ -472,5 +472,12 @@ val examples2026 = listOf(
         description = "Compose Foundation 자동완성: Modifier.semantics { contentType = ... } 로 TextField 에 Username/Password/Email/PostalCode 힌트를 부여하고, LocalAutofillManager 로 commit/cancel 을 트리거 — 로그인/회원가입 폼 시나리오. 실제 자동완성 UI 는 OS/단말 자동완성 서비스에 의존하므로 힌트 부여 패턴과 가용성 설명 중심",
         blogUrl = "",
         exampleType = ConstValue.AutofillExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 06. 09",
+        title = "StrictMode 위반 감지",
+        description = "메인 스레드의 디스크/네트워크 I/O(ThreadPolicy)와 닫지 않은 Closeable 누수(VmPolicy)를 의도적으로 재현하고 penaltyListener 로 위반을 실시간 수집해 화면에 표시. detectDiskReads/detectDiskWrites/detectNetwork + detectLeakedClosableObjects 사용, penaltyListener 는 API 28+ 필요(미만은 penaltyLog→logcat). 외부 라이브러리(Strictly) 없이 순수 StrictMode API 로 구현",
+        blogUrl = "",
+        exampleType = ConstValue.StrictModeExample
     )
 )
