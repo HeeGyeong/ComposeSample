@@ -425,6 +425,13 @@ val examples2026 = listOf(
         exampleType = ConstValue.Nav3ViewModelScopeExample
     ),
     ExampleObject(
+        lastUpdate = "26. 06. 10",
+        title = "Nav3 SavedStateHandle 크래시 & 복원",
+        description = "Navigation 3 백스택(NavKey)에 복합 객체를 통째로 담으면 프로세스 종료 후 복원 시 역직렬화 크래시가 발생하는 문제를 시뮬레이션: ❌ 람다/런타임 필드를 가진 객체를 키에 담아 복원 실패 재현 vs ✅ 식별자(id)만 키에 담고 SavedStateHandle+Repository(Koin)로 객체를 다시 조회해 안전하게 복원하는 패턴 비교",
+        blogUrl = "",
+        exampleType = ConstValue.Nav3SavedStateHandleExample
+    ),
+    ExampleObject(
         lastUpdate = "26. 05. 13",
         title = "Hardware-Backed Keystore 검증",
         description = "AndroidKeyStore 키가 실제 TEE/StrongBox 하드웨어에 보관되는지 런타임 진단: API 23~30 isInsideSecureHardware vs API 31+ securityLevel(SOFTWARE/TRUSTED_ENVIRONMENT/STRONGBOX) 분기, setIsStrongBoxBacked() StrongBoxUnavailableException 폴백, KeyInfo + SecretKeyFactory 메타데이터 조회 패턴",

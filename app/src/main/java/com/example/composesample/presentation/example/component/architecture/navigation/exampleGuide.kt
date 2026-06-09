@@ -53,3 +53,35 @@ package com.example.composesample.presentation.example.component.architecture.na
  * - Navigation 3 는 현재 alpha 단계이며, 본 예제는 라이브러리 의존성 없이
  *   순수 Compose 상태로 동작 차이만 시뮬레이션한다. (CLAUDE.md ViewModel 범위 규칙과 연계)
  */
+
+/**
+ * Nav3 SavedStateHandle 크래시 & 복원 Example 참고 자료
+ *
+ * - Why SavedStateHandle Crashes in Jetpack Navigation 3 (Ahmed Tikiwa, Android Weekly #730)
+ * - Navigation3 공식 문서: https://developer.android.com/guide/navigation/navigation3
+ * - SavedStateHandle: https://developer.android.com/topic/libraries/architecture/viewmodel/viewmodel-savedstate
+ *
+ * 핵심 개념 정리:
+ *
+ * 1) 왜 크래시가 나는가
+ *    - Nav3 백스택은 State<List<NavKey>> 이고, process death 복원을 위해 각 NavKey 는
+ *      SavedState(Bundle)로 직렬화/역직렬화된다.
+ *    - NavKey 에 람다·런타임 객체·비직렬화 필드를 가진 "복합 객체"를 담으면,
+ *      복원(역직렬화) 단계에서 해당 필드를 되돌리지 못해 크래시가 발생한다.
+ *    - 동일한 원인이 SavedStateHandle 로 복합 객체를 전달할 때도 적용된다.
+ *
+ * 2) 해결 패턴 — 식별자(id)만 전달
+ *    - NavKey/SavedStateHandle 에는 String/Int 등 직렬화 가능한 식별자만 담는다.
+ *    - 실제 객체는 ViewModel 이 SavedStateHandle 의 id 를 읽어 Repository 에서 다시 조회한다.
+ *    - 원문은 Hilt Assisted Injection 으로 id 를 VM 에 주입하지만,
+ *      본 프로젝트에서는 Koin 으로 Repository 를 주입(single { UserRepository() })하고
+ *      viewModel { DetailViewModel(get(), get()) } 형태로 각색한다.
+ *
+ * 3) 대안 — 키 자체를 직렬화 가능하게
+ *    - 꼭 객체를 담아야 한다면 @Parcelize / kotlinx @Serializable 로 NavKey 를 만들고
+ *      모든 필드를 직렬화 가능한 타입으로 제한한다(람다·Context·View 참조 금지).
+ *
+ * 주의사항:
+ * - Navigation 3 는 alpha 단계 → 본 예제는 라이브러리/Hilt 의존성 없이
+ *   "직렬화 → 프로세스 종료 → 역직렬화" 흐름만 순수 Compose 상태로 시뮬레이션한다.
+ */

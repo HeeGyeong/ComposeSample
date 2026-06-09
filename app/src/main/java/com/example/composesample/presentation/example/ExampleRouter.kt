@@ -146,6 +146,7 @@ import com.example.composesample.presentation.example.component.architecture.dev
 import com.example.composesample.presentation.example.component.architecture.development.flow.FlatMapExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.flow.FlowBatchingExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.flow.FlowOperatorsExampleUI
+import com.example.composesample.presentation.example.component.architecture.navigation.Nav3SavedStateHandleExampleUI
 import com.example.composesample.presentation.example.component.architecture.navigation.Nav3ViewModelScopeExampleUI
 import com.example.composesample.presentation.example.component.architecture.navigation.Navigation3ExampleUI
 import com.example.composesample.presentation.example.component.architecture.modularization.ModularizationExampleUI
@@ -223,6 +224,7 @@ import com.example.composesample.util.ConstValue.ParticleEmitterExample
 import com.example.composesample.util.ConstValue.ModalDrawExample
 import com.example.composesample.util.ConstValue.ModularizationExample
 import com.example.composesample.util.ConstValue.MotionBlurExample
+import com.example.composesample.util.ConstValue.Nav3SavedStateHandleExample
 import com.example.composesample.util.ConstValue.Nav3ViewModelScopeExample
 import com.example.composesample.util.ConstValue.Navigation3Example
 import com.example.composesample.util.ConstValue.NestedRoutesNav3Example
@@ -711,6 +713,10 @@ fun ExampleCaseUI(
 
                         Nav3ViewModelScopeExample -> {
                             Nav3ViewModelScopeExampleUI(onBackEvent)
+                        }
+
+                        Nav3SavedStateHandleExample -> {
+                            Nav3SavedStateHandleExampleUI(onBackEvent)
                         }
 
                         ModularizationExample -> {

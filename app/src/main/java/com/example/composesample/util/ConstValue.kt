@@ -102,11 +102,12 @@ object ConstValue {
     const val AnimationsShowcaseExample = "animationsShowcaseExample"
 
     // ==================== 네비게이션 예제 ====================
-    // BottomNavigation(하단 탭), Navigation3(새 Navigation), NestedRoutesNav3(중첩 라우팅), Nav3ViewModelScope(Nav3 ViewModel 스코프 변화 + 복원 패턴)
+    // BottomNavigation(하단 탭), Navigation3(새 Navigation), NestedRoutesNav3(중첩 라우팅), Nav3ViewModelScope(Nav3 ViewModel 스코프 변화 + 복원 패턴), Nav3SavedStateHandle(복합 객체 NavKey 역직렬화 크래시 재현 + id+Repository 복원)
     const val BottomNavigationExample = "bottomNavigationExample"
     const val Navigation3Example = "navigation3Example"
     const val NestedRoutesNav3Example = "nestedRoutesNav3Example"
     const val Nav3ViewModelScopeExample = "nav3ViewModelScopeExample"
+    const val Nav3SavedStateHandleExample = "nav3SavedStateHandleExample"
 
     // ==================== 앱 시작 최적화 예제 ====================
     // StartupOptimization(App Startup / Baseline Profile / Koin 지연 초기화 비교)
