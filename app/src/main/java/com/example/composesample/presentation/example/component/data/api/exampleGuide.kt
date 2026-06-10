@@ -16,7 +16,18 @@ package com.example.composesample.presentation.example.component.data.api
  * 핵심 개념:
  * - HttpClient + ContentNegotiation(Gson) + Logging + DefaultRequest + timeout 구성
  * - Retrofit과의 비교: suspend 기반 동일하나 엔진/플러그인 구성 방식이 다름
- * - 고급 구성(Auth 토큰 리프레시, HttpRequestRetry 지수 백오프)은 추후 보강 예정
+ *
+ * ## KtorAdvancedConfigExampleUI (Auth 토큰 리프레시 / HttpRequestRetry 재시도 — MockEngine 시연)
+ * - 공식 문서(Auth): https://ktor.io/docs/client-bearer-auth.html
+ * - 공식 문서(Retry): https://ktor.io/docs/client-request-retry.html
+ * - 공식 문서(MockEngine): https://ktor.io/docs/client-testing.html
+ * 핵심 개념:
+ * - MockEngine: 실서버/실네트워크 없이 요청을 코드로 받아 응답을 정의하는 가짜 엔진. 401/503 분기를 결정적으로 재현
+ * - install(Auth) { bearer { loadTokens / refreshTokens } }: 401 수신 시 refreshTokens 가 자동 호출되어 토큰 갱신 후 재요청
+ *   - 트리거 조건: 401 응답에 WWW-Authenticate: Bearer 헤더가 있어야 BearerAuthProvider 가 동작
+ *   - sendWithoutRequest { true }: 401 을 기다리지 않고 첫 요청부터 토큰을 선제 전송
+ * - install(HttpRequestRetry) { retryOnServerErrors; delayMillis/exponentialDelay }: 5xx 에 지수 백오프로 재시도
+ * - 데모 목적상 MockEngine 을 메인 소스셋에 배치(실서비스는 보통 test 소스셋). 의존성: ktor-client-mock, ktor-client-auth
  *
  * ## ApiDisconnectExampleUI (연결 해제 처리)
  * - 공식 문서: https://developer.android.com/training/monitoring-device-state/connectivity-status-type

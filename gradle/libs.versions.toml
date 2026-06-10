@@ -131,6 +131,8 @@ ktorClientCore = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
 ktorClientLogging = { module = "io.ktor:ktor-client-logging", version.ref = "ktor" }
 ktorClientContentNegotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
 ktorSerializationGson = { module = "io.ktor:ktor-serialization-gson", version.ref = "ktor" }
+ktorClientAuth = { module = "io.ktor:ktor-client-auth", version.ref = "ktor" }
+ktorClientMock = { module = "io.ktor:ktor-client-mock", version.ref = "ktor" }
 
 junit = { module = "junit:junit", version.ref = "junit" }
 androidxTestJunit = { module = "androidx.test.ext:junit", version.ref = "androidxTestJunit" }
@@ -231,7 +233,9 @@ ktor = [
     "ktorClientContentNegotiation",
     "ktorClientCore",
     "ktorClientLogging",
-    "ktorSerializationGson"
+    "ktorSerializationGson",
+    "ktorClientAuth",
+    "ktorClientMock"
 ]
 
 room = [

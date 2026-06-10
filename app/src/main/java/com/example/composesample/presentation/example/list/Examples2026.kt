@@ -486,5 +486,12 @@ val examples2026 = listOf(
         description = "메인 스레드의 디스크/네트워크 I/O(ThreadPolicy)와 닫지 않은 Closeable 누수(VmPolicy)를 의도적으로 재현하고 penaltyListener 로 위반을 실시간 수집해 화면에 표시. detectDiskReads/detectDiskWrites/detectNetwork + detectLeakedClosableObjects 사용, penaltyListener 는 API 28+ 필요(미만은 penaltyLog→logcat). 외부 라이브러리(Strictly) 없이 순수 StrictMode API 로 구현",
         blogUrl = "",
         exampleType = ConstValue.StrictModeExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 06. 11",
+        title = "Advanced Ktor Config (Auth/Retry)",
+        description = "Ktor MockEngine 으로 실서버 없이 고급 클라이언트 구성을 시연 — ① Auth bearer 플러그인: 만료 토큰으로 요청 → 401 수신 → refreshTokens() 자동 호출 → 새 토큰으로 재요청 성공, ② HttpRequestRetry 플러그인: 503 두 번 → 지수 백오프(delayMillis) 후 재시도 → 3번째 200 복구, ③ 대조군: 플러그인 없이 401/503 이 그대로 실패로 노출. 각 시나리오를 실시간 타임라인 로그로 비교",
+        blogUrl = "",
+        exampleType = ConstValue.KtorAdvancedConfigExample
     )
 )

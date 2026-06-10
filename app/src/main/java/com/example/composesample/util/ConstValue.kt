@@ -164,10 +164,11 @@ object ConstValue {
     const val NameBasedDestructuringExample = "nameBasedDestructuringExample"
 
     // ==================== 네트워크 & API 예제 ====================
-    // Ktor(API 호출), SSE(실시간 통신), ApiDisconnect(연결 해제 처리)
+    // Ktor(API 호출), SSE(실시간 통신), ApiDisconnect(연결 해제 처리), KtorAdvancedConfig(MockEngine 위에서 Auth bearer 토큰 리프레시 / HttpRequestRetry 지수 백오프 재시도 시연)
     const val KtorExample = "ktorExample"
     const val SSEExample = "sseExample"
     const val ApiDisconnectExample = "apiDisconnectExample"
+    const val KtorAdvancedConfigExample = "ktorAdvancedConfigExample"
 
     // ==================== 데이터 & 캐시 예제 ====================
     // DataCache(캐시 관리), Paging(무한 스크롤), MultiTableInsert(Room DAO 인터페이스 상속 + withTransaction 다중 테이블 insert), RoomFtsSearch(Room @Fts4 가상 테이블의 MATCH 검색 vs LIKE '%q%' 전체 스캔 성능 비교), RoomIndex(@Index 단일/복합 인덱스의 범위/등호+정렬 쿼리 성능 비교)

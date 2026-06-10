@@ -46,6 +46,7 @@ import com.example.composesample.presentation.example.component.architecture.pat
 import com.example.composesample.presentation.example.component.architecture.pattern.effect.SideEffectExampleUI
 import com.example.composesample.presentation.example.component.architecture.pattern.mvi.MVIExampleUI
 import com.example.composesample.presentation.example.component.data.api.ApiDisconnectExampleUI
+import com.example.composesample.presentation.example.component.data.api.KtorAdvancedConfigExampleUI
 import com.example.composesample.presentation.example.component.data.api.KtorExampleUI
 import com.example.composesample.presentation.example.component.data.cache.DataCacheExampleUI
 import com.example.composesample.presentation.example.component.data.paging.PagingExampleUI
@@ -205,6 +206,7 @@ import com.example.composesample.util.ConstValue.InitTestExample
 import com.example.composesample.util.ConstValue.InlineValueClassExample
 import com.example.composesample.util.ConstValue.KoinCompilerPluginExample
 import com.example.composesample.util.ConstValue.FeatureFlagExample
+import com.example.composesample.util.ConstValue.KtorAdvancedConfigExample
 import com.example.composesample.util.ConstValue.KtorExample
 import com.example.composesample.util.ConstValue.AccessibleFocusIndicatorExample
 import com.example.composesample.util.ConstValue.LargeContentViewerExample
@@ -457,6 +459,10 @@ fun ExampleCaseUI(
 
                         KtorExample -> {
                             KtorExampleUI(onBackEvent)
+                        }
+
+                        KtorAdvancedConfigExample -> {
+                            KtorAdvancedConfigExampleUI(onBackEvent)
                         }
 
                         AnimationExample -> {
