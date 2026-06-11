@@ -12,15 +12,15 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.pullrefresh.PullRefreshIndicator
-import androidx.compose.material.pullrefresh.pullRefresh
-import androidx.compose.material.pullrefresh.rememberPullRefreshState
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
@@ -32,7 +32,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun PullToRefreshUI(
     onBackButtonClick: () -> Unit
@@ -40,29 +40,36 @@ fun PullToRefreshUI(
     val coroutineScope = rememberCoroutineScope()
     val refreshViewModel = viewModel<RefreshViewModel>()
     val refreshState by refreshViewModel.refreshState
-    val pullRefreshState = rememberPullRefreshState(
-        refreshing = refreshState.isLoading,
-        onRefresh = refreshViewModel::addRefreshItem
-    )
+    val pullToRefreshState = rememberPullToRefreshState()
 
-    val pullRefreshStateSame = rememberPullRefreshState(
-        refreshing = refreshState.isLoading,
-        onRefresh = {
-            coroutineScope.launch {
-                refreshViewModel.changeRefreshState(true)
-                delay(1000L)
-                refreshViewModel.changeRefreshState(false)
-                refreshViewModel.updateItem()
-            }
+    // M3 에서는 onRefresh 를 상태가 아닌 PullToRefreshBox 에 직접 전달한다.
+    // 아래 람다는 코루틴으로 직접 로딩 상태를 제어하는 대체 onRefresh 예시.
+    val onRefreshSame: () -> Unit = {
+        coroutineScope.launch {
+            refreshViewModel.changeRefreshState(true)
+            delay(1000L)
+            refreshViewModel.changeRefreshState(false)
+            refreshViewModel.updateItem()
         }
-    )
+    }
 
-    Box(
+    PullToRefreshBox(
+        isRefreshing = refreshState.isLoading,
+        onRefresh = refreshViewModel::addRefreshItem,
+//        onRefresh = onRefreshSame,
         modifier = Modifier
             .fillMaxSize()
-            .pullRefresh(pullRefreshState)
-//            .pullRefresh(pullRefreshStateSame)
-            .background(color = Color.White)
+            .background(color = Color.White),
+        state = pullToRefreshState,
+        indicator = {
+            PullToRefreshDefaults.Indicator(
+                state = pullToRefreshState,
+                isRefreshing = refreshState.isLoading,
+                modifier = Modifier.align(Alignment.TopCenter),
+                containerColor = Color.LightGray,
+                color = if (refreshState.isLoading) Color.Red else Color.Blue,
+            )
+        }
     ) {
         LazyColumn(
             modifier = Modifier
@@ -95,14 +102,5 @@ fun PullToRefreshUI(
                 }
             }
         }
-
-        PullRefreshIndicator(
-            refreshing = refreshViewModel.refreshState.value.isLoading,
-            state = pullRefreshState,
-//            state = pullRefreshStateSame,
-            modifier = Modifier.align(Alignment.TopCenter),
-            backgroundColor = Color.LightGray,
-            contentColor = if (refreshViewModel.refreshState.value.isLoading) Color.Red else Color.Blue,
-        )
     }
 }

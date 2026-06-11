@@ -12,17 +12,17 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material.Divider
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.pullrefresh.PullRefreshIndicator
-import androidx.compose.material.pullrefresh.pullRefresh
-import androidx.compose.material.pullrefresh.rememberPullRefreshState
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -36,7 +36,7 @@ import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun KtorExampleUI(
     onBackButtonClick: () -> Unit,
@@ -48,20 +48,28 @@ fun KtorExampleUI(
     val isLoading by apiExampleViewModel.isLoading.collectAsStateWithLifecycle()
     val errorMessage by apiExampleViewModel.errorMessage.collectAsStateWithLifecycle()
 
-    val pullRefreshState = rememberPullRefreshState(
-        refreshing = isLoading,
+    val pullToRefreshState = rememberPullToRefreshState()
+
+    PullToRefreshBox(
+        isRefreshing = isLoading,
         onRefresh = {
             coroutineScope.launch {
                 apiExampleViewModel.fetchPostsWithKtor()
             }
-        }
-    )
-
-    Box(
+        },
         modifier = Modifier
             .fillMaxSize()
-            .pullRefresh(pullRefreshState)
-            .background(color = Color.White)
+            .background(color = Color.White),
+        state = pullToRefreshState,
+        indicator = {
+            PullToRefreshDefaults.Indicator(
+                state = pullToRefreshState,
+                isRefreshing = isLoading,
+                modifier = Modifier.align(Alignment.TopCenter),
+                containerColor = Color.LightGray,
+                color = if (isLoading) Color.Red else Color.Blue,
+            )
+        }
     ) {
         LazyColumn(
             modifier = Modifier
@@ -88,7 +96,7 @@ fun KtorExampleUI(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(horizontal = 16.dp),
-                            style = MaterialTheme.typography.h6
+                            style = MaterialTheme.typography.titleLarge
                         )
 
                         errorMessage?.let {
@@ -110,28 +118,20 @@ fun KtorExampleUI(
                 ) {
                     Text(
                         text = "[$index] : ${item.title}",
-                        style = MaterialTheme.typography.body1
+                        style = MaterialTheme.typography.bodyLarge
                     )
 
                     Spacer(modifier = Modifier.height(4.dp))
 
                     Text(
                         text = item.body,
-                        style = MaterialTheme.typography.body2,
+                        style = MaterialTheme.typography.bodyMedium,
                         color = Color.Gray
                     )
 
-                    Divider(modifier = Modifier.padding(vertical = 8.dp))
+                    HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
                 }
             }
         }
-
-        PullRefreshIndicator(
-            refreshing = isLoading,
-            state = pullRefreshState,
-            modifier = Modifier.align(Alignment.TopCenter),
-            backgroundColor = Color.LightGray,
-            contentColor = if (isLoading) Color.Red else Color.Blue,
-        )
     }
-} 
+}
