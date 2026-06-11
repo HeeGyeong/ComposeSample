@@ -15,11 +15,11 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.Text
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.MoreVert
@@ -75,7 +75,6 @@ fun FancyTopAppBarExampleUI(
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 private fun ExampleSelectorCard(
     selectedExample: Int,
@@ -86,8 +85,8 @@ private fun ExampleSelectorCard(
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp),
-        elevation = 4.dp,
-        backgroundColor = Color.White,
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.White),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -145,7 +144,6 @@ private fun ExampleSelectorCard(
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 private fun ExampleButton(
     text: String,
@@ -155,10 +153,9 @@ private fun ExampleButton(
     Card(
         modifier = Modifier.fillMaxWidth(),
         onClick = onClick,
-        backgroundColor = if (isSelected) Color(0xFF1976D2) else Color(0xFFF5F5F5),
+        colors = CardDefaults.cardColors(containerColor = if (isSelected) Color(0xFF1976D2) else Color(0xFFF5F5F5)),
         shape = RoundedCornerShape(8.dp),
-        elevation = if (isSelected) 2.dp else 0.dp
-    ) {
+        elevation = CardDefaults.cardElevation(defaultElevation = if (isSelected) 2.dp else 0.dp)) {
         Text(
             text = text,
             modifier = Modifier.padding(12.dp),
@@ -458,8 +455,8 @@ private fun DemoListContent(
         item {
             Card(
                 modifier = Modifier.fillMaxWidth(),
-                elevation = 2.dp,
-                backgroundColor = Color(0xFFE3F2FD),
+                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+                colors = CardDefaults.cardColors(containerColor = Color(0xFFE3F2FD)),
                 shape = RoundedCornerShape(12.dp)
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
@@ -492,8 +489,8 @@ private fun DemoListContent(
 private fun DemoListItem(index: Int) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 2.dp,
-        backgroundColor = Color.White,
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.White),
         shape = RoundedCornerShape(8.dp)
     ) {
         Row(

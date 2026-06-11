@@ -23,15 +23,16 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.Card
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.Icon
-import androidx.compose.material.Surface
-import androidx.compose.material.Tab
-import androidx.compose.material.TabRow
-import androidx.compose.material.Text
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRow
+import androidx.compose.material3.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Info
@@ -87,7 +88,7 @@ fun DynamicAppLinksExampleUI(
 
         TabRow(
             selectedTabIndex = selectedTab,
-            backgroundColor = Color(0xFF1976D2),
+            containerColor = Color(0xFF1976D2),
             contentColor = Color.White
         ) {
             Tab(
@@ -138,7 +139,7 @@ private fun OverviewTab() {
 private fun OverviewCard() {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(
@@ -205,8 +206,8 @@ private fun FeatureChip(text: String, color: Color) {
 private fun SourceReferenceCard() {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        backgroundColor = Color(0xFFFFF9C4),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFFFF9C4)),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(
@@ -264,8 +265,8 @@ private fun SourceReferenceCard() {
 private fun QuickFeatureCard() {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        backgroundColor = Color(0xFFE8F5E8),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFE8F5E8)),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(
@@ -379,8 +380,8 @@ private fun LiveTestTab() {
         item {
             Card(
                 modifier = Modifier.fillMaxWidth(),
-                elevation = 4.dp,
-                backgroundColor = Color(0xFF1976D2),
+                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+                colors = CardDefaults.cardColors(containerColor = Color(0xFF1976D2)),
                 shape = RoundedCornerShape(12.dp)
             ) {
                 Column(
@@ -425,7 +426,7 @@ private fun LiveTestTab() {
                         },
                         modifier = Modifier.fillMaxWidth(),
                         colors = ButtonDefaults.buttonColors(
-                            backgroundColor = Color.White,
+                            containerColor = Color.White,
                             contentColor = Color(0xFF1976D2)
                         ),
                         shape = RoundedCornerShape(8.dp)
@@ -489,7 +490,7 @@ private fun LiveTestItem(
 
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 2.dp,
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(
@@ -568,7 +569,7 @@ private fun LiveTestItem(
                 },
                 modifier = Modifier.fillMaxWidth(),
                 colors = ButtonDefaults.buttonColors(
-                    backgroundColor = Color(0xFF1976D2)
+                    containerColor = Color(0xFF1976D2)
                 ),
                 shape = RoundedCornerShape(8.dp),
                 enabled = !isTesting
@@ -606,8 +607,8 @@ private fun LiveTestItem(
 private fun TestResultsCard(results: List<TestResult>) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        backgroundColor = Color(0xFFE8F5E9),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFE8F5E9)),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(
@@ -726,8 +727,8 @@ private fun PerformanceMetricsCard(
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        backgroundColor = Color(0xFF1976D2),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFF1976D2)),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(
@@ -759,7 +760,7 @@ private fun PerformanceMetricsCard(
                         onClick = { onMetricSelected(index) },
                         modifier = Modifier.weight(1f),
                     colors = ButtonDefaults.buttonColors(
-                            backgroundColor = if (selectedMetric == index) 
+                            containerColor = if (selectedMetric == index) 
                                 Color.White else Color.White.copy(alpha = 0.3f)
                     ),
                     shape = RoundedCornerShape(8.dp)
@@ -781,7 +782,7 @@ private fun PerformanceMetricsCard(
                 onClick = onAnalyze,
                 modifier = Modifier.fillMaxWidth(),
                 colors = ButtonDefaults.buttonColors(
-                    backgroundColor = Color(0xFF4CAF50)
+                    containerColor = Color(0xFF4CAF50)
                 ),
                 shape = RoundedCornerShape(8.dp),
                 enabled = !isAnalyzing
@@ -821,7 +822,7 @@ private fun LinkResolutionPerformanceCard() {
 
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(
@@ -930,8 +931,8 @@ private fun PerformanceBarChart(data: List<Float>, label: String) {
 private fun CacheEfficiencyCard() {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        backgroundColor = Color(0xFFE8F5E9),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFE8F5E9)),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(
@@ -1025,8 +1026,8 @@ private fun CacheEfficiencyCard() {
 private fun NetworkImpactCard() {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        backgroundColor = Color(0xFFFFF3E0),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFFFF3E0)),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(
@@ -1083,7 +1084,7 @@ private fun NetworkImpactCard() {
 private fun ComparisonCard() {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(
@@ -1223,8 +1224,8 @@ private fun SimulatorControlCard(
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        backgroundColor = Color(0xFF7B1FA2),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFF7B1FA2)),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(
@@ -1260,7 +1261,7 @@ private fun SimulatorControlCard(
                     onClick = { onUrlSelected(url) },
                 modifier = Modifier.fillMaxWidth(),
                     colors = ButtonDefaults.buttonColors(
-                        backgroundColor = if (selectedUrl == url) 
+                        containerColor = if (selectedUrl == url) 
                             Color.White else Color.White.copy(alpha = 0.3f)
                     ),
                     shape = RoundedCornerShape(8.dp)
@@ -1281,7 +1282,7 @@ private fun SimulatorControlCard(
                 onClick = onSimulate,
                 modifier = Modifier.fillMaxWidth(),
                 colors = ButtonDefaults.buttonColors(
-                    backgroundColor = Color(0xFF4CAF50)
+                    containerColor = Color(0xFF4CAF50)
                 ),
                 shape = RoundedCornerShape(8.dp),
                 enabled = !isProcessing
@@ -1312,8 +1313,8 @@ private fun SimulatorControlCard(
 private fun SimulationResultCard(result: SimulationResult) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        backgroundColor = Color(0xFFE8F5E9),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFE8F5E9)),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(
@@ -1431,7 +1432,7 @@ private fun ProcessingStepItem(stepNumber: Int, description: String) {
 private fun RuleEngineCard(url: String) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(

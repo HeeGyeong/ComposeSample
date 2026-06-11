@@ -15,15 +15,16 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.ScrollableTabRow
-import androidx.compose.material.Tab
-import androidx.compose.material.TabRow
-import androidx.compose.material.TabRowDefaults
-import androidx.compose.material.TabRowDefaults.tabIndicatorOffset
-import androidx.compose.material.Text
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.ScrollableTabRow
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRow
+import androidx.compose.material3.TabRowDefaults
+import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
+import androidx.compose.material3.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.runtime.Composable
@@ -74,8 +75,8 @@ private fun HeaderCard(onBackEvent: () -> Unit) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp),
-        elevation = 4.dp,
-        backgroundColor = Color.White,
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.White),
         shape = RoundedCornerShape(12.dp)
     ) {
         Row(
@@ -115,8 +116,8 @@ private fun ShortLabelsCard() {
 
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        backgroundColor = Color.White,
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.White),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -169,8 +170,8 @@ private fun LongLabelsCard() {
 
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        backgroundColor = Color.White,
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.White),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -223,8 +224,8 @@ private fun MixedLabelsCard() {
 
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        backgroundColor = Color.White,
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.White),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -280,8 +281,8 @@ private fun WithBadgesCard() {
 
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        backgroundColor = Color.White,
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.White),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -350,8 +351,8 @@ private fun ComparisonCard() {
 
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        backgroundColor = Color.White,
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.White),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -373,7 +374,7 @@ private fun ComparisonCard() {
             Spacer(modifier = Modifier.height(8.dp))
             TabRow(
                 selectedTabIndex = selectedTab1,
-                backgroundColor = Color(0xFFFFF3E0),
+                containerColor = Color(0xFFFFF3E0),
                 contentColor = Color(0xFFFF6F00)
             ) {
                 longTabs.forEachIndexed { index, title ->
@@ -403,7 +404,7 @@ private fun ComparisonCard() {
             Spacer(modifier = Modifier.height(8.dp))
             ScrollableTabRow(
                 selectedTabIndex = selectedTab2,
-                backgroundColor = Color(0xFFF3E5F5),
+                containerColor = Color(0xFFF3E5F5),
                 contentColor = Color(0xFF7B1FA2),
                 edgePadding = 0.dp
             ) {
@@ -461,9 +462,9 @@ fun ResponsiveTabRow(
     onTabClick: (Int) -> Unit,
     containerColor: Color = Color.White,
     contentColor: Color = Color(0xFF1976D2),
-    indicator: @Composable (tabPositions: List<androidx.compose.material.TabPosition>) -> Unit = { tabPositions ->
+    indicator: @Composable (tabPositions: List<androidx.compose.material3.TabPosition>) -> Unit = { tabPositions ->
         if (tabPositions.isNotEmpty() && selectedTabIndex < tabPositions.size) {
-            TabRowDefaults.Indicator(
+            TabRowDefaults.SecondaryIndicator(
                 Modifier.tabIndicatorOffset(tabPositions[selectedTabIndex]),
                 color = contentColor
             )
@@ -509,7 +510,7 @@ fun ResponsiveTabRow(
             if (useScrollable) {
                 ScrollableTabRow(
                     selectedTabIndex = selectedTabIndex,
-                    backgroundColor = containerColor,
+                    containerColor = containerColor,
                     contentColor = contentColor,
                     edgePadding = 0.dp,
                     indicator = indicator,
@@ -532,7 +533,7 @@ fun ResponsiveTabRow(
             } else {
                 TabRow(
                     selectedTabIndex = selectedTabIndex,
-                    backgroundColor = containerColor,
+                    containerColor = containerColor,
                     contentColor = contentColor,
                     indicator = indicator,
                     divider = divider
