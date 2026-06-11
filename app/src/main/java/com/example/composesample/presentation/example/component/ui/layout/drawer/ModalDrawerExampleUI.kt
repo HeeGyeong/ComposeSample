@@ -8,16 +8,17 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.material.Button
-import androidx.compose.material.DrawerValue
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.ModalDrawer
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.rememberDrawerState
+import androidx.compose.material3.Button
+import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.ModalDrawerSheet
+import androidx.compose.material3.ModalNavigationDrawer
+import androidx.compose.material3.Text
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.mutableStateOf
@@ -55,18 +56,21 @@ fun ModalDrawerExampleUI(
                 LocalLayoutDirection provides LayoutDirection.Ltr
             }
         ) {
-            ModalDrawer(
+            ModalNavigationDrawer(
                 drawerState = drawerState,
                 gesturesEnabled = drawerState.isOpen,
                 drawerContent = {
-                    CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
-                        DrawerContainer(
-                            onClickEvent = {
-                                coroutineScope.launch {
-                                    drawerState.close()
+                    // M3 에서는 drawer 표면을 ModalDrawerSheet 로 감싼다.
+                    ModalDrawerSheet {
+                        CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
+                            DrawerContainer(
+                                onClickEvent = {
+                                    coroutineScope.launch {
+                                        drawerState.close()
+                                    }
                                 }
-                            }
-                        )
+                            )
+                        }
                     }
                 },
                 content = {

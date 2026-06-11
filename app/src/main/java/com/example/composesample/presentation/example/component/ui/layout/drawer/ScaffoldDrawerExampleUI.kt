@@ -10,20 +10,27 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.Divider
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.Scaffold
-import androidx.compose.material.SnackbarDuration
-import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material.rememberScaffoldState
+import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.ModalDrawerSheet
+import androidx.compose.material3.ModalNavigationDrawer
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -33,6 +40,7 @@ import androidx.compose.ui.zIndex
 import com.example.composesample.util.noRippleClickable
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ScaffoldDrawerExampleUI(
     onBackButtonClick: () -> Unit
@@ -43,19 +51,72 @@ fun ScaffoldDrawerExampleUI(
             .zIndex(1f),
         contentAlignment = Alignment.Center
     ) {
-        val scaffoldState = rememberScaffoldState()
+        // M3 Scaffold 에는 scaffoldState/drawerContent 가 없으므로
+        // ModalNavigationDrawer 로 감싸고 DrawerState/SnackbarHostState 를 직접 관리한다.
+        val drawerState = rememberDrawerState(DrawerValue.Closed)
+        val snackbarHostState = remember { SnackbarHostState() }
         val coroutineScope = rememberCoroutineScope()
 
-        Scaffold(
-            scaffoldState = scaffoldState,
-            topBar = {
-                TopAppBar(
-                    title = { Text(text = "scaffold drawerContent") },
-                    navigationIcon = {
+        ModalNavigationDrawer(
+            drawerState = drawerState,
+            gesturesEnabled = true,
+            drawerContent = {
+                ModalDrawerSheet {
+                    DrawerContainer(
+                        onClickEvent = {
+                            coroutineScope.launch {
+                                drawerState.close()
+                            }
+                        }
+                    )
+                }
+            }
+        ) {
+            Scaffold(
+                snackbarHost = { SnackbarHost(snackbarHostState) },
+                topBar = {
+                    TopAppBar(
+                        title = { Text(text = "scaffold drawerContent") },
+                        navigationIcon = {
+                            IconButton(
+                                onClick = {
+                                    coroutineScope.launch {
+                                        drawerState.apply {
+                                            if (isClosed) open() else close()
+                                        }
+                                    }
+                                }
+                            ) {
+                                Icon(Icons.Filled.Menu, contentDescription = "drawerIcon")
+                            }
+                        },
+                        actions = {
+                            IconButton(
+                                onClick = {
+                                    onBackButtonClick.invoke()
+                                }
+                            ) {
+                                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "")
+                            }
+                        }
+                    )
+                },
+                content = { paddingValues ->
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(paddingValues),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            text = "Sample Contents"
+                        )
+
                         IconButton(
                             onClick = {
                                 coroutineScope.launch {
-                                    scaffoldState.drawerState.apply {
+                                    drawerState.apply {
                                         if (isClosed) open() else close()
                                     }
                                 }
@@ -63,68 +124,24 @@ fun ScaffoldDrawerExampleUI(
                         ) {
                             Icon(Icons.Filled.Menu, contentDescription = "drawerIcon")
                         }
-                    },
-                    actions = {
+
                         IconButton(
                             onClick = {
-                                onBackButtonClick.invoke()
-                            }
-                        ) {
-                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "")
-                        }
-                    }
-                )
-            },
-            content = { paddingValues ->
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(paddingValues),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(
-                        text = "Sample Contents"
-                    )
-
-                    IconButton(
-                        onClick = {
-                            coroutineScope.launch {
-                                scaffoldState.drawerState.apply {
-                                    if (isClosed) open() else close()
+                                coroutineScope.launch {
+                                    snackbarHostState.showSnackbar(
+                                        "ggg",
+                                        duration = SnackbarDuration.Short
+                                    )
                                 }
                             }
+                        ) {
+                            Icon(Icons.Filled.Edit, contentDescription = "snackBarIcon")
                         }
-                    ) {
-                        Icon(Icons.Filled.Menu, contentDescription = "drawerIcon")
-                    }
 
-                    IconButton(
-                        onClick = {
-                            coroutineScope.launch {
-                                scaffoldState.snackbarHostState.showSnackbar(
-                                    "ggg",
-                                    duration = SnackbarDuration.Short
-                                )
-                            }
-                        }
-                    ) {
-                        Icon(Icons.Filled.Edit, contentDescription = "snackBarIcon")
                     }
-
                 }
-            },
-            drawerContent = {
-                DrawerContainer(
-                    onClickEvent = {
-                        coroutineScope.launch {
-                            scaffoldState.drawerState.close()
-                        }
-                    }
-                )
-            },
-            drawerGesturesEnabled = true
-        )
+            )
+        }
     }
 }
 
@@ -179,6 +196,6 @@ fun ColumnScope.DrawerContents(
         )
     }
     if (visibleDivider) {
-        Divider()
+        HorizontalDivider()
     }
 }
