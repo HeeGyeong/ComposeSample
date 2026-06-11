@@ -14,17 +14,18 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.Card
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.Icon
-import androidx.compose.material.Scaffold
-import androidx.compose.material.SnackbarHost
-import androidx.compose.material.SnackbarHostState
-import androidx.compose.material.SnackbarResult
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
@@ -103,8 +104,8 @@ private fun BasicUsageCard(snackbarHostState: SnackbarHostState) {
     val scope = rememberCoroutineScope()
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        backgroundColor = Color(0xFFE3F2FD),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFE3F2FD)),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(
@@ -196,7 +197,7 @@ private fun BasicUsageButton(
     Button(
         onClick = onClick,
         modifier = Modifier.fillMaxWidth(),
-        colors = ButtonDefaults.buttonColors(backgroundColor = color),
+        colors = ButtonDefaults.buttonColors(containerColor = color),
         shape = RoundedCornerShape(8.dp)
     ) {
         Column(
@@ -224,8 +225,8 @@ private fun InteractiveSnackbarsCard(snackbarHostState: SnackbarHostState) {
 
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        backgroundColor = Color(0xFFFFEBEE),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFFFEBEE)),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(
@@ -265,7 +266,7 @@ private fun InteractiveSnackbarsCard(snackbarHostState: SnackbarHostState) {
                         }
                     },
                     modifier = Modifier.fillMaxWidth(),
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFD32F2F)),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFD32F2F)),
                     shape = RoundedCornerShape(8.dp)
                 ) {
                     Icon(
@@ -291,7 +292,7 @@ private fun InteractiveSnackbarsCard(snackbarHostState: SnackbarHostState) {
                         }
                     },
                     modifier = Modifier.fillMaxWidth(),
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF2196F3)),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2196F3)),
                     shape = RoundedCornerShape(8.dp)
                 ) {
                     Icon(
@@ -355,8 +356,8 @@ private fun RealWorldUseCasesCard(
     val scope = rememberCoroutineScope()
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        backgroundColor = Color(0xFFF3E5F5),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFF3E5F5)),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(
@@ -399,7 +400,7 @@ private fun RealWorldUseCasesCard(
                             }
                         },
                         modifier = Modifier.weight(1f),
-                        colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF4CAF50))
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4CAF50))
                     ) {
                         Text("유효한 이메일", color = Color.White, fontSize = 12.sp)
                     }
@@ -411,7 +412,7 @@ private fun RealWorldUseCasesCard(
                             }
                         },
                         modifier = Modifier.weight(1f),
-                        colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFD32F2F))
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFD32F2F))
                     ) {
                         Text("잘못된 이메일", color = Color.White, fontSize = 12.sp)
                     }
@@ -442,7 +443,7 @@ private fun RealWorldUseCasesCard(
                             }
                         },
                         modifier = Modifier.weight(1f),
-                        colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF4CAF50))
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4CAF50))
                     ) {
                         Icon(
                             imageVector = Icons.Filled.Add,
@@ -476,7 +477,7 @@ private fun RealWorldUseCasesCard(
                             }
                         },
                         modifier = Modifier.weight(1f),
-                        colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFFF9800))
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFF9800))
                     ) {
                         Icon(
                             imageVector = Icons.Filled.ShoppingCart,
@@ -512,7 +513,7 @@ private fun RealWorldUseCasesCard(
                     modifier = Modifier.fillMaxWidth(),
                     enabled = !isLoading,
                     colors = ButtonDefaults.buttonColors(
-                        backgroundColor = if (isLoading) Color.Gray else Color(0xFF2196F3)
+                        containerColor = if (isLoading) Color.Gray else Color(0xFF2196F3)
                     ),
                     shape = RoundedCornerShape(8.dp)
                 ) {
