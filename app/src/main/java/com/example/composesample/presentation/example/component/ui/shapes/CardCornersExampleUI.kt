@@ -18,14 +18,15 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.Card
-import androidx.compose.material.Icon
-import androidx.compose.material.Slider
-import androidx.compose.material.SliderDefaults
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Slider
+import androidx.compose.material3.SliderDefaults
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Info
@@ -79,8 +80,8 @@ fun CardCornersExampleUI(
 private fun BasicCornerTypesCard() {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        backgroundColor = Color(0xFFE8F5E8),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFE8F5E8)),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(
@@ -271,8 +272,8 @@ private fun ConcaveCornerExample(
 private fun MixedCornersCard() {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        backgroundColor = Color(0xFFE3F2FD),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFE3F2FD)),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(
@@ -361,9 +362,8 @@ private fun MixedCornerExampleCard(
                         .fillMaxWidth()
                         .height(30.dp),
                     shape = shape,
-                    backgroundColor = color,
-                    elevation = 2.dp
-                ) {
+                    colors = CardDefaults.cardColors(containerColor = color),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)) {
                     Box(contentAlignment = Alignment.Center) {
                         Icon(
                             imageVector = Icons.Filled.Star,
@@ -378,9 +378,8 @@ private fun MixedCornerExampleCard(
                         .fillMaxWidth()
                         .height(30.dp),
                     shape = bottomShape,
-                    backgroundColor = color.copy(alpha = 0.8f),
-                    elevation = 2.dp
-                ) {
+                    colors = CardDefaults.cardColors(containerColor = color.copy(alpha = 0.8f)),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)) {
                     Box(contentAlignment = Alignment.Center) {
                         Icon(
                             imageVector = Icons.Filled.Star,
@@ -395,9 +394,8 @@ private fun MixedCornerExampleCard(
             Card(
                 modifier = Modifier.size(width = 80.dp, height = 60.dp),
                 shape = shape,
-                backgroundColor = color,
-                elevation = 4.dp
-            ) {
+                colors = CardDefaults.cardColors(containerColor = color),
+                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)) {
                 Box(
                     contentAlignment = Alignment.Center
                 ) {
@@ -445,8 +443,8 @@ private fun InteractiveCornerCard() {
 
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        backgroundColor = Color(0xFFFFF3E0),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFFFF3E0)),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(
@@ -485,9 +483,8 @@ private fun InteractiveCornerCard() {
                 Card(
                     modifier = Modifier.size(100.dp),
                     shape = dynamicShape,
-                    backgroundColor = Color(0xFFE65100),
-                    elevation = 4.dp
-                ) {
+                    colors = CardDefaults.cardColors(containerColor = Color(0xFFE65100)),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)) {
                     Box(
                         contentAlignment = Alignment.Center
                     ) {
@@ -563,8 +560,7 @@ private fun CornerControl(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(8.dp),
         color = Color(0xFFE65100).copy(alpha = 0.05f),
-        elevation = 1.dp
-    ) {
+        shadowElevation = 1.dp) {
         Column(
             modifier = Modifier.padding(12.dp)
         ) {
@@ -586,7 +582,7 @@ private fun CornerControl(
                         onClick = { onTypeChange(typeOption) },
                         modifier = Modifier.weight(1f),
                         colors = ButtonDefaults.buttonColors(
-                            backgroundColor = if (type == typeOption)
+                            containerColor = if (type == typeOption)
                                 Color(0xFFE65100) else Color(0xFFE65100).copy(alpha = 0.2f)
                         ),
                         shape = RoundedCornerShape(6.dp)
@@ -633,8 +629,8 @@ private fun CornerControl(
 private fun RealWorldExamplesCard() {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        backgroundColor = Color(0xFFFFEBEE),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFFFEBEE)),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(
@@ -727,9 +723,8 @@ private fun RealWorldExample(
         Card(
             modifier = Modifier.size(60.dp),
             shape = shape,
-            backgroundColor = color,
-            elevation = 4.dp
-        ) {
+            colors = CardDefaults.cardColors(containerColor = color),
+            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)) {
             Box(
                 contentAlignment = Alignment.Center
             ) {
