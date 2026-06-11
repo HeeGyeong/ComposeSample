@@ -1,13 +1,11 @@
 package com.example.composesample.presentation.legacy.base
 
-import androidx.compose.foundation.shape.CornerSize
-import androidx.compose.material.BottomAppBar
-import androidx.compose.material.BottomNavigation
-import androidx.compose.material.BottomNavigationItem
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
+import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.Icon
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.Text
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Menu
@@ -21,14 +19,12 @@ import androidx.compose.ui.graphics.Color
 fun BottomBar() {
     val selectedItem = remember { mutableStateOf("") }
 
+    // M3 BottomAppBar 에는 cutoutShape(FAB docking)이 없다.
     BottomAppBar(
-        cutoutShape = MaterialTheme.shapes.small.copy(
-            CornerSize(percent = 50)
-        ),
-        backgroundColor = Color.DarkGray,
+        containerColor = Color.DarkGray,
         content = {
-            BottomNavigation() {
-                BottomNavigationItem(
+            NavigationBar {
+                NavigationBarItem(
                     icon = {
                         Icon(Icons.Filled.Favorite, "")
                     },
@@ -40,7 +36,7 @@ fun BottomBar() {
                     alwaysShowLabel = false
                 )
 
-                BottomNavigationItem(
+                NavigationBarItem(
                     icon = {
                         Icon(Icons.Filled.Home, "")
                     },
@@ -52,7 +48,7 @@ fun BottomBar() {
                     alwaysShowLabel = false
                 )
 
-                BottomNavigationItem(
+                NavigationBarItem(
                     icon = {
                         Icon(Icons.Filled.Menu, "")
                     },
@@ -66,7 +62,7 @@ fun BottomBar() {
                     alwaysShowLabel = false
                 )
 
-                BottomNavigationItem(
+                NavigationBarItem(
                     icon = {
                         Icon(Icons.Filled.MoreVert, "")
                     },

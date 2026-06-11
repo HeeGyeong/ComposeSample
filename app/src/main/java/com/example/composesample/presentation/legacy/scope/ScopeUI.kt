@@ -10,10 +10,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Button
-import androidx.compose.material.ScaffoldState
-import androidx.compose.material.Text
-import androidx.compose.material.TextField
+import androidx.compose.material3.Button
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.runtime.getValue
@@ -128,7 +128,7 @@ fun GoSubActivity() {
  */
 @Composable
 fun CoroutineScreen(
-    scaffoldState: ScaffoldState,
+    snackbarHostState: SnackbarHostState,
     changeState: () -> Unit,
     coroutineScope: CoroutineScope = rememberCoroutineScope(),
 ) {
@@ -136,7 +136,7 @@ fun CoroutineScreen(
         Button(
             onClick = {
                 coroutineScope.launch {
-                    scaffoldState.snackbarHostState
+                    snackbarHostState
                         .showSnackbar("Show Snackbar $coroutineScope")
                 }
             },

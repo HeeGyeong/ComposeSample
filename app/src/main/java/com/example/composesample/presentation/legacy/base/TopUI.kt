@@ -12,17 +12,18 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.material.AppBarDefaults
-import androidx.compose.material.Divider
-import androidx.compose.material.DropdownMenu
-import androidx.compose.material.DropdownMenuItem
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.IconToggleButton
-import androidx.compose.material.ScaffoldState
-import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
+import androidx.compose.material3.DrawerState
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconToggleButton
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material.icons.filled.Call
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Favorite
@@ -51,11 +52,12 @@ import com.example.composesample.presentation.legacy.sub.SubActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @ExperimentalAnimationApi
 @Composable
 fun TopBar(
     title: String,
-    scaffoldState: ScaffoldState,
+    drawerState: DrawerState,
     scope: CoroutineScope = rememberCoroutineScope(), // 인자가 안넘어오면 생성. 안정성을 위해 추가.
 ) {
     val context = LocalContext.current as Activity
@@ -72,7 +74,7 @@ fun TopBar(
             IconButton(
                 onClick = {
                     scope.launch {
-                        scaffoldState.drawerState.apply {
+                        drawerState.apply {
                             if (isClosed) open() else close()
                         }
                     }
@@ -127,90 +129,95 @@ fun TopBar(
                     expanded = expanded.value,
                     onDismissRequest = { expanded.value = false },
                 ) {
-                    DropdownMenuItem(onClick = {
-                        expanded.value = false
+                    DropdownMenuItem(
+                        text = { Text("SubActivity") },
+                        onClick = {
+                            expanded.value = false
 
-                        context.startActivity(
-                            Intent().run {
-                                this.putExtra("sample", "data")
-                                setClass(context, SubActivity::class.java)
-                            }
-                        )
-                        context.finish()
-                    }) {
-                        Text("SubActivity")
-                    }
+                            context.startActivity(
+                                Intent().run {
+                                    this.putExtra("sample", "data")
+                                    setClass(context, SubActivity::class.java)
+                                }
+                            )
+                            context.finish()
+                        }
+                    )
 
-                    DropdownMenuItem(onClick = {
-                        expanded.value = false
+                    DropdownMenuItem(
+                        text = { Text("ProgressActivity") },
+                        onClick = {
+                            expanded.value = false
 
-                        context.startActivity(Intent(context, ProgressActivity::class.java))
-                        context.finish()
-                    }) {
-                        Text("ProgressActivity")
-                    }
+                            context.startActivity(Intent(context, ProgressActivity::class.java))
+                            context.finish()
+                        }
+                    )
 
-                    Divider()
+                    HorizontalDivider()
 
-                    DropdownMenuItem(onClick = {
-                        expanded.value = false
+                    DropdownMenuItem(
+                        text = { Text("CalActivity") },
+                        onClick = {
+                            expanded.value = false
 
-                        context.startActivity(Intent(context, CalActivity::class.java))
-                        context.finish()
-                    }) {
-                        Text("CalActivity")
-                    }
+                            context.startActivity(Intent(context, CalActivity::class.java))
+                            context.finish()
+                        }
+                    )
 
-                    Divider(thickness = 4.dp)
+                    HorizontalDivider(thickness = 4.dp)
 
-                    DropdownMenuItem(onClick = {
-                        expanded.value = false
+                    DropdownMenuItem(
+                        text = { Text("Scope Activity") },
+                        onClick = {
+                            expanded.value = false
 
-                        context.startActivity(Intent(context, ScopeActivity::class.java))
-                        context.finish()
-                    }) {
-                        Text("Scope Activity")
-                    }
+                            context.startActivity(Intent(context, ScopeActivity::class.java))
+                            context.finish()
+                        }
+                    )
 
-                    Divider(thickness = 8.dp)
+                    HorizontalDivider(thickness = 8.dp)
 
-                    DropdownMenuItem(onClick = {
-                        expanded.value = false
+                    DropdownMenuItem(
+                        text = { Text("Movie Activity") },
+                        onClick = {
+                            expanded.value = false
 
-                        context.startActivity(Intent(context, MovieActivity::class.java))
-                        context.finish()
-                    }) {
-                        Text("Movie Activity")
-                    }
+                            context.startActivity(Intent(context, MovieActivity::class.java))
+                            context.finish()
+                        }
+                    )
 
-                    Divider(thickness = 8.dp)
+                    HorizontalDivider(thickness = 8.dp)
 
-                    DropdownMenuItem(onClick = {
-                        expanded.value = false
+                    DropdownMenuItem(
+                        text = { Text("HashTag Activity") },
+                        onClick = {
+                            expanded.value = false
 
-                        context.startActivity(Intent(context, HashTagActivity::class.java))
-                        context.finish()
-                    }) {
-                        Text("HashTag Activity")
-                    }
+                            context.startActivity(Intent(context, HashTagActivity::class.java))
+                            context.finish()
+                        }
+                    )
                 }
             }
         },
-        backgroundColor = Color(0xFDCD7F32),
-        elevation = AppBarDefaults.TopAppBarElevation
+        colors = TopAppBarDefaults.topAppBarColors(containerColor = Color(0xFDCD7F32))
     )
 }
 
 @ExperimentalAnimationApi
 @Composable
-fun DrawerItem(scaffoldState: ScaffoldState, scope: CoroutineScope) {
+fun DrawerItem(drawerState: DrawerState, scope: CoroutineScope) {
     val context = LocalContext.current as Activity
 
     Row {
         IconButton(
             onClick = {
                 scope.launch {
-                    scaffoldState.drawerState.close()
+                    drawerState.close()
                 }
             },
         ) {
@@ -224,12 +231,12 @@ fun DrawerItem(scaffoldState: ScaffoldState, scope: CoroutineScope) {
         }
         Text("Navigation Drawer", modifier = Modifier.padding(top = 13.5.dp))
     }
-    Divider()
+    HorizontalDivider()
 
     Row(modifier = Modifier
         .clickable {
             scope.launch {
-                scaffoldState.drawerState.close()
+                drawerState.close()
                 context.startActivity(Intent(context, ScopeActivity::class.java))
                 context.finish()
             }
@@ -251,7 +258,7 @@ fun DrawerItem(scaffoldState: ScaffoldState, scope: CoroutineScope) {
             scope.launch {
                 context.startActivity(Intent(context, ProgressActivity::class.java))
                 context.finish()
-                scaffoldState.drawerState.close()
+                drawerState.close()
             }
         }
         .fillMaxWidth()

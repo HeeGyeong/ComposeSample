@@ -29,17 +29,22 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.Button
-import androidx.compose.material.ExtendedFloatingActionButton
-import androidx.compose.material.FabPosition
-import androidx.compose.material.FloatingActionButton
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
-import androidx.compose.material.SnackbarDuration
-import androidx.compose.material.SnackbarResult
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.material.rememberScaffoldState
+import androidx.compose.material3.Button
+import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.ExtendedFloatingActionButton
+import androidx.compose.material3.FabPosition
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalDrawerSheet
+import androidx.compose.material3.ModalNavigationDrawer
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -73,7 +78,10 @@ fun AppbarSample(
     title: String,
     onCloseEvent: () -> Unit,
 ) {
-    val scaffoldState = rememberScaffoldState()
+    // M3 Scaffold 에는 scaffoldState/drawerContent 가 없으므로
+    // ModalNavigationDrawer 로 감싸고 DrawerState/SnackbarHostState 를 직접 관리한다.
+    val drawerState = rememberDrawerState(DrawerValue.Closed)
+    val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
 
@@ -100,90 +108,97 @@ fun AppbarSample(
         Message("Message Header 8", "Message Body Line", false)
     )
 
-    Scaffold(
-        // Compose의 Modifier는 chaining 방식으로 동작하기 때문에 아래와 같은 형태가 가능하다.
-        modifier = Modifier
-            .fillMaxSize()
-            .background(color = Color.LightGray) // status bar color
-            .windowInsetsPadding(WindowInsets.statusBars)
-            .background(color = Color.Red) // navigation bar color
-//            .windowInsetsPadding(WindowInsets.navigationBars)
-            .padding(WindowInsets.navigationBars.asPaddingValues()) // 2가지 방식을 사용하여 padding 추가
-//            .windowInsetsPadding(WindowInsets.systemBars) // 위, 아래 둘 다
-//            .windowInsetsPadding(WindowInsets.statusBars) // 위
-//            .windowInsetsPadding(WindowInsets.navigationBars) // 아래
-        ,
-        scaffoldState = scaffoldState,
-        topBar = {
-            TopBar(title, scaffoldState, scope)
-        },
-        bottomBar = {
-            BottomBar()
-        },
-        // Top, Bottom 사이에 들어갈 item
-        content = { padding ->
-            ListTest(
-                modifier = Modifier.padding(padding),
-                itemList = itemList,
-                onCloseEvent = onCloseEvent
-            )
-        },
-        // floating Button
-        floatingActionButton = {
-            // Make SnackBar Floating Button
-            ExtendedFloatingActionButton(
-                text = { Text("+") },
-                onClick = {
-                    scope.launch {
-                        val result = scaffoldState.snackbarHostState
-                            .showSnackbar(
-                                message = "Go to Blog Example List Screen",
-                                actionLabel = "Go",
-                                // Defaults to SnackbarDuration.Short
-                                duration = SnackbarDuration.Short
-                            )
-                        when (result) {
-                            SnackbarResult.ActionPerformed -> {
-                                Log.d("FloatingButton", "ActionPerformed~")
-                                context.startActivity(
-                                    Intent(
-                                        context,
-                                        BlogExampleActivity::class.java
-                                    )
-                                )
-                            }
-
-                            SnackbarResult.Dismissed -> {
-                                Log.d("FloatingButton", "Dismissed~")
-                            }
-                        }
-                    }
-                }
-            )
-
-            // Navi Drawer Open Floating Button
-            /*ExtendedFloatingActionButton(
-                text = { Text("A") },
-                onClick = {
-                    scope.launch {
-                        scaffoldState.drawerState.apply {
-                            if (isClosed) open() else close()
-                        }
-                    }
-                }
-            )*/
-        },
-        // floating Button 위치.
-        floatingActionButtonPosition = FabPosition.Center,
-        // button이 bottom과 겹치는지 여부
-        isFloatingActionButtonDocked = true,
+    ModalNavigationDrawer(
+        drawerState = drawerState,
+        // Navi Drag 가능 여부.
+        gesturesEnabled = false,
         // Navi Drawer Layout
         drawerContent = {
-            DrawerItem(scaffoldState, scope)
-        },
-        // Navi Drag 가능 여부.
-        drawerGesturesEnabled = false
-    )
+            ModalDrawerSheet {
+                DrawerItem(drawerState, scope)
+            }
+        }
+    ) {
+        Scaffold(
+            // Compose의 Modifier는 chaining 방식으로 동작하기 때문에 아래와 같은 형태가 가능하다.
+            modifier = Modifier
+                .fillMaxSize()
+                .background(color = Color.LightGray) // status bar color
+                .windowInsetsPadding(WindowInsets.statusBars)
+                .background(color = Color.Red) // navigation bar color
+//                .windowInsetsPadding(WindowInsets.navigationBars)
+                .padding(WindowInsets.navigationBars.asPaddingValues()) // 2가지 방식을 사용하여 padding 추가
+//                .windowInsetsPadding(WindowInsets.systemBars) // 위, 아래 둘 다
+//                .windowInsetsPadding(WindowInsets.statusBars) // 위
+//                .windowInsetsPadding(WindowInsets.navigationBars) // 아래
+            ,
+            snackbarHost = { SnackbarHost(snackbarHostState) },
+            topBar = {
+                TopBar(title, drawerState, scope)
+            },
+            bottomBar = {
+                BottomBar()
+            },
+            // Top, Bottom 사이에 들어갈 item
+            content = { padding ->
+                ListTest(
+                    modifier = Modifier.padding(padding),
+                    itemList = itemList,
+                    onCloseEvent = onCloseEvent
+                )
+            },
+            // floating Button
+            floatingActionButton = {
+                // Make SnackBar Floating Button
+                ExtendedFloatingActionButton(
+                    onClick = {
+                        scope.launch {
+                            val result = snackbarHostState
+                                .showSnackbar(
+                                    message = "Go to Blog Example List Screen",
+                                    actionLabel = "Go",
+                                    // Defaults to SnackbarDuration.Short
+                                    duration = SnackbarDuration.Short
+                                )
+                            when (result) {
+                                SnackbarResult.ActionPerformed -> {
+                                    Log.d("FloatingButton", "ActionPerformed~")
+                                    context.startActivity(
+                                        Intent(
+                                            context,
+                                            BlogExampleActivity::class.java
+                                        )
+                                    )
+                                }
+
+                                SnackbarResult.Dismissed -> {
+                                    Log.d("FloatingButton", "Dismissed~")
+                                }
+                            }
+                        }
+                    }
+                ) {
+                    Text("+")
+                }
+
+                // Navi Drawer Open Floating Button
+                /*ExtendedFloatingActionButton(
+                    onClick = {
+                        scope.launch {
+                            drawerState.apply {
+                                if (isClosed) open() else close()
+                            }
+                        }
+                    }
+                ) {
+                    Text("A")
+                }*/
+            },
+            // floating Button 위치.
+            floatingActionButtonPosition = FabPosition.Center
+            // M3 Scaffold 에는 isFloatingActionButtonDocked 가 없다 (BottomAppBar FAB slot 으로 대체됨).
+        )
+    }
 }
 
 @ExperimentalAnimationApi
@@ -248,7 +263,7 @@ fun ListTest(
         if (flowShowButton) {
             val coroutineScope = rememberCoroutineScope()
             FloatingActionButton(
-                backgroundColor = MaterialTheme.colors.primary,
+                containerColor = MaterialTheme.colorScheme.primary,
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
                     .padding(end = 5.dp, bottom = 60.dp),
@@ -275,7 +290,7 @@ fun CardView(msg: Message) {
             modifier = Modifier
                 .size(40.dp)
                 .clip(CircleShape)
-                .border(1.5.dp, MaterialTheme.colors.secondary, CircleShape),
+                .border(1.5.dp, MaterialTheme.colorScheme.secondary, CircleShape),
             colorFilter = ColorFilter.tint(
                 Color.Yellow,
                 BlendMode.ColorBurn
@@ -301,22 +316,22 @@ fun CardView(msg: Message) {
         ) {
             Text(
                 text = msg.head,
-                color = MaterialTheme.colors.secondaryVariant,
-                style = MaterialTheme.typography.subtitle2
+                color = MaterialTheme.colorScheme.secondary,
+                style = MaterialTheme.typography.titleSmall
             )
 
             Spacer(modifier = Modifier.height(4.dp))
 
             Surface(
                 shape = MaterialTheme.shapes.medium,
-                elevation = 10.dp,
+                shadowElevation = 10.dp,
                 color = animatedColor.value,
             ) {
                 Text(
                     text = msg.body,
                     modifier = Modifier.padding(all = 4.dp),
                     maxLines = if (isExpanded) Int.MAX_VALUE else 1,
-                    style = MaterialTheme.typography.body2
+                    style = MaterialTheme.typography.bodyMedium
                 )
             }
         }

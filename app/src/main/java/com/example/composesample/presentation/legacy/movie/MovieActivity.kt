@@ -4,8 +4,11 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.material.Scaffold
-import androidx.compose.material.rememberScaffoldState
+import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.ModalDrawerSheet
+import androidx.compose.material3.ModalNavigationDrawer
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.rememberCoroutineScope
 import com.example.composesample.presentation.legacy.base.BottomBar
 import com.example.composesample.presentation.legacy.base.DrawerItem
@@ -24,28 +27,33 @@ class MovieActivity : ComponentActivity() {
         setContent {
             SetSystemUI()
 
-            val scaffoldState = rememberScaffoldState()
+            val drawerState = rememberDrawerState(DrawerValue.Closed)
             val scope = rememberCoroutineScope()
 
             // Runtime Error.
 //            val viewModel = viewModel<MovieViewModel>()
 
-            Scaffold(
-                scaffoldState = scaffoldState,
-                topBar = {
-                    TopBar("Movie Activity", scaffoldState, scope)
-                },
-                bottomBar = {
-                    BottomBar()
-                },
-                content = {
-                    MovieScreen(viewModel, scope)
-                },
+            ModalNavigationDrawer(
+                drawerState = drawerState,
+                gesturesEnabled = false,
                 drawerContent = {
-                    DrawerItem(scaffoldState, scope)
-                },
-                drawerGesturesEnabled = false
-            )
+                    ModalDrawerSheet {
+                        DrawerItem(drawerState, scope)
+                    }
+                }
+            ) {
+                Scaffold(
+                    topBar = {
+                        TopBar("Movie Activity", drawerState, scope)
+                    },
+                    bottomBar = {
+                        BottomBar()
+                    },
+                    content = {
+                        MovieScreen(viewModel, scope)
+                    }
+                )
+            }
         }
     }
 }

@@ -4,8 +4,13 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.material.Scaffold
-import androidx.compose.material.rememberScaffoldState
+import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.ModalDrawerSheet
+import androidx.compose.material3.ModalNavigationDrawer
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -27,48 +32,55 @@ class RememberCoroutineActivity : ComponentActivity() {
         setContent {
             SetSystemUI()
 
-            val scaffoldState = rememberScaffoldState()
+            val drawerState = rememberDrawerState(DrawerValue.Closed)
+            val snackbarHostState = remember { SnackbarHostState() }
             val scope = rememberCoroutineScope()
 
             var changeUI by remember { mutableStateOf(1) }
 
-            Scaffold(
-                scaffoldState = scaffoldState,
-                topBar = {
-                    TopBar("ProgressActivity", scaffoldState, scope)
-                },
-                bottomBar = {
-                    BottomBar()
-                },
-                content = {
-                    when (changeUI) {
-                        1 -> {
-                            // scope를 넣지 않으면 FirstScreen 생성 시 rememberCoroutineScope()를 호출함.
-                            CoroutineScreen(scaffoldState,
-                                changeState = {
-                                    changeUI = 2
-                                }
-                            )
-                        }
-                        2 -> {
-                            // lifecycleScope은 Activity의 생명주기를 따름.
-                            CoroutineScreen(scaffoldState,
-                                changeState = {
-                                    changeUI = 3
-                                },
-                                lifecycleScope
-                            )
-                        }
-                        else -> {
-                            CoroutineTempScreen()
+            ModalNavigationDrawer(
+                drawerState = drawerState,
+                gesturesEnabled = false,
+                drawerContent = {
+                    ModalDrawerSheet {
+                        DrawerItem(drawerState, scope)
+                    }
+                }
+            ) {
+                Scaffold(
+                    snackbarHost = { SnackbarHost(snackbarHostState) },
+                    topBar = {
+                        TopBar("ProgressActivity", drawerState, scope)
+                    },
+                    bottomBar = {
+                        BottomBar()
+                    },
+                    content = {
+                        when (changeUI) {
+                            1 -> {
+                                // scope를 넣지 않으면 FirstScreen 생성 시 rememberCoroutineScope()를 호출함.
+                                CoroutineScreen(snackbarHostState,
+                                    changeState = {
+                                        changeUI = 2
+                                    }
+                                )
+                            }
+                            2 -> {
+                                // lifecycleScope은 Activity의 생명주기를 따름.
+                                CoroutineScreen(snackbarHostState,
+                                    changeState = {
+                                        changeUI = 3
+                                    },
+                                    lifecycleScope
+                                )
+                            }
+                            else -> {
+                                CoroutineTempScreen()
+                            }
                         }
                     }
-                },
-                drawerContent = {
-                    DrawerItem(scaffoldState, scope)
-                },
-                drawerGesturesEnabled = false
-            )
+                )
+            }
         }
     }
 }

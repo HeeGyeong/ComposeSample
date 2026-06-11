@@ -5,10 +5,16 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.material.Scaffold
-import androidx.compose.material.rememberScaffoldState
+import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.ModalDrawerSheet
+import androidx.compose.material3.ModalNavigationDrawer
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -27,41 +33,48 @@ class LaunchedEffectActivity : ComponentActivity() {
         setContent {
             SetSystemUI()
 
-            val scaffoldState = rememberScaffoldState()
+            val drawerState = rememberDrawerState(DrawerValue.Closed)
+            val snackbarHostState = remember { SnackbarHostState() }
             val scope = rememberCoroutineScope()
 
             val viewModel = viewModel<LaunchedEffectViewModel>()
 
             val isGo by viewModel.isGo.collectAsStateWithLifecycle()
 
-            Scaffold(
-                scaffoldState = scaffoldState,
-                topBar = {
-                    TopBar("Launched Activity", scaffoldState, scope)
-                },
-                bottomBar = {
-                    BottomBar()
-                },
-                content = { padding ->
-                    if (isGo) {
-                        // LaunchedEffect 사용 시, 최초 실행을 제외하고 param 값이 변경될 때 취소되고 재 시작 된다.
-                        // param 의 갯수는 제한되어 있지 않다.
-                        LaunchedEffect(isGo) {
-                            try {
-                                scaffoldState.snackbarHostState
-                                    .showSnackbar("input text : go")
-                            } catch (e: CancellationException) {
-                                Log.e("CancelText", "in catch")
+            ModalNavigationDrawer(
+                drawerState = drawerState,
+                gesturesEnabled = false,
+                drawerContent = {
+                    ModalDrawerSheet {
+                        DrawerItem(drawerState, scope)
+                    }
+                }
+            ) {
+                Scaffold(
+                    snackbarHost = { SnackbarHost(snackbarHostState) },
+                    topBar = {
+                        TopBar("Launched Activity", drawerState, scope)
+                    },
+                    bottomBar = {
+                        BottomBar()
+                    },
+                    content = { padding ->
+                        if (isGo) {
+                            // LaunchedEffect 사용 시, 최초 실행을 제외하고 param 값이 변경될 때 취소되고 재 시작 된다.
+                            // param 의 갯수는 제한되어 있지 않다.
+                            LaunchedEffect(isGo) {
+                                try {
+                                    snackbarHostState
+                                        .showSnackbar("input text : go")
+                                } catch (e: CancellationException) {
+                                    Log.e("CancelText", "in catch")
+                                }
                             }
                         }
+                        LaunchedScreen(paddingValues = padding, viewModel = viewModel)
                     }
-                    LaunchedScreen(paddingValues = padding, viewModel = viewModel)
-                },
-                drawerContent = {
-                    DrawerItem(scaffoldState, scope)
-                },
-                drawerGesturesEnabled = false
-            )
+                )
+            }
         }
     }
 }
