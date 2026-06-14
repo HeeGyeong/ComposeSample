@@ -327,6 +327,13 @@ val examples2026 = listOf(
         exampleType = ConstValue.RaceConditionExample
     ),
     ExampleObject(
+        lastUpdate = "26. 06. 15",
+        title = "Kotlin Select Expressions",
+        description = "select { } 로 여러 suspending 작업을 경쟁시켜 가장 먼저 끝난 결과만 채택하는 3가지 패턴: ① onAwait — 여러 미러 서버를 동시 요청해 최속 응답 채택 후 나머지 취소, ② onTimeout — 주 작업이 한도를 넘기면 캐시 폴백으로 전환, ③ onReceiveCatching — 고속/저속 두 채널을 도착 순서대로 멀티플렉싱 수신. 각 실행을 타임라인 로그로 시각화",
+        blogUrl = "",
+        exampleType = ConstValue.SelectExpressionExample
+    ),
+    ExampleObject(
         lastUpdate = "26. 04. 27",
         title = "Modifier Order in Compose",
         description = "동일한 modifier 조합도 순서에 따라 layout/draw/hit-test 결과가 달라진다: padding↔background, border↔clip, clickable↔padding, size↔padding 4가지 시나리오를 좌우 나란히 시각 비교",

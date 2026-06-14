@@ -143,12 +143,13 @@ object ConstValue {
     const val PerItemViewModelExample = "perItemViewModelExample"
 
     // ==================== 코루틴 & 동시성 예제 ====================
-    // Coroutine(기본 특징), CoroutinesInternals(내부 동작 원리), WithContext(withContext vs launch), CoroutineBridges(콜백→suspend 변환 패턴), RaceCondition(공유 가변 상태 보호 4전략 비교 — 비보호/Atomic/Mutex/단일스레드 confinement)
+    // Coroutine(기본 특징), CoroutinesInternals(내부 동작 원리), WithContext(withContext vs launch), CoroutineBridges(콜백→suspend 변환 패턴), RaceCondition(공유 가변 상태 보호 4전략 비교 — 비보호/Atomic/Mutex/단일스레드 confinement), SelectExpression(select{}로 여러 suspending 작업 경쟁 — onAwait 최속 미러/onTimeout 폴백/onReceiveCatching 다중 채널 멀티플렉싱)
     const val CoroutineExample = "coroutineExample"
     const val CoroutinesInternalsExample = "coroutinesInternalsExample"
     const val WithContextExample = "withContextExample"
     const val CoroutineBridgesExample = "coroutineBridgesExample"
     const val RaceConditionExample = "raceConditionExample"
+    const val SelectExpressionExample = "selectExpressionExample"
 
     // ==================== Flow 예제 ====================
     // FlatMap(flatMap vs flatMapLatest 비교), FlowOperators(buffer/conflate/debounce/sample 속도 제어 비교), FlowBatching(onEachBatch 크기/시간 기준 배치 집계)

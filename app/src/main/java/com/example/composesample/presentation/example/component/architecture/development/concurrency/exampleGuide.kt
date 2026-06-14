@@ -38,4 +38,16 @@ package com.example.composesample.presentation.example.component.architecture.de
  * - 단일 스레드 confinement: Dispatchers.Default.limitedParallelism(1) 디스패처에 갱신을 한정해 동시 접근 자체를 제거
  * - MutableStateFlow.update { }: CAS 루프로 안전하게 상태 갱신. Compose 에 노출하는 상태에 적합
  * - 주의: @Synchronized/Java ReentrantLock 은 스레드를 블로킹 → 코루틴에는 Mutex 사용
+ *
+ * ## Select Expressions (여러 suspending 작업 경쟁 선택)
+ * - 공식 문서: https://kotlinlang.org/docs/select-expression.html
+ * - 출처: The Task Shapes the Strategy: Kotlin Select Expressions in Practice (Android Weekly #731)
+ * 핵심 개념:
+ * - select { }: 여러 절(clause) 중 가장 먼저 준비되는 하나만 선택해 그 블록을 실행. 나머지 절은 무시됨
+ * - Deferred.onAwait { }: 여러 async 결과 중 먼저 끝난 것을 채택 (최속 미러 응답, 헤지 요청 패턴)
+ * - onTimeout(ms) { }: 다른 절이 한도 내 준비되지 않으면 발동 → 폴백 값 반환 (withTimeoutOrNull 보다 유연하게 조합 가능)
+ * - Channel.onReceiveCatching { }: 여러 채널을 멀티플렉싱해 도착 순서대로 수신. 채널이 닫혀도 예외 대신 ChannelResult(닫힘) 반환 → 종료 안전 감지
+ * - select 는 선택된 절만 실행하므로, 채택되지 않은 Deferred/작업은 직접 cancel() 로 정리해야 리소스 누수가 없음
+ * - 한 번의 select 는 절 하나만 선택 → 반복 수신은 while 루프로 감싸고, 모든 소스가 닫히면 종료
+ * - onTimeout/일부 채널 API 는 @ExperimentalCoroutinesApi 옵트인 필요
  */
