@@ -2,7 +2,14 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-    // [Kotlin 2.4.0 검증] hotswan-compiler 1.2.1 이 2.4.0 컴파일러 확장 API와 충돌(ClassCastException) → 임시 비활성화
+    // [Kotlin 2.4.0 업그레이드 검증으로 임시 비활성화]
+    // hotswan-compiler 1.2.1(Compose Hot Reload)이 Kotlin 2.4.0 컴파일러 확장 등록 API와 충돌한다.
+    // 2.4.0 빌드 시 PreComposePluginRegistrar.registerExtensions 에서
+    //   ClassCastException: IrGenerationExtension$Companion → ProjectExtensionDescriptor
+    // 가 발생해 :coordinator:compileDebugKotlin Internal compiler error 로 빌드가 깨진다.
+    // 이 1줄만 주석 처리하면 나머지 전체(KSP/Room/Compose컴파일러/앱코드)는 2.4.0에서 정상 빌드된다.
+    // hotswan-compiler 의 Kotlin 2.4.0 호환 버전이 나오면 주석을 해제할 것.
+    // (Hot Reload 는 개발 편의 도구이므로 비활성화해도 예제 동작/최종 빌드에는 영향 없음 — ComposeHotReloadGuide.md 참고)
     // alias(libs.plugins.hotswan.compiler)
 
     id 'kotlin-parcelize'

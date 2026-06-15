@@ -6,6 +6,9 @@ plugins {
     alias(libs.plugins.kotlin.android) apply false
     alias(libs.plugins.kotlin.jvm) apply false
     alias(libs.plugins.ksp) apply false
+    // hotswan-compiler 는 여기서 선언(apply false)만 하므로 어느 모듈에도 적용되지 않아 무해하다.
+    // 실제 적용은 app/build.gradle 에서 했으나 Kotlin 2.4.0 비호환(ClassCastException)으로 임시 비활성화함.
+    // 상세 사유: app/build.gradle 주석 및 docs/devtools/ComposeHotReloadGuide.md 참고.
     alias(libs.plugins.hotswan.compiler) apply false
 }
 

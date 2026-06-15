@@ -103,6 +103,8 @@ kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlinVer
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlinVersion" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlinVersion" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+# [Kotlin 2.4.0 비호환] 1.2.1 은 Kotlin 2.4.0 컴파일러 확장 API와 충돌하여 app/build.gradle 에서 임시 비활성화함.
+# Kotlin 2.4.0 호환 버전이 출시되면 version 갱신 후 app/build.gradle 의 적용 주석 해제 (사유: ComposeHotReloadGuide.md).
 hotswan-compiler = { id = "com.github.skydoves.compose.hotswan.compiler", version = "1.2.1" }
 
 [libraries]

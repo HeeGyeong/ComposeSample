@@ -1,5 +1,32 @@
 # Compose Hot Reload (HotSwan) Guide
 
+> ## ⚠️ Current Status — Temporarily Disabled (branch `chore/kotlin-2.4-upgrade`)
+>
+> The HotSwan Gradle plugin application in `app/build.gradle` is **commented out** because
+> **hotswan-compiler 1.2.1 is incompatible with Kotlin 2.4.0**.
+>
+> During the Kotlin 2.4.0 upgrade verification (2026-06-16), the plugin's compiler registrar threw:
+>
+> ```
+> java.lang.ClassCastException: IrGenerationExtension$Companion cannot be cast to ProjectExtensionDescriptor
+>   at com.skydoves.compose.hotswan.compiler.pre.PreComposePluginRegistrar.registerExtensions
+> ```
+>
+> This caused an Internal compiler error on `:coordinator:compileDebugKotlin`. Kotlin 2.4.0 changed the
+> compiler extension registration API, which HotSwan 1.2.1 does not support.
+>
+> **Verification result:** commenting out this single line lets the entire project (KSP 2.3.9 / Room 2.8.4 /
+> Compose compiler 2.4.0 / all app·data·domain·core·coordinator code) build successfully on Kotlin 2.4.0 with
+> **zero source changes**. HotSwan is the sole blocker.
+>
+> **Impact:** Hot Reload is a development-only convenience tool, so disabling it does **not** affect any example's
+> behavior or the final build — only the in-IDE hot-reload experience is unavailable.
+>
+> **Action:** re-enable the plugin (uncomment in `app/build.gradle` + bump the version in `libs.versions.toml`)
+> once a hotswan-compiler release that supports Kotlin 2.4.0 is available.
+>
+> On the `main` branch (Kotlin 2.3.20) the plugin remains **active**.
+
 ## Overview
 
 Compose Hot Reload (HotSwan) is a development tool that, when you save a `.kt` file, applies the changes to a real device/emulator **within 1 second without restarting the app**.
@@ -31,7 +58,8 @@ Compose Hot Reload (HotSwan) is a development tool that, when you save a `.kt` f
 ## Version Requirements
 
 - HotSwan 1.2.1 requires Kotlin 2.3.0 or higher → **the project applied Kotlin 2.3.20 (2026-04-13)**
-- The Gradle plugin is **already applied to the project**. You only need to install the IDE plugin separately to use it.
+- ⚠️ **HotSwan 1.2.1 does NOT support Kotlin 2.4.0** — it fails at compiler-extension registration (see "Current Status" above). The `chore/kotlin-2.4-upgrade` branch keeps the plugin disabled until a 2.4.0-compatible release ships.
+- The Gradle plugin is **already applied to the project** (on `main`). You only need to install the IDE plugin separately to use it.
 
 ## Installation (Gradle setup already applied to the project)
 
