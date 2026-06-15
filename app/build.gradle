@@ -2,7 +2,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-    alias(libs.plugins.hotswan.compiler)
+    // [Kotlin 2.4.0 검증] hotswan-compiler 1.2.1 이 2.4.0 컴파일러 확장 API와 충돌(ClassCastException) → 임시 비활성화
+    // alias(libs.plugins.hotswan.compiler)
 
     id 'kotlin-parcelize'
 }
