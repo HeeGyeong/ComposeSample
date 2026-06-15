@@ -16,7 +16,8 @@ Version and example-addition history for ComposeSample, newest first.
   - Translated the UI/DI/Data rule documents to Korean, then updated all md docs (DomainREADME/README/AppREADME/PendingExamples/ClaudeCodeGuide); later migrated all docs to English
   - New docs: `docs/README.md` (index), `ARCHITECTURE.md`, `docs/KnownLimitations.md`, `LICENSE` (MIT)
   - Added 30 exampleGuide.kt category files
-- Versions: upgraded to ComposeBom 2026.05.00 + Material 1.11.1
+- Versions: upgraded to Kotlin 2.4.0 + KSP 2.3.9 (2026-06-16), ComposeBom 2026.05.00 + Material 1.11.1
+  - The Kotlin 2.4.0 bump required disabling the HotSwan (Compose Hot Reload) plugin — hotswan-compiler 1.2.1 is incompatible with the 2.4.0 compiler-extension API. All other modules build with zero source changes. See `docs/devtools/ComposeHotReloadGuide.md`.
 
 ## 2026.05
 - New examples added
@@ -40,7 +41,7 @@ Version and example-addition history for ComposeSample, newest first.
 ## 2026.04
 - New examples added: LazyStaggeredGrid waterfall grid, Adaptive Layout WindowSizeClass, Custom Layout MeasurePolicy, Dynamic App Links, Screenshot Testing (Paparazzi/Roborazzi), Compose Snapshot System, Compose UI Testing, Predictive Back Gesture, Spring/Tween/Snap animation, Haptic Feedback, Stability Annotations, Rich Content in Text Input, official FlowRow/FlowColumn Flexbox, Preview-only Annotation (@RequiresOptIn), Coroutine Bridges (suspendCoroutine), Compose Loaders math-curve loading, TextField Max Length hidden bug, Kotlin Name-Based Destructuring, Material 3 Expressive SecureTextField, Modifier Order in Compose, Flow Operators (buffer/conflate/debounce/sample), Multi-Table Inserts in Room (DAO interface inheritance), etc.
 - Applied Compose Hot Reload (HotSwan) Gradle plugin
-  - ⚠️ Temporarily disabled on the `chore/kotlin-2.4-upgrade` branch: HotSwan 1.2.1 is incompatible with Kotlin 2.4.0 (compiler-extension `ClassCastException`). Active on `main` (Kotlin 2.3.20). See `docs/devtools/ComposeHotReloadGuide.md`.
+  - ⚠️ Disabled on `main` since 2026-06-16: HotSwan 1.2.1 is incompatible with Kotlin 2.4.0 (compiler-extension `ClassCastException`). Re-enable once a 2.4.0-compatible release ships. See `docs/devtools/ComposeHotReloadGuide.md`.
 - Versions: upgraded to Kotlin 2.3.20 + AGP 8.13.2 + Compose BOM 2026.03.01 + Material3 1.4.0
 
 ## 2026.03

@@ -1,8 +1,9 @@
 # Compose Hot Reload (HotSwan) Guide
 
-> ## ⚠️ Current Status — Temporarily Disabled (branch `chore/kotlin-2.4-upgrade`)
+> ## ⚠️ Current Status — Temporarily Disabled on `main`
 >
-> The HotSwan Gradle plugin application in `app/build.gradle` is **commented out** because
+> Since the Kotlin 2.4.0 upgrade was merged to `main` (2026-06-16), the HotSwan Gradle plugin
+> application in `app/build.gradle` is **commented out** because
 > **hotswan-compiler 1.2.1 is incompatible with Kotlin 2.4.0**.
 >
 > During the Kotlin 2.4.0 upgrade verification (2026-06-16), the plugin's compiler registrar threw:
@@ -24,8 +25,6 @@
 >
 > **Action:** re-enable the plugin (uncomment in `app/build.gradle` + bump the version in `libs.versions.toml`)
 > once a hotswan-compiler release that supports Kotlin 2.4.0 is available.
->
-> On the `main` branch (Kotlin 2.3.20) the plugin remains **active**.
 
 ## Overview
 
@@ -57,9 +56,9 @@ Compose Hot Reload (HotSwan) is a development tool that, when you save a `.kt` f
 
 ## Version Requirements
 
-- HotSwan 1.2.1 requires Kotlin 2.3.0 or higher → **the project applied Kotlin 2.3.20 (2026-04-13)**
-- ⚠️ **HotSwan 1.2.1 does NOT support Kotlin 2.4.0** — it fails at compiler-extension registration (see "Current Status" above). The `chore/kotlin-2.4-upgrade` branch keeps the plugin disabled until a 2.4.0-compatible release ships.
-- The Gradle plugin is **already applied to the project** (on `main`). You only need to install the IDE plugin separately to use it.
+- HotSwan 1.2.1 requires Kotlin 2.3.0 or higher (the plugin was first applied at Kotlin 2.3.20 on 2026-04-13)
+- ⚠️ **HotSwan 1.2.1 does NOT support Kotlin 2.4.0** — it fails at compiler-extension registration (see "Current Status" above). The project moved to Kotlin 2.4.0 on 2026-06-16, so the plugin is currently **disabled on `main`** until a 2.4.0-compatible release ships.
+- When re-enabled, the Gradle setup is already in place — you only need to install the IDE plugin separately to use it.
 
 ## Installation (Gradle setup already applied to the project)
 
@@ -91,7 +90,7 @@ alias(libs.plugins.hotswan.compiler)
 
 ## Notes
 
-- **Kotlin 2.3.0 or higher required** — the project applied Kotlin 2.3.20
+- **Kotlin 2.3.0 or higher required**, but **2.4.0 is not supported by HotSwan 1.2.1** — the project moved to Kotlin 2.4.0 (2026-06-16), so the plugin is currently disabled on `main`
 - **The IDE and Gradle plugin versions must match** (current Gradle plugin: 1.2.1)
 - When you update the IDE plugin, also change the version in `libs.versions.toml`
 - Structural changes (class hierarchy changes, adding interfaces, etc.) may require an app restart

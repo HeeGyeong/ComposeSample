@@ -18,12 +18,12 @@ A project that collects samples of issues encountered while studying and applyin
 It is built on Clean Architecture, and components are systematically classified by feature so you can easily find the example you want.
 
 - **Latest updates** (full history in [CHANGELOG.md](CHANGELOG.md))
-  - 2026.06: Architecture refactoring and documentation/quality improvements (domain converted to pure Kotlin(JVM), ExampleObject moved domain→app, DataCache abstraction, MainUIComponent migrated to M3, docs updated + new ARCHITECTURE/KnownLimitations/LICENSE). Upgraded to ComposeBom 2026.05.00 + Material 1.11.1.
+  - 2026.06: Architecture refactoring and documentation/quality improvements (domain converted to pure Kotlin(JVM), ExampleObject moved domain→app, DataCache abstraction, MainUIComponent migrated to M3, docs updated + new ARCHITECTURE/KnownLimitations/LICENSE). Upgraded to Kotlin 2.4.0 + KSP 2.3.9 (HotSwan/Compose Hot Reload disabled — incompatible with 2.4.0), ComposeBom 2026.05.00 + Material 1.11.1.
   - 2026.05: New examples added (Accessible Focus Indicator, Document Editing TextField, Syntax Highlighting, Particle Emitter, Animations Showcase, Hardware-Backed Keystore, Shared Element Debug Tooling, Foundation Style API, Month Picker Dial, App Security, AGSL Shader, Type-Safe Feature Flag, Per-Item ViewModels, Room FTS4/Indices/Multi-Table, etc.)
-  - 2026.04: New examples added (Adaptive Layout, Custom Layout, Dynamic App Links, Screenshot/Compose UI Testing, Predictive Back, Spring/Tween/Snap, Haptic, Stability Annotations, Rich Content, FlowRow/Column, Coroutine Bridges, Compose Loaders, etc.). Compose Hot Reload applied (⚠️ temporarily disabled on the `chore/kotlin-2.4-upgrade` branch — HotSwan 1.2.1 is incompatible with Kotlin 2.4.0; see [ComposeHotReloadGuide.md](app/src/main/java/com/example/composesample/docs/devtools/ComposeHotReloadGuide.md)). Upgraded to Kotlin 2.3.20 + AGP 8.13.2.
+  - 2026.04: New examples added (Adaptive Layout, Custom Layout, Dynamic App Links, Screenshot/Compose UI Testing, Predictive Back, Spring/Tween/Snap, Haptic, Stability Annotations, Rich Content, FlowRow/Column, Coroutine Bridges, Compose Loaders, etc.). Compose Hot Reload applied. Upgraded to Kotlin 2.3.20 + AGP 8.13.2. (Hot Reload was later disabled in 2026.06 — see below.)
 
 ## Development Environment
-- Kotlin 2.3.20
+- Kotlin 2.4.0
 - Android Studio
 - AGP 8.13.2 / Gradle 8.13
 - ComposeBom 2026.05.00

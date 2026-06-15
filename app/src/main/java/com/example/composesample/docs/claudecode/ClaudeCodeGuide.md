@@ -13,7 +13,7 @@ Even without explicit instructions, Claude always works with the project's codin
 
 | Section | Content |
 |---------|---------|
-| Tech stack | Kotlin 2.3.20 / ComposeBom 2026.05.00 / Target SDK 35 |
+| Tech stack | Kotlin 2.4.0 / ComposeBom 2026.05.00 / Target SDK 35 |
 | Module structure | app / data / domain / Core / Coordinator |
 | How to add an example | 4-step workflow (ConstValue → ExampleObject → UI → Router) |
 | File naming | `*ExampleUI.kt` / `exampleGuide.kt` conventions |
