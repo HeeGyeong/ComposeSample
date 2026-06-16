@@ -13,4 +13,6 @@
 *.aab
 
 # Claude Code
-.claude/
+.claude/*
+# 단, 공유용 스킬(멀티에이전트 하네스)은 추적
+!.claude/skills/
