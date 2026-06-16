@@ -10,8 +10,8 @@ description: 수정된 버그 1건에서 패턴을 추상화해 코드베이스 
 **역할 경계**: 이 하네스는 "이 버그의 **사본**이 다른 곳에 있는가"만 묻는다. 수정 자체의 옳고 그름은 `/qa-verify`·`/code-review`, 변경의 영향 분석은 `/impact-analyze` 의 영역 — 여기서 하지 않는다. **탐지까지만** 수행하며, 발견된 형제 버그의 수정은 별도 작업 spec(fix-*)으로 진행한다.
 
 호출: `/find-similar-bugs <이슈번호|커밋해시|버그설명>`
-- 예: `/find-similar-bugs #3373`
-- 예: `/find-similar-bugs 재접속 전까지 {{user}} 치환 안 되는 버그 — ChatBot 메시지 렌더링`
+- 예: `/find-similar-bugs <커밋해시>`
+- 예: `/find-similar-bugs rememberSaveable 키 누락으로 화면 회전 시 상태 유실되는 버그 — 예제 UI 렌더링`
 
 ---
 
@@ -30,7 +30,7 @@ bugPattern = {
   rootCause: 원인 메커니즘 (왜 생기는가),
   signature: 코드 시그니처 — 잘못된 API/관용구/구조 (grep 가능한 형태로),
   fixedSites: [이미 고친 파일:라인],   // 탐색에서 제외할 곳
-  category: 디폴트값|상태동기화|타이밍|생명주기|번역키|기타,
+  category: 디폴트값|상태동기화|타이밍|생명주기|재구성/상태복원|기타,
 }
 ```
 

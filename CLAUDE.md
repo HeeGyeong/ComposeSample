@@ -375,3 +375,31 @@ For the full document list, first see the document index at **`app/src/main/java
 - **Using Claude Code**: `app/src/main/java/com/example/composesample/docs/claudecode/ClaudeCodeGuide.md`
 - **Compose Hot Reload**: `app/src/main/java/com/example/composesample/docs/devtools/ComposeHotReloadGuide.md`
 - **Example candidate review log (archive)**: `app/src/main/java/com/example/composesample/docs/pending/PendingExamples.md`
+- **Spec-first workflow (optional)**: `.claude/docs/workflow/WORKFLOW.md` (spec → 승인 → 구현 방법론. 빌드/커밋 규칙은 이 CLAUDE.md가 우선)
+
+---
+
+## Multi-agent Harnesses & Agents (`.claude/`)
+
+이 프로젝트에는 read-only 멀티에이전트 하네스(스킬)와 전용 에이전트가 등록되어 있습니다. 모두 **사용자가 명시 호출**할 때만 실행하며(토큰 비용이 큼), 앱 코드를 변경하지 않습니다(분석/제안 전용).
+
+### Skills (`.claude/skills/`)
+
+| 스킬 | 호출 | 용도 |
+|------|------|------|
+| `explore-codebase` | `/explore-codebase <대상>` | **탐색형** — 서브시스템 병렬 탐색 → 아키텍처 맵·실행 경로 합성 |
+| `impact-analyze` | `/impact-analyze [대상\|diff]` | **검증형** — 변경 영향(크래시/사이드이펙트)을 차원별 탐지 + adversarial 검증 → 분석 섹션 초안 |
+| `design-options` | `/design-options <문제>` | **결정형** — 관점이 다른 설계 N개 독립 생성 → judge panel 심사 → 비교표·추천안 |
+| `find-similar-bugs` | `/find-similar-bugs <설명\|커밋\|diff>` | **전파탐지형** — 수정한 버그 패턴을 추상화해 코드베이스 내 형제 버그 탐지 (탐지까지만) |
+
+- 사용 시점/연계: 방향 미결정 → `design-options`, 구조 파악 → `explore-codebase`, 변경 안전성 검증 → `impact-analyze`, fix 후 전파 확인 → `find-similar-bugs`. 방향 결정 후 변경면을 `impact-analyze`로 넘기는 체인이 자연스럽습니다.
+- 실행 전 반드시 **"<하네스명> 하네스로 ~를 수행합니다"** 한 줄을 고지합니다.
+
+### Agents (`.claude/agents/`)
+
+| 에이전트 | 용도 |
+|----------|------|
+| `android-reviewer` | Compose + Koin + Clean Architecture 기준 엄격 코드 리뷰 (레이어 의존성·Koin `named()`·UI-로직 분리 pre-check) |
+| `android-ui` | `*ExampleUI(onBackEvent)` 패턴·Material3 기준 Compose UI 생성 (비즈니스 로직 미포함) |
+
+> 추적 범위: `.claude/` 중 `skills/`·`agents/`·`docs/`만 git 추적됩니다 (`settings.local.json`·`specs/`는 무시).
