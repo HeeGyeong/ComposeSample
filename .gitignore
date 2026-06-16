@@ -14,5 +14,7 @@
 
 # Claude Code
 .claude/*
-# 단, 공유용 스킬(멀티에이전트 하네스)은 추적
+# 단, 공유용 설정(스킬·에이전트·워크플로 문서)은 추적
 !.claude/skills/
+!.claude/agents/
+!.claude/docs/
