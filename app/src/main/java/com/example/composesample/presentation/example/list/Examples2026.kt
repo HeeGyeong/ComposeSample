@@ -500,5 +500,12 @@ val examples2026 = listOf(
         description = "Ktor MockEngine 으로 실서버 없이 고급 클라이언트 구성을 시연 — ① Auth bearer 플러그인: 만료 토큰으로 요청 → 401 수신 → refreshTokens() 자동 호출 → 새 토큰으로 재요청 성공, ② HttpRequestRetry 플러그인: 503 두 번 → 지수 백오프(delayMillis) 후 재시도 → 3번째 200 복구, ③ 대조군: 플러그인 없이 401/503 이 그대로 실패로 노출. 각 시나리오를 실시간 타임라인 로그로 비교",
         blogUrl = "",
         exampleType = ConstValue.KtorAdvancedConfigExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 06. 19",
+        title = "Kotlin 2.4 Language Features",
+        description = "Kotlin 2.4의 두 가지 신규 문법을 시연: ① 컬렉션 리터럴 — Swift 스타일 대괄호 [1, 2, 3] 로 List/Set/Map 을 기대 타입 추론으로 생성(커스텀 타입은 operator fun of 지원), ② 컨텍스트 파라미터 — context(logger: Logger) 로 의존성을 암시적 주입해 인자 전달 보일러플레이트 제거(deprecated context receivers 대체). 두 기능 모두 Experimental 이라 새 문법은 코드 블록으로 보여주고 실제 실행은 동등한 stable 코드(listOf/명시적 파라미터)로 대체, 전역 적용 금지·예제 단위 opt-in 강조",
+        blogUrl = "",
+        exampleType = ConstValue.Kotlin24FeaturesExample
     )
 )

@@ -29,4 +29,16 @@ package com.example.composesample.presentation.example.component.architecture.de
  * - name-mismatch: 변수명과 프로퍼티명 불일치 시 경고 발생
  * - complete: 이름 기반이 기본, 위치 기반은 [] 구문으로 전환
  * - 현재 Experimental 상태. 향후 이름 기반이 기본 동작이 될 예정
+ *
+ * ## Kotlin 2.4 Language Features (Collection Literals / Context Parameters)
+ * - What's New 2.4: https://kotlinlang.org/docs/whatsnew24.html
+ * - Collection literals KEEP: https://github.com/Kotlin/KEEP/issues/112
+ * - Context parameters KEEP: https://github.com/Kotlin/KEEP/blob/master/proposals/context-parameters.md
+ * 핵심 개념:
+ * - 컬렉션 리터럴: [1, 2, 3] 대괄호 문법으로 컬렉션 생성. 기대 타입에 따라 List/Set/Map 추론
+ * - 커스텀 타입은 companion 의 operator fun of(vararg ...) 로 리터럴 생성을 지원할 수 있음
+ * - 컨텍스트 파라미터: context(name: Type) 선언으로 의존성을 암시적 주입(인자 전달 보일러플레이트 제거)
+ * - context parameters 는 deprecated 된 context receivers 의 후속 — 컨텍스트에 변수명을 부여해 모호성 해소
+ * - 컴파일러 플래그(Experimental): -Xcollection-literals / -Xcontext-parameters
+ * - 두 기능 모두 Experimental → 전역 적용 금지, 예제(모듈/파일) 단위 opt-in 권장
  */

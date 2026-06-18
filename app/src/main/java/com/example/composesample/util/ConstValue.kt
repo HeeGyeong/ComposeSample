@@ -158,11 +158,12 @@ object ConstValue {
     const val FlowBatchingExample = "flowBatchingExample"
 
     // ==================== Kotlin 언어 기능 예제 ====================
-    // Type(변수 타입 활용), InlineValueClass(성능 최적화), SealedClassInterface(타입 안전 계층), NameBasedDestructuring(이름 기반 구조 분해 — Kotlin 2.3.20)
+    // Type(변수 타입 활용), InlineValueClass(성능 최적화), SealedClassInterface(타입 안전 계층), NameBasedDestructuring(이름 기반 구조 분해 — Kotlin 2.3.20), Kotlin24Features(Kotlin 2.4 컬렉션 리터럴 [ ] / 컨텍스트 파라미터 context(...))
     const val TypeExample = "typeExample"
     const val InlineValueClassExample = "inlineValueClassExample"
     const val SealedClassInterfaceExample = "sealedClassInterfaceExample"
     const val NameBasedDestructuringExample = "nameBasedDestructuringExample"
+    const val Kotlin24FeaturesExample = "kotlin24FeaturesExample"
 
     // ==================== 네트워크 & API 예제 ====================
     // Ktor(API 호출), SSE(실시간 통신), ApiDisconnect(연결 해제 처리), KtorAdvancedConfig(MockEngine 위에서 Auth bearer 토큰 리프레시 / HttpRequestRetry 지수 백오프 재시도 시연)
