@@ -507,5 +507,12 @@ val examples2026 = listOf(
         description = "Kotlin 2.4의 두 가지 신규 문법을 시연: ① 컬렉션 리터럴 — Swift 스타일 대괄호 [1, 2, 3] 로 List/Set/Map 을 기대 타입 추론으로 생성(커스텀 타입은 operator fun of 지원), ② 컨텍스트 파라미터 — context(logger: Logger) 로 의존성을 암시적 주입해 인자 전달 보일러플레이트 제거(deprecated context receivers 대체). 두 기능 모두 Experimental 이라 새 문법은 코드 블록으로 보여주고 실제 실행은 동등한 stable 코드(listOf/명시적 파라미터)로 대체, 전역 적용 금지·예제 단위 opt-in 강조",
         blogUrl = "",
         exampleType = ConstValue.Kotlin24FeaturesExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 06. 22",
+        title = "How Compose Works (내부 동작)",
+        description = "Jetpack Compose가 선언형 UI를 실제로 동작시키는 4단계 파이프라인을 한 화면에서 통합 시연: ① 컴파일러 변환 — @Composable 함수에 \$composer 파라미터와 startRestartGroup/endRestartGroup 그룹 호출이 삽입되는 과정, ② SlotTable — 컴포지션 결과가 그룹·슬롯으로 저장되고 리컴포지션 시 위치 기반으로 재사용되는 구조, ③ Snapshot 읽기 추적 — state 를 읽은 Composable 만 무효화되는 read-tracking 을 두 독립 카운터로 실측(컴포지션 횟수 표시), ④ Layout Pipeline — measure → place → draw 3단계를 단계별로 시각화. 내부 구현 대신 개념+CodeBlock+동등 시뮬레이션으로 안전하게 재현",
+        blogUrl = "",
+        exampleType = ConstValue.HowComposeWorksExample
     )
 )
