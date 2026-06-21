@@ -99,7 +99,7 @@ val examples2026 = listOf(
         lastUpdate = "26. 03. 04",
         title = "Large Content Viewer",
         description = "iOS의 Large Content Viewer를 Compose로 구현하고, 키보드·스크린 리더 내비게이션 지원",
-        blogUrl = "",
+        blogUrl = "https://heegs.tistory.com/203",
         exampleType = ConstValue.LargeContentViewerExample
     ),
     ExampleObject(
