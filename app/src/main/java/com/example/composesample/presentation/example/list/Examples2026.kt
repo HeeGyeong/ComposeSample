@@ -514,5 +514,12 @@ val examples2026 = listOf(
         description = "Jetpack Compose가 선언형 UI를 실제로 동작시키는 4단계 파이프라인을 한 화면에서 통합 시연: ① 컴파일러 변환 — @Composable 함수에 \$composer 파라미터와 startRestartGroup/endRestartGroup 그룹 호출이 삽입되는 과정, ② SlotTable — 컴포지션 결과가 그룹·슬롯으로 저장되고 리컴포지션 시 위치 기반으로 재사용되는 구조, ③ Snapshot 읽기 추적 — state 를 읽은 Composable 만 무효화되는 read-tracking 을 두 독립 카운터로 실측(컴포지션 횟수 표시), ④ Layout Pipeline — measure → place → draw 3단계를 단계별로 시각화. 내부 구현 대신 개념+CodeBlock+동등 시뮬레이션으로 안전하게 재현",
         blogUrl = "",
         exampleType = ConstValue.HowComposeWorksExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 06. 23",
+        title = "Coil 3 이미지 로딩 & 캐시",
+        description = "Coil 3로 네트워크 이미지를 비동기 로딩하는 핵심 패턴을 한 화면에서 시연: ① AsyncImage 상태 — crossfade 전환과 placeholder/error Painter 를 적용하고 onState 콜백으로 Loading→Success/Error 를 실시간 배지로 표시(정상 URL ↔ 깨진 URL 토글로 에러 폴백 확인), ② 캐시 정책 — 같은 이미지를 memoryCachePolicy ENABLED/DISABLED 로 재요청해 SuccessResult.dataSource 가 NETWORK 인지 MEMORY_CACHE 인지 추적(캐시 비우기 버튼 포함), ③ ImageLoader 커스터마이징 — MemoryCache.maxSizePercent + DiskCache 구성을 CodeBlock 으로 보여주고 커스텀 ImageLoader 의 메모리 캐시 사용량을 라이브 표시. 기존 Coil 2(coil.*)와 별도 coil3.* 네임스페이스로 공존. 네트워크가 없으면 자동으로 error 상태가 노출되어 오프라인에서도 동작 시연 가능",
+        blogUrl = "",
+        exampleType = ConstValue.Coil3ImageExample
     )
 )

@@ -65,6 +65,9 @@ object ConstValue {
     // FoundationStyleApi(Compose 1.11 Foundation Style API: MaterialTheme + CompositionLocal 토큰 확장 vs Style 객체 단일 전달 패턴 비교)
     const val FoundationStyleApiExample = "foundationStyleApiExample"
 
+    // Coil3Image(Coil 3 이미지 로딩: AsyncImage crossfade/placeholder/error 상태 + memoryCachePolicy ENABLED/DISABLED 토글로 dataSource(NETWORK/MEMORY_CACHE) 추적 + 커스텀 ImageLoader 메모리/디스크 캐시 구성 — coil3 네임스페이스로 기존 Coil 2와 공존)
+    const val Coil3ImageExample = "coil3ImageExample"
+
     // ==================== 스크롤 & 제스처 예제 ====================
     // PullToRefresh(당겨서 새로고침), PullScreenPager(풀스크린 페이저), FlingBehavior(스크롤 커스텀), SwipeToDismiss(스와이프 삭제), SwipeToDismissM3(M3 스와이프 삭제), DragAndDrop(드래그 앤 드롭), NestedScrolling(중첩 스크롤), CustomScrollBehavior(커스텀 TopAppBarScrollBehavior), StickerCanvas(스티커 제스처 캔버스)
     const val PullToRefreshExample = "pullToRefreshExample"

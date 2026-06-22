@@ -67,6 +67,7 @@ accompanistSystemUiController = "0.32.0"
 glideCompose = "1.0.0-alpha.1"
 coilCompose = "2.5.0"
 coilGif = "2.6.0"
+coil3 = "3.1.0"
 
 # Reactive
 rxJava = "2.2.17"
@@ -184,6 +185,8 @@ accompanistSystemUiController = { module = "com.google.accompanist:accompanist-s
 glideCompose = { module = "com.github.bumptech.glide:compose", version.ref = "glideCompose" }
 coilCompose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
 coilGif = { module = "io.coil-kt:coil-gif", version.ref = "coilGif" }
+coil3Compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil3" }
+coil3NetworkOkhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coil3" }
 
 # Reactive
 rxJava = { module = "io.reactivex.rxjava2:rxjava", version.ref = "rxJava" }
@@ -271,6 +274,8 @@ image = [
     "glideCompose",
     "coilCompose",
     "coilGif",
+    "coil3Compose",
+    "coil3NetworkOkhttp",
 ]
 
 koin = [
