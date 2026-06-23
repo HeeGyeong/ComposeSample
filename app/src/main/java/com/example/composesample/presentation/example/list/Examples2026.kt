@@ -521,5 +521,12 @@ val examples2026 = listOf(
         description = "Coil 3로 네트워크 이미지를 비동기 로딩하는 핵심 패턴을 한 화면에서 시연: ① AsyncImage 상태 — crossfade 전환과 placeholder/error Painter 를 적용하고 onState 콜백으로 Loading→Success/Error 를 실시간 배지로 표시(정상 URL ↔ 깨진 URL 토글로 에러 폴백 확인), ② 캐시 정책 — 같은 이미지를 memoryCachePolicy ENABLED/DISABLED 로 재요청해 SuccessResult.dataSource 가 NETWORK 인지 MEMORY_CACHE 인지 추적(캐시 비우기 버튼 포함), ③ ImageLoader 커스터마이징 — MemoryCache.maxSizePercent + DiskCache 구성을 CodeBlock 으로 보여주고 커스텀 ImageLoader 의 메모리 캐시 사용량을 라이브 표시. 기존 Coil 2(coil.*)와 별도 coil3.* 네임스페이스로 공존. 네트워크가 없으면 자동으로 error 상태가 노출되어 오프라인에서도 동작 시연 가능",
         blogUrl = "",
         exampleType = ConstValue.Coil3ImageExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 06. 24",
+        title = "Preview-Driven Screenshot Testing",
+        description = "@Preview를 단일 진실 공급원(source of truth)으로 삼아 스크린샷 테스트 매트릭스를 자동 파생하는 각도를 라이브로 시연: ① 하나의 샘플 컴포넌트를 정의하고, ② locale(en/ko/ar-RTL) × fontScale(0.85/1.0/1.3) × theme(Light/Dark) 차원을 FilterChip으로 토글하면, ③ 선택된 차원의 데카르트 곱만큼 변형이 실시간으로 그리드 렌더링되며 'N×M×K = 총 변형 수'가 즉시 갱신됨(CompositionLocalProvider로 LocalDensity의 fontScale·LocalLayoutDirection의 RTL을 실제 적용). 각 매트릭스 셀이 곧 하나의 골든 이미지에 대응한다는 매핑과, @PreviewParameter/멀티프리뷰 애노테이션으로 이 매트릭스를 코드로 표현하는 패턴을 CodeBlock으로 제시. Paparazzi/Roborazzi 실행 메커니즘은 기존 Screenshot Testing 예제 참조",
+        blogUrl = "",
+        exampleType = ConstValue.PreviewDrivenScreenshotExample
     )
 )

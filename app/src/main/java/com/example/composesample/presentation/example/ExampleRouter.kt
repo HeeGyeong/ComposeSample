@@ -38,6 +38,7 @@ import com.example.composesample.presentation.example.component.architecture.dev
 import com.example.composesample.presentation.example.component.architecture.development.test.TurbineFlowTestExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.test.RecompositionTestExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.test.ScreenshotTestingExampleUI
+import com.example.composesample.presentation.example.component.architecture.development.test.PreviewDrivenScreenshotExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.test.UITestExampleUI
 import com.example.composesample.presentation.example.component.system.platform.quicksettings.QuickSettingsTileExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.type.TypeExampleUI
@@ -311,6 +312,7 @@ import com.example.composesample.util.ConstValue.ComposeTestingExample
 import com.example.composesample.util.ConstValue.CustomLayoutExample
 import com.example.composesample.util.ConstValue.ModifierOrderExample
 import com.example.composesample.util.ConstValue.ScreenshotTestingExample
+import com.example.composesample.util.ConstValue.PreviewDrivenScreenshotExample
 import com.example.composesample.presentation.example.model.ExampleMoveType
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -871,6 +873,10 @@ fun ExampleCaseUI(
 
                         ScreenshotTestingExample -> {
                             ScreenshotTestingExampleUI(onBackEvent)
+                        }
+
+                        PreviewDrivenScreenshotExample -> {
+                            PreviewDrivenScreenshotExampleUI(onBackEvent)
                         }
 
                         Compose17FeaturesExample -> {
