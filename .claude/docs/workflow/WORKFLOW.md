@@ -190,3 +190,4 @@
 - 영향 분석 하네스: `impact-analyze` 스킬(`/impact-analyze [대상|diff]`) — read-only 멀티에이전트로 영향 차원별 리스크를 탐지·**adversarial 검증**해 크래시/사이드이펙트 분석 섹션 초안 생성(**검증형**). (조건부 사용 — §1.5)
 - 설계 비교 하네스: `design-options` 스킬(`/design-options <문제>`) — read-only 멀티에이전트로 독립 설계 N개를 judge panel 심사해 비교표·추천안 생성(**결정형**). 방향 미결정 작업의 spec 작성 전 사용. (조건부 사용 — §1.5)
 - 유사 버그 전파 탐지 하네스: `find-similar-bugs` 스킬(`/find-similar-bugs <설명|커밋|diff>`) — 수정된 버그의 패턴을 추상화해 코드베이스 다른 곳의 같은 버그를 multi-modal 탐색·adversarial 검증(**전파탐지형**). fix 작업 완료 직후 "다른 데도 있나" 확인용. 탐지까지만 — 발견된 형제 버그의 수정은 별도 작업 spec 으로 진행.
+- 릴리즈 QA 감사 하네스: `qa-verify` 스킬(`/qa-verify [버전]`) — GitHub QA/bug 이슈 ↔ fix 커밋 대조로 수정 누락·불완전을 빌드 배포 전에 검출(**감사형**, `gh` CLI 읽기 전용). 릴리즈/빌드 배포 전 사용 권장. 새 버그 탐색은 `/code-review`, 패턴 전파는 `find-similar-bugs` 의 역할 — 이 하네스는 이슈-수정 대응 여부만 본다. `gh` 미인증이면 실행 전 중단·안내.

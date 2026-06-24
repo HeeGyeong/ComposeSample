@@ -391,6 +391,7 @@ For the full document list, first see the document index at **`app/src/main/java
 | `impact-analyze` | `/impact-analyze [대상\|diff]` | **검증형** — 변경 영향(크래시/사이드이펙트)을 차원별 탐지 + adversarial 검증 → 분석 섹션 초안 |
 | `design-options` | `/design-options <문제>` | **결정형** — 관점이 다른 설계 N개 독립 생성 → judge panel 심사 → 비교표·추천안 |
 | `find-similar-bugs` | `/find-similar-bugs <설명\|커밋\|diff>` | **전파탐지형** — 수정한 버그 패턴을 추상화해 코드베이스 내 형제 버그 탐지 (탐지까지만) |
+| `qa-verify` | `/qa-verify [버전]` | **감사형** — GitHub QA/bug 이슈(milestone+라벨) ↔ fix 커밋 대조로 수정 누락·불완전을 빌드 배포 전 검출 (`gh` CLI read-only) |
 
 - 사용 시점/연계: 방향 미결정 → `design-options`, 구조 파악 → `explore-codebase`, 변경 안전성 검증 → `impact-analyze`, fix 후 전파 확인 → `find-similar-bugs`. 방향 결정 후 변경면을 `impact-analyze`로 넘기는 체인이 자연스럽습니다.
 - 실행 전 반드시 **"<하네스명> 하네스로 ~를 수행합니다"** 한 줄을 고지합니다.
