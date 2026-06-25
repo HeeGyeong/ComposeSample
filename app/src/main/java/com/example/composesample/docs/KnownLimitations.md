@@ -42,13 +42,17 @@ A human-readable collection of **intentional deferrals, version constraints, and
 
 ---
 
-## Material 2 remnants (M3 migration in progress)
+## Material 2 remnants (M3 migration complete — intentional remnants only)
 
-### M3-BULK 3rd pass — 32 files still on Material2
-- **Current**: the 1st/2nd bulk migrations (~80 files) are done. The remaining 32 files require API model changes and must be rewritten per domain.
-- **Classification**: `BottomSheet*`/`ModalBottomSheet*` (state-model change), `Drawer` (→`ModalNavigationDrawer`), `TopAppBar` (Slot/scrollBehavior differences), `Scaffold`, `Snackbar`, `BottomNavigation` (→`NavigationBar`), `ScrollableTabRow`, etc.
-- **Why**: simple import replacement is not enough; call sites must be rewritten, so per-domain PR splitting is recommended. The common header `MainUIComponent.kt` was already migrated by M3-05 (excluded).
-- **Intentional remnants**: some M2 examples (BottomSheet/SwipeToDismiss) are kept for comparison with their M3 replacements — see "Intentionally Kept Exceptions" in [`ARCHITECTURE.md`](../../../../../../../../ARCHITECTURE.md).
+### M3-BULK — migration complete, 4 intentional remnants kept
+- **Current**: the bulk migrations (1st/2nd/3rd passes) are **complete**. Only **4 files** intentionally remain on Material2, kept for side-by-side comparison with their M3 replacements (**do not re-migrate**):
+  - `ui/layout/bottomsheet/BottomSheetUI.kt`
+  - `ui/layout/bottomsheet/BottomSheetContent.kt`
+  - `ui/layout/bottomsheet/ModalBottomSheetUI.kt`
+  - `interaction/swipe/SwipeToDismissUI.kt`
+- **History**: the 3rd pass (completed 2026-06-12) migrated the remaining files per domain — `Drawer` (→`ModalNavigationDrawer`), `TopAppBar`, `Scaffold`, `Snackbar`, `BottomNavigation` (→`NavigationBar`), `ScrollableTabRow`, `PullToRefreshBox`, etc. The common header `MainUIComponent.kt` was migrated earlier by M3-05.
+- **Scan note**: `grep "import androidx.compose.material."` still matches ~100 files, but those are `material.icons` / `material.ripple` usages — legitimate even in M3 projects — **not** Material2 components. Only the 4 files above import actual M2 components.
+- **Intentional remnants**: see "Intentionally Kept Exceptions" in [`ARCHITECTURE.md`](../../../../../../../../ARCHITECTURE.md).
 
 ---
 
