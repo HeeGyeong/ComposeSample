@@ -60,9 +60,6 @@ runner = "1.5.2"
 rules = "1.5.0"
 espressoIntents = "3.5.1"
 
-# Accompanist
-accompanistSystemUiController = "0.32.0"
-
 # Image Loader
 glideCompose = "1.0.0-alpha.1"
 coilCompose = "2.5.0"
@@ -178,9 +175,6 @@ koinCore = { module = "io.insert-koin:koin-core", version.ref = "koinCore" }
 koinAndroid = { module = "io.insert-koin:koin-android", version.ref = "koinAndroid" }
 koinAndroidxCompose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koinAndroidxCompose" }
 
-# Accompanist
-accompanistSystemUiController = { module = "com.google.accompanist:accompanist-systemuicontroller", version.ref = "accompanistSystemUiController" }
-
 # Image Loader
 glideCompose = { module = "com.github.bumptech.glide:compose", version.ref = "glideCompose" }
 coilCompose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
@@ -295,10 +289,6 @@ lifecycle = [
     "lifecycleLivedataKtx",
     "lifecycleViewmodelCompose",
     "lifecycleViewmodelKtx"
-]
-
-accompanist = [
-    "accompanistSystemUiController"
 ]
 
 media = [

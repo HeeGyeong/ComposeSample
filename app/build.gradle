@@ -65,9 +65,6 @@ dependencies {
     // ViewModel
     implementation(libs.bundles.lifecycle)
 
-    // Accompanist
-    implementation(libs.bundles.accompanist)
-
     // Image Loading
     implementation(libs.bundles.image)
 
