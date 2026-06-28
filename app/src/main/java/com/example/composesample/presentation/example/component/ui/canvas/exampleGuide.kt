@@ -51,4 +51,26 @@ package com.example.composesample.presentation.example.component.ui.canvas
  * ### 제스처 패턴
  * - `detectDragGestures { onDragStart, onDrag, onDragEnd }`
  * - 원형 회전은 `Animatable<Float>` + `snapTo` (드래그 중) / `animateTo` (스냅)로 구현
+ *
+ * ## FreehandDrawingExampleUI (자유 곡선 드로잉 / 서명 캔버스)
+ * - 영감: DrawBox Goes Multiplatform (Akshay Nandwana, https://ak1.io) — Android Weekly #733
+ *   (원문은 CMP 드로잉 라이브러리 + MVI 재설계. 본 예제는 외부 라이브러리 없이 핵심 개념만 자체 구현)
+ * - DrawBox 라이브러리: https://github.com/akshay2211/DrawBox
+ *
+ * ### 핵심 개념
+ * - 입력: `pointerInput { detectDragGestures(onDragStart, onDrag, onDragEnd, onDragCancel) }`
+ *   → onDrag 의 `change.position` 을 점(Offset)으로 누적해 하나의 스트로크를 구성
+ * - 렌더링: 점 리스트를 `Path.moveTo/lineTo` 로 잇고 `drawPath(style = Stroke(cap=Round, join=Round))`
+ *   → 더 매끄럽게 하려면 인접 점의 중점으로 `quadraticBezierTo` 적용 가능
+ * - 점이 1개뿐(드래그 슬롭 미달)이면 `drawCircle` 로 점 표현
+ *
+ * ### MVI 단방향 상태 흐름 (DrawBox 아키텍처 차용)
+ * - `DrawIntent`(StartStroke/Drag/EndStroke/Undo/Redo/Clear/SetColor/SetWidth) sealed interface
+ * - 순수 `reduce(state, intent): DrawBoxState` 리듀서 — 부수효과 없이 다음 상태만 계산
+ * - 상태 불변(immutable List) → Undo/Redo 는 strokes ↔ redoStack 리스트 이동만으로 안전하게 구현
+ * - 새 스트로크 확정(EndStroke) 시 redoStack 무효화(표준 undo/redo 시맨틱)
+ *
+ * ### PNG 내보내기 (개념)
+ * - `rememberGraphicsLayer()` + `drawWithContent { layer.record { drawContent() }; drawLayer(layer) }`
+ * - 저장: `layer.toImageBitmap().asAndroidBitmap().compress(Bitmap.CompressFormat.PNG, 100, out)`
  */

@@ -528,5 +528,12 @@ val examples2026 = listOf(
         description = "@Preview를 단일 진실 공급원(source of truth)으로 삼아 스크린샷 테스트 매트릭스를 자동 파생하는 각도를 라이브로 시연: ① 하나의 샘플 컴포넌트를 정의하고, ② locale(en/ko/ar-RTL) × fontScale(0.85/1.0/1.3) × theme(Light/Dark) 차원을 FilterChip으로 토글하면, ③ 선택된 차원의 데카르트 곱만큼 변형이 실시간으로 그리드 렌더링되며 'N×M×K = 총 변형 수'가 즉시 갱신됨(CompositionLocalProvider로 LocalDensity의 fontScale·LocalLayoutDirection의 RTL을 실제 적용). 각 매트릭스 셀이 곧 하나의 골든 이미지에 대응한다는 매핑과, @PreviewParameter/멀티프리뷰 애노테이션으로 이 매트릭스를 코드로 표현하는 패턴을 CodeBlock으로 제시. Paparazzi/Roborazzi 실행 메커니즘은 기존 Screenshot Testing 예제 참조",
         blogUrl = "",
         exampleType = ConstValue.PreviewDrivenScreenshotExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 06. 29",
+        title = "Freehand Drawing (Signature Canvas)",
+        description = "외부 라이브러리 없이 Compose Canvas + pointerInput(detectDragGestures)만으로 자유 곡선 드로잉을 구현하고, DrawBox의 MVI 아키텍처를 차용해 상태를 관리: ① 드래그 제스처(onDragStart→onDrag→onDragEnd)로 점(Offset)을 누적해 하나의 스트로크를 만들고 drawPath(StrokeCap/Join.Round)로 렌더링, ② DrawIntent(StartStroke/Drag/EndStroke/Undo/Redo/Clear/SetColor/SetWidth) sealed interface + 순수 reduce() 리듀서로 단방향 상태 흐름을 구성, ③ 완료된 스트로크를 불변 List로 보관해 Undo는 strokes를 redoStack으로, Redo는 그 반대로 이동(새 스트로크를 그리면 redoStack 무효화), ④ 색상 팔레트와 굵기 Slider로 currentColor/strokeWidth를 변경. PNG 내보내기는 graphicsLayer.toImageBitmap()→Bitmap.compress 파이프라인을 CodeBlock으로 제시",
+        blogUrl = "",
+        exampleType = ConstValue.FreehandDrawingExample
     )
 )

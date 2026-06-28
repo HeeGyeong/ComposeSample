@@ -89,6 +89,7 @@ import com.example.composesample.presentation.example.component.ui.canvas.Compos
 import com.example.composesample.presentation.example.component.ui.canvas.DialComponentExampleUI
 import com.example.composesample.presentation.example.component.ui.canvas.MonthPickerDialExampleUI
 import com.example.composesample.presentation.example.component.ui.canvas.ParticleEmitterExampleUI
+import com.example.composesample.presentation.example.component.ui.canvas.FreehandDrawingExampleUI
 import com.example.composesample.presentation.example.component.ui.canvas.MotionBlurExampleUI
 import com.example.composesample.presentation.example.component.ui.graphics.NewShadowApiExampleUI
 import com.example.composesample.presentation.example.component.ui.layout.animation.AnimatedContentExampleUI
@@ -228,6 +229,7 @@ import com.example.composesample.util.ConstValue.FoundationStyleApiExample
 import com.example.composesample.util.ConstValue.ModalBottomSheetExample
 import com.example.composesample.util.ConstValue.MonthPickerDialExample
 import com.example.composesample.util.ConstValue.ParticleEmitterExample
+import com.example.composesample.util.ConstValue.FreehandDrawingExample
 import com.example.composesample.util.ConstValue.ModalDrawExample
 import com.example.composesample.util.ConstValue.ModularizationExample
 import com.example.composesample.util.ConstValue.MotionBlurExample
@@ -837,6 +839,10 @@ fun ExampleCaseUI(
 
                         ParticleEmitterExample -> {
                             ParticleEmitterExampleUI(onBackEvent)
+                        }
+
+                        FreehandDrawingExample -> {
+                            FreehandDrawingExampleUI(onBackEvent)
                         }
 
                         EmbeddedPhotoPickerExample -> {
