@@ -106,7 +106,7 @@ val examples2026 = listOf(
         lastUpdate = "26. 03. 11",
         title = "Motion Blur (Spinning Wheel)",
         description = "스피닝 휠에 모션 블러를 적용하는 방법: Ghost Frames, BlurMaskFilter, RenderEffect 비교",
-        blogUrl = "",
+        blogUrl = "https://heegs.tistory.com/204",
         exampleType = ConstValue.MotionBlurExample
     ),
     ExampleObject(
