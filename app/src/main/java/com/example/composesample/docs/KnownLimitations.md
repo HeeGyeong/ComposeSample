@@ -28,8 +28,8 @@ A human-readable collection of **intentional deferrals, version constraints, and
 - **Why**: minimizing per-module dependencies is desirable but has a wide impact, so it is deferred to a separate PR.
 
 ### UTIL-01 — Split ConstValue / ExampleRouter
-- **Current**: `ConstValue.kt` (150+ constants) and `ExampleRouter.kt` (150+ import lines, 130+ when branches) have grown large.
-- **Why**: both files are edited on every example addition, becoming a merge-conflict hotspot. Splitting by category is needed but has a large impact, so it is deferred to a separate PR.
+- **ExampleRouter — Done** (commit da927855): the 146-branch `when` monolith was extracted into a registry map (`exampleUiRegistry` in `ExampleUiRegistry.kt`). `ExampleRouter.kt` shrank from 974 to ~106 lines and now only handles move-type dispatch + a registry lookup. Adding an example is now a one-line map entry. Behavior is fully preserved (SDK gating for SSE/ReverseLazyColumn, the `onBackButtonClick` param for SafFile, the Dummy fallback; key set verified 146 = 146).
+- **ConstValue — intentionally deferred**: `ConstValue.kt` (150+ constants) is still a single file. Splitting it would break the `ConstValue.Xxx` qualified imports across the whole codebase for little benefit — a centralized constants file is an acceptable pattern. Kept as-is.
 - Related: the `TODO(UTIL-01)` comment in `ConstValue.kt`.
 
 ---

@@ -1,7 +1,9 @@
 package com.example.composesample.util
 
-// TODO(UTIL-01): 파일이 200줄 이상으로 커지면서 예제 추가 시 ExampleRouter.kt(import 150+줄)와 함께 수정 충돌 포인트가 됨.
-//  카테고리별 const 파일 분할 또는 sealed class 기반 라우팅 테이블로 재설계 필요 (별도 PR 권장).
+// TODO(UTIL-01): 파일이 200줄 이상으로 커지면서 예제 추가 시 수정 충돌 포인트가 됨.
+//  ExampleRouter 의 146분기 when 은 레지스트리(ExampleUiRegistry.kt)로 분리 완료(커밋 da927855).
+//  이 ConstValue 분할은 전 코드베이스의 `ConstValue.Xxx` qualified import 를 대량 파손시켜
+//  위험 대비 이득이 낮으므로 의도적으로 보류(중앙 상수 파일 패턴 유지).
 object ConstValue {
     // ==================== 기본 설정 ====================
     const val UpdateDate = "26년 6월"
