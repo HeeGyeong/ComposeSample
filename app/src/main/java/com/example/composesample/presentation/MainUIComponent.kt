@@ -67,7 +67,6 @@ fun MainHeader(
 @Composable
 fun MainScreenContent(
     onExampleCodeClick: () -> Unit,
-    onLegacyCodeClick: () -> Unit,
     onWebViewClick: (String) -> Unit,
 ) {
     Column(
@@ -83,7 +82,7 @@ fun MainScreenContent(
             fontWeight = FontWeight.Bold
         )
         Text(
-            text = "실험 예제와 레거시 샘플을 선택하세요.",
+            text = "실험 예제를 선택하세요.",
             style = MaterialTheme.typography.bodyMedium,
             color = Color.Gray
         )
@@ -94,12 +93,6 @@ fun MainScreenContent(
             title = "Example Code",
             description = "최신 Compose 예제 화면",
             onClick = onExampleCodeClick
-        )
-
-        MainMenuCard(
-            title = "Legacy Code",
-            description = "기존 레거시 예제 화면",
-            onClick = onLegacyCodeClick
         )
 
         MainMenuCard(

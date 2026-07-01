@@ -28,7 +28,6 @@ import com.example.composesample.presentation.example.component.system.ui.widget
 import com.example.composesample.presentation.example.component.system.ui.widget.SmallWidget
 import com.example.composesample.presentation.example.component.system.ui.widget.MediumWidget
 import com.example.composesample.presentation.example.component.system.ui.widget.LargeWidget
-import com.example.composesample.presentation.legacy.LegacyActivity
 import com.example.composesample.util.ConstValue.ExampleType
 import com.example.composesample.util.ConstValue.IntentType
 import kotlinx.coroutines.Dispatchers
@@ -88,9 +87,6 @@ fun MainActivityScreen() {
                 putExtra(IntentType, ExampleType)
             }
             context.startActivity(intent)
-        },
-        onLegacyCodeClick = {
-            context.startActivity(Intent(context, LegacyActivity::class.java))
         },
         onWebViewClick = { url ->
             openWebPage(context, url)
