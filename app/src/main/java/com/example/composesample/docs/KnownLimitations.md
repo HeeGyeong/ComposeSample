@@ -27,10 +27,10 @@ A human-readable collection of **intentional deferrals, version constraints, and
 - **Current**: `config.gradle`/`core-dependencies.gradle` are applied commonly. domain was split out by ARCH-04, but `core`/`coordinator` still apply them commonly.
 - **Why**: minimizing per-module dependencies is desirable but has a wide impact, so it is deferred to a separate PR.
 
-### UTIL-01 — Split ConstValue / ExampleRouter
+### UTIL-01 — ExampleRouter split (done) / ConstValue split (decided: won't-do)
 - **ExampleRouter — Done** (commit da927855): the 146-branch `when` monolith was extracted into a registry map (`exampleUiRegistry` in `ExampleUiRegistry.kt`). `ExampleRouter.kt` shrank from 974 to ~106 lines and now only handles move-type dispatch + a registry lookup. Adding an example is now a one-line map entry. Behavior is fully preserved (SDK gating for SSE/ReverseLazyColumn, the `onBackButtonClick` param for SafFile, the Dummy fallback; key set verified 146 = 146).
-- **ConstValue — intentionally deferred**: `ConstValue.kt` (150+ constants) is still a single file. Splitting it would break the `ConstValue.Xxx` qualified imports across the whole codebase for little benefit — a centralized constants file is an acceptable pattern. Kept as-is.
-- Related: the `TODO(UTIL-01)` comment in `ConstValue.kt`.
+- **ConstValue — decided: won't-do (no longer a pending task)**: `ConstValue.kt` (150+ constants) stays a single file. Splitting it would break **355 `ConstValue.Xxx` qualified references across 15 files plus ~140 member imports** for a purely cosmetic gain (file length). A Kotlin `object` cannot span multiple files, so any split forces top-level constants and mass reference churn. Benefit < risk → kept as-is permanently; a centralized constants file is the accepted project pattern. This is a closed decision, not deferred work — no need to re-evaluate in future scans.
+- Related: the `[UTIL-01 — 결정 완료]` note in `ConstValue.kt` (the prior `TODO` marker was removed since this is no longer pending work).
 
 ---
 

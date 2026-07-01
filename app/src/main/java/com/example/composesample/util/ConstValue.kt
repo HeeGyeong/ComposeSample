@@ -1,9 +1,10 @@
 package com.example.composesample.util
 
-// TODO(UTIL-01): 파일이 200줄 이상으로 커지면서 예제 추가 시 수정 충돌 포인트가 됨.
-//  ExampleRouter 의 146분기 when 은 레지스트리(ExampleUiRegistry.kt)로 분리 완료(커밋 da927855).
-//  이 ConstValue 분할은 전 코드베이스의 `ConstValue.Xxx` qualified import 를 대량 파손시켜
-//  위험 대비 이득이 낮으므로 의도적으로 보류(중앙 상수 파일 패턴 유지).
+// [UTIL-01 — 결정 완료, 미진행(won't-do)] ConstValue 분할은 영구 보류한다. (재논의 불필요)
+//  ExampleRouter 의 146분기 when 은 레지스트리(ExampleUiRegistry.kt)로 분리 완료(커밋 da927855)되어
+//  가독성 핵심 문제는 이미 해소됨. 반면 이 ConstValue 분할은 전 코드베이스의 `ConstValue.Xxx`
+//  참조 355곳(15개 파일) + 멤버 import ~140건을 대량 파손시키는데 이득은 파일 길이 단축(미관)뿐 →
+//  이득 < 위험으로 의도적 미진행(중앙 상수 파일 패턴 유지). object 는 Kotlin 에서 파일 분할 불가.
 object ConstValue {
     // ==================== 기본 설정 ====================
     const val UpdateDate = "26년 6월"
