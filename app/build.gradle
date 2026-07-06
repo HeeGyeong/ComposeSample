@@ -71,9 +71,6 @@ dependencies {
     // Dependency Injection
     implementation(libs.bundles.koin)
 
-    // Reactive
-    implementation(libs.bundles.reactive)
-
     // Media
     implementation(libs.bundles.media)
 

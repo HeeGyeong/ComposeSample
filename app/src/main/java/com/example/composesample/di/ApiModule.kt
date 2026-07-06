@@ -13,7 +13,6 @@ import org.koin.core.module.Module
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import retrofit2.Retrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
@@ -25,7 +24,6 @@ val apiModule: Module = module {
         Retrofit.Builder()
             .baseUrl(ApiClient.BASE_URL)
             .client(get())
-            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .addConverterFactory(get<GsonConverterFactory>())
             .build()
     }
@@ -34,7 +32,6 @@ val apiModule: Module = module {
         Retrofit.Builder()
             .baseUrl(ApiClient.NEW_BASE_URL)
             .client(get())
-            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .addConverterFactory(get<GsonConverterFactory>())
             .build()
     }

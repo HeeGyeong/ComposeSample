@@ -12,6 +12,5 @@ val databaseModule = module {
             .build()
     }
 
-    single { get<RoomSingleton>().itemDao() }
     single { get<RoomSingleton>().exampleDao() }
 }
