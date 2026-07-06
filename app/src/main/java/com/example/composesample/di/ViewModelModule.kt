@@ -18,8 +18,6 @@ import com.example.composesample.presentation.example.component.data.cache.DataC
 import com.example.composesample.presentation.example.component.data.paging.PagingViewModel
 import com.example.composesample.presentation.example.component.data.sse.SSEViewModel
 import com.example.composesample.presentation.example.component.system.platform.file.SafFileSelectionViewModel
-import com.example.composesample.presentation.legacy.movie.MovieViewModel
-import com.example.composesample.presentation.legacy.sub.SubActivityViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.module.Module
 import org.koin.core.qualifier.named
@@ -35,10 +33,8 @@ val viewModelModule: Module = module {
     }
 
     viewModel { BlogExampleViewModel(get(), get()) }
-    viewModel { MovieViewModel(get(), get(named("api"))) }
     viewModel { ApiExampleUseCaseViewModel(get(), get()) }
     viewModel { DataCacheViewModel(get(), get()) }
-    viewModel { SubActivityViewModel(get(), get()) }
 
     viewModel { MVIExampleViewModel(get()) }
     viewModel { SSEViewModel() }

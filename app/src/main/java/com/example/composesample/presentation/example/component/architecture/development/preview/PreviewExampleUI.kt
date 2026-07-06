@@ -15,11 +15,13 @@ import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
+import androidx.lifecycle.ViewModel
 import com.example.composesample.presentation.example.BlogExampleViewModel
 import com.example.composesample.presentation.example.component.ui.media.shimmer.ShimmerExampleUI
-import com.example.composesample.presentation.legacy.cal.CalViewModel
 import com.example.core.navigation.Navigation
 import com.example.core.navigation.NavigationInterface
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
 /**
  * 가장 기본적인 Preview 사용 방법
@@ -110,10 +112,22 @@ private class MockNavigationInterface : NavigationInterface {
 
 private val mockNavigation = Navigation(MockNavigationInterface())
 
+/**
+ * ViewModelPreview1 시연용 최소 카운터 ViewModel.
+ */
+class PreviewCounterViewModel : ViewModel() {
+    private val _counter = MutableStateFlow(0)
+    val counter = _counter.asStateFlow()
+
+    fun addCounter() {
+        _counter.value += 1
+    }
+}
+
 @Preview
 @Composable
 fun ViewModelPreview1(
-    calViewModel: CalViewModel = CalViewModel(),
+    calViewModel: PreviewCounterViewModel = PreviewCounterViewModel(),
     blogExampleViewModel: BlogExampleViewModel = BlogExampleViewModel(
         navigation = mockNavigation,
         application = Application()

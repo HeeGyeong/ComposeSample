@@ -1,5 +1,8 @@
 package com.example.composesample.presentation.example.component.navigation
 
+import android.app.Activity
+import android.content.Context
+import android.content.ContextWrapper
 import android.graphics.Rect
 import android.os.Bundle
 import android.view.ViewTreeObserver
@@ -48,6 +51,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalView
@@ -61,7 +65,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.composesample.presentation.example.BlogExampleViewModel
-import com.example.composesample.presentation.legacy.base.SetSystemUI
 import org.koin.androidx.compose.koinViewModel
 
 @ExperimentalAnimationApi
@@ -285,6 +288,31 @@ class BottomNavigationActivity : ComponentActivity() {
             SetSystemUI()
         }
     }
+}
+
+/**
+ * 상태바/내비게이션 바 색상 지정 (검정 상태바 + 노랑 내비바 시연).
+ *
+ * window.statusBarColor / navigationBarColor 직접 지정은 API 35(에지투에지 강제)에서
+ * deprecated 이지만, 이 데모는 색상 지정 자체가 목적이라 동작을 그대로 보존한다.
+ */
+@Suppress("DEPRECATION")
+@Composable
+private fun SetSystemUI() {
+    val view = LocalView.current
+    if (view.isInEditMode) return
+
+    val window = view.context.findActivity()?.window ?: return
+    // Top System UI
+    window.statusBarColor = Color.Black.toArgb()
+    // Bottom System UI
+    window.navigationBarColor = Color.Yellow.toArgb()
+}
+
+private tailrec fun Context.findActivity(): Activity? = when (this) {
+    is Activity -> this
+    is ContextWrapper -> baseContext.findActivity()
+    else -> null
 }
 
 /**
