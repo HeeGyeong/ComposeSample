@@ -2,10 +2,8 @@ package com.example.composesample.di
 
 import android.util.Log
 import com.example.data.api.ApiClient
-import com.example.data.api.ApiInterface
 import com.example.data.api.PostApiInterface
 import com.example.composesample.util.NetworkInterceptor
-import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import com.example.composesample.BuildConfig
@@ -18,15 +16,6 @@ import java.util.concurrent.TimeUnit
 
 val apiModule: Module = module {
     single<GsonConverterFactory> { GsonConverterFactory.create() }
-
-    // Retrofit setting
-    single<Retrofit> {
-        Retrofit.Builder()
-            .baseUrl(ApiClient.BASE_URL)
-            .client(get())
-            .addConverterFactory(get<GsonConverterFactory>())
-            .build()
-    }
 
     single<Retrofit>(named("jsonplaceholder")) {
         Retrofit.Builder()
@@ -42,23 +31,10 @@ val apiModule: Module = module {
                 connectTimeout(60, TimeUnit.SECONDS)
                 readTimeout(60, TimeUnit.SECONDS)
                 writeTimeout(60, TimeUnit.SECONDS)
-                addInterceptor(get<Interceptor>())
                 addInterceptor(get<HttpLoggingInterceptor>())
                 addInterceptor(get<NetworkInterceptor>())
                 build()
             }
-    }
-
-    single {
-        Interceptor { chain ->
-            with(chain) {
-                val newRequest = request().newBuilder()
-                    .addHeader("X-Naver-Client-Id", BuildConfig.NAVER_CLIENT_ID)
-                    .addHeader("X-Naver-Client-Secret", BuildConfig.NAVER_CLIENT_SECRET)
-                    .build()
-                proceed(newRequest)
-            }
-        }
     }
 
     single {
@@ -73,8 +49,6 @@ val apiModule: Module = module {
                 }
             }
     }
-
-    single<ApiInterface>(named("api")) { get<Retrofit>().create(ApiInterface::class.java) }
 
     single<PostApiInterface>(named("post")) {
         get<Retrofit>(named("jsonplaceholder")).create(
