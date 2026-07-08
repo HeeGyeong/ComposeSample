@@ -9,7 +9,7 @@ import android.database.ContentObserver
 import android.net.Uri
 import android.os.Build
 import android.os.Handler
-import android.os.Looper
+import android.os.HandlerThread
 import android.provider.MediaStore
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -206,10 +206,13 @@ private fun LegacyMediaStoreSection() {
     var isMonitoring by remember { mutableStateOf(false) }
     val events = remember { mutableStateListOf<String>() }
     var observer by remember { mutableStateOf<ContentObserver?>(null) }
+    // onChange 안에서 MediaStore 쿼리(디스크 I/O)를 수행하므로 메인 스레드를 막지 않도록 전용 백그라운드 스레드에서 관찰한다.
+    val observerThread = remember { HandlerThread("ScreenshotObserver").apply { start() } }
 
     DisposableEffect(Unit) {
         onDispose {
             observer?.let { runCatching { context.contentResolver.unregisterContentObserver(it) } }
+            observerThread.quitSafely()
         }
     }
 
@@ -228,12 +231,15 @@ private fun LegacyMediaStoreSection() {
                     observer = null
                     isMonitoring = false
                 } else {
-                    val obs = object : ContentObserver(Handler(Looper.getMainLooper())) {
+                    val mainExecutor = ContextCompat.getMainExecutor(context)
+                    val obs = object : ContentObserver(Handler(observerThread.looper)) {
                         override fun onChange(selfChange: Boolean, uri: Uri?) {
                             super.onChange(selfChange, uri)
+                            // 여기까지는 observerThread(백그라운드)에서 실행 — 쿼리 완료 후 상태 갱신만 메인으로 전달
                             val (name, path) = queryLatestImageInfo(context) ?: return
                             if (isLikelyScreenshot(name, path)) {
-                                events.add(0, "📸 감지 @ ${timestamp()} — $name ($path)")
+                                val message = "📸 감지 @ ${timestamp()} — $name ($path)"
+                                mainExecutor.execute { events.add(0, message) }
                             }
                         }
                     }
