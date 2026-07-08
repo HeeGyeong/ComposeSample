@@ -73,3 +73,36 @@ package com.example.composesample.presentation.example.component.system.security
  *  - 실제 운영에서는 한 번 생성한 키를 재사용하고 진단 결과만 캐싱 권장
  *  - 에뮬레이터에서는 대부분 SOFTWARE 로 떨어지며, 실기기(Pixel/Galaxy 등)에서 TEE/STRONGBOX 결과 확인 가능
  */
+
+/**
+ * Screenshot Detection 예제 참고 자료
+ *
+ * - Android 14 동작 변경: https://developer.android.com/about/versions/14/behavior-changes-14#detect-screenshots
+ * - Activity.registerScreenCaptureCallback: https://developer.android.com/reference/android/app/Activity#registerScreenCaptureCallback(java.util.concurrent.Executor,android.app.Activity.ScreenCaptureCallback)
+ * - MediaStore.Images: https://developer.android.com/reference/android/provider/MediaStore.Images
+ * - ContentObserver: https://developer.android.com/reference/android/database/ContentObserver
+ * - 런타임 권한(사진/미디어): https://developer.android.com/about/versions/13/behavior-changes-13#granular-media-permissions
+ *
+ * 핵심 개념 요약
+ *
+ * 1) Android 14+ 콜백 (registerScreenCaptureCallback)
+ *  - Activity.registerScreenCaptureCallback(executor, callback) 로 등록, unregisterScreenCaptureCallback 으로 해제
+ *  - callback.onScreenCaptured() 는 이 Activity 가 화면에 보이는 동안 실제로 캡처될 때만 호출됨
+ *  - 별도 권한 불필요 — 시스템이 캡처 이벤트를 직접 통지
+ *  - 화면 녹화(레코딩)는 감지 대상이 아님(레코딩 감지는 MediaProjection 콜백 별도 필요)
+ *
+ * 2) 레거시 MediaStore ContentObserver
+ *  - contentResolver.registerContentObserver(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, true, observer)
+ *  - onChange(selfChange, uri) 콜백에서 최신 삽입 이미지의 DISPLAY_NAME/RELATIVE_PATH(API 29+) 또는 DATA(그 미만)를 조회
+ *  - 파일명·경로에 "screenshot" 문자열이 포함되는지로 휴리스틱 판정 — 사진 편집 앱 저장본 등 오탐 가능
+ *  - READ_MEDIA_IMAGES(API 33+) 또는 READ_EXTERNAL_STORAGE(API 32 이하) 런타임 권한 필요
+ *
+ * 3) 실무 적용
+ *  - minSdk 가 34 미만이면 SDK_INT 분기로 두 방식을 병행(34+ 콜백, 미만 ContentObserver 폴백)
+ *  - 결제/DRM 콘텐츠 등 민감 화면 보호 목적이면 캡처 감지 시 워터마크 오버레이·경고 다이얼로그 등으로 대응
+ *  - FLAG_SECURE 로 애초에 캡처 자체를 차단하는 방법도 있으나, 이 예제는 "감지" 자체가 목적인 시나리오(로깅/경고)를 다룸
+ *
+ * 본 예제의 단순화 포인트
+ *  - 두 방식 모두 화면 내 토글 버튼으로 수동 등록/해제 (실제 운영에서는 Activity onResume/onPause 생명주기에 연동 권장)
+ *  - ContentObserver 는 이미지 삽입마다 매번 최신 1건을 재조회 — 대량 삽입 시 놓치는 이벤트가 있을 수 있어 로깅/분석 용도로만 권장
+ */

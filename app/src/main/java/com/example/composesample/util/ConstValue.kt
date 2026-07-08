@@ -7,7 +7,7 @@ package com.example.composesample.util
 //  이득 < 위험으로 의도적 미진행(중앙 상수 파일 패턴 유지). object 는 Kotlin 에서 파일 분할 불가.
 object ConstValue {
     // ==================== 기본 설정 ====================
-    const val UpdateDate = "26년 6월"
+    const val UpdateDate = "26년 7월"
 
     // ==================== Intent & Code Type ====================
     const val IntentType = "type"
@@ -203,9 +203,10 @@ object ConstValue {
     const val BiometricAuthExample = "biometricAuthExample"
 
     // ==================== 보안 예제 ====================
-    // AppSecurity(Certificate Pinning + AndroidKeyStore AES-GCM 암호화 저장 + Play Integrity Mock 응답 디코딩), HardwareKeystore(TEE/StrongBox 하드웨어 키 보관 검증 — API 23+ isInsideSecureHardware / API 31+ SECURITY_LEVEL)
+    // AppSecurity(Certificate Pinning + AndroidKeyStore AES-GCM 암호화 저장 + Play Integrity Mock 응답 디코딩), HardwareKeystore(TEE/StrongBox 하드웨어 키 보관 검증 — API 23+ isInsideSecureHardware / API 31+ SECURITY_LEVEL), ScreenshotDetection(Android 14 registerScreenCaptureCallback vs 레거시 MediaStore ContentObserver 비교)
     const val AppSecurityExample = "appSecurityExample"
     const val HardwareKeystoreExample = "hardwareKeystoreExample"
+    const val ScreenshotDetectionExample = "screenshotDetectionExample"
 
     // ==================== AI / 온디바이스 ML 예제 ====================
     // GeminiNano(ML Kit GenAI 온디바이스 추론 + Feature 가용성 + Cloud fallback)

@@ -446,6 +446,13 @@ val examples2026 = listOf(
         exampleType = ConstValue.HardwareKeystoreExample
     ),
     ExampleObject(
+        lastUpdate = "26. 07. 09",
+        title = "Screenshot Detection (Android 14 콜백 vs 레거시 MediaStore)",
+        description = "화면 캡처를 실시간으로 감지하는 두 가지 방식을 한 화면에서 비교: ① Android 14(API 34+) Activity.registerScreenCaptureCallback() — 권한 불필요, 화면이 보이는 동안 캡처 시점에만 정확히 발화 ② 레거시 MediaStore ContentObserver — READ_MEDIA_IMAGES/READ_EXTERNAL_STORAGE 권한 필요, 새로 삽입된 이미지의 파일명·경로를 휴리스틱으로 매칭(오탐 가능). 실시간 이벤트 로그 + API 레벨별 실무 가이드",
+        blogUrl = "",
+        exampleType = ConstValue.ScreenshotDetectionExample
+    ),
+    ExampleObject(
         lastUpdate = "26. 05. 12",
         title = "Compose Animations Showcase (카탈로그)",
         description = "공통 duration/easing 슬라이더로 5가지 모션 패턴을 한 화면에서 동시 비교: animateXxxAsState(Dp/Color/scale·alpha), AnimatedVisibility(slide+fade combo) + Crossfade, AnimatedContent(SizeTransform) + updateTransition(다중 속성 동기), rememberInfiniteTransition + Drag-driven Animatable spring 복귀",
