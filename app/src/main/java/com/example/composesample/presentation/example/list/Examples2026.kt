@@ -542,5 +542,12 @@ val examples2026 = listOf(
         description = "외부 라이브러리 없이 Compose Canvas + pointerInput(detectDragGestures)만으로 자유 곡선 드로잉을 구현하고, DrawBox의 MVI 아키텍처를 차용해 상태를 관리: ① 드래그 제스처(onDragStart→onDrag→onDragEnd)로 점(Offset)을 누적해 하나의 스트로크를 만들고 drawPath(StrokeCap/Join.Round)로 렌더링, ② DrawIntent(StartStroke/Drag/EndStroke/Undo/Redo/Clear/SetColor/SetWidth) sealed interface + 순수 reduce() 리듀서로 단방향 상태 흐름을 구성, ③ 완료된 스트로크를 불변 List로 보관해 Undo는 strokes를 redoStack으로, Redo는 그 반대로 이동(새 스트로크를 그리면 redoStack 무효화), ④ 색상 팔레트와 굵기 Slider로 currentColor/strokeWidth를 변경. PNG 내보내기는 graphicsLayer.toImageBitmap()→Bitmap.compress 파이프라인을 CodeBlock으로 제시",
         blogUrl = "",
         exampleType = ConstValue.FreehandDrawingExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 07. 10",
+        title = "Advanced Repository Pattern",
+        description = "다중 소스를 Memory → Disk → Network 우선순위로 해석하는 Repository 패턴을 한 화면에서 시연: ① 조회 시 가장 빠른 계층(Memory)부터 확인하고 없으면 Disk(300ms)·Network(900ms) 순으로 내려가며, 하위 계층에서 찾은 값은 상위 계층에도 채워 넣어(cache population) 다음 조회를 가속, ② 강제 새로고침은 Memory/Disk를 모두 건너뛰고 Network로 직행, ③ 메모리/디스크 무효화 버튼으로 두 캐시가 서로 독립적임을 실시간 타임라인 로그(MEMORY/DISK/NETWORK 색상 배지 + 소요시간)로 확인. ArticleRepository 인터페이스는 순수 Kotlin 모델(ArticleData)이라 domain 모듈에 위치 — Room @Entity(UserData)라 data 레이어에 둬야 했던 UserCacheRepository 예제와 대조",
+        blogUrl = "",
+        exampleType = ConstValue.AdvancedRepositoryPatternExample
     )
 )

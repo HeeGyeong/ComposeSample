@@ -32,6 +32,7 @@ import com.example.composesample.presentation.example.component.data.api.KtorAdv
 import com.example.composesample.presentation.example.component.data.api.KtorExampleUI
 import com.example.composesample.presentation.example.component.data.cache.DataCacheExampleUI
 import com.example.composesample.presentation.example.component.data.paging.PagingExampleUI
+import com.example.composesample.presentation.example.component.data.repository.AdvancedRepositoryPatternExampleUI
 import com.example.composesample.presentation.example.component.data.room.MultiTableInsertExampleUI
 import com.example.composesample.presentation.example.component.data.room.RoomFtsSearchExampleUI
 import com.example.composesample.presentation.example.component.data.room.RoomIndexExampleUI
@@ -174,6 +175,7 @@ import com.example.composesample.util.ConstValue.CursorIDEExample
 import com.example.composesample.util.ConstValue.CustomBottomSheetExample
 import com.example.composesample.util.ConstValue.CustomScrollBehaviorExample
 import com.example.composesample.util.ConstValue.CustomTextRenderingExample
+import com.example.composesample.util.ConstValue.AdvancedRepositoryPatternExample
 import com.example.composesample.util.ConstValue.DataCacheExample
 import com.example.composesample.util.ConstValue.DialComponentExample
 import com.example.composesample.util.ConstValue.DragAndDropExample
@@ -336,6 +338,7 @@ val exampleUiRegistry: Map<String, @Composable (onBackEvent: () -> Unit) -> Unit
     SwipeToDismissM3Example to { onBackEvent -> SwipeToDismissM3ExampleUI(onBackEvent) },
     SideEffectExample to { onBackEvent -> SideEffectExampleUI(onBackEvent) },
     DataCacheExample to { onBackEvent -> DataCacheExampleUI(onBackEvent) },
+    AdvancedRepositoryPatternExample to { onBackEvent -> AdvancedRepositoryPatternExampleUI(onBackEvent) },
     ApiDisconnectExample to { onBackEvent -> ApiDisconnectExampleUI(onBackEvent) },
     PowerSaveModeExample to { onBackEvent -> PowerSaveModeExampleUI(onBackEvent) },
     DragAndDropExample to { onBackEvent -> DragAndDropExampleUI(onBackEvent) },

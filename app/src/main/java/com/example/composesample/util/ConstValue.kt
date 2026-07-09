@@ -181,12 +181,13 @@ object ConstValue {
     const val KtorAdvancedConfigExample = "ktorAdvancedConfigExample"
 
     // ==================== 데이터 & 캐시 예제 ====================
-    // DataCache(캐시 관리), Paging(무한 스크롤), MultiTableInsert(Room DAO 인터페이스 상속 + withTransaction 다중 테이블 insert), RoomFtsSearch(Room @Fts4 가상 테이블의 MATCH 검색 vs LIKE '%q%' 전체 스캔 성능 비교), RoomIndex(@Index 단일/복합 인덱스의 범위/등호+정렬 쿼리 성능 비교)
+    // DataCache(캐시 관리), Paging(무한 스크롤), MultiTableInsert(Room DAO 인터페이스 상속 + withTransaction 다중 테이블 insert), RoomFtsSearch(Room @Fts4 가상 테이블의 MATCH 검색 vs LIKE '%q%' 전체 스캔 성능 비교), RoomIndex(@Index 단일/복합 인덱스의 범위/등호+정렬 쿼리 성능 비교), AdvancedRepositoryPattern(Memory→Disk→Network 다중 소스 우선순위 해석 + cache population)
     const val DataCacheExample = "dataCacheExample"
     const val PagingExample = "pagingExample"
     const val MultiTableInsertExample = "multiTableInsertExample"
     const val RoomFtsSearchExample = "roomFtsSearchExample"
     const val RoomIndexExample = "roomIndexExample"
+    const val AdvancedRepositoryPatternExample = "advancedRepositoryPatternExample"
 
     // ==================== 시스템 & 설정 예제 ====================
     // PowerSaveMode(절전 모드), TargetSDK34Permission(권한 처리), PassingIntentData(Intent 전달), LanguageSetting(시스템 언어), LocalLanguageChange(앱 내 언어), Shortcut(앱 숏컷), QuickSettingsTile(빠른 설정 타일), DynamicAppLinks(동적 앱 링크), PredictiveBack(예측형 뒤로가기 제스처), HapticFeedback(햅틱 피드백), BiometricAuth(생체 인증 — biometric-compose alpha)

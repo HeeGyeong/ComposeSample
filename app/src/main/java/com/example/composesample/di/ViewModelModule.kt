@@ -16,6 +16,7 @@ import com.example.composesample.presentation.example.component.data.api.ApiExam
 import com.example.composesample.presentation.example.component.data.api.ApiExampleViewModel
 import com.example.composesample.presentation.example.component.data.cache.DataCacheViewModel
 import com.example.composesample.presentation.example.component.data.paging.PagingViewModel
+import com.example.composesample.presentation.example.component.data.repository.AdvancedRepositoryPatternViewModel
 import com.example.composesample.presentation.example.component.data.sse.SSEViewModel
 import com.example.composesample.presentation.example.component.system.platform.file.SafFileSelectionViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -35,6 +36,7 @@ val viewModelModule: Module = module {
     viewModel { BlogExampleViewModel(get(), get()) }
     viewModel { ApiExampleUseCaseViewModel(get(), get()) }
     viewModel { DataCacheViewModel(get(), get()) }
+    viewModel { AdvancedRepositoryPatternViewModel(get(), get()) }
 
     viewModel { MVIExampleViewModel(get()) }
     viewModel { SSEViewModel() }
