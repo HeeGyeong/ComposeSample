@@ -34,10 +34,18 @@ package com.example.composesample.presentation.example.component.architecture.de
  * - 공식 문서: https://developer.android.com/develop/ui/compose/tooling/previews
  *
  * --- Recomposition Test ---
+ * - 출처: https://proandroiddev.com/catching-excessive-recompositions-in-jetpack-compose-with-tests-8d0b952e2853
  * - Compose 컴파일러가 생성하는 $changed 비트마스크 기반 최적화 검증
  * - remember { derivedStateOf { } } 패턴으로 불필요한 리컴포지션 제거
  * - RecompositionTestExample: 과도한 리컴포지션 감지 패턴 시연
+ * - RecompositionCounter(SideEffect로 카운트 증가) + composeTestRule로 초기 컴포지션·상태 변경 후 재구성 횟수를 assertEquals로 단언
+ * - @Stable/@Immutable 어노테이션으로 안정성을 보장해 스마트 리컴포지션 유도, key 파라미터로 LazyColumn 아이템 재사용 최적화
  *
  * --- Coroutine Flow Testing (Turbine) ---
- * - TurbineFlowTestExampleGuide.kt 참조 (별도 파일로 관리)
+ * - 원문: https://programminghard.dev/dont-learn-coroutine-testing-with-turbine/
+ * - Turbine 이전에 코루틴 테스트 기초(runTest, 가상 시간)를 먼저 이해해야 함
+ * - awaitItem() 체이닝은 과명세화(over-specification)를 유발함
+ * - StateFlow 테스트: 상태별 독립 테스트 + runCurrent() / advanceUntilIdle()
+ * - SharedFlow/단방향 이벤트 스트림에서는 Turbine이 적합
+ * - 테스트 디스패처: StandardTestDispatcher(명시적 진행 제어) vs UnconfinedTestDispatcher(즉시 실행, 초기 상태 검증에 편리)
  */

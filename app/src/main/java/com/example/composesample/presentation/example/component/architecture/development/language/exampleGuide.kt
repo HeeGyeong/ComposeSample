@@ -5,6 +5,7 @@ package com.example.composesample.presentation.example.component.architecture.de
  *
  * ## Sealed Class vs Sealed Interface
  * - 공식 문서: https://kotlinlang.org/docs/sealed-classes.html
+ * - 출처: https://proandroiddev.com/kotlin-sealed-classes-and-interface-9a90f80d4983
  * 핵심 개념:
  * - sealed class: 단일 파일·패키지 내 하위 클래스 제한. 생성자 인자 가능
  * - sealed interface: 다중 상속 가능. data class/object가 여러 sealed interface 구현 가능
@@ -14,6 +15,8 @@ package com.example.composesample.presentation.example.component.architecture.de
  * - UI 상태 모델링: sealed class UiState { Loading, Success(data), Error(msg) }
  * - 이벤트 처리: sealed interface UiEvent { data class Click(id: Int), object Refresh }
  * - 다중 상태 조합: sealed interface 다중 구현으로 복합 상태 표현
+ * - ApiResult<T> 제네릭 래퍼로 Success/Error/Loading/Empty 상태를 재사용 가능하게 표현 (timestamp·code 등 부가 정보 포함)
+ * - Enum 대비 장점: 각 하위 타입이 서로 다른 데이터를 보유 가능 + 제네릭 타입 파라미터 지원
  *
  * Kotlin 1.9+ 변경:
  * - sealed class 하위 클래스가 같은 패키지 전체로 확장 (파일 제한 완화)

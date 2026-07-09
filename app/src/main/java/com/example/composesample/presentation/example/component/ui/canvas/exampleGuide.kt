@@ -73,4 +73,32 @@ package com.example.composesample.presentation.example.component.ui.canvas
  * ### PNG 내보내기 (개념)
  * - `rememberGraphicsLayer()` + `drawWithContent { layer.record { drawContent() }; drawLayer(layer) }`
  * - 저장: `layer.toImageBitmap().asAndroidBitmap().compress(Bitmap.CompressFormat.PNG, 100, out)`
+ *
+ * ## MotionBlurExampleUI (스피닝 휠 모션 블러)
+ * - 출처: https://proandroiddev.com/motion-blur-for-a-spinning-wheel-in-jetpack-compose-368c1647224d
+ *
+ * ### 핵심 개념
+ * - Ghost Frames 기법: 동일 휠을 여러 각도로 반투명 겹쳐 그려 모션 블러 흉내 (`withTransform { rotate(...) }` + alpha 감쇠) — API 레벨 제한 없음
+ * - BlurMaskFilter: `Paint.asFrameworkPaint().maskFilter = BlurMaskFilter(radius, Blur.NORMAL/SOLID/INNER/OUTER)`로 Paint 레벨 블러
+ * - RenderEffect(API 31+): `Modifier.graphicsLayer { renderEffect = BlurEffect(radiusX, radiusY=0f) }`로 GPU 가속 축 방향 블러
+ * - 속도 연동: 각속도(angularVelocity)에 비례해 블러 반경·고스트 개수를 동적 조절 → 빠르게 회전할수록 강한 블러
+ *
+ * ## CanvasShapesExampleUI (Canvas 도형·애니메이션 기초)
+ * - 출처: https://proandroiddev.com/compose-canvas-understanding-shapes-and-animations-for-beginners-255653149393
+ *
+ * ### 핵심 개념
+ * - DrawScope 기본 도형: drawCircle/drawRect/drawRoundRect/drawLine/drawArc/drawPath, dp.toPx() 변환 필수
+ * - Brush 그라디언트: linearGradient/radialGradient/sweepGradient
+ * - Transform: rotate/scale/translate + withTransform 조합, BlendMode·alpha로 겹침 효과 제어
+ * - 애니메이션 결합: rememberInfiniteTransition/animateFloatAsState, 복잡한 Path는 drawWithCache로 캐싱 최적화
+ *
+ * ## DialComponentExampleUI (Canvas 기반 다이얼/원형 슬라이더)
+ * - 출처: https://www.sinasamaki.com/how-to-create-dials-in-jetpack-compose/
+ *   (원본은 ChromaDial 라이브러리 소개, 본 예제는 외부 라이브러리 없이 Canvas로 직접 구현)
+ *
+ * ### 핵심 개념
+ * - 각도 ↔ 좌표 변환: `x = cx + r·cos(θ)`, `y = cy + r·sin(θ)` (12시 방향 기준 θ = degree - 90)
+ * - 터치 → 각도: `atan2(dy, dx)`로 계산 후 `(degrees + 90 + 360) % 360` 보정
+ * - startDegrees/sweepDegrees로 범위 제한(예: 270도 부채꼴), sweepDegrees > 360이면 멀티턴 다이얼
+ * - interval 스냅: 0=스무스, N이면 가장 가까운 N배수로 반올림 스냅
  */

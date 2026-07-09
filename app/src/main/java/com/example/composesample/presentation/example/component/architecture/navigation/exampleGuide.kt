@@ -23,6 +23,17 @@ package com.example.composesample.presentation.example.component.architecture.na
  * 주의사항:
  * - 현재 실험적(Experimental) API — 프로덕션 적용 전 안정화 여부 확인 필요
  * - Navigation2와 동시 혼용 시 백스택 충돌 가능
+ *
+ * ## Navigation3ExampleUI 추가 참고 자료 (Navigation3Guide.kt에서 이관)
+ * - 출처: https://android-developers.googleblog.com/2025/11/jetpack-navigation-3-is-stable.html
+ *
+ * 핵심 개념:
+ * - Navigation 3는 "Building blocks approach"로 작고 분리된 API를 조합해 사용하는 철학
+ * - Nav2는 NavController가 백스택을 내부 상태로 관리했지만, Nav3는 개발자가 backStack을
+ *   Compose State(List<NavKey>)로 직접 소유해 Single Source of Truth를 확보
+ * - NavDisplay는 backStack 변화를 관찰해 entryProvider의 when 분기로 현재 화면만 표시
+ * - Multiple back stacks(탭별 독립 백스택), Scenes API(어댑티브 레이아웃), Deep Link 처리 등은
+ *   빌딩 블록을 조합해 앱에서 직접 구현
  */
 
 /**

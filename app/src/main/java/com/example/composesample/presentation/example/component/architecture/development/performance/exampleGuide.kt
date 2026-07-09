@@ -5,10 +5,13 @@ package com.example.composesample.presentation.example.component.architecture.de
  *
  * ## Inline Value Class (인라인 값 클래스)
  * - 공식 문서: https://kotlinlang.org/docs/inline-classes.html
+ * - 출처: https://carrion.dev/en/posts/kotlin-inline-functions-value-classes/
  * 핵심 개념:
  * - @JvmInline value class: 래퍼 클래스의 타입 안전성 + 원시 타입의 런타임 성능
  * - 컴파일 시 래퍼 제거 → 힙 할당 없음. 박싱 비용 0
  * - 제한: 단일 val 프로퍼티만 허용, 상속 불가, init 블록 가능
+ * - inline 함수와 조합: 함수 호출 오버헤드 제거 + reified 타입 파라미터로 타입 소거 문제 해결 (Zero-Cost Abstractions)
+ * - noinline/crossinline: 람다를 인라인 대상에서 제외하거나 non-local return을 금지할 때 사용
  *
  * 활용 패턴:
  * - 도메인 구분: value class UserId(val id: String) vs value class OrderId(val id: String)

@@ -23,4 +23,13 @@ package com.example.composesample.presentation.example.component.architecture.pa
  * - 다크/라이트 테마 전환: MaterialTheme → LocalColorScheme
  * - 화면 방향별 레이아웃: LocalConfiguration.current.orientation
  * - 테스트 환경 주입: CompositionLocalProvider로 목 데이터 제공
+ *
+ * ## CompositionLocalTreeExampleUI 추가 참고 자료 (CompositionLocalTreeGuide.kt에서 이관)
+ * - 출처: https://dev.to/bansalayush/visualizing-compositionlocal-in-the-composition-tree-2jkg
+ *
+ * 핵심 개념:
+ * - CompositionLocalProvider는 데이터를 자식에게 복사하지 않고, 해당 트리 노드에 "locals map"을 부착
+ * - .current 호출 시 Compose는 현재 노드에서 부모 방향으로 룩업하며 값을 찾고, 없으면 기본값(defaultFactory) 사용
+ * - 중첩된 Provider가 같은 키를 다시 제공하면 자식 쪽 값이 우선 적용되는 섀도잉(Shadowing)이 발생
+ * - 내부적으로 Slot Table(평탄화된 배열)에 노드·locals map·parent 인덱스가 저장되어 트리 탐색에 사용됨
  */

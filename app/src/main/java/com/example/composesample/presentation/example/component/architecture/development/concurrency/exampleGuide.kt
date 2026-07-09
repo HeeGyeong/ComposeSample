@@ -6,19 +6,25 @@ package com.example.composesample.presentation.example.component.architecture.de
  * ## Coroutines Internals (코루틴 내부 동작 원리)
  * - 공식 문서: https://kotlinlang.org/docs/coroutines-guide.html
  * - KotlinConf 발표: https://youtu.be/YrrUCSi72E8
+ * - 출처: https://proandroiddev.com/inside-kotlin-coroutines-state-machines-continuations-and-structured-concurrency-b8d3d4e48e62
  * 핵심 개념:
  * - CPS(Continuation Passing Style): 코루틴은 컴파일 시 상태 머신으로 변환됨
  * - Continuation: 일시 중단 지점 이후 실행 흐름을 캡처한 콜백 객체
  * - suspend 함수 = 실행 중단이 가능한 함수. 재개 시 Continuation.resumeWith() 호출
  * - CoroutineDispatcher: 코루틴이 실행될 스레드/스레드 풀 결정 (Main/IO/Default/Unconfined)
+ * - State Machine 변환: suspend 함수 내 각 지점(label)마다 지역 변수를 Continuation 필드로 저장, COROUTINE_SUSPENDED 반환 시 즉시 중단
+ * - Structured Concurrency: 부모는 모든 자식 완료까지 대기, 부모 취소 시 자식 전파 취소, 자식 실패 시 부모도 취소(SupervisorJob 예외)
  *
  * ## WithContext (컨텍스트 전환 패턴)
  * - 공식 문서: https://kotlinlang.org/api/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/with-context.html
+ * - 출처: https://proandroiddev.com/the-real-difference-between-withcontext-dispatchers-io-and-launch-dispatchers-io-b70ec00a33f2
  * 핵심 개념:
  * - withContext(Dispatchers.IO) { } : 현재 코루틴 내에서 디스패처만 전환 (새 코루틴 미생성)
  * - launch vs withContext: launch는 새 코루틴 생성, withContext는 같은 코루틴에서 전환
  * - withContext는 결과값 반환 가능 (val result = withContext(IO) { computeResult() })
  * - UI 업데이트: withContext(Dispatchers.Main) { view.text = result }
+ * - 예외 처리 차이: withContext/async는 호출자에게 예외 전파(try-catch 가능), launch는 예외가 내부에 갇혀 CoroutineExceptionHandler 또는 내부 try-catch 필요
+ * - 선택 기준: 결과 불필요=launch, 결과+순차=withContext, 결과+병렬=async/await
  *
  * ## CoroutineBridges (콜백 → suspend 변환 패턴)
  * - 출처: https://www.revenuecat.com/blog/engineering/kotlin-coroutine-bridge/

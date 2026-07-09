@@ -25,4 +25,13 @@ package com.example.composesample.presentation.example.component.architecture.mo
  * Gradle Convention Plugin 패턴:
  * - build-logic/convention 모듈에 공통 빌드 설정을 플러그인으로 캡슐화
  * - androidLibrary, androidFeature, androidCompose 등 재사용 가능한 플러그인 작성
+ *
+ * ## ModularizationExampleUI 추가 참고 자료 (ModularizationGuide.kt에서 이관)
+ * - 출처: https://proandroiddev.com/pragmatic-modularization-the-case-for-wiring-modules-c936d3af3611
+ *
+ * 핵심 개념 — Wiring Module 패턴:
+ * - Feature 모듈이 다른 Feature 모듈을 직접 참조하면 강결합·순환 의존 위험이 생김
+ * - Feature마다 인터페이스만 담은 :feature:xxx-api 모듈을 두고, 실제 구현은 :feature:xxx에 위치
+ * - 별도의 :wiring 모듈이 API ↔ 구현체를 DI로 연결해 Feature 간 직접 의존 없이 간접 통신 실현
+ * - 장점: 느슨한 결합, 독립적 테스트, 병렬 빌드 성능 향상 (팀 3명 이상·Feature 5개 이상일 때 도입 권장)
  */

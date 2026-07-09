@@ -57,9 +57,28 @@ package com.example.composesample.presentation.example.component.ui.text
  * - API 33+ 필요
  *
  * ## LocalContextStringsExampleUI (LocalContext 안티패턴)
+ * - 출처: https://proandroiddev.com/jetpack-compose-why-you-shouldnt-use-localcontext-for-strings-4d4c372b14ab
  * - 핵심: Compose에서 문자열 리소스는 `stringResource()` 또는 UiText sealed class 패턴 사용
- * - LocalContext를 직접 사용하면 프리뷰/테스트 환경에서 문제 발생 가능
+ * - LocalContext를 직접 사용하면 프리뷰/테스트 환경에서 문제 발생 가능(Preview 미동작·locale 변경 미반영)
+ * - ViewModel에서는 UiText sealed class(DynamicString/StringResource)로 감싸고, UI 레이어에서만 stringResource() 호출
  *
- * ## AutoSizingTextExampleUI / CustomTextRenderingExampleUI / TextStyleUI
+ * ## CustomTextRenderingExampleUI (TextMeasurer 기반 커스텀 텍스트 효과)
+ * - 출처: https://segunfamisa.com/posts/exploring-custom-text-rendering-in-compose
+ *
+ * ### 핵심 개념
+ * - TextMeasurer.measure() + Canvas.drawText()로 저수준 텍스트 렌더링 (FadedText/WarpedText/TypewriterText 등)
+ * - TextLayoutResult: lineCount/getBoundingBox/getLineLeft·Right·Top·Bottom으로 라인·문자 단위 제어
+ * - withTransform { translate/rotate/scale }으로 문자별 웨이브·흔들림 효과 적용
+ * - TextLayoutResult는 remember로 캐싱 필수, 컨테이너 제약은 BoxWithConstraints로 전달
+ *
+ * ## AutoSizingTextExampleUI (BasicText autoSize)
+ *
+ * ### 핵심 개념
+ * - Compose BOM 2025.04.01+의 `BasicText(autoSize = TextAutoSize.StepBased(...))`로 컨테이너에 맞춰 폰트 크기 자동 조절
+ * - maxFontSize/minFontSize로 범위 제한, minFontSize 도달 후에도 넘치면 TextOverflow.Ellipsis로 처리
+ * - softWrap/maxLines와 조합 가능, onTextLayout 콜백으로 실측 크기·라인 수 확인
+ * - 반드시 명확한 크기 제약이 있는 컨테이너에서만 동작(width/height 무제한이면 미작동)
+ *
+ * ## TextStyleUI
  * - 각 예제 파일 내 주석 참고
  */

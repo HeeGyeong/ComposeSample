@@ -6,10 +6,11 @@ package com.example.composesample.presentation.example.component.architecture.de
  * - 공식 문서: https://kotlinlang.org/docs/flow.html
  *
  * ## flatMap 계열 연산자 비교
+ * - 출처: https://proandroiddev.com/understanding-flatmap-vs-flatmaplatest-a-deep-dive-061994b7ffc4
  * 핵심 개념:
  * - flatMapConcat: 이전 Flow 완료 후 다음 시작. 순서 보장. (직렬 실행)
- * - flatMapMerge: 모든 Flow 동시 실행. 순서 미보장. (병렬 실행)
- * - flatMapLatest: 새 값 도착 시 이전 Flow 취소 후 새로 시작. (최신값 유지)
+ * - flatMapMerge: 모든 Flow 동시 실행. 순서 미보장. (병렬 실행, concurrency 파라미터로 동시 개수 제어)
+ * - flatMapLatest: 새 값 도착 시 이전 Flow 취소 후 새로 시작. (최신값 유지, switchMap과 동일 개념)
  *
  * 사용 가이드:
  * - 검색 자동완성 → flatMapLatest (이전 쿼리 취소)
