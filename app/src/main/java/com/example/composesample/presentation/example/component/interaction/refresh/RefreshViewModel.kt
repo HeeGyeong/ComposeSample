@@ -1,15 +1,14 @@
 package com.example.composesample.presentation.example.component.interaction.refresh
 
-import android.app.Application
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.random.Random
 
-class RefreshViewModel(application: Application) : AndroidViewModel(application) {
+class RefreshViewModel : ViewModel() {
 
     private val _refreshState = mutableStateOf(PullToRefreshState())
     val refreshState: State<PullToRefreshState> = _refreshState

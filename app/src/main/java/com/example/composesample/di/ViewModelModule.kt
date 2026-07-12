@@ -35,7 +35,7 @@ val viewModelModule: Module = module {
 
     viewModel { BlogExampleViewModel(get(), get()) }
     viewModel { ApiExampleUseCaseViewModel(get(), get()) }
-    viewModel { DataCacheViewModel(get(), get()) }
+    viewModel { DataCacheViewModel(get()) }
     viewModel { AdvancedRepositoryPatternViewModel(get(), get()) }
 
     viewModel { MVIExampleViewModel(get()) }

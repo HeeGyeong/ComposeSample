@@ -1,7 +1,6 @@
 package com.example.composesample.presentation.example.component.data.cache
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.data.db.UserData
 import com.example.data.repository.UserCacheRepository
@@ -10,10 +9,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
 class DataCacheViewModel(
-    application: Application,
     // RoomSingleton/DAO 직접 참조 대신 Repository 추상화에 의존 (의존성 역전)
     private val userCacheRepository: UserCacheRepository
-) : AndroidViewModel(application) {
+) : ViewModel() {
 
     fun searchUserName(name: String): Flow<List<UserData>> {
         return userCacheRepository.searchUserName(name)
