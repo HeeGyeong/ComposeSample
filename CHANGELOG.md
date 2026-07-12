@@ -5,6 +5,19 @@ Version and example-addition history for ComposeSample, newest first.
 
 ---
 
+## 2026.07
+- New examples added
+  - Screenshot Detection — Android 14 `registerScreenCaptureCallback` vs legacy MediaStore `ContentObserver` comparison
+  - Advanced Repository Pattern — Memory→Disk→Network priority-resolving repository
+- Legacy subsystem removal (LEGACY-RM)
+  - Removed the entire legacy subsystem (`presentation/legacy/` 24 files + 10 Activities) and its RxJava dependency completely
+- Dead code / documentation cleanup
+  - Removed 45 unreferenced `*Guide.kt` learning-guide files; each file's source URL was absorbed into the sibling `exampleGuide.kt` (GUIDE-DEAD-01)
+  - Removed the dead parameterized `EventSource` Koin registration in `NetworkModule` (DI-DEAD-01)
+  - Removed the dead `ApiInterface` + related Koin/Retrofit registrations left over from the RxJava removal (API-DEAD-01); renamed `ItemDTO.kt` → `UserData.kt` to match its actual contents (CONV-06)
+- Architecture cleanup
+  - Converted `RefreshViewModel`/`DataCacheViewModel` from `AndroidViewModel` to plain `ViewModel` — neither used the injected `Application` (VM-ANDROIDVM-01)
+
 ## 2026.06
 - Architecture refactoring and documentation/quality improvements
   - Converted the domain module to pure Kotlin(JVM) — removed Android/Retrofit/Gson dependencies
@@ -16,6 +29,13 @@ Version and example-addition history for ComposeSample, newest first.
   - Translated the UI/DI/Data rule documents to Korean, then updated all md docs (DomainREADME/README/AppREADME/PendingExamples/ClaudeCodeGuide); later migrated all docs to English
   - New docs: `docs/README.md` (index), `ARCHITECTURE.md`, `docs/KnownLimitations.md`, `LICENSE` (MIT)
   - Added 30 exampleGuide.kt category files
+- New examples added (2026-06-17 ~ 2026-06-29)
+  - Kotlin 2.4 Language Features — collection literals / context parameters (CodeBlock-only, no global opt-in)
+  - How Compose Works — compiler transform / SlotTable / snapshot read-tracking / layout pipeline walkthrough
+  - Coil 3 Image Loading — AsyncImage state, memory cache policy + `dataSource` tracking, ImageLoader customization
+  - Preview-Driven Screenshot Testing — locale × fontScale × theme matrix derived live from `@Preview`
+  - Freehand Drawing / Signature Canvas — Canvas + `detectDragGestures`, MVI intent/reducer for undo/redo
+- Dependency cleanup: removed the end-of-life `accompanist-systemuicontroller` dependency, replaced with platform Window APIs (EDGE-01)
 - Versions: upgraded to Kotlin 2.4.0 + KSP 2.3.9 (2026-06-16), ComposeBom 2026.05.00 + Material 1.11.1
   - The Kotlin 2.4.0 bump required disabling the HotSwan (Compose Hot Reload) plugin — hotswan-compiler 1.2.1 is incompatible with the 2.4.0 compiler-extension API. All other modules build with zero source changes. See `docs/devtools/ComposeHotReloadGuide.md`.
 
