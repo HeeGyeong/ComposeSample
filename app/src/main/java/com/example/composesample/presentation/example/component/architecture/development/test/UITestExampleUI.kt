@@ -64,13 +64,6 @@ fun UITestExampleUI(onBackEvent: () -> Unit) {
             onBackIconClicked = onBackEvent
         )
 
-        // 첫 번째 테스트 후 코드 구현
-//        val text = remember { mutableStateOf("Hello") }
-//
-//        Button(onClick = { text.value = "Clicked!" }) {
-//            Text(text.value)
-//        }
-
         // 두 번째 테스트 후 코드 구현
         val text = remember { mutableStateOf("Hello") }
         val clickCount = remember { mutableStateOf(0) }

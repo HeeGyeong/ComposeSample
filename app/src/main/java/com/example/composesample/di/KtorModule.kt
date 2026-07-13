@@ -64,12 +64,6 @@ val ktorModule = module {
             install(ContentNegotiation) {
                 gson()
             }
-            
-            // Android Engine일 때, HTTP 클라이언트 엔진 설정
-//            engine {
-//                connectTimeout = NetworkConstants.CONNECT_TIMEOUT
-//                socketTimeout = NetworkConstants.SOCKET_TIMEOUT
-//            }
 
             // OkHttp Engine일 때, HTTP 클라이언트 엔진 설정
             engine {

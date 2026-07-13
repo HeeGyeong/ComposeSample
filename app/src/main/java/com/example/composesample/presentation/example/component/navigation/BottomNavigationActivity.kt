@@ -244,9 +244,6 @@ class BottomNavigationActivity : ComponentActivity() {
                                 NavigationView1(
                                     text = "CustomBottomNavi 1",
                                     modifier = Modifier
-//                                        .graphicsLayer {
-//                                            translationY = offsetY.value.toPx()
-//                                        }
                                         .background(color = Color.Green)
                                 )
                             }
