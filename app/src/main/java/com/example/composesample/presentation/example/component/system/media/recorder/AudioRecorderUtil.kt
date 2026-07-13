@@ -112,34 +112,3 @@ fun startMediaPlayer(
         isPlaying.value = false
     }
 }
-
-// 일시 정지
-fun pauseMediaPlayer(mediaPlayer: MutableState<MediaPlayer?>) {
-    mediaPlayer.value?.pause()
-}
-
-// 재개
-fun resumeMediaPlayer(mediaPlayer: MutableState<MediaPlayer?>) {
-    mediaPlayer.value?.start()
-}
-
-// 일시 정지 후 재생 위치 저장
-fun saveCurrentPosition(mediaPlayer: MutableState<MediaPlayer?>, currentPosition: MutableState<Int?>) {
-    mediaPlayer.value?.let {
-        currentPosition.value = it.currentPosition
-        it.pause()
-    }
-}
-
-// 저장된 재생 위치에서 재개
-fun resumeMediaPlayerFromPosition(
-    mediaPlayer: MutableState<MediaPlayer?>,
-    currentPosition: MutableState<Int?>,
-    isPlaying: MutableState<Boolean>
-) {
-    mediaPlayer.value?.let {
-        it.seekTo(currentPosition.value ?: 0)
-        it.start()
-        isPlaying.value = true
-    }
-}
