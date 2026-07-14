@@ -523,6 +523,13 @@ val examples2026 = listOf(
         exampleType = ConstValue.HowComposeWorksExample
     ),
     ExampleObject(
+        lastUpdate = "26. 07. 15",
+        title = "RememberObserver / Composition Lifecycle",
+        description = "remember 된 객체가 RememberObserver(onRemembered/onForgotten/onAbandoned)를 구현하면 Compose 런타임이 컴포지션 진입·이탈·폐기 시점에 자동으로 호출해줌을 실동작으로 시연: ① 컴포지션에서 자식을 추가/제거해 onRemembered/onForgotten 이 실제로 발화하는 이벤트 로그, ② '리컴포지션만 유발' 버튼으로 recomposition 은 remember 슬롯을 재생성하지 않아 콜백이 다시 발화하지 않음을 컴포지션 횟수와 대조, ③ DisposableEffect(key 변경마다 반응·onDispose 단일 통합)와의 차이 비교, ④ Compose 런타임 내부에서 rememberCoroutineScope() 가 동일한 패턴으로 onForgotten 시 scope.cancel() 을 호출하는 개념 재현. 외부 라이브러리 미사용, HowComposeWorks 옆에 배치",
+        blogUrl = "",
+        exampleType = ConstValue.RememberObserverExample
+    ),
+    ExampleObject(
         lastUpdate = "26. 06. 23",
         title = "Coil 3 이미지 로딩 & 캐시",
         description = "Coil 3로 네트워크 이미지를 비동기 로딩하는 핵심 패턴을 한 화면에서 시연: ① AsyncImage 상태 — crossfade 전환과 placeholder/error Painter 를 적용하고 onState 콜백으로 Loading→Success/Error 를 실시간 배지로 표시(정상 URL ↔ 깨진 URL 토글로 에러 폴백 확인), ② 캐시 정책 — 같은 이미지를 memoryCachePolicy ENABLED/DISABLED 로 재요청해 SuccessResult.dataSource 가 NETWORK 인지 MEMORY_CACHE 인지 추적(캐시 비우기 버튼 포함), ③ ImageLoader 커스터마이징 — MemoryCache.maxSizePercent + DiskCache 구성을 CodeBlock 으로 보여주고 커스텀 ImageLoader 의 메모리 캐시 사용량을 라이브 표시. 기존 Coil 2(coil.*)와 별도 coil3.* 네임스페이스로 공존. 네트워크가 없으면 자동으로 error 상태가 노출되어 오프라인에서도 동작 시연 가능",

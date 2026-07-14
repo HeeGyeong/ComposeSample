@@ -125,7 +125,7 @@ object ConstValue {
     const val StrictModeExample = "strictModeExample"
 
     // ==================== 아키텍처 패턴 예제 ====================
-    // MVI(단방향 데이터 흐름), Coordinator(화면 전환 패턴), Modularization(모듈화 전략), PreviewInternals(@Preview 내부 동작 원리), StabilityAnnotations(@Stable/@Immutable 리컴포지션 최적화), PreviewOnlyAnnotation(@RequiresOptIn으로 Preview 전용 Composable 제한), KoinCompilerPlugin(Koin Annotations KSP로 컴파일 타임 DI 검증), FeatureFlag(sealed class type-safe flag 레지스트리 + StateFlow reactive 토글 + ModalBottomSheet 디버그 메뉴 + Remote Config 시뮬레이션), HowComposeWorks(Compose 내부 동작 통합 워크스루 — 컴파일러 변환/SlotTable/snapshot 읽기 추적/layout pipeline)
+    // MVI(단방향 데이터 흐름), Coordinator(화면 전환 패턴), Modularization(모듈화 전략), PreviewInternals(@Preview 내부 동작 원리), StabilityAnnotations(@Stable/@Immutable 리컴포지션 최적화), PreviewOnlyAnnotation(@RequiresOptIn으로 Preview 전용 Composable 제한), KoinCompilerPlugin(Koin Annotations KSP로 컴파일 타임 DI 검증), FeatureFlag(sealed class type-safe flag 레지스트리 + StateFlow reactive 토글 + ModalBottomSheet 디버그 메뉴 + Remote Config 시뮬레이션), HowComposeWorks(Compose 내부 동작 통합 워크스루 — 컴파일러 변환/SlotTable/snapshot 읽기 추적/layout pipeline), RememberObserver(remember 객체 생명주기 콜백 — onRemembered/onForgotten/onAbandoned 로 컴포지션 진입·이탈·폐기를 추적, DisposableEffect·rememberCoroutineScope 와 비교)
     const val MVIExample = "mviExample"
     const val CoordinatorExample = "coordinatorExample"
     const val ModularizationExample = "modularizationExample"
@@ -135,6 +135,7 @@ object ConstValue {
     const val KoinCompilerPluginExample = "koinCompilerPluginExample"
     const val FeatureFlagExample = "featureFlagExample"
     const val HowComposeWorksExample = "howComposeWorksExample"
+    const val RememberObserverExample = "rememberObserverExample"
 
     // ==================== Compose 상태 & Side Effect 예제 ====================
     // SideEffect(부수 효과 함수들), CompositionLocal(암시적 전달), StaticDynamicCompositionLocal(Static vs Dynamic), CompositionLocalTree(트리 시각화), RetainApi(retain API), SnapshotFlow(Flow 변환), InitTest(초기화 케이스), LocalContextStrings(LocalContext 문자열 안티패턴), RememberPatterns(rememberSaveable/rememberUpdatedState/derivedStateOf 비교), ComposeSnapshot(Snapshot 시스템 내부 동작), PerItemViewModel(LazyColumn 아이템별 독립 ViewModelStoreOwner)

@@ -38,3 +38,35 @@ package com.example.composesample.presentation.example.component.architecture.de
  * - Snapshot 읽기 추적 카드만 실제 동작 시연: 두 독립 state 와 plain CompositionCounter 로
  *   "변경된 state 를 읽은 카드만 리컴포즈됨"을 컴포지션 횟수로 실측 (snapshot state 가 아닌 plain 필드라 추가 무효화 없음)
  */
+
+/**
+ * RememberObserver / Composition Lifecycle 예제 참고 자료
+ *
+ * ## 출처
+ * - Inside Compose Side Effects — Jaewoong Eum (doveletter.dev)
+ * - Android Weekly #735
+ *
+ * ## 공식 문서 / 권장 자료
+ * - RememberObserver: https://developer.android.com/reference/kotlin/androidx/compose/runtime/RememberObserver
+ * - Side-effects in Compose: https://developer.android.com/develop/ui/compose/side-effects
+ * - remember: https://developer.android.com/develop/ui/compose/state#remember
+ *
+ * ## 핵심 개념 요약
+ * - `RememberObserver` 는 `remember { }` 로 기억시킨 객체가 구현할 수 있는 3가지 콜백을 제공한다
+ *   1) onRemembered — 컴포지션에 커밋되어 진입할 때(최초 remember 또는 재진입)
+ *   2) onForgotten — 컴포지션에서 완전히 제거될 때(조건부 제거, 스코프 종료 등)
+ *   3) onAbandoned — onRemembered 없이 컴포지션 자체가 커밋 실패로 폐기될 때
+ * - 리컴포지션(Composable body 재실행) 자체는 이 콜백을 다시 유발하지 않는다 — remember 슬롯이 유지되는 한
+ *   객체 인스턴스는 재생성되지 않으며, 오직 실제로 컴포지션 트리를 벗어났다 다시 들어올 때만 반응한다
+ * - DisposableEffect(key) 는 key 변경마다 반응하는 부수 효과 블록인 반면, RememberObserver 는 remember 되는
+ *   '값 객체' 자신이 생명주기를 구현 — 파라미터 변경에 영향받지 않고 객체의 컴포지션 멤버십에만 묶인다
+ * - Compose 런타임 내부에서 rememberCoroutineScope() 가 이 패턴으로 구현되어 있어, onForgotten 시점에
+ *   scope.cancel() 이 자동 호출된다(Composable 이탈 시 launch 된 코루틴이 자동 취소되는 이유)
+ *
+ * ## 본 예제 구현 메모
+ * - 외부 라이브러리 미사용, 순수 androidx.compose.runtime.RememberObserver 인터페이스만 사용
+ * - LifecycleDemoCard 가 실제 동작 시연: 자식을 컴포지션에서 추가/제거해 onRemembered/onForgotten 이벤트 로그를 실측하고,
+ *   "리컴포지션만 유발" 버튼으로 remember 슬롯이 유지되는 동안은 콜백이 재발화하지 않음을 컴포지션 카운터로 대조
+ * - onAbandoned 는 컴포지션 커밋 실패 시나리오라 안전하게 실동작 데모로 재현하기 어려워 개념 설명 + CodeBlock 으로만 제공
+ * - rememberCoroutineScope() 내부 구현은 실제 Compose 런타임 소스를 그대로 옮긴 것이 아닌 개념적 재현(HowComposeWorks 와 동일 관례)
+ */
