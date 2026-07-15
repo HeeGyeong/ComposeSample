@@ -556,5 +556,12 @@ val examples2026 = listOf(
         description = "다중 소스를 Memory → Disk → Network 우선순위로 해석하는 Repository 패턴을 한 화면에서 시연: ① 조회 시 가장 빠른 계층(Memory)부터 확인하고 없으면 Disk(300ms)·Network(900ms) 순으로 내려가며, 하위 계층에서 찾은 값은 상위 계층에도 채워 넣어(cache population) 다음 조회를 가속, ② 강제 새로고침은 Memory/Disk를 모두 건너뛰고 Network로 직행, ③ 메모리/디스크 무효화 버튼으로 두 캐시가 서로 독립적임을 실시간 타임라인 로그(MEMORY/DISK/NETWORK 색상 배지 + 소요시간)로 확인. ArticleRepository 인터페이스는 순수 Kotlin 모델(ArticleData)이라 domain 모듈에 위치 — Room @Entity(UserData)라 data 레이어에 둬야 했던 UserCacheRepository 예제와 대조",
         blogUrl = "",
         exampleType = ConstValue.AdvancedRepositoryPatternExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 07. 16",
+        title = "Media3 비디오 재생 (ExoPlayer)",
+        description = "androidx.media3 ExoPlayer + PlayerView 를 Compose 에 통합해 실제 네트워크 비디오를 재생: ① AndroidView 로 PlayerView 를 임베딩하고 remember 로 생성한 ExoPlayer 인스턴스를 1회만 바인딩(MediaItem.fromUri 로 스트림 URL 재생), ② Player.Listener(onIsPlayingChanged/onPlaybackStateChanged)로 IDLE/BUFFERING/READY/ENDED 상태와 재생 여부를 실시간 추적하고 LaunchedEffect 폴링으로 현재 위치/전체 길이를 mm:ss 로 표시, ③ 재생/일시정지/처음으로 버튼 + Slider seekTo 탐색, ④ 화면을 벗어나면 AndroidView onRelease 에서 player.release() 호출(WebViewIssueUI 의 리소스 정리 관례와 동일), 앱이 백그라운드로 전환되면(OnLifecycleEvent ON_STOP) 자동 일시정지해 백그라운드 재생/네이티브 리소스 누수 방지",
+        blogUrl = "",
+        exampleType = ConstValue.Media3VideoPlayerExample
     )
 )

@@ -53,6 +53,7 @@ import com.example.composesample.presentation.example.component.system.platform.
 import com.example.composesample.presentation.example.component.system.platform.predictiveback.PredictiveBackExampleUI
 import com.example.composesample.presentation.example.component.system.background.workmanager.WorkManagerUI
 import com.example.composesample.presentation.example.component.system.media.recorder.AudioRecorderUI
+import com.example.composesample.presentation.example.component.system.media.video.Media3VideoPlayerExampleUI
 import com.example.composesample.presentation.example.component.system.platform.file.SafFileSelectionUI
 import com.example.composesample.presentation.example.component.system.platform.intent.PassingIntentDataExampleUI
 import com.example.composesample.presentation.example.component.system.platform.language.LanguageSettingExampleUI
@@ -177,6 +178,7 @@ import com.example.composesample.util.ConstValue.CustomBottomSheetExample
 import com.example.composesample.util.ConstValue.CustomScrollBehaviorExample
 import com.example.composesample.util.ConstValue.CustomTextRenderingExample
 import com.example.composesample.util.ConstValue.AdvancedRepositoryPatternExample
+import com.example.composesample.util.ConstValue.Media3VideoPlayerExample
 import com.example.composesample.util.ConstValue.DataCacheExample
 import com.example.composesample.util.ConstValue.DialComponentExample
 import com.example.composesample.util.ConstValue.DragAndDropExample
@@ -327,6 +329,7 @@ val exampleUiRegistry: Map<String, @Composable (onBackEvent: () -> Unit) -> Unit
     WebViewIssueExample to { onBackEvent -> WebViewIssueUI(onBackEvent) },
     TextStyleExample to { onBackEvent -> TextStyleUI(onBackEvent) },
     AudioRecorderExample to { onBackEvent -> AudioRecorderUI(onBackEvent) },
+    Media3VideoPlayerExample to { onBackEvent -> Media3VideoPlayerExampleUI(onBackEvent) },
     WorkManagerExample to { onBackEvent -> WorkManagerUI(onBackEvent) },
     PullToRefreshExample to { onBackEvent -> PullToRefreshUI(onBackEvent) },
     PullScreenPager to { onBackEvent -> PullScreenPagerUI(onBackEvent) },

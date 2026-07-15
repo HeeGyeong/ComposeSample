@@ -219,6 +219,10 @@ object ConstValue {
     const val WorkManagerExample = "workManagerExample"
     const val AudioRecorderExample = "audioRecorderExample"
 
+    // ==================== 비디오 재생 예제 ====================
+    // Media3VideoPlayer(Media3 ExoPlayer + PlayerView 통합 재생 — AndroidView 로 PlayerView 임베딩, Player.Listener 로 재생 상태/진행률 실시간 추적, 화면 이탈 시 release + 백그라운드 전환 시 자동 일시정지)
+    const val Media3VideoPlayerExample = "media3VideoPlayerExample"
+
     // ==================== 파일 & 문서 예제 ====================
     // SafFile(SAF 파일 선택)
     const val SafFileExample = "safFileExample"
