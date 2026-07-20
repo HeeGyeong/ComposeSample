@@ -563,12 +563,5 @@ val examples2026 = listOf(
         description = "androidx.media3 ExoPlayer + PlayerView 를 Compose 에 통합해 실제 네트워크 비디오를 재생: ① AndroidView 로 PlayerView 를 임베딩하고 remember 로 생성한 ExoPlayer 인스턴스를 1회만 바인딩(MediaItem.fromUri 로 스트림 URL 재생), ② Player.Listener(onIsPlayingChanged/onPlaybackStateChanged)로 IDLE/BUFFERING/READY/ENDED 상태와 재생 여부를 실시간 추적하고 LaunchedEffect 폴링으로 현재 위치/전체 길이를 mm:ss 로 표시, ③ 재생/일시정지/처음으로 버튼 + Slider seekTo 탐색, ④ 화면을 벗어나면 AndroidView onRelease 에서 player.release() 호출(WebViewIssueUI 의 리소스 정리 관례와 동일), 앱이 백그라운드로 전환되면(OnLifecycleEvent ON_STOP) 자동 일시정지해 백그라운드 재생/네이티브 리소스 누수 방지",
         blogUrl = "",
         exampleType = ConstValue.Media3VideoPlayerExample
-    ),
-    ExampleObject(
-        lastUpdate = "26. 07. 20",
-        title = "Fakes vs Mocks in Testing",
-        description = "테스트 더블 두 전략을 같은 UserDao 시나리오로 한 화면에서 대조: ① Mock — 사전에 프로그래밍(stub)된 응답만 반환하고 insertUser 호출은 실제 저장하지 않음, u2를 insert한 뒤 getUser(u2)를 호출해도 스텁에 없어 null이 나오는 것을 실시간으로 확인(상호작용 검증 대상), ② Fake — 인메모리 Map으로 실제 동작하는 경량 구현체라 insert→get 라운드트립이 항상 일관됨(상태 검증 대상), ③ 브리틀니스 비교 — insertUser를 2회 호출하도록 '리팩터링'해도 최종 상태는 동일한데, Mock의 verify(exactly=1)은 깨지고 Fake 기반 상태 검증(assertEquals)은 안 깨지는 것을 버튼으로 실측. MockK 실제 문법(io.mockk, 이미 테스트 의존성에 존재)으로 작성한 JUnit 코드 스니펫 비교 포함",
-        blogUrl = "",
-        exampleType = ConstValue.FakesVsMocksTestExample
     )
 )

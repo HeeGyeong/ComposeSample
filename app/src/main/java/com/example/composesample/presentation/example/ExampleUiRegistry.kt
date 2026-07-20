@@ -17,7 +17,6 @@ import com.example.composesample.presentation.example.component.architecture.dev
 import com.example.composesample.presentation.example.component.architecture.development.preview.PreviewOnlyAnnotationExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.rebound.ReboundExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.test.TurbineFlowTestExampleUI
-import com.example.composesample.presentation.example.component.architecture.development.test.FakesVsMocksTestExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.test.RecompositionTestExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.test.ScreenshotTestingExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.test.PreviewDrivenScreenshotExampleUI
@@ -241,7 +240,6 @@ import com.example.composesample.util.ConstValue.StartupOptimizationExample
 import com.example.composesample.util.ConstValue.RememberPatternsExample
 import com.example.composesample.util.ConstValue.ReboundExample
 import com.example.composesample.util.ConstValue.TurbineFlowTestExample
-import com.example.composesample.util.ConstValue.FakesVsMocksTestExample
 import com.example.composesample.util.ConstValue.RecompositionTestExample
 import com.example.composesample.util.ConstValue.ResponsiveTabRowExample
 import com.example.composesample.util.ConstValue.RetainApiExample
@@ -443,7 +441,6 @@ val exampleUiRegistry: Map<String, @Composable (onBackEvent: () -> Unit) -> Unit
     RecompositionTestExample to { onBackEvent -> RecompositionTestExampleUI(onBackEvent) },
     ReboundExample to { onBackEvent -> ReboundExampleUI(onBackEvent) },
     TurbineFlowTestExample to { onBackEvent -> TurbineFlowTestExampleUI(onBackEvent) },
-    FakesVsMocksTestExample to { onBackEvent -> FakesVsMocksTestExampleUI(onBackEvent) },
     PreviewInternalsExample to { onBackEvent -> PreviewInternalsExampleUI(onBackEvent) },
     PreviewOnlyAnnotationExample to { onBackEvent -> PreviewOnlyAnnotationExampleUI(onBackEvent) },
     StartupOptimizationExample to { onBackEvent -> StartupOptimizationExampleUI(onBackEvent) },

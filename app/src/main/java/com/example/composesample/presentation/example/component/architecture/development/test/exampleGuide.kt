@@ -48,13 +48,4 @@ package com.example.composesample.presentation.example.component.architecture.de
  * - StateFlow 테스트: 상태별 독립 테스트 + runCurrent() / advanceUntilIdle()
  * - SharedFlow/단방향 이벤트 스트림에서는 Turbine이 적합
  * - 테스트 디스패처: StandardTestDispatcher(명시적 진행 제어) vs UnconfinedTestDispatcher(즉시 실행, 초기 상태 검증에 편리)
- *
- * --- Fakes vs Mocks in Testing ---
- * - 원문: https://medium.com/@dhananjaydy/fakes-vs-mocks-in-testing-08ec776742d9 (Android Weekly #736)
- * - Mock: 상호작용을 검증하는 테스트 더블. verify()로 "몇 번, 어떤 인자로 호출됐는지"를 확인하며, 반환값은 사전에 프로그래밍(stub)된 값만 나옴 — 실제 상태를 저장하지 않음
- * - Fake: 실제로 동작하는 경량 구현체(예: 인메모리 Map 기반 DAO). production 코드와 동일한 계약을 만족해 insert→get 라운드트립 같은 실제 로직을 그대로 수행
- * - 핵심 함정: Mock에 insert 후 같은 값을 get 하면, stub에 없는 값이라 null이 나옴(실제 상태에 반영 안 됨) — Fake는 항상 일관됨
- * - 브리틀니스: 저장 로직을 리팩터링(insertUser 2회 호출로 변경, 최종 상태는 동일)해도 Mock의 verify(exactly=1)은 깨지지만(구현 세부사항 결합), Fake 기반 상태 검증(assertEquals)은 안 깨짐
- * - 적합한 대상: Mock은 외부 시스템과의 상호작용(결제 API 호출 여부, 분석 이벤트 발행) 검증에, Fake는 데이터 계층(Repository/DAO)처럼 상태를 갖는 컴포넌트 검증에 적합
- * - MockK(io.mockk, 프로젝트 테스트 의존성에 이미 존재): every { } 로 stub, verify(exactly = n) { } 로 상호작용 검증
  */
