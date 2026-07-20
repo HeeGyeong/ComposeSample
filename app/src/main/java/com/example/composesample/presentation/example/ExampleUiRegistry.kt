@@ -48,6 +48,7 @@ import com.example.composesample.presentation.example.component.system.deeplink.
 import com.example.composesample.presentation.example.component.system.platform.biometric.BiometricAuthExampleUI
 import com.example.composesample.presentation.example.component.system.security.AppSecurityExampleUI
 import com.example.composesample.presentation.example.component.system.security.HardwareKeystoreExampleUI
+import com.example.composesample.presentation.example.component.system.security.IpcExportedComponentExampleUI
 import com.example.composesample.presentation.example.component.system.security.ScreenshotDetectionExampleUI
 import com.example.composesample.presentation.example.component.system.platform.haptic.HapticFeedbackExampleUI
 import com.example.composesample.presentation.example.component.system.platform.predictiveback.PredictiveBackExampleUI
@@ -156,6 +157,7 @@ import com.example.composesample.util.ConstValue.AgslShaderTuningExample
 import com.example.composesample.util.ConstValue.AnimatedContentExample
 import com.example.composesample.util.ConstValue.AppSecurityExample
 import com.example.composesample.util.ConstValue.HardwareKeystoreExample
+import com.example.composesample.util.ConstValue.IpcExportedComponentExample
 import com.example.composesample.util.ConstValue.ScreenshotDetectionExample
 import com.example.composesample.util.ConstValue.AnimationExample
 import com.example.composesample.util.ConstValue.ApiDisconnectExample
@@ -447,6 +449,7 @@ val exampleUiRegistry: Map<String, @Composable (onBackEvent: () -> Unit) -> Unit
     AppSecurityExample to { onBackEvent -> AppSecurityExampleUI(onBackEvent) },
     HardwareKeystoreExample to { onBackEvent -> HardwareKeystoreExampleUI(onBackEvent) },
     ScreenshotDetectionExample to { onBackEvent -> ScreenshotDetectionExampleUI(onBackEvent) },
+    IpcExportedComponentExample to { onBackEvent -> IpcExportedComponentExampleUI(onBackEvent) },
     RememberPatternsExample to { onBackEvent -> RememberPatternsExampleUI(onBackEvent) },
     QuickSettingsTileExample to { onBackEvent -> QuickSettingsTileExampleUI(onBackEvent) },
     FancyTopAppBarExample to { onBackEvent -> FancyTopAppBarExampleUI(onBackEvent) },

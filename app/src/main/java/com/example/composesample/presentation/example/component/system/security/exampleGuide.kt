@@ -106,3 +106,32 @@ package com.example.composesample.presentation.example.component.system.security
  *  - 두 방식 모두 화면 내 토글 버튼으로 수동 등록/해제 (실제 운영에서는 Activity onResume/onPause 생명주기에 연동 권장)
  *  - ContentObserver 는 이미지 삽입마다 매번 최신 1건을 재조회 — 대량 삽입 시 놓치는 이벤트가 있을 수 있어 로깅/분석 용도로만 권장
  */
+
+/**
+ * IPC / Exported Component 보안 진단 예제 참고 자료
+ *
+ * - PackageManager.getPackageInfo: https://developer.android.com/reference/android/content/pm/PackageManager#getPackageInfo(java.lang.String,%20android.content.pm.PackageManager.PackageInfoFlags)
+ * - ComponentInfo.exported: https://developer.android.com/reference/android/content/pm/ComponentInfo#exported
+ * - PendingIntent FLAG_MUTABLE/FLAG_IMMUTABLE: https://developer.android.com/reference/android/app/PendingIntent#FLAG_IMMUTABLE
+ * - Intent.fillIn: https://developer.android.com/reference/android/content/Intent#fillIn(android.content.Intent,%20int)
+ * - Custom permissions (protectionLevel): https://developer.android.com/guide/topics/permissions/defining
+ *
+ * 핵심 개념 요약 — CLAUDE.md 컨벤션 실험: 이 예제는 UI 본문에 서술형 설명 카드를 두는 대신,
+ * 아래처럼 실제 소스 코드의 KDoc/inline 주석에 판단 근거를 적어두고 화면에는 "코드/주석 참고" 포인터만 남긴다.
+ *
+ * 1) Manifest 진단 (실동작)
+ *  - exported/permission 은 매니페스트에 고정되는 값이라 런타임 토글 데모는 불가능하지만,
+ *    PackageManager.getPackageInfo(packageName, GET_ACTIVITIES|GET_SERVICES|GET_RECEIVERS|GET_PROVIDERS) 로
+ *    이 앱 자신의 컴포넌트 목록을 실시간 스캔하는 것은 가능 — 판단 기준은 IpcExportedComponentExampleUI.kt 의
+ *    scanExportedComponents() 함수 KDoc 참고.
+ *
+ * 2) PendingIntent Mutability (실동작)
+ *  - FLAG_IMMUTABLE 로 만든 PendingIntent 는 send(Context, int, Intent) 에 넘긴 fillIn 인자가 통째로 무시됨
+ *  - FLAG_MUTABLE(또는 API 31 미만 기본 동작) 은 fillIn 이 그대로 적용 — 유출된 PendingIntent 를 손에 넣은
+ *    제3자가 내부 Intent 의 extras 를 조작할 수 있다는 뜻. 상세 시나리오는 sendTamperedBroadcast() 함수 KDoc 참고.
+ *
+ * 3) Permission Enforcement (CodeBlock, 실행 없음)
+ *  - protectionLevel="signature" 커스텀 권한을 선언하고 exported 컴포넌트의 android:permission 에 지정하면
+ *    같은 서명으로 빌드된 앱끼리만 호출을 허용할 수 있음 — 코드는 IpcExportedComponentExampleUI.kt 의
+ *    PermissionEnforcementSection() CodeBlock 참고.
+ */

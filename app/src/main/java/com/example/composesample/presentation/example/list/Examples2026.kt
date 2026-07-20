@@ -453,6 +453,13 @@ val examples2026 = listOf(
         exampleType = ConstValue.ScreenshotDetectionExample
     ),
     ExampleObject(
+        lastUpdate = "26. 07. 21",
+        title = "IPC / Exported Component 보안 진단",
+        description = "exported 컴포넌트는 매니페스트 고정값이라 런타임 토글 대신 코드/주석 중심으로 구성: ① PackageManager로 이 앱 자신의 Activity/Service/Receiver/Provider를 실시간 스캔해 exported+permission 진단 ② FLAG_MUTABLE vs FLAG_IMMUTABLE PendingIntent로 fillIn Intent 변조 시도 시 실제 payload가 바뀌는지 비교 ③ signature 커스텀 권한으로 exported 컴포넌트를 강제하는 패턴(CodeBlock)",
+        blogUrl = "",
+        exampleType = ConstValue.IpcExportedComponentExample
+    ),
+    ExampleObject(
         lastUpdate = "26. 05. 12",
         title = "Compose Animations Showcase (카탈로그)",
         description = "공통 duration/easing 슬라이더로 5가지 모션 패턴을 한 화면에서 동시 비교: animateXxxAsState(Dp/Color/scale·alpha), AnimatedVisibility(slide+fade combo) + Crossfade, AnimatedContent(SizeTransform) + updateTransition(다중 속성 동기), rememberInfiniteTransition + Drag-driven Animatable spring 복귀",
