@@ -219,7 +219,7 @@ private const val TAG = "IpcExportedComponentExample"
  *   리시버는 변조된 payload("TAMPERED")를 수신한다.
  *
  * → 앱 밖으로 유출된 PendingIntent가 mutable이면, 그걸 손에 넣은 다른 앱이 내부 Intent를 조작할 수 있다는 뜻.
- * 근거: https://developer.android.com/reference/android/app/PendingIntent#FLAG_IMMUTABLE
+ * 근거 URL은 exampleGuide.kt 참고.
  */
 private fun sendTamperedBroadcast(context: Context, mutable: Boolean) {
     val requestCode = if (mutable) 2 else 1
