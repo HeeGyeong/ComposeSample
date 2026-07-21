@@ -28,11 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 /**
- * ScreenshotTesting Example 참고 자료
- * - Paparazzi (Cash App): https://github.com/cashapp/paparazzi
- * - Roborazzi (takahirom): https://github.com/takahirom/roborazzi
- * - 공식 Compose 테스트 가이드: https://developer.android.com/develop/ui/compose/testing
- * - Screenshot Testing 블로그: https://medium.com/androiddevelopers/screenshot-testing-jetpack-compose-with-paparazzi-11d38feecef6
+ * ScreenshotTesting Example
  */
 
 @Composable

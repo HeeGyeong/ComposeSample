@@ -343,7 +343,6 @@ private fun AnimatedVisibilityCard() {
 
 /**
  * 커스텀 Visibility + PathHitTester 예제
- * PathHitTester 참고: https://www.romainguy.dev/posts/2025/arbitrary-shape-tap-detection/
  *
  * PathHitTester는 임의의 Path 내부에 특정 좌표가 포함되는지 확인하는 API
  * - 별 모양 Path를 탭하면 PathHitTester로 hit test 후 색상 변경

@@ -18,12 +18,13 @@ package com.example.composesample.presentation.example.component.architecture.de
  * - waitUntil { condition }: 비동기 상태 변경을 기다리는 유틸리티
  *
  * --- Screenshot Testing (Paparazzi / Roborazzi) ---
- * - Paparazzi: https://cashapp.github.io/paparazzi/
+ * - Paparazzi: https://cashapp.github.io/paparazzi/ (GitHub: https://github.com/cashapp/paparazzi)
  * - Roborazzi: https://github.com/takahirom/roborazzi
  * - 골든 이미지를 저장해두고 변경 시 자동으로 회귀를 검출
  * - Paparazzi: 에뮬레이터/실기기 없이 JVM에서 Android View/Compose 렌더링
  * - Roborazzi: Robolectric 위에서 실행, 더 넓은 Android API 커버
  * - 골든 이미지 갱신: ./gradlew recordPaparazziDebug 또는 recordRoborazzi
+ * - 참고 블로그: https://medium.com/androiddevelopers/screenshot-testing-jetpack-compose-with-paparazzi-11d38feecef6
  *
  * --- Preview-Driven Screenshot Testing ---
  * - PreviewDrivenScreenshotExampleUI.kt 참조 (Preview를 source of truth로 매트릭스 파생)
@@ -32,6 +33,8 @@ package com.example.composesample.presentation.example.component.architecture.de
  * - 매트릭스 셀 1개 = 골든 이미지 1개. 축을 늘리면 커버리지가 곱(N×M×K)으로 증가
  * - AGP 8.5+ Compose Preview Screenshot Testing: @Preview 를 직접 입력으로 받아 공식 지원
  * - 공식 문서: https://developer.android.com/develop/ui/compose/tooling/previews
+ * - Multipreview annotations: https://developer.android.com/develop/ui/compose/tooling/previews#multipreview
+ * - @PreviewParameter: https://developer.android.com/develop/ui/compose/tooling/previews#preview-data
  *
  * --- Recomposition Test ---
  * - 출처: https://proandroiddev.com/catching-excessive-recompositions-in-jetpack-compose-with-tests-8d0b952e2853

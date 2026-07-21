@@ -4,7 +4,8 @@ package com.example.composesample.presentation.example.component.ui.layout.adapt
  * Adaptive Layout (WindowSizeClass) 예제 참고 자료
  *
  * - 공식 문서: https://developer.android.com/develop/ui/compose/layouts/adaptive
- * - WindowSizeClass API: https://developer.android.com/reference/kotlin/androidx/window/core/layout/WindowSizeClass
+ * - WindowSizeClass API (androidx.window): https://developer.android.com/reference/kotlin/androidx/window/core/layout/WindowSizeClass
+ * - WindowSizeClass API (Material3, 이 예제가 사용하는 API): https://developer.android.com/reference/kotlin/androidx/compose/material3/windowsizeclass/WindowSizeClass
  *
  * 핵심 개념:
  * - WindowSizeClass: 화면 너비/높이를 Compact/Medium/Expanded 3단계로 분류

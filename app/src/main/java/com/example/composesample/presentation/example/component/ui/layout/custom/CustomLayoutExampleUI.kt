@@ -32,10 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 /**
- * CustomLayout Example 참고 자료
- * - 공식 문서: https://developer.android.com/develop/ui/compose/layouts/custom
- * - Layout composable: https://developer.android.com/reference/kotlin/androidx/compose/ui/layout/package-summary#Layout
- * - MeasurePolicy: https://developer.android.com/reference/kotlin/androidx/compose/ui/layout/MeasurePolicy
+ * CustomLayout Example
  */
 
 @Composable

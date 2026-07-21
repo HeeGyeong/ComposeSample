@@ -37,9 +37,7 @@ import androidx.compose.ui.unit.sp
 import androidx.activity.ComponentActivity
 
 /**
- * AdaptiveLayout Example 참고 자료
- * - 공식 문서: https://developer.android.com/develop/ui/compose/layouts/adaptive
- * - WindowSizeClass API: https://developer.android.com/reference/kotlin/androidx/compose/material3/windowsizeclass/WindowSizeClass
+ * AdaptiveLayout Example
  */
 
 @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)

@@ -4,6 +4,7 @@ package com.example.composesample.presentation.example.component.ui.layout.custo
  * Custom Layout (MeasurePolicy) 예제 참고 자료
  *
  * - 공식 문서: https://developer.android.com/develop/ui/compose/layouts/custom
+ * - Layout composable: https://developer.android.com/reference/kotlin/androidx/compose/ui/layout/package-summary#Layout
  * - MeasurePolicy API: https://developer.android.com/reference/kotlin/androidx/compose/ui/layout/MeasurePolicy
  *
  * 핵심 개념:

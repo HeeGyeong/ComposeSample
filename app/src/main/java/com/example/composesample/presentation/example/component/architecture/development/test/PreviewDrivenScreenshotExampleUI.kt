@@ -41,12 +41,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 /**
- * Preview-Driven Screenshot Testing Example 참고 자료
+ * Preview-Driven Screenshot Testing Example
  * - @Preview 를 source of truth 로 삼는 스크린샷 테스트 각도
  * - Paparazzi/Roborazzi 실행 메커니즘은 ScreenshotTestingExampleUI 참조
- * - Compose Preview 공식 문서: https://developer.android.com/develop/ui/compose/tooling/previews
- * - Multipreview annotations: https://developer.android.com/develop/ui/compose/tooling/previews#multipreview
- * - @PreviewParameter: https://developer.android.com/develop/ui/compose/tooling/previews#preview-data
  */
 
 // ==================== 매트릭스 차원 정의 ====================
