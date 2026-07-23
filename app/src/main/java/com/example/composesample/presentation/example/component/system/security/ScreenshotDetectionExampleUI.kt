@@ -373,27 +373,7 @@ private fun EventLog(events: List<String>) {
     }
 }
 
-@Composable
-private fun SectionCard(title: String, content: @Composable () -> Unit) {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFF2C3E50))
-    ) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Text(
-                text = title,
-                color = Color.White,
-                fontSize = 15.sp,
-                fontWeight = FontWeight.Bold
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            HorizontalDivider(color = Color(0xFF455A64))
-            Spacer(modifier = Modifier.height(8.dp))
-            content()
-        }
-    }
-}
+// SectionCard는 system/security 패키지 공용(SecurityUiComponents.kt)으로 이동
 
 @Composable
 private fun BodyText(text: String) {
