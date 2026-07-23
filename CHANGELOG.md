@@ -9,14 +9,25 @@ Version and example-addition history for ComposeSample, newest first.
 - New examples added
   - Screenshot Detection — Android 14 `registerScreenCaptureCallback` vs legacy MediaStore `ContentObserver` comparison
   - Advanced Repository Pattern — Memory→Disk→Network priority-resolving repository
+  - RememberObserver / Composition Lifecycle — contrasts removing a composable from composition vs. triggering recomposition only, to observe `onRemembered`/`onForgotten` firing; DisposableEffect comparison; `rememberCoroutineScope` internals reproduced conceptually
+  - Media3 (ExoPlayer) Video Playback — `AndroidView` + `PlayerView` embedding with real playback; auto-pause on backgrounding via `OnLifecycleEvent(ON_STOP)`
+  - IPC / Exported Component Security Diagnostics — runtime `PackageManager` scan of this app's own exported components; `PendingIntent` `FLAG_MUTABLE`/`FLAG_IMMUTABLE` tamper comparison with a live broadcast; `signature`-level permission enforcement as a code reference
 - Legacy subsystem removal (LEGACY-RM)
   - Removed the entire legacy subsystem (`presentation/legacy/` 24 files + 10 Activities) and its RxJava dependency completely
 - Dead code / documentation cleanup
   - Removed 45 unreferenced `*Guide.kt` learning-guide files; each file's source URL was absorbed into the sibling `exampleGuide.kt` (GUIDE-DEAD-01)
   - Removed the dead parameterized `EventSource` Koin registration in `NetworkModule` (DI-DEAD-01)
   - Removed the dead `ApiInterface` + related Koin/Retrofit registrations left over from the RxJava removal (API-DEAD-01); renamed `ItemDTO.kt` → `UserData.kt` to match its actual contents (CONV-06)
+  - Removed the unused `sh.calvin.reorderable` dependency (DEP-DEAD-02)
+  - Removed 6 unreferenced functions from `KtorApiExtensions`/`AudioRecorderUtil` (DEAD-FUNC-01/02)
+  - Removed 4 commented-out dead code blocks (CODE-DEAD-02)
+  - Removed unused imports across 5 files (CODE-IMPORT-01)
+  - Moved 13 reference URLs out of 5 `*ExampleUI.kt` files' KDoc into the sibling `exampleGuide.kt` (CONV-07)
 - Architecture cleanup
   - Converted `RefreshViewModel`/`DataCacheViewModel` from `AndroidViewModel` to plain `ViewModel` — neither used the injected `Application` (VM-ANDROIDVM-01)
+  - Consolidated a byte-identical `SectionCard` composable duplicated across 4 `system/security` example files into a shared `SecurityUiComponents.kt` (CODE-DUP-01)
+- Dependency migration
+  - Removed Glide and Coil2 entirely; migrated to Coil3 (`coil3`, `coil3-gif`) as the sole image loader across `FlexBoxUI`/`LottieExampleUI` (DEP-VERSION-01)
 
 ## 2026.06
 - Architecture refactoring and documentation/quality improvements
