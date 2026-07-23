@@ -60,9 +60,6 @@ rules = "1.5.0"
 espressoIntents = "3.5.1"
 
 # Image Loader
-glideCompose = "1.0.0-alpha.1"
-coilCompose = "2.5.0"
-coilGif = "2.6.0"
 coil3 = "3.1.0"
 
 # Media
@@ -169,11 +166,9 @@ koinAndroid = { module = "io.insert-koin:koin-android", version.ref = "koinAndro
 koinAndroidxCompose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koinAndroidxCompose" }
 
 # Image Loader
-glideCompose = { module = "com.github.bumptech.glide:compose", version.ref = "glideCompose" }
-coilCompose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
-coilGif = { module = "io.coil-kt:coil-gif", version.ref = "coilGif" }
 coil3Compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil3" }
 coil3NetworkOkhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coil3" }
+coil3Gif = { module = "io.coil-kt.coil3:coil-gif", version.ref = "coil3" }
 
 # Media
 lottieCompose = { module = "com.airbnb.android:lottie-compose", version.ref = "lottieCompose" }
@@ -252,11 +247,9 @@ uiTest = [
 ]
 
 image = [
-    "glideCompose",
-    "coilCompose",
-    "coilGif",
     "coil3Compose",
     "coil3NetworkOkhttp",
+    "coil3Gif",
 ]
 
 koin = [

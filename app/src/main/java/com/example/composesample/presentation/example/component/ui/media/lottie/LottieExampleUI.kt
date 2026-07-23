@@ -28,14 +28,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImagePainter.State
-import coil.compose.rememberAsyncImagePainter
-import coil.decode.GifDecoder
-import coil.decode.ImageDecoderDecoder
-import coil.request.ImageRequest
-import coil.request.onAnimationEnd
-import coil.request.onAnimationStart
-import coil.request.repeatCount
+import coil3.compose.AsyncImagePainter.State
+import coil3.compose.rememberAsyncImagePainter
+import coil3.gif.GifDecoder
+import coil3.gif.AnimatedImageDecoder
+import coil3.request.ImageRequest
+import coil3.request.crossfade
+import coil3.gif.onAnimationEnd
+import coil3.gif.onAnimationStart
+import coil3.gif.repeatCount
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
@@ -71,7 +72,7 @@ fun LottieExampleUI(
             .crossfade(true)
             .decoderFactory(
                 if (SDK_INT >= 28) {
-                    ImageDecoderDecoder.Factory()
+                    AnimatedImageDecoder.Factory()
                 } else {
                     GifDecoder.Factory()
                 }

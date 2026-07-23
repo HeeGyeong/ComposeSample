@@ -28,13 +28,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
-import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
-import com.bumptech.glide.integration.compose.GlideImage
+import coil3.compose.AsyncImage
 import com.example.composesample.util.component.FlexBoxLayout
 import kotlin.random.Random
 
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalGlideComposeApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun FlexBoxUI(onBackButtonClick: () -> Unit) {
     LazyColumn(modifier = Modifier.padding(horizontal = 20.dp)) {
@@ -105,7 +104,7 @@ fun FlexBoxUI(onBackButtonClick: () -> Unit) {
                     repeat(40) {
                         Row(modifier = Modifier.padding(vertical = 5.dp)) {
                             Spacer(modifier = Modifier.width(widthMargin))
-                            GlideImage(
+                            AsyncImage(
                                 modifier = Modifier
                                     .width(Random.nextInt(20, 120).dp)
                                     .height(20.dp)
