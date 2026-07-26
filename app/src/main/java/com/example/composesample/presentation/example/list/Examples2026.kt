@@ -113,7 +113,7 @@ val examples2026 = listOf(
         lastUpdate = "26. 03. 15",
         title = "LocalContext for Strings (Anti-Pattern)",
         description = "Compose에서 문자열에 LocalContext 사용 금지: stringResource vs UiText sealed class 패턴",
-        blogUrl = "",
+        blogUrl = "https://heegs.tistory.com/205",
         exampleType = ConstValue.LocalContextStringsExample
     ),
     ExampleObject(
