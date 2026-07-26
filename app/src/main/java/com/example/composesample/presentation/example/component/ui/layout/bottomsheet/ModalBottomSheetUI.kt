@@ -72,8 +72,6 @@ fun ModalBottomSheetUI(
                                 "sheetContentHeight.value ? ${sheetContentHeight.value}"
                             )
                         }
-//                        .fillMaxWidth()
-//                        .fillMaxHeight(fraction = 0.8f) // Expanded 일때의 높이 제한.
                 ) {
                     ModalExpandedBottomSheet()
                 }

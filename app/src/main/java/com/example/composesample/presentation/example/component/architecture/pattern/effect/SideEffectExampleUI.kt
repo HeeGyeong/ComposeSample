@@ -206,7 +206,6 @@ fun UpdateRememberExample(
     isChanged: MutableState<Boolean>
 ) {
     var textState by remember { mutableStateOf("Default") }
-//    val textState = remember { mutableStateOf("Default") }
 
     Column(modifier = Modifier.padding(16.dp)) {
         TextField(

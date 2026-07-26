@@ -71,7 +71,6 @@ fun LazyColumnFlingBehaviorExampleUI(onBackButtonClick: () -> Unit) {
         SnapLayoutInfoProvider(lazyListState, snapPosition)
     }
     // 기본적인 사용법
-//    val snappingLayout = remember(lazyListState) { SnapLayoutInfoProvider(lazyListState) }
     val flingBehavior = rememberSnapFlingBehavior(snappingLayout)
 
 
@@ -88,8 +87,6 @@ fun LazyColumnFlingBehaviorExampleUI(onBackButtonClick: () -> Unit) {
             .background(color = Color.White),
         // flingBehavior의 다양한 사용 방법
         flingBehavior = flingBehavior,
-//        flingBehavior = maxScrollSpeedFlingBehavior(), // custom
-//        flingBehavior = rememberSnapFlingBehavior(lazyListState = lazyListState) // defult
     ) {
         stickyHeader {
             Box(
