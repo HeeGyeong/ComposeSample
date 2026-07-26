@@ -20,11 +20,8 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -119,25 +116,6 @@ fun StickyHeaderComponent(
 
 val COLLAPSED_TOP_BAR_HEIGHT = 56.dp
 val EXPANDED_TOP_BAR_HEIGHT = 100.dp
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun LargeTopBar(
-    scrollBehavior: TopAppBarScrollBehavior,
-    onBackButtonClick: () -> Unit,
-) = LargeTopAppBar(
-    title = {
-        StickyHeaderComponent(
-            onBackButtonClick = onBackButtonClick
-        )
-    },
-    colors = TopAppBarDefaults.topAppBarColors(
-        containerColor = Color.DarkGray, // Expanded
-        scrolledContainerColor = Color.DarkGray, // Collapsed
-        titleContentColor = Color.LightGray
-    ),
-    scrollBehavior = scrollBehavior,
-)
 
 @Composable
 private fun CollapsedHeaderUI(

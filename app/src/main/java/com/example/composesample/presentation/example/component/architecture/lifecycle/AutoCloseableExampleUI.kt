@@ -338,23 +338,6 @@ private fun ManualCloseControlCard(
 }
 
 @Composable
-private fun FeatureChip(text: String, color: Color) {
-    Surface(
-        modifier = Modifier,
-        shape = RoundedCornerShape(16.dp),
-        color = color.copy(alpha = 0.1f)
-    ) {
-        Text(
-            text = text,
-            modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
-            fontSize = 12.sp,
-            color = color,
-            fontWeight = FontWeight.Medium
-        )
-    }
-}
-
-@Composable
 private fun ServiceStatusCard(serviceStatus: Map<String, ServiceStatusInfo>) {
     Card(
         modifier = Modifier.fillMaxWidth(),
