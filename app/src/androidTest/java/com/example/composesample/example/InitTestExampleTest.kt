@@ -12,8 +12,8 @@ import androidx.compose.ui.test.performClick
 import androidx.test.core.app.ActivityScenario
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.example.composesample.presentation.example.BlogExampleActivity
-import com.example.composesample.presentation.example.component.init.InitTestExampleUI
-import com.example.composesample.presentation.example.component.init.InitTestViewModel
+import com.example.composesample.presentation.example.component.architecture.development.init.InitTestExampleUI
+import com.example.composesample.presentation.example.component.architecture.development.init.InitTestViewModel
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.Before

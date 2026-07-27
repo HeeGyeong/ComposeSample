@@ -6,7 +6,7 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
-import com.example.composesample.presentation.example.component.test.UITestExampleUI
+import com.example.composesample.presentation.example.component.architecture.development.test.UITestExampleUI
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
