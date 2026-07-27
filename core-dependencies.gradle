@@ -25,7 +25,9 @@ dependencies {
     implementation(libs.bundles.ktor)
 
     // Test
+    // androidTest 전용 번들이므로 implementation(프로덕션 산출물 포함)이 아닌
+    // androidTestImplementation 으로 선언한다. (GRADLE-SCOPE-01)
     testImplementation(libs.junit)
-    implementation(libs.bundles.androidTest)
+    androidTestImplementation(libs.bundles.androidTest)
     debugImplementation(libs.uiTooling)
 }
