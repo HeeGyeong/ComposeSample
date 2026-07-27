@@ -29,7 +29,7 @@ val viewModelModule: Module = module {
         ApiExampleViewModel(
             application = get(),
             postApiInterface = get(named("post")),
-            ktorClient = get()
+            ktorClient = get(named("jsonplaceholder"))
         )
     }
 

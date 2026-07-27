@@ -13,6 +13,7 @@ import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.request.header
 import io.ktor.serialization.gson.gson
+import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
 // 네트워크 설정 상수 (BASE_URL은 ApiClient.NEW_BASE_URL 사용)
@@ -22,7 +23,9 @@ private object NetworkConstants {
 }
 
 val ktorModule = module {
-    single {
+    // API 의존성은 named() qualifier 필수 (DIRules.md)
+    // Retrofit 의 named("jsonplaceholder") 와 동일하게 대상 도메인 기준으로 명명
+    single(named("jsonplaceholder")) {
         HttpClient(OkHttp) {
 
             defaultRequest {
