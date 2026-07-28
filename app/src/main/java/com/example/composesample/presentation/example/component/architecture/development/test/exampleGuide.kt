@@ -7,6 +7,12 @@ package com.example.composesample.presentation.example.component.architecture.de
  * - 공식 문서: https://developer.android.com/develop/ui/compose/testing
  * - createComposeRule: 단일 Activity 없이 Composable을 직접 테스트
  * - createAndroidComposeRule: Activity 컨텍스트가 필요한 경우
+ * - ⚠️ 패키지 주의: 기존 `androidx.compose.ui.test.junit4.createComposeRule` /
+ *   `...junit4.createAndroidComposeRule` 은 deprecated 되었고
+ *   `androidx.compose.ui.test.junit4.v2.*` 가 대체 API다(반환 타입은 v1과 동일해 import 만 바뀜).
+ *   v2 는 UnconfinedTestDispatcher 대신 StandardTestDispatcher 를 사용해 작업을 즉시 실행하지 않고
+ *   큐잉하므로, 즉시 실행에 의존하던 테스트는 waitUntil / awaitIdle 같은 명시적 동기화가 필요할 수 있다.
+ *   마이그레이션 가이드: https://developer.android.com/develop/ui/compose/testing/migrate-to-v2
  * - onNodeWithTag / onNodeWithText / onNodeWithContentDescription: 시맨틱 트리 탐색
  * - performClick / performTextInput / performScrollTo: 사용자 인터랙션 시뮬레이션
  * - assertIsDisplayed / assertIsEnabled / assertTextEquals: 단언문

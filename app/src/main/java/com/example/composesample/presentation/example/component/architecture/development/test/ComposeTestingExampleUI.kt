@@ -137,7 +137,10 @@ fun ComposeTestingExampleUI(onBackEvent: () -> Unit) {
                         )
                         Spacer(modifier = Modifier.height(10.dp))
                         CodeBlock(
-                            code = "@RunWith(AndroidJUnit4::class)\n" +
+                            code = "// Compose 1.9+ : junit4.createComposeRule() 는 deprecated,\n" +
+                                    "// junit4.v2 로 대체(StandardTestDispatcher 기반)\n" +
+                                    "import androidx.compose.ui.test.junit4.v2.createComposeRule\n\n" +
+                                    "@RunWith(AndroidJUnit4::class)\n" +
                                     "class MyScreenTest {\n\n" +
                                     "    @get:Rule\n" +
                                     "    val rule = createComposeRule()\n\n" +
@@ -263,7 +266,8 @@ fun ComposeTestingExampleUI(onBackEvent: () -> Unit) {
                         Spacer(modifier = Modifier.height(8.dp))
                         TipRow("testTag를 UI 코드에 심어두면 텍스트 변경에 테스트가 깨지지 않음")
                         TipRow("waitUntil { condition } 으로 비동기 상태 변화 대기 가능")
-                        TipRow("createAndroidComposeRule<Activity>()로 실제 Activity 컨텍스트 활용")
+                        TipRow("createAndroidComposeRule<Activity>()로 실제 Activity 컨텍스트 활용 (junit4.v2 패키지 사용)")
+                        TipRow("v2 룰은 StandardTestDispatcher 기반 — 즉시 실행 대신 큐잉되므로 타이밍 의존 테스트는 명시적 대기 필요")
                         TipRow("ViewModel 목 주입 시 Koin testKoin {} 또는 Hilt @TestInstallIn 활용")
                         TipRow("Screenshot Testing과 조합하면 회귀 방지 커버리지 극대화")
                     }

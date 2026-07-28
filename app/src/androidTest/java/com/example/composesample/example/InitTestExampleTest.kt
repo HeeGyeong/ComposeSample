@@ -5,7 +5,7 @@ import android.util.Log
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
@@ -55,7 +55,8 @@ class InitTestExampleUITest {
             .assertExists()
             .assertIsDisplayed()
 
-        composeTestRule.onNodeWithContentDescription("Header_back_button")
+        // MainHeader 의 뒤로가기 아이콘 contentDescription 은 "Back" 이다.
+        composeTestRule.onNodeWithContentDescription("Back")
             .assertExists()
             .assertIsDisplayed()
             .assertHasClickAction()
@@ -72,7 +73,8 @@ class InitTestExampleUITest {
             InitTestExampleUI(onBackButtonClick = { backButtonClicked = true })
         }
 
-        composeTestRule.onNodeWithContentDescription("Header_back_button")
+        // MainHeader 의 뒤로가기 아이콘 contentDescription 은 "Back" 이다.
+        composeTestRule.onNodeWithContentDescription("Back")
             .performClick()
 
         // Then

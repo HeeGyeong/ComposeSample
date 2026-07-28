@@ -240,6 +240,9 @@ testImplementation("io.github.takahirom.roborazzi:roborazzi:x.x.x")
 testImplementation("io.github.takahirom.roborazzi:roborazzi-compose:x.x.x")
 
 // 테스트 코드 (@RunWith(RobolectricTestRunner::class) 필요)
+// Compose 1.9+ : junit4.createComposeRule() 은 deprecated → junit4.v2 사용
+import androidx.compose.ui.test.junit4.v2.createComposeRule
+
 @RunWith(RobolectricTestRunner::class)
 class MyComposableRoborazziTest {
 
