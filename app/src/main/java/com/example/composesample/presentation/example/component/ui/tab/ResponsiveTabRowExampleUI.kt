@@ -19,11 +19,11 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.ScrollableTabRow
+import androidx.compose.material3.SecondaryScrollableTabRow
+import androidx.compose.material3.SecondaryTabRow
 import androidx.compose.material3.Tab
-import androidx.compose.material3.TabRow
+import androidx.compose.material3.TabIndicatorScope
 import androidx.compose.material3.TabRowDefaults
-import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -372,7 +372,7 @@ private fun ComparisonCard() {
                 color = Color(0xFF333333)
             )
             Spacer(modifier = Modifier.height(8.dp))
-            TabRow(
+            SecondaryTabRow(
                 selectedTabIndex = selectedTab1,
                 containerColor = Color(0xFFFFF3E0),
                 contentColor = Color(0xFFFF6F00)
@@ -402,7 +402,7 @@ private fun ComparisonCard() {
                 color = Color(0xFF333333)
             )
             Spacer(modifier = Modifier.height(8.dp))
-            ScrollableTabRow(
+            SecondaryScrollableTabRow(
                 selectedTabIndex = selectedTab2,
                 containerColor = Color(0xFFF3E5F5),
                 contentColor = Color(0xFF7B1FA2),
@@ -462,13 +462,14 @@ fun ResponsiveTabRow(
     onTabClick: (Int) -> Unit,
     containerColor: Color = Color.White,
     contentColor: Color = Color(0xFF1976D2),
-    indicator: @Composable (tabPositions: List<androidx.compose.material3.TabPosition>) -> Unit = { tabPositions ->
-        if (tabPositions.isNotEmpty() && selectedTabIndex < tabPositions.size) {
-            TabRowDefaults.SecondaryIndicator(
-                Modifier.tabIndicatorOffset(tabPositions[selectedTabIndex]),
-                color = contentColor
-            )
-        }
+    // M3 1.4.0부터 indicator는 tabPositions 리스트 대신 TabIndicatorScope를 리시버로 받는다.
+    // 탭 위치 계산은 스코프의 tabIndicatorOffset(selectedTabIndex)가 내부에서 처리하므로
+    // 기존의 인덱스 범위 방어 코드(tabPositions.isNotEmpty() 등)가 더 이상 필요 없다.
+    indicator: @Composable TabIndicatorScope.() -> Unit = {
+        TabRowDefaults.SecondaryIndicator(
+            Modifier.tabIndicatorOffset(selectedTabIndex),
+            color = contentColor
+        )
     },
     divider: @Composable () -> Unit = {},
     tabTextStyle: TextStyle = TextStyle(fontSize = 14.sp, fontWeight = FontWeight.Medium),
@@ -508,7 +509,7 @@ fun ResponsiveTabRow(
 
         val layoutContent = @Composable {
             if (useScrollable) {
-                ScrollableTabRow(
+                SecondaryScrollableTabRow(
                     selectedTabIndex = selectedTabIndex,
                     containerColor = containerColor,
                     contentColor = contentColor,
@@ -531,7 +532,7 @@ fun ResponsiveTabRow(
                     }
                 }
             } else {
-                TabRow(
+                SecondaryTabRow(
                     selectedTabIndex = selectedTabIndex,
                     containerColor = containerColor,
                     contentColor = contentColor,

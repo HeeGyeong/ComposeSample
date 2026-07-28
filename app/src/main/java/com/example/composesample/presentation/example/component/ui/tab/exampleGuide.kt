@@ -10,4 +10,16 @@ package com.example.composesample.presentation.example.component.ui.tab
  * - SubcomposeLayout으로 탭 콘텐츠를 무제한 너비(Constraints.Infinity)로 먼저 측정해 선호 너비(preferred width)를 계산하고, 고정 분할 너비(availableWidth / tab 수)와 비교해 초과하면 ScrollableTabRow, 아니면 TabRow를 렌더링
  * - 다국어 레이블, 서버에서 받은 동적 카테고리, 사용자 폰트 크기 설정처럼 런타임 전까지 길이를 알 수 없는 콘텐츠에 자동 대응
  * - 탭이 매우 많으면 추가 측정 단계 비용이 있지만, 일반적인 3-7개 탭 수준에서는 성능 영향 없음
+ *
+ * ## M3 1.4.0 Tab API 변경 (코드에서 Secondary* 를 쓰는 이유)
+ * - `TabRow`/`ScrollableTabRow` 는 deprecated → `PrimaryTabRow`/`SecondaryTabRow`,
+ *   `PrimaryScrollableTabRow`/`SecondaryScrollableTabRow` 로 분리됨
+ * - Primary 는 콘텐츠 너비에 맞는 짧은 인디케이터, Secondary 는 탭 전체 너비 인디케이터.
+ *   이 예제는 기존 동작(`TabRowDefaults.SecondaryIndicator`)을 보존하려고 Secondary 계열을 사용
+ * - indicator 파라미터 시그니처도 바뀜: `(tabPositions: List<TabPosition>) -> Unit`
+ *   → `TabIndicatorScope.() -> Unit`. 위치 계산은 스코프의 `Modifier.tabIndicatorOffset(selectedTabIndex)`
+ *   가 내부에서 처리하므로, 기존처럼 tabPositions 인덱스를 직접 다루거나 범위를 방어할 필요가 없음
+ * - 위 본문에서 말하는 "TabRow / ScrollableTabRow" 는 고정폭/스크롤이라는 개념 구분을 가리키며,
+ *   실제 코드는 각각 `SecondaryTabRow` / `SecondaryScrollableTabRow` 로 구현되어 있음
+ * - 참고: https://developer.android.com/reference/kotlin/androidx/compose/material3/package-summary#SecondaryTabRow(kotlin.Int,androidx.compose.ui.Modifier,androidx.compose.ui.graphics.Color,androidx.compose.ui.graphics.Color,kotlin.Function1,kotlin.Function0,kotlin.Function0)
  */

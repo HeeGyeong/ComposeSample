@@ -30,8 +30,8 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
+import androidx.compose.material3.SecondaryTabRow
 import androidx.compose.material3.Tab
-import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
@@ -86,7 +86,8 @@ fun DynamicAppLinksExampleUI(
             onBackIconClicked = onBackEvent
         )
 
-        TabRow(
+        // M3 1.4.0에서 TabRow가 deprecated되어 동작이 동일한 SecondaryTabRow로 대체
+        SecondaryTabRow(
             selectedTabIndex = selectedTab,
             containerColor = Color(0xFF1976D2),
             contentColor = Color.White
