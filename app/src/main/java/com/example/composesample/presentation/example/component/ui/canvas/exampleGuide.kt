@@ -74,6 +74,43 @@ package com.example.composesample.presentation.example.component.ui.canvas
  * - `rememberGraphicsLayer()` + `drawWithContent { layer.record { drawContent() }; drawLayer(layer) }`
  * - 저장: `layer.toImageBitmap().asAndroidBitmap().compress(Bitmap.CompressFormat.PNG, 100, out)`
  *
+ * ## WaveformCanvasExampleUI (실시간 파형 렌더러 — ECG/PPG)
+ * - Compose 단계별 상태 읽기: https://developer.android.com/develop/ui/compose/performance/bestpractices#defer-reads
+ * - withFrameNanos: https://developer.android.com/reference/kotlin/androidx/compose/runtime/package-summary#withFrameNanos(kotlin.Function1)
+ * - ECG 파형(PQRST 복합파) 개요: https://en.wikipedia.org/wiki/Electrocardiography#Theory
+ * - PPG(광용적맥파) 개요: https://en.wikipedia.org/wiki/Photoplethysmogram
+ *   (신호는 실제 센서 데이터가 아니라 가우시안 합으로 합성한 시뮬레이션. 외부 라이브러리 미사용)
+ *
+ * ### 고정 샘플레이트 ↔ 가변 프레임레이트 분리
+ * - 센서는 250Hz 로 일정하게, 화면은 60/90/120Hz 로 제각각 → "프레임당 1샘플"로 밀면 기기마다 시간축이 달라짐
+ * - `carry += dt * SAMPLE_RATE` → `count = carry.toInt()` → `carry -= count` (소수부 이월)
+ *   60fps·250Hz 면 프레임당 4.16 샘플 → 4개 넣고 0.16 은 다음 프레임으로
+ * - `dt` 가 비정상적으로 크면(백그라운드 복귀 등) 해당 프레임은 폐기, 밀린 샘플은 상한(MAX_SAMPLES_PER_FRAME)으로 절단
+ *
+ * ### 링 버퍼(FloatArray + head 순환)
+ * - `samples[head] = v; head = (head + 1) % capacity` — 쓰기 O(1), 프레임당 할당 0
+ * - 스냅샷 리스트(mutableStateListOf)를 쓰지 않는 이유: 초당 250회 스냅샷 쓰기가 발생하지만
+ *   화면은 프레임당 1회만 갱신하면 되므로, 갱신 신호는 head 인덱스 상태 하나로 충분
+ * - Path 도 `remember { Path() }` 로 재사용하고 매 드로우 `reset()`
+ *
+ * ### 드로우 단계 상태 읽기 (defer reads)
+ * - `Canvas { }` 의 람다 안에서 상태를 읽으면 드로우 단계 구독이 되어 **리컴포지션 없이 재드로우만** 무효화
+ * - 같은 상태를 컴포저블 본문에서 읽으면 프레임마다 컴포지션 전체가 재실행 → 예제에서 카운터로 실측 대조
+ * - 화면에 띄우는 지표 텍스트는 0.5초 주기로만 갱신(매 프레임 갱신 시 텍스트 한 줄이 캔버스보다 비쌀 수 있음)
+ * - 상태 소유자(WaveformController)를 LazyColumn 아이템이 아닌 최상위 컴포저블에 두어, 스크롤로 카드가 폐기돼도 신호 연속성 유지
+ *
+ * ### 렌더 모드
+ * - Sweep(환자 모니터): 버퍼 인덱스 = 화면 x 좌표. 커서 앞 GAP 구간만 비워 '지우개' 표현 → 이동 비용 0
+ * - Scroll(오실로스코프): 나이(age) 순으로 이어 최신 샘플을 오른쪽 끝에 배치 → 시간 순서가 직관적
+ * - 둘 다 같은 버퍼를 읽으며, 차이는 "인덱스로 읽느냐 / 나이로 읽느냐"뿐
+ *
+ * ### 신호 합성
+ * - 한 박동 내 위치 phase(0~1)를 입력으로 받는 순수 함수 — 가우시안 `amp·exp(-½((p-c)/w)²)` 의 합
+ * - ECG: P(0.18) · Q(0.30) · R(0.33 스파이크) · S(0.37) · T(0.56)
+ * - PPG: 수축기 피크(0.26) + 중복맥(dicrotic notch) 봉우리(0.50)
+ * - phase 를 `phase += (1/SAMPLE_RATE)/(60/bpm)` 로 누적 → BPM 을 바꿔도 파형 불연속 없음
+ *   (`t % period` 방식은 주기가 바뀌는 순간 위상이 튄다)
+ *
  * ## MotionBlurExampleUI (스피닝 휠 모션 블러)
  * - 출처: https://proandroiddev.com/motion-blur-for-a-spinning-wheel-in-jetpack-compose-368c1647224d
  *

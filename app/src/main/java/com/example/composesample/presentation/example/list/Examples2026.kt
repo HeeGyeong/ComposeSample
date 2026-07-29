@@ -570,5 +570,12 @@ val examples2026 = listOf(
         description = "androidx.media3 ExoPlayer + PlayerView 를 Compose 에 통합해 실제 네트워크 비디오를 재생: ① AndroidView 로 PlayerView 를 임베딩하고 remember 로 생성한 ExoPlayer 인스턴스를 1회만 바인딩(MediaItem.fromUri 로 스트림 URL 재생), ② Player.Listener(onIsPlayingChanged/onPlaybackStateChanged)로 IDLE/BUFFERING/READY/ENDED 상태와 재생 여부를 실시간 추적하고 LaunchedEffect 폴링으로 현재 위치/전체 길이를 mm:ss 로 표시, ③ 재생/일시정지/처음으로 버튼 + Slider seekTo 탐색, ④ 화면을 벗어나면 AndroidView onRelease 에서 player.release() 호출(WebViewIssueUI 의 리소스 정리 관례와 동일), 앱이 백그라운드로 전환되면(OnLifecycleEvent ON_STOP) 자동 일시정지해 백그라운드 재생/네이티브 리소스 누수 방지",
         blogUrl = "",
         exampleType = ConstValue.Media3VideoPlayerExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 07. 30",
+        title = "Realtime Waveform Canvas (ECG/PPG)",
+        description = "환자 모니터처럼 끊임없이 흘러가는 생체신호 파형을 외부 라이브러리 없이 Canvas로 렌더링: ① 고정 샘플레이트(250Hz)와 가변 프레임레이트를 분리 — withFrameNanos의 dt로 이번 프레임에 밀어 넣을 샘플 개수를 계산하고 소수부는 다음 프레임으로 이월해 기기 주사율(60/90/120Hz)과 무관하게 동일한 시간축 유지, ② 고정 크기 FloatArray 링 버퍼(head 인덱스 순환)로 프레임당 할당·리스트 재구성 0 — 스냅샷 리스트 대신 평범한 배열을 쓰는 이유를 대조, ③ Sweep(커서가 좌→우로 훑으며 지난 파형을 덮어씀, 병원 모니터 방식)과 Scroll(파형 전체가 우→좌로 흐름, 오실로스코프 방식) 두 렌더 모드를 같은 버퍼로 구현, ④ ECG는 P-Q-R-S-T 복합파를 가우시안 합으로, PPG는 수축기 피크+중복맥 봉우리로 합성하고 BPM·잡음 슬라이더로 실시간 조절, ⑤ 파형 갱신 상태를 컴포지션이 아닌 드로우 단계에서 읽어 리컴포지션 0회로 재드로우만 유발하는 패턴을 컴포지션/드로우 횟수 카운터로 실측 대조",
+        blogUrl = "",
+        exampleType = ConstValue.WaveformCanvasExample
     )
 )

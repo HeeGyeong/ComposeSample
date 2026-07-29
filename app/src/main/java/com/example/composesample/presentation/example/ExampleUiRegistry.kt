@@ -74,6 +74,7 @@ import com.example.composesample.presentation.example.component.ui.canvas.DialCo
 import com.example.composesample.presentation.example.component.ui.canvas.MonthPickerDialExampleUI
 import com.example.composesample.presentation.example.component.ui.canvas.ParticleEmitterExampleUI
 import com.example.composesample.presentation.example.component.ui.canvas.FreehandDrawingExampleUI
+import com.example.composesample.presentation.example.component.ui.canvas.WaveformCanvasExampleUI
 import com.example.composesample.presentation.example.component.ui.canvas.MotionBlurExampleUI
 import com.example.composesample.presentation.example.component.ui.graphics.NewShadowApiExampleUI
 import com.example.composesample.presentation.example.component.ui.layout.animation.AnimatedContentExampleUI
@@ -218,6 +219,7 @@ import com.example.composesample.util.ConstValue.ModalBottomSheetExample
 import com.example.composesample.util.ConstValue.MonthPickerDialExample
 import com.example.composesample.util.ConstValue.ParticleEmitterExample
 import com.example.composesample.util.ConstValue.FreehandDrawingExample
+import com.example.composesample.util.ConstValue.WaveformCanvasExample
 import com.example.composesample.util.ConstValue.ModalDrawExample
 import com.example.composesample.util.ConstValue.ModularizationExample
 import com.example.composesample.util.ConstValue.MotionBlurExample
@@ -458,6 +460,7 @@ val exampleUiRegistry: Map<String, @Composable (onBackEvent: () -> Unit) -> Unit
     MonthPickerDialExample to { onBackEvent -> MonthPickerDialExampleUI(onBackEvent) },
     ParticleEmitterExample to { onBackEvent -> ParticleEmitterExampleUI(onBackEvent) },
     FreehandDrawingExample to { onBackEvent -> FreehandDrawingExampleUI(onBackEvent) },
+    WaveformCanvasExample to { onBackEvent -> WaveformCanvasExampleUI(onBackEvent) },
     EmbeddedPhotoPickerExample to { onBackEvent -> EmbeddedPhotoPickerExampleUI(onBackEvent) },
     ResponsiveTabRowExample to { onBackEvent -> ResponsiveTabRowExampleUI(onBackEvent) },
     CustomTextRenderingExample to { onBackEvent -> CustomTextRenderingExampleUI(onBackEvent) },
