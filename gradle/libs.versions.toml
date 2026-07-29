@@ -138,7 +138,7 @@ kotlinTestJunit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.r
 kotlinTest = { module = "org.jetbrains.kotlin:kotlin-test" }
 
 # UI Test Dependency
-junitNoVersion = { module = "androidx.compose.ui:ui-test-junit4"}
+# ui-test-junit4 는 위 junit4 별칭 하나로 통일한다. (DEP-VERSION-02)
 testRunner = { module = "androidx.test:runner", version.ref = "runner" }
 testRules = { module = "androidx.test:rules", version.ref = "rules" }
 testManifest = { module = "androidx.compose.ui:ui-test-manifest" }
@@ -190,11 +190,9 @@ pagingRuntime = { module = "androidx.paging:paging-runtime", version.ref = "pagi
 pagingCompose = { module = "androidx.paging:paging-compose", version.ref = "pagingCompose" }
 
 # Glance Widget
+# glance-appwidget 이 glance 코어를 전이 포함한다.
+# material/material3/preview/appwidget-preview 는 실사용 import 0건이라 제거. (DEP-DEAD-03)
 glanceAppwidget = { module = "androidx.glance:glance-appwidget", version.ref = "glance" }
-glanceMaterial3 = { module = "androidx.glance:glance-material3", version.ref = "glance" }
-glanceMaterial = { module = "androidx.glance:glance-material", version.ref = "glance" }
-glancePreview = { module = "androidx.glance:glance-preview", version.ref = "glance" }
-glanceAppwidgetPreview = { module = "androidx.glance:glance-appwidget-preview", version.ref = "glance" }
 
 # Biometric
 biometric = { module = "androidx.biometric:biometric", version.ref = "biometric" }
@@ -239,7 +237,7 @@ unitTest = [
 ]
 
 uiTest = [
-    "junitNoVersion",
+    "junit4",
     "espressoCore",
     "testRunner",
     "testRules",
@@ -286,9 +284,5 @@ paging = [
 ]
 
 glance = [
-    "glanceAppwidget",
-    "glanceMaterial3",
-    "glanceMaterial",
-    "glancePreview",
-    "glanceAppwidgetPreview"
+    "glanceAppwidget"
 ]

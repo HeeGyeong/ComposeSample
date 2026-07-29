@@ -24,12 +24,12 @@ dependencies {
 
     // coordinator 모듈은 CoordinatorActivity + Composable UI를 포함하므로
     // Compose 의존성을 직접 선언합니다.
+    // (material3 는 core-dependencies.gradle 에서 공통 제공되므로 여기서 중복 선언하지 않습니다 — DEP-DUP-01)
     def composeBom = platform(libs.composeBom)
     implementation(composeBom)
 
     implementation(libs.activityCompose)
     implementation(libs.composeUi)
-    implementation(libs.material3)
     implementation(libs.runtime)
     implementation(libs.uiToolingPreview)
 

@@ -52,7 +52,7 @@ dependencies {
     implementation(project(':core'))
 
     // AndroidX Core
-    implementation(libs.lifecycleRuntimeKtx)
+    // lifecycleRuntimeKtx 는 아래 bundles.lifecycle 에 포함되어 있어 개별 선언하지 않는다. (DEP-DUP-01)
     implementation(libs.activityCompose)
 
     // Compose — BOM이 ui/animation/runtime 등 개별 버전을 통합 관리
@@ -83,8 +83,7 @@ dependencies {
     // SSE
     implementation(libs.okhttpEventSource)
 
-    // Adaptive Layout
-    implementation(libs.material3WindowSizeClass)
+    // Adaptive Layout(material3WindowSizeClass)은 core-dependencies.gradle 에서 공통 제공된다. (DEP-DUP-01)
 
     // Paging
     implementation(libs.bundles.paging)
