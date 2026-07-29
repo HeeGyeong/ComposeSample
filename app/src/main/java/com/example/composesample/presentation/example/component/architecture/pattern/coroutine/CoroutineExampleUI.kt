@@ -339,6 +339,9 @@ fun LaunchVsAsyncButton(
             // launch는 결과를 반환하지 않습니다.
             val launchResult = launch {
                 Log.d("CoroutineExample", "Launch result?")
+                // 블록 안에서 값을 만들어도 launch 는 Job 만 반환하므로 이 값은 버려진다.
+                // (아래 async 와의 대조가 이 예제의 핵심이라 의도적으로 남겨 둔 표현식)
+                @Suppress("UNUSED_EXPRESSION")
                 "Launch result"
             }
 

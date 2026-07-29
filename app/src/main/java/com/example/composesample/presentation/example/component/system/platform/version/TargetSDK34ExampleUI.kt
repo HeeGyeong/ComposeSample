@@ -150,8 +150,6 @@ fun PermissionButton(
             bitmap?.let { _ ->
                 // logic
                 Log.d("TargetSDK", "photoBitmap - photo : $bitmap")
-            } ?: run {
-                Unit
             }
         }
 
