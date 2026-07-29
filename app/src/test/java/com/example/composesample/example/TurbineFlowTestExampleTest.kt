@@ -80,7 +80,8 @@ class TurbineFlowTestExampleTest {
         // then
         val state = viewModel.uiState.value
         assertTrue(state is FlowTestUiState.Success, "Success 상태여야 하지만: $state")
-        assertEquals(3, (state as FlowTestUiState.Success).items.size)
+        // assertTrue 의 contract 로 이미 스마트 캐스트되므로 별도 as 캐스트가 필요 없다
+        assertEquals(3, state.items.size)
     }
 
     @Test
@@ -128,7 +129,7 @@ class TurbineFlowTestExampleTest {
             // then: 이벤트 수신 확인
             val event = awaitItem()
             assertTrue(event is FlowTestEvent.ShowToast)
-            assertEquals("로딩 완료", (event as FlowTestEvent.ShowToast).message)
+            assertEquals("로딩 완료", event.message)
 
             cancelAndIgnoreRemainingEvents()
         }
@@ -144,7 +145,7 @@ class TurbineFlowTestExampleTest {
             // then
             val event = awaitItem()
             assertTrue(event is FlowTestEvent.ShowToast)
-            assertEquals("오류가 발생했습니다", (event as FlowTestEvent.ShowToast).message)
+            assertEquals("오류가 발생했습니다", event.message)
 
             cancelAndIgnoreRemainingEvents()
         }
