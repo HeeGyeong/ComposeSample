@@ -24,6 +24,9 @@ package com.example.composesample.presentation.example.component.system.backgrou
  * ### Service 수명주기에서 자주 깨지는 지점
  * - 5초 룰: startForegroundService() 이후 5초 안에 startForeground() 미호출 시
  *   ForegroundServiceDidNotStartInTimeException 으로 프로세스 종료.
+ *   → 조기 return 하는 검사(권한 확인 등)를 startForeground 앞에 두면 그 경로 자체가 계약 위반이 된다.
+ *   → 중지 액션처럼 startForeground 를 부르지 않는 분기는 startForegroundService 가 아니라
+ *     startService 로 보내야 한다(이미 FGS 가 떠 있으면 백그라운드에서도 startService 가 허용됨).
  * - START_STICKY 재생성 시 onStartCommand 의 intent 가 null 로 들어온다(액션 분기에서 반드시 처리).
  * - Android 12+ 는 앱이 백그라운드일 때 서비스 시작 시 ForegroundServiceStartNotAllowedException.
  * - onDestroy 에서 LocationManager.removeUpdates + CoroutineScope.cancel 을 함께 수행.

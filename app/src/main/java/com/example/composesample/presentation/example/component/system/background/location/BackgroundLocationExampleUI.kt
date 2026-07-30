@@ -428,7 +428,11 @@ private fun BgLocationLifecycleCard() {
         Text(
             text = "• 5초 룰: startForegroundService() 로 시작했다면 5초 안에 startForeground() 를 " +
                     "불러야 합니다. 놓치면 ForegroundServiceDidNotStartInTimeException 으로 프로세스가 죽습니다. " +
-                    "그래서 권한 확인과 채널 생성만 앞에 두고, 위치 구독은 startForeground 이후로 미룹니다.\n" +
+                    "그래서 이 예제는 권한 검사보다 startForeground 를 먼저 호출합니다 — 권한 검사를 앞에 두면 " +
+                    "권한이 회수된 순간 startForeground 없이 return 하게 되어 그 자체가 계약 위반이 됩니다.\n" +
+                    "• 중지 경로는 startForegroundService 로 깨우면 안 됩니다. 중지 분기는 startForeground 를 " +
+                    "부르지 않으므로 같은 계약에 걸립니다. 이미 FGS 가 떠 있는 앱은 백그라운드에서도 " +
+                    "startService 가 허용되므로 중지에는 startService 를 씁니다.\n" +
                     "• START_STICKY: 시스템이 서비스를 되살릴 때 intent 가 null 로 들어옵니다. " +
                     "이 분기를 처리하지 않으면 재생성된 서비스가 아무 일도 하지 않고 남아 있게 됩니다.\n" +
                     "• Android 12+: 앱이 백그라운드일 때 서비스를 시작하면 " +

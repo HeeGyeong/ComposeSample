@@ -109,8 +109,7 @@ class LocationTrackingService : Service() {
             // 사용자가 명시적으로 끈 것이므로 되살리지 않는다
             START_NOT_STICKY
         } else {
-            startTracking()
-            START_STICKY
+            if (startTracking()) START_STICKY else START_NOT_STICKY
         }
     }
 
@@ -126,30 +125,27 @@ class LocationTrackingService : Service() {
 
     // ==================== 추적 시작 / 중지 ====================
 
-    private fun startTracking() {
-        if (_state.value.isRunning) {
-            addEvent("이미 실행 중 — onStartCommand 만 다시 호출됨")
-            return
-        }
-
-        startedAtMs = System.currentTimeMillis()
-        _state.value = LocationTrackingState(isRunning = true)
-        addEvent("onStartCommand 진입")
-
-        // Android 14(API 34)+ 는 location 타입 FGS 를 시작하는 시점에 위치 런타임 권한이
-        // 반드시 granted 여야 한다. 없으면 startForeground 가 SecurityException 을 던진다.
-        if (!hasLocationPermission()) {
-            addEvent("위치 권한 없음 → 서비스 자체 종료")
-            _state.value = LocationTrackingState(isRunning = false)
-            stopSelf()
-            return
+    /**
+     * 추적 시작. 포그라운드 승격에 성공했으면 true.
+     *
+     * **순서가 곧 안전장치다.** [start] 는 startForegroundService() 로 서비스를 깨우는데,
+     * 이 경우 5초 안에 startForeground() 를 부르지 않으면 시스템이
+     * ForegroundServiceDidNotStartInTimeException 으로 프로세스를 죽인다.
+     * 따라서 **먼저 빠져나갈 수 있는 어떤 검사보다 startForeground 를 앞에 둔다.**
+     * (권한 검사를 앞에 두면, 권한이 회수된 순간 startForeground 없이 return 하게 되어 계약 위반)
+     */
+    private fun startTracking(): Boolean {
+        val alreadyRunning = _state.value.isRunning
+        if (alreadyRunning) {
+            addEvent("이미 실행 중 — onStartCommand 재진입")
+        } else {
+            startedAtMs = System.currentTimeMillis()
+            _state.value = LocationTrackingState(isRunning = true)
+            addEvent("onStartCommand 진입")
         }
 
         createNotificationChannel()
 
-        // startForegroundService() 로 시작했다면 5초 안에 반드시 startForeground() 를 불러야 한다.
-        // 안 부르면 시스템이 ForegroundServiceDidNotStartInTimeException 으로 프로세스를 죽인다.
-        // → 무거운 초기화(권한 확인·채널 생성 제외)는 전부 startForeground 이후로 미룬다.
         try {
             ServiceCompat.startForeground(
                 this,
@@ -157,20 +153,34 @@ class LocationTrackingService : Service() {
                 buildNotification(_state.value),
                 foregroundServiceType()
             )
-            _state.value = _state.value.copy(notifyCount = 1)
+            _state.value = _state.value.copy(notifyCount = _state.value.notifyCount + 1)
             addEvent("startForeground 성공 (type=location)")
         } catch (e: Exception) {
             // API 31+ 백그라운드에서 시작 시 ForegroundServiceStartNotAllowedException,
-            // API 34+ 권한 미보유 시 SecurityException 이 여기로 온다.
+            // API 34+ 위치 권한 미보유 시 SecurityException 이 여기로 온다.
             Log.e(TAG, "startForeground 실패", e)
             addEvent("startForeground 실패: ${e.javaClass.simpleName}")
             _state.value = LocationTrackingState(isRunning = false)
             stopSelf()
-            return
+            return false
         }
 
-        startLocationUpdates()
-        startTicker()
+        // 승격에 성공한 뒤부터는 계약이 충족된 상태라 언제든 안전하게 중단할 수 있다.
+        // API 33 이하에는 startForeground 단계의 위치 권한 검사가 없으므로 여기서 직접 확인한다.
+        if (!hasLocationPermission()) {
+            addEvent("위치 권한 없음 → 서비스 종료")
+            _state.value = LocationTrackingState(isRunning = false)
+            ServiceCompat.stopForeground(this, ServiceCompat.STOP_FOREGROUND_REMOVE)
+            stopSelf()
+            return false
+        }
+
+        // 재진입 시 리스너와 타이머가 중복 등록되지 않도록 한 번만 구독한다
+        if (!alreadyRunning) {
+            startLocationUpdates()
+            startTicker()
+        }
+        return true
     }
 
     private fun stopTracking() {
@@ -411,12 +421,23 @@ class LocationTrackingService : Service() {
             )
         }
 
-        /** 서비스 중지 — 액션을 담아 onStartCommand 로 보내 정리 절차를 태운다 */
+        /**
+         * 서비스 중지 — 액션을 담아 onStartCommand 로 보내 정리 절차를 태운다.
+         *
+         * 여기서는 startForegroundService 가 아니라 **startService 를 쓴다.**
+         * 중지 분기는 startForeground() 를 부르지 않으므로, startForegroundService 로 깨우면
+         * 5초 계약을 위반해 프로세스가 죽는다. 이미 포그라운드 서비스가 돌고 있는 앱은
+         * 백그라운드 상태에서도 startService 가 허용되므로(알림의 중지 액션 포함) 문제가 없다.
+         */
         fun stop(context: Context) {
-            ContextCompat.startForegroundService(
-                context,
-                Intent(context, LocationTrackingService::class.java).setAction(ACTION_STOP)
-            )
+            val intent = Intent(context, LocationTrackingService::class.java)
+                .setAction(ACTION_STOP)
+            runCatching { context.startService(intent) }
+                .onFailure { throwable ->
+                    // 서비스가 이미 죽어 있고 앱도 백그라운드면 IllegalStateException 이 날 수 있다
+                    Log.e(TAG, "stopService 요청 실패", throwable)
+                    addEvent("중지 요청 실패: ${throwable.javaClass.simpleName}")
+                }
         }
 
         fun clearEvents() {
