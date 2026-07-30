@@ -9,6 +9,13 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <!-- 백그라운드 위치 추적 (API 29+). Android 11+ 는 런타임 다이얼로그로 받을 수 없고 설정 화면에서 '항상 허용'을 골라야 한다 -->
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+    <!-- Foreground Service 알림 (API 33+). 없으면 서비스는 돌지만 알림이 보이지 않는다 -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <!-- Foreground Service. LOCATION 타입은 API 34+ 에서 별도 선언 + 위치 런타임 권한이 함께 필요하다 -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />
 
     <uses-feature
         android:name="android.hardware.camera"
@@ -187,6 +194,12 @@
                 <action android:name="android.service.quicksettings.action.QS_TILE" />
             </intent-filter>
         </service>
+
+        <!-- Background Location Tracking Foreground Service -->
+        <service
+            android:name=".presentation.example.component.system.background.location.LocationTrackingService"
+            android:exported="false"
+            android:foregroundServiceType="location" />
 
         <!-- Memo Input Activity (for Quick Settings Tile) -->
         <activity

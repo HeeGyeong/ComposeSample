@@ -217,9 +217,10 @@ object ConstValue {
     const val GeminiNanoExample = "geminiNanoExample"
 
     // ==================== 백그라운드 작업 예제 ====================
-    // WorkManager(백그라운드 작업), AudioRecorder(음성 녹음/재생)
+    // WorkManager(백그라운드 작업), AudioRecorder(음성 녹음/재생), BackgroundLocation(Foreground Service 로 앱 이탈 후에도 위치 지속 추적 — 권한 3단계 플로우 + foregroundServiceType + WorkManager 스냅샷 대조)
     const val WorkManagerExample = "workManagerExample"
     const val AudioRecorderExample = "audioRecorderExample"
+    const val BackgroundLocationExample = "backgroundLocationExample"
 
     // ==================== 비디오 재생 예제 ====================
     // Media3VideoPlayer(Media3 ExoPlayer + PlayerView 통합 재생 — AndroidView 로 PlayerView 임베딩, Player.Listener 로 재생 상태/진행률 실시간 추적, 화면 이탈 시 release + 백그라운드 전환 시 자동 일시정지)

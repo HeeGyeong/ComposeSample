@@ -52,6 +52,7 @@ import com.example.composesample.presentation.example.component.system.security.
 import com.example.composesample.presentation.example.component.system.security.ScreenshotDetectionExampleUI
 import com.example.composesample.presentation.example.component.system.platform.haptic.HapticFeedbackExampleUI
 import com.example.composesample.presentation.example.component.system.platform.predictiveback.PredictiveBackExampleUI
+import com.example.composesample.presentation.example.component.system.background.location.BackgroundLocationExampleUI
 import com.example.composesample.presentation.example.component.system.background.workmanager.WorkManagerUI
 import com.example.composesample.presentation.example.component.system.media.recorder.AudioRecorderUI
 import com.example.composesample.presentation.example.component.system.media.video.Media3VideoPlayerExampleUI
@@ -283,6 +284,7 @@ import com.example.composesample.util.ConstValue.RaceConditionExample
 import com.example.composesample.util.ConstValue.SelectExpressionExample
 import com.example.composesample.util.ConstValue.StrictModeExample
 import com.example.composesample.util.ConstValue.WorkManagerExample
+import com.example.composesample.util.ConstValue.BackgroundLocationExample
 import com.example.composesample.util.ConstValue.DynamicAppLinksExample
 import com.example.composesample.util.ConstValue.BiometricAuthExample
 import com.example.composesample.util.ConstValue.HapticFeedbackExample
@@ -335,6 +337,7 @@ val exampleUiRegistry: Map<String, @Composable (onBackEvent: () -> Unit) -> Unit
     AudioRecorderExample to { onBackEvent -> AudioRecorderUI(onBackEvent) },
     Media3VideoPlayerExample to { onBackEvent -> Media3VideoPlayerExampleUI(onBackEvent) },
     WorkManagerExample to { onBackEvent -> WorkManagerUI(onBackEvent) },
+    BackgroundLocationExample to { onBackEvent -> BackgroundLocationExampleUI(onBackEvent) },
     PullToRefreshExample to { onBackEvent -> PullToRefreshUI(onBackEvent) },
     PullScreenPager to { onBackEvent -> PullScreenPagerUI(onBackEvent) },
     FlingBehaviorExample to { onBackEvent -> LazyColumnFlingBehaviorExampleUI(onBackEvent) },

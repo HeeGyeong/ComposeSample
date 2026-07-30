@@ -577,5 +577,12 @@ val examples2026 = listOf(
         description = "환자 모니터처럼 끊임없이 흘러가는 생체신호 파형을 외부 라이브러리 없이 Canvas로 렌더링: ① 고정 샘플레이트(250Hz)와 가변 프레임레이트를 분리 — withFrameNanos의 dt로 이번 프레임에 밀어 넣을 샘플 개수를 계산하고 소수부는 다음 프레임으로 이월해 기기 주사율(60/90/120Hz)과 무관하게 동일한 시간축 유지, ② 고정 크기 FloatArray 링 버퍼(head 인덱스 순환)로 프레임당 할당·리스트 재구성 0 — 스냅샷 리스트 대신 평범한 배열을 쓰는 이유를 대조, ③ Sweep(커서가 좌→우로 훑으며 지난 파형을 덮어씀, 병원 모니터 방식)과 Scroll(파형 전체가 우→좌로 흐름, 오실로스코프 방식) 두 렌더 모드를 같은 버퍼로 구현, ④ ECG는 P-Q-R-S-T 복합파를 가우시안 합으로, PPG는 수축기 피크+중복맥 봉우리로 합성하고 BPM·잡음 슬라이더로 실시간 조절, ⑤ 파형 갱신 상태를 컴포지션이 아닌 드로우 단계에서 읽어 리컴포지션 0회로 재드로우만 유발하는 패턴을 컴포지션/드로우 횟수 카운터로 실측 대조",
         blogUrl = "",
         exampleType = ConstValue.WaveformCanvasExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 07. 31",
+        title = "백그라운드 위치 추적 (Foreground Service + WorkManager)",
+        description = "앱을 벗어나도 끊기지 않는 위치 추적을 Foreground Service 로 구현하고, 같은 일을 WorkManager 로 했을 때의 한계를 한 화면에서 대조: ① 권한이 하나가 아니라 절차라는 점을 실동작으로 확인 — 포그라운드 위치(FINE/COARSE) → 알림(POST_NOTIFICATIONS, API 33+) → 백그라운드 위치(ACCESS_BACKGROUND_LOCATION, API 29+) 순서로만 받을 수 있고 Android 11+ 는 마지막 단계를 런타임 다이얼로그로 받을 수 없어 앱 설정 화면으로 유도해야 함(ON_RESUME 마다 권한 재확인), ② foregroundServiceType=\"location\" 서비스를 실제로 시작해 홈 버튼으로 앱을 내려도 알림이 남고 경과 시간·위치 수신 횟수가 계속 증가하는 것을 확인 — LocationManager.requestLocationUpdates 구독 + 첫 fix 전에는 getLastKnownLocation 으로 초기값 표시, 알림은 매초가 아니라 5초 주기로만 갱신, ③ 5초 안에 startForeground 를 부르지 않으면 프로세스가 죽는 제약·START_STICKY 재생성 시 intent 가 null 로 들어오는 분기·Android 12+ 백그라운드 시작 제한·Android 14+ 런타임 권한 요구를 코드와 함께 정리, ④ 대조군으로 CoroutineWorker 를 즉시/15분 주기로 실행해 '구독이 아니라 단발 스냅샷'임을 보이고, PeriodicWorkRequest 최소 주기 15분과 work-runtime 의 SystemForegroundService 가 foregroundServiceType 을 선언하지 않는다는 사실로 지속 추적을 WorkManager 로 대체할 수 없는 이유를 설명",
+        blogUrl = "",
+        exampleType = ConstValue.BackgroundLocationExample
     )
 )
