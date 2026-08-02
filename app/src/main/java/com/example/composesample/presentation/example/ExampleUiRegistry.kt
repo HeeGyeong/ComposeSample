@@ -97,6 +97,7 @@ import com.example.composesample.presentation.example.component.ui.style.Foundat
 import com.example.composesample.presentation.example.component.ui.layout.header.StickyHeaderExampleUI
 import com.example.composesample.presentation.example.component.ui.layout.lazycolumn.LazyColumnFlingBehaviorExampleUI
 import com.example.composesample.presentation.example.component.ui.layout.lazycolumn.LazyColumnIssueUI
+import com.example.composesample.presentation.example.component.ui.layout.lazycolumn.LazyListReusePoolExampleUI
 import com.example.composesample.presentation.example.component.ui.layout.lazycolumn.LazyStaggeredGridExampleUI
 import com.example.composesample.presentation.example.component.ui.layout.lazycolumn.ReverseLazyColumnExampleUI
 import com.example.composesample.presentation.example.component.ui.layout.pager.PullScreenPagerUI
@@ -208,6 +209,7 @@ import com.example.composesample.util.ConstValue.AccessibleFocusIndicatorExample
 import com.example.composesample.util.ConstValue.LargeContentViewerExample
 import com.example.composesample.util.ConstValue.LanguageSettingExample
 import com.example.composesample.util.ConstValue.LazyColumnExample
+import com.example.composesample.util.ConstValue.LazyListReusePoolExample
 import com.example.composesample.util.ConstValue.LazyStaggeredGridExample
 import com.example.composesample.util.ConstValue.LocalContextStringsExample
 import com.example.composesample.util.ConstValue.LocalLanguageChangeExample
@@ -328,6 +330,7 @@ import com.example.composesample.util.ConstValue.PreviewDrivenScreenshotExample
 val exampleUiRegistry: Map<String, @Composable (onBackEvent: () -> Unit) -> Unit> = mapOf(
     LazyColumnExample to { onBackEvent -> LazyColumnIssueUI(onBackEvent) },
     LazyStaggeredGridExample to { onBackEvent -> LazyStaggeredGridExampleUI(onBackEvent) },
+    LazyListReusePoolExample to { onBackEvent -> LazyListReusePoolExampleUI(onBackEvent) },
     ClickEventExample to { onBackEvent -> ClickEventUI(onBackEvent) },
     FlexBoxLayoutExample to { onBackEvent -> FlexBoxUI(onBackEvent) },
     FlowRowLayoutExample to { onBackEvent -> FlowRowLayoutExampleUI(onBackEvent) },

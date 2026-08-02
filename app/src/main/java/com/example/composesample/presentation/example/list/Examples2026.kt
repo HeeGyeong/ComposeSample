@@ -584,5 +584,12 @@ val examples2026 = listOf(
         description = "앱을 벗어나도 끊기지 않는 위치 추적을 Foreground Service 로 구현하고, 같은 일을 WorkManager 로 했을 때의 한계를 한 화면에서 대조: ① 권한이 하나가 아니라 절차라는 점을 실동작으로 확인 — 포그라운드 위치(FINE/COARSE) → 알림(POST_NOTIFICATIONS, API 33+) → 백그라운드 위치(ACCESS_BACKGROUND_LOCATION, API 29+) 순서로만 받을 수 있고 Android 11+ 는 마지막 단계를 런타임 다이얼로그로 받을 수 없어 앱 설정 화면으로 유도해야 함(ON_RESUME 마다 권한 재확인), ② foregroundServiceType=\"location\" 서비스를 실제로 시작해 홈 버튼으로 앱을 내려도 알림이 남고 경과 시간·위치 수신 횟수가 계속 증가하는 것을 확인 — LocationManager.requestLocationUpdates 구독 + 첫 fix 전에는 getLastKnownLocation 으로 초기값 표시, 알림은 매초가 아니라 5초 주기로만 갱신, ③ 5초 안에 startForeground 를 부르지 않으면 프로세스가 죽는 제약·START_STICKY 재생성 시 intent 가 null 로 들어오는 분기·Android 12+ 백그라운드 시작 제한·Android 14+ 런타임 권한 요구를 코드와 함께 정리, ④ 대조군으로 CoroutineWorker 를 즉시/15분 주기로 실행해 '구독이 아니라 단발 스냅샷'임을 보이고, PeriodicWorkRequest 최소 주기 15분과 work-runtime 의 SystemForegroundService 가 foregroundServiceType 을 선언하지 않는다는 사실로 지속 추적을 WorkManager 로 대체할 수 없는 이유를 설명",
         blogUrl = "",
         exampleType = ConstValue.BackgroundLocationExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 08. 03",
+        title = "LazyList contentType 재사용 풀 함정",
+        description = "LazyColumn 의 contentType 에 아이템 고유값을 넘기면 메모리가 회수되지 않는 이유를 실측으로 확인: ① Compose 는 화면 밖으로 나간 아이템의 컴포지션(슬롯)을 재사용 풀에 넣어 뒀다가 같은 contentType 의 새 아이템에 돌려 쓰는데, 풀 정리 규칙이 'contentType 당 7개까지만 유지'라 전체 슬롯 수에는 상한이 없다(foundation 1.11.1 의 LazyLayoutItemReusePolicy.getSlotsToRetain 을 디스어셈블해 확인), ② 그래서 contentType 에 아이템마다 다른 값을 넘기면 버킷이 아이템 수만큼 생기고 각 버킷에 1개씩만 들어 있어 정리 조건에 영원히 걸리지 않는다 — 스크롤로 지나친 아이템의 슬롯이 전부 남는다, ③ 지정 안 함(null, 버킷 1개) / 클래스 단위(item::class, 버킷 2개) / 아이템 고유값(버킷 200개) 세 모드를 같은 리스트에 적용하고 자동 스크롤로 끝까지 훑은 뒤 System.gc() 를 유도해 WeakReference 로 살아남은 페이로드 수·보유 크기·힙 사용량을 대조, ④ 남은 슬롯이 붙들고 있는 것은 빈 껍데기가 아니라 remember 값과 modifier 람다가 캡처한 객체라는 점을 아이템당 64KB 페이로드를 drawBehind 람다에 캡처시켜 재현, ⑤ key(식별자 — 아이템마다 달라야 함)와 contentType(분류 — 레이아웃 종류만큼만) 의 역할 차이와 '값의 가짓수가 데이터 양에 비례하면 잘못 쓴 것'이라는 판별 기준 정리",
+        blogUrl = "",
+        exampleType = ConstValue.LazyListReusePoolExample
     )
 )
