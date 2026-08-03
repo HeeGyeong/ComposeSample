@@ -98,16 +98,22 @@ app/.../component/{category}/{subcategory}/NewFeatureExampleUI.kt
 - **Function signature**: `fun NewFeatureExampleUI(onBackEvent: () -> Unit)`
 - Reference/blog URLs go only in `exampleGuide.kt` (not in the UI file).
 
-### Step 4: Add routing to `ExampleRouter.kt`
+### Step 4: Register routing in `ExampleUiRegistry.kt`
+
+Routing is a **map lookup, not a when-expression** — `ExampleRouter.kt` only branches on `ExampleMoveType` and then looks the type up in `exampleUiRegistry`. An unregistered type falls back to a "Dummy" screen instead of failing the build, so double-check this step.
 
 ```kotlin
+// app/.../presentation/example/ExampleUiRegistry.kt
 import com.example.composesample.presentation.example.component.{category}.NewFeatureExampleUI
 import com.example.composesample.util.ConstValue.NewFeatureExample
 
-NewFeatureExample -> {
-    NewFeatureExampleUI(onBackEvent)
-}
+val exampleUiRegistry: Map<String, @Composable (onBackEvent: () -> Unit) -> Unit> = mapOf(
+    // ...
+    NewFeatureExample to { onBackEvent -> NewFeatureExampleUI(onBackEvent) },
+)
 ```
+
+Activity-based examples (rare) skip the registry: set `moveType = ExampleMoveType.ACTIVITY` on the `ExampleObject` and add a `startActivity` case to the `ExampleMoveType.ACTIVITY` branch in `ExampleRouter.kt`.
 
 ---
 

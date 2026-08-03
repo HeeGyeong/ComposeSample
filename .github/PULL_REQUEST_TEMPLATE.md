@@ -20,7 +20,7 @@
 - [ ] Step 2: `ExampleObject` added to `Examples20XX.kt` (`blogUrl = ""`, registered in `ExampleObjectList.kt` if a new year file)
 - [ ] Step 2-1: if it is a sub-category group — children added to `subCategoryList()`, parent's `exampleType` uses the group constant
 - [ ] Step 3: UI file created as `*ExampleUI.kt` with `fun *ExampleUI(onBackEvent: () -> Unit)`
-- [ ] Step 4: routing added to `ExampleRouter.kt`
+- [ ] Step 4: routing entry added to the `exampleUiRegistry` map in `ExampleUiRegistry.kt` (Activity-type examples: `ExampleRouter.kt` `ACTIVITY` branch instead)
 - [ ] Reference URLs placed only in `exampleGuide.kt`; `blogUrl` is `""` or the `blogUrl(postId)` helper — never a raw URL string
 
 ## Verification

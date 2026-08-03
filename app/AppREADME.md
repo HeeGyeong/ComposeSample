@@ -139,7 +139,7 @@ Uses Koin. Define modules in the `di` package and register all modules in `Injec
 1. Add a constant to `ConstValue.kt`
 2. Add an `ExampleObject` entry to `Examples20XX.kt`
 3. Create the UI file (`*ExampleUI.kt`) and `exampleGuide.kt` under the relevant `component/` category
-4. Add routing to `ExampleRouter.kt`
+4. Add a routing entry to the `exampleUiRegistry` map in `ExampleUiRegistry.kt`
 
 For detailed rules, see `CLAUDE.md` (the 4-step "How to Add a New Example") and the `docs/` folder.
 

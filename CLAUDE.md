@@ -40,8 +40,9 @@ presentation/example/
 │   ├── system/       # System integration (platform, media, background)
 │   └── architecture/ # Architecture patterns & dev tools
 ├── list/             # ExampleObject list definitions
-├── ExampleRouter.kt  # Example routing (when-expression)
-└── ExampleObjectList.kt # Aggregation of the full example list
+├── ExampleUiRegistry.kt # exampleType → Composable routing map (add new examples here)
+├── ExampleRouter.kt  # ExampleMoveType dispatch + registry lookup
+└── ExampleObjectList.kt # Aggregation of the full example list + subCategoryList()
 ```
 
 ---
@@ -133,17 +134,25 @@ app/.../component/{category}/{subcategory}/NewFeatureExampleUI.kt
  */
 ```
 
-### Step 4: Add routing to `ExampleRouter.kt`
+### Step 4: Register routing in `ExampleUiRegistry.kt`
+
+Routing is a **map lookup, not a when-expression**. `ExampleRouter.kt` only branches on `ExampleMoveType` and then looks the type up in `exampleUiRegistry`; an unregistered type silently falls back to a "Dummy" screen.
+
 ```kotlin
-// add import
+// app/.../presentation/example/ExampleUiRegistry.kt
+
+// 1) add two imports
 import com.example.composesample.presentation.example.component.{category}.NewFeatureExampleUI
 import com.example.composesample.util.ConstValue.NewFeatureExample
 
-// add to the when-expression
-NewFeatureExample -> {
-    NewFeatureExampleUI(onBackEvent)
-}
+// 2) add one entry to the map
+val exampleUiRegistry: Map<String, @Composable (onBackEvent: () -> Unit) -> Unit> = mapOf(
+    // ...
+    NewFeatureExample to { onBackEvent -> NewFeatureExampleUI(onBackEvent) },
+)
 ```
+
+**Activity-based examples only** (rare — currently `BottomNavigationExample` alone): the registry is for `ExampleMoveType.UI`. Instead set `moveType = ExampleMoveType.ACTIVITY` on the `ExampleObject` and add a `startActivity` case to the `ExampleMoveType.ACTIVITY` branch in `ExampleRouter.kt`.
 
 ---
 
@@ -194,7 +203,7 @@ When the user types **"사전작업"** (pre-work), perform the procedure below:
 1. **Understand the whole project**
    - `ConstValue.kt` — review all registered example constants
    - `Examples20XX.kt` files — check recently added examples
-   - `ExampleRouter.kt` — check for missing routing entries
+   - `ExampleUiRegistry.kt` — check for missing routing entries (`ExampleObject.exampleType` ↔ `exampleUiRegistry` key diff). Group constants (`Shimmer`/`FlingBehavior`/`BottomSheet`/`NavigationDraw`) and `BottomNavigationExample` always show up as gaps — known false positives, not real gaps
    - Main source files — look for deprecated APIs, dead code, architecture violations
 
 2. **Classify improvement items**
