@@ -34,7 +34,9 @@ val examples2025 = listOf(
         lastUpdate = "25. 01. 26",
         title = "Shimmer Example",
         description = "Shimmer를 사용하는 방법에 대해 알아보기 위한 예제.",
-        exampleType = ConstValue.UIShimmerExample,
+        // 그룹 부모 항목이므로 leaf 상수가 아닌 그룹 상수를 쓴다.
+        // (자식 목록은 ExampleObjectList.subCategoryList() 에 있고, 부모의 exampleType 은 라우팅에 쓰이지 않는다)
+        exampleType = ConstValue.Shimmer,
     ),
     ExampleObject(
         lastUpdate = "25. 02. 10",

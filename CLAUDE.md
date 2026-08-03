@@ -69,10 +69,17 @@ ExampleObject(
     lastUpdate = "26. MM. DD",  // two-digit year, e.g. "26. 03. 22"
     title = "Example title",
     description = "Example description",
-    blogUrl = "",  // Blog links belong only in exampleGuide.kt; this must always be an empty string
+    blogUrl = "",  // a new example always starts empty — see the blogUrl rule below
     exampleType = ConstValue.NewFeatureExample
 )
 ```
+
+**`blogUrl` rule**: a new example is **always** registered with `blogUrl = ""`, because the explanatory post does not exist yet. Once the post is actually published, replace it with the `blogUrl(postId)` helper in `list/BlogUrlHelper.kt` — a non-empty value is what makes the "Explain Blog" button appear on the example card.
+```kotlin
+blogUrl = blogUrl(194),  // ✅ helper — the base URL lives only in BlogUrlHelper.kt
+blogUrl = "https://heegs.tistory.com/194",  // ❌ never hardcode a raw URL string
+```
+Reference URLs used for studying the topic (official docs, other people's articles) still belong **only in `exampleGuide.kt`**, never in the example list or the UI file.
 
 When adding the first example of a new year/month, also update `UpdateDate` in `ConstValue.kt`:
 ```kotlin
@@ -80,6 +87,35 @@ const val UpdateDate = "26년 3월"  // update to the current month
 ```
 
 `ExampleObjectList.kt` aggregates the per-year files, so when adding a new year file (`Examples20XX.kt`), register it there as well.
+
+### Step 2-1 (only for sub-category groups): register children in `subCategoryList()`
+
+Some examples are grouped: the card in the main list opens a **child list** instead of a screen. Children live in a **second registration path** — `subCategoryList()` in `ExampleObjectList.kt` — not in `Examples20XX.kt`.
+
+```kotlin
+// 1) Parent — in Examples20XX.kt. Both fields use the GROUP constant.
+ExampleObject(
+    subCategory = ConstValue.Shimmer,
+    title = "Shimmer Example",
+    description = "...",
+    exampleType = ConstValue.Shimmer  // group constant, NOT a leaf constant
+)
+
+// 2) Children — in ExampleObjectList.kt subCategoryList()
+insertExampleObject.add(
+    ExampleObject(
+        subCategory = ConstValue.Shimmer,          // same group constant as the parent
+        title = "UI Shimmer Example",
+        description = "...",
+        exampleType = ConstValue.UIShimmerExample  // leaf constant → needs Step 4 routing
+    )
+)
+```
+
+- The parent's `exampleType` is **never routed**: when `subCategory` is non-empty, `BlogExampleActivity` calls `setSubCategoryList(subCategory)` instead of navigating. So the parent must carry the group constant — putting a leaf constant there silently duplicates a child entry.
+- **Only the children need Step 4 routing.**
+- Existing groups: `Shimmer` / `FlingBehavior` / `BottomSheet` / `NavigationDraw` / `Compose17FeaturesExample`.
+- Group constants intentionally have no routing entry, so a routing-gap scan always reports them (plus `BottomNavigationExample`) — a known false positive, not a gap.
 
 ### Step 3: Create the UI file
 ```

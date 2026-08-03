@@ -8,112 +8,112 @@ val examples2026 = listOf(
         lastUpdate = "26. 01. 10",
         title = "Quick Settings Tile",
         description = "빠른 설정 타일을 활용한 마이크로 인터랙션 패턴 구현",
-        blogUrl = "https://heegs.tistory.com/194",
+        blogUrl = blogUrl(194),
         exampleType = ConstValue.QuickSettingsTileExample
     ),
     ExampleObject(
         lastUpdate = "26. 01. 17",
         title = "Fancy TopAppBar",
         description = "Collapsing Toolbar와 다양한 스크롤 동작을 가진 고급 TopAppBar 구현",
-        blogUrl = "https://heegs.tistory.com/195",
+        blogUrl = blogUrl(195),
         exampleType = ConstValue.FancyTopAppBarExample
     ),
     ExampleObject(
         lastUpdate = "26. 01. 19",
         title = "Canvas Shapes & Animations",
         description = "Canvas를 활용한 도형 그리기와 애니메이션 기초",
-        blogUrl = "https://heegs.tistory.com/196",
+        blogUrl = blogUrl(196),
         exampleType = ConstValue.CanvasShapesExample
     ),
     ExampleObject(
         lastUpdate = "26. 01. 20",
         title = "Responsive TabRow",
         description = "SubcomposeLayout을 활용한 반응형 탭 구현",
-        blogUrl = "https://heegs.tistory.com/197",
+        blogUrl = blogUrl(197),
         exampleType = ConstValue.ResponsiveTabRowExample
     ),
     ExampleObject(
         lastUpdate = "26. 01. 25",
         title = "Custom Text Rendering",
         description = "TextMeasurer와 Canvas를 활용한 커스텀 텍스트 렌더링",
-        blogUrl = "https://heegs.tistory.com/198",
+        blogUrl = blogUrl(198),
         exampleType = ConstValue.CustomTextRenderingExample
     ),
     ExampleObject(
         lastUpdate = "26. 01. 26",
         title = "Swipe to Dismiss (Material 3)",
         description = "Material 3의 SwipeToDismissBox를 활용한 스와이프 제스처",
-        blogUrl = "https://heegs.tistory.com/199",
+        blogUrl = blogUrl(199),
         exampleType = ConstValue.SwipeToDismissM3Example
     ),
     ExampleObject(
         lastUpdate = "26. 02. 05",
         title = "Shared Element Transitions",
         description = "화면 간 요소를 부드럽게 전환하는 공유 요소 애니메이션",
-        blogUrl = "https://heegs.tistory.com/200",
+        blogUrl = blogUrl(200),
         exampleType = ConstValue.SharedElementTransitionExample
     ),
     ExampleObject(
         lastUpdate = "26. 02. 07",
         title = "Dial Component",
         description = "Canvas로 구현하는 원형 다이얼: 범위 설정, 스냅, 멀티턴",
-        blogUrl = "https://heegs.tistory.com/201",
+        blogUrl = blogUrl(201),
         exampleType = ConstValue.DialComponentExample
     ),
     ExampleObject(
         lastUpdate = "26. 02. 13",
         title = "Embedded Photo Picker",
         description = "앱 내에서 직접 포토 피커를 임베드하여 사진/영상을 선택하는 방법",
-        blogUrl = "https://heegs.tistory.com/190",
+        blogUrl = blogUrl(190),
         exampleType = ConstValue.EmbeddedPhotoPickerExample
     ),
     ExampleObject(
         lastUpdate = "26. 02. 16",
         title = "CompositionLocal Tree Visualization",
         description = "Composition Tree에서 CompositionLocal의 데이터 흐름, 룩업, 섀도잉을 시각화",
-        blogUrl = "https://heegs.tistory.com/191",
+        blogUrl = blogUrl(191),
         exampleType = ConstValue.CompositionLocalTreeExample
     ),
     ExampleObject(
         lastUpdate = "26. 02. 19",
         title = "Retain API (Goodbye ViewModel)",
         description = "Compose 1.10 retain API로 ViewModel 없이 상태 보존하는 패턴",
-        blogUrl = "https://heegs.tistory.com/192",
+        blogUrl = blogUrl(192),
         exampleType = ConstValue.RetainApiExample
     ),
     ExampleObject(
         lastUpdate = "26. 02. 22",
         title = "Custom TopAppBarScrollBehavior",
         description = "RecyclerView 스크롤 이벤트를 커스텀 TopAppBarScrollBehavior로 처리하는 패턴",
-        blogUrl = "https://heegs.tistory.com/193",
+        blogUrl = blogUrl(193),
         exampleType = ConstValue.CustomScrollBehaviorExample
     ),
     ExampleObject(
         lastUpdate = "26. 02. 28",
         title = "Sticker Canvas (Gestures & Physics)",
         description = "드래그, 핀치 리사이즈, 회전, 스프링 물리, 필오프 애니메이션을 구현한 스티커 캔버스",
-        blogUrl = "https://heegs.tistory.com/202",
+        blogUrl = blogUrl(202),
         exampleType = ConstValue.StickerCanvasExample
     ),
     ExampleObject(
         lastUpdate = "26. 03. 04",
         title = "Large Content Viewer",
         description = "iOS의 Large Content Viewer를 Compose로 구현하고, 키보드·스크린 리더 내비게이션 지원",
-        blogUrl = "https://heegs.tistory.com/203",
+        blogUrl = blogUrl(203),
         exampleType = ConstValue.LargeContentViewerExample
     ),
     ExampleObject(
         lastUpdate = "26. 03. 11",
         title = "Motion Blur (Spinning Wheel)",
         description = "스피닝 휠에 모션 블러를 적용하는 방법: Ghost Frames, BlurMaskFilter, RenderEffect 비교",
-        blogUrl = "https://heegs.tistory.com/204",
+        blogUrl = blogUrl(204),
         exampleType = ConstValue.MotionBlurExample
     ),
     ExampleObject(
         lastUpdate = "26. 03. 15",
         title = "LocalContext for Strings (Anti-Pattern)",
         description = "Compose에서 문자열에 LocalContext 사용 금지: stringResource vs UiText sealed class 패턴",
-        blogUrl = "https://heegs.tistory.com/205",
+        blogUrl = blogUrl(205),
         exampleType = ConstValue.LocalContextStringsExample
     ),
     ExampleObject(
