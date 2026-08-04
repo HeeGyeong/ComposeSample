@@ -591,5 +591,12 @@ val examples2026 = listOf(
         description = "LazyColumn 의 contentType 에 아이템 고유값을 넘기면 메모리가 회수되지 않는 이유를 실측으로 확인: ① Compose 는 화면 밖으로 나간 아이템의 컴포지션(슬롯)을 재사용 풀에 넣어 뒀다가 같은 contentType 의 새 아이템에 돌려 쓰는데, 풀 정리 규칙이 'contentType 당 7개까지만 유지'라 전체 슬롯 수에는 상한이 없다(foundation 1.11.1 의 LazyLayoutItemReusePolicy.getSlotsToRetain 을 디스어셈블해 확인), ② 그래서 contentType 에 아이템마다 다른 값을 넘기면 버킷이 아이템 수만큼 생기고 각 버킷에 1개씩만 들어 있어 정리 조건에 영원히 걸리지 않는다 — 스크롤로 지나친 아이템의 슬롯이 전부 남는다, ③ 지정 안 함(null, 버킷 1개) / 클래스 단위(item::class, 버킷 2개) / 아이템 고유값(버킷 200개) 세 모드를 같은 리스트에 적용하고 자동 스크롤로 끝까지 훑은 뒤 System.gc() 를 유도해 WeakReference 로 살아남은 페이로드 수·보유 크기·힙 사용량을 대조, ④ 남은 슬롯이 붙들고 있는 것은 빈 껍데기가 아니라 remember 값과 modifier 람다가 캡처한 객체라는 점을 아이템당 64KB 페이로드를 drawBehind 람다에 캡처시켜 재현, ⑤ key(식별자 — 아이템마다 달라야 함)와 contentType(분류 — 레이아웃 종류만큼만) 의 역할 차이와 '값의 가짓수가 데이터 양에 비례하면 잘못 쓴 것'이라는 판별 기준 정리",
         blogUrl = "",
         exampleType = ConstValue.LazyListReusePoolExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 08. 05",
+        title = "Compose Grid API (non-lazy 2D 레이아웃)",
+        description = "Compose 1.11 의 실험 API 인 Grid 로 CSS Grid 를 닮은 2차원 트랙 레이아웃을 구성: ① 트랙 크기 6종(Fixed/Percentage/Flex(fr)/Auto/MinContent/MaxContent)과 minmax 를 같은 격자에 나란히 두고 컨테이너 폭 슬라이더로 줄여가며 '고정은 그대로, 퍼센트는 비례, fr 은 남은 공간만 나눠 갖는다'는 해석 순서를 실시간으로 관측, ② fr 비율(1fr:2fr:3fr)과 gap/columnGap/rowGap 을 슬라이더로 조절해 트랙 간격이 남은 공간 계산에 먼저 반영되는 것을 확인, ③ 자동 배치와 Modifier.gridItem(row, column, rowSpan, columnSpan) 명시 배치를 대조해 헤더-사이드바-본문 대시보드를 구성하고, IntRange 오버로드(gridItem(0..1, 1..2))가 같은 배치의 다른 표기임을 보임 — 명시 배치는 겹침을 막아 주지 않아 좌표가 충돌하면 아이템이 그대로 포개진다는 함정을 토글로 재현, ④ GridFlow.Row/Column 토글로 자동 배치 커서의 진행 방향이 바뀌는 것을 확인, ⑤ Grid 는 lazy 가 아니므로 화면 밖 셀도 전부 컴포즈된다는 점을 LazyVerticalGrid 와 나란히 두고 살아있는 자식 컴포지션 수로 실측(Grid 는 개수 고정, LazyVerticalGrid 는 스크롤에 따라 증감). 이름 붙인 영역(area()/gridItem(area))은 Compose 1.12+ 신규라 이 예제 범위에서 제외",
+        blogUrl = "",
+        exampleType = ConstValue.GridLayoutExample
     )
 )

@@ -115,6 +115,7 @@ import com.example.composesample.presentation.example.component.ui.shapes.CardCo
 import com.example.composesample.presentation.example.component.ui.tab.ResponsiveTabRowExampleUI
 import com.example.composesample.presentation.example.component.ui.layout.adaptive.AdaptiveLayoutExampleUI
 import com.example.composesample.presentation.example.component.ui.layout.custom.CustomLayoutExampleUI
+import com.example.composesample.presentation.example.component.ui.layout.grid.GridLayoutExampleUI
 import com.example.composesample.presentation.example.component.ui.layout.modifier.ModifierOrderExampleUI
 import com.example.composesample.presentation.example.component.ui.text.AutoSizingTextExampleUI
 import com.example.composesample.presentation.example.component.ui.text.CustomTextRenderingExampleUI
@@ -307,6 +308,7 @@ import com.example.composesample.util.ConstValue.ComposeSnapshotExample
 import com.example.composesample.util.ConstValue.PerItemViewModelExample
 import com.example.composesample.util.ConstValue.ComposeTestingExample
 import com.example.composesample.util.ConstValue.CustomLayoutExample
+import com.example.composesample.util.ConstValue.GridLayoutExample
 import com.example.composesample.util.ConstValue.ModifierOrderExample
 import com.example.composesample.util.ConstValue.ScreenshotTestingExample
 import com.example.composesample.util.ConstValue.PreviewDrivenScreenshotExample
@@ -474,6 +476,7 @@ val exampleUiRegistry: Map<String, @Composable (onBackEvent: () -> Unit) -> Unit
     GeminiNanoExample to { onBackEvent -> GeminiNanoExampleUI(onBackEvent) },
     AdaptiveLayoutExample to { onBackEvent -> AdaptiveLayoutExampleUI(onBackEvent) },
     CustomLayoutExample to { onBackEvent -> CustomLayoutExampleUI(onBackEvent) },
+    GridLayoutExample to { onBackEvent -> GridLayoutExampleUI(onBackEvent) },
     ModifierOrderExample to { onBackEvent -> ModifierOrderExampleUI(onBackEvent) },
     ScreenshotTestingExample to { onBackEvent -> ScreenshotTestingExampleUI(onBackEvent) },
     PreviewDrivenScreenshotExample to { onBackEvent -> PreviewDrivenScreenshotExampleUI(onBackEvent) },
