@@ -5,8 +5,20 @@ Version and example-addition history for ComposeSample, newest first.
 
 ---
 
+## 2026.08
+- New examples added
+  - LazyList `contentType` Reuse-Pool Trap — shows why passing a per-item unique value as `contentType` prevents slot reclamation: the reuse policy retains up to 7 slots *per contentType*, so one bucket per item never meets the cleanup condition. Compares null / `item::class` / per-item value modes and measures surviving payloads via `WeakReference` after `System.gc()`
+  - Compose Grid API — Compose 1.11 experimental non-lazy 2D track layout (CSS Grid inspired): 6 track sizes (`Fixed`/`Percentage`/`Flex(fr)`/`Auto`/`MinContent`/`MaxContent`) plus `minmax`, `gap`/`columnGap`/`rowGap`, automatic vs explicit `Modifier.gridItem(row, column, span)` placement including the `IntRange` overload, `GridFlow.Row`/`Column` cursor direction, and a live count of alive child compositions against `LazyVerticalGrid` to show Grid is not lazy. Named areas (`area()`) are Compose 1.12+ and out of scope
+- Convention / structure cleanup
+  - Replaced 16 hardcoded blog URLs in the example lists with the `blogUrl(postId)` helper so the base URL lives only in `BlogUrlHelper.kt`; updated the CLAUDE.md rule (new example starts with `""` → helper once published → raw URLs forbidden) (CONV-08)
+  - Fixed the Shimmer sub-category parent to carry the group constant instead of a leaf constant, which had silently duplicated a child entry; documented the second registration path (`subCategoryList()`) as "Step 2-1" (REG-DUAL-01)
+- Documentation fixes
+  - Corrected the "Step 4: register routing" instructions across 4 documents — routing is a `ExampleUiRegistry.kt` map lookup (154 entries), not an `ExampleRouter.kt` when-expression, and an unregistered type does not break the build but silently falls back to a Dummy screen (DOC-ROUTE-01)
+
 ## 2026.07
 - New examples added
+  - Realtime Waveform Canvas (ECG/PPG) — separates a fixed 250Hz sample rate from a variable frame rate by carrying the fractional remainder across `withFrameNanos` frames; fixed-size `FloatArray` ring buffer for zero per-frame allocation; Sweep vs Scroll render modes; waveform state read in the draw phase so recomposition stays at 0
+  - Background Location Tracking (Foreground Service + WorkManager) — permission as a *sequence* (foreground location → notifications → background location, the last one only via app settings on Android 11+); a real `foregroundServiceType="location"` service that keeps running when the app is backgrounded; contrasted with `CoroutineWorker` to show why WorkManager cannot replace continuous tracking
   - Screenshot Detection — Android 14 `registerScreenCaptureCallback` vs legacy MediaStore `ContentObserver` comparison
   - Advanced Repository Pattern — Memory→Disk→Network priority-resolving repository
   - RememberObserver / Composition Lifecycle — contrasts removing a composable from composition vs. triggering recomposition only, to observe `onRemembered`/`onForgotten` firing; DisposableEffect comparison; `rememberCoroutineScope` internals reproduced conceptually
@@ -23,11 +35,27 @@ Version and example-addition history for ComposeSample, newest first.
   - Removed 4 commented-out dead code blocks (CODE-DEAD-02)
   - Removed unused imports across 5 files (CODE-IMPORT-01)
   - Moved 13 reference URLs out of 5 `*ExampleUI.kt` files' KDoc into the sibling `exampleGuide.kt` (CONV-07)
+  - Removed unused imports left over from the `SectionCard` consolidation across the 4 security files (CODE-DUP-CLEANUP-01) and 3 more unused imports elsewhere (CODE-IMPORT-02)
+  - Removed 4 commented-out dead code blocks (CODE-DEAD-03) and 2 unreferenced private composables (DEAD-FUNC-03)
+- Existing example enhancement
+  - Init Case Test — the UI was a 39-line empty screen while its ViewModel already held three loading-trigger patterns (`LaunchedEffect` / `init{}` / `onStart + stateIn(WhileSubscribed)`). Rebuilt the screen to observe *when and how often* each one fires, with a subscribe/unsubscribe toggle that lets you re-subscribe before or after the 5s timeout. ViewModel code unchanged (INIT-UI-01)
+- Deprecated API migration
+  - Migrated the Material3 1.4.0 deprecated Tab APIs in 2 files — `TabRow`→`SecondaryTabRow`, `ScrollableTabRow`→`SecondaryScrollableTabRow`, `Modifier.tabIndicatorOffset`→`TabIndicatorScope.tabIndicatorOffset`. Secondary (not Primary) was chosen to preserve the existing full-width indicator behavior (DEP-M3TAB-01)
+  - Migrated the Compose test rules to `androidx.compose.ui.test.junit4.v2.*` across 3 androidTest files and 2 example code snippets, so the examples no longer teach the deprecated API (TEST-DEPRECATED-01)
+- Test infrastructure
+  - Fixed stale import paths in 3 androidTest files, restoring `:app:compileDebugAndroidTestKotlin` after the instrumentation source set had been uncompilable for over a year following the 2025-07 package reorganization (TEST-STALE-01)
+  - Corrected `implementation(libs.bundles.androidTest)` → `androidTestImplementation(...)`, removing instrumentation-test artifacts from the production runtime classpath of all 4 modules that apply the shared dependency script (GRADLE-SCOPE-01)
 - Architecture cleanup
   - Converted `RefreshViewModel`/`DataCacheViewModel` from `AndroidViewModel` to plain `ViewModel` — neither used the injected `Application` (VM-ANDROIDVM-01)
   - Consolidated a byte-identical `SectionCard` composable duplicated across 4 `system/security` example files into a shared `SecurityUiComponents.kt` (CODE-DUP-01)
+  - Applied a `named("jsonplaceholder")` qualifier to the Ktor `HttpClient` Koin registration and its single consumer, matching the project's DI convention (DI-NAMED-01)
+- Bug fixes
+  - Removed two paths in the newly added `LocationTrackingService` that violated the `startForeground()` 5-second contract — a stop path that woke the service via `startForegroundService()` without ever promoting it, and a permission pre-check that returned early before promotion. Also fixed duplicate listener registration on `onStartCommand` re-entry (FGS-CONTRACT-01)
+- Compiler warnings
+  - Removed the last "Expression is unused" warnings in main sources (CODE-WARN-01) and 3 "No cast needed" warnings in the unit-test source set (TEST-WARN-01), reaching zero kotlinc warnings across all modules and source sets under forced recompilation
 - Dependency migration
   - Removed Glide and Coil2 entirely; migrated to Coil3 (`coil3`, `coil3-gif`) as the sole image loader across `FlexBoxUI`/`LottieExampleUI` (DEP-VERSION-01)
+  - Cleaned up unused/duplicated dependency declarations (DEP-DEAD-03, DEP-DUP-01, DEP-VERSION-02)
 
 ## 2026.06
 - Architecture refactoring and documentation/quality improvements
