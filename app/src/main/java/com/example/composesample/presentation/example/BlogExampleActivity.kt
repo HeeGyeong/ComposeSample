@@ -40,6 +40,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ComposeUiFlags
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -64,8 +66,13 @@ import org.koin.androidx.compose.koinViewModel
 @ExperimentalAnimationApi
 class BlogExampleActivity : ComponentActivity() {
     @SuppressLint("ContextCastToActivity")
+    @OptIn(ExperimentalComposeUiApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // MediaQuery 예제 전제 조건: 이 플래그가 true 여야 플랫폼이 LocalUiMediaScope 를 제공한다.
+        // 컴포지션 루트가 만들어질 때 한 번만 읽히므로 setContent 이전에 켜야 한다.
+        ComposeUiFlags.isMediaQueryIntegrationEnabled = true
 
         setContent {
             val context = LocalContext.current as BlogExampleActivity

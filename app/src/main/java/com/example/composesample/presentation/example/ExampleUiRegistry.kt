@@ -114,6 +114,7 @@ import com.example.composesample.presentation.example.component.ui.scroll.Nested
 import com.example.composesample.presentation.example.component.ui.shapes.CardCornersExampleUI
 import com.example.composesample.presentation.example.component.ui.tab.ResponsiveTabRowExampleUI
 import com.example.composesample.presentation.example.component.ui.layout.adaptive.AdaptiveLayoutExampleUI
+import com.example.composesample.presentation.example.component.ui.layout.adaptive.MediaQueryExampleUI
 import com.example.composesample.presentation.example.component.ui.layout.custom.CustomLayoutExampleUI
 import com.example.composesample.presentation.example.component.ui.layout.grid.GridLayoutExampleUI
 import com.example.composesample.presentation.example.component.ui.layout.modifier.ModifierOrderExampleUI
@@ -296,6 +297,7 @@ import com.example.composesample.util.ConstValue.PredictiveBackExample
 import com.example.composesample.util.ConstValue.SpringTweenSnapExample
 import com.example.composesample.util.ConstValue.AnimationsShowcaseExample
 import com.example.composesample.util.ConstValue.AdaptiveLayoutExample
+import com.example.composesample.util.ConstValue.MediaQueryExample
 import com.example.composesample.util.ConstValue.Compose17FeaturesExample
 import com.example.composesample.util.ConstValue.ComposeLoadersExample
 import com.example.composesample.util.ConstValue.FlowRowLayoutExample
@@ -475,6 +477,7 @@ val exampleUiRegistry: Map<String, @Composable (onBackEvent: () -> Unit) -> Unit
     DynamicAppLinksExample to { onBackEvent -> DynamicAppLinksExampleUI(onBackEvent) },
     GeminiNanoExample to { onBackEvent -> GeminiNanoExampleUI(onBackEvent) },
     AdaptiveLayoutExample to { onBackEvent -> AdaptiveLayoutExampleUI(onBackEvent) },
+    MediaQueryExample to { onBackEvent -> MediaQueryExampleUI(onBackEvent) },
     CustomLayoutExample to { onBackEvent -> CustomLayoutExampleUI(onBackEvent) },
     GridLayoutExample to { onBackEvent -> GridLayoutExampleUI(onBackEvent) },
     ModifierOrderExample to { onBackEvent -> ModifierOrderExampleUI(onBackEvent) },

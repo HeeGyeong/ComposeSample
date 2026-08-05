@@ -598,5 +598,12 @@ val examples2026 = listOf(
         description = "Compose 1.11 의 실험 API 인 Grid 로 CSS Grid 를 닮은 2차원 트랙 레이아웃을 구성: ① 트랙 크기 6종(Fixed/Percentage/Flex(fr)/Auto/MinContent/MaxContent)과 minmax 를 같은 격자에 나란히 두고 컨테이너 폭 슬라이더로 줄여가며 '고정은 그대로, 퍼센트는 비례, fr 은 남은 공간만 나눠 갖는다'는 해석 순서를 실시간으로 관측, ② fr 비율(1fr:2fr:3fr)과 gap/columnGap/rowGap 을 슬라이더로 조절해 트랙 간격이 남은 공간 계산에 먼저 반영되는 것을 확인, ③ 자동 배치와 Modifier.gridItem(row, column, rowSpan, columnSpan) 명시 배치를 대조해 헤더-사이드바-본문 대시보드를 구성하고, IntRange 오버로드(gridItem(0..1, 1..2))가 같은 배치의 다른 표기임을 보임 — 명시 배치는 겹침을 막아 주지 않아 좌표가 충돌하면 아이템이 그대로 포개진다는 함정을 토글로 재현, ④ GridFlow.Row/Column 토글로 자동 배치 커서의 진행 방향이 바뀌는 것을 확인, ⑤ Grid 는 lazy 가 아니므로 화면 밖 셀도 전부 컴포즈된다는 점을 LazyVerticalGrid 와 나란히 두고 살아있는 자식 컴포지션 수로 실측(Grid 는 개수 고정, LazyVerticalGrid 는 스크롤에 따라 증감). 이름 붙인 영역(area()/gridItem(area))은 Compose 1.12+ 신규라 이 예제 범위에서 제외",
         blogUrl = "",
         exampleType = ConstValue.GridLayoutExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 08. 06",
+        title = "Compose MediaQuery API (선언적 환경 적응)",
+        description = "Compose 1.11 의 실험 API 인 MediaQuery 로 \"지금 환경이 이 조건을 만족하는가\" 를 람다로 질의한다: ① 이 API 의 최대 함정인 활성화 — LocalUiMediaScope 는 기본값이 없고 플랫폼은 ComposeUiFlags.isMediaQueryIntegrationEnabled(기본 false)가 true 일 때만 이 CompositionLocal 을 제공하므로, 끈 채로 mediaQuery { } 를 부르면 컴파일은 통과하고 실행 시점에 IllegalStateException 이 난다. 게다가 플랫폼 구현을 만드는 obtainUiMediaScope() 는 Kotlin internal 이라 직접 제공하는 우회로도 없어, setContent 이전에 플래그를 켜는 것이 유일한 경로다(BlogExampleActivity.onCreate 에서 활성화), ② 플랫폼이 제공한 UiMediaScope 의 8개 속성(windowWidth/windowHeight/windowPosture/pointerPrecision/keyboardKind/viewingDistance/hasCamera/hasMicrophone)을 실제 기기 값으로 표시해 회전·멀티윈도우·키보드 표시에 따라 즉시 갱신되는 것을 확인, ③ mediaQuery 와 derivedMediaQuery 의 리컴포지션 범위 차이를 실측 — 폭만 조작하는 시뮬레이션 UiMediaScope 를 provide 하고 슬라이더를 움직이며 두 자식의 리컴포지션 횟수를 SideEffect 로 세면, 즉시 평가해 Boolean 을 돌려주는 mediaQuery 쪽은 1dp 변화마다 오르고 derivedStateOf 로 감싼 derivedMediaQuery 쪽은 기준선(600dp)을 넘을 때만 오른다, ④ 폭·자세(Tabletop)·포인터 정밀도(Coarse) 세 질의를 조합해 레이아웃을 고르는 선언적 분기를 실제 기기 상태로 시연. 기존 AdaptiveLayout 예제(material3 WindowSizeClass)와 달리 ui 레이어에서 크기 밖의 환경까지 질의한다는 점이 축의 차이",
+        blogUrl = "",
+        exampleType = ConstValue.MediaQueryExample
     )
 )
