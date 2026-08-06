@@ -292,9 +292,9 @@ val examples2026 = listOf(
         exampleType = ConstValue.NameBasedDestructuringExample
     ),
     ExampleObject(
-        lastUpdate = "26. 05. 19",
+        lastUpdate = "26. 08. 07",
         title = "Foundation Style API (Compose 1.11)",
-        description = "디자인 토큰(typography/colors/shapes/spacing)을 단일 Immutable Style 객체로 묶어 하나의 CompositionLocal 로 전파하는 패턴 — Legacy(개별 Local) vs Style API(단일 Local) 비교 + copy() 부분 오버라이드 데모, Light/Dark/Brand 프리셋 토글",
+        description = "Modifier.styleable + Style{} DSL 로 컴포넌트의 상태별 스타일을 선언하는 실험 API — pressed/hovered/focused/checked/selected/disabled 변형, 선언 순서가 우선순위인 함정, animate(spec) 선언적 전이, 커스텀 StyleStateKey, 조건부 Modifier 체이닝과의 리컴포지션 실측 대조 (부록: 디자인 토큰 전파 패턴)",
         blogUrl = "",
         exampleType = ConstValue.FoundationStyleApiExample
     ),

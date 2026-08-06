@@ -70,7 +70,7 @@ object ConstValue {
     // AgslShaderTuning(API 33+ RuntimeShader + graphicsLayer renderEffect 로 AGSL 셰이더 실시간 튜닝: uniform 슬라이더 조절 + 셰이더 소스 라이브 편집/재컴파일, 미지원 단말 placeholder)
     const val AgslShaderTuningExample = "agslShaderTuningExample"
 
-    // FoundationStyleApi(Compose 1.11 Foundation Style API: MaterialTheme + CompositionLocal 토큰 확장 vs Style 객체 단일 전달 패턴 비교)
+    // FoundationStyleApi(Compose 1.11 Foundation Style API: Modifier.styleable + Style{} DSL 로 컴포넌트 상태별 스타일 선언 — pressed/hovered/focused/checked/selected/disabled 변형 + animate() 전이 + 커스텀 StyleStateKey + 조건부 Modifier 체이닝과 리컴포지션 대조, 부록으로 디자인 토큰 전파 패턴)
     const val FoundationStyleApiExample = "foundationStyleApiExample"
 
     // Coil3Image(Coil 3 이미지 로딩: AsyncImage crossfade/placeholder/error 상태 + memoryCachePolicy ENABLED/DISABLED 토글로 dataSource(NETWORK/MEMORY_CACHE) 추적 + 커스텀 ImageLoader 메모리/디스크 캐시 구성 — coil3 네임스페이스로 기존 Coil 2와 공존)
