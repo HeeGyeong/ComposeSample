@@ -281,7 +281,7 @@ val examples2026 = listOf(
         lastUpdate = "26. 04. 09",
         title = "TextField Max Length 숨겨진 버그",
         description = "maxLength()가 프로그래매틱 state 변경엔 미적용되는 버그와 해결책",
-        blogUrl = "",
+        blogUrl = blogUrl(207),
         exampleType = ConstValue.TextFieldMaxLengthExample
     ),
     ExampleObject(
