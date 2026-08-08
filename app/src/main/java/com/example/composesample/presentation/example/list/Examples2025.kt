@@ -47,7 +47,7 @@ val examples2025 = listOf(
     ExampleObject(
         lastUpdate = "25. 02. 19",
         title = "Lazy Column Keyboard Issue",
-        description = "LazyColumn 내부에 TextField Component가 있을 때, keyboard가 정상적으로 보이지 않는 문제. + SDK 35 대응",
+        description = "LazyColumn 안 TextField에서 keyboard가 정상 표시되지 않는 문제와 SDK 35 대응",
         blogUrl = blogUrl(142),
         exampleType = ConstValue.LazyColumnExample
     ),
@@ -66,7 +66,7 @@ val examples2025 = listOf(
     ExampleObject(
         lastUpdate = "25. 03. 06",
         title = "Shortcut Example",
-        description = "Shortcut을 통해 앱을 실행하는 방법에 대해 알아보기 위한 예제.\n블로그는 22년도 글이지만 Base는 그대로입니다.",
+        description = "앱 실행 Shortcut을 등록하고 동작시키는 방법을 알아보는 예제",
         blogUrl = blogUrl(130),
         exampleType = ConstValue.ShortcutExample
     ),
@@ -85,7 +85,7 @@ val examples2025 = listOf(
     ExampleObject(
         lastUpdate = "25. 05. 29",
         title = "Language Setting Example",
-        description = "시스템 언어 설정을 확인하고 변경하는 예제\n언어 설정 변경 후 앱으로 돌아오면 변경사항이 반영됩니다.",
+        description = "시스템 언어 설정을 확인·변경하는 예제 (변경 후 앱 복귀 시 반영)",
         exampleType = ConstValue.LanguageSettingExample
     ),
     ExampleObject(
@@ -227,7 +227,7 @@ val examples2025 = listOf(
     ExampleObject(
         lastUpdate = "25. 12. 31",
         title = "Catching Excessive Recompositions",
-        description = "테스트로 과도한 Recomposition 감지: RecompositionCounter와 assertRecompositionCount",
+        description = "RecompositionCounter + assertRecompositionCount로 과도한 리컴포지션 테스트 감지",
         exampleType = ConstValue.RecompositionTestExample
     )
 )

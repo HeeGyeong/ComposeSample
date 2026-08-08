@@ -108,7 +108,7 @@ fun subCategoryList(): ArrayList<ExampleObject> {
         ExampleObject(
             subCategory = ConstValue.Compose17FeaturesExample,
             title = "Text Overflow 새 기능",
-            description = "TextOverflow.StartEllipsis와 MiddleEllipsis를 사용한 새로운 텍스트 오버플로우 옵션",
+            description = "TextOverflow.StartEllipsis·MiddleEllipsis 새 옵션 예제",
             exampleType = ConstValue.TextOverflowExample
         )
     )

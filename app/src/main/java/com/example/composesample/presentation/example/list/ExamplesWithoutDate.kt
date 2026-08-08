@@ -13,7 +13,7 @@ val examplesWithoutDate = listOf(
     ),
     ExampleObject(
         title = "FlexBox Layout Example",
-        description = "Item의 개수와 크기에 따라서 유동적으로 변하는 layout인 FlexBox Layout에 대한 예제",
+        description = "아이템 개수·크기에 따라 유동적으로 변하는 FlexBox Layout 예제",
         blogUrl = blogUrl(144),
         exampleType = ConstValue.FlexBoxLayoutExample
     ),
