@@ -337,7 +337,7 @@ val examples2026 = listOf(
         lastUpdate = "26. 04. 27",
         title = "Modifier Order in Compose",
         description = "modifier 순서에 따른 layout/draw/hit-test 결과 차이 비교",
-        blogUrl = "",
+        blogUrl = blogUrl(208),
         exampleType = ConstValue.ModifierOrderExample
     ),
     ExampleObject(
