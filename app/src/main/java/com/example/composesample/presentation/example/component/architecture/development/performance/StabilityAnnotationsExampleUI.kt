@@ -101,8 +101,24 @@ fun StabilityAnnotationsExampleUI(onBackEvent: () -> Unit) {
                 )
             }
 
+            item {
+                InfoCard(
+                    title = "먼저 알아둘 것 — Strong Skipping Mode",
+                    description = "Kotlin 2.0.20 컴파일러부터 Strong Skipping이 기본 활성화됩니다.\n" +
+                            "(이 프로젝트는 Kotlin 2.4.0이므로 켜져 있습니다)\n\n" +
+                            "그래서 '불안정한 파라미터를 받으면 스킵이 아예 불가능'하지 않습니다.\n" +
+                            "불안정 파라미터를 받는 컴포저블도 skippable로 컴파일되고,\n" +
+                            "달라지는 것은 '무엇으로 비교하는가'입니다.\n\n" +
+                            "• 안정(stable) 파라미터 → equals() 구조 비교\n" +
+                            "• 불안정(unstable) 파라미터 → === 인스턴스 동일성 비교\n\n" +
+                            "즉 불안정 타입은 내용이 같아도 .copy()/.toList() 등으로\n" +
+                            "새 인스턴스를 만들면 리컴포지션됩니다. 5번 섹션에서 직접 확인합니다.",
+                    bgColor = Color(0xFFE0F7FA)
+                )
+            }
+
             item { HorizontalDivider() }
-            item { SectionHeader("1. 불안정한 클래스 (항상 리컴포지션)") }
+            item { SectionHeader("1. 불안정한 클래스 (인스턴스가 바뀌면 리컴포지션)") }
 
             item {
                 CodeCard(
@@ -112,7 +128,9 @@ data class UnstableItem(
     val tags: List<String>  // ← Compose가 불안정으로 판단
 )
 
-// 부모가 리컴포지션되면 이 컴포저블도 항상 리컴포지션됨
+// Strong Skipping 덕분에 이 함수도 skippable 로 컴파일된다.
+// 다만 item 은 equals() 가 아니라 === 로 비교되므로,
+// 내용이 같아도 새 인스턴스를 넘기면 리컴포지션된다.
 @Composable
 fun UnstableChild(item: UnstableItem) { ... }"""
                 )
@@ -196,10 +214,11 @@ fun StableChild(counter: StableCounter) { ... }"""
                 InfoCard(
                     title = "데모 설명",
                     description = "아래 버튼으로 부모를 리컴포지션시킵니다.\n" +
-                            "• UnstableChild: 파라미터 내용이 동일해도 항상 리컴포지션\n" +
-                            "• ImmutableChild: 파라미터가 같으면 리컴포지션 스킵\n\n" +
-                            "실제 스킵 여부는 Compose 컴파일러 버전과\n" +
-                            "Strong Skipping Mode 설정에 따라 다를 수 있습니다.",
+                            "두 카드 모두 매번 새 인스턴스를 만들어 넘깁니다.\n\n" +
+                            "• UnstableChild: === 비교 → 새 인스턴스라 실패 → 리컴포지션\n" +
+                            "• ImmutableChild: equals() 비교 → 내용이 같아 성공 → 스킵\n\n" +
+                            "여기서 차이를 만드는 것은 '불안정하냐'가 아니라\n" +
+                            "'무엇으로 비교하느냐'입니다. 5번 섹션에서 이를 분리해 확인합니다.",
                     bgColor = Color(0xFFF3E5F5)
                 )
             }
@@ -218,12 +237,13 @@ fun StableChild(counter: StableCounter) { ... }"""
                 // parentTrigger를 읽어 부모가 리컴포지션될 때 함께 재실행되는 블록
                 val trigger = parentTrigger
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    // 불안정 파라미터 → 항상 리컴포지션
+                    // 불안정 파라미터 → === 비교. 매번 새 인스턴스라 실패 → 리컴포지션
                     UnstableChildDemo(
+                        label = "UnstableChild",
                         item = UnstableItem("테스트", listOf("A", "B")),
                         modifier = Modifier.weight(1f)
                     )
-                    // @Immutable 파라미터 → 스킵 가능
+                    // @Immutable 파라미터 → equals() 비교. 내용이 같아 성공 → 스킵
                     ImmutableChildDemo(
                         item = ImmutableItem("테스트", listOf("A", "B")),
                         modifier = Modifier.weight(1f)
@@ -232,7 +252,70 @@ fun StableChild(counter: StableCounter) { ... }"""
             }
 
             item { HorizontalDivider() }
-            item { SectionHeader("5. 실무 가이드라인") }
+            item { SectionHeader("5. 실증: 불안정 파라미터는 ===로 비교된다") }
+
+            item {
+                InfoCard(
+                    title = "같은 불안정 타입, 갈리는 결과",
+                    description = "아래 두 카드는 똑같은 UnstableItem(불안정)을 받습니다.\n" +
+                            "다른 점은 인스턴스를 매번 새로 만드느냐 하나뿐입니다.\n\n" +
+                            "• 왼쪽: 매번 새 인스턴스 → === 실패 → 리컴포지션\n" +
+                            "• 오른쪽: remember로 고정 → === 성공 → 스킵\n\n" +
+                            "오른쪽이 1회에서 멈춘다면, '불안정 = 항상 리컴포지션'이\n" +
+                            "틀린 설명이라는 증거입니다. 정확한 규칙은\n" +
+                            "'불안정 = 내용이 아니라 인스턴스로 비교'입니다.",
+                    bgColor = Color(0xFFE0F7FA)
+                )
+            }
+
+            item {
+                // remember로 고정한 인스턴스 — 부모가 리컴포지션돼도 같은 객체가 전달된다
+                val fixedItem = remember { UnstableItem("고정", listOf("A", "B")) }
+                Column {
+                    // parentTrigger를 실제로 읽어야 이 item이 부모와 함께 리컴포지션된다
+                    Text(
+                        text = "부모 리컴포지션 ${parentTrigger}회 기준",
+                        fontSize = 11.sp,
+                        color = Color.Gray
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        // 매번 새 인스턴스 생성 → === 비교 실패
+                        UnstableChildDemo(
+                            label = "새 인스턴스",
+                            item = UnstableItem("고정", listOf("A", "B")),
+                            modifier = Modifier.weight(1f)
+                        )
+                        // remember로 고정된 동일 인스턴스 → === 비교 성공 → 스킵
+                        UnstableChildDemo(
+                            label = "remember 고정",
+                            item = fixedItem,
+                            modifier = Modifier.weight(1f)
+                        )
+                    }
+                }
+            }
+
+            item {
+                CodeCard(
+                    code = """// 두 호출의 차이는 '인스턴스를 새로 만드느냐'뿐이다
+val fixedItem = remember { UnstableItem("고정", listOf("A", "B")) }
+
+UnstableChild(UnstableItem("고정", listOf("A", "B")))  // 매번 새 인스턴스 → 리컴포지션
+UnstableChild(fixedItem)                                // 같은 인스턴스   → 스킵
+
+// 컴파일러 리포트로도 확인할 수 있다 (composables.txt)
+// restartable skippable fun UnstableChildDemo(
+//   stable label: String        ← stable 표시 있음 = equals() 비교
+//   item: UnstableItem          ← stable 표시 없음 = 불안정(=== 비교)
+//   stable modifier: Modifier?  ← stable 표시 있음 = equals() 비교
+// )
+// ↑ skippable 이라는 점에 주목. 불안정 파라미터가 있어도 스킵 자체는 가능하다."""
+                )
+            }
+
+            item { HorizontalDivider() }
+            item { SectionHeader("6. 실무 가이드라인") }
 
             item {
                 CodeCard(
@@ -253,7 +336,12 @@ data class SimpleData(val id: Int, val label: String)
 
 // ⚠ 남용 금지: 실제로 불안정한 클래스에 붙이면 리컴포지션 버그 발생
 // @Immutable  ← 절대 금지
-// class WrongUsage { var mutable = "변할 수 있음" }"""
+// class WrongUsage { var mutable = "변할 수 있음" }
+
+// ✅ Strong Skipping 시대의 추가 원칙: 인스턴스를 불필요하게 새로 만들지 말 것
+// 불안정 타입은 ===로 비교되므로, 내용이 같아도 아래는 매번 리컴포지션된다
+// state.copy(items = state.items.toList())  ← 새 List 인스턴스 = 스킵 실패
+// → ImmutableList로 바꾸거나(equals 비교), 인스턴스를 그대로 재사용할 것"""
                 )
             }
 
@@ -265,7 +353,11 @@ data class SimpleData(val id: Int, val label: String)
 // ===================== 데모용 자식 컴포저블 =====================
 
 @Composable
-private fun UnstableChildDemo(item: UnstableItem, modifier: Modifier = Modifier) {
+private fun UnstableChildDemo(
+    label: String,
+    item: UnstableItem,
+    modifier: Modifier = Modifier
+) {
     var recomposeCount by remember { mutableIntStateOf(0) }
     // SideEffect: 리컴포지션마다 실행 (성공적으로 커밋된 컴포지션 후)
     SideEffect { recomposeCount++ }
@@ -279,7 +371,7 @@ private fun UnstableChildDemo(item: UnstableItem, modifier: Modifier = Modifier)
             modifier = Modifier.padding(10.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text("UnstableChild", fontWeight = FontWeight.Bold, fontSize = 12.sp)
+            Text(label, fontWeight = FontWeight.Bold, fontSize = 12.sp)
             Spacer(modifier = Modifier.height(4.dp))
             Text(
                 text = "리컴포지션\n${recomposeCount}회",

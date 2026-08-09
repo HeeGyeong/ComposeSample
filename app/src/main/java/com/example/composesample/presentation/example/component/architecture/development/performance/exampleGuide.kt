@@ -34,7 +34,17 @@ package com.example.composesample.presentation.example.component.architecture.de
  * - List<T>는 MutableList 구현 가능 → 컴파일러가 불안정으로 판단
  * - kotlinx.collections.immutable의 ImmutableList 사용 시 어노테이션 없이도 안정 판단
  *
- * Strong Skipping Mode (Compose 1.7+):
- * - 불안정한 람다를 포함해도 스킵 가능하도록 컴파일러 동작 개선
- * - gradle.properties: composeCompiler.enableStrongSkippingMode=true
+ * Strong Skipping Mode (Kotlin 2.0.20 컴파일러부터 기본 활성화 — 이 프로젝트는 Kotlin 2.4.0):
+ * - 불안정한 파라미터를 가진 컴포저블도 skippable 로 컴파일된다 ("불안정 = 항상 리컴포지션"이 아니다)
+ * - 단, 비교 전략이 다르다 — 안정 파라미터는 equals(구조 비교), 불안정 파라미터는 ===(인스턴스 동일성)
+ *   → 내용이 같아도 .copy()/.toList() 등으로 새 인스턴스를 만들면 리컴포지션된다
+ * - 람다는 자동으로 remember 로 감싸진다 (자동 람다 메모이제이션)
+ * - 별도 설정이 필요 없다. 끄려면 build.gradle 에
+ *   composeCompiler { featureFlags.add(ComposeFeatureFlag.StrongSkipping.disabled()) }
+ *   (구 gradle.properties 키 composeCompiler.enableStrongSkippingMode 는 폐기됨)
+ *
+ * 안정성 판정을 눈으로 확인하는 방법 (Compose Compiler Metrics):
+ * - build.gradle 에 composeCompiler { reportsDestination = ...; metricsDestination = ... } 추가 후 빌드
+ * - composables.txt: 함수별 restartable/skippable 여부와 파라미터별 stable 표시
+ * - classes.txt: 클래스별 stable/runtime 판정과 <runtime stability> 근거
  */
