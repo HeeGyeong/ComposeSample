@@ -596,7 +596,7 @@ val examples2026 = listOf(
         lastUpdate = "26. 08. 05",
         title = "Compose Grid API (non-lazy 2D 레이아웃)",
         description = "Compose 1.11 Grid API로 CSS Grid 닮은 2차원 트랙 레이아웃 구성",
-        blogUrl = "",
+        blogUrl = blogUrl(209),
         exampleType = ConstValue.GridLayoutExample
     ),
     ExampleObject(
