@@ -59,13 +59,18 @@ class ArticleRemoteMediator(
         // 1) 어떤 네트워크 페이지를 요청할지 결정한다 — RemoteKey 테이블이 그 근거다.
         val page = when (loadType) {
             LoadType.REFRESH -> {
-                // 현재 보고 있는 위치에 가장 가까운 아이템의 키에서 역산.
-                // 아무것도 없으면(최초 진입) 첫 페이지부터.
-                val anchorKey = state.anchorPosition
-                    ?.let { position -> state.closestItemToPosition(position) }
-                    ?.let { article -> remoteKeyDao.remoteKeyByArticleId(article.id) }
-                val target = anchorKey?.nextKey?.minus(1) ?: FakeArticleApi.STARTING_PAGE
-                log("load(REFRESH) → page=$target")
+                // 이 예제는 REFRESH 에서 캐시를 전량 비우고 다시 채우므로 항상 첫 페이지부터 받는다.
+                //
+                // 공식 샘플처럼 앵커 위치에서 페이지를 역산하는 변형도 있다.
+                //   state.anchorPosition
+                //     ?.let { state.closestItemToPosition(it) }
+                //     ?.let { remoteKeyDao.remoteKeyByArticleId(it.id) }
+                //     ?.nextKey?.minus(1) ?: STARTING_PAGE
+                // 하지만 그 방식은 "캐시 전량 삭제"와 함께 쓰면 4페이지까지 보던 사용자가
+                // 새로고침했을 때 4페이지만 남아 목록이 중간부터 시작한다.
+                // 앵커 역산은 캐시를 지우지 않고 해당 구간만 갱신하는 구현과 짝을 이뤄야 한다.
+                val target = FakeArticleApi.STARTING_PAGE
+                log("load(REFRESH) → page=$target (캐시 전량 갱신)")
                 target
             }
 

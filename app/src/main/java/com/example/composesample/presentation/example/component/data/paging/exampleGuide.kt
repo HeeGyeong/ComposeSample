@@ -24,7 +24,10 @@ package com.example.composesample.presentation.example.component.data.paging
  *   PagingSource 는 Room 이 생성하고(@Query 반환 타입을 PagingSource 로 선언),
  *   RemoteMediator 는 화면이 아니라 DB 에 write 한다 → DB 변경이 PagingSource 를 invalidate 해 화면에 반영
  * - RemoteMediator.load(loadType, state) 의 3분기
- *   · REFRESH : 최초 로드 또는 refresh() — 보통 기존 캐시를 지우고 첫 페이지부터 다시 채운다
+ *   · REFRESH : 최초 로드 또는 refresh() — 보통 기존 캐시를 지우고 첫 페이지부터 다시 채운다.
+ *               앵커(state.anchorPosition)에서 페이지를 역산하는 변형도 있지만,
+ *               캐시 전량 삭제와 함께 쓰면 새로고침 후 목록이 중간 페이지부터 시작하므로
+ *               "지우지 않고 해당 구간만 갱신"하는 구현과 짝을 이뤄야 한다
  *   · PREPEND : 목록 앞쪽 경계 도달 — 앞 페이지를 받을 수 없으면 Success(endOfPaginationReached = true)
  *   · APPEND  : 목록 뒤쪽 경계 도달 — 다음 페이지를 받아 DB 에 append
  * - MediatorResult 는 Success(endOfPaginationReached) / Error(throwable) 두 가지.
