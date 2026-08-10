@@ -76,8 +76,11 @@ reorderable = "0.9.6"
 okhttpEventSource = "3.0.0"
 
 # Paging
-paging = "3.2.1"
-pagingCompose = "3.2.1"
+# room-paging 가 paging-common 3.3.2 를 요구하고, androidx.paging 은 atomic group 이라
+# 스택 전체(runtime/compose/common-ktx)가 3.3.2 로 함께 올라간다.
+# 3.2.1 로 적어두면 선언과 실제 해석 버전이 어긋나므로 해석 결과에 맞춘다. (DEP-VERSION-03)
+paging = "3.3.2"
+pagingCompose = "3.3.2"
 
 # Glance Widget
 glance = "1.1.1"
