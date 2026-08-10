@@ -18,7 +18,7 @@ A project that collects samples of issues encountered while studying and applyin
 It is built on Clean Architecture, and components are systematically classified by feature so you can easily find the example you want.
 
 - **Latest updates** (full history in [CHANGELOG.md](CHANGELOG.md))
-  - 2026.08: New examples added (LazyList `contentType` Reuse-Pool Trap, Compose Grid API, Compose MediaQuery API). Convention/structure cleanup — 16 hardcoded blog URLs replaced with the `blogUrl(postId)` helper (CONV-08) and the Shimmer sub-category parent fixed to carry the group constant (REG-DUAL-01). Corrected the "register routing" instructions across 4 documents: routing is an `ExampleUiRegistry.kt` map lookup, not an `ExampleRouter.kt` when-expression, and an unregistered type silently falls back to a Dummy screen (DOC-ROUTE-01). Reworked the Foundation Style API example to use the real `androidx.compose.foundation.style` API (`Modifier.styleable` + `Style { }` DSL, state variants, `animate()` transitions, custom `StyleStateKey`) and corrected its description — the previous version explained an unrelated design-token propagation pattern, which is kept as an appendix. Added the missing `ui/autofill`, `ui/shader`, and `ui/style` packages to the Component Examples catalog (DOC-DRIFT-06).
+  - 2026.08: New examples added (LazyList `contentType` Reuse-Pool Trap, Compose Grid API, Compose MediaQuery API, Paging3 `RemoteMediator` offline-first paging). Convention/structure cleanup — 16 hardcoded blog URLs replaced with the `blogUrl(postId)` helper (CONV-08) and the Shimmer sub-category parent fixed to carry the group constant (REG-DUAL-01). Corrected the "register routing" instructions across 4 documents: routing is an `ExampleUiRegistry.kt` map lookup, not an `ExampleRouter.kt` when-expression, and an unregistered type silently falls back to a Dummy screen (DOC-ROUTE-01). Reworked the Foundation Style API example to use the real `androidx.compose.foundation.style` API (`Modifier.styleable` + `Style { }` DSL, state variants, `animate()` transitions, custom `StyleStateKey`) and corrected its description — the previous version explained an unrelated design-token propagation pattern, which is kept as an appendix. Added the missing `ui/autofill`, `ui/shader`, and `ui/style` packages to the Component Examples catalog (DOC-DRIFT-06), then extended that directory↔catalog diff beyond `ui/` to every category and filled in 12 more never-listed packages — `ui/media/image`, `data/repository`, `data/room`, `system/ai`, `system/security`, `system/media/video`, `system/background/location`, `system/platform/biometric`, `architecture/development/di`, `featureflag`, `internals`, `strictmode` (DOC-DRIFT-07).
   - 2026.07: New examples added (Realtime Waveform Canvas, Background Location Tracking, Screenshot Detection, Advanced Repository Pattern, RememberObserver/Composition Lifecycle, Media3(ExoPlayer) Video Playback, IPC/Exported Component Security Diagnostics). Removed the legacy subsystem entirely (24 files + 10 Activities, incl. its RxJava dependency). Dead code/doc cleanup (45 unreferenced `*Guide.kt` files, dead Koin registrations, dead functions/imports/dependencies, reference URLs moved out of `*ExampleUI.kt` into `exampleGuide.kt`) and an architecture cleanup (`AndroidViewModel` → plain `ViewModel` where `Application` was unused, Koin `named()` qualifier for the Ktor client). Migrated deprecated APIs (Material3 Tab family, Compose test rules → `junit4.v2`) and restored the instrumentation source set after a year of stale imports (TEST-STALE-01, GRADLE-SCOPE-01). Fixed two `startForeground()` 5-second contract violations in the new location service (FGS-CONTRACT-01). Migrated the image-loading stack from Glide + Coil2 to Coil3 as the sole loader. Consolidated a byte-identical `SectionCard` composable duplicated across 4 security example files into a shared component. Reached zero kotlinc warnings across all modules and source sets.
   - 2026.06: Architecture refactoring and documentation/quality improvements (domain converted to pure Kotlin(JVM), ExampleObject moved domain→app, DataCache abstraction, MainUIComponent migrated to M3, docs updated + new ARCHITECTURE/KnownLimitations/LICENSE). New examples added (Kotlin 2.4 Language Features, How Compose Works, Coil 3 Image Loading, Preview-Driven Screenshot Testing, Freehand Drawing). Upgraded to Kotlin 2.4.0 + KSP 2.3.9 (HotSwan/Compose Hot Reload disabled — incompatible with 2.4.0), ComposeBom 2026.05.00 + Material 1.11.1.
   - 2026.05: New examples added (Accessible Focus Indicator, Document Editing TextField, Syntax Highlighting, Particle Emitter, Animations Showcase, Hardware-Backed Keystore, Shared Element Debug Tooling, Foundation Style API, Month Picker Dial, App Security, AGSL Shader, Type-Safe Feature Flag, Per-Item ViewModels, Room FTS4/Indices/Multi-Table, etc.)
@@ -175,6 +175,7 @@ The two sources only partially map 1:1 by topic, so refer to both when checking 
 - **modifier**: Modifier Order — how modifier ordering changes layout, drawing, and hit-testing
 
 **media**:
+- **image**: Coil 3 image loading (AsyncImage, GIF decoding, caching and placeholder/error states)
 - **lottie**: Lottie animation implementation and control
 - **picker**: Embedded Photo Picker, BottomSheet integration and URI lifetime management
 - **shimmer**: UI Shimmer, Text Shimmer loading effects
@@ -218,7 +219,9 @@ The two sources only partially map 1:1 by topic, so refer to both when checking 
 ### **data** - data management & network
 - **api**: Retrofit API calls, UseCase pattern, disconnection handling
 - **cache**: Room local data caching and CRUD, real-time search
-- **paging**: paging and infinite scroll
+- **paging**: paging and infinite scroll; Paging3 `RemoteMediator` offline-first paging (network + DB dual source with the DB as the single source of truth — `LoadType` REFRESH/PREPEND/APPEND branching, a RemoteKeys table, `initialize()` cache gating, and `loadState.source` vs `loadState.mediator` as two separate axes)
+- **repository**: Advanced Repository Pattern — Memory → Disk → Network multi-source priority resolution and cache population
+- **room**: Room `@Fts4` MATCH search vs `LIKE '%q%'` full scan, `@Index` single/composite index query performance, multi-table insert via DAO interface inheritance + `withTransaction`
 - **sse**: Server-Sent Events and real-time data streaming
 
 ### **system** - system integration & platform
@@ -229,6 +232,7 @@ The two sources only partially map 1:1 by topic, so refer to both when checking 
 - **language**: localization, system language settings, in-app language change
 - **powersave**: power-save mode detection and battery optimization
 - **predictiveback**: Predictive Back Gesture (Android 14+ Flow-based real-time animation of edge-swipe progress)
+- **biometric**: Biometric Authentication (biometric-compose alpha — Compose integration)
 - **quicksettings**: Quick Settings Tile
 - **shortcut**: app shortcuts (dynamic, static, pin)
 - **version**: Android SDK version handling (targetSDK 34 permission handling)
@@ -240,12 +244,18 @@ The two sources only partially map 1:1 by topic, so refer to both when checking 
 **media**:
 - **ffmpeg**: video/audio encoding/decoding (commented out due to library compatibility issues as of 2025.06)
 - **recorder**: audio/video recording and media recording state management
+- **video**: Media3 (ExoPlayer) video playback — integrating `PlayerView` into Compose for network video
 
 **background**:
+- **location**: Background Location Tracking — a real `foregroundServiceType="location"` service, permission handling as a sequence (foreground → notifications → background), contrasted with `CoroutineWorker` to show why WorkManager cannot replace continuous tracking
 - **workmanager**: background work and task scheduling
 
 **ui**:
 - **widget**: Glance widget (App Widget)
+
+**others**:
+- **ai**: Gemini Nano on-device inference (AICore)
+- **security**: App Security diagnostics (certificate pinning, Play Integrity mock), Hardware-Backed Keystore, IPC/Exported Component security, Screenshot Detection
 
 ### **architecture** - architecture & dev tools
 **pattern**:
@@ -261,12 +271,16 @@ The two sources only partially map 1:1 by topic, so refer to both when checking 
 - **concurrency**: coroutine internals, withContext pattern, Coroutine Bridges (converting callback-based APIs to suspend functions with suspendCoroutine/suspendCancellableCoroutine)
 - **coordinator**: Coordinator Pattern implementation
 - **cursor**: Cursor IDE-related examples (using AI coding assistants)
+- **di**: Koin Compiler Plugin (compile-time DI resolution without KSP)
+- **featureflag**: Type-Safe Feature Flag (compile-time safe flag definition and rollout control)
 - **flow**: FlatMap vs FlatMapLatest comparison
 - **init**: initialization logic and state management, app startup optimization (App Startup / Baseline Profile / Koin lazy initialization)
+- **internals**: How Compose Works (Composition/Layout/Draw phases), RememberObserver and composition lifecycle (onRemembered/onForgotten/onAbandoned measured live)
 - **language**: Sealed Class Interface (type-safe hierarchy), Name-Based Destructuring (Kotlin 2.3.20 name-based destructuring)
 - **performance**: Inline Value Class (performance optimization), Stability Annotations (preventing unnecessary recomposition with @Stable/@Immutable)
 - **preview**: Compose Preview features, @Preview internals (rendering pipeline, LocalInspectionMode, MultiPreview), Preview-only Annotation (restricting Preview-only Composables at compile time with @RequiresOptIn)
 - **rebound**: role-based recomposition budget monitoring
+- **strictmode**: StrictMode policy-violation detection (main-thread disk/network I/O, leaked closeables)
 - **test**: UI test TDD, recomposition detection, Coroutine Flow Testing (Turbine), Screenshot Testing (Paparazzi/Roborazzi), Compose UI Testing (test pattern guide for createComposeRule, onNodeWithTag, performClick, etc.)
 - **type**: variable type usage and compile-time optimization
 
