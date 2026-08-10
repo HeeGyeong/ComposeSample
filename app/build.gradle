@@ -87,6 +87,8 @@ dependencies {
 
     // Paging
     implementation(libs.bundles.paging)
+    // Room DAO 가 PagingSource 를 반환하기 위한 Room-Paging3 통합 (RemoteMediator 예제)
+    implementation(libs.roomPaging)
 
     // Glance Widget
     implementation(libs.bundles.glance)

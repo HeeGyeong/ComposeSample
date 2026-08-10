@@ -109,6 +109,11 @@ material3WindowSizeClass = { module = "androidx.compose.material3:material3-wind
 roomRuntime = { module = "androidx.room:room-runtime", version.ref = "room" }
 roomKtx = { module = "androidx.room:room-ktx", version.ref = "room" }
 roomCompiler = { module = "androidx.room:room-compiler", version.ref = "room" }
+# Room DAO 가 PagingSource 를 반환하려면 필요한 Paging3 통합 아티팩트.
+# room-runtime 에 포함되지 않은 별도 모듈이라, 없으면 KSP 가
+# "Cannot find required type element androidx.room.paging.LimitOffsetPagingSource" 로 실패한다.
+# 전 모듈 전이 주입(core-dependencies.gradle)을 피하려고 bundles.room 이 아닌 app 모듈에서만 선언한다.
+roomPaging = { module = "androidx.room:room-paging", version.ref = "room" }
 
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 converterGson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "retrofit" }

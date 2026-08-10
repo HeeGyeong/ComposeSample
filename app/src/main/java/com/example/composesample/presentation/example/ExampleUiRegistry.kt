@@ -32,6 +32,7 @@ import com.example.composesample.presentation.example.component.data.api.KtorAdv
 import com.example.composesample.presentation.example.component.data.api.KtorExampleUI
 import com.example.composesample.presentation.example.component.data.cache.DataCacheExampleUI
 import com.example.composesample.presentation.example.component.data.paging.PagingExampleUI
+import com.example.composesample.presentation.example.component.data.paging.RemoteMediatorExampleUI
 import com.example.composesample.presentation.example.component.data.repository.AdvancedRepositoryPatternExampleUI
 import com.example.composesample.presentation.example.component.data.room.MultiTableInsertExampleUI
 import com.example.composesample.presentation.example.component.data.room.RoomFtsSearchExampleUI
@@ -238,6 +239,7 @@ import com.example.composesample.util.ConstValue.MultiTableInsertExample
 import com.example.composesample.util.ConstValue.RoomFtsSearchExample
 import com.example.composesample.util.ConstValue.RoomIndexExample
 import com.example.composesample.util.ConstValue.PagingExample
+import com.example.composesample.util.ConstValue.RemoteMediatorExample
 import com.example.composesample.util.ConstValue.PassingIntentDataExample
 import com.example.composesample.util.ConstValue.PathGraphicsExample
 import com.example.composesample.util.ConstValue.PowerSaveModeExample
@@ -392,6 +394,7 @@ val exampleUiRegistry: Map<String, @Composable (onBackEvent: () -> Unit) -> Unit
     InitTestExample to { onBackEvent -> InitTestExampleUI(onBackEvent) },
     ShortcutExample to { onBackEvent -> ShortcutExampleUI(onBackEvent) },
     PagingExample to { onBackEvent -> PagingExampleUI(onBackEvent) },
+    RemoteMediatorExample to { onBackEvent -> RemoteMediatorExampleUI(onBackEvent) },
     MultiTableInsertExample to { onBackEvent -> MultiTableInsertExampleUI(onBackEvent) },
     RoomFtsSearchExample to { onBackEvent -> RoomFtsSearchExampleUI(onBackEvent) },
     RoomIndexExample to { onBackEvent -> RoomIndexExampleUI(onBackEvent) },

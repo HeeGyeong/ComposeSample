@@ -16,9 +16,11 @@ import com.example.composesample.presentation.example.component.data.api.ApiExam
 import com.example.composesample.presentation.example.component.data.api.ApiExampleViewModel
 import com.example.composesample.presentation.example.component.data.cache.DataCacheViewModel
 import com.example.composesample.presentation.example.component.data.paging.PagingViewModel
+import com.example.composesample.presentation.example.component.data.paging.RemoteMediatorViewModel
 import com.example.composesample.presentation.example.component.data.repository.AdvancedRepositoryPatternViewModel
 import com.example.composesample.presentation.example.component.data.sse.SSEViewModel
 import com.example.composesample.presentation.example.component.system.platform.file.SafFileSelectionViewModel
+import org.koin.android.ext.koin.androidApplication
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.module.Module
 import org.koin.core.qualifier.named
@@ -43,6 +45,8 @@ val viewModelModule: Module = module {
     viewModel { CompositionLocalViewModel() }
     viewModel { InitTestViewModel() }
     viewModel { PagingViewModel() }
+    // Room 파일 DB 를 생성해야 하므로 Application 컨텍스트를 주입한다
+    viewModel { RemoteMediatorViewModel(androidApplication()) }
     viewModel { TypeExampleViewModel() }
     viewModel { SafFileSelectionViewModel() }
     viewModel { SnapshotFlowExampleViewModel() }

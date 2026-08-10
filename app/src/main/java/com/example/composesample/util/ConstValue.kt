@@ -186,9 +186,10 @@ object ConstValue {
     const val KtorAdvancedConfigExample = "ktorAdvancedConfigExample"
 
     // ==================== 데이터 & 캐시 예제 ====================
-    // DataCache(캐시 관리), Paging(무한 스크롤), MultiTableInsert(Room DAO 인터페이스 상속 + withTransaction 다중 테이블 insert), RoomFtsSearch(Room @Fts4 가상 테이블의 MATCH 검색 vs LIKE '%q%' 전체 스캔 성능 비교), RoomIndex(@Index 단일/복합 인덱스의 범위/등호+정렬 쿼리 성능 비교), AdvancedRepositoryPattern(Memory→Disk→Network 다중 소스 우선순위 해석 + cache population)
+    // DataCache(캐시 관리), Paging(무한 스크롤), RemoteMediator(네트워크+DB 이중 소스 오프라인 우선 페이징 — LoadType 분기·RemoteKeys·initialize() 캐시 게이트), MultiTableInsert(Room DAO 인터페이스 상속 + withTransaction 다중 테이블 insert), RoomFtsSearch(Room @Fts4 가상 테이블의 MATCH 검색 vs LIKE '%q%' 전체 스캔 성능 비교), RoomIndex(@Index 단일/복합 인덱스의 범위/등호+정렬 쿼리 성능 비교), AdvancedRepositoryPattern(Memory→Disk→Network 다중 소스 우선순위 해석 + cache population)
     const val DataCacheExample = "dataCacheExample"
     const val PagingExample = "pagingExample"
+    const val RemoteMediatorExample = "remoteMediatorExample"
     const val MultiTableInsertExample = "multiTableInsertExample"
     const val RoomFtsSearchExample = "roomFtsSearchExample"
     const val RoomIndexExample = "roomIndexExample"
