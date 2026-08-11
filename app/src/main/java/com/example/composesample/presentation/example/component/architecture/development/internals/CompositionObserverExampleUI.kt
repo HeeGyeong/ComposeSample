@@ -88,7 +88,13 @@ private class StateNameRegistry(capacity: Int = 8) {
     }
 }
 
-/** 사전 할당된 고정 크기 링버퍼. 콜백에서의 적재는 할당 없이 O(1). */
+/**
+ * 사전 할당된 고정 크기 링버퍼. 콜백에서의 적재는 할당 없이 O(1).
+ *
+ * 이 예제는 모든 상태 쓰기가 onClick(메인 스레드)에서만 일어나므로 동기화하지 않았다.
+ * 다만 Snapshot 쪽 write/apply 옵저버는 쓰기를 일으킨 스레드에서 호출되므로,
+ * 백그라운드에서 상태를 쓰는 실제 앱에 이 패턴을 옮길 때는 스레드 안전하게 만들어야 한다.
+ */
 private class EventRing(private val capacity: Int = 64) {
     private val buffer = arrayOfNulls<String>(capacity)
     private var writeIndex = 0

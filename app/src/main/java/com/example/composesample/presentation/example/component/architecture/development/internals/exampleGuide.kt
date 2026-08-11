@@ -142,6 +142,10 @@ package com.example.composesample.presentation.example.component.architecture.de
  *   StateNameRegistry 에 등록된 상태가 관여한 이벤트만 남기는 필터를 둔다(identity 비교, 등록 3개라 사실상 O(1)).
  * - 스코프에 사람이 읽을 수 있는 함수명을 붙이는 것은 이 API 범위 밖이다(슬롯 트리의 sourceInfo 파싱 영역).
  *   여기서는 S1/S2 별칭과 identity 해시로만 구분한다.
+ * - ⚠️ 스레드 계약: `registerGlobalWriteObserver`/`registerApplyObserver` 는 **쓰기를 일으킨 스레드에서** 호출된다.
+ *   이 예제는 모든 쓰기가 onClick(메인 스레드)에서만 일어나므로 EventRing 을 동기화하지 않았지만,
+ *   백그라운드에서 상태를 쓰는 실제 앱에 이 패턴을 옮길 때는 링버퍼를 스레드 안전하게 만들어야 한다.
+ *   (CompositionObserver 쪽 콜백은 컴포지션 스레드에서만 오므로 이 문제가 없다.)
  * - SnapshotObserverCard 의 버튼 3개는 위 매트릭스 3행에 1:1로 대응한다
  *   ("전역에 직접 쓰기" / "스냅샷 안에서 쓰기" / "같은 값 쓰기").
  *   특히 "스냅샷 안에서 쓰기"는 컴포지션 내부 쓰기를 안전하게 관측하기 위한 대역이다
