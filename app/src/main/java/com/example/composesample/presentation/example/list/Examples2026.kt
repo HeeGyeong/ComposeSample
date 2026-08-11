@@ -537,6 +537,13 @@ val examples2026 = listOf(
         exampleType = ConstValue.RememberObserverExample
     ),
     ExampleObject(
+        lastUpdate = "26. 08. 12",
+        title = "Composition Observer (왜 리컴포즈됐나)",
+        description = "CompositionObserver·Snapshot 관찰 API로 리컴포지션 원인을 인과 로그로 추적",
+        blogUrl = "",
+        exampleType = ConstValue.CompositionObserverExample
+    ),
+    ExampleObject(
         lastUpdate = "26. 06. 23",
         title = "Coil 3 이미지 로딩 & 캐시",
         description = "Coil 3의 AsyncImage 상태 표시와 캐시 정책 핵심 패턴 시연",

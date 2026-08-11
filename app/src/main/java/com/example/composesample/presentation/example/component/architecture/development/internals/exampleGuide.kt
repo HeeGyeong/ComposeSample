@@ -70,3 +70,80 @@ package com.example.composesample.presentation.example.component.architecture.de
  * - onAbandoned 는 컴포지션 커밋 실패 시나리오라 안전하게 실동작 데모로 재현하기 어려워 개념 설명 + CodeBlock 으로만 제공
  * - rememberCoroutineScope() 내부 구현은 실제 Compose 런타임 소스를 그대로 옮긴 것이 아닌 개념적 재현(HowComposeWorks 와 동일 관례)
  */
+
+/**
+ * Composition Observer (컴포지션 관찰 API) 예제 참고 자료
+ *
+ * ## 출처
+ * - Compose State Has No Name — Adit Lal
+ * - Android Weekly #739
+ *
+ * ## 공식 문서 / 권장 자료
+ * - CompositionObserver: https://developer.android.com/reference/kotlin/androidx/compose/runtime/tooling/CompositionObserver
+ * - Snapshot: https://developer.android.com/reference/kotlin/androidx/compose/runtime/snapshots/Snapshot
+ * - Compose 상태와 스냅샷 시스템: https://developer.android.com/develop/ui/compose/state
+ * - 리컴포지션 디버깅(Layout Inspector): https://developer.android.com/develop/ui/compose/tooling/layout-inspector
+ *
+ * ## 핵심 개념 요약
+ * 1) CompositionObserver — 컴포지션 축
+ *    - `currentComposer.composition` 으로 현재 Composable 이 속한 컴포지션을 얻고 `setObserver()` 로 부착
+ *    - 콜백 7종: onBeginComposition / onScopeEnter / onReadInScope / onScopeExit /
+ *      onScopeInvalidated / onScopeDisposed / onEndComposition
+ *    - 이 중 `onScopeInvalidated(scope, value)` 가 "왜 리컴포즈됐는가"를 답하는 유일한 콜백이다.
+ *      기존 리컴포지션 예제들(SideEffect 수동 계측)은 "몇 번"만 답하므로 축이 다르다.
+ *
+ * 2) Snapshot 관찰 API — 상태 축
+ *    - `Snapshot.observeSnapshots(SnapshotObserver)` (실험) — 스냅샷 생성에 개입해 read/write 옵저버를 주입
+ *    - `Snapshot.registerGlobalWriteObserver { }` (stable) — 전역 스냅샷의 쓰기만 관찰
+ *    - `Snapshot.registerApplyObserver { changed, snapshot -> }` (stable) — 변경이 전역에 적용되는 커밋 시점
+ *    - **세 API 의 커버리지는 겹치지 않고 상보적이다**(아래 실측 매트릭스 참조) — 어느 하나로 모든 쓰기를 볼 수 없다
+ *
+ * 3) 관찰로 완전한 로깅이 불가능한 이유(4가지 벽)
+ *    - ① 동일 값 쓰기: 값이 동등하면 setter 가 실제 쓰기를 건너뛰어 write 옵저버가 호출되지 않는다(설계상 불가)
+ *    - ② 이전 값 복구: 이전 값을 담은 StateRecord 필드가 internal 이고 레코드가 재사용되어 접근 불가
+ *    - ③ 컴포지션 중 쓰기: 컴포지션은 격리 스냅샷에서 진행되어 전역 write 옵저버에 안 잡힘
+ *      → `observeSnapshots` 가 유일한 경로
+ *    - ④ 이름 부재: 콜백은 상태/스코프 "객체"만 넘겨주므로 그대로는 @1387209841 로만 보인다
+ *
+ * ## 바이트코드/프로브로 확정한 사항 (Compose 1.11.1)
+ * - `Composition.setObserver()` 는 `androidx.compose.runtime.tooling` 의 확장함수이며 **반환이 nullable** 이다
+ *   (`ObservableComposition.setObserver()` 멤버 쪽과 시그니처가 다르다)
+ * - `onReadInScope(scope, value: Any)` 와 `onScopeInvalidated(scope, value: Any?)` 는 **value 의 nullability 가 다르다**
+ * - `IdentifiableRecomposeScope.identity` 는 `@ComposeToolingApi` opt-in 이 별도로 필요하다
+ * - `currentComposer.recomposeScope` 는 `@InternalComposeApi` 라 예제에서 사용하지 않는다
+ *   (관찰자 콜백이 넘겨주는 scope 로 충분하다)
+ *
+ * ## 실기기 계측으로 확정한 런타임 동작 (Compose 1.11.1, SM-A725F / API 33)
+ * 임시 계측 테스트(`CompositionObserverProbeTest`, 검증 후 삭제)로 측정한 사실이며 추정이 아니다.
+ *
+ * 1) 콜백 발화 순서 — 상태를 바꾸면 `[invalidated, begin, read, end]` 순으로 기록된다.
+ *    즉 **무효화가 먼저 일어나고(쓰기 시점), 그 다음 패스에서 스코프가 재실행되며 구독이 다시 형성**된다.
+ *    `setObserver` 반환 handle 은 실제로 non-null 이었다(관찰자 미부착 상태였으므로).
+ *
+ * 2) 쓰기 경로 × 관찰 API 발화 매트릭스 — **커버리지가 상보적이다**
+ *
+ *    | 쓰기 경로                       | registerGlobalWriteObserver | registerApplyObserver | observeSnapshots(write) |
+ *    |--------------------------------|-----------------------------|-----------------------|-------------------------|
+ *    | 전역 직접 쓰기(버튼 onClick)     | 발화                         | 발화                   | **침묵**                 |
+ *    | `withMutableSnapshot { }` 안    | **침묵**                     | 발화                   | 발화                     |
+ *    | 같은 값 재대입                   | 침묵                         | 침묵                   | 침묵                     |
+ *
+ *    - `observeSnapshots` 의 read/write 옵저버는 `onPreCreate` 로 **새 스냅샷이 생성될 때** 주입되므로,
+ *      새 스냅샷을 만들지 않는 전역 직접 쓰기에는 관여하지 못한다. "실험 API 라서 더 많이 본다"가 아니다.
+ *    - 컴포지션도 자기 스냅샷 안에서 진행되므로 위 표의 2행이 곧 컴포지션 내부 쓰기의 대역이며,
+ *      이것이 벽 ③("컴포지션 중 쓰기는 observeSnapshots 만이 경로")의 실측 근거다.
+ *    - 3행이 벽 ①의 실측 근거다.
+ *
+ * ## 본 예제 구현 메모
+ * - 관찰자 콜백은 컴포지션 도중 + 전역 스냅샷 락 아래에서 실행되므로, 콜백에서는 사전 할당 링버퍼(EventRing)에
+ *   O(1) 적재만 하고 화면 반영(mutableStateListOf 쓰기)은 클릭 핸들러에서만 수행한다.
+ *   콜백에서 스냅샷 상태에 직접 쓰면 "컴포지션 중 쓰기"가 되어 무한 리컴포지션으로 번진다.
+ * - setObserver 는 컴포지션 하나 전체에 붙어 화면의 모든 스코프 이벤트가 들어오므로,
+ *   StateNameRegistry 에 등록된 상태가 관여한 이벤트만 남기는 필터를 둔다(identity 비교, 등록 3개라 사실상 O(1)).
+ * - 스코프에 사람이 읽을 수 있는 함수명을 붙이는 것은 이 API 범위 밖이다(슬롯 트리의 sourceInfo 파싱 영역).
+ *   여기서는 S1/S2 별칭과 identity 해시로만 구분한다.
+ * - SnapshotObserverCard 의 버튼 3개는 위 매트릭스 3행에 1:1로 대응한다
+ *   ("전역에 직접 쓰기" / "스냅샷 안에서 쓰기" / "같은 값 쓰기").
+ *   특히 "스냅샷 안에서 쓰기"는 컴포지션 내부 쓰기를 안전하게 관측하기 위한 대역이다
+ *   — 컴포지션 도중 실제로 상태에 쓰면 무한 리컴포지션이 되므로 그 자체를 시연할 수는 없다.
+ */
