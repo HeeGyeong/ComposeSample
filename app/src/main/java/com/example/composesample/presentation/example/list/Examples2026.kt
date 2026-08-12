@@ -619,5 +619,12 @@ val examples2026 = listOf(
         description = "네트워크+DB 이중 소스로 DB를 단일 진실 공급원 삼는 페이징 구성",
         blogUrl = "",
         exampleType = ConstValue.RemoteMediatorExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 08. 13",
+        title = "Slot Tree Inspector (컴포지션 구조 덤프)",
+        description = "compositionData를 순회해 슬롯 그룹을 함수명·파일·줄번호로 해석",
+        blogUrl = "",
+        exampleType = ConstValue.SlotTreeInspectorExample
     )
 )

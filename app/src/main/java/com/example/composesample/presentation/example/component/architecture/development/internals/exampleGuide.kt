@@ -151,3 +151,92 @@ package com.example.composesample.presentation.example.component.architecture.de
  *   특히 "스냅샷 안에서 쓰기"는 컴포지션 내부 쓰기를 안전하게 관측하기 위한 대역이다
  *   — 컴포지션 도중 실제로 상태에 쓰면 무한 리컴포지션이 되므로 그 자체를 시연할 수는 없다.
  */
+
+/**
+ * Slot Tree Inspector (컴포지션 슬롯 트리 인스펙터) 예제 참고 자료
+ *
+ * ## 공식 문서 / 권장 자료
+ * - CompositionData: https://developer.android.com/reference/kotlin/androidx/compose/runtime/tooling/CompositionData
+ * - CompositionGroup: https://developer.android.com/reference/kotlin/androidx/compose/runtime/tooling/CompositionGroup
+ * - Layout Inspector(같은 정보를 IDE 에서 보는 도구): https://developer.android.com/develop/ui/compose/tooling/layout-inspector
+ * - Compose 컴파일러 메트릭(그룹/스킵 여부를 파일로 뽑는 축): https://developer.android.com/develop/ui/compose/performance/stability/diagnose
+ *
+ * ## 핵심 개념 요약
+ * 1) 무엇을 답하는 API 인가
+ *    - CompositionObserver(직전 예제)가 **이벤트 축**("왜 리컴포즈됐는가")이라면 이쪽은 **구조 축**이다.
+ *      "지금 이 컴포지션이 어떤 그룹 계층이고, 각 그룹이 어느 함수의 몇 번째 줄인가"를 답한다.
+ *    - 직전 예제가 스코프에 이름을 못 붙여 S1/S2 별칭에 그친 빈 곳을 정확히 이 API 가 메운다.
+ *
+ * 2) API 표면 (androidx.compose.runtime.tooling, `@OptIn(ComposeToolingApi::class)`)
+ *    - `currentComposer.compositionData` → `CompositionData` (이 Composable 이 속한 컴포지션의 슬롯 트리)
+ *    - `CompositionData` : `compositionGroups` / `isEmpty` / `find(identity)`
+ *    - `CompositionGroup` **은 `CompositionData` 를 상속**한다 → 재귀 순회가 확장함수 하나로 끝난다.
+ *      멤버: `key` / `sourceInfo` / `node` / `data` / `identity` / `groupSize` / `slotsSize`
+ *    - `parseSourceInformation(String): SourceInformation?` — 최상위 함수
+ *      → `functionName` / `sourceFile` / `packageHash` / `isCall` / `isInline` /
+ *        `locations[].lineNumber·isRepeatable` / `parameters[].name·sortedIndex·inlineClass`
+ *    - `CompositionData.findCompositionInstance()` → `CompositionInstance`(`parent` / `data` / `findContextGroup()`)
+ *
+ * 3) sourceInfo 문자열 문법
+ *    - `C(함수명)N(파라미터들)줄@오프셋L길이,...:파일.kt#패키지해시`
+ *    - `C` = 호출 그룹, `CC` = 인라인 호출 그룹, 접두어가 없으면 이름 없는 그룹(줄 정보만)
+ *    - 위치의 `*` 접두어는 반복 호출 지점(`isRepeatable=true`)
+ *    - 파라미터의 `:c#ui.graphics.Color` 는 인라인 클래스 → `inlineClass` 로 풀린다
+ *
+ * ## 바이트코드로 확정한 사항 (Compose 1.11.1)
+ * - 소스 정보 기록 조건은 `GapComposer.sourceInformation()` 안에 있다:
+ *   **`if (inserting && sourceMarkersEnabled) writer.recordGroupSourceInformation(info)`**
+ *   → 수집을 켜기 전에 이미 삽입된 그룹에는 소급 기록되지 않는다.
+ * - `collectParameterInformation()` 이 하는 일은 세 가지다:
+ *   `forceRecomposeScopes = true` / `sourceMarkersEnabled = true` / `slotTable.collectSourceInformation()`
+ *   → **모든 스코프를 재시작 가능하게 만들므로 스킵 최적화가 약해진다**(공짜가 아니다).
+ * - `parseSourceInformation` 의 반환은 **nullable** 이고, 내부에서 ParseException 을 잡아 null 로 바꾼다
+ *   (`ParseException` 자체는 package-private 이라 호출부에서 타입으로 잡을 수 없다).
+ * - 필요한 opt-in 은 `ComposeToolingApi` **하나뿐**이다(`InternalComposeApi` 는 필요 없었다).
+ * - ⚠️ 같은 tooling 패키지의 `ComposeStackTrace` / `appendStackTrace` / `attachComposeStackTrace` 는
+ *   javap 에는 public 으로 보이지만 Kotlin `internal` 이라 앱 코드에서 호출할 수 없다.
+ * - ⚠️ `ui-tooling-data` 의 `asTree()` / `Group` 은 더 편하지만 그 아티팩트는 **debug 전용**이라
+ *   릴리스 빌드가 깨진다. 이 예제가 쓰는 API 는 `runtime-android` 에 있어 릴리스에서도 안전하다.
+ *
+ * ## 실기기 계측으로 확정한 런타임 동작 (Compose 1.11.1, SM-A725F / API 33)
+ * 임시 프로브/스모크 테스트(검증 후 삭제)로 측정한 사실이며 추정이 아니다.
+ *
+ * 1) **읽는 시점이 결과를 바꾼다.**
+ *    - `setContent` 루트 컴포지션의 최초 패스 도중 읽으면 `isEmpty=true`, 그룹 0개.
+ *    - 이미 내용이 있는 슬롯 테이블에서는 트리가 보이지만 **지금 만들고 있는 부분이 빠져 있다.**
+ *      실측: 카드에 행을 하나 추가한 뒤 → 컴포지션 도중 읽기 **316개**, 클릭 핸들러에서 읽기 **331개**.
+ *      (같은 값이 다음 패스에서도 316 으로 유지되어, 단순히 "직전 패스의 트리"라고 말할 수는 없다.)
+ *    - → 규칙: **순회는 반드시 컴포지션 밖(클릭 핸들러 등)에서 한다.** 예외를 던지지 않고
+ *      그럴듯한 값을 돌려주므로 가장 속기 쉬운 함정이다.
+ *
+ * 2) **수집 플래그가 이름의 유무를 가른다.**
+ *    - `collectParameterInformation()` 없이 컴포지션 이후에 읽으면
+ *      구조는 완전하지만 실측 **그룹 316개 중 sourceInfo 를 가진 그룹 0개**.
+ *    - 켜면 `InspectedSampleTree(title, leafCount)` 처럼 함수명과 파라미터 이름까지 나온다.
+ *    - 켠 뒤 **나중에 삽입되는 서브트리도 정상 기록**된다(잎 추가 시 66 → 84 그룹, 이름 유지).
+ *
+ * 3) **LazyColumn 의 item 은 각각 별도 서브컴포지션이다.**
+ *    - 카드 안에서 얻은 compositionData 는 화면 전체가 아니라 그 item 의 트리다.
+ *    - `findCompositionInstance()?.parent != null` (실측) — 즉 부모 컴포지션이 존재한다.
+ *    - 그래서 A 카드에서 켠 수집 플래그가 B 카드에는 영향을 주지 않는다.
+ *      이 예제의 GateMatrixCard 가 "수집 OFF" 대조군으로 성립하는 근거가 바로 이것이다.
+ *
+ * 4) **줄 번호는 함수 선언 줄이 아니라 함수 안의 Composable 호출 지점이다.**
+ *    - 실측: 70행에 선언된 함수의 첫 위치가 71(=71행의 첫 호출), 두 번째 위치가 75.
+ *    - 원문 숫자는 0부터, 파싱 결과는 1부터 세므로 정확히 1 차이가 난다.
+ *
+ * 5) **관찰이 대상을 바꾼다(observer effect).**
+ *    - 인스펙터의 결과 표도 같은 컴포지션 안에 그려지므로, 아무것도 바꾸지 않고 한 번 더 스캔하기만 해도
+ *      "컴포지션 전체 그룹 수"가 크게 늘어난다(실측 661 → 1137).
+ *    - 그래서 예제 화면의 숫자를 코드 주석/문구에 **고정 값으로 박아두면 안 된다**
+ *      (UI 를 한 줄만 고쳐도 어긋난다 — 이 가이드에만 측정 시점 값으로 남긴다).
+ *
+ * ## 본 예제 구현 메모
+ * - 스캔 버튼의 onClick 안에서만 트리를 순회한다(위 1번 때문). 컴포지션 본문에서는 참조만 잡아둔다.
+ * - `collectParameterInformation()` 은 InspectorCard 본문 첫 줄에서 호출한다 —
+ *   그래야 그 아래 삽입되는 스캔 대상이 이름을 갖는다. 카드 자신과 조상 그룹에는 이름이 없다(위 바이트코드 조건).
+ * - GateMatrixCard 는 의도적으로 `collectParameterInformation()` 을 호출하지 않는다.
+ *   별도 서브컴포지션이라는 3번 사실 덕분에 "수집 OFF" 대조군이 된다.
+ * - 표시량은 깊이(maxDepth)와 줄 수(limit=60) 양쪽으로 제한한다 —
+ *   카드 하나가 속한 서브컴포지션조차 수백~천 단위 그룹이라 전량 표시는 화면에서 의미가 없다.
+ */
