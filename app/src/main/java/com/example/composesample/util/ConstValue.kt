@@ -100,7 +100,7 @@ object ConstValue {
     const val ModalDrawExample = "modalDrawExample"
 
     // ==================== 애니메이션 & 효과 예제 ====================
-    // Animation(다양한 애니메이션), AnimatedContent(콘텐츠 전환 심화), Lottie(Lottie/GIF), UIShimmer(로딩 효과), TextShimmer(텍스트 효과), NewShadowApi(Compose 1.9 Shadow), SharedElementTransition(공유 요소 전환), SharedElementDebugTooling(Compose 1.11 LookaheadAnimationVisualDebugging 오버레이로 matched/multipleMatches/unmatched 시각화 + test coroutine API 안내), SpringTweenSnap(spring/tween/snap/keyframes 비교), AnimationsShowcase(공통 duration/easing 슬라이더로 5가지 패턴 동시 비교 — animateXxxAsState / AnimatedVisibility+Crossfade / AnimatedContent+updateTransition / InfiniteTransition+Drag spring)
+    // Animation(다양한 애니메이션), AnimatedContent(콘텐츠 전환 심화), Lottie(Lottie/GIF), UIShimmer(로딩 효과), TextShimmer(텍스트 효과), NewShadowApi(Compose 1.9 Shadow), SharedElementTransition(공유 요소 전환), SharedElementDebugTooling(Compose 1.11 LookaheadAnimationVisualDebugging 오버레이로 matched/multipleMatches/unmatched 시각화 + test coroutine API 안내), SpringTweenSnap(spring/tween/snap/keyframes 비교), AnimationsShowcase(공통 duration/easing 슬라이더로 5가지 패턴 동시 비교 — animateXxxAsState / AnimatedVisibility+Crossfade / AnimatedContent+updateTransition / InfiniteTransition+Drag spring), ArcPathAnimation(2D 값의 "경로 모양" 축 — ArcAnimationSpec/ArcMode로 직선 대신 호, keyframesWithSpline로 경유점 부드럽게 통과, keyframes 구간별 ArcMode, DeferredTargetAnimation pendingTarget)
     const val AnimationExample = "animationExample"
     const val AnimatedContentExample = "animatedContentExample"
     const val LottieExample = "lottieExample"
@@ -111,6 +111,7 @@ object ConstValue {
     const val SharedElementDebugToolingExample = "sharedElementDebugToolingExample"
     const val SpringTweenSnapExample = "springTweenSnapExample"
     const val AnimationsShowcaseExample = "animationsShowcaseExample"
+    const val ArcPathAnimationExample = "arcPathAnimationExample"
 
     // ==================== 네비게이션 예제 ====================
     // BottomNavigation(하단 탭), Navigation3(새 Navigation), NestedRoutesNav3(중첩 라우팅), Nav3ViewModelScope(Nav3 ViewModel 스코프 변화 + 복원 패턴), Nav3SavedStateHandle(복합 객체 NavKey 역직렬화 크래시 재현 + id+Repository 복원)

@@ -626,5 +626,12 @@ val examples2026 = listOf(
         description = "compositionData를 순회해 슬롯 그룹을 함수명·파일·줄번호로 해석",
         blogUrl = "",
         exampleType = ConstValue.SlotTreeInspectorExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 08. 14",
+        title = "2D 경로 애니메이션 (Arc / Spline)",
+        description = "두 점 사이를 직선이 아닌 호·스플라인으로 잇는 경로 제어 스펙",
+        blogUrl = "",
+        exampleType = ConstValue.ArcPathAnimationExample
     )
 )
