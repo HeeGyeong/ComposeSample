@@ -92,6 +92,7 @@ import com.example.composesample.presentation.example.component.ui.layout.bottom
 import com.example.composesample.presentation.example.component.ui.layout.drawer.ModalDrawerExampleUI
 import com.example.composesample.presentation.example.component.ui.layout.drawer.ScaffoldDrawerExampleUI
 import com.example.composesample.presentation.example.component.ui.layout.flexbox.FlexBoxUI
+import com.example.composesample.presentation.example.component.ui.layout.flexbox.FlowOverflowExampleUI
 import com.example.composesample.presentation.example.component.ui.layout.flexbox.FlowRowLayoutExampleUI
 import com.example.composesample.presentation.example.component.ui.material3.Material3ExpressiveExampleUI
 import com.example.composesample.presentation.example.component.ui.shader.AgslShaderTuningExampleUI
@@ -304,6 +305,7 @@ import com.example.composesample.util.ConstValue.PredictiveBackExample
 import com.example.composesample.util.ConstValue.SpringTweenSnapExample
 import com.example.composesample.util.ConstValue.AnimationsShowcaseExample
 import com.example.composesample.util.ConstValue.ArcPathAnimationExample
+import com.example.composesample.util.ConstValue.FlowOverflowExample
 import com.example.composesample.util.ConstValue.AdaptiveLayoutExample
 import com.example.composesample.util.ConstValue.MediaQueryExample
 import com.example.composesample.util.ConstValue.Compose17FeaturesExample
@@ -502,6 +504,7 @@ val exampleUiRegistry: Map<String, @Composable (onBackEvent: () -> Unit) -> Unit
     SpringTweenSnapExample to { onBackEvent -> SpringTweenSnapExampleUI(onBackEvent) },
     AnimationsShowcaseExample to { onBackEvent -> AnimationsShowcaseExampleUI(onBackEvent) },
     ArcPathAnimationExample to { onBackEvent -> ArcPathAnimationExampleUI(onBackEvent) },
+    FlowOverflowExample to { onBackEvent -> FlowOverflowExampleUI(onBackEvent) },
     HapticFeedbackExample to { onBackEvent -> HapticFeedbackExampleUI(onBackEvent) },
     BiometricAuthExample to { onBackEvent -> BiometricAuthExampleUI(onBackEvent) },
     StabilityAnnotationsExample to { onBackEvent -> StabilityAnnotationsExampleUI(onBackEvent) },

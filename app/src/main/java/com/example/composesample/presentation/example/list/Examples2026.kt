@@ -633,5 +633,12 @@ val examples2026 = listOf(
         description = "두 점 사이를 직선이 아닌 호·스플라인으로 잇는 경로 제어 스펙",
         blogUrl = "",
         exampleType = ConstValue.ArcPathAnimationExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 08. 15",
+        title = "Flow 레이아웃 오버플로 제어",
+        description = "maxLines + expandIndicator/expandOrCollapseIndicator, ContextualFlowRow 지연 생성 실측",
+        blogUrl = "",
+        exampleType = ConstValue.FlowOverflowExample
     )
 )
