@@ -240,3 +240,44 @@ package com.example.composesample.presentation.example.component.architecture.de
  * - 표시량은 깊이(maxDepth)와 줄 수(limit=60) 양쪽으로 제한한다 —
  *   카드 하나가 속한 서브컴포지션조차 수백~천 단위 그룹이라 전량 표시는 화면에서 의미가 없다.
  */
+
+/**
+ * Recomposer 레지스트리 관찰 예제 참고 자료
+ *
+ * ## 공식 문서 / 권장 자료
+ * - Recomposer: https://developer.android.com/reference/kotlin/androidx/compose/runtime/Recomposer
+ * - RecomposerInfo: https://developer.android.com/reference/kotlin/androidx/compose/runtime/RecomposerInfo
+ * - CompositionRegistrationObserver: https://developer.android.com/reference/kotlin/androidx/compose/runtime/tooling/CompositionRegistrationObserver
+ *
+ * ## 핵심 개념 요약
+ * - CompositionObserver(컴포지션 안의 스코프 무효화) · SlotTreeInspector(컴포지션 안의 슬롯 구조)가 "한 컴포지션 안"을
+ *   보는 반면, 이 예제는 "프로세스에 컴포지션이 몇 개 살아있고 언제 생겼다 사라지는가"를 본다 — 한 단계 위 레벨.
+ * - `Recomposer.runningRecomposers: StateFlow<Set<RecomposerInfo>>` — opt-in 불필요(javap 로 확인, RequiresOptIn
+ *   게이팅이 없음). 프로세스 전체의 실행 중 Recomposer 를 조회한다.
+ * - `RecomposerInfo.observe(CompositionRegistrationObserver): CompositionObserverHandle?` —
+ *   `@OptIn(ExperimentalComposeRuntimeApi::class)` 필요. `onCompositionRegistered`/`onCompositionUnregistered`
+ *   콜백으로 그 Recomposer 아래 컴포지션(서브컴포지션 포함)의 등록/해제를 관찰한다.
+ *
+ * ## 바이트코드로 확정한 사항 (Compose 1.11.1)
+ * - `Recomposer.Companion.getRunningRecomposers()` 는 `RuntimeInvisibleAnnotations` 에 `NotNull` 만 있고
+ *   `RequiresOptIn` 계열 게이팅이 없다 — opt-in 없이 호출 가능.
+ * - `RecomposerInfo.observe()` 는 `RuntimeInvisibleAnnotations` 에 `ExperimentalComposeRuntimeApi` +
+ *   `Nullable` 이 함께 붙어 있다 — opt-in 필요 + 반환값 nullable, 둘 다 CompositionObserver.setObserver() 와
+ *   동일한 함정 패턴.
+ * - `CompositionRegistrationObserver` 인터페이스 자체도 `ExperimentalComposeRuntimeApi` 로 게이팅된다.
+ *
+ * ## 실기기 계측으로 확정한 런타임 동작 (Compose 1.11.1, SM-A725F / API 33 — 후보 등록 시점, 검증 후 프로브 삭제)
+ * - `runningRecomposers` 는 이 앱에서 1개로 채워진다.
+ * - `observe()` 부착 즉시, 이미 등록돼 있던 컴포지션 43개에 대해 `onCompositionRegistered` 가 한꺼번에 재생됐다
+ *   — 미래 이벤트만 오는 스트림이 아니다.
+ * - LazyColumn 을 스크롤하니 등록 85 / 해제 35 로 item 서브컴포지션의 생성·파기가 실측됐다
+ *   (SlotTreeInspector 가 확인한 "LazyColumn item = 별도 서브컴포지션"과 맞물리는 증거).
+ * - `changeCount` 는 컴포지션·스크롤 후에도 계속 0 으로 관측됐다 — "전역 리컴포지션 카운터"로 서술하면 틀린다.
+ *
+ * ## 본 예제 구현 메모
+ * - CompositionRegistrationObserver 콜백도 컴포지션 기계장치가 동작하는 도중 호출될 수 있으므로,
+ *   CompositionObserverExampleUI 와 동일하게 사전 할당 EventRing 에 O(1) 적재만 하고 화면 반영은 클릭
+ *   핸들러(로그 새로고침/관찰 중지)에서만 수행한다.
+ * - changeCount 함정 카드는 수동 클릭 카운터와 나란히 배치해 "이름이 시사하는 것과 실제 동작이 다르다"를
+ *   코드가 아니라 화면에서 직접 대조하도록 구성했다.
+ */

@@ -135,6 +135,7 @@ import com.example.composesample.presentation.example.component.architecture.dev
 import com.example.composesample.presentation.example.component.architecture.development.internals.HowComposeWorksExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.internals.RememberObserverExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.internals.SlotTreeInspectorExampleUI
+import com.example.composesample.presentation.example.component.architecture.development.internals.RecomposerRegistryExampleUI
 import com.example.composesample.presentation.example.component.ui.media.image.Coil3ImageExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.language.Kotlin24FeaturesExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.language.NameBasedDestructuringExampleUI
@@ -267,6 +268,7 @@ import com.example.composesample.util.ConstValue.CompositionObserverExample
 import com.example.composesample.util.ConstValue.HowComposeWorksExample
 import com.example.composesample.util.ConstValue.RememberObserverExample
 import com.example.composesample.util.ConstValue.SlotTreeInspectorExample
+import com.example.composesample.util.ConstValue.RecomposerRegistryExample
 import com.example.composesample.util.ConstValue.Coil3ImageExample
 import com.example.composesample.util.ConstValue.NameBasedDestructuringExample
 import com.example.composesample.util.ConstValue.SealedClassInterfaceExample
@@ -449,6 +451,7 @@ val exampleUiRegistry: Map<String, @Composable (onBackEvent: () -> Unit) -> Unit
     RememberObserverExample to { onBackEvent -> RememberObserverExampleUI(onBackEvent) },
     CompositionObserverExample to { onBackEvent -> CompositionObserverExampleUI(onBackEvent) },
     SlotTreeInspectorExample to { onBackEvent -> SlotTreeInspectorExampleUI(onBackEvent) },
+    RecomposerRegistryExample to { onBackEvent -> RecomposerRegistryExampleUI(onBackEvent) },
     Coil3ImageExample to { onBackEvent -> Coil3ImageExampleUI(onBackEvent) },
     CoroutinesInternalsExample to { onBackEvent -> CoroutinesInternalsExampleUI(onBackEvent) },
     FlatMapExample to { onBackEvent -> FlatMapExampleUI(onBackEvent) },

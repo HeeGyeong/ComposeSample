@@ -640,5 +640,12 @@ val examples2026 = listOf(
         description = "maxLines + expandIndicator/expandOrCollapseIndicator, ContextualFlowRow 지연 생성 실측",
         blogUrl = "",
         exampleType = ConstValue.FlowOverflowExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 08. 16",
+        title = "Recomposer 레지스트리 관찰",
+        description = "runningRecomposers + CompositionRegistrationObserver로 컴포지션 등록/해제를 실시간 관찰",
+        blogUrl = "",
+        exampleType = ConstValue.RecomposerRegistryExample
     )
 )
