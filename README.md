@@ -153,6 +153,8 @@ Cursor IDE를 사용하는 개발자를 위한 **AI 코딩 어시스턴트 규�
 
 ## 컴포넌트 예제
 
+> 아래 목록은 실제 코드를 기준으로 AI(Claude Code)가 디렉터리를 탐색해 정리한 카탈로그입니다. 새 예제가 추가될 때마다 코드와의 diff를 확인해 자동으로 갱신하고 있어(DOC-DRIFT 사이클), 사람이 손으로 나열한 것보다 기계적으로 느껴질 수 있습니다.
+
 ### **ui** - UI 컴포넌트 & 레이아웃
 **layout**:
 - **animation**: Compose 애니메이션, Shared Element Transition, AnimatedContent 심화(탭 전환, 카운터, 상태 전환, transitionSpec 갤러리), Spring/Tween/Snap/Keyframes 비교(물리 기반 바운스, 시간 기반 이징, 즉시 전환, 구간별 커스텀), 2D 경로 애니메이션(`ArcAnimationSpec`/`ArcMode` 호(arc), `keyframesWithSpline` 경유점 스무딩, 구간별 `using ArcMode`, `DeferredTargetAnimation` + `approachLayout` — 스펙 자체를 샘플링해 그린 경로)
