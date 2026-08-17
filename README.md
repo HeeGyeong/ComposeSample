@@ -278,6 +278,7 @@ Cursor IDE를 사용하는 개발자를 위한 **AI 코딩 어시스턴트 규�
 - **rebound**: 역할 기반 리컴포지션 예산 모니터링
 - **strictmode**: StrictMode 정책 위반 감지(메인 스레드 디스크/네트워크 I/O, 미해제 closeable)
 - **test**: UI 테스트 TDD, 리컴포지션 감지, Coroutine Flow Testing(Turbine), Screenshot Testing(Paparazzi/Roborazzi), Compose UI Testing(createComposeRule, onNodeWithTag, performClick 등 테스트 패턴 가이드)
+- **tracing**: Perfetto 커스텀 트레이스 이벤트(`Trace.beginSection`/`endSection`의 스레드 페어링 함정을 실측 + `beginAsyncSection`/`endAsyncSection`·`setCounter`로 안전하게 트레이싱)
 - **type**: 변수 타입 활용과 컴파일 타임 최적화
 
 **others**:
