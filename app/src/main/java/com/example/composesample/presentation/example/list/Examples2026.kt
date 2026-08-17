@@ -654,5 +654,12 @@ val examples2026 = listOf(
         description = "beginSection/endSection의 스레드 페어링 함정을 실측 + beginAsyncSection/setCounter로 안전하게 트레이싱",
         blogUrl = "",
         exampleType = ConstValue.PerfettoTracingExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 08. 18",
+        title = "IME 인터랙티브 제어",
+        description = "imeNestedScroll로 제스처 드래그해서 키보드 열고/닫기 + imeAnimationSource/Target로 애니메이션 진행률에 커스텀 UI 동기화",
+        blogUrl = "",
+        exampleType = ConstValue.ImeNestedScrollExample
     )
 )

@@ -113,6 +113,7 @@ import com.example.composesample.presentation.example.component.ui.media.shimmer
 import com.example.composesample.presentation.example.component.ui.navigation.NestedRoutesNav3ExampleUI
 import com.example.composesample.presentation.example.component.ui.notification.SnapNotifyExampleUI
 import com.example.composesample.presentation.example.component.ui.scroll.CustomScrollBehaviorExampleUI
+import com.example.composesample.presentation.example.component.ui.scroll.ImeNestedScrollExampleUI
 import com.example.composesample.presentation.example.component.ui.scroll.NestedScrollingExampleUI
 import com.example.composesample.presentation.example.component.ui.shapes.CardCornersExampleUI
 import com.example.composesample.presentation.example.component.ui.tab.ResponsiveTabRowExampleUI
@@ -239,6 +240,7 @@ import com.example.composesample.util.ConstValue.Nav3SavedStateHandleExample
 import com.example.composesample.util.ConstValue.Nav3ViewModelScopeExample
 import com.example.composesample.util.ConstValue.Navigation3Example
 import com.example.composesample.util.ConstValue.NestedRoutesNav3Example
+import com.example.composesample.util.ConstValue.ImeNestedScrollExample
 import com.example.composesample.util.ConstValue.NestedScrollingExample
 import com.example.composesample.util.ConstValue.NewShadowApiExample
 import com.example.composesample.util.ConstValue.MultiTableInsertExample
@@ -422,6 +424,7 @@ val exampleUiRegistry: Map<String, @Composable (onBackEvent: () -> Unit) -> Unit
     PathGraphicsExample to { onBackEvent -> PathGraphicsExampleUI(onBackEvent) },
     NestedScrollingExample to { onBackEvent -> NestedScrollingExampleUI(onBackEvent) },
     CustomScrollBehaviorExample to { onBackEvent -> CustomScrollBehaviorExampleUI(onBackEvent) },
+    ImeNestedScrollExample to { onBackEvent -> ImeNestedScrollExampleUI(onBackEvent) },
     StickerCanvasExample to { onBackEvent -> StickerCanvasExampleUI(onBackEvent) },
     AccessibleFocusIndicatorExample to { onBackEvent -> AccessibleFocusIndicatorExampleUI(onBackEvent) },
     LargeContentViewerExample to { onBackEvent -> LargeContentViewerExampleUI(onBackEvent) },
