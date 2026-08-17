@@ -146,6 +146,7 @@ import com.example.composesample.presentation.example.component.architecture.dev
 import com.example.composesample.presentation.example.component.architecture.development.concurrency.RaceConditionExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.concurrency.SelectExpressionExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.strictmode.StrictModeExampleUI
+import com.example.composesample.presentation.example.component.architecture.development.tracing.PerfettoTracingExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.flow.FlatMapExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.flow.FlowBatchingExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.flow.FlowOperatorsExampleUI
@@ -297,6 +298,7 @@ import com.example.composesample.util.ConstValue.CoroutineBridgesExample
 import com.example.composesample.util.ConstValue.RaceConditionExample
 import com.example.composesample.util.ConstValue.SelectExpressionExample
 import com.example.composesample.util.ConstValue.StrictModeExample
+import com.example.composesample.util.ConstValue.PerfettoTracingExample
 import com.example.composesample.util.ConstValue.WorkManagerExample
 import com.example.composesample.util.ConstValue.BackgroundLocationExample
 import com.example.composesample.util.ConstValue.DynamicAppLinksExample
@@ -466,6 +468,7 @@ val exampleUiRegistry: Map<String, @Composable (onBackEvent: () -> Unit) -> Unit
     RaceConditionExample to { onBackEvent -> RaceConditionExampleUI(onBackEvent) },
     SelectExpressionExample to { onBackEvent -> SelectExpressionExampleUI(onBackEvent) },
     StrictModeExample to { onBackEvent -> StrictModeExampleUI(onBackEvent) },
+    PerfettoTracingExample to { onBackEvent -> PerfettoTracingExampleUI(onBackEvent) },
     ButtonGroupExample to { onBackEvent -> ButtonGroupExampleUI(onBackEvent) },
     VisibilityExample to { onBackEvent -> VisibilityExampleUI(onBackEvent) },
     RecompositionTestExample to { onBackEvent -> RecompositionTestExampleUI(onBackEvent) },

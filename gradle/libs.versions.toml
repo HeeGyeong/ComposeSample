@@ -88,6 +88,11 @@ glance = "1.1.1"
 # Biometric (alpha — biometric-compose는 alpha 단계만 존재)
 biometric = "1.4.0-alpha05"
 
+# Tracing (Perfetto 커스텀 트레이스 이벤트)
+# debugRuntimeClasspath 에는 이미 전이 해석되어 있으나 debugCompileClasspath 에는 없어(실측 확인)
+# 코드에서 Trace 클래스를 직접 참조하려면 명시적 선언이 필요하다. 이미 해석 중이던 버전과 동일하게 고정.
+tracing = "1.2.0"
+
 [plugins]
 android-application = { id = "com.android.application", version.ref = "applicationVersion" }
 android-library = { id = "com.android.library", version.ref = "libraryVersion" }
@@ -205,6 +210,9 @@ glanceAppwidget = { module = "androidx.glance:glance-appwidget", version.ref = "
 # Biometric
 biometric = { module = "androidx.biometric:biometric", version.ref = "biometric" }
 biometricCompose = { module = "androidx.biometric:biometric-compose", version.ref = "biometric" }
+
+# Tracing
+tracing = { module = "androidx.tracing:tracing", version.ref = "tracing" }
 
 [bundles]
 retrofit = [

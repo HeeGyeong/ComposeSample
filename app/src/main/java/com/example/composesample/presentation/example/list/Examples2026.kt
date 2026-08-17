@@ -647,5 +647,12 @@ val examples2026 = listOf(
         description = "runningRecomposers + CompositionRegistrationObserver로 컴포지션 등록/해제를 실시간 관찰",
         blogUrl = "",
         exampleType = ConstValue.RecomposerRegistryExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 08. 17",
+        title = "Perfetto 코루틴/Flow 트레이싱",
+        description = "beginSection/endSection의 스레드 페어링 함정을 실측 + beginAsyncSection/setCounter로 안전하게 트레이싱",
+        blogUrl = "",
+        exampleType = ConstValue.PerfettoTracingExample
     )
 )

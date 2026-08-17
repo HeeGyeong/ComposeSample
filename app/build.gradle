@@ -97,6 +97,9 @@ dependencies {
     implementation(libs.biometric)
     implementation(libs.biometricCompose)
 
+    // Tracing (Perfetto 커스텀 트레이스 이벤트 — PerfettoTracing 예제)
+    implementation(libs.tracing)
+
     // Unit Test
     testImplementation(libs.bundles.unitTest)
 

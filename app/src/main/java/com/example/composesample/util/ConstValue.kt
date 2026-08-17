@@ -127,8 +127,9 @@ object ConstValue {
     const val StartupOptimizationExample = "startupOptimizationExample"
 
     // ==================== 개발 도구 / 정책 위반 감지 예제 ====================
-    // StrictMode(메인 스레드 디스크/네트워크 I/O ThreadPolicy + leaked Closeable VmPolicy 위반을 의도적으로 재현하고 penaltyListener 로 감지 — API 28+ 분기)
+    // StrictMode(메인 스레드 디스크/네트워크 I/O ThreadPolicy + leaked Closeable VmPolicy 위반을 의도적으로 재현하고 penaltyListener 로 감지 — API 28+ 분기), PerfettoTracing(androidx.tracing 의 Trace.beginSection/endSection vs beginAsyncSection/endAsyncSection 비교 — 코루틴이 멀티스레드 디스패처에서 재개될 때 스레드가 바뀌어 동기 트레이스 페어링이 깨지는 함정을 실기기 스레드명 로그로 실증, setCounter 로 Flow 활성 구독자 수 트랙)
     const val StrictModeExample = "strictModeExample"
+    const val PerfettoTracingExample = "perfettoTracingExample"
 
     // ==================== 아키텍처 패턴 예제 ====================
     // MVI(단방향 데이터 흐름), Coordinator(화면 전환 패턴), Modularization(모듈화 전략), PreviewInternals(@Preview 내부 동작 원리), StabilityAnnotations(@Stable/@Immutable 리컴포지션 최적화), PreviewOnlyAnnotation(@RequiresOptIn으로 Preview 전용 Composable 제한), KoinCompilerPlugin(Koin Annotations KSP로 컴파일 타임 DI 검증), FeatureFlag(sealed class type-safe flag 레지스트리 + StateFlow reactive 토글 + ModalBottomSheet 디버그 메뉴 + Remote Config 시뮬레이션), HowComposeWorks(Compose 내부 동작 통합 워크스루 — 컴파일러 변환/SlotTable/snapshot 읽기 추적/layout pipeline), RememberObserver(remember 객체 생명주기 콜백 — onRemembered/onForgotten/onAbandoned 로 컴포지션 진입·이탈·폐기를 추적, DisposableEffect·rememberCoroutineScope 와 비교), CompositionObserver(컴포지션 관찰 API — onScopeInvalidated 로 "왜 리컴포즈됐는가"를 인과 로그로 기록, Snapshot.observeSnapshots/registerGlobalWriteObserver 와 비교), SlotTreeInspector(컴포지션 슬롯 트리 인스펙터 — compositionData 재귀 순회 + parseSourceInformation 으로 그룹을 함수명/파일/줄번호/파라미터로 해석), RecomposerRegistry(Recomposer.runningRecomposers + RecomposerInfo.observe(CompositionRegistrationObserver) 로 컴포지션이 몇 개 살아있고 언제 생겼다 사라지는지 관찰)
