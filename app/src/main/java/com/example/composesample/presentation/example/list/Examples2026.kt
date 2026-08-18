@@ -661,5 +661,12 @@ val examples2026 = listOf(
         description = "imeNestedScroll로 제스처 드래그해서 키보드 열고/닫기 + imeAnimationSource/Target로 애니메이션 진행률에 커스텀 UI 동기화",
         blogUrl = "",
         exampleType = ConstValue.ImeNestedScrollExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 08. 19",
+        title = "간접 포인터 입력 파이프라인",
+        description = "IndirectPointerInputModifierNode 원시 트랙패드 캡처와 PointerEventType.Pan*/Scale* 표준 파이프라인을 대조 — 터치스크린 멀티터치로는 Pan*/Scale*가 켜지지 않음을 실측",
+        blogUrl = "",
+        exampleType = ConstValue.IndirectPointerExample
     )
 )

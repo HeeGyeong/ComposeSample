@@ -40,6 +40,7 @@ import com.example.composesample.presentation.example.component.data.room.RoomIn
 import com.example.composesample.presentation.example.component.data.sse.SSEExampleUI
 import com.example.composesample.presentation.example.component.interaction.clickevent.ClickEventUI
 import com.example.composesample.presentation.example.component.interaction.drag.DragAndDropExampleUI
+import com.example.composesample.presentation.example.component.interaction.pointer.IndirectPointerExampleUI
 import com.example.composesample.presentation.example.component.interaction.refresh.PullToRefreshUI
 import com.example.composesample.presentation.example.component.interaction.sticker.StickerCanvasExampleUI
 import com.example.composesample.presentation.example.component.interaction.swipe.SwipeToDismissM3ExampleUI
@@ -197,6 +198,7 @@ import com.example.composesample.util.ConstValue.Media3VideoPlayerExample
 import com.example.composesample.util.ConstValue.DataCacheExample
 import com.example.composesample.util.ConstValue.DialComponentExample
 import com.example.composesample.util.ConstValue.DragAndDropExample
+import com.example.composesample.util.ConstValue.IndirectPointerExample
 import com.example.composesample.util.ConstValue.EmbeddedPhotoPickerExample
 import com.example.composesample.util.ConstValue.EmbeddedPickerComposeExample
 import com.example.composesample.util.ConstValue.FancyTopAppBarExample
@@ -377,6 +379,7 @@ val exampleUiRegistry: Map<String, @Composable (onBackEvent: () -> Unit) -> Unit
     ApiDisconnectExample to { onBackEvent -> ApiDisconnectExampleUI(onBackEvent) },
     PowerSaveModeExample to { onBackEvent -> PowerSaveModeExampleUI(onBackEvent) },
     DragAndDropExample to { onBackEvent -> DragAndDropExampleUI(onBackEvent) },
+    IndirectPointerExample to { onBackEvent -> IndirectPointerExampleUI(onBackEvent) },
     TargetSDK34PermissionExample to { onBackEvent -> TargetSDK34ExampleUI(onBackEvent) },
     PassingIntentDataExample to { onBackEvent -> PassingIntentDataExampleUI(onBackEvent) },
     LottieExample to { onBackEvent -> LottieExampleUI(onBackEvent) },
