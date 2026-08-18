@@ -203,6 +203,7 @@ Cursor IDE를 사용하는 개발자를 위한 **AI 코딩 어시스턴트 규�
 ### **interaction** - 사용자 상호작용 & 제스처
 - **clickevent**: 다양한 클릭 이벤트 처리와 중복 방지
 - **drag**: 아이템 재정렬이 가능한 LazyColumn 드래그 앤 드롭
+- **pointer**: IndirectPointerInputModifierNode 원시 트랙패드 캡처와 PointerEventType.Pan*/Scale* 표준 파이프라인 대조
 - **refresh**: Pull-to-Refresh 구현과 새로고침 애니메이션
 - **sticker**: 스티커 캔버스(드래그, 핀치 리사이즈, 회전, 스프링 물리, peel-off 애니메이션)
 - **swipe**: Swipe to Dismiss, Material 3 SwipeToDismissBox
