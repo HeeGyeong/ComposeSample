@@ -668,5 +668,12 @@ val examples2026 = listOf(
         description = "IndirectPointerInputModifierNode 원시 트랙패드 캡처와 PointerEventType.Pan*/Scale* 표준 파이프라인을 대조 — 터치스크린 멀티터치로는 Pan*/Scale*가 켜지지 않음을 실측",
         blogUrl = "",
         exampleType = ConstValue.IndirectPointerExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 08. 20",
+        title = "kotlin.time 시간 API",
+        description = "Clock.System.now()/Instant 벽시계 vs TimeSource.Monotonic.markNow()/elapsedNow() 단조시계, measureTimedValue의 Duration 정밀도, TestTimeSource로 실시간 대기 없이 시간을 직접 전진",
+        blogUrl = "",
+        exampleType = ConstValue.KotlinTimeApiExample
     )
 )

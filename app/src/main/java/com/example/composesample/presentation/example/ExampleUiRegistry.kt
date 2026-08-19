@@ -142,6 +142,7 @@ import com.example.composesample.presentation.example.component.ui.media.image.C
 import com.example.composesample.presentation.example.component.architecture.development.language.Kotlin24FeaturesExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.language.NameBasedDestructuringExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.language.SealedClassInterfaceExampleUI
+import com.example.composesample.presentation.example.component.architecture.development.time.KotlinTimeApiExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.concurrency.CoroutinesInternalsExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.concurrency.WithContextExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.concurrency.CoroutineBridgesExampleUI
@@ -269,6 +270,7 @@ import com.example.composesample.util.ConstValue.SSEExample
 import com.example.composesample.util.ConstValue.SafFileExample
 import com.example.composesample.util.ConstValue.ScaffoldDrawExample
 import com.example.composesample.util.ConstValue.Kotlin24FeaturesExample
+import com.example.composesample.util.ConstValue.KotlinTimeApiExample
 import com.example.composesample.util.ConstValue.CompositionObserverExample
 import com.example.composesample.util.ConstValue.HowComposeWorksExample
 import com.example.composesample.util.ConstValue.RememberObserverExample
@@ -455,6 +457,7 @@ val exampleUiRegistry: Map<String, @Composable (onBackEvent: () -> Unit) -> Unit
     SealedClassInterfaceExample to { onBackEvent -> SealedClassInterfaceExampleUI(onBackEvent) },
     NameBasedDestructuringExample to { onBackEvent -> NameBasedDestructuringExampleUI(onBackEvent) },
     Kotlin24FeaturesExample to { onBackEvent -> Kotlin24FeaturesExampleUI(onBackEvent) },
+    KotlinTimeApiExample to { onBackEvent -> KotlinTimeApiExampleUI(onBackEvent) },
     HowComposeWorksExample to { onBackEvent -> HowComposeWorksExampleUI(onBackEvent) },
     RememberObserverExample to { onBackEvent -> RememberObserverExampleUI(onBackEvent) },
     CompositionObserverExample to { onBackEvent -> CompositionObserverExampleUI(onBackEvent) },
