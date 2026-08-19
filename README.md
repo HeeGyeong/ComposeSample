@@ -273,12 +273,13 @@ Cursor IDE를 사용하는 개발자를 위한 **AI 코딩 어시스턴트 규�
 - **flow**: FlatMap vs FlatMapLatest 비교
 - **init**: 초기화 로직과 상태 관리, 앱 시작 최적화(App Startup / Baseline Profile / Koin lazy 초기화)
 - **internals**: How Compose Works(Composition/Layout/Draw 단계), RememberObserver와 컴포지션 생명주기(onRemembered/onForgotten/onAbandoned 실측), Composition Observer(어떤 상태가 어떤 스코프를 무효화했는지 알려주는 인과 로그, `Snapshot` 관찰 API와의 상호 보완적 커버리지 대비), Slot Tree Inspector(`parseSourceInformation`으로 `compositionData`를 순회해 각 슬롯 그룹을 함수명/파일/라인/파라미터로 해석), Recomposer 레지스트리 관찰(`Recomposer.runningRecomposers`(옵트인 불필요) + `RecomposerInfo.observe(CompositionRegistrationObserver)`로 프로세스 전역의 컴포지션 등록/해제 관찰)
-- **language**: Sealed Class Interface(타입 안전 계층 구조), Name-Based Destructuring(Kotlin 2.3.20 이름 기반 구조 분해)
+- **language**: Sealed Class Interface(타입 안전 계층 구조), Name-Based Destructuring(Kotlin 2.3.20 이름 기반 구조 분해), Kotlin 2.4 언어 기능(Collection Literals / Context Parameters)
 - **performance**: Inline Value Class(성능 최적화), Stability Annotations(@Stable/@Immutable로 불필요한 리컴포지션 방지)
 - **preview**: Compose Preview 기능, @Preview 내부 동작(렌더링 파이프라인, LocalInspectionMode, MultiPreview), Preview-only Annotation(@RequiresOptIn으로 컴파일 타임에 Preview 전용 Composable 제한)
 - **rebound**: 역할 기반 리컴포지션 예산 모니터링
 - **strictmode**: StrictMode 정책 위반 감지(메인 스레드 디스크/네트워크 I/O, 미해제 closeable)
 - **test**: UI 테스트 TDD, 리컴포지션 감지, Coroutine Flow Testing(Turbine), Screenshot Testing(Paparazzi/Roborazzi), Compose UI Testing(createComposeRule, onNodeWithTag, performClick 등 테스트 패턴 가이드)
+- **time**: kotlin.time 시간 API — Clock.System.now()/Instant 벽시계 vs TimeSource.Monotonic.markNow()/elapsedNow() 단조시계, measureTimedValue의 Duration 정밀도, TestTimeSource로 실시간 대기 없이 시간 전진
 - **tracing**: Perfetto 커스텀 트레이스 이벤트(`Trace.beginSection`/`endSection`의 스레드 페어링 함정을 실측 + `beginAsyncSection`/`endAsyncSection`·`setCounter`로 안전하게 트레이싱)
 - **type**: 변수 타입 활용과 컴파일 타임 최적화
 

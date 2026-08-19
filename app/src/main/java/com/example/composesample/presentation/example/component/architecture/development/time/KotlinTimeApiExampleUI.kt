@@ -36,7 +36,6 @@ import kotlin.time.Clock
 import kotlin.time.ComparableTimeMark
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
-import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 import kotlin.time.TestTimeSource
 import kotlin.time.TimeSource
@@ -124,8 +123,6 @@ private fun ConceptCard() {
     }
 }
 
-// Clock/Instant 는 kotlin.time 의 실험 단계 API 라 @OptIn 필요 — 이 카드 함수에만 붙여 opt-in 경계를 코드 구조로 드러낸다
-@OptIn(ExperimentalTime::class)
 @Composable
 private fun WallClockCard() {
     var now by remember { mutableStateOf<Instant>(Clock.System.now()) }
@@ -151,7 +148,8 @@ private fun WallClockCard() {
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
-                text = "Clock.System.now()는 실제 달력 시각을 kotlin.time.Instant로 돌려줍니다. 1초마다 다시 읽어 화면에 표시합니다.",
+                text = "Clock.System.now()는 실제 달력 시각을 kotlin.time.Instant로 돌려줍니다. 1초마다 다시 읽어 화면에 표시합니다. " +
+                        "Kotlin 2.3부터 stdlib 정식 API로 승격되어 opt-in 없이 바로 쓸 수 있습니다.",
                 fontSize = 12.sp,
                 color = Color(0xFF757575),
                 lineHeight = 16.sp
@@ -159,8 +157,7 @@ private fun WallClockCard() {
             Spacer(modifier = Modifier.height(12.dp))
 
             CodeBlock(
-                code = "@OptIn(ExperimentalTime::class)\n" +
-                        "val now: Instant = Clock.System.now()\n" +
+                code = "val now: Instant = Clock.System.now() // opt-in 불필요(Kotlin 2.3+)\n" +
                         "now.epochSeconds       // Long, 초 단위\n" +
                         "now.toEpochMilliseconds() // Long, 밀리초 단위",
                 borderColor = Color(0xFF388E3C)
@@ -210,7 +207,7 @@ private fun MonotonicClockCard() {
             Spacer(modifier = Modifier.height(4.dp))
             Text(
                 text = "markNow()로 시작점을 찍고 elapsedNow()로 그 이후 흐른 시간만 잽니다. " +
-                        "시스템 벽시계가 바뀌어도 이 값은 영향받지 않습니다 — 안정 API, opt-in 불필요.",
+                        "시스템 벽시계가 바뀌어도 이 값은 영향받지 않습니다. 이쪽도 opt-in이 필요 없는 안정 API입니다.",
                 fontSize = 12.sp,
                 color = Color(0xFF757575),
                 lineHeight = 16.sp
@@ -218,7 +215,7 @@ private fun MonotonicClockCard() {
             Spacer(modifier = Modifier.height(12.dp))
 
             CodeBlock(
-                code = "val mark = TimeSource.Monotonic.markNow() // opt-in 불필요\n" +
+                code = "val mark = TimeSource.Monotonic.markNow()\n" +
                         "// ... 작업 수행 ...\n" +
                         "val elapsed: Duration = mark.elapsedNow()",
                 borderColor = Color(0xFF388E3C)
@@ -316,8 +313,6 @@ private fun MeasureTimeCard() {
     }
 }
 
-// TestTimeSource 는 kotlin.time 의 실험 단계 API 라 @OptIn 필요
-@OptIn(ExperimentalTime::class)
 @Composable
 private fun TestTimeSourceCard() {
     val testTimeSource = remember { TestTimeSource() }
@@ -347,8 +342,7 @@ private fun TestTimeSourceCard() {
             Spacer(modifier = Modifier.height(12.dp))
 
             CodeBlock(
-                code = "@OptIn(ExperimentalTime::class)\n" +
-                        "val testTimeSource = TestTimeSource()\n" +
+                code = "val testTimeSource = TestTimeSource() // opt-in 불필요(Kotlin 2.3+)\n" +
                         "val mark = testTimeSource.markNow()\n" +
                         "testTimeSource += 5.seconds // 실시간 대기 없이 5초 전진\n" +
                         "mark.elapsedNow() // 5s",
@@ -408,11 +402,11 @@ private fun SummaryCard() {
             )
             Spacer(modifier = Modifier.height(8.dp))
             val bullets = listOf(
-                "Clock.System.now()/Instant 는 \"지금 몇 시인가\"(벽시계) — 값이 바뀔 수 있어 경과 측정엔 부적합. @OptIn(ExperimentalTime::class) 필요",
-                "TimeSource.Monotonic.markNow()/elapsedNow() 는 \"얼마나 흘렀는가\" 전용 단조시계 — 안정 API, opt-in 불필요",
+                "Clock.System.now()/Instant 는 \"지금 몇 시인가\"(벽시계) — 값이 바뀔 수 있어 경과 측정엔 부적합",
+                "TimeSource.Monotonic.markNow()/elapsedNow() 는 \"얼마나 흘렀는가\" 전용 단조시계 — 벽시계가 바뀌어도 영향받지 않음",
                 "measureTimedValue { }는 실행 결과(value)와 소요 시간(duration)을 함께 반환 — Duration은 나노초 단위까지 표현하고 단위를 자동으로 골라 표기",
-                "TestTimeSource로 실시간 delay() 없이 시간을 직접 전진시켜 타임아웃/재시도 로직을 결정론적으로 테스트 가능. 마찬가지로 opt-in 필요",
-                "새 시간 측정 코드는 System.currentTimeMillis()/kotlin.system.measureTimeMillis 대신 kotlin.time 계열을 우선 검토"
+                "TestTimeSource로 실시간 delay() 없이 시간을 직접 전진시켜 타임아웃/재시도 로직을 결정론적으로 테스트 가능",
+                "네 API 모두 Kotlin 2.3부터 stdlib 정식 API로 승격되어 opt-in 불필요 — 새 시간 측정 코드는 System.currentTimeMillis()/kotlin.system.measureTimeMillis 대신 kotlin.time 계열을 우선 검토"
             )
             bullets.forEach { bullet ->
                 Row(modifier = Modifier.padding(vertical = 3.dp)) {
