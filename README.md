@@ -259,6 +259,7 @@ Cursor IDE를 사용하는 개발자를 위한 **AI 코딩 어시스턴트 규�
 - **compositionLocal**: CompositionLocal 기초, Static/Dynamic 비교, 트리 시각화
 - **coroutine**: 코루틴 기초, 내부 동작, withContext vs launch 비교
 - **effect**: Side Effect 처리(LaunchedEffect, SideEffect, SnapshotFlow 등)
+- **error**: Sealed 인터페이스 도메인 에러 처리 — 예외 던지기 대신 sealed interface를 함수 반환 타입으로 써서 실패 케이스를 시그니처에 직접 드러내고, exhaustive when으로 처리 누락을 컴파일 타임에 강제
 - **mvi**: MVI 아키텍처 패턴과 단방향 데이터 흐름
 - **remember**: rememberSaveable(회전 생존), rememberUpdatedState(최신 콜백), derivedStateOf(연산 최적화) 비교
 - **retain**: Compose retain API(Compose 1.10)를 통한 ViewModel 없는 상태 유지
