@@ -675,5 +675,12 @@ val examples2026 = listOf(
         description = "Clock.System.now()/Instant 벽시계 vs TimeSource.Monotonic.markNow()/elapsedNow() 단조시계, measureTimedValue의 Duration 정밀도, TestTimeSource로 실시간 대기 없이 시간을 직접 전진",
         blogUrl = "",
         exampleType = ConstValue.KotlinTimeApiExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 08. 24",
+        title = "Sealed 인터페이스 도메인 에러 처리",
+        description = "예외 던지기 대신 sealed interface로 실패를 함수 시그니처에 직접 반환 — exhaustive when으로 컴파일 타임에 모든 에러 케이스 처리를 강제",
+        blogUrl = "",
+        exampleType = ConstValue.SealedDomainErrorExample
     )
 )
