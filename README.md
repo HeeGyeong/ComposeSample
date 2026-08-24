@@ -193,6 +193,7 @@ Cursor IDE를 사용하는 개발자를 위한 **AI 코딩 어시스턴트 규�
 - **graphics**: New Shadow API(Compose 1.9)
 - **navigation**: Navigation3 중첩 라우팅(NestedRoutesNav3)
 - **notification**: SnapNotify(Snackbar 간소화 라이브러리)
+- **overlay**: 좌표 기반 스포트라이트 오버레이(코치마크) — `onGloballyPositioned`로 타깃 좌표 수집 → `Popup` 전체화면 오버레이(부모 클리핑에 갇히지 않음) → `Path.op(Difference)` + `clipPath`로 스크림에 구멍 뚫기 → `animateFloatAsState`로 스텝 전환 애니메이션
 - **scroll**: 커스텀 TopAppBarScrollBehavior, nested scroll, IME 인터랙티브 제어(`Modifier.imeNestedScroll()`로 스크롤 제스처를 키보드 표시/숨김 애니메이션에 연결 + `imeAnimationSource`/`imeAnimationTarget`로 실제 애니메이션 진행률을 커스텀 UI에 동기화)
 - **shader**: AGSL Shader Live Tuning(API 33+ `RuntimeShader` + `graphicsLayer` renderEffect, 실시간 uniform 슬라이더와 셰이더 소스 재컴파일)
 - **shapes**: CardCorners(모서리 스타일)
