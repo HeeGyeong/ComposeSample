@@ -682,5 +682,12 @@ val examples2026 = listOf(
         description = "예외 던지기 대신 sealed interface로 실패를 함수 시그니처에 직접 반환 — exhaustive when으로 컴파일 타임에 모든 에러 케이스 처리를 강제",
         blogUrl = "",
         exampleType = ConstValue.SealedDomainErrorExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 08. 25",
+        title = "좌표 기반 스포트라이트 오버레이",
+        description = "onGloballyPositioned로 타깃 좌표 수집 → Popup 전체화면 오버레이 → Path.op(Difference)+clipPath로 스크림에 구멍 뚫기 → animateFloatAsState 스텝 전환 애니메이션",
+        blogUrl = "",
+        exampleType = ConstValue.SpotlightOverlayExample
     )
 )
