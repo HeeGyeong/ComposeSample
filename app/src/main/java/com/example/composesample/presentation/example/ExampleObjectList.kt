@@ -46,6 +46,16 @@ fun subCategoryList(): ArrayList<ExampleObject> {
 
     insertExampleObject.add(
         ExampleObject(
+            subCategory = ConstValue.Shimmer,
+            title = "Auto Skeleton Modifier Example",
+            description = "콘텐츠 로딩 상태를 Modifier 체인이 CompositionLocal로 자동 감지해 스켈레톤을 그리는 기법(기존 수동 상태 분기 방식과 대비)에 대해 알아보기 위한 예제.",
+            blogUrl = "",
+            exampleType = ConstValue.AutoSkeletonModifierExample
+        )
+    )
+
+    insertExampleObject.add(
+        ExampleObject(
             subCategory = ConstValue.FlingBehavior,
             title = "LazyColumn FlingBehavior Example",
             description = "LazyList에서 스크롤 이벤트를 커스텀하기 위해 FlingBehavior를 사용해보는 예제",

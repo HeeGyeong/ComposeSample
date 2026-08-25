@@ -109,6 +109,7 @@ import com.example.composesample.presentation.example.component.ui.layout.topapp
 import com.example.composesample.presentation.example.component.ui.media.lottie.LottieExampleUI
 import com.example.composesample.presentation.example.component.ui.media.picker.EmbeddedPhotoPickerExampleUI
 import com.example.composesample.presentation.example.component.ui.media.picker.EmbeddedPickerComposeExampleUI
+import com.example.composesample.presentation.example.component.ui.media.shimmer.AutoSkeletonModifierExampleUI
 import com.example.composesample.presentation.example.component.ui.media.shimmer.ShimmerExampleUI
 import com.example.composesample.presentation.example.component.ui.media.shimmer.TextShimmerExampleUI
 import com.example.composesample.presentation.example.component.ui.navigation.NestedRoutesNav3ExampleUI
@@ -181,6 +182,7 @@ import com.example.composesample.util.ConstValue.ApiDisconnectExample
 import com.example.composesample.util.ConstValue.AutoCloseableExample
 import com.example.composesample.util.ConstValue.AutofillExample
 import com.example.composesample.util.ConstValue.AutoSizingTextExample
+import com.example.composesample.util.ConstValue.AutoSkeletonModifierExample
 import com.example.composesample.util.ConstValue.AudioRecorderExample
 import com.example.composesample.util.ConstValue.BottomSheetExample
 import com.example.composesample.util.ConstValue.ButtonGroupExample
@@ -413,6 +415,7 @@ val exampleUiRegistry: Map<String, @Composable (onBackEvent: () -> Unit) -> Unit
     CoroutineExample to { onBackEvent -> CoroutineExampleUI(onBackEvent) },
     UIShimmerExample to { onBackEvent -> ShimmerExampleUI(onBackEvent) },
     TextShimmerExample to { onBackEvent -> TextShimmerExampleUI(onBackEvent) },
+    AutoSkeletonModifierExample to { onBackEvent -> AutoSkeletonModifierExampleUI(onBackEvent) },
     CompositionLocalExample to { onBackEvent -> CompositionLocalExampleUI(onBackEvent) },
     InitTestExample to { onBackEvent -> InitTestExampleUI(onBackEvent) },
     ShortcutExample to { onBackEvent -> ShortcutExampleUI(onBackEvent) },
