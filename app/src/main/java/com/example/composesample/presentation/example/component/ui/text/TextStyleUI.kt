@@ -1,6 +1,5 @@
 package com.example.composesample.presentation.example.component.ui.text
 
-import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -80,7 +79,6 @@ fun TextStyleUI(onBackButtonClick: () -> Unit) {
 
                 CheckFontSizeUI(30.sp)
 
-                val sample = TextUnit.Unspecified.value * 1.em.value
                 CheckFontSizeUI((14 * 1.em.value).sp)
 
                 CheckFontSizeUI((14 * 2.em.value).sp)
@@ -166,12 +164,6 @@ fun CheckTextSpaceUI(fontSize: TextUnit = TextUnit.Unspecified) {
             .wrapContentSize(),
         text = text,
         fontSize = 20.sp,
-        onTextLayout = {
-            Log.d(
-                "textStyleUI",
-                "fontSize check[$fontSize] 1 : ${it.size} :: ${it.layoutInput.style.fontSize}"
-            )
-        }
     )
 
     Spacer(modifier = Modifier.height(3.dp))
@@ -182,12 +174,6 @@ fun CheckTextSpaceUI(fontSize: TextUnit = TextUnit.Unspecified) {
         text = text,
         fontSize = 20.sp,
         letterSpacing = fontSize,
-        onTextLayout = {
-            Log.d(
-                "textStyleUI",
-                "fontSize check[$fontSize] 2 : ${it.size} :: ${it.layoutInput.style.fontSize}"
-            )
-        }
     )
 
     Spacer(modifier = Modifier.height(3.dp))
@@ -198,12 +184,6 @@ fun CheckTextSpaceUI(fontSize: TextUnit = TextUnit.Unspecified) {
         text = text,
         fontSize = 20.sp,
         lineHeight = fontSize,
-        onTextLayout = {
-            Log.d(
-                "textStyleUI",
-                "fontSize check[$fontSize] 3 : ${it.size} :: ${it.layoutInput.style.fontSize}"
-            )
-        }
     )
 
     Spacer(modifier = Modifier.height(3.dp))
@@ -215,12 +195,6 @@ fun CheckTextSpaceUI(fontSize: TextUnit = TextUnit.Unspecified) {
         fontSize = 20.sp,
         letterSpacing = fontSize,
         lineHeight = fontSize,
-        onTextLayout = {
-            Log.d(
-                "textStyleUI",
-                "fontSize check[$fontSize] 3 : ${it.size} :: ${it.layoutInput.style.fontSize}"
-            )
-        }
     )
 
     Spacer(modifier = Modifier.height(10.dp))
@@ -245,12 +219,6 @@ fun CheckFontSizeUI(fontSize: TextUnit = TextUnit.Unspecified) {
             .wrapContentSize(),
         text = text1,
         fontSize = fontSize,
-        onTextLayout = {
-            Log.d(
-                "textStyleUI",
-                "fontSize check[$fontSize] 1 : ${it.size} :: ${it.layoutInput.style.fontSize}"
-            )
-        }
     )
 
     Spacer(modifier = Modifier.height(3.dp))
@@ -260,12 +228,6 @@ fun CheckFontSizeUI(fontSize: TextUnit = TextUnit.Unspecified) {
             .wrapContentSize(),
         text = text2,
         fontSize = fontSize,
-        onTextLayout = {
-            Log.d(
-                "textStyleUI",
-                "fontSize check[$fontSize] 2 : ${it.size} :: ${it.layoutInput.style.fontSize}"
-            )
-        }
     )
 
     Spacer(modifier = Modifier.height(3.dp))
@@ -275,12 +237,6 @@ fun CheckFontSizeUI(fontSize: TextUnit = TextUnit.Unspecified) {
             .wrapContentSize(),
         text = text3,
         fontSize = fontSize,
-        onTextLayout = {
-            Log.d(
-                "textStyleUI",
-                "fontSize check[$fontSize] 3 : ${it.size} :: ${it.layoutInput.style.fontSize}"
-            )
-        }
     )
 
     Spacer(modifier = Modifier.height(10.dp))
