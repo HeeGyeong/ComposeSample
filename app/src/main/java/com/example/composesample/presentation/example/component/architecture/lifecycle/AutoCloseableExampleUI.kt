@@ -561,9 +561,6 @@ private fun ItemsServiceCard(items: List<String>, onAddItem: (String) -> Unit) {
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            val isServiceClosed =
-                items.isNotEmpty() && items.last().startsWith("Item") && items.size == items.size
-
             if (items.isEmpty()) {
                 Surface(
                     modifier = Modifier.fillMaxWidth(),
@@ -579,14 +576,6 @@ private fun ItemsServiceCard(items: List<String>, onAddItem: (String) -> Unit) {
                     )
                 }
             } else {
-                // 서비스 종료 감지
-                val lastUpdateTime = remember { mutableStateOf(System.currentTimeMillis()) }
-                val itemCount = items.size
-
-                LaunchedEffect(itemCount) {
-                    lastUpdateTime.value = System.currentTimeMillis()
-                }
-
                 items.takeLast(5).forEach { item ->
                     Row(
                         modifier = Modifier
@@ -737,14 +726,6 @@ private fun CustomersServiceCard(customers: List<String>, onAddCustomer: (String
                     )
                 }
             } else {
-                // 서비스 종료 감지
-                val lastUpdateTime = remember { mutableStateOf(System.currentTimeMillis()) }
-                val customerCount = customers.size
-
-                LaunchedEffect(customerCount) {
-                    lastUpdateTime.value = System.currentTimeMillis()
-                }
-
                 customers.takeLast(5).forEach { customer ->
                     Row(
                         modifier = Modifier
