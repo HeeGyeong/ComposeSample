@@ -77,11 +77,31 @@ fun NestedRoutesNav3ExampleUI(
             contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
+            item { SimulationNoticeCard() }
             item { BottomNavigationDemoCard(currentTab) { currentTab = it } }
             item { RealNavBackStackDemoCard() }
             item { RealStateManagementDemoCard() }
             item { RealRouteComponentDemoCard() }
         }
+    }
+}
+
+@Composable
+private fun SimulationNoticeCard() {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth(),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFFFF3E0)),
+        shape = RoundedCornerShape(8.dp)
+    ) {
+        Text(
+            text = "⚠️ 이 화면의 백스택/상태 저장/컴포넌트 생명주기 동작은 실제 Nav3 API 호출이 아니라, " +
+                "개념 이해를 돕기 위해 직접 구현한 시뮬레이터(NavBackStackSimulator 등)입니다. " +
+                "메모리 사용량 등 수치는 예시를 위한 임의값이며, 실제 API는 각 섹션 하단 안내를 참고하세요.",
+            fontSize = 12.sp,
+            color = Color(0xFFE65100),
+            modifier = Modifier.padding(12.dp)
+        )
     }
 }
 

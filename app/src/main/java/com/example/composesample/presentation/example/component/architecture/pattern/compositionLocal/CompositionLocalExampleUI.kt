@@ -51,7 +51,7 @@ fun CompositionLocalExampleUI(
             .background(color = Color.Gray)
     ) {
         MainHeader(
-            title = "Text Shimmer Example",
+            title = "CompositionLocal Example",
             onBackIconClicked = onBackButtonClick
         )
 

@@ -30,7 +30,7 @@ fun ShortcutExampleUI(
             .background(color = Color.White)
     ) {
         MainHeader(
-            title = "Init Test Example",
+            title = "Shortcut Example",
             onBackIconClicked = onBackButtonClick
         )
 

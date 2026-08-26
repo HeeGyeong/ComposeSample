@@ -41,7 +41,8 @@ private val compose17Features = listOf(
     ),
     Compose17FeatureItem(
         title = "GraphicsLayer (BlendMode / ColorFilter)",
-        description = "Modifier.graphicsLayer에서 BlendMode와 ColorFilter를 적용해 GPU 수준의 색상 블렌딩과 필터를 처리합니다.",
+        description = "Modifier.graphicsLayer에서 BlendMode를 적용해 GPU 수준의 색상 블렌딩을 처리합니다. " +
+            "(ColorFilter 효과는 예제 화면에서 시뮬레이션으로 시연합니다)",
         keywords = listOf("BlendMode.Screen", "ColorFilter.tint", "compositeOver")
     ),
     Compose17FeatureItem(
@@ -56,7 +57,8 @@ private val compose17Features = listOf(
     ),
     Compose17FeatureItem(
         title = "PathGraphics (Path.reverse / contains)",
-        description = "Path.reverse()로 채우기 방향을 반전(도넛 구멍 효과)하고, Path.contains(offset)로 히트 테스트를 수행합니다.",
+        description = "Path.reverse()로 채우기 방향을 반전(도넛 구멍 효과)하고, Path.contains(offset)로 히트 테스트를 수행하는 " +
+            "개념을 다룹니다. 현재 버전은 두 API를 지원하지 않아 예제 화면에서는 직접 구현으로 대체합니다.",
         keywords = listOf("Path.reverse", "Path.contains", "Canvas 도형")
     )
 )
