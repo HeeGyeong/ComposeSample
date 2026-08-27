@@ -19,8 +19,9 @@ package com.example.composesample.presentation.example.component.architecture.de
  * - 단위 표현: value class Meters(val value: Double), value class Kilograms(val value: Double)
  *
  * 주의사항:
- * - nullable 또는 제네릭 타입으로 사용 시 박싱 발생 (성능 이점 사라짐)
- * - 인터페이스 구현 시 박싱 발생
+ * - Any/인터페이스/제네릭(List<T> 등) 타입으로 다룰 시 박싱 발생 (성능 이점 사라짐)
+ * - 단, String처럼 참조 타입을 감싼 value class는 nullable(?)만으로는 박싱되지 않음
+ *   (언더라잉 타입의 null 표현을 그대로 재사용 — InlineValueClassExampleUI.kt 리플렉션 실측으로 확인)
  *
  * ---
  *

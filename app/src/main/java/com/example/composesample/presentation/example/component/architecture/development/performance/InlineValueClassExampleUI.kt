@@ -85,6 +85,31 @@ fun <T> List<T>.customFilterNonInline(predicate: (T) -> Boolean): List<T> {
     return result
 }
 
+// 도메인 구분용 value class 예시 — 둘 다 String을 감싸지만 타입 시스템에서 혼용 방지
+@JvmInline
+private value class UserId(val id: String)
+
+@JvmInline
+private value class OrderId(val id: String)
+
+// 리플렉션으로 컴파일된 파라미터 타입을 직접 확인하기 위한 프로브
+private object ValueClassRuntimeProbe {
+    fun acceptUserId(id: UserId) {}
+}
+
+// 직접 파라미터로 넘기면 원시 타입(String)으로 소거됨 — Zero-Cost
+private fun unboxedParameterTypeName(): String {
+    val method = ValueClassRuntimeProbe::class.java.declaredMethods
+        .first { it.name.startsWith("acceptUserId") }
+    return method.parameterTypes.first().name
+}
+
+// Any/제네릭처럼 다형적으로 다루면 실제 UserId 객체로 박싱됨
+private fun boxedRuntimeTypeName(): String {
+    val boxed: Any = UserId("probe")
+    return boxed.javaClass.name
+}
+
 @Composable
 fun InlineValueClassExampleUI(
     onBackEvent: () -> Unit
@@ -95,7 +120,7 @@ fun InlineValueClassExampleUI(
             .background(Color.White)
     ) {
         MainHeader(
-            title = "Inline Functions",
+            title = "Inline Functions & Value Classes",
             onBackIconClicked = onBackEvent
         )
 
@@ -107,6 +132,8 @@ fun InlineValueClassExampleUI(
             item { InlineExplanationCard() }
             item { CodeComparisonCard() }
             item { PerformanceBenchmarkCard() }
+            item { ValueClassExplanationCard() }
+            item { ValueClassRuntimeCheckCard() }
         }
     }
 }
@@ -741,6 +768,235 @@ private fun PerformanceComparison(inlineTime: Long, nonInlineTime: Long, context
                 fontSize = 11.sp,
                 color = Color.Gray
             )
+        }
+    }
+}
+
+@Composable
+private fun ValueClassExplanationCard() {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFE0F2F1)),
+        shape = RoundedCornerShape(12.dp)
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Delete,
+                    contentDescription = null,
+                    tint = Color(0xFF00695C),
+                    modifier = Modifier.size(28.dp)
+                )
+                Spacer(modifier = Modifier.width(12.dp))
+                Text(
+                    text = "Value Class란?",
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFF00695C)
+                )
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Surface(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(8.dp),
+                color = Color.White
+            ) {
+                Column(modifier = Modifier.padding(12.dp)) {
+                    Text(
+                        text = "@JvmInline value class를 붙이면:",
+                        fontSize = 13.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFF00695C)
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    BulletPoint("컴파일 후 래퍼가 사라지고 원시 타입만 남음 (Zero-Cost Abstraction)")
+                    BulletPoint("단일 val 프로퍼티만 허용, 상속 불가")
+                    BulletPoint("타입 안전성은 컴파일 타임에만 존재 — 런타임엔 원시 타입과 동일")
+                }
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            CodeComparisonSection(
+                title = "Value Class 선언",
+                code = """
+@JvmInline
+value class UserId(val id: String)
+
+@JvmInline
+value class OrderId(val id: String)
+
+fun findUser(id: UserId) { /* ... */ }
+                """.trimIndent(),
+                explanation = "• UserId와 OrderId는 둘 다 String이지만 서로 다른 타입\n" +
+                    "• findUser(orderId)처럼 잘못 넘기면 컴파일 에러\n" +
+                    "• 런타임엔 UserId 객체가 아니라 String 그대로 전달됨",
+                color = Color(0xFF00897B)
+            )
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            HorizontalDivider(color = Color(0xFF00695C).copy(alpha = 0.2f))
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Surface(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(8.dp),
+                color = Color(0xFFFFF9C4)
+            ) {
+                Row(
+                    modifier = Modifier.padding(12.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "⚠️",
+                        fontSize = 20.sp
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = "Any/인터페이스/List<T> 등 다형적 타입으로 다루면 박싱이 발생해 성능 이점이 사라집니다. " +
+                            "단, String처럼 참조 타입을 감싼 value class는 nullable(?)만으로는 박싱되지 않습니다 " +
+                            "(아래 런타임 확인에서 직접 검증).",
+                        fontSize = 11.sp,
+                        color = Color(0xFF666666),
+                        lineHeight = 16.sp
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun RuntimeTypeResultRow(label: String, typeName: String, color: Color) {
+    Surface(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(8.dp),
+        color = color.copy(alpha = 0.1f)
+    ) {
+        Column(modifier = Modifier.padding(12.dp)) {
+            Text(
+                text = label,
+                fontSize = 13.sp,
+                fontWeight = FontWeight.Medium,
+                color = color
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(
+                text = typeName,
+                fontSize = 12.sp,
+                fontFamily = FontFamily.Monospace,
+                color = color
+            )
+        }
+    }
+}
+
+@Composable
+private fun ValueClassRuntimeCheckCard() {
+    var checkResult by remember { mutableStateOf<Pair<String, String>?>(null) }
+
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFEDE7F6)),
+        shape = RoundedCornerShape(12.dp)
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Delete,
+                    contentDescription = null,
+                    tint = Color(0xFF512DA8),
+                    modifier = Modifier.size(28.dp)
+                )
+                Spacer(modifier = Modifier.width(12.dp))
+                Text(
+                    text = "런타임 타입 확인",
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFF512DA8)
+                )
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Text(
+                text = "리플렉션으로 컴파일된 타입/실제 런타임 타입을 직접 확인합니다",
+                fontSize = 12.sp,
+                color = Color.Gray
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Button(
+                onClick = {
+                    checkResult = unboxedParameterTypeName() to boxedRuntimeTypeName()
+                },
+                modifier = Modifier.fillMaxWidth(),
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF512DA8)),
+                shape = RoundedCornerShape(8.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.PlayArrow,
+                    contentDescription = null,
+                    modifier = Modifier.size(20.dp)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text("타입 확인하기", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 14.sp)
+            }
+
+            AnimatedVisibility(
+                visible = checkResult != null,
+                enter = expandVertically() + fadeIn(),
+                exit = shrinkVertically() + fadeOut()
+            ) {
+                checkResult?.let { (unboxedType, boxedType) ->
+                    Column {
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        RuntimeTypeResultRow(
+                            label = "acceptUserId(id: UserId) 파라미터의 컴파일된 타입",
+                            typeName = unboxedType,
+                            color = Color(0xFF4CAF50)
+                        )
+
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        RuntimeTypeResultRow(
+                            label = "val x: Any = UserId(...) 의 실제 런타임 타입",
+                            typeName = boxedType,
+                            color = Color(0xFFFF9800)
+                        )
+
+                        Spacer(modifier = Modifier.height(12.dp))
+
+                        Surface(
+                            modifier = Modifier.fillMaxWidth(),
+                            shape = RoundedCornerShape(8.dp),
+                            color = Color(0xFF512DA8).copy(alpha = 0.1f)
+                        ) {
+                            Text(
+                                text = "값 클래스 그대로 넘기면 String으로 소거(Zero-Cost)되지만, " +
+                                    "Any 타입으로 다루면 실제 UserId 객체로 박싱됩니다.",
+                                modifier = Modifier.padding(12.dp),
+                                fontSize = 11.sp,
+                                color = Color(0xFF666666),
+                                lineHeight = 16.sp
+                            )
+                        }
+                    }
+                }
+            }
         }
     }
 }
