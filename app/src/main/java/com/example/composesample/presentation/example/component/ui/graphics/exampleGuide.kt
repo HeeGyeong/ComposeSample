@@ -4,7 +4,7 @@ package com.example.composesample.presentation.example.component.ui.graphics
  * Graphics 예제 참고 자료
  *
  * ## NewShadowApiExampleUI (향상된 Shadow 효과)
- * - 별도 외부 출처 없음(Kotlin 2.1.0 + Compose 1.9.0 환경 자체 정리 노트)
+ * - 별도 외부 출처 없음(Kotlin 2.4.0 + Compose 1.11.1(ComposeBom 2026.05.00) 환경 자체 정리 노트)
  *
  * ### 핵심 개념
  * - `Modifier.shadow()`의 ambientColor/spotColor로 elevation 기반 그림자에 색상 제어 추가, clip=false로 경계 밖 확장 허용

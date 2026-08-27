@@ -105,7 +105,7 @@ private fun OverviewCard() {
             modifier = Modifier.padding(16.dp)
         ) {
             Text(
-                text = "✨ New Shadow API for Compose 1.9.0",
+                text = "✨ New Shadow API for Compose 1.11.1",
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color(0xFF1976D2)
@@ -114,7 +114,7 @@ private fun OverviewCard() {
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = "최신 Compose 1.9.0 버전으로 업데이트되었습니다! 새로운 그림자 API와 향상된 성능을 경험해보세요.",
+                text = "최신 Compose 1.11.1 버전으로 업데이트되었습니다! 새로운 그림자 API와 향상된 성능을 경험해보세요.",
                 fontSize = 14.sp,
                 color = Color.Gray
             )
@@ -138,7 +138,7 @@ private fun OverviewCard() {
                 color = Color(0xFFF5F5F5)
             ) {
                 Text(
-                    text = "💡 업데이트 완료! Kotlin 2.1.0 + Compose 1.9.0 환경에서 최신 API를 활용한 그림자 효과",
+                    text = "💡 업데이트 완료! Kotlin 2.4.0 + Compose 1.11.1 환경에서 최신 API를 활용한 그림자 효과",
                     modifier = Modifier.padding(12.dp),
                     fontSize = 12.sp,
                     color = Color(0xFF666666),
@@ -290,7 +290,7 @@ private fun BasicShadowCard() {
                 color = Color(0xFF388E3C).copy(alpha = 0.1f)
             ) {
                 Text(
-                    text = "✨ 업데이트 완료! Compose 1.9.0의 향상된 shadow API 사용:\n• ambientColor와 spotColor 지원\n• 더 사실적인 그림자 효과",
+                    text = "✨ 업데이트 완료! Compose 1.11.1의 향상된 shadow API 사용:\n• ambientColor와 spotColor 지원\n• 더 사실적인 그림자 효과",
                     modifier = Modifier.padding(12.dp),
                     fontSize = 11.sp,
                     color = Color(0xFF388E3C)
@@ -512,7 +512,7 @@ private fun ShadowPropertiesCard() {
                 color = Color(0xFF1976D2).copy(alpha = 0.1f)
             ) {
             Text(
-                text = "💡 Compose 1.9.0의 향상된 shadow API로 더 세밀하고 사실적인 그림자 효과를 구현할 수 있습니다!",
+                text = "💡 Compose 1.11.1의 향상된 shadow API로 더 세밀하고 사실적인 그림자 효과를 구현할 수 있습니다!",
                 modifier = Modifier.padding(8.dp),
                 fontSize = 11.sp,
                 color = Color(0xFF1976D2),
