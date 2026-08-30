@@ -68,6 +68,7 @@ package com.example.composesample.presentation.example.component.architecture.de
  *   그대로 수행한다 → 두 CompositionLocal 을 함께 제공해야 결정론이 생긴다
  * - 팩토리 AsyncImagePreviewHandler { image } 가 만드는 상태는 State.Success 가 아니라 painter 를 실은 State.Loading 이다
  *   → 픽셀은 고정되지만 onState 로 Success 를 기다리는 대기 로직은 끝나지 않는다
+ *   (바이트코드 판독 후 실기기 SM-A725F/API 33 임시 계측 테스트로 재확인 — 방출된 상태는 [Loading] 하나뿐, Success 없음)
  * - LocalAsyncImagePreviewHandler / AsyncImagePreviewHandler 는 @ExperimentalCoilApi 이므로 @OptIn 필요
  * - 테스트 소스셋 전체를 덮으려면 coil-test 의 FakeImageLoaderEngine + SingletonImageLoader.setUnsafe(loader) 조합을 쓴다
  *   (이 프로젝트는 coil-test·스크린샷 러너를 의존성으로 두지 않아 코드 스니펫으로만 시연)
