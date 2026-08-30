@@ -280,7 +280,7 @@ Cursor IDE를 사용하는 개발자를 위한 **AI 코딩 어시스턴트 규�
 - **preview**: Compose Preview 기능, @Preview 내부 동작(렌더링 파이프라인, LocalInspectionMode, MultiPreview), Preview-only Annotation(@RequiresOptIn으로 컴파일 타임에 Preview 전용 Composable 제한)
 - **rebound**: 역할 기반 리컴포지션 예산 모니터링
 - **strictmode**: StrictMode 정책 위반 감지(메인 스레드 디스크/네트워크 I/O, 미해제 closeable)
-- **test**: UI 테스트 TDD, 리컴포지션 감지, Coroutine Flow Testing(Turbine), Screenshot Testing(Paparazzi/Roborazzi), Compose UI Testing(createComposeRule, onNodeWithTag, performClick 등 테스트 패턴 가이드)
+- **test**: UI 테스트 TDD, 리컴포지션 감지, Coroutine Flow Testing(Turbine), Screenshot Testing(Paparazzi/Roborazzi), Preview-Driven Screenshot Testing(@Preview를 source of truth로 locale/fontScale/theme 매트릭스 파생), 스크린샷 테스트 이미지 결정론화(LocalAsyncImagePreviewHandler로 비동기 이미지 픽셀 고정), Compose UI Testing(createComposeRule, onNodeWithTag, performClick 등 테스트 패턴 가이드)
 - **time**: kotlin.time 시간 API — Clock.System.now()/Instant 벽시계 vs TimeSource.Monotonic.markNow()/elapsedNow() 단조시계, measureTimedValue의 Duration 정밀도, TestTimeSource로 실시간 대기 없이 시간 전진
 - **tracing**: Perfetto 커스텀 트레이스 이벤트(`Trace.beginSection`/`endSection`의 스레드 페어링 함정을 실측 + `beginAsyncSection`/`endAsyncSection`·`setCounter`로 안전하게 트레이싱)
 - **type**: 변수 타입 활용과 컴파일 타임 최적화

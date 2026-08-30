@@ -689,5 +689,12 @@ val examples2026 = listOf(
         description = "onGloballyPositioned로 타깃 좌표 수집 → Popup 전체화면 오버레이 → Path.op(Difference)+clipPath로 스크림에 구멍 뚫기 → animateFloatAsState 스텝 전환 애니메이션",
         blogUrl = "",
         exampleType = ConstValue.SpotlightOverlayExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 08. 31",
+        title = "스크린샷 테스트 이미지 결정론화",
+        description = "네트워크 이미지가 회차마다 출처(NETWORK/MEMORY_CACHE)와 소요 시간이 달라지는 것을 실측하고, LocalAsyncImagePreviewHandler로 픽셀을 고정 — inspection 모드 게이팅과 팩토리가 State.Loading을 반환하는 함정까지",
+        blogUrl = "",
+        exampleType = ConstValue.DeterministicImageTestExample
     )
 )

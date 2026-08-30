@@ -20,6 +20,7 @@ import com.example.composesample.presentation.example.component.architecture.dev
 import com.example.composesample.presentation.example.component.architecture.development.test.RecompositionTestExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.test.ScreenshotTestingExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.test.PreviewDrivenScreenshotExampleUI
+import com.example.composesample.presentation.example.component.architecture.development.test.DeterministicImageTestExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.test.UITestExampleUI
 import com.example.composesample.presentation.example.component.system.platform.quicksettings.QuickSettingsTileExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.type.TypeExampleUI
@@ -181,6 +182,7 @@ import com.example.composesample.util.ConstValue.AnimationExample
 import com.example.composesample.util.ConstValue.ApiDisconnectExample
 import com.example.composesample.util.ConstValue.AutoCloseableExample
 import com.example.composesample.util.ConstValue.AutofillExample
+import com.example.composesample.util.ConstValue.DeterministicImageTestExample
 import com.example.composesample.util.ConstValue.AutoSizingTextExample
 import com.example.composesample.util.ConstValue.AutoSkeletonModifierExample
 import com.example.composesample.util.ConstValue.AudioRecorderExample
@@ -535,4 +537,5 @@ val exampleUiRegistry: Map<String, @Composable (onBackEvent: () -> Unit) -> Unit
     KoinCompilerPluginExample to { onBackEvent -> KoinCompilerPluginExampleUI(onBackEvent) },
     FeatureFlagExample to { onBackEvent -> FeatureFlagExampleUI(onBackEvent) },
     AutofillExample to { onBackEvent -> AutofillExampleUI(onBackEvent) },
+    DeterministicImageTestExample to { onBackEvent -> DeterministicImageTestExampleUI(onBackEvent) },
 )

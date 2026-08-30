@@ -57,4 +57,19 @@ package com.example.composesample.presentation.example.component.architecture.de
  * - StateFlow 테스트: 상태별 독립 테스트 + runCurrent() / advanceUntilIdle()
  * - SharedFlow/단방향 이벤트 스트림에서는 Turbine이 적합
  * - 테스트 디스패처: StandardTestDispatcher(명시적 진행 제어) vs UnconfinedTestDispatcher(즉시 실행, 초기 상태 검증에 편리)
+ *
+ * --- Deterministic Images in Screenshot Tests ---
+ * - 원문: https://alexzh.com/handling-asynchronous-images-in-android-screenshot-tests/
+ * - Coil 3 Compose(프리뷰 핸들러): https://coil-kt.github.io/coil/compose/
+ * - coil-test(FakeImageLoaderEngine): https://coil-kt.github.io/coil/testing/
+ * - AsyncImage 는 LocalInspectionMode.current 가 true 일 때만 LocalAsyncImagePreviewHandler 를 조회한다
+ *   (coil 3.1.0 의 coil3.compose.internal.UtilsKt.previewHandler 바이트코드로 확인) → 일반 앱 실행에는 영향이 없다
+ * - inspection 모드만 켜고 핸들러를 주지 않으면 기본값 AsyncImagePreviewHandler.Default 가 실제 ImageLoader.execute() 를
+ *   그대로 수행한다 → 두 CompositionLocal 을 함께 제공해야 결정론이 생긴다
+ * - 팩토리 AsyncImagePreviewHandler { image } 가 만드는 상태는 State.Success 가 아니라 painter 를 실은 State.Loading 이다
+ *   → 픽셀은 고정되지만 onState 로 Success 를 기다리는 대기 로직은 끝나지 않는다
+ * - LocalAsyncImagePreviewHandler / AsyncImagePreviewHandler 는 @ExperimentalCoilApi 이므로 @OptIn 필요
+ * - 테스트 소스셋 전체를 덮으려면 coil-test 의 FakeImageLoaderEngine + SingletonImageLoader.setUnsafe(loader) 조합을 쓴다
+ *   (이 프로젝트는 coil-test·스크린샷 러너를 의존성으로 두지 않아 코드 스니펫으로만 시연)
+ * - 골든 이미지에 실제 사진 대신 단색이 찍히므로 레이아웃·크기 회귀 검출에는 오히려 유리하다
  */
