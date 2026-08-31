@@ -177,19 +177,27 @@ private fun rememberDisplayRotation(): Int {
     }
 }
 
+/** 회전 벡터 센서 조회. 구독부와 화면 안내가 같은 결과를 보도록 한 곳에서만 찾는다. */
+@Composable
+private fun rememberRotationSensor(): Pair<SensorManager?, Sensor?> {
+    val context = LocalContext.current
+    return remember(context) {
+        val manager = context.getSystemService(Context.SENSOR_SERVICE) as? SensorManager
+        manager to manager?.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR)
+    }
+}
+
 /**
  * TYPE_ROTATION_VECTOR 구독.
  * 리스너 등록/해제를 컴포저블의 진입/이탈과 일치시켜, 화면을 벗어나면 센서가 계속 돌지 않게 한다.
  */
 @Composable
-private fun rememberCompassReading(alpha: Float, displayRotation: Int): State<CompassReading> {
-    val context = LocalContext.current
-    val sensorManager = remember(context) {
-        context.getSystemService(Context.SENSOR_SERVICE) as? SensorManager
-    }
-    val rotationSensor = remember(sensorManager) {
-        sensorManager?.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR)
-    }
+private fun rememberCompassReading(
+    sensorManager: SensorManager?,
+    rotationSensor: Sensor?,
+    alpha: Float,
+    displayRotation: Int
+): State<CompassReading> {
     val reading: MutableState<CompassReading> = remember { mutableStateOf(CompassReading()) }
 
     // 필터 계수가 바뀌었다고 리스너를 다시 등록할 이유는 없다. 최신 값만 콜백에서 읽는다.
@@ -295,15 +303,16 @@ private fun FusionPipelineCard() {
 
 @Composable
 private fun LiveCompassCard() {
-    val context = LocalContext.current
     val displayRotation = rememberDisplayRotation()
-    val rotationSensor = remember(context) {
-        (context.getSystemService(Context.SENSOR_SERVICE) as? SensorManager)
-            ?.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR)
-    }
+    val (sensorManager, rotationSensor) = rememberRotationSensor()
 
     var alpha by remember { mutableFloatStateOf(0.15f) }
-    val readingState = rememberCompassReading(alpha = alpha, displayRotation = displayRotation)
+    val readingState = rememberCompassReading(
+        sensorManager = sensorManager,
+        rotationSensor = rotationSensor,
+        alpha = alpha,
+        displayRotation = displayRotation
+    )
 
     SensorSectionCard(title = "2. 실측 — 회색(원시) vs 빨강(필터)") {
         if (rotationSensor == null) {
