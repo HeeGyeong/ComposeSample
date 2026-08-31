@@ -232,6 +232,7 @@ Cursor IDE를 사용하는 개발자를 위한 **AI 코딩 어시스턴트 규�
 - **predictiveback**: Predictive Back Gesture(Android 14+ Flow 기반 엣지 스와이프 진행률 실시간 애니메이션)
 - **biometric**: Biometric Authentication(biometric-compose alpha — Compose 연동)
 - **quicksettings**: Quick Settings Tile
+- **sensor**: 센서 퓨전 나침반(TYPE_ROTATION_VECTOR 방위각 파이프라인, remapCoordinateSystem 화면 회전 보정, 각도 랩어라운드를 견디는 저역통과 필터)
 - **shortcut**: 앱 바로가기(dynamic, static, pin)
 - **version**: Android SDK 버전 처리(targetSDK 34 권한 처리)
 - **webview**: WebView 구현과 JavaScript interface

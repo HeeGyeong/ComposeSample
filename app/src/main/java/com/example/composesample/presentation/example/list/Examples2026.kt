@@ -696,5 +696,12 @@ val examples2026 = listOf(
         description = "네트워크 이미지가 회차마다 출처(NETWORK/MEMORY_CACHE)와 소요 시간이 달라지는 것을 실측하고, LocalAsyncImagePreviewHandler로 픽셀을 고정 — inspection 모드 게이팅과 팩토리가 State.Loading을 반환하는 함정까지",
         blogUrl = "",
         exampleType = ConstValue.DeterministicImageTestExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 09. 01",
+        title = "센서 퓨전 나침반",
+        description = "TYPE_ROTATION_VECTOR 한 개로 방위각을 뽑는 4단계 파이프라인 + remapCoordinateSystem 화면 회전 보정 + 359°→3° 랩어라운드에서 바늘이 역주행하는 저역통과 필터 함정 비교",
+        blogUrl = "",
+        exampleType = ConstValue.SensorFusionCompassExample
     )
 )
