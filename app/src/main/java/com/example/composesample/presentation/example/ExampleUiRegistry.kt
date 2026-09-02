@@ -23,6 +23,7 @@ import com.example.composesample.presentation.example.component.architecture.dev
 import com.example.composesample.presentation.example.component.architecture.development.test.DeterministicImageTestExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.test.UITestExampleUI
 import com.example.composesample.presentation.example.component.system.platform.quicksettings.QuickSettingsTileExampleUI
+import com.example.composesample.presentation.example.component.system.notification.LiveUpdateNotificationExampleUI
 import com.example.composesample.presentation.example.component.system.platform.sensor.SensorFusionCompassExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.type.TypeExampleUI
 import com.example.composesample.presentation.example.component.architecture.pattern.compositionLocal.CompositionLocalExampleUI
@@ -318,6 +319,7 @@ import com.example.composesample.util.ConstValue.WorkManagerExample
 import com.example.composesample.util.ConstValue.BackgroundLocationExample
 import com.example.composesample.util.ConstValue.DynamicAppLinksExample
 import com.example.composesample.util.ConstValue.BiometricAuthExample
+import com.example.composesample.util.ConstValue.LiveUpdateNotificationExample
 import com.example.composesample.util.ConstValue.SensorFusionCompassExample
 import com.example.composesample.util.ConstValue.HapticFeedbackExample
 import com.example.composesample.util.ConstValue.StabilityAnnotationsExample
@@ -541,4 +543,5 @@ val exampleUiRegistry: Map<String, @Composable (onBackEvent: () -> Unit) -> Unit
     AutofillExample to { onBackEvent -> AutofillExampleUI(onBackEvent) },
     DeterministicImageTestExample to { onBackEvent -> DeterministicImageTestExampleUI(onBackEvent) },
     SensorFusionCompassExample to { onBackEvent -> SensorFusionCompassExampleUI(onBackEvent) },
+    LiveUpdateNotificationExample to { onBackEvent -> LiveUpdateNotificationExampleUI(onBackEvent) },
 )

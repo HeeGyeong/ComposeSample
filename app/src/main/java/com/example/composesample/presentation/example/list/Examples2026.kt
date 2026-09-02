@@ -703,5 +703,12 @@ val examples2026 = listOf(
         description = "TYPE_ROTATION_VECTOR 한 개로 방위각을 뽑는 4단계 파이프라인 + remapCoordinateSystem 화면 회전 보정 + 359°→3° 랩어라운드에서 바늘이 역주행하는 저역통과 필터 함정 비교",
         blogUrl = "",
         exampleType = ConstValue.SensorFusionCompassExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 09. 02",
+        title = "Live Updates 알림",
+        description = "NotificationCompat.ProgressStyle 세그먼트/포인트/트래커 아이콘 + 설정자가 없는 progressMax(세그먼트 길이 합) + API 36 미만에서 단색 막대로 축약되는 폴백을 빌드된 Notification extras 실측으로 확인",
+        blogUrl = "",
+        exampleType = ConstValue.LiveUpdateNotificationExample
     )
 )

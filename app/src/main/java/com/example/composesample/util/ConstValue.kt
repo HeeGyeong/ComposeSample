@@ -208,7 +208,7 @@ object ConstValue {
     const val AdvancedRepositoryPatternExample = "advancedRepositoryPatternExample"
 
     // ==================== 시스템 & 설정 예제 ====================
-    // PowerSaveMode(절전 모드), TargetSDK34Permission(권한 처리), PassingIntentData(Intent 전달), LanguageSetting(시스템 언어), LocalLanguageChange(앱 내 언어), Shortcut(앱 숏컷), QuickSettingsTile(빠른 설정 타일), DynamicAppLinks(동적 앱 링크), PredictiveBack(예측형 뒤로가기 제스처), HapticFeedback(햅틱 피드백), BiometricAuth(생체 인증 — biometric-compose alpha), SensorFusionCompass(TYPE_ROTATION_VECTOR 퓨전 나침반 — remapCoordinateSystem 화면 회전 보정 + 각도 랩어라운드를 견디는 저역통과 필터)
+    // PowerSaveMode(절전 모드), TargetSDK34Permission(권한 처리), PassingIntentData(Intent 전달), LanguageSetting(시스템 언어), LocalLanguageChange(앱 내 언어), Shortcut(앱 숏컷), QuickSettingsTile(빠른 설정 타일), DynamicAppLinks(동적 앱 링크), PredictiveBack(예측형 뒤로가기 제스처), HapticFeedback(햅틱 피드백), BiometricAuth(생체 인증 — biometric-compose alpha), SensorFusionCompass(TYPE_ROTATION_VECTOR 퓨전 나침반 — remapCoordinateSystem 화면 회전 보정 + 각도 랩어라운드를 견디는 저역통과 필터), LiveUpdateNotification(Android 16 Live Updates — NotificationCompat.ProgressStyle 세그먼트/포인트/트래커, 설정자 없는 progressMax, API 36 미만 단색 막대 폴백)
     const val PowerSaveModeExample = "powerSaveModeExample"
     const val QuickSettingsTileExample = "quickSettingsTileExample"
     const val TargetSDK34PermissionExample = "targetSDK34PermissionExample"
@@ -221,6 +221,7 @@ object ConstValue {
     const val HapticFeedbackExample = "hapticFeedbackExample"
     const val BiometricAuthExample = "biometricAuthExample"
     const val SensorFusionCompassExample = "sensorFusionCompassExample"
+    const val LiveUpdateNotificationExample = "liveUpdateNotificationExample"
 
     // ==================== 보안 예제 ====================
     // AppSecurity(Certificate Pinning + AndroidKeyStore AES-GCM 암호화 저장 + Play Integrity Mock 응답 디코딩), HardwareKeystore(TEE/StrongBox 하드웨어 키 보관 검증 — API 23+ isInsideSecureHardware / API 31+ SECURITY_LEVEL), ScreenshotDetection(Android 14 registerScreenCaptureCallback vs 레거시 MediaStore ContentObserver 비교), IpcExportedComponent(PackageManager 런타임 매니페스트 진단 + PendingIntent FLAG_MUTABLE/FLAG_IMMUTABLE payload 변조 비교 + signature 권한 강제 패턴)

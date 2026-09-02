@@ -36,7 +36,11 @@ koinAndroid = "3.2.2"
 koinAndroidxCompose = "3.2.2"
 
 # Core-dependencies
-coreKtx = "1.13.1"
+# NotificationCompat.ProgressStyle(Android 16 Live Updates)가 core 1.17.0 부터라 올린다.
+# 1.13.1 로 선언돼 있었지만 다른 라이브러리들이 이미 1.16.0 을 끌어올려 해석 중이었으므로
+# (선언≠해석, DEP-VERSION-03 과 같은 유형) 이번 상향으로 선언과 해석을 함께 맞춘다.
+# core-ktx 1.17.0 이 core 1.17.0 을 전이로 가져오므로 core 를 따로 선언하지 않는다.
+coreKtx = "1.17.0"
 appcompat = "1.7.0"
 material = "1.11.1"
 material3 = "1.4.0"

@@ -250,6 +250,9 @@ Cursor IDE를 사용하는 개발자를 위한 **AI 코딩 어시스턴트 규�
 - **location**: Background Location Tracking — 실제 `foregroundServiceType="location"` 서비스, 순차적 권한 처리(포그라운드 → 알림 → 백그라운드), `CoroutineWorker`와 대비해 WorkManager가 지속적인 위치 추적을 대체할 수 없는 이유 설명
 - **workmanager**: 백그라운드 작업과 태스크 스케줄링
 
+**notification**:
+- **Live Updates 알림**: Android 16 승격(promoted) 알림 — `NotificationCompat.ProgressStyle`의 세그먼트/포인트/트래커 아이콘, 설정자가 없고 세그먼트 길이 합으로 정해지는 `progressMax`, API 36 미만에서 단색 진행 막대 한 줄로 축약되는 폴백을 빌드된 Notification의 extras 실측으로 확인
+
 **ui**:
 - **widget**: Glance 위젯(App Widget)
 
