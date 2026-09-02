@@ -135,9 +135,13 @@ fun LightWeightCoroutine() {
             repeat(10000) {
                 launch(Dispatchers.Default) {
                     delay(1000L)
+                    // compileSdk 36 스텁부터 Thread.getId() 가 deprecated 다.
+                    // 대체 API 인 Thread.threadId() 는 android-36 에만 존재해(android-35 스텁에는 없음)
+                    // minSdk 24 인 이 프로젝트에서는 쓸 수 없으므로 억제 범위를 이 값 하나로 좁힌다.
+                    @Suppress("DEPRECATION") val threadId = Thread.currentThread().id
                     Log.d(
                         "CoroutineExample",
-                        "count : ${createCount.value++} : ${Thread.currentThread().name}[${Thread.currentThread().id}]"
+                        "count : ${createCount.value++} : ${Thread.currentThread().name}[$threadId]"
                     )
                 }
             }

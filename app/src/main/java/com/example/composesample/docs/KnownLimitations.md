@@ -13,7 +13,7 @@ A human-readable collection of **intentional deferrals, version constraints, and
 
 ### biometric pinned to alpha05
 - **Current**: `androidx.biometric:biometric(-compose):1.4.0-alpha05`
-- **Why**: alpha06+ requires compileSdk 36, but the project uses compileSdk 35. We adopted alpha05, the last version compatible with 35. (alpha06+ also changes the `biometricRequest` API to vararg + CustomOption, requiring call-site changes.)
+- **Why**: alpha06+ used to be blocked by two things — it requires compileSdk 36, and it changes the `biometricRequest` API to vararg + CustomOption. The compileSdk half was removed on 2026-09-02 when the project moved to compileSdk 36 for the Live Updates notification example, so the only remaining blocker is the call-site API change. Still pinned to alpha05 because upgrading is a dependency decision of its own, not a side effect of the compileSdk bump.
 
 ### ffmpeg commented out
 - **Current**: the encoding/decoding example under `system/media/ffmpeg` is fully commented out
