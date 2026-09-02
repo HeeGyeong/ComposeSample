@@ -710,5 +710,12 @@ val examples2026 = listOf(
         description = "NotificationCompat.ProgressStyle 세그먼트/포인트/트래커 아이콘 + 설정자가 없는 progressMax(세그먼트 길이 합) + API 36 미만에서 단색 막대로 축약되는 폴백을 빌드된 Notification extras 실측으로 확인",
         blogUrl = "",
         exampleType = ConstValue.LiveUpdateNotificationExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 09. 03",
+        title = "Picture-in-Picture compat",
+        description = "PictureInPictureParamsCompat로 9개 필드를 버전 분기 없이 구성 → toPictureInPictureParams()가 API 33/31/26으로 잘라내는 규칙을 되읽기로 확인 + 종횡비 허용 범위(0.418410~2.390000)와 enter/set의 상태 요구 차이를 실측",
+        blogUrl = "",
+        exampleType = ConstValue.PictureInPictureExample
     )
 )

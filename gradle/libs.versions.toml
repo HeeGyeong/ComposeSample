@@ -42,11 +42,13 @@ koinAndroid = "3.2.3"
 koinAndroidxCompose = "3.2.2"
 
 # Core-dependencies
-# NotificationCompat.ProgressStyle(Android 16 Live Updates)가 core 1.17.0 부터라 올린다.
-# 1.13.1 로 선언돼 있었지만 다른 라이브러리들이 이미 1.16.0 을 끌어올려 해석 중이었으므로
-# (선언≠해석, DEP-VERSION-03 과 같은 유형) 이번 상향으로 선언과 해석을 함께 맞춘다.
-# core-ktx 1.17.0 이 core 1.17.0 을 전이로 가져오므로 core 를 따로 선언하지 않는다.
-coreKtx = "1.17.0"
+# 1.17.0: NotificationCompat.ProgressStyle(Android 16 Live Updates)가 이 버전부터.
+# 1.18.0: PictureInPictureParamsCompat / PictureInPictureProvider / PictureInPictureUiStateCompat /
+#         DisplayShapeCompat 신규(PiP 예제가 사용). aar-metadata 는 minCompileSdk=36 / minAGP=8.9.1 로
+#         현재 환경(compileSdk 36, AGP 8.13.2)과 호환된다. 1.19.0 은 minCompileSdk=37 이라 채택하지 않는다.
+# 선언은 1.13.1 이었지만 실제 해석은 1.16.0 이던 드리프트를 2026-09-02 에 함께 해소했다.
+# core-ktx 가 core 를 전이로 가져오므로 core 를 따로 선언하지 않는다.
+coreKtx = "1.18.0"
 appcompat = "1.7.0"
 material = "1.11.1"
 material3 = "1.4.0"

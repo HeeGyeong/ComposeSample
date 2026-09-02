@@ -229,6 +229,7 @@ Cursor IDE를 사용하는 개발자를 위한 **AI 코딩 어시스턴트 규�
 - **haptic**: Haptic Feedback(LocalHapticFeedback vs HapticFeedbackConstants 비교와 API 레벨별 지원 범위)
 - **intent**: Intent 처리와 앱 간 데이터 공유
 - **language**: 지역화, 시스템 언어 설정, 앱 내 언어 변경
+- **pip**: Picture-in-Picture compat(core 1.18.0) — `PictureInPictureParamsCompat`로 9개 필드를 버전 분기 없이 구성하고 `toPictureInPictureParams()`가 API 33/31/26으로 잘라내는 규칙을 플랫폼 getter 되읽기로 확인, 종횡비 허용 범위(0.418410~2.390000)와 `enterPictureInPictureMode`(RESUMED 필요) vs `setPictureInPictureParams`(정지 상태에서도 가능) 대조
 - **powersave**: 절전 모드 감지와 배터리 최적화
 - **predictiveback**: Predictive Back Gesture(Android 14+ Flow 기반 엣지 스와이프 진행률 실시간 애니메이션)
 - **biometric**: Biometric Authentication(biometric-compose alpha — Compose 연동)
