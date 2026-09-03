@@ -37,7 +37,7 @@ fun DynamicColor() {
 @Composable
 fun SquareComposablePreview() {
     MaterialTheme {
-        ShimmerExampleUI(onBackButtonClick = {})
+        ShimmerExampleUI(onBackEvent = {})
     }
 }
 

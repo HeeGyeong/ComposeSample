@@ -29,7 +29,7 @@ import com.example.composesample.util.noRippleClickable
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun TextStyleUI(onBackButtonClick: () -> Unit) {
+fun TextStyleExampleUI(onBackEvent: () -> Unit) {
     LazyColumn(modifier = Modifier.padding(horizontal = 20.dp)) {
         stickyHeader {
             Box(
@@ -40,7 +40,7 @@ fun TextStyleUI(onBackButtonClick: () -> Unit) {
                 Row(modifier = Modifier.fillMaxWidth()) {
                     IconButton(
                         onClick = {
-                            onBackButtonClick.invoke()
+                            onBackEvent.invoke()
                         }
                     ) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "")

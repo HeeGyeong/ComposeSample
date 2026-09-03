@@ -34,8 +34,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun PullScreenPagerUI(
-    onBackButtonClick: () -> Unit
+fun PullScreenPagerExampleUI(
+    onBackEvent: () -> Unit
 ) {
     Box(
         modifier = Modifier
@@ -51,7 +51,7 @@ fun PullScreenPagerUI(
             ) {
                 IconButton(
                     onClick = {
-                        onBackButtonClick.invoke()
+                        onBackEvent.invoke()
                     }
                 ) {
                     Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "")

@@ -32,7 +32,7 @@ import kotlinx.parcelize.Parcelize
 @OptIn(ExperimentalFoundationApi::class, ExperimentalAnimationApi::class)
 @Composable
 fun PassingIntentDataExampleUI(
-    onBackButtonClick: () -> Unit
+    onBackEvent: () -> Unit
 ) {
     val listState = rememberLazyListState()
     val context = LocalContext.current
@@ -53,7 +53,7 @@ fun PassingIntentDataExampleUI(
                     Row(modifier = Modifier.fillMaxWidth()) {
                         IconButton(
                             onClick = {
-                                onBackButtonClick.invoke()
+                                onBackEvent.invoke()
                             }
                         ) {
                             Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "")

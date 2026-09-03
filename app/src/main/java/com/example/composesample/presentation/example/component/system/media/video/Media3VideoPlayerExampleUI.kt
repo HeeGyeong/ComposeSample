@@ -332,7 +332,7 @@ private fun LifecycleManagementCard(exoPlayer: ExoPlayer) {
                         "DisposableEffect(exoPlayer) {\n" +
                         "    onDispose { exoPlayer.release() }\n" +
                         "}\n\n" +
-                        "// AndroidView 이탈 시 View 쪽 참조 해제(WebViewIssueUI 와 동일 관례)\n" +
+                        "// AndroidView 이탈 시 View 쪽 참조 해제(WebViewIssueExampleUI 와 동일 관례)\n" +
                         "AndroidView(\n" +
                         "    factory = { PlayerView(it).apply { player = exoPlayer } },\n" +
                         "    onRelease = { view -> view.player = null }\n" +

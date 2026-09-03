@@ -41,8 +41,8 @@ import java.util.concurrent.TimeUnit
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun WorkManagerUI(
-    onBackButtonClick: () -> Unit
+fun WorkManagerExampleUI(
+    onBackEvent: () -> Unit
 ) {
     val context = LocalContext.current
     val lifecycleContext = LocalLifecycleOwner.current
@@ -129,7 +129,7 @@ fun WorkManagerUI(
                 Row(modifier = Modifier.fillMaxWidth()) {
                     IconButton(
                         onClick = {
-                            onBackButtonClick.invoke()
+                            onBackEvent.invoke()
                         }
                     ) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "")

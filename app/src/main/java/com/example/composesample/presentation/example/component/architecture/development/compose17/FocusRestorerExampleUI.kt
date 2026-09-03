@@ -47,7 +47,7 @@ import com.example.composesample.presentation.getTextStyle
  */
 @OptIn(ExperimentalFoundationApi::class, ExperimentalComposeUiApi::class)
 @Composable
-fun FocusRestorerExampleUI(onBackButtonClick: () -> Unit) {
+fun FocusRestorerExampleUI(onBackEvent: () -> Unit) {
     val focusManager = LocalFocusManager.current
     
     LazyColumn(modifier = Modifier.padding(horizontal = 20.dp)) {
@@ -60,7 +60,7 @@ fun FocusRestorerExampleUI(onBackButtonClick: () -> Unit) {
                 Row(modifier = Modifier.fillMaxWidth()) {
                     IconButton(
                         onClick = {
-                            onBackButtonClick.invoke()
+                            onBackEvent.invoke()
                         }
                     ) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "뒤로가기")

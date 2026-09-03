@@ -41,8 +41,8 @@ import java.io.File
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun AudioRecorderUI(
-    onBackButtonClick: () -> Unit
+fun AudioRecorderExampleUI(
+    onBackEvent: () -> Unit
 ) {
     val context = LocalContext.current
     val isRecoding = remember { mutableStateOf(false) }
@@ -78,7 +78,7 @@ fun AudioRecorderUI(
                 Row(modifier = Modifier.fillMaxWidth()) {
                     IconButton(
                         onClick = {
-                            onBackButtonClick.invoke()
+                            onBackEvent.invoke()
                         }
                     ) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "")

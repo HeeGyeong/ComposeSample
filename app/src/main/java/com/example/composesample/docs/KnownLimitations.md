@@ -28,7 +28,7 @@ A human-readable collection of **intentional deferrals, version constraints, and
 - **Why**: minimizing per-module dependencies is desirable but has a wide impact, so it is deferred to a separate PR.
 
 ### UTIL-01 — ExampleRouter split (done) / ConstValue split (decided: won't-do)
-- **ExampleRouter — Done** (commit da927855): the 146-branch `when` monolith was extracted into a registry map (`exampleUiRegistry` in `ExampleUiRegistry.kt`). `ExampleRouter.kt` shrank from 974 to ~106 lines and now only handles move-type dispatch + a registry lookup. Adding an example is now a one-line map entry. Behavior is fully preserved (SDK gating for SSE/ReverseLazyColumn, the `onBackButtonClick` param for SafFile, the Dummy fallback; key set verified 146 = 146).
+- **ExampleRouter — Done** (commit da927855): the 146-branch `when` monolith was extracted into a registry map (`exampleUiRegistry` in `ExampleUiRegistry.kt`). `ExampleRouter.kt` shrank from 974 to ~106 lines and now only handles move-type dispatch + a registry lookup. Adding an example is now a one-line map entry. Behavior is fully preserved (SDK gating for SSE/ReverseLazyColumn, the back-callback param for SafFile (named `onBackButtonClick` at the time; unified to `onBackEvent` by CONV-09 on 2026-09-04), the Dummy fallback; key set verified 146 = 146).
 - **ConstValue — decided: won't-do (no longer a pending task)**: `ConstValue.kt` (150+ constants) stays a single file. Splitting it would break **355 `ConstValue.Xxx` qualified references across 15 files plus ~140 member imports** for a purely cosmetic gain (file length). A Kotlin `object` cannot span multiple files, so any split forces top-level constants and mass reference churn. Benefit < risk → kept as-is permanently; a centralized constants file is the accepted project pattern. This is a closed decision, not deferred work — no need to re-evaluate in future scans.
 - Related: the `[UTIL-01 — 결정 완료]` note in `ConstValue.kt` (the prior `TODO` marker was removed since this is no longer pending work).
 
@@ -46,10 +46,10 @@ A human-readable collection of **intentional deferrals, version constraints, and
 
 ### M3-BULK — migration complete, 4 intentional remnants kept
 - **Current**: the bulk migrations (1st/2nd/3rd passes) are **complete**. Only **4 files** intentionally remain on Material2, kept for side-by-side comparison with their M3 replacements (**do not re-migrate**):
-  - `ui/layout/bottomsheet/BottomSheetUI.kt`
+  - `ui/layout/bottomsheet/BottomSheetExampleUI.kt`
   - `ui/layout/bottomsheet/BottomSheetContent.kt`
-  - `ui/layout/bottomsheet/ModalBottomSheetUI.kt`
-  - `interaction/swipe/SwipeToDismissUI.kt`
+  - `ui/layout/bottomsheet/ModalBottomSheetExampleUI.kt`
+  - `interaction/swipe/SwipeToDismissExampleUI.kt`
 - **History**: the 3rd pass (completed 2026-06-12) migrated the remaining files per domain — `Drawer` (→`ModalNavigationDrawer`), `TopAppBar`, `Scaffold`, `Snackbar`, `BottomNavigation` (→`NavigationBar`), `ScrollableTabRow`, `PullToRefreshBox`, etc. The common header `MainUIComponent.kt` was migrated earlier by M3-05.
 - **Scan note**: `grep "import androidx.compose.material."` still matches ~100 files, but those are `material.icons` / `material.ripple` usages — legitimate even in M3 projects — **not** Material2 components. Only the 4 files above import actual M2 components.
 - **Intentional remnants**: see "Intentionally Kept Exceptions" in [`ARCHITECTURE.md`](../../../../../../../../ARCHITECTURE.md).

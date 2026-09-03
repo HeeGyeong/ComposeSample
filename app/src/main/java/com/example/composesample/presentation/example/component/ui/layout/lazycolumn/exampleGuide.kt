@@ -3,7 +3,7 @@ package com.example.composesample.presentation.example.component.ui.layout.lazyc
 /**
  * UI/Layout/LazyColumn 예제 참고 자료
  *
- * ## LazyColumn 성능/이슈 (LazyColumnFlingBehaviorExampleUI, LazyColumnIssueUI)
+ * ## LazyColumn 성능/이슈 (LazyColumnFlingBehaviorExampleUI, LazyColumnIssueExampleUI)
  * - 공식 문서: https://developer.android.com/develop/ui/compose/lists
  * - 성능: https://developer.android.com/develop/ui/compose/lists#item-keys
  * 핵심 개념:

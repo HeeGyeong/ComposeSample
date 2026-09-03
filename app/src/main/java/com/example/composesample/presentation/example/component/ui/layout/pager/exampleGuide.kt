@@ -3,7 +3,7 @@ package com.example.composesample.presentation.example.component.ui.layout.pager
 /**
  * UI/Layout/Pager 예제 참고 자료
  *
- * ## PullScreenPagerUI (HorizontalPager / VerticalPager)
+ * ## PullScreenPagerExampleUI (HorizontalPager / VerticalPager)
  * - 공식 문서: https://developer.android.com/develop/ui/compose/layouts/pager
  * 핵심 개념:
  * - HorizontalPager(state = rememberPagerState { pageCount }) 로 스와이프 페이지 전환

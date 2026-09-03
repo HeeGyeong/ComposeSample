@@ -3,7 +3,7 @@ package com.example.composesample.presentation.example.component.interaction.ref
 /**
  * Interaction/Refresh 예제 참고 자료
  *
- * ## PullToRefreshUI (Pull-to-Refresh)
+ * ## PullToRefreshExampleUI (Pull-to-Refresh)
  * - 공식 문서: https://developer.android.com/develop/ui/compose/components/pull-to-refresh
  * 핵심 개념:
  * - Material3 PullToRefreshBox / pullToRefresh modifier 로 당겨서 새로고침 구현

@@ -3,7 +3,7 @@ package com.example.composesample.presentation.example.component.interaction.cli
 /**
  * Interaction/ClickEvent 예제 참고 자료
  *
- * ## ClickEventUI (클릭 이벤트 처리 & 중복 방지)
+ * ## ClickEventExampleUI (클릭 이벤트 처리 & 중복 방지)
  * - 공식 문서: https://developer.android.com/develop/ui/compose/touch-input/pointer-input/tap-and-press
  * 핵심 개념:
  * - 빠른 연속 탭(더블 클릭) 중복 처리 방지: 마지막 클릭 시각을 기억해 throttle

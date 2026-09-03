@@ -3,7 +3,7 @@ package com.example.composesample.presentation.example.component.system.backgrou
 /**
  * System/Background/WorkManager 예제 참고 자료
  *
- * ## WorkManagerUI (백그라운드 작업 & 스케줄링)
+ * ## WorkManagerExampleUI (백그라운드 작업 & 스케줄링)
  * - 공식 문서: https://developer.android.com/develop/background-work/background-tasks/persistent/getting-started
  * 핵심 개념:
  * - Worker.doWork() 에서 백그라운드 작업 정의 → Result.success/retry/failure 반환

@@ -47,7 +47,7 @@ import com.example.composesample.util.noRippleClickable
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun LottieExampleUI(
-    onBackButtonClick: () -> Unit
+    onBackEvent: () -> Unit
 ) {
     val context = LocalContext.current
     var isPlaying by remember { mutableStateOf(true) }
@@ -116,7 +116,7 @@ fun LottieExampleUI(
                 Row(modifier = Modifier.fillMaxWidth()) {
                     IconButton(
                         onClick = {
-                            onBackButtonClick.invoke()
+                            onBackEvent.invoke()
                         }
                     ) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "")

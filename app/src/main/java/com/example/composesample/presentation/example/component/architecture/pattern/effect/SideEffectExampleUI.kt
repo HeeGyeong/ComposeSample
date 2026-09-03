@@ -45,7 +45,7 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun SideEffectExampleUI(
-    onBackButtonClick: () -> Unit
+    onBackEvent: () -> Unit
 ) {
     val coroutineScope = rememberCoroutineScope()
 
@@ -66,7 +66,7 @@ fun SideEffectExampleUI(
                 Row(modifier = Modifier.fillMaxWidth()) {
                     IconButton(
                         onClick = {
-                            onBackButtonClick.invoke()
+                            onBackEvent.invoke()
                         }
                     ) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "")

@@ -43,7 +43,7 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ScaffoldDrawerExampleUI(
-    onBackButtonClick: () -> Unit
+    onBackEvent: () -> Unit
 ) {
     Box(
         modifier = Modifier
@@ -93,7 +93,7 @@ fun ScaffoldDrawerExampleUI(
                         actions = {
                             IconButton(
                                 onClick = {
-                                    onBackButtonClick.invoke()
+                                    onBackEvent.invoke()
                                 }
                             ) {
                                 Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "")

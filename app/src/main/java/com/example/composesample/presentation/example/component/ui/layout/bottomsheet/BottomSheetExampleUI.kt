@@ -45,8 +45,8 @@ import kotlinx.coroutines.launch
 @Suppress("DEPRECATION")
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun BottomSheetUI(
-    onBackButtonClick: () -> Unit
+fun BottomSheetExampleUI(
+    onBackEvent: () -> Unit
 ) {
     val visibleBs = remember { mutableStateOf(false) }
     val heightSample = remember { mutableStateOf(30.dp) } // default Height
@@ -80,7 +80,7 @@ fun BottomSheetUI(
                 Row(modifier = Modifier.fillMaxWidth()) {
                     IconButton(
                         onClick = {
-                            onBackButtonClick.invoke()
+                            onBackEvent.invoke()
                         }
                     ) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "")

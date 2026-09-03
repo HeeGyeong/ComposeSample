@@ -34,8 +34,8 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun ModalBottomSheetUI(
-    onBackButtonClick: () -> Unit
+fun ModalBottomSheetExampleUI(
+    onBackEvent: () -> Unit
 ) {
     val coroutineScope = rememberCoroutineScope()
     val bottomState = rememberModalBottomSheetState(
@@ -44,7 +44,7 @@ fun ModalBottomSheetUI(
     val containerHeight = remember { mutableStateOf(0) }
     val sheetContentHeight = remember { mutableStateOf(0) }
 
-    Log.d("ModalBottomSheetUI", "-----------------------------------------------------")
+    Log.d("ModalBottomSheetExampleUI", "-----------------------------------------------------")
 
     Box(
         modifier = Modifier
@@ -55,7 +55,7 @@ fun ModalBottomSheetUI(
         ModalBottomSheetLayout(
             modifier = Modifier.onSizeChanged { size -> // MaxSize라서 처음부터 다 그려둔다
                 containerHeight.value = size.height
-                Log.d("ModalBottomSheetUI", "containerHeight.value ? ${containerHeight.value}")
+                Log.d("ModalBottomSheetExampleUI", "containerHeight.value ? ${containerHeight.value}")
             },
             scrimColor = Color.Black.copy(alpha = 0.6f),
             sheetState = bottomState,
@@ -68,7 +68,7 @@ fun ModalBottomSheetUI(
                         .onSizeChanged { size -> // MaxSize라서 처음부터 다 그려둔다
                             sheetContentHeight.value = size.height
                             Log.d(
-                                "ModalBottomSheetUI",
+                                "ModalBottomSheetExampleUI",
                                 "sheetContentHeight.value ? ${sheetContentHeight.value}"
                             )
                         }
@@ -83,7 +83,7 @@ fun ModalBottomSheetUI(
                         bottomState.show()
                     }
                 },
-                onBackButtonClick = onBackButtonClick
+                onBackEvent = onBackEvent
             )
         }
     }
@@ -92,9 +92,9 @@ fun ModalBottomSheetUI(
 @Composable
 fun BackgroundScreen(
     onButtonClick: () -> Unit,
-    onBackButtonClick: () -> Unit,
+    onBackEvent: () -> Unit,
 ) {
-    Log.d("ModalBottomSheetUI", "BackgroundScreen Call")
+    Log.d("ModalBottomSheetExampleUI", "BackgroundScreen Call")
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -109,7 +109,7 @@ fun BackgroundScreen(
             ) {
                 IconButton(
                     onClick = {
-                        onBackButtonClick.invoke()
+                        onBackEvent.invoke()
                     }
                 ) {
                     Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "")

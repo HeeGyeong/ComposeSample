@@ -39,7 +39,7 @@ import com.example.composesample.presentation.example.component.architecture.dev
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun StickyHeaderExampleUI(
-    onBackButtonClick: () -> Unit
+    onBackEvent: () -> Unit
 ) {
     val listState = rememberLazyListState()
 
@@ -59,8 +59,8 @@ fun StickyHeaderExampleUI(
             CollapsedHeaderUI(
                 modifier = Modifier.zIndex(2f),
                 isCollapsed = isCollapsed,
-                onBackButtonClick = {
-                    onBackButtonClick.invoke()
+                onBackEvent = {
+                    onBackEvent.invoke()
                 }
             )
         }
@@ -74,8 +74,8 @@ fun StickyHeaderExampleUI(
         ) {
             item {
                 ExpandedHeaderUI(
-                    onBackButtonClick = {
-                        onBackButtonClick.invoke()
+                    onBackEvent = {
+                        onBackEvent.invoke()
                     }
                 )
             }
@@ -95,7 +95,7 @@ fun StickyHeaderExampleUI(
 
 @Composable
 fun StickyHeaderComponent(
-    onBackButtonClick: () -> Unit
+    onBackEvent: () -> Unit
 ) {
     Box(
         modifier = Modifier
@@ -104,7 +104,7 @@ fun StickyHeaderComponent(
         Row(modifier = Modifier.fillMaxWidth()) {
             IconButton(
                 onClick = {
-                    onBackButtonClick.invoke()
+                    onBackEvent.invoke()
                 }
             ) {
                 Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "")
@@ -121,7 +121,7 @@ val EXPANDED_TOP_BAR_HEIGHT = 100.dp
 private fun CollapsedHeaderUI(
     modifier: Modifier = Modifier,
     isCollapsed: Boolean,
-    onBackButtonClick: () -> Unit,
+    onBackEvent: () -> Unit,
 ) {
     val color: Color by animateColorAsState(
         if (isCollapsed) {
@@ -144,7 +144,7 @@ private fun CollapsedHeaderUI(
             exit = fadeOut()
         ) {
             StickyHeaderComponent(
-                onBackButtonClick = onBackButtonClick
+                onBackEvent = onBackEvent
             )
         }
     }
@@ -152,7 +152,7 @@ private fun CollapsedHeaderUI(
 
 @Composable
 private fun ExpandedHeaderUI(
-    onBackButtonClick: () -> Unit,
+    onBackEvent: () -> Unit,
 ) {
     Box(
         modifier = Modifier
@@ -162,7 +162,7 @@ private fun ExpandedHeaderUI(
         contentAlignment = Alignment.BottomStart
     ) {
         StickyHeaderComponent(
-            onBackButtonClick = onBackButtonClick
+            onBackEvent = onBackEvent
         )
     }
 }

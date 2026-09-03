@@ -34,8 +34,8 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun PullToRefreshUI(
-    onBackButtonClick: () -> Unit
+fun PullToRefreshExampleUI(
+    onBackEvent: () -> Unit
 ) {
     val coroutineScope = rememberCoroutineScope()
     val refreshViewModel = viewModel<RefreshViewModel>()
@@ -85,7 +85,7 @@ fun PullToRefreshUI(
                     Row(modifier = Modifier.fillMaxWidth()) {
                         IconButton(
                             onClick = {
-                                onBackButtonClick.invoke()
+                                onBackEvent.invoke()
                             }
                         ) {
                             Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "")

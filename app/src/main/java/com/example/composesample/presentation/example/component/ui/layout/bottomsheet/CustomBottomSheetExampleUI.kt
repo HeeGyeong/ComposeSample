@@ -11,8 +11,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.zIndex
 
 @Composable
-fun CustomBottomSheetUI(
-    onBackButtonClick: () -> Unit
+fun CustomBottomSheetExampleUI(
+    onBackEvent: () -> Unit
 ) {
     val customBottomSheetVisible = remember { mutableStateOf(false) }
 
@@ -26,7 +26,7 @@ fun CustomBottomSheetUI(
             onButtonClick = {
                 customBottomSheetVisible.value = true
             },
-            onBackButtonClick = onBackButtonClick
+            onBackEvent = onBackEvent
         )
 
         Box(

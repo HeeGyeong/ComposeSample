@@ -47,7 +47,7 @@ class InitTestExampleUITest {
     fun verify_initial_ui_elements_exist() {
         // When
         composeTestRule.setContent {
-            InitTestExampleUI(onBackButtonClick = {})
+            InitTestExampleUI(onBackEvent = {})
         }
 
         // Then
@@ -70,7 +70,7 @@ class InitTestExampleUITest {
 
         // When
         composeTestRule.setContent {
-            InitTestExampleUI(onBackButtonClick = { backButtonClicked = true })
+            InitTestExampleUI(onBackEvent = { backButtonClicked = true })
         }
 
         // MainHeader 의 뒤로가기 아이콘 contentDescription 은 "Back" 이다.
@@ -89,7 +89,7 @@ class InitTestExampleUITest {
 
         // When
         composeTestRule.setContent {
-            InitTestExampleUI(onBackButtonClick = {})
+            InitTestExampleUI(onBackEvent = {})
         }
         // isInitLoading을 구독하여 true로 설정
         viewModel.isInitLoading.first { it }
@@ -138,7 +138,7 @@ class InitTestExampleUITest {
     fun verify_loading_state_persists_after_rotation() = runTest {
         // Given
         composeTestRule.setContent {
-            InitTestExampleUI(onBackButtonClick = {})
+            InitTestExampleUI(onBackEvent = {})
         }
         viewModel.changeLaunchedEffectLoading()
         viewModel.isInitLoading.first { it }
@@ -166,7 +166,7 @@ class InitTestExampleUITest {
 
         // When
         composeTestRule.setContent {
-            InitTestExampleUI(onBackButtonClick = {})
+            InitTestExampleUI(onBackEvent = {})
         }
         viewModel.isInitLoading.first { it }
 

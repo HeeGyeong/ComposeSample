@@ -12,7 +12,7 @@ package com.example.composesample.presentation.example.component.ui.layout.flexb
  * - horizontalArrangement/verticalArrangement + itemSpacing 으로 간격 제어
  * - Modifier.weight(): FlowRowScope 내에서 남은 공간 비율 분배
  *
- * ## FlexBoxUI (반응형 디자인)
+ * ## FlexBoxExampleUI (반응형 디자인)
  * 핵심 개념:
  * - 화면 크기에 따라 아이템 배치가 줄바꿈되는 CSS Flexbox 유사 패턴
  *

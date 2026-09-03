@@ -3,7 +3,7 @@ package com.example.composesample.presentation.example.component.system.platform
 /**
  * System/Platform/WebView 예제 참고 자료
  *
- * ## WebViewIssueUI (WebView 구현 & JavaScript 인터페이스)
+ * ## WebViewIssueExampleUI (WebView 구현 & JavaScript 인터페이스)
  * - 공식 문서: https://developer.android.com/develop/ui/views/layout/webapps/webview
  * 핵심 개념:
  * - AndroidView(factory = { WebView(it) }) 로 Compose에 WebView 통합

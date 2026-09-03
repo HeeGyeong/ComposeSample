@@ -46,7 +46,7 @@ class PassingIntentDataExampleTest {
         // 테스트할 Compose UI 컴포넌트 설정
         composeTestRule.setContent {
             PassingIntentDataExampleUI(
-                onBackButtonClick = { backButtonClicked = true }
+                onBackEvent = { backButtonClicked = true }
             )
         }
     }
@@ -86,7 +86,7 @@ class PassingIntentDataExampleTest {
     /**
      * 뒤로가기 버튼의 클릭 이벤트 처리가 정상적으로 작동하는지 검증
      * 1. 뒤로가기 버튼 클릭 시 backButtonClicked 플래그가 true로 변경되는지 확인
-     * 2. onBackButtonClick 콜백이 정상적으로 호출되는지 확인
+     * 2. onBackEvent 콜백이 정상적으로 호출되는지 확인
      */
     @Test
     fun test_back_button_click() {

@@ -48,7 +48,7 @@ import com.example.composesample.presentation.getTextStyle
  */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun GraphicsLayerExampleUI(onBackButtonClick: () -> Unit) {
+fun GraphicsLayerExampleUI(onBackEvent: () -> Unit) {
     LazyColumn(modifier = Modifier.padding(horizontal = 20.dp)) {
         stickyHeader {
             Box(
@@ -59,7 +59,7 @@ fun GraphicsLayerExampleUI(onBackButtonClick: () -> Unit) {
                 Row(modifier = Modifier.fillMaxWidth()) {
                     IconButton(
                         onClick = {
-                            onBackButtonClick.invoke()
+                            onBackEvent.invoke()
                         }
                     ) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "뒤로가기")

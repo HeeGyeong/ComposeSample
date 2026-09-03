@@ -20,7 +20,7 @@ import com.example.composesample.util.createPinShortcut
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun ShortcutExampleUI(
-    onBackButtonClick: () -> Unit
+    onBackEvent: () -> Unit
 ) {
     val context = LocalContext.current
 
@@ -31,7 +31,7 @@ fun ShortcutExampleUI(
     ) {
         MainHeader(
             title = "Shortcut Example",
-            onBackIconClicked = onBackButtonClick
+            onBackIconClicked = onBackEvent
         )
 
 

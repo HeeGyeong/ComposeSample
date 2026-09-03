@@ -43,7 +43,7 @@ import org.koin.androidx.compose.koinViewModel
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun DataCacheExampleUI(
-    onBackButtonClick: () -> Unit
+    onBackEvent: () -> Unit
 ) {
     val viewModelStoreOwner = checkNotNull(LocalViewModelStoreOwner.current)
     val dataCacheViewModel =
@@ -68,7 +68,7 @@ fun DataCacheExampleUI(
                     Row(modifier = Modifier.fillMaxWidth()) {
                         IconButton(
                             onClick = {
-                                onBackButtonClick.invoke()
+                                onBackEvent.invoke()
                             }
                         ) {
                             Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "")

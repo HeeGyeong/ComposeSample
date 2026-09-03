@@ -70,7 +70,7 @@ data class LocationInfo(
 )
 
 @Composable
-fun LanguageSettingExampleUI(onBackButtonClick: () -> Unit) {
+fun LanguageSettingExampleUI(onBackEvent: () -> Unit) {
     val context = LocalContext.current
     val isEmulator = remember { EmulatorUtil.isEmulator() }
 
@@ -136,7 +136,7 @@ fun LanguageSettingExampleUI(onBackButtonClick: () -> Unit) {
                 Row(modifier = Modifier.fillMaxWidth()) {
                     IconButton(
                         onClick = {
-                            onBackButtonClick.invoke()
+                            onBackEvent.invoke()
                         }
                     ) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "뒤로가기")

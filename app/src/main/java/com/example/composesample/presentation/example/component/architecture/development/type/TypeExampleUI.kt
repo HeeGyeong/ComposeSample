@@ -30,7 +30,7 @@ import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun TypeExampleUI(onBackButtonClick: () -> Unit) {
+fun TypeExampleUI(onBackEvent: () -> Unit) {
     val viewModelStoreOwner = checkNotNull(LocalViewModelStoreOwner.current)
     val viewModel = koinViewModel<TypeExampleViewModel>(owner = viewModelStoreOwner)
 
@@ -55,7 +55,7 @@ fun TypeExampleUI(onBackButtonClick: () -> Unit) {
                 Row(modifier = Modifier.fillMaxWidth()) {
                     IconButton(
                         onClick = {
-                            onBackButtonClick.invoke()
+                            onBackEvent.invoke()
                         }
                     ) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "뒤로가기")

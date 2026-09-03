@@ -3,7 +3,7 @@ package com.example.composesample.presentation.example.component.ui.layout.botto
 /**
  * UI/Layout/BottomSheet 예제 참고 자료
  *
- * ## ModalBottomSheetUI / BottomSheetUI / CustomBottomSheetUI
+ * ## ModalBottomSheetExampleUI / BottomSheetExampleUI / CustomBottomSheetExampleUI
  * - 공식 문서: https://developer.android.com/develop/ui/compose/components/bottom-sheets
  * 핵심 개념:
  * - M3 ModalBottomSheet + rememberModalBottomSheetState: 모달 형태 바텀시트(스크림 포함)

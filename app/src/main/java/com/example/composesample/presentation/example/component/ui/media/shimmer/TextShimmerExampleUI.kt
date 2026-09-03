@@ -27,7 +27,7 @@ import com.example.composesample.util.textShimmer
 
 @Composable
 fun TextShimmerExampleUI(
-    onBackButtonClick: () -> Unit
+    onBackEvent: () -> Unit
 ) {
     val transition = rememberInfiniteTransition(label = "")
     val translateAnim by transition.animateFloat(
@@ -49,7 +49,7 @@ fun TextShimmerExampleUI(
     ) {
         MainHeader(
             title = "Text Shimmer Example",
-            onBackIconClicked = onBackButtonClick
+            onBackIconClicked = onBackEvent
         )
 
         Box(

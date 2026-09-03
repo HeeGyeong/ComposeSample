@@ -3,7 +3,7 @@ package com.example.composesample.presentation.example.component.system.media.ff
 /**
  * System/Media/FFmpeg 예제 참고 자료
  *
- * ## FfmpegEncodingUI (비디오/오디오 인코딩·디코딩)
+ * ## FfmpegEncodingExampleUI (비디오/오디오 인코딩·디코딩)
  * - ffmpeg-kit: https://github.com/arthenica/ffmpeg-kit
  * 핵심 개념:
  * - FFmpegKit.execute("-i input.mp4 ...") 로 커맨드 기반 미디어 변환

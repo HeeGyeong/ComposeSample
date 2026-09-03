@@ -39,7 +39,7 @@ val LocalViewModel = compositionLocalOf<CompositionLocalViewModel> { error("No V
 
 @Composable
 fun CompositionLocalExampleUI(
-    onBackButtonClick: () -> Unit
+    onBackEvent: () -> Unit
 ) {
     Log.d(LOG_TAG, "CompositionLocalExampleUI")
 
@@ -52,7 +52,7 @@ fun CompositionLocalExampleUI(
     ) {
         MainHeader(
             title = "CompositionLocal Example",
-            onBackIconClicked = onBackButtonClick
+            onBackIconClicked = onBackEvent
         )
 
         ExampleDivider(title = "DefaultCompositionLocalUse")
@@ -286,5 +286,5 @@ fun ExampleDivider(title: String) {
 @Preview
 @Composable
 fun ExamplePreview() {
-    CompositionLocalExampleUI(onBackButtonClick = { })
+    CompositionLocalExampleUI(onBackEvent = { })
 }

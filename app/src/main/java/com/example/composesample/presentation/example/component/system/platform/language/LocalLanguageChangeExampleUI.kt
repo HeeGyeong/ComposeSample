@@ -36,7 +36,7 @@ import com.example.composesample.R
 import com.example.composesample.util.LanguageManager
 
 @Composable
-fun LocalLanguageChangeExampleUI(onBackButtonClick: () -> Unit) {
+fun LocalLanguageChangeExampleUI(onBackEvent: () -> Unit) {
     val context = LocalContext.current
 
     // LanguageManager를 사용하여 언어 설정 관리
@@ -76,7 +76,7 @@ fun LocalLanguageChangeExampleUI(onBackButtonClick: () -> Unit) {
                 Row(modifier = Modifier.fillMaxWidth()) {
                     IconButton(
                         onClick = {
-                            onBackButtonClick.invoke()
+                            onBackEvent.invoke()
                         }
                     ) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "뒤로가기")

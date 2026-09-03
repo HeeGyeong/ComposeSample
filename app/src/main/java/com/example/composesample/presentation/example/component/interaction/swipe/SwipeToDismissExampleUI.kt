@@ -62,17 +62,17 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
-fun SwipeToDismissUI(
-    onBackButtonClick: () -> Unit
+fun SwipeToDismissExampleUI(
+    onBackEvent: () -> Unit
 ) {
-    SimpleSwipeToDismissUI(onBackButtonClick = onBackButtonClick)
+    SimpleSwipeToDismissUI(onBackEvent = onBackEvent)
 }
 
 // 아이템 dismiss 시 완전히 view에서 제거 처리 해야함.
 @OptIn(ExperimentalMaterialApi::class, ExperimentalFoundationApi::class)
 @Composable
 fun SimpleSwipeToDismissUI(
-    onBackButtonClick: () -> Unit
+    onBackEvent: () -> Unit
 ) {
     val coroutineScope = rememberCoroutineScope()
     var cardItemWidth by remember { mutableStateOf(0f) }
@@ -122,7 +122,7 @@ fun SimpleSwipeToDismissUI(
                 Row(modifier = Modifier.fillMaxWidth()) {
                     IconButton(
                         onClick = {
-                            onBackButtonClick.invoke()
+                            onBackEvent.invoke()
                         }
                     ) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "")

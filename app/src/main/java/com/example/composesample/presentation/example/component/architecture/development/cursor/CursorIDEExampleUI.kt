@@ -31,7 +31,7 @@ import androidx.compose.ui.unit.dp
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun CursorIDEExampleUI(
-    onBackButtonClick: () -> Unit
+    onBackEvent: () -> Unit
 ) {
     var text by remember { mutableStateOf("") }
 
@@ -47,7 +47,7 @@ fun CursorIDEExampleUI(
                     .padding(top = 10.dp, bottom = 10.dp)
             ) {
                 Row(modifier = Modifier.fillMaxWidth()) {
-                    IconButton(onClick = onBackButtonClick) {
+                    IconButton(onClick = onBackEvent) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "")
                     }
                 }

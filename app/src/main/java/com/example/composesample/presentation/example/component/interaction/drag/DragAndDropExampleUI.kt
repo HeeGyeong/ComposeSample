@@ -50,7 +50,7 @@ val itemHeight = 64.dp
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun DragAndDropExampleUI(
-    onBackButtonClick: () -> Unit
+    onBackEvent: () -> Unit
 ) {
     var items by remember { mutableStateOf(List(20) { "Item $it" }) }
     var draggedItemIndex by remember { mutableStateOf<Int?>(null) }
@@ -78,7 +78,7 @@ fun DragAndDropExampleUI(
                     Row(modifier = Modifier.fillMaxWidth()) {
                         IconButton(
                             onClick = {
-                                onBackButtonClick.invoke()
+                                onBackEvent.invoke()
                             }
                         ) {
                             Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "")

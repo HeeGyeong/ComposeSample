@@ -45,7 +45,7 @@ import java.text.DecimalFormat
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun SafFileSelectionUI(onBackButtonClick: () -> Unit) {
+fun SafFileSelectionExampleUI(onBackEvent: () -> Unit) {
     val context = LocalContext.current
     val viewModel: SafFileSelectionViewModel = viewModel()
     var selectedFileName by remember { mutableStateOf<String?>(null) }
@@ -130,7 +130,7 @@ fun SafFileSelectionUI(onBackButtonClick: () -> Unit) {
                 Row(modifier = Modifier.fillMaxWidth()) {
                     IconButton(
                         onClick = {
-                            onBackButtonClick.invoke()
+                            onBackEvent.invoke()
                         }
                     ) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "뒤로가기")

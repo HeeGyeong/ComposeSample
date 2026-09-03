@@ -42,13 +42,13 @@ import com.example.composesample.presentation.example.component.data.room.MultiT
 import com.example.composesample.presentation.example.component.data.room.RoomFtsSearchExampleUI
 import com.example.composesample.presentation.example.component.data.room.RoomIndexExampleUI
 import com.example.composesample.presentation.example.component.data.sse.SSEExampleUI
-import com.example.composesample.presentation.example.component.interaction.clickevent.ClickEventUI
+import com.example.composesample.presentation.example.component.interaction.clickevent.ClickEventExampleUI
 import com.example.composesample.presentation.example.component.interaction.drag.DragAndDropExampleUI
 import com.example.composesample.presentation.example.component.interaction.pointer.IndirectPointerExampleUI
-import com.example.composesample.presentation.example.component.interaction.refresh.PullToRefreshUI
+import com.example.composesample.presentation.example.component.interaction.refresh.PullToRefreshExampleUI
 import com.example.composesample.presentation.example.component.interaction.sticker.StickerCanvasExampleUI
 import com.example.composesample.presentation.example.component.interaction.swipe.SwipeToDismissM3ExampleUI
-import com.example.composesample.presentation.example.component.interaction.swipe.SwipeToDismissUI
+import com.example.composesample.presentation.example.component.interaction.swipe.SwipeToDismissExampleUI
 import com.example.composesample.presentation.example.component.system.ai.GeminiNanoExampleUI
 import com.example.composesample.presentation.example.component.system.deeplink.DynamicAppLinksExampleUI
 import com.example.composesample.presentation.example.component.system.platform.biometric.BiometricAuthExampleUI
@@ -59,17 +59,17 @@ import com.example.composesample.presentation.example.component.system.security.
 import com.example.composesample.presentation.example.component.system.platform.haptic.HapticFeedbackExampleUI
 import com.example.composesample.presentation.example.component.system.platform.predictiveback.PredictiveBackExampleUI
 import com.example.composesample.presentation.example.component.system.background.location.BackgroundLocationExampleUI
-import com.example.composesample.presentation.example.component.system.background.workmanager.WorkManagerUI
-import com.example.composesample.presentation.example.component.system.media.recorder.AudioRecorderUI
+import com.example.composesample.presentation.example.component.system.background.workmanager.WorkManagerExampleUI
+import com.example.composesample.presentation.example.component.system.media.recorder.AudioRecorderExampleUI
 import com.example.composesample.presentation.example.component.system.media.video.Media3VideoPlayerExampleUI
-import com.example.composesample.presentation.example.component.system.platform.file.SafFileSelectionUI
+import com.example.composesample.presentation.example.component.system.platform.file.SafFileSelectionExampleUI
 import com.example.composesample.presentation.example.component.system.platform.intent.PassingIntentDataExampleUI
 import com.example.composesample.presentation.example.component.system.platform.language.LanguageSettingExampleUI
 import com.example.composesample.presentation.example.component.system.platform.language.LocalLanguageChangeExampleUI
 import com.example.composesample.presentation.example.component.system.platform.powersave.PowerSaveModeExampleUI
 import com.example.composesample.presentation.example.component.system.platform.shortcut.ShortcutExampleUI
 import com.example.composesample.presentation.example.component.system.platform.version.TargetSDK34ExampleUI
-import com.example.composesample.presentation.example.component.system.platform.webview.WebViewIssueUI
+import com.example.composesample.presentation.example.component.system.platform.webview.WebViewIssueExampleUI
 import com.example.composesample.presentation.example.component.system.ui.widget.GlanceWidgetExampleUI
 import com.example.composesample.presentation.example.component.ui.autofill.AutofillExampleUI
 import com.example.composesample.presentation.example.component.ui.accessibility.AccessibleFocusIndicatorExampleUI
@@ -91,12 +91,12 @@ import com.example.composesample.presentation.example.component.ui.layout.animat
 import com.example.composesample.presentation.example.component.ui.layout.animation.AnimationExampleUI
 import com.example.composesample.presentation.example.component.ui.layout.animation.SharedElementDebugToolingExampleUI
 import com.example.composesample.presentation.example.component.ui.layout.animation.SharedElementTransitionExampleUI
-import com.example.composesample.presentation.example.component.ui.layout.bottomsheet.BottomSheetUI
-import com.example.composesample.presentation.example.component.ui.layout.bottomsheet.CustomBottomSheetUI
-import com.example.composesample.presentation.example.component.ui.layout.bottomsheet.ModalBottomSheetUI
+import com.example.composesample.presentation.example.component.ui.layout.bottomsheet.BottomSheetExampleUI
+import com.example.composesample.presentation.example.component.ui.layout.bottomsheet.CustomBottomSheetExampleUI
+import com.example.composesample.presentation.example.component.ui.layout.bottomsheet.ModalBottomSheetExampleUI
 import com.example.composesample.presentation.example.component.ui.layout.drawer.ModalDrawerExampleUI
 import com.example.composesample.presentation.example.component.ui.layout.drawer.ScaffoldDrawerExampleUI
-import com.example.composesample.presentation.example.component.ui.layout.flexbox.FlexBoxUI
+import com.example.composesample.presentation.example.component.ui.layout.flexbox.FlexBoxExampleUI
 import com.example.composesample.presentation.example.component.ui.layout.flexbox.FlowOverflowExampleUI
 import com.example.composesample.presentation.example.component.ui.layout.flexbox.FlowRowLayoutExampleUI
 import com.example.composesample.presentation.example.component.ui.material3.Material3ExpressiveExampleUI
@@ -104,11 +104,11 @@ import com.example.composesample.presentation.example.component.ui.shader.AgslSh
 import com.example.composesample.presentation.example.component.ui.style.FoundationStyleApiExampleUI
 import com.example.composesample.presentation.example.component.ui.layout.header.StickyHeaderExampleUI
 import com.example.composesample.presentation.example.component.ui.layout.lazycolumn.LazyColumnFlingBehaviorExampleUI
-import com.example.composesample.presentation.example.component.ui.layout.lazycolumn.LazyColumnIssueUI
+import com.example.composesample.presentation.example.component.ui.layout.lazycolumn.LazyColumnIssueExampleUI
 import com.example.composesample.presentation.example.component.ui.layout.lazycolumn.LazyListReusePoolExampleUI
 import com.example.composesample.presentation.example.component.ui.layout.lazycolumn.LazyStaggeredGridExampleUI
 import com.example.composesample.presentation.example.component.ui.layout.lazycolumn.ReverseLazyColumnExampleUI
-import com.example.composesample.presentation.example.component.ui.layout.pager.PullScreenPagerUI
+import com.example.composesample.presentation.example.component.ui.layout.pager.PullScreenPagerExampleUI
 import com.example.composesample.presentation.example.component.ui.layout.topappbar.FancyTopAppBarExampleUI
 import com.example.composesample.presentation.example.component.ui.media.lottie.LottieExampleUI
 import com.example.composesample.presentation.example.component.ui.media.picker.EmbeddedPhotoPickerExampleUI
@@ -135,7 +135,7 @@ import com.example.composesample.presentation.example.component.ui.text.RichCont
 import com.example.composesample.presentation.example.component.ui.text.TextFieldMaxLengthExampleUI
 import com.example.composesample.presentation.example.component.ui.text.DocumentEditingTextFieldExampleUI
 import com.example.composesample.presentation.example.component.ui.text.SyntaxHighlightingExampleUI
-import com.example.composesample.presentation.example.component.ui.text.TextStyleUI
+import com.example.composesample.presentation.example.component.ui.text.TextStyleExampleUI
 import com.example.composesample.presentation.example.component.ui.visibility.VisibilityExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.performance.InlineValueClassExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.internals.CompositionObserverExampleUI
@@ -362,32 +362,32 @@ import com.example.composesample.util.ConstValue.PreviewDrivenScreenshotExample
  * ExampleMoveType.ACTIVITY(BottomNavigation)·EMPTY 분기는 화면 구성이 아니라
  * Activity 시작/상태 초기화이므로 ExampleRouter 에 그대로 둔다.
  *
- * SSE / ReverseLazyColumn 의 SDK 게이팅, SafFile 의 파라미터명(onBackButtonClick) 등
+ * SSE / ReverseLazyColumn 의 SDK 게이팅, SafFile 의 파라미터명(onBackEvent) 등
  * 기존 동작은 그대로 보존한다.
  */
 val exampleUiRegistry: Map<String, @Composable (onBackEvent: () -> Unit) -> Unit> = mapOf(
-    LazyColumnExample to { onBackEvent -> LazyColumnIssueUI(onBackEvent) },
+    LazyColumnExample to { onBackEvent -> LazyColumnIssueExampleUI(onBackEvent) },
     LazyStaggeredGridExample to { onBackEvent -> LazyStaggeredGridExampleUI(onBackEvent) },
     LazyListReusePoolExample to { onBackEvent -> LazyListReusePoolExampleUI(onBackEvent) },
-    ClickEventExample to { onBackEvent -> ClickEventUI(onBackEvent) },
-    FlexBoxLayoutExample to { onBackEvent -> FlexBoxUI(onBackEvent) },
+    ClickEventExample to { onBackEvent -> ClickEventExampleUI(onBackEvent) },
+    FlexBoxLayoutExample to { onBackEvent -> FlexBoxExampleUI(onBackEvent) },
     FlowRowLayoutExample to { onBackEvent -> FlowRowLayoutExampleUI(onBackEvent) },
     ComposeLoadersExample to { onBackEvent -> ComposeLoadersExampleUI(onBackEvent) },
-    WebViewIssueExample to { onBackEvent -> WebViewIssueUI(onBackEvent) },
-    TextStyleExample to { onBackEvent -> TextStyleUI(onBackEvent) },
-    AudioRecorderExample to { onBackEvent -> AudioRecorderUI(onBackEvent) },
+    WebViewIssueExample to { onBackEvent -> WebViewIssueExampleUI(onBackEvent) },
+    TextStyleExample to { onBackEvent -> TextStyleExampleUI(onBackEvent) },
+    AudioRecorderExample to { onBackEvent -> AudioRecorderExampleUI(onBackEvent) },
     Media3VideoPlayerExample to { onBackEvent -> Media3VideoPlayerExampleUI(onBackEvent) },
-    WorkManagerExample to { onBackEvent -> WorkManagerUI(onBackEvent) },
+    WorkManagerExample to { onBackEvent -> WorkManagerExampleUI(onBackEvent) },
     BackgroundLocationExample to { onBackEvent -> BackgroundLocationExampleUI(onBackEvent) },
-    PullToRefreshExample to { onBackEvent -> PullToRefreshUI(onBackEvent) },
-    PullScreenPager to { onBackEvent -> PullScreenPagerUI(onBackEvent) },
+    PullToRefreshExample to { onBackEvent -> PullToRefreshExampleUI(onBackEvent) },
+    PullScreenPager to { onBackEvent -> PullScreenPagerExampleUI(onBackEvent) },
     FlingBehaviorExample to { onBackEvent -> LazyColumnFlingBehaviorExampleUI(onBackEvent) },
-    BottomSheetExample to { onBackEvent -> BottomSheetUI(onBackEvent) },
-    ModalBottomSheetExample to { onBackEvent -> ModalBottomSheetUI(onBackEvent) },
-    CustomBottomSheetExample to { onBackEvent -> CustomBottomSheetUI(onBackEvent) },
+    BottomSheetExample to { onBackEvent -> BottomSheetExampleUI(onBackEvent) },
+    ModalBottomSheetExample to { onBackEvent -> ModalBottomSheetExampleUI(onBackEvent) },
+    CustomBottomSheetExample to { onBackEvent -> CustomBottomSheetExampleUI(onBackEvent) },
     ScaffoldDrawExample to { onBackEvent -> ScaffoldDrawerExampleUI(onBackEvent) },
     ModalDrawExample to { onBackEvent -> ModalDrawerExampleUI(onBackEvent) },
-    SwipeToDismissExample to { onBackEvent -> SwipeToDismissUI(onBackEvent) },
+    SwipeToDismissExample to { onBackEvent -> SwipeToDismissExampleUI(onBackEvent) },
     SwipeToDismissM3Example to { onBackEvent -> SwipeToDismissM3ExampleUI(onBackEvent) },
     SideEffectExample to { onBackEvent -> SideEffectExampleUI(onBackEvent) },
     DataCacheExample to { onBackEvent -> DataCacheExampleUI(onBackEvent) },
@@ -433,7 +433,7 @@ val exampleUiRegistry: Map<String, @Composable (onBackEvent: () -> Unit) -> Unit
     RoomFtsSearchExample to { onBackEvent -> RoomFtsSearchExampleUI(onBackEvent) },
     RoomIndexExample to { onBackEvent -> RoomIndexExampleUI(onBackEvent) },
     TypeExample to { onBackEvent -> TypeExampleUI(onBackEvent) },
-    SafFileExample to { onBackEvent -> SafFileSelectionUI(onBackButtonClick = onBackEvent) },
+    SafFileExample to { onBackEvent -> SafFileSelectionExampleUI(onBackEvent) },
     LanguageSettingExample to { onBackEvent -> LanguageSettingExampleUI(onBackEvent) },
     LocalLanguageChangeExample to { onBackEvent -> LocalLanguageChangeExampleUI(onBackEvent) },
     TextOverflowExample to { onBackEvent -> TextOverflowExampleUI(onBackEvent) },

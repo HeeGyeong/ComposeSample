@@ -32,7 +32,7 @@ import org.koin.androidx.compose.koinViewModel
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun PagingExampleUI(
-    onBackButtonClick: () -> Unit,
+    onBackEvent: () -> Unit,
 ) {
     val viewModelStoreOwner = checkNotNull(LocalViewModelStoreOwner.current)
     val pagingViewModel = koinViewModel<PagingViewModel>(owner = viewModelStoreOwner)
@@ -62,7 +62,7 @@ fun PagingExampleUI(
             stickyHeader {
                 MainHeader(
                     title = "Paging Example",
-                    onBackIconClicked = onBackButtonClick
+                    onBackIconClicked = onBackEvent
                 )
             }
 

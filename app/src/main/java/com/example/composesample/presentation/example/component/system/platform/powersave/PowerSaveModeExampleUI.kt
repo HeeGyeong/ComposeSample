@@ -40,7 +40,7 @@ import com.example.composesample.util.BackGroundWorker
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun PowerSaveModeExampleUI(
-    onBackButtonClick: () -> Unit
+    onBackEvent: () -> Unit
 ) {
     val context = LocalContext.current
     val isPowerSaveMode = remember { mutableStateOf(false) }
@@ -111,7 +111,7 @@ fun PowerSaveModeExampleUI(
                     Row(modifier = Modifier.fillMaxWidth()) {
                         IconButton(
                             onClick = {
-                                onBackButtonClick.invoke()
+                                onBackEvent.invoke()
                             }
                         ) {
                             Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "")

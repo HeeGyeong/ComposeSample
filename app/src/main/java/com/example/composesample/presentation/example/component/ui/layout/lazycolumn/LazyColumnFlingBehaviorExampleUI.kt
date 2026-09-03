@@ -41,7 +41,7 @@ import kotlin.math.abs
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun LazyColumnFlingBehaviorExampleUI(onBackButtonClick: () -> Unit) {
+fun LazyColumnFlingBehaviorExampleUI(onBackEvent: () -> Unit) {
     val lazyListState = rememberLazyListState()
     val repeatCount = 1000
 
@@ -97,7 +97,7 @@ fun LazyColumnFlingBehaviorExampleUI(onBackButtonClick: () -> Unit) {
                 Row(modifier = Modifier.fillMaxWidth()) {
                     IconButton(
                         onClick = {
-                            onBackButtonClick.invoke()
+                            onBackEvent.invoke()
                         }
                     ) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "")

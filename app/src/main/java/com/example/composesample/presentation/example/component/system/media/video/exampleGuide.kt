@@ -25,6 +25,6 @@ package com.example.composesample.presentation.example.component.system.media.vi
  *   상태 추적, 생명주기 관리)만 재구성해 시연
  * - 샘플 비디오는 Google 공개 테스트 스트림(BigBuckBunny.mp4)을 사용해 실제 네트워크 재생을 시연(네트워크 없으면 버퍼링 상태로 표시)
  * - 화면 이탈 시 리스너 해제 + player.release() 는 DisposableEffect 로, PlayerView 쪽 참조 해제는 AndroidView 의 onRelease 로 분리
- *   (WebViewIssueUI 의 AndroidView + onRelease 리소스 정리 관례와 동일)
+ *   (WebViewIssueExampleUI 의 AndroidView + onRelease 리소스 정리 관례와 동일)
  * - 앱 백그라운드 전환 시 자동 일시정지는 프로젝트 공용 유틸 `OnLifecycleEvent`(LifecycleUtil.kt)로 ON_STOP 을 구독해 실동작 시연
  */

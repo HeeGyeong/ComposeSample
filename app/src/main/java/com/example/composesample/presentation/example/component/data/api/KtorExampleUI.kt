@@ -39,7 +39,7 @@ import org.koin.androidx.compose.koinViewModel
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun KtorExampleUI(
-    onBackButtonClick: () -> Unit,
+    onBackEvent: () -> Unit,
 ) {
     val viewModelStoreOwner = checkNotNull(LocalViewModelStoreOwner.current)
     val apiExampleViewModel = koinViewModel<ApiExampleViewModel>(owner = viewModelStoreOwner)
@@ -85,7 +85,7 @@ fun KtorExampleUI(
                     Column {
                         Row(modifier = Modifier.fillMaxWidth()) {
                             IconButton(
-                                onClick = onBackButtonClick
+                                onClick = onBackEvent
                             ) {
                                 Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "")
                             }

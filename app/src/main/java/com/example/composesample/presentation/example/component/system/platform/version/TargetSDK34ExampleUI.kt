@@ -55,7 +55,7 @@ import com.example.composesample.util.videoAlbumIntent
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun TargetSDK34ExampleUI(
-    onBackButtonClick: () -> Unit
+    onBackEvent: () -> Unit
 ) {
     val listState = rememberLazyListState()
     val context = LocalContext.current
@@ -78,7 +78,7 @@ fun TargetSDK34ExampleUI(
                     Row(modifier = Modifier.fillMaxWidth()) {
                         IconButton(
                             onClick = {
-                                onBackButtonClick.invoke()
+                                onBackEvent.invoke()
                             }
                         ) {
                             Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "")

@@ -44,7 +44,7 @@ private const val SUBSCRIPTION_TIMEOUT_MS = 5000L
 
 @Composable
 fun InitTestExampleUI(
-    onBackButtonClick: () -> Unit
+    onBackEvent: () -> Unit
 ) {
     val initTestViewModel: InitTestViewModel = koinViewModel()
 
@@ -55,7 +55,7 @@ fun InitTestExampleUI(
     ) {
         MainHeader(
             title = "Init Test Example",
-            onBackIconClicked = onBackButtonClick
+            onBackIconClicked = onBackEvent
         )
 
         LazyColumn(

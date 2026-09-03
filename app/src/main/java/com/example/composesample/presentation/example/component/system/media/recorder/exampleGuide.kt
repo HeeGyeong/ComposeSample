@@ -3,7 +3,7 @@ package com.example.composesample.presentation.example.component.system.media.re
 /**
  * System/Media/Recorder 예제 참고 자료
  *
- * ## AudioRecorderUI / AudioRecorderUtil (오디오 녹음 & 미디어 상태 관리)
+ * ## AudioRecorderExampleUI / AudioRecorderUtil (오디오 녹음 & 미디어 상태 관리)
  * - 공식 문서: https://developer.android.com/media/platform/mediarecorder
  * 핵심 개념:
  * - MediaRecorder 설정 순서: setAudioSource → setOutputFormat → setAudioEncoder → setOutputFile → prepare → start

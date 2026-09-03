@@ -36,7 +36,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun ModalDrawerExampleUI(
-    onBackButtonClick: () -> Unit
+    onBackEvent: () -> Unit
 ) {
     val coroutineScope = rememberCoroutineScope()
     val drawerState = rememberDrawerState(DrawerValue.Closed)
@@ -92,7 +92,7 @@ fun ModalDrawerExampleUI(
                             Spacer(modifier = Modifier.weight(1f))
                             IconButton(
                                 onClick = {
-                                    onBackButtonClick.invoke()
+                                    onBackEvent.invoke()
                                 }
                             ) {
                                 Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "")

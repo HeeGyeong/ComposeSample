@@ -27,7 +27,7 @@ import com.example.composesample.util.singleClickable
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun ClickEventUI(onBackButtonClick: () -> Unit) {
+fun ClickEventExampleUI(onBackEvent: () -> Unit) {
     LazyColumn(modifier = Modifier.padding(horizontal = 20.dp)) {
         stickyHeader {
             Box(
@@ -38,7 +38,7 @@ fun ClickEventUI(onBackButtonClick: () -> Unit) {
                 Row(modifier = Modifier.fillMaxWidth()) {
                     IconButton(
                         onClick = {
-                            onBackButtonClick.invoke()
+                            onBackEvent.invoke()
                         }
                     ) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "")

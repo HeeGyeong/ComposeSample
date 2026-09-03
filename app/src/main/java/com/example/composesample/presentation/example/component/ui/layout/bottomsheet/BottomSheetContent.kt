@@ -169,7 +169,7 @@ fun CollapsedBottomSheet(
 fun ModalExpandedBottomSheet() {
     val localDensity = LocalDensity.current
     var sheetContentHeight by remember { mutableStateOf(0f) }
-    Log.d("ModalBottomSheetUI", "ModalExpandedBottomSheet Call $sheetContentHeight")
+    Log.d("ModalBottomSheetExampleUI", "ModalExpandedBottomSheet Call $sheetContentHeight")
 
 
     Surface {
@@ -177,7 +177,7 @@ fun ModalExpandedBottomSheet() {
             .fillMaxSize()
             .onGloballyPositioned { coordinates -> // MaxSize라서 처음부터 다 그려둔다
                 Log.d( // 현재 보여지고 있는 BottomSheet의 Height.
-                    "ModalBottomSheetUI",
+                    "ModalBottomSheetExampleUI",
                     "onGloballyPositioned ? :: ${coordinates.boundsInWindow().height}"
                 )
                 sheetContentHeight = coordinates.boundsInWindow().height

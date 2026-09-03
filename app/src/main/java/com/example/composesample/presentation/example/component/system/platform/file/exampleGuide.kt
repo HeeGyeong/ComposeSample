@@ -3,7 +3,7 @@ package com.example.composesample.presentation.example.component.system.platform
 /**
  * System/Platform/File 예제 참고 자료
  *
- * ## SafFileSelectionUI (Storage Access Framework)
+ * ## SafFileSelectionExampleUI (Storage Access Framework)
  * - 공식 문서: https://developer.android.com/training/data-storage/shared/documents-files
  * 핵심 개념:
  * - SAF: 권한 선언 없이 시스템 문서 선택기로 사용자가 직접 파일 접근 허용

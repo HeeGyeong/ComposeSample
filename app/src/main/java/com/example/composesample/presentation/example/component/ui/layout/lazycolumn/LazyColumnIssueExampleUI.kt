@@ -31,7 +31,7 @@ import com.example.composesample.util.rememberImeState
  */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun LazyColumnIssueUI(onBackButtonClick: () -> Unit) {
+fun LazyColumnIssueExampleUI(onBackEvent: () -> Unit) {
     val imeState = rememberImeState()
     val imeBottomPadding = WindowInsets.ime.getBottom(LocalDensity.current)
     val density = LocalDensity.current
@@ -50,7 +50,7 @@ fun LazyColumnIssueUI(onBackButtonClick: () -> Unit) {
                 Row(modifier = Modifier.fillMaxWidth()) {
                     IconButton(
                         onClick = {
-                            onBackButtonClick.invoke()
+                            onBackEvent.invoke()
                         }
                     ) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "")

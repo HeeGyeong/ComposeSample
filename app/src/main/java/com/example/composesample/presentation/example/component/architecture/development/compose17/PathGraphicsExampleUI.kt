@@ -52,7 +52,7 @@ import kotlin.math.PI
  */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun PathGraphicsExampleUI(onBackButtonClick: () -> Unit) {
+fun PathGraphicsExampleUI(onBackEvent: () -> Unit) {
     LazyColumn(modifier = Modifier.padding(horizontal = 20.dp)) {
         stickyHeader {
             Box(
@@ -63,7 +63,7 @@ fun PathGraphicsExampleUI(onBackButtonClick: () -> Unit) {
                 Row(modifier = Modifier.fillMaxWidth()) {
                     IconButton(
                         onClick = {
-                            onBackButtonClick.invoke()
+                            onBackEvent.invoke()
                         }
                     ) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "뒤로가기")

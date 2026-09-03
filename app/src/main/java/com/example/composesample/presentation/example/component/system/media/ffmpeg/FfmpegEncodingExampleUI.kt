@@ -23,9 +23,9 @@ import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun FfmpegEncodingUI(
+fun FfmpegEncodingExampleUI(
     launcher: ActivityResultLauncher<String>,
-    onBackButtonClick: () -> Unit
+    onBackEvent: () -> Unit
 ) {
     LazyColumn(modifier = Modifier.padding(horizontal = 20.dp)) {
         stickyHeader {
@@ -37,7 +37,7 @@ fun FfmpegEncodingUI(
                 Row(modifier = Modifier.fillMaxWidth()) {
                     IconButton(
                         onClick = {
-                            onBackButtonClick.invoke()
+                            onBackEvent.invoke()
                         }
                     ) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "")

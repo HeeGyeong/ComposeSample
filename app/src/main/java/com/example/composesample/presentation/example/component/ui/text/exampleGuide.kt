@@ -79,6 +79,6 @@ package com.example.composesample.presentation.example.component.ui.text
  * - softWrap/maxLines와 조합 가능, onTextLayout 콜백으로 실측 크기·라인 수 확인
  * - 반드시 명확한 크기 제약이 있는 컨테이너에서만 동작(width/height 무제한이면 미작동)
  *
- * ## TextStyleUI
+ * ## TextStyleExampleUI
  * - 각 예제 파일 내 주석 참고
  */
