@@ -63,7 +63,10 @@ ktor = "2.3.7"
 junit = "4.13.2"
 androidxTestJunit = "1.2.1"
 espressoCore = "3.5.1"
-coroutineTest = "1.7.1"
+# 런타임에 들어온 kotlinx-coroutines-android 1.10.1 이 kotlinx-coroutines-bom:1.10.1 을 함께 끌고 오고,
+# 그 BOM 의 제약이 test 아티팩트까지 1.10.1 로 올린다(선언 1.7.1 ↔ 해석 1.10.1 불일치였음).
+# 해석 결과에 선언을 맞춘다. (DEP-VERSION-03/04 와 동일 유형 — DEP-VERSION-05)
+coroutineTest = "1.10.1"
 mockk = "1.13.5"
 turbine = "1.0.0"
 kotlinTestJunit = "1.8.20"
