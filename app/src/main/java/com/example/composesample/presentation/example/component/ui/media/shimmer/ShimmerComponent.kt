@@ -148,7 +148,7 @@ fun BackgroundShimmerItem() {
     }
 
     // shimmer가 보이지 않는다.
-    androidx.compose.material3.Card(
+    Card(
         modifier = Modifier
             .fillMaxWidth()
             .height(100.dp)
@@ -173,7 +173,7 @@ fun BackgroundShimmerItem() {
         )
     }
 
-    androidx.compose.material3.Card(
+    Card(
         modifier = Modifier
             .fillMaxWidth()
             .height(100.dp)

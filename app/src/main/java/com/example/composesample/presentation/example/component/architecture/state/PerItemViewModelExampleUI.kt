@@ -3,6 +3,7 @@ package com.example.composesample.presentation.example.component.architecture.st
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -88,7 +89,7 @@ fun PerItemViewModelExampleUI(onBackEvent: () -> Unit) {
                 .fillMaxSize()
                 .padding(horizontal = 12.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp),
-            contentPadding = androidx.compose.foundation.layout.PaddingValues(vertical = 12.dp)
+            contentPadding = PaddingValues(vertical = 12.dp)
         ) {
             item { SectionTitle("A. 단일 화면 ViewModel (공유 상태 충돌)") }
             item { SharedScopeSection() }

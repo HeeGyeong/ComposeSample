@@ -27,7 +27,6 @@ import com.example.composesample.util.rememberImeState
  * Compose Version 1.4.0-alpha04 이하의 버전을 사용하면
  * Keyboard가 정상적으로 동작하지 않는 이슈를 가지고 있는 Compose 함수.
  *
- * https://heegs.tistory.com/142
  */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable

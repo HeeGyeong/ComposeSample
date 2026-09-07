@@ -33,3 +33,9 @@ package com.example.composesample.presentation.example.component.ui.layout.lazyc
  * - 남은 슬롯은 remember 값과 modifier 람다가 캡처한 객체까지 도달 가능한 상태로 붙들고 있다
  * - key(식별자, 아이템마다 달라야 함) vs contentType(분류, 레이아웃 종류만큼만) 의 역할 구분
  */
+
+/**
+ * LazyColumnIssueExampleUI 참고 자료
+ * - 설명 글: https://heegs.tistory.com/142
+ *   (URL 은 프로젝트 규칙상 exampleGuide.kt 에만 둔다 — UI 파일 KDoc 에 있던 것을 옮겼다)
+ */

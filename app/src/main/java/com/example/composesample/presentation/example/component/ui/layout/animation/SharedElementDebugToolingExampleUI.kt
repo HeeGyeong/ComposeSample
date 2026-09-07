@@ -13,6 +13,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -511,7 +512,7 @@ private fun TestCoroutineApiNoteCard() {
         colors = CardDefaults.cardColors(containerColor = Color(0xFFFFF8E1)),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         shape = RoundedCornerShape(12.dp),
-        border = androidx.compose.foundation.BorderStroke(1.dp, Color(0xFFFFD54F))
+        border = BorderStroke(1.dp, Color(0xFFFFD54F))
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(

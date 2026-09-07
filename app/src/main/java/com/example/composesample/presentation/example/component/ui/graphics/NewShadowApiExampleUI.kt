@@ -22,6 +22,11 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -31,11 +36,6 @@ import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -46,6 +46,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
@@ -259,7 +260,7 @@ private fun BasicShadowCard() {
                                     drawRoundRect(
                                         color = shadowColor,
                                         size = size,
-                                        cornerRadius = androidx.compose.ui.geometry.CornerRadius(cornerRadius)
+                                        cornerRadius = CornerRadius(cornerRadius)
                                     )
                                 }
                                 
@@ -267,7 +268,7 @@ private fun BasicShadowCard() {
                                     color = Color.White.copy(alpha = 0.2f),
                                     topLeft = Offset(2.dp.toPx(), 2.dp.toPx()),
                                     size = Size(size.width - 4.dp.toPx(), size.height - 4.dp.toPx()),
-                                    cornerRadius = androidx.compose.ui.geometry.CornerRadius(cornerRadius)
+                                    cornerRadius = CornerRadius(cornerRadius)
                                 )
                             },
                         contentAlignment = Alignment.Center
@@ -383,7 +384,7 @@ private fun ShadowPropertiesCard() {
                                         size.width + spreadValue,
                                         size.height + spreadValue
                                     ),
-                                    cornerRadius = androidx.compose.ui.geometry.CornerRadius(16.dp.toPx())
+                                    cornerRadius = CornerRadius(16.dp.toPx())
                                 )
                             }
                         }
@@ -887,14 +888,14 @@ private fun NeumorphismCard() {
                                 color = darkShadow,
                                 topLeft = Offset(offset, offset),
                                 size = size,
-                                cornerRadius = androidx.compose.ui.geometry.CornerRadius(cornerRadius)
+                                cornerRadius = CornerRadius(cornerRadius)
                             )
                             
                             drawRoundRect(
                                 color = lightShadow,
                                 topLeft = Offset(-offset/2, -offset/2),
                                 size = size,
-                                cornerRadius = androidx.compose.ui.geometry.CornerRadius(cornerRadius)
+                                cornerRadius = CornerRadius(cornerRadius)
                             )
                         },
                     contentAlignment = Alignment.Center
@@ -927,7 +928,7 @@ private fun NeumorphismCard() {
                                     size.width - inset * 2,
                                     size.height - inset * 2
                                 ),
-                                cornerRadius = androidx.compose.ui.geometry.CornerRadius(cornerRadius - inset)
+                                cornerRadius = CornerRadius(cornerRadius - inset)
                             )
                             
                             drawRoundRect(
@@ -937,7 +938,7 @@ private fun NeumorphismCard() {
                                     size.width - inset * 4,
                                     size.height - inset * 4
                                 ),
-                                cornerRadius = androidx.compose.ui.geometry.CornerRadius(cornerRadius - inset * 2)
+                                cornerRadius = CornerRadius(cornerRadius - inset * 2)
                             )
                         },
                     contentAlignment = Alignment.Center
@@ -1270,7 +1271,7 @@ private fun LayeredShadowCard() {
                                     color = Color.Black.copy(alpha = alpha),
                                     topLeft = offset,
                                     size = size,
-                                    cornerRadius = androidx.compose.ui.geometry.CornerRadius(20.dp.toPx())
+                                    cornerRadius = CornerRadius(20.dp.toPx())
                                 )
                             }
                         }
@@ -1451,7 +1452,7 @@ private fun ShadowDirectionCard() {
                                 color = Color.Black.copy(alpha = 0.25f),
                                 topLeft = Offset(offsetX, offsetY),
                                 size = size,
-                                cornerRadius = androidx.compose.ui.geometry.CornerRadius(16.dp.toPx())
+                                cornerRadius = CornerRadius(16.dp.toPx())
                             )
                         }
                         .shadow(

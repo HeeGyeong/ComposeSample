@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -20,18 +22,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.composesample.presentation.MainHeader
+import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.async
 import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withTimeout
-import kotlinx.coroutines.async
-import kotlinx.coroutines.CoroutineName
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.SupervisorJob
 
 @Composable
 fun CoroutineExampleUI(onBackEvent: () -> Unit) {
@@ -47,45 +49,54 @@ fun CoroutineExampleUI(onBackEvent: () -> Unit) {
             onBackIconClicked = onBackEvent
         )
 
-        PrintCoroutineOrder(
-            coroutineScope = coroutineScope
-        )
+        // 섹션이 세로로 길게 쌓여 화면을 넘어간다. 헤더는 고정하고 본문만 스크롤한다.
+        // (실측: 스크롤이 없던 상태에서는 마지막 섹션이 화면에 닿지 않았다)
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+        ) {
 
-        LightWeightCoroutine()
+            PrintCoroutineOrder(
+                coroutineScope = coroutineScope
+            )
 
-        AsyncSuspendButton(
-            coroutineScope = coroutineScope
-        )
+            LightWeightCoroutine()
 
-        StructuredConcurrencyButton(
-            coroutineScope = coroutineScope
-        )
+            AsyncSuspendButton(
+                coroutineScope = coroutineScope
+            )
 
-        CancellationButton()
+            StructuredConcurrencyButton(
+                coroutineScope = coroutineScope
+            )
 
-        ContextSwitchingButton(
-            coroutineScope = coroutineScope
-        )
+            CancellationButton()
 
-        ExceptionHandlingButton(
-            coroutineScope = coroutineScope
-        )
+            ContextSwitchingButton(
+                coroutineScope = coroutineScope
+            )
 
-        TimeoutButton(
-            coroutineScope = coroutineScope
-        )
+            ExceptionHandlingButton(
+                coroutineScope = coroutineScope
+            )
 
-        LaunchVsAsyncButton(
-            coroutineScope = coroutineScope
-        )
+            TimeoutButton(
+                coroutineScope = coroutineScope
+            )
 
-        CoroutineContextButton(
-            coroutineScope = coroutineScope
-        )
+            LaunchVsAsyncButton(
+                coroutineScope = coroutineScope
+            )
 
-        SupervisorJobButton(
-            coroutineScope = coroutineScope
-        )
+            CoroutineContextButton(
+                coroutineScope = coroutineScope
+            )
+
+            SupervisorJobButton(
+                coroutineScope = coroutineScope
+            )
+        }
     }
 }
 

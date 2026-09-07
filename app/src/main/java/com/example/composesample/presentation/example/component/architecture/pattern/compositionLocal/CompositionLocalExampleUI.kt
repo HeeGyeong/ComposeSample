@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.material3.Button
@@ -16,7 +18,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.ProvidableCompositionLocal
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -26,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.composesample.presentation.MainHeader
 import org.koin.androidx.compose.koinViewModel
 
@@ -55,26 +57,35 @@ fun CompositionLocalExampleUI(
             onBackIconClicked = onBackEvent
         )
 
-        ExampleDivider(title = "DefaultCompositionLocalUse")
-        DefaultCompositionLocalUse()
+        // 섹션이 세로로 길게 쌓여 화면을 넘어간다. 헤더는 고정하고 본문만 스크롤한다.
+        // (실측: 스크롤이 없던 상태에서는 마지막 섹션이 화면에 닿지 않았다)
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+        ) {
 
-        ExampleDivider(title = "NoRecompositionCheckCase")
-        NoRecompositionCheckCase()
+            ExampleDivider(title = "DefaultCompositionLocalUse")
+            DefaultCompositionLocalUse()
 
-        ExampleDivider(title = "RecompositionCheckCase")
-        RecompositionCheckCase()
+            ExampleDivider(title = "NoRecompositionCheckCase")
+            NoRecompositionCheckCase()
 
-        ExampleDivider(title = "ColorThemeCase")
-        ColorThemeCase()
+            ExampleDivider(title = "RecompositionCheckCase")
+            RecompositionCheckCase()
 
-        ExampleDivider(title = "MultiCompositionLocalUse")
-        MultiCompositionLocalUse()
+            ExampleDivider(title = "ColorThemeCase")
+            ColorThemeCase()
 
-        ExampleDivider(title = "CompositionLocalViewModelCase")
-        CompositionLocalViewModelCase(viewModel)
+            ExampleDivider(title = "MultiCompositionLocalUse")
+            MultiCompositionLocalUse()
 
-        ExampleDivider(title = "InnerCompositionLocalProvider")
-        LocalVariableCompositionLocalProvider()
+            ExampleDivider(title = "CompositionLocalViewModelCase")
+            CompositionLocalViewModelCase(viewModel)
+
+            ExampleDivider(title = "InnerCompositionLocalProvider")
+            LocalVariableCompositionLocalProvider()
+        }
     }
 }
 

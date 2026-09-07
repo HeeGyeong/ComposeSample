@@ -110,7 +110,7 @@ fun FlexBoxExampleUI(onBackEvent: () -> Unit) {
                                     .height(20.dp)
                                     .border(width = 1.dp, color = Color.Blue, shape = CircleShape)
                                     .clip(CircleShape),
-                                model = "https://www.researchgate.net/profile/Elif-Bayramoglu/publication/322918596/figure/fig3/AS:669304651530259@1536586072864/Sample-example-of-xeriscape-URL-3.jpg",
+                                model = DEMO_IMAGE_URL,
                                 contentDescription = null,
                                 contentScale = ContentScale.Crop
                             )
@@ -124,3 +124,7 @@ fun FlexBoxExampleUI(onBackEvent: () -> Unit) {
 }
 
 
+
+/** 데모용 원격 이미지 1장. 예제 동작과 무관한 표시용 리소스라 이름을 붙여 호출부에서 걷어냈다. */
+private const val DEMO_IMAGE_URL =
+    "https://www.researchgate.net/profile/Elif-Bayramoglu/publication/322918596/figure/fig3/AS:669304651530259@1536586072864/Sample-example-of-xeriscape-URL-3.jpg"

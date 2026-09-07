@@ -40,6 +40,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asComposeRenderEffect
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -198,7 +199,7 @@ private fun AgslSupportedContent() {
                     BasicTextField(
                         value = shaderSource,
                         onValueChange = { shaderSource = it },
-                        textStyle = androidx.compose.ui.text.TextStyle(
+                        textStyle = TextStyle(
                             color = Color(0xFFD4D4D4),
                             fontFamily = FontFamily.Monospace,
                             fontSize = 12.sp

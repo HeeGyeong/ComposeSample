@@ -37,6 +37,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -505,7 +506,7 @@ private fun DetailView(
                     lineHeight = 20.sp
                 )
                 Spacer(modifier = Modifier.height(16.dp))
-                androidx.compose.material3.Button(
+                Button(
                     onClick = onBack,
                     modifier = Modifier.fillMaxWidth()
                 ) {
@@ -843,7 +844,7 @@ private fun ProfileDetailView(
                     lineHeight = 20.sp
                 )
                 Spacer(modifier = Modifier.height(16.dp))
-                androidx.compose.material3.Button(
+                Button(
                     onClick = onBack,
                     modifier = Modifier.fillMaxWidth()
                 ) {

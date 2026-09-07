@@ -26,6 +26,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -33,9 +36,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -46,7 +46,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.PathHitTester
@@ -480,8 +482,8 @@ private fun CustomVisibilityModifierCard() {
                     drawRoundRect(
                         color = if (box1Tapped) Color(0xFFBBDEFB) else Color(0xFFE3F2FD),
                         topLeft = Offset(boxPadding, boxPadding),
-                        size = androidx.compose.ui.geometry.Size(boxWidth, boxHeight),
-                        cornerRadius = androidx.compose.ui.geometry.CornerRadius(8f)
+                        size = Size(boxWidth, boxHeight),
+                        cornerRadius = CornerRadius(8f)
                     )
                     val star1Path = createStarPath(starCenterX, boxPadding + boxHeight / 2, starSize, starSize * 0.5f)
                     drawPath(star1Path, if (box1Tapped) Color(0xFFFFD700) else Color(0xFFFFC107), style = Fill)
@@ -494,8 +496,8 @@ private fun CustomVisibilityModifierCard() {
                             drawRoundRect(
                                 color = if (box2Tapped) Color(0xFFD1C4E9) else Color(0xFFE1BEE7),
                                 topLeft = Offset(boxPadding, box2Y),
-                                size = androidx.compose.ui.geometry.Size(boxWidth, boxHeight),
-                                cornerRadius = androidx.compose.ui.geometry.CornerRadius(8f)
+                                size = Size(boxWidth, boxHeight),
+                                cornerRadius = CornerRadius(8f)
                             )
                             val star2Path = createStarPath(starCenterX, box2Y + boxHeight / 2, starSize, starSize * 0.5f)
                             drawPath(star2Path, if (box2Tapped) Color(0xFFFFD700) else Color(0xFFFFC107), style = Fill)
@@ -506,8 +508,8 @@ private fun CustomVisibilityModifierCard() {
                             drawRoundRect(
                                 color = Color(0xFFE1BEE7).copy(alpha = 0.2f),
                                 topLeft = Offset(boxPadding, box2Y),
-                                size = androidx.compose.ui.geometry.Size(boxWidth, boxHeight),
-                                cornerRadius = androidx.compose.ui.geometry.CornerRadius(8f),
+                                size = Size(boxWidth, boxHeight),
+                                cornerRadius = CornerRadius(8f),
                                 style = Stroke(width = 1f)
                             )
                         }
@@ -524,8 +526,8 @@ private fun CustomVisibilityModifierCard() {
                     drawRoundRect(
                         color = if (box3Tapped) Color(0xFFC8E6C9) else Color(0xFFE8F5E9),
                         topLeft = Offset(boxPadding, box3Y),
-                        size = androidx.compose.ui.geometry.Size(boxWidth, boxHeight),
-                        cornerRadius = androidx.compose.ui.geometry.CornerRadius(8f)
+                        size = Size(boxWidth, boxHeight),
+                        cornerRadius = CornerRadius(8f)
                     )
                     val star3Path = createStarPath(starCenterX, box3Y + boxHeight / 2, starSize, starSize * 0.5f)
                     drawPath(star3Path, if (box3Tapped) Color(0xFFFFD700) else Color(0xFFFFC107), style = Fill)

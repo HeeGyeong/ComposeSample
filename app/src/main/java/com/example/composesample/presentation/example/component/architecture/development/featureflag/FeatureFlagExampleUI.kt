@@ -356,7 +356,6 @@ private fun FlagStatusRow(flag: FeatureFlag, value: FlagValue?, source: FlagSour
             }
             Row(verticalAlignment = Alignment.CenterVertically) {
                 SourceBadge(source)
-                Spacer(modifier = Modifier.height(0.dp))
                 Text(
                     text = "  $valueText",
                     fontWeight = FontWeight.Bold,

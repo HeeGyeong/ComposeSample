@@ -2,6 +2,7 @@ package com.example.composesample.presentation.example.component.architecture.de
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -19,10 +20,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -39,6 +40,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.composesample.presentation.MainHeader
+import kotlin.system.measureTimeMillis
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -48,7 +50,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import kotlin.system.measureTimeMillis
 
 @Composable
 fun CoroutinesInternalsExampleUI(
@@ -550,7 +551,7 @@ private fun ChildCoroutineBox(label: String, state: String, modifier: Modifier =
             state.contains("실행") -> Color(0xFF2196F3).copy(alpha = 0.2f)
             else -> Color(0xFFE0E0E0)
         },
-        border = androidx.compose.foundation.BorderStroke(
+        border = BorderStroke(
             1.dp,
             when {
                 state.contains("완료") -> Color(0xFF4CAF50)
@@ -1012,7 +1013,7 @@ private fun TaskBox(label: String, state: String, modifier: Modifier = Modifier)
             state.contains("실행") -> Color(0xFF2196F3).copy(alpha = 0.2f)
             else -> Color(0xFFE0E0E0)
         },
-        border = androidx.compose.foundation.BorderStroke(
+        border = BorderStroke(
             1.dp,
             when {
                 state.contains("완료") -> Color(0xFF4CAF50)
