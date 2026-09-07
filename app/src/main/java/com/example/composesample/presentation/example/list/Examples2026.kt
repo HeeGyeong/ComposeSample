@@ -717,5 +717,12 @@ val examples2026 = listOf(
         description = "PictureInPictureParamsCompat로 9개 필드를 버전 분기 없이 구성 → toPictureInPictureParams()가 API 33/31/26으로 잘라내는 규칙을 되읽기로 확인 + 종횡비 허용 범위(0.418410~2.390000)와 enter/set의 상태 요구 차이를 실측",
         blogUrl = "",
         exampleType = ConstValue.PictureInPictureExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 09. 07",
+        title = "WorkManager 테스트 하네스",
+        description = "work-testing의 TestDriver로 네트워크·충전 제약과 24시간 초기 지연을 실제로 만족시키지 않고 통과시키기 + TestListenableWorkerBuilder로 워커를 격리 실행하고 runAttemptCount를 주입해 재시도 분기 검증",
+        blogUrl = "",
+        exampleType = ConstValue.WorkManagerTestExample
     )
 )

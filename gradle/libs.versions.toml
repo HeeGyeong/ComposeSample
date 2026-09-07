@@ -203,6 +203,9 @@ media3Ui = { module = "androidx.media3:media3-ui", version.ref = "media3" }
 # WorkManager
 workRuntime = { module = "androidx.work:work-runtime", version.ref = "workRuntime" }
 workRuntimeKtx = { module = "androidx.work:work-runtime-ktx", version.ref = "workRuntime" }
+# WorkManager 테스트 하네스(TestDriver/TestListenableWorkerBuilder). work 런타임과 같은 버전을 쓴다.
+# aar-metadata minCompileSdk=34 / minAGP=1.0.0 이라 현재 환경에서 상향 없이 채택 가능하다.
+workTesting = { module = "androidx.work:work-testing", version.ref = "workRuntime" }
 
 # Drag and Drop Library
 reorderable = { module = "org.burnoutcrew.composereorderable:reorderable", version.ref = "reorderable" }

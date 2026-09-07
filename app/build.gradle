@@ -104,6 +104,8 @@ dependencies {
     testImplementation(libs.bundles.unitTest)
 
     // UI Test
+    // work-testing 은 계측 테스트에서만 쓰므로 androidTest 스코프로만 선언한다. (GRADLE-SCOPE-01 원칙)
+    androidTestImplementation(libs.workTesting)
     androidTestImplementation platform(libs.composeBom)
     androidTestImplementation(libs.bundles.uiTest)
     debugImplementation(libs.testManifest)

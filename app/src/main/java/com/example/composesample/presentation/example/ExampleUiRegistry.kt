@@ -21,6 +21,7 @@ import com.example.composesample.presentation.example.component.architecture.dev
 import com.example.composesample.presentation.example.component.architecture.development.test.ScreenshotTestingExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.test.PreviewDrivenScreenshotExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.test.DeterministicImageTestExampleUI
+import com.example.composesample.presentation.example.component.architecture.development.test.WorkManagerTestExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.test.UITestExampleUI
 import com.example.composesample.presentation.example.component.system.platform.quicksettings.QuickSettingsTileExampleUI
 import com.example.composesample.presentation.example.component.system.notification.LiveUpdateNotificationExampleUI
@@ -263,6 +264,7 @@ import com.example.composesample.util.ConstValue.RemoteMediatorExample
 import com.example.composesample.util.ConstValue.PassingIntentDataExample
 import com.example.composesample.util.ConstValue.PathGraphicsExample
 import com.example.composesample.util.ConstValue.PictureInPictureExample
+import com.example.composesample.util.ConstValue.WorkManagerTestExample
 import com.example.composesample.util.ConstValue.PowerSaveModeExample
 import com.example.composesample.util.ConstValue.PullScreenPager
 import com.example.composesample.util.ConstValue.PullToRefreshExample
@@ -547,4 +549,5 @@ val exampleUiRegistry: Map<String, @Composable (onBackEvent: () -> Unit) -> Unit
     SensorFusionCompassExample to { onBackEvent -> SensorFusionCompassExampleUI(onBackEvent) },
     LiveUpdateNotificationExample to { onBackEvent -> LiveUpdateNotificationExampleUI(onBackEvent) },
     PictureInPictureExample to { onBackEvent -> PictureInPictureExampleUI(onBackEvent) },
+    WorkManagerTestExample to { onBackEvent -> WorkManagerTestExampleUI(onBackEvent) },
 )

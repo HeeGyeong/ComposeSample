@@ -74,3 +74,35 @@ package com.example.composesample.presentation.example.component.architecture.de
  *   (이 프로젝트는 coil-test·스크린샷 러너를 의존성으로 두지 않아 코드 스니펫으로만 시연)
  * - 골든 이미지에 실제 사진 대신 단색이 찍히므로 레이아웃·크기 회귀 검출에는 오히려 유리하다
  */
+
+/**
+ * WorkManagerTestExampleUI (WorkManager 테스트 하네스)
+ * - 공식 문서: https://developer.android.com/develop/background-work/background-tasks/testing/persistent/integration-testing
+ * - work-testing API: https://developer.android.com/reference/androidx/work/testing/package-summary
+ * - 출처(Android Weekly #743): https://segunfamisa.com/posts/androids-missing-work-manager-test-rule
+ *
+ * 핵심 개념:
+ * - 의존성은 `androidTestImplementation("androidx.work:work-testing")` 한 줄이며 런타임 work 와 같은 버전을 쓴다.
+ *   aar-metadata 는 minCompileSdk=34 / minAGP=1.0.0 이라 이 프로젝트는 상향 없이 2.9.1 을 그대로 채택했다.
+ * - 세 도구의 역할이 다르다:
+ *   ① `WorkManagerTestInitHelper.initializeTestWorkManager(context, config)` — 실제 스케줄러를 테스트 구현으로 교체
+ *   ② `TestDriver` — `setAllConstraintsMet` / `setInitialDelayMet` / `setPeriodDelayMet` (전부 UUID 를 받는다)
+ *   ③ `TestListenableWorkerBuilder<W>` — WorkManager 없이 워커 하나만 실행
+ * - `SynchronousExecutor` 를 Configuration 에 넣으면 작업이 호출 스레드에서 즉시 실행돼 대기/idling 코드가 없어진다.
+ * - 실측(SM-A725F/Android 13, 프로젝트 androidTest 5개 전부 통과):
+ *   · 네트워크+충전 제약 작업 → enqueue 직후 `ENQUEUED`, `setAllConstraintsMet` 후 `SUCCEEDED`(출력 echo="HELLO").
+ *     기기의 충전·네트워크 상태는 전혀 건드리지 않았다.
+ *   · 초기 지연 24시간 → `ENQUEUED`, `setInitialDelayMet` 후 `SUCCEEDED`.
+ *   · 격리 실행 → `Success {mOutputData=Data {echo : ISOLATED, }}`, 입력 없음 → `Failure {mOutputData=Data {}}`.
+ *   · `setRunAttemptCount(0)` → `Retry`, `setRunAttemptCount(2)` → `Success {mOutputData=Data {attempt : 2, }}`.
+ * - ⚠️ `initializeTestWorkManager` 는 프로세스의 WorkManager 싱글턴을 갈아끼운다. 앱 코드(예제 화면)에서 부르면
+ *   기존 `WorkManagerExampleUI` 가 쓰는 실제 인스턴스까지 바뀌므로, 실행 코드는 androidTest 에만 두고
+ *   화면은 설명 + 측정 결과만 싣는다(같은 폴더의 ScreenshotTesting/ComposeTesting 예제와 동일한 구성).
+ * - ⚠️ `ExecutorsMode` 오버로드 3종: `LEGACY_OVERRIDE_WITH_SYNCHRONOUS_EXECUTORS`(기본) /
+ *   `PRESERVE_EXECUTORS`(설정한 executor 유지) / `USE_TIME_BASED_SCHEDULING`(시간 기반 스케줄링).
+ * - ⚠️ `enqueue(...).result.get()` 과 `getWorkInfoById(id).get()` 은 ListenableFuture 블로킹 대기다(메인 스레드 금지).
+ * - ⚠️ WorkManager 는 프로세스 싱글턴이라 테스트 간 상태가 샌다 → 규칙의 finally 에서 `cancelAllWork()` 로 정리한다.
+ * - ⚠️ TestDriver 는 "조건이 만족됐다"고 알릴 뿐 조건 판정 자체를 검증하지 않는다. 제약이 제대로 걸렸는지는
+ *   WorkRequest 의 Constraints 를 단언하는 편이 맞다.
+ * - 실제 검증 코드: `app/src/androidTest/java/com/example/composesample/example/WorkManagerTestExampleTest.kt`
+ */

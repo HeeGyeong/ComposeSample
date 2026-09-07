@@ -254,7 +254,7 @@ object ConstValue {
     const val GlanceWidgetExample = "glanceWidgetExample"
 
     // ==================== 테스트 예제 ====================
-    // Test(UI 테스트 TDD), RecompositionTest(과도한 Recomposition 감지), Rebound(역할 기반 리컴포지션 예산 모니터링), TurbineFlowTest(StateFlow/SharedFlow 테스트 패턴 비교), ScreenshotTesting(Paparazzi/Roborazzi 스크린샷 테스트), ComposeTesting(Compose UI 테스트 패턴), PreviewDrivenScreenshot(@Preview를 source of truth로 삼아 locale/fontScale/theme 매트릭스 파생 + 라이브 렌더링), DeterministicImageTest(비동기 이미지가 골든 이미지를 깨뜨리는 지점을 회차별 출처/소요시간으로 실측 + LocalAsyncImagePreviewHandler로 픽셀 고정 — inspection 모드 게이팅과 팩토리가 State.Success가 아닌 State.Loading을 반환하는 함정 포함)
+    // Test(UI 테스트 TDD), RecompositionTest(과도한 Recomposition 감지), Rebound(역할 기반 리컴포지션 예산 모니터링), TurbineFlowTest(StateFlow/SharedFlow 테스트 패턴 비교), ScreenshotTesting(Paparazzi/Roborazzi 스크린샷 테스트), ComposeTesting(Compose UI 테스트 패턴), PreviewDrivenScreenshot(@Preview를 source of truth로 삼아 locale/fontScale/theme 매트릭스 파생 + 라이브 렌더링), DeterministicImageTest(비동기 이미지가 골든 이미지를 깨뜨리는 지점을 회차별 출처/소요시간으로 실측 + LocalAsyncImagePreviewHandler로 픽셀 고정 — inspection 모드 게이팅과 팩토리가 State.Success가 아닌 State.Loading을 반환하는 함정 포함), WorkManagerTest(work-testing TestDriver/격리 실행 빌더로 제약·지연을 기다리지 않고 통과시키는 테스트 하네스)
     const val TestExample = "testExample"
     const val RecompositionTestExample = "recompositionTestExample"
     const val ReboundExample = "reboundExample"
@@ -263,6 +263,7 @@ object ConstValue {
     const val ComposeTestingExample = "composeTestingExample"
     const val PreviewDrivenScreenshotExample = "previewDrivenScreenshotExample"
     const val DeterministicImageTestExample = "deterministicImageTestExample"
+    const val WorkManagerTestExample = "workManagerTestExample"
 
     // ==================== 유틸리티 & 라이브러리 예제 ====================
     // CursorIDE(AI IDE 활용), SnapNotify(Snackbar 간소화), AutoCloseable(자동 리소스 정리)
