@@ -307,6 +307,7 @@ Cursor IDE를 사용하는 개발자를 위한 **AI 코딩 어시스턴트 규�
 - 라이브러리 버전이 업데이트되면서 구현된 일부 기능이 동작하지 않을 수 있습니다
 - 버전 호환성이 깨진 예제는 삭제하지 않고 전체 주석 처리하여 보존합니다
 - **API 키**: Naver API 등 외부 API 키는 `local.properties`에 별도로 설정해야 합니다(`NAVER_CLIENT_ID`, `NAVER_CLIENT_SECRET`)
+- **`local.properties`**: git 으로 추적하지 않습니다(`.gitignore` 대상). 클론 후 Android Studio 가 자동 생성하거나, 직접 만들어 `sdk.dir=<Android SDK 경로>` 를 넣으면 됩니다. 위 API 키도 같은 파일에 둡니다
 - **Cursor Rules**: `.cursor/rules`의 mdc 파일은 Cursor IDE에서만 동작하며 다른 IDE에서는 영향을 주지 않습니다
 
 ## 더 알아보기
