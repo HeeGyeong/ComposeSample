@@ -69,7 +69,6 @@ espressoCore = "3.5.1"
 coroutineTest = "1.10.1"
 mockk = "1.13.5"
 turbine = "1.0.0"
-kotlinTestJunit = "1.8.20"
 runner = "1.5.2"
 rules = "1.5.0"
 espressoIntents = "3.5.1"
@@ -162,7 +161,9 @@ uiTooling = { module = "androidx.compose.ui:ui-tooling" }
 coroutinesTest = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutineTest" }
 mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
-kotlinTestJunit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlinTestJunit" }
+# Kotlin 플러그인이 kotlin-test 계열을 컴파일러 버전으로 정렬하므로 별도 버전 키를 두면 반드시 어긋난다
+# (선언 1.8.20 ↔ 해석 2.4.0 이었음). kotlinVersion 에 묶어 재발을 막는다. (DEP-VERSION-05)
+kotlinTestJunit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlinVersion" }
 kotlinTest = { module = "org.jetbrains.kotlin:kotlin-test" }
 
 # UI Test Dependency
