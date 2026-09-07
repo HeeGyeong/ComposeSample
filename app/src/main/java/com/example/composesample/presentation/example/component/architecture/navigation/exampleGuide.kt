@@ -61,8 +61,15 @@ package com.example.composesample.presentation.example.component.architecture.na
  *    - 실제 구현에서는 rememberSaveableStateHolder 와 DisposableEffect 를 함께 사용
  *
  * 주의사항:
- * - Navigation 3 는 현재 alpha 단계이며, 본 예제는 라이브러리 의존성 없이
- *   순수 Compose 상태로 동작 차이만 시뮬레이션한다. (CLAUDE.md ViewModel 범위 규칙과 연계)
+ * - 본 예제는 androidx.navigation3 의존성 없이 순수 Compose 상태로 동작 차이만 시뮬레이션한다
+ *   (프로젝트 전체에 `import androidx.navigation3` 는 0건). Nav2 대비 ViewModel 스코프 차이를
+ *   대조하는 것이 목적이라 라이브러리 API 사용법 자체는 다루지 않는다.
+ *   (CLAUDE.md ViewModel 범위 규칙과 연계)
+ * - ⚠️ 단계 표기 정정(2026-09-07 실측): Navigation 3 는 더 이상 alpha 가 아니다.
+ *   **stable 1.1.x 라인(최신 1.1.7)이 1.2.0 알파/베타 라인과 병행**하며,
+ *   navigation3-ui-android:1.1.7 의 aar-metadata 는 minCompileSdk=36 이라 이 프로젝트에서 채택 가능하다.
+ *   다만 1.2.0-beta01 은 minCompileSdk=37 을 요구해 현재(compileSdk 36)로는 쓸 수 없다.
+ *   → 시뮬레이션을 유지하는 이유는 라이브러리 단계가 아니라 위에 적은 예제의 목적이다.
  */
 
 /**
@@ -93,6 +100,9 @@ package com.example.composesample.presentation.example.component.architecture.na
  *      모든 필드를 직렬화 가능한 타입으로 제한한다(람다·Context·View 참조 금지).
  *
  * 주의사항:
- * - Navigation 3 는 alpha 단계 → 본 예제는 라이브러리/Hilt 의존성 없이
- *   "직렬화 → 프로세스 종료 → 역직렬화" 흐름만 순수 Compose 상태로 시뮬레이션한다.
+ * - 본 예제는 라이브러리/Hilt 의존성 없이 "직렬화 → 프로세스 종료 → 역직렬화" 흐름만
+ *   순수 Compose 상태로 시뮬레이션한다. 크래시의 원인과 회피 패턴을 보이는 것이 목적이라
+ *   라이브러리 API 자체는 다루지 않는다.
+ * - ⚠️ 단계 표기 정정(2026-09-07 실측): Navigation 3 는 alpha 가 아니라 stable 1.1.7 이 있다
+ *   (자세한 버전 사정은 위 Nav3 ViewModel Scope 항목의 주의사항 참조).
  */
