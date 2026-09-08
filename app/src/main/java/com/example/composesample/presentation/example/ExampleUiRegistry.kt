@@ -134,6 +134,7 @@ import com.example.composesample.presentation.example.component.ui.text.CustomTe
 import com.example.composesample.presentation.example.component.ui.text.LocalContextStringsExampleUI
 import com.example.composesample.presentation.example.component.ui.text.RichContentTextInputExampleUI
 import com.example.composesample.presentation.example.component.ui.text.TextFieldMaxLengthExampleUI
+import com.example.composesample.presentation.example.component.ui.form.FormValidationExampleUI
 import com.example.composesample.presentation.example.component.ui.text.DocumentEditingTextFieldExampleUI
 import com.example.composesample.presentation.example.component.ui.text.SyntaxHighlightingExampleUI
 import com.example.composesample.presentation.example.component.ui.text.TextStyleExampleUI
@@ -264,6 +265,7 @@ import com.example.composesample.util.ConstValue.RemoteMediatorExample
 import com.example.composesample.util.ConstValue.PassingIntentDataExample
 import com.example.composesample.util.ConstValue.PathGraphicsExample
 import com.example.composesample.util.ConstValue.PictureInPictureExample
+import com.example.composesample.util.ConstValue.FormValidationExample
 import com.example.composesample.util.ConstValue.WorkManagerTestExample
 import com.example.composesample.util.ConstValue.PowerSaveModeExample
 import com.example.composesample.util.ConstValue.PullScreenPager
@@ -550,4 +552,5 @@ val exampleUiRegistry: Map<String, @Composable (onBackEvent: () -> Unit) -> Unit
     LiveUpdateNotificationExample to { onBackEvent -> LiveUpdateNotificationExampleUI(onBackEvent) },
     PictureInPictureExample to { onBackEvent -> PictureInPictureExampleUI(onBackEvent) },
     WorkManagerTestExample to { onBackEvent -> WorkManagerTestExampleUI(onBackEvent) },
+    FormValidationExample to { onBackEvent -> FormValidationExampleUI(onBackEvent) },
 )

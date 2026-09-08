@@ -724,5 +724,12 @@ val examples2026 = listOf(
         description = "work-testing의 TestDriver로 네트워크·충전 제약과 24시간 초기 지연을 실제로 만족시키지 않고 통과시키기 + TestListenableWorkerBuilder로 워커를 격리 실행하고 runAttemptCount를 주입해 재시도 분기 검증",
         blogUrl = "",
         exampleType = ConstValue.WorkManagerTestExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 09. 08",
+        title = "폼 상태와 검증",
+        description = "다중 필드 폼 — 검증 시점 3종(입력 즉시/포커스 이탈/제출)을 같은 규칙으로 나란히 대조하고 에러 표시 전환 횟수로 실측 + isError/supportingText·IME 액션 포커스 이동·derivedStateOf 제출 게이팅·에러 문구가 만드는 레이아웃 점프",
+        blogUrl = "",
+        exampleType = ConstValue.FormValidationExample
     )
 )

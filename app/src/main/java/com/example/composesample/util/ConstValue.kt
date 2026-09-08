@@ -61,6 +61,7 @@ object ConstValue {
     const val ComposeLoadersExample = "composeLoadersExample"
     const val TextFieldMaxLengthExample = "textFieldMaxLengthExample"
     const val DocumentEditingTextFieldExample = "documentEditingTextFieldExample"
+    const val FormValidationExample = "formValidationExample"
     const val SyntaxHighlightingExample = "syntaxHighlightingExample"
     const val Material3ExpressiveExample = "material3ExpressiveExample"
     const val ModifierOrderExample = "modifierOrderExample"

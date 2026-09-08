@@ -177,6 +177,9 @@ Cursor IDE를 사용하는 개발자를 위한 **AI 코딩 어시스턴트 규�
 - **picker**: Embedded Photo Picker, BottomSheet 연동과 URI 수명 관리
 - **shimmer**: UI Shimmer, Text Shimmer 로딩 효과, 자동 스켈레톤 로딩 감지 Modifier(`CompositionLocal`로 로딩 상태·shimmer 애니메이션을 자동 전파해 요소마다 `isLoading` 분기 없이 `Modifier.autoSkeleton()`만 붙이는 방식 — 실제 콘텐츠의 측정된 크기를 그대로 재사용, 기존 수동 스켈레톤 트리 방식과 대비)
 
+**form**:
+- **폼 상태와 검증**: 다중 필드 폼 — 검증 시점 3종(입력 즉시/포커스 이탈/제출)을 같은 규칙으로 대조하고 에러 표시 전환 횟수를 화면에서 실측, `isError`/`supportingText`와 IME 액션 기반 포커스 이동(`FocusRequester`), `derivedStateOf` 제출 게이팅의 리컴포지션 차이, 에러 문구가 필드 높이를 늘려 아래를 밀어내는 레이아웃 점프
+
 **text**:
 - 텍스트 스타일링, AutoSizing, 커스텀 TextMeasurer 렌더링
 - TextOverflow(Start/Middle Ellipsis), LocalContext 문자열 안티패턴
