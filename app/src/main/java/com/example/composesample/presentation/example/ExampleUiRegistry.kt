@@ -155,6 +155,7 @@ import com.example.composesample.presentation.example.component.ui.overlay.Spotl
 import com.example.composesample.presentation.example.component.architecture.development.concurrency.CoroutinesInternalsExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.concurrency.WithContextExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.concurrency.CoroutineBridgesExampleUI
+import com.example.composesample.presentation.example.component.architecture.development.concurrency.CoroutineStackTraceExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.concurrency.RaceConditionExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.concurrency.SelectExpressionExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.strictmode.StrictModeExampleUI
@@ -317,6 +318,7 @@ import com.example.composesample.util.ConstValue.VisibilityExample
 import com.example.composesample.util.ConstValue.WebViewIssueExample
 import com.example.composesample.util.ConstValue.WithContextExample
 import com.example.composesample.util.ConstValue.CoroutineBridgesExample
+import com.example.composesample.util.ConstValue.CoroutineStackTraceExample
 import com.example.composesample.util.ConstValue.RaceConditionExample
 import com.example.composesample.util.ConstValue.SelectExpressionExample
 import com.example.composesample.util.ConstValue.StrictModeExample
@@ -497,6 +499,7 @@ val exampleUiRegistry: Map<String, @Composable (onBackEvent: () -> Unit) -> Unit
     CoroutineBridgesExample to { onBackEvent -> CoroutineBridgesExampleUI(onBackEvent) },
     RaceConditionExample to { onBackEvent -> RaceConditionExampleUI(onBackEvent) },
     SelectExpressionExample to { onBackEvent -> SelectExpressionExampleUI(onBackEvent) },
+    CoroutineStackTraceExample to { onBackEvent -> CoroutineStackTraceExampleUI(onBackEvent) },
     StrictModeExample to { onBackEvent -> StrictModeExampleUI(onBackEvent) },
     PerfettoTracingExample to { onBackEvent -> PerfettoTracingExampleUI(onBackEvent) },
     ButtonGroupExample to { onBackEvent -> ButtonGroupExampleUI(onBackEvent) },

@@ -731,5 +731,12 @@ val examples2026 = listOf(
         description = "다중 필드 폼 — 검증 시점 3종(입력 즉시/포커스 이탈/제출)을 같은 규칙으로 나란히 대조하고 에러 표시 전환 횟수로 실측 + isError/supportingText·IME 액션 포커스 이동·derivedStateOf 제출 게이팅·에러 문구가 만드는 레이아웃 점프",
         blogUrl = "",
         exampleType = ConstValue.FormValidationExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 09. 09",
+        title = "코루틴 스택 트레이스 복구",
+        description = "suspend 경계를 넘으면 호출자 프레임이 사라지는 것을 실측하고, kotlinx.coroutines 의 복구가 언제 켜지는지(assertion 기반 DEBUG 스위치)와 필드가 하나만 있어도 반사 복사가 통째로 스킵되는 규칙 + CopyableThrowable 로 되살리기 + _COROUTINE 인공 프레임 직접 재현",
+        blogUrl = "",
+        exampleType = ConstValue.CoroutineStackTraceExample
     )
 )

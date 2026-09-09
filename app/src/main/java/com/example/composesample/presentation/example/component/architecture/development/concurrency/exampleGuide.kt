@@ -56,4 +56,26 @@ package com.example.composesample.presentation.example.component.architecture.de
  * - select 는 선택된 절만 실행하므로, 채택되지 않은 Deferred/작업은 직접 cancel() 로 정리해야 리소스 누수가 없음
  * - 한 번의 select 는 절 하나만 선택 → 반복 수신은 while 루프로 감싸고, 모든 소스가 닫히면 종료
  * - onTimeout/일부 채널 API 는 @ExperimentalCoroutinesApi 옵트인 필요
+ *
+ * ## Coroutine Stack Trace Recovery (suspend 경계에서 잘린 트레이스 복구)
+ * - 공식 문서: https://github.com/Kotlin/kotlinx.coroutines/blob/master/docs/topics/debugging.md
+ * - API 문서: https://kotlinlang.org/api/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/-copyable-throwable/
+ * 핵심 개념:
+ * - suspend 함수가 중단되면 호출자의 자바 프레임은 정리된다. 재개 이후 던져진 예외의 트레이스에는 호출자가 없고
+ *   대신 재개시킨 스레드의 프레임(BaseContinuationImpl.resumeWith / DispatchedTask.run / CoroutineScheduler.runSafely)이 남는다
+ * - stack trace recovery: 예외를 복사하고, Continuation 체인으로 복원한 호출자 스택을 이어 붙인 뒤 경계에 인공 프레임을 끼운다.
+ *   원본 예외는 복사본의 cause 로 보존된다 → catch 로 들어오는 것은 원본이 아니라 복사본이다(참조 동일성 전제 코드 주의)
+ * - 인공 프레임: className = "_COROUTINE._BOUNDARY"(생성 지점은 "_CREATION"), methodName = "_".
+ *   실제 출력 예: `at _COROUTINE._BOUNDARY._(CoroutineDebugging.kt:42)`
+ * - 스위치: DEBUG = 시스템 프로퍼티 "kotlinx.coroutines.debug" 가 null/"auto" 면 assertion 활성 여부,
+ *   ""/"on" 이면 true, "off" 면 false(그 외 값은 IllegalStateException).
+ *   RECOVER_STACK_TRACES = DEBUG && systemProp("kotlinx.coroutines.stacktrace.recovery", true)
+ * - **안드로이드에서는 기본적으로 꺼져 있다** — 런타임이 assertion 을 켜지 않기 때문(JVM 은 -ea 로 켠다.
+ *   Gradle 의 단위 테스트 태스크는 assertion 을 켜므로 JVM 테스트에서는 복구가 동작한다)
+ * - 두 값 모두 클래스 최초 로드 시 한 번 계산되는 val 이라, 코루틴을 쓴 뒤 System.setProperty 를 불러도 반영되지 않는다
+ * - 복사 규칙: CopyableThrowable.createCopy() 가 있으면 그것을 먼저 쓰고, 없으면 생성자를 반사로 찾는다.
+ *   단 반사 복사에는 선행 조건이 있다 — 예외 클래스가 Throwable 보다 필드를 하나라도 더 선언하면 복사를 포기한다
+ *   (`if (throwableFields != fieldsCountOrDefault(clazz, 0)) return nullResult`) → 필드를 가진 도메인 예외는
+ *   CopyableThrowable 을 구현해야 복구 대상이 된다
+ * - 비용: 예외마다 복사 + 스택 병합이 일어난다. 디버깅용 스위치이며 프로덕션 상시 활성 대상이 아니다
  */
