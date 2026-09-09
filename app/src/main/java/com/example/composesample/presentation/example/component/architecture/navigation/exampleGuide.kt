@@ -105,4 +105,34 @@ package com.example.composesample.presentation.example.component.architecture.na
  *   라이브러리 API 자체는 다루지 않는다.
  * - ⚠️ 단계 표기 정정(2026-09-07 실측): Navigation 3 는 alpha 가 아니라 stable 1.1.7 이 있다
  *   (자세한 버전 사정은 위 Nav3 ViewModel Scope 항목의 주의사항 참조).
- */
+  *
+ * ## NavigationEvent Dispatcher (androidx.navigationevent — back/forward 양방향 내비게이션 이벤트)
+ * - 공식 문서: https://developer.android.com/reference/androidx/navigationevent/package-summary
+ * - API 문서: https://developer.android.com/reference/androidx/navigationevent/NavigationEventDispatcher
+ * 핵심 개념:
+ * - 구성: 입력원(NavigationEventInput) → 디스패처(NavigationEventDispatcher) → 핸들러(NavigationEventHandler) → 앱 콜백.
+ *   플랫폼 제스처(OnBackInvokedInput)와 직접 주입(DirectNavigationEventInput)이 같은 디스패처를 공유한다
+ * - PredictiveBackHandler 와의 차이: back 한 방향/진행률만이 아니라 **back+forward 양방향**, **currentInfo·backInfo·forwardInfo**,
+ *   **transitionState** 를 함께 다룬다
+ * - Compose 통합: rememberNavigationEventState(currentInfo, backInfo, forwardInfo) 로 상태를 만들고
+ *   NavigationEventHandler(state, isBackEnabled, onBackCompleted, onBackCancelled, isForwardEnabled, onForwardCompleted, onForwardCancelled)
+ *   로 붙인다. NavigationBackHandler / NavigationForwardHandler 는 한 방향 축약형
+ * - **진행률은 콜백으로 오지 않는다** — 컴포저블 핸들러의 콜백은 완료/취소뿐이고, 중간 진행은
+ *   state.transitionState 가 InProgress 일 때의 latestEvent.progress 로 읽는다
+ * - CompositionLocal 필수: 핸들러는 LocalNavigationEventDispatcherOwner 에서 디스패처를 찾고 없으면
+ *   IllegalStateException("No NavigationEventDispatcher was provided via LocalNavigationEventDispatcherOwner").
+ *   rememberNavigationEventDispatcherOwner 는 parent 기본값이 그 Local 이라, 루트를 만들 때는 parent = null 을 명시해야 한다
+ *   (아니면 "...If you intended to create a root dispatcher, explicitly pass null as the parent.")
+ * - NavigationEventInfo 는 인터페이스가 아니라 **추상 클래스** → `data class X(...) : NavigationEventInfo()` 로 상속
+ * - 순서 규칙: NavigationEventHistory.mergedHistory = backInfo + currentInfo + forwardInfo 를 그대로 이어 붙인다
+ *   → backInfo 는 오래된 것부터 담아야 이력이 시간순으로 맞는다. 실측: back=[홈,목록]·current=상세·forward=[설정] 이면
+ *   mergedHistory=[홈,목록,상세,설정], currentIndex=2
+ * - 상수(바이트코드 확인): TRANSITIONING_UNKNOWN=0 / TRANSITIONING_FORWARD=1 / **TRANSITIONING_BACK=-1**,
+ *   EDGE_LEFT=0 / EDGE_RIGHT=1 / EDGE_NONE=2(NavigationEvent 의 기본값), PRIORITY_OVERLAY=0 / PRIORITY_DEFAULT=1
+ * - 실기기 실측(SM-A725F/Android 13): ① Idle → InProgress(direction=-1) → 완료 후 Idle 복귀
+ *   ② isBackEnabled=false 인 핸들러에 시작+완료를 주입하면 콜백 0회(예외 없이 사라진다)
+ *   ③ **순서는 강제되지 않는다** — backStarted 없이 backCompleted 만 불러도 콜백이 오고, backProgressed 만 부르면 무시된다
+ * - 의존성 주의: navigationevent-compose 1.1.2 의 pom 이 compose ui/runtime 1.11.2 를 요구해 BOM(1.11.1)보다
+ *   높은 쪽이 이겨 ui/runtime 만 1.11.2 로 올라간다(foundation/animation/material 은 1.11.1 유지).
+ *   실제로 쓰는 API(androidx.compose.runtime.HostDefaultKey)는 1.11.1 에도 있으므로 호환 요구일 뿐이다
+*/

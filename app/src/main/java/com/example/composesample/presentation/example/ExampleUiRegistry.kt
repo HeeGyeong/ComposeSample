@@ -165,6 +165,7 @@ import com.example.composesample.presentation.example.component.architecture.dev
 import com.example.composesample.presentation.example.component.architecture.development.flow.FlowOperatorsExampleUI
 import com.example.composesample.presentation.example.component.architecture.navigation.Nav3SavedStateHandleExampleUI
 import com.example.composesample.presentation.example.component.architecture.navigation.Nav3ViewModelScopeExampleUI
+import com.example.composesample.presentation.example.component.architecture.navigation.NavigationEventDispatcherExampleUI
 import com.example.composesample.presentation.example.component.architecture.navigation.Navigation3ExampleUI
 import com.example.composesample.presentation.example.component.architecture.modularization.ModularizationExampleUI
 import com.example.composesample.presentation.example.component.architecture.lifecycle.AutoCloseableExampleUI
@@ -253,6 +254,7 @@ import com.example.composesample.util.ConstValue.ModularizationExample
 import com.example.composesample.util.ConstValue.MotionBlurExample
 import com.example.composesample.util.ConstValue.Nav3SavedStateHandleExample
 import com.example.composesample.util.ConstValue.Nav3ViewModelScopeExample
+import com.example.composesample.util.ConstValue.NavigationEventDispatcherExample
 import com.example.composesample.util.ConstValue.Navigation3Example
 import com.example.composesample.util.ConstValue.NestedRoutesNav3Example
 import com.example.composesample.util.ConstValue.ImeNestedScrollExample
@@ -492,6 +494,7 @@ val exampleUiRegistry: Map<String, @Composable (onBackEvent: () -> Unit) -> Unit
     FlowOperatorsExample to { onBackEvent -> FlowOperatorsExampleUI(onBackEvent) },
     FlowBatchingExample to { onBackEvent -> FlowBatchingExampleUI(onBackEvent) },
     Navigation3Example to { onBackEvent -> Navigation3ExampleUI(onBackEvent) },
+    NavigationEventDispatcherExample to { onBackEvent -> NavigationEventDispatcherExampleUI(onBackEvent) },
     Nav3ViewModelScopeExample to { onBackEvent -> Nav3ViewModelScopeExampleUI(onBackEvent) },
     Nav3SavedStateHandleExample to { onBackEvent -> Nav3SavedStateHandleExampleUI(onBackEvent) },
     ModularizationExample to { onBackEvent -> ModularizationExampleUI(onBackEvent) },

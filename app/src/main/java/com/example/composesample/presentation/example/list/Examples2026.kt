@@ -738,5 +738,12 @@ val examples2026 = listOf(
         description = "suspend 경계를 넘으면 호출자 프레임이 사라지는 것을 실측하고, kotlinx.coroutines 의 복구가 언제 켜지는지(assertion 기반 DEBUG 스위치)와 필드가 하나만 있어도 반사 복사가 통째로 스킵되는 규칙 + CopyableThrowable 로 되살리기 + _COROUTINE 인공 프레임 직접 재현",
         blogUrl = "",
         exampleType = ConstValue.CoroutineStackTraceExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 09. 10",
+        title = "NavigationEvent 디스패처",
+        description = "androidx.navigationevent 로 back/forward 양방향 내비게이션 이벤트를 다루기 — DirectNavigationEventInput 으로 제스처 없이 started/progressed/completed 를 주입해 콜백 순서를 결정론적으로 재현하고, 진행률이 콜백이 아니라 transitionState 로만 오는 설계와 currentInfo/backInfo/forwardInfo 목록·게이팅을 화면에서 실측",
+        blogUrl = "",
+        exampleType = ConstValue.NavigationEventDispatcherExample
     )
 )
