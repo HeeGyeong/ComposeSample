@@ -137,6 +137,7 @@ import com.example.composesample.presentation.example.component.ui.text.TextFiel
 import com.example.composesample.presentation.example.component.ui.form.FormValidationExampleUI
 import com.example.composesample.presentation.example.component.ui.text.DocumentEditingTextFieldExampleUI
 import com.example.composesample.presentation.example.component.ui.text.SyntaxHighlightingExampleUI
+import com.example.composesample.presentation.example.component.ui.text.TextSelectionControlExampleUI
 import com.example.composesample.presentation.example.component.ui.text.TextStyleExampleUI
 import com.example.composesample.presentation.example.component.ui.visibility.VisibilityExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.performance.InlineValueClassExampleUI
@@ -313,6 +314,7 @@ import com.example.composesample.util.ConstValue.TargetSDK34PermissionExample
 import com.example.composesample.util.ConstValue.TestExample
 import com.example.composesample.util.ConstValue.TextOverflowExample
 import com.example.composesample.util.ConstValue.TextShimmerExample
+import com.example.composesample.util.ConstValue.TextSelectionControlExample
 import com.example.composesample.util.ConstValue.TextStyleExample
 import com.example.composesample.util.ConstValue.TypeExample
 import com.example.composesample.util.ConstValue.UIShimmerExample
@@ -466,6 +468,7 @@ val exampleUiRegistry: Map<String, @Composable (onBackEvent: () -> Unit) -> Unit
     TextFieldMaxLengthExample to { onBackEvent -> TextFieldMaxLengthExampleUI(onBackEvent) },
     SyntaxHighlightingExample to { onBackEvent -> SyntaxHighlightingExampleUI(onBackEvent) },
     DocumentEditingTextFieldExample to { onBackEvent -> DocumentEditingTextFieldExampleUI(onBackEvent) },
+    TextSelectionControlExample to { onBackEvent -> TextSelectionControlExampleUI(onBackEvent) },
     Material3ExpressiveExample to { onBackEvent -> Material3ExpressiveExampleUI(onBackEvent) },
     FoundationStyleApiExample to { onBackEvent -> FoundationStyleApiExampleUI(onBackEvent) },
     NestedRoutesNav3Example to { onBackEvent -> NestedRoutesNav3ExampleUI(onBackEvent) },

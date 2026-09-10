@@ -81,4 +81,32 @@ package com.example.composesample.presentation.example.component.ui.text
  *
  * ## TextStyleExampleUI
  * - 각 예제 파일 내 주석 참고
- */
+  *
+ * ## Text Selection Control (읽기 전용 텍스트 선택 + 컨텍스트 메뉴)
+ * - 공식 문서: https://developer.android.com/develop/ui/compose/text/user-interactions
+ * - API: https://developer.android.com/reference/kotlin/androidx/compose/foundation/text/selection/package-summary
+ * 핵심 개념:
+ * - `Text` 는 기본적으로 선택 불가 → `SelectionContainer` 로 감싸야 선택이 열린다. 컨테이너 하나가
+ *   그 안의 모든 선택 가능 텍스트를 **하나의 선택 영역**으로 묶는다
+ * - `DisableSelection { }` 은 같은 컨테이너 안에서 일부만 선택에서 제외한다(숨기는 것이 아니라 선택만 막는다)
+ * - **선택 내용을 읽는 공개 경로가 없다(1.11.1)**: `SelectionContainer(modifier, selection, onSelectionChange, children)`
+ *   오버로드와 `Selection`/`Selection.AnchorInfo` 가 바이트코드에는 public 으로 보이지만 Kotlin `internal` 이라
+ *   앱 모듈에서 컴파일되지 않는다(`Cannot access 'data class Selection': it is internal in file.`).
+ *   → **교훈: Kotlin internal 은 JVM public 으로 컴파일되므로 javap 결과만 보고 사용 가능하다고 판단하면 안 된다**
+ * - `TextToolbar` / `LocalTextToolbar`: 인터페이스는 `showMenu(rect, onCopyRequested, onPasteRequested,
+ *   onCutRequested, onSelectAllRequested)`(+ onAutofillRequested 오버로드) · `hide()` · `status`(Shown/Hidden)
+ * - **⚠️ 1.11 부터 LocalTextToolbar 교체는 기본값에서 동작하지 않는다**: foundation 이 선택 컨텍스트 메뉴를
+ *   `androidx.compose.foundation.text.contextmenu` 로 옮겼고 `ComposeFoundationFlags.isNewContextMenuEnabled`
+ *   기본값이 **true**(바이트코드 정적 초기화에서 확인). true 인 동안 `SelectionManager` 는 `TextToolbar.showMenu` 를
+ *   호출하지 않는다. 플래그를 false 로 두면 예전 경로로 돌아간다(전역 가변 상태이므로 원복 필요)
+ * - 실기기 계측(SM-A725F/Android 13, Compose UI 테스트에서 longClick 으로 선택):
+ *   ① 기본값(true) → showMenu **0회**, status=Hidden
+ *   ② 런타임에 false 로 바꾸고 `key()` 로 서브트리를 재생성 → showMenu **2회**, status=Shown
+ *   ③ 넘어오는 액션은 **copy, selectAll 뿐**(읽기 전용 선택이라 cut/paste 는 null)
+ * - 선택된 문자열을 얻는 우회: 커스텀 툴바가 받은 `onCopyRequested` 를 실행한 뒤 `LocalClipboard` 로
+ *   `getClipEntry()?.clipData` 를 되읽는다. 단 Android 12+ 는 클립보드 읽기 시 사용자에게 토스트를 띄운다
+ * - Compose 1.12.1 의 `SelectionState`(현재 프로젝트엔 없음): `rememberSelectionState()` · `selectedTexts:
+ *   List<AnnotatedString>` · `selectableTexts` · `selectAll()` · `clear()` · `extendSelectionByWord()` · Saver 내장.
+ *   즉 "선택된 텍스트 읽기"는 1.12 에서 공개 API 가 된다. 다만 foundation 1.12.1 은 aar-metadata 가
+ *   minCompileSdk=37 이라 현재 프로젝트(compileSdk 36)에서는 채택할 수 없다
+*/

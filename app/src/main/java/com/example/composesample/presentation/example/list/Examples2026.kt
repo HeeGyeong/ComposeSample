@@ -745,5 +745,12 @@ val examples2026 = listOf(
         description = "androidx.navigationevent 로 back/forward 양방향 내비게이션 이벤트를 다루기 — DirectNavigationEventInput 으로 제스처 없이 started/progressed/completed 를 주입해 콜백 순서를 결정론적으로 재현하고, 진행률이 콜백이 아니라 transitionState 로만 오는 설계와 currentInfo/backInfo/forwardInfo 목록·게이팅을 화면에서 실측",
         blogUrl = "",
         exampleType = ConstValue.NavigationEventDispatcherExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 09. 11",
+        title = "텍스트 선택 제어",
+        description = "읽기 전용 텍스트의 선택 경로 — SelectionContainer로 선택을 열고 DisableSelection으로 일부만 잠그기, controlled 오버로드로 Selection(오프셋·selectableId·handlesCrossed)을 실시간 관찰, LocalTextToolbar를 갈아끼워 플랫폼 플로팅 툴바를 가로채고 넘어온 콜백이 무엇인지 실측 + Compose 1.12 SelectionState가 더 주는 것(selectedTexts/selectAll/clear) 실물 대조",
+        blogUrl = "",
+        exampleType = ConstValue.TextSelectionControlExample
     )
 )

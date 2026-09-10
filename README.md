@@ -182,6 +182,7 @@ Cursor IDE를 사용하는 개발자를 위한 **AI 코딩 어시스턴트 규�
 
 **text**:
 - 텍스트 스타일링, AutoSizing, 커스텀 TextMeasurer 렌더링
+- **텍스트 선택 제어**: 읽기 전용 텍스트 선택(`SelectionContainer`/`DisableSelection`)과 컨텍스트 메뉴 — Compose 1.11 이 선택 메뉴를 `text.contextmenu` 로 옮기면서 `LocalTextToolbar` 교체가 기본값에서 동작하지 않게 된 사실을 실기기 계측으로 확인(`isNewContextMenuEnabled` 기본 true → showMenu 0회, 끄면 copy·selectAll 수신) + 선택 문자열을 얻는 클립보드 우회 + 1.12 `SelectionState` 대조
 - TextOverflow(Start/Middle Ellipsis), LocalContext 문자열 안티패턴
 - Rich Content in Text Input(contentReceiver를 통한 이미지/파일 붙여넣기 — 키보드/클립보드/드래그앤드롭 소스별 처리)
 - TextField Max Length 숨겨진 버그(프로그래밍적 변경에는 InputTransformation이 적용되지 않는 버그 + LaunchedEffect+snapshotFlow 해결책)
