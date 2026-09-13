@@ -752,5 +752,12 @@ val examples2026 = listOf(
         description = "읽기 전용 텍스트의 선택 경로 — SelectionContainer로 선택을 열고 DisableSelection으로 일부만 잠그기, controlled 오버로드로 Selection(오프셋·selectableId·handlesCrossed)을 실시간 관찰, LocalTextToolbar를 갈아끼워 플랫폼 플로팅 툴바를 가로채고 넘어온 콜백이 무엇인지 실측 + Compose 1.12 SelectionState가 더 주는 것(selectedTexts/selectAll/clear) 실물 대조",
         blogUrl = "",
         exampleType = ConstValue.TextSelectionControlExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 09. 14",
+        title = "다이얼로그 배경 블러",
+        description = "같은 '블러'가 가리키는 세 가지를 분리 — blurBehindRadius+FLAG_BLUR_BEHIND(뒤 윈도우)·setBackgroundBlurRadius(내 윈도우 배경)·Modifier.blur(컴포저블). SDK_INT만으로는 부족해 isCrossWindowBlurEnabled를 리스너로 구독해 시스템이 꺼둔 상태를 드러내고, API 31 미만용 폴백으로 GraphicsLayer 캡처 후 소프트웨어 박스 블러를 돌려 축소 배율별 소요 시간을 실측",
+        blogUrl = "",
+        exampleType = ConstValue.DialogBlurExample
     )
 )

@@ -84,6 +84,7 @@ import com.example.composesample.presentation.example.component.ui.canvas.Partic
 import com.example.composesample.presentation.example.component.ui.canvas.FreehandDrawingExampleUI
 import com.example.composesample.presentation.example.component.ui.canvas.WaveformCanvasExampleUI
 import com.example.composesample.presentation.example.component.ui.canvas.MotionBlurExampleUI
+import com.example.composesample.presentation.example.component.ui.graphics.DialogBlurExampleUI
 import com.example.composesample.presentation.example.component.ui.graphics.NewShadowApiExampleUI
 import com.example.composesample.presentation.example.component.ui.layout.animation.AnimatedContentExampleUI
 import com.example.composesample.presentation.example.component.ui.layout.animation.AnimationsShowcaseExampleUI
@@ -295,6 +296,7 @@ import com.example.composesample.util.ConstValue.RememberObserverExample
 import com.example.composesample.util.ConstValue.SlotTreeInspectorExample
 import com.example.composesample.util.ConstValue.RecomposerRegistryExample
 import com.example.composesample.util.ConstValue.SealedDomainErrorExample
+import com.example.composesample.util.ConstValue.DialogBlurExample
 import com.example.composesample.util.ConstValue.SpotlightOverlayExample
 import com.example.composesample.util.ConstValue.Coil3ImageExample
 import com.example.composesample.util.ConstValue.NameBasedDestructuringExample
@@ -486,6 +488,7 @@ val exampleUiRegistry: Map<String, @Composable (onBackEvent: () -> Unit) -> Unit
     KotlinTimeApiExample to { onBackEvent -> KotlinTimeApiExampleUI(onBackEvent) },
     SealedDomainErrorExample to { onBackEvent -> SealedDomainErrorExampleUI(onBackEvent) },
     SpotlightOverlayExample to { onBackEvent -> SpotlightOverlayExampleUI(onBackEvent) },
+    DialogBlurExample to { onBackEvent -> DialogBlurExampleUI(onBackEvent) },
     HowComposeWorksExample to { onBackEvent -> HowComposeWorksExampleUI(onBackEvent) },
     RememberObserverExample to { onBackEvent -> RememberObserverExampleUI(onBackEvent) },
     CompositionObserverExample to { onBackEvent -> CompositionObserverExampleUI(onBackEvent) },
