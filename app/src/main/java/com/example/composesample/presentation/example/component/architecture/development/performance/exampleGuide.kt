@@ -35,7 +35,7 @@ package com.example.composesample.presentation.example.component.architecture.de
  * - List<T>는 MutableList 구현 가능 → 컴파일러가 불안정으로 판단
  * - kotlinx.collections.immutable의 ImmutableList 사용 시 어노테이션 없이도 안정 판단
  *
- * Strong Skipping Mode (Kotlin 2.0.20 컴파일러부터 기본 활성화 — 이 프로젝트는 Kotlin 2.4.0):
+ * Strong Skipping Mode (Kotlin 2.0.20 컴파일러부터 기본 활성화 — 이 프로젝트는 Kotlin 2.4.20):
  * - 불안정한 파라미터를 가진 컴포저블도 skippable 로 컴파일된다 ("불안정 = 항상 리컴포지션"이 아니다)
  * - 단, 비교 전략이 다르다 — 안정 파라미터는 equals(구조 비교), 불안정 파라미터는 ===(인스턴스 동일성)
  *   → 내용이 같아도 .copy()/.toList() 등으로 새 인스턴스를 만들면 리컴포지션된다

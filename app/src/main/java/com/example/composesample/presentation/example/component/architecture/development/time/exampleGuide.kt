@@ -20,7 +20,7 @@ package com.example.composesample.presentation.example.component.architecture.de
  * - 하지만 실제로 `@OptIn(ExperimentalTime::class)`를 제거하고 `:app:compileDebugKotlin`을 돌려 확인한 결과 **빌드가 그대로 성공** —
  *   `WasExperimental`은 "예전엔 experimental이었지만 Kotlin 2.3부터 stable로 승격됐다"는 컴파일러용 이력 메타데이터일 뿐,
  *   opt-in 요구 사실을 남기는 마커가 아니었다. Clock/Instant/TestTimeSource/TimeSource.Monotonic/measureTimedValue 전부
- *   이 프로젝트의 Kotlin 2.4.0에서는 opt-in 없이 바로 쓸 수 있는 안정 API다
+ *   이 프로젝트의 Kotlin 2.4.20에서는 opt-in 없이 바로 쓸 수 있는 안정 API다
  * - 교훈: 바이트코드의 `WasExperimental` 어노테이션과 실제 `@RequiresOptIn` 게이팅을 혼동하지 말 것 — opt-in 요구 여부는
  *   해당 애노테이션을 실제로 빼고 컴파일해보는 것이 가장 확실하다(javap 정적 추론만으로는 오판 가능)
  * - 이 프로젝트는 시간 측정에 System.currentTimeMillis()/kotlin.system.measureTimeMillis만 써왔고

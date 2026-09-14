@@ -8,7 +8,7 @@
 
 ## 기술 스택
 
-- **언어**: Kotlin 2.4.0
+- **언어**: Kotlin 2.4.20
 - **UI**: Jetpack Compose + Material3 (ComposeBom 2026.05.00)
 - **아키텍처**: Clean Architecture + MVVM
 - **DI**: Koin

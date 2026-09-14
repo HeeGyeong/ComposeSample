@@ -105,7 +105,7 @@ fun StabilityAnnotationsExampleUI(onBackEvent: () -> Unit) {
                 InfoCard(
                     title = "먼저 알아둘 것 — Strong Skipping Mode",
                     description = "Kotlin 2.0.20 컴파일러부터 Strong Skipping이 기본 활성화됩니다.\n" +
-                            "(이 프로젝트는 Kotlin 2.4.0이므로 켜져 있습니다)\n\n" +
+                            "(이 프로젝트는 Kotlin 2.4.20이므로 켜져 있습니다)\n\n" +
                             "그래서 '불안정한 파라미터를 받으면 스킵이 아예 불가능'하지 않습니다.\n" +
                             "불안정 파라미터를 받는 컴포저블도 skippable로 컴파일되고,\n" +
                             "달라지는 것은 '무엇으로 비교하는가'입니다.\n\n" +

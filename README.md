@@ -20,7 +20,7 @@ Clean Architecture 기반으로 구성되어 있으며, 원하는 예제를 쉽�
 최신 변경 이력은 [CHANGELOG.md](CHANGELOG.md)에서 확인할 수 있습니다.
 
 ## 개발 환경
-- Kotlin 2.4.0
+- Kotlin 2.4.20
 - Android Studio
 - AGP 8.13.2 / Gradle 8.13
 - ComposeBom 2026.05.00
