@@ -66,7 +66,8 @@ material = "1.11.4"
 material3 = "1.4.0"
 material3WindowSizeClass = "1.4.0"
 room = "2.8.4"
-retrofit = "2.9.0"
+# Retrofit 3.0.0 — okhttp 4.12.0 · (converter-gson) gson 2.13.1 을 요구하지만 둘 다 Ktor 쪽 요구(okhttp 5.3.2, gson 2.14.0)보다 낮아 해석은 그대로다.
+retrofit = "3.0.0"
 # ktor-serialization-gson 3.5.2 가 2.14.0 을 요구해 해석 결과에 맞춘다(retrofit converter-gson 3.0.0 의 요구 2.13.1 보다 높다).
 gson = "2.14.0"
 # Ktor 3.5.2 가 okhttp 코어를 5.3.2 로 끌어올리므로 logging-interceptor 도 같은 5.3.2 로 맞춘다(4.x 인터셉터를 5.x 코어와 섞지 않는다).
