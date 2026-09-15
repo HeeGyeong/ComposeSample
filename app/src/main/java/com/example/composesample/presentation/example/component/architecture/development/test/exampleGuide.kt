@@ -101,6 +101,8 @@ package com.example.composesample.presentation.example.component.architecture.de
  * - ⚠️ `ExecutorsMode` 오버로드 3종: `LEGACY_OVERRIDE_WITH_SYNCHRONOUS_EXECUTORS`(기본) /
  *   `PRESERVE_EXECUTORS`(설정한 executor 유지) / `USE_TIME_BASED_SCHEDULING`(시간 기반 스케줄링).
  * - ⚠️ `enqueue(...).result.get()` 과 `getWorkInfoById(id).get()` 은 ListenableFuture 블로킹 대기다(메인 스레드 금지).
+ * - ⚠️ work 2.11.2 에서 `getWorkInfoById(id).get()` 의 타입은 `WorkInfo?` 다(2.9.1 에서는 null 처리 없이 컴파일됐다) →
+ *   테스트에서는 `checkNotNull(...)` 로 감싸 작업이 없으면 그 자리에서 실패하게 한다(2.11.2 상향 때 androidTest 컴파일이 여기서 깨졌다).
  * - ⚠️ WorkManager 는 프로세스 싱글턴이라 테스트 간 상태가 샌다 → 규칙의 finally 에서 `cancelAllWork()` 로 정리한다.
  * - ⚠️ TestDriver 는 "조건이 만족됐다"고 알릴 뿐 조건 판정 자체를 검증하지 않는다. 제약이 제대로 걸렸는지는
  *   WorkRequest 의 Constraints 를 단언하는 편이 맞다.

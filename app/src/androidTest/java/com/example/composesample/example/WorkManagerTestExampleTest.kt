@@ -113,12 +113,13 @@ class WorkManagerTestExampleTest {
 
         workRule.workManager.enqueue(request).result.get()
 
-        val before = workRule.workManager.getWorkInfoById(request.id).get().state
+        // work 2.10+ 부터 getWorkInfoById(id).get() 은 WorkInfo? 를 돌려준다 — 작업이 없으면 여기서 바로 실패하도록 checkNotNull
+        val before = checkNotNull(workRule.workManager.getWorkInfoById(request.id).get()).state
         log("제약 충족 전 상태 = $before")
 
         workRule.testDriver.setAllConstraintsMet(request.id)
 
-        val after = workRule.workManager.getWorkInfoById(request.id).get()
+        val after = checkNotNull(workRule.workManager.getWorkInfoById(request.id).get())
         log("제약 충족 후 상태 = ${after.state} / output = ${after.outputData.getString(EchoWorker.KEY)}")
 
         assertEquals(WorkInfo.State.ENQUEUED, before)
@@ -134,11 +135,11 @@ class WorkManagerTestExampleTest {
             .build()
 
         workRule.workManager.enqueue(request).result.get()
-        val before = workRule.workManager.getWorkInfoById(request.id).get().state
+        val before = checkNotNull(workRule.workManager.getWorkInfoById(request.id).get()).state
         log("24시간 지연 설정 후 상태 = $before")
 
         workRule.testDriver.setInitialDelayMet(request.id)
-        val after = workRule.workManager.getWorkInfoById(request.id).get().state
+        val after = checkNotNull(workRule.workManager.getWorkInfoById(request.id).get()).state
         log("setInitialDelayMet 후 상태 = $after")
 
         assertEquals(WorkInfo.State.ENQUEUED, before)
