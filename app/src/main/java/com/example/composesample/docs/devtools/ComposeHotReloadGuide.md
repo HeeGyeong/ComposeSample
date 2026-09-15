@@ -1,30 +1,38 @@
 # Compose Hot Reload (HotSwan) Guide
 
-> ## ⚠️ Current Status — Temporarily Disabled on `main`
+> ## Current Status — Enabled on `main` with HotSwan 2.0.0 (re-enabled 2026-09-15)
 >
-> Since the Kotlin 2.4.0 upgrade was merged to `main` (2026-06-16), the HotSwan Gradle plugin
-> application in `app/build.gradle` is **commented out** because
-> **hotswan-compiler 1.2.1 is incompatible with Kotlin 2.4.0**.
->
-> During the Kotlin 2.4.0 upgrade verification (2026-06-16), the plugin's compiler registrar threw:
+> **History.** From 2026-06-16 to 2026-09-15 the plugin line in `app/build.gradle` was commented out, because
+> hotswan-compiler 1.2.1 broke the Kotlin 2.4.0 compiler:
 >
 > ```
 > java.lang.ClassCastException: IrGenerationExtension$Companion cannot be cast to ProjectExtensionDescriptor
 >   at com.skydoves.compose.hotswan.compiler.pre.PreComposePluginRegistrar.registerExtensions
 > ```
 >
-> This caused an Internal compiler error on `:coordinator:compileDebugKotlin`. Kotlin 2.4.0 changed the
-> compiler extension registration API, which HotSwan 1.2.1 does not support.
+> (an Internal compiler error on `:coordinator:compileDebugKotlin`; commenting out that single line was enough for the
+> rest of the project to build on 2.4.0).
 >
-> **Verification result:** commenting out this single line lets the entire project (KSP 2.3.9 / Room 2.8.4 /
-> Compose compiler 2.4.0 / all app·data·domain·core·coordinator code) build successfully on Kotlin 2.4.0 with
-> **zero source changes**. HotSwan is the sole blocker.
+> **Compatible releases that followed** (JetBrains Marketplace change notes): **1.3.5** targets the Kotlin 2.4.0 compiler
+> API and requires Kotlin 2.4.0+, **1.3.7** fixes a launch crash on Kotlin 2.4.0, and **2.0.0** (2026-09-13) replaces the
+> runtime with an interpreter engine and lists Kotlin 2.3.x–2.4.x.
 >
-> **Impact:** Hot Reload is a development-only convenience tool, so disabling it does **not** affect any example's
-> behavior or the final build — only the in-IDE hot-reload experience is unavailable.
+> **Why 2.0.0 rather than 1.3.7:** the Gradle plugin version must match the IDE plugin version, and the Marketplace installs
+> 2.0.0 by default — pinning 1.3.7 would force every developer to side-load an old IDE plugin.
 >
-> **Action:** re-enable the plugin (uncomment in `app/build.gradle` + bump the version in `libs.versions.toml`)
-> once a hotswan-compiler release that supports Kotlin 2.4.0 is available.
+> **Verified on this project (Kotlin 2.4.20 / AGP 8.13.2 / Gradle 8.13), 2026-09-15:**
+> - `./gradlew assembleDebug` passes with only the catalog version bump and the `app/build.gradle` line uncommented — zero source changes
+> - HotSwan tasks exist only in the debug task graph (`transformDebugHotswanClasses`, `extractDebugInterpClasses`,
+>   `packageDebugInterpAssets` on both `:app` and `:coordinator`); `./gradlew :app:assembleRelease --dry-run` contains none
+> - The debug APK gains `libhotswan_interp.so` (arm64-v8a / armeabi-v7a / x86_64) and about 1,700 `assets/hotswan-v2*` entries
+> - Installed on a real device (SM-A725F / API 33), the app launches without a crash and logcat shows
+>   `HotSwanV2: v2 server listening on 127.0.0.1:8601`
+>
+> **Not verified:** an actual edit-and-reload round trip from the IDE — that needs the IDE plugin, which a CLI session cannot drive.
+>
+> **⚠️ Outside the official support matrix:** the 2.0.0 release notes list **AGP 9.x** (plus IntelliJ IDEA / Android Studio
+> 2025.1+ and device API 28+). This project is on AGP 8.13.2; the build and the runtime start-up work, but if hot reload
+> misbehaves, suspect AGP first — either fall back to 1.3.7 (Gradle **and** IDE plugin together) or upgrade AGP.
 
 ## Overview
 
@@ -33,7 +41,7 @@ Compose Hot Reload (HotSwan) is a development tool that, when you save a `.kt` f
 - Navigation stack, scroll position, form input values, and ViewModel data are all preserved
 - Constant values (padding, color, string) are applied within ~50ms by skipping compilation (Literal Patching)
 
-## Behavior Pipeline (5 steps)
+## Behavior Pipeline (1.x)
 
 ```
 1. Detect file change → identify module
@@ -42,6 +50,12 @@ Compose Hot Reload (HotSwan) is a development tool that, when you save a `.kt` f
 4. Swap classes in memory with a native agent
 5. Recompose only the affected Compose scopes
 ```
+
+> **2.0 changed step 4.** Per the 2.0.0 release notes the runtime no longer relies on swapping classes through the Android
+> runtime; it runs HotSwan's own interpreter, which is also what lets Composables be added, removed or reordered in place.
+> What this shows up as in this project's build: `transformDebugHotswanClasses` strips `*_INTERP` sibling classes and
+> substitutes coroutine-impl shims, `packageDebugInterpAssets` packages interpreter baseline classes under
+> `assets/hotswan-v2/classes/`, and the native interpreter ships as `libhotswan_interp.so`.
 
 ## Supported Scope
 
@@ -54,11 +68,24 @@ Compose Hot Reload (HotSwan) is a development tool that, when you save a `.kt` f
 | data class properties | |
 | extension / suspend functions | |
 
+### What 2.0 leaves native (from this project's build log)
+
+`assembleDebug` prints `w: [HotSwan v2] SKIPPED ...` for **39 declarations — 28 methods and 11 whole classes** — that
+cannot be copied to the interpreter. They keep working, but edits to them need a full build. These `w:` lines are plugin
+diagnostics, **not compiler warnings on the source** (the project's warning scan counts only `w: file://` lines).
+
+| Reason | Count | Skipped unit | Examples in this project |
+|--------|-------|--------------|--------------------------|
+| `VIEW_RECEIVER_SUBTYPE` | 20 | method | `super.onCreate()` in activities (`MainActivity`, `BlogExampleActivity`, …), Room `*_Impl.createOpenDelegate`/`clearAllTables`, non-public `ViewModel` members |
+| `FRAMEWORK_ENTRY_SUBCLASS` | 11 | whole class | `BaseApplication`, `LocationTrackingService`, the five Quick Settings `*TileService`s, the four Glance `*WidgetReceiver`s |
+| `GENERIC_DECLARATION` | 8 | method | functions declaring type parameters, e.g. `onEachBatch<T>`, `measureInline<T>` |
+
 ## Version Requirements
 
-- HotSwan 1.2.1 requires Kotlin 2.3.0 or higher (the plugin was first applied at Kotlin 2.3.20 on 2026-04-13)
-- ⚠️ **HotSwan 1.2.1 does NOT support Kotlin 2.4.0** — it fails at compiler-extension registration (see "Current Status" above). The project moved to Kotlin 2.4.0 on 2026-06-16, so the plugin is currently **disabled on `main`** until a 2.4.0-compatible release ships.
-- When re-enabled, the Gradle setup is already in place — you only need to install the IDE plugin separately to use it.
+- **HotSwan 2.0.0 (current):** Kotlin 2.3.x–2.4.x, AGP 9.x (official), IntelliJ IDEA / Android Studio 2025.1+, device API 28+ — runs here on Kotlin 2.4.20 / AGP 8.13.2 (see "Current Status")
+- **HotSwan 1.3.5–1.3.7:** Kotlin 2.4.0 or later (projects on Kotlin 2.2.x–2.3.x should stay on 1.3.4)
+- **HotSwan 1.2.1:** Kotlin 2.3.x — fails at compiler-extension registration on Kotlin 2.4.0
+- The Gradle plugin adds its runtime dependency and the required compiler flags itself — no extra dependency or configuration block is needed
 
 ## Installation (Gradle setup already applied to the project)
 
@@ -70,7 +97,7 @@ Compose Hot Reload (HotSwan) is a development tool that, when you save a `.kt` f
 **libs.versions.toml:**
 ```toml
 [plugins]
-hotswan-compiler = { id = "com.github.skydoves.compose.hotswan.compiler", version = "1.2.1" }
+hotswan-compiler = { id = "com.github.skydoves.compose.hotswan.compiler", version = "2.0.0" }
 ```
 
 **root build.gradle:**
@@ -90,11 +117,10 @@ alias(libs.plugins.hotswan.compiler)
 
 ## Notes
 
-- **Kotlin 2.3.0 or higher required**, but **2.4.0 is not supported by HotSwan 1.2.1** — the project moved to Kotlin 2.4.0 (2026-06-16), so the plugin is currently disabled on `main`
-- **The IDE and Gradle plugin versions must match** (current Gradle plugin: 1.2.1)
+- **The IDE and Gradle plugin versions must match** (current Gradle plugin: 2.0.0)
 - When you update the IDE plugin, also change the version in `libs.versions.toml`
 - Structural changes (class hierarchy changes, adding interfaces, etc.) may require an app restart
-- Hot Reload is a development convenience tool and does not affect the final build
+- Hot Reload is a development convenience tool and does not affect the final build — its tasks are absent from the release task graph
 
 ## References
 
