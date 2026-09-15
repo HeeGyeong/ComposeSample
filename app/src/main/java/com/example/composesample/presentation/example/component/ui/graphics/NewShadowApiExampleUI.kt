@@ -1,9 +1,9 @@
 package com.example.composesample.presentation.example.component.ui.graphics
 
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
@@ -15,52 +15,55 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.draw.dropShadow
+import androidx.compose.ui.draw.innerShadow
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.geometry.CornerRadius
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.drawscope.DrawScope
-import androidx.compose.ui.graphics.drawscope.inset
+import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.graphics.shadow.Shadow
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.composesample.presentation.MainHeader
 
+/**
+ * New Shadow API — Modifier.dropShadow / Modifier.innerShadow (Compose 1.9+)
+ *
+ * 그림자 값은 전부 Shadow(radius, color 또는 brush, spread, offset, alpha, blendMode) 하나로 넘긴다.
+ * 모디파이어 순서가 곧 그리는 순서다: dropShadow → background(도형 뒤), background → innerShadow(배경 위).
+ * 참고 자료와 핵심 개념은 같은 폴더의 exampleGuide.kt 참고.
+ */
 @Composable
 fun NewShadowApiExampleUI(
     onBackEvent: () -> Unit
@@ -85,75 +88,557 @@ fun NewShadowApiExampleUI(
             item { ShadowPropertiesCard() }
             item { InteractiveShadowCard() }
             item { NeumorphismCard() }
-            item { GlowEffectCard() }
-            item { KeyboardButtonCard() }
-            item { BlendModeCard() }
             item { LayeredShadowCard() }
-            item { ColoredShadowCard() }
-            item { ShadowDirectionCard() }
+            item { BlendModeCard() }
+        }
+    }
+}
+
+// ==================== 1. 개요 ====================
+
+@Composable
+private fun OverviewCard() {
+    SectionCard(
+        title = "✨ New Shadow API — dropShadow / innerShadow",
+        description = "Compose 1.9 에서 추가된 두 모디파이어는 Shadow 값 하나로 radius·spread·offset·color(또는 brush)·alpha·blendMode 를 모두 받는다. " +
+            "이 프로젝트가 쓰는 Compose 1.11.4 에서는 opt-in 없이 바로 쓸 수 있다.",
+        containerColor = Color(0xFFE3F2FD)
+    ) {
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            FeatureChip("dropShadow", Color(0xFF388E3C))
+            FeatureChip("innerShadow", Color(0xFF1976D2))
+            FeatureChip("Shadow(...)", Color(0xFFF57C00))
+        }
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        CodeBox(
+            code = "val shape = RoundedCornerShape(16.dp)\n" +
+                "Modifier\n" +
+                "    .dropShadow(shape, Shadow(radius = 12.dp, color = Color.Black,\n" +
+                "        offset = DpOffset(0.dp, 6.dp), alpha = 0.3f))\n" +
+                "    .background(Color.White, shape)\n" +
+                "    .innerShadow(shape, Shadow(radius = 8.dp, color = Color.Black, alpha = 0.2f))"
+        )
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        NoteBox(
+            "모디파이어 순서가 곧 그리는 순서다 — dropShadow 는 background 보다 앞에 두어 도형 뒤에 깔고, " +
+                "innerShadow 는 background 뒤에 두어 배경 위(도형 안쪽 가장자리)에 그린다."
+        )
+    }
+}
+
+// ==================== 2. 기본 비교 ====================
+
+@Composable
+private fun BasicShadowCard() {
+    val shape = RoundedCornerShape(16.dp)
+    val boxColor = Color(0xFF66BB6A)
+
+    SectionCard(
+        title = "🎯 기본 비교 — shadow(elevation) · dropShadow · innerShadow",
+        description = "같은 크기·같은 도형에 세 가지 그림자를 적용했다."
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceEvenly
+        ) {
+            DemoItem(label = "shadow", caption = "elevation 12dp") {
+                Box(
+                    modifier = Modifier
+                        .size(64.dp)
+                        .shadow(elevation = 12.dp, shape = shape)
+                        .background(boxColor, shape)
+                )
+            }
+            DemoItem(label = "dropShadow", caption = "radius 16 · y +6") {
+                Box(
+                    modifier = Modifier
+                        .size(64.dp)
+                        .dropShadow(
+                            shape,
+                            Shadow(radius = 16.dp, color = Color.Black, offset = DpOffset(0.dp, 6.dp), alpha = 0.35f)
+                        )
+                        .background(boxColor, shape)
+                )
+            }
+            DemoItem(label = "innerShadow", caption = "radius 12") {
+                Box(
+                    modifier = Modifier
+                        .size(64.dp)
+                        .background(boxColor, shape)
+                        .innerShadow(shape, Shadow(radius = 12.dp, color = Color.Black, alpha = 0.45f))
+                )
+            }
+        }
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        NoteBox(
+            "shadow(elevation) 은 시스템 광원을 기준으로 그려지는 플랫폼 그림자라 높이만 정할 수 있다. " +
+                "dropShadow 는 블러한 도형을 직접 그려 퍼짐(spread)·위치(offset)·색까지 조절되고, " +
+                "innerShadow 는 도형 안쪽 가장자리에 그림자를 그린다."
+        )
+    }
+}
+
+// ==================== 3. 속성 체험 ====================
+
+@Composable
+private fun ShadowPropertiesCard() {
+    var radius by remember { mutableFloatStateOf(16f) }
+    var spread by remember { mutableFloatStateOf(0f) }
+    var offsetX by remember { mutableFloatStateOf(0f) }
+    var offsetY by remember { mutableFloatStateOf(8f) }
+    var alpha by remember { mutableFloatStateOf(0.5f) }
+    val shape = RoundedCornerShape(20.dp)
+
+    SectionCard(
+        title = "🎛️ Shadow 속성 체험",
+        description = "Shadow(radius, spread, offset, color, alpha) 의 값을 슬라이더로 바꿔 본다. offset 으로 광원의 방향도 표현된다."
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(180.dp)
+                .background(Color(0xFFF1F3F6), RoundedCornerShape(12.dp)),
+            contentAlignment = Alignment.Center
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(96.dp)
+                    .dropShadow(
+                        shape,
+                        Shadow(
+                            radius = radius.dp,
+                            color = Color(0xFF0D47A1),
+                            spread = spread.dp,
+                            offset = DpOffset(offsetX.dp, offsetY.dp),
+                            alpha = alpha
+                        )
+                    )
+                    .background(Color(0xFF42A5F5), shape),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(text = "DEMO", color = Color.White, fontWeight = FontWeight.Bold)
+            }
+        }
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        LabeledSlider("radius", "${radius.toInt()}dp", radius, 0f..40f) { radius = it }
+        LabeledSlider("spread", "${spread.toInt()}dp", spread, 0f..24f) { spread = it }
+        LabeledSlider("offset x", "${offsetX.toInt()}dp", offsetX, -24f..24f) { offsetX = it }
+        LabeledSlider("offset y", "${offsetY.toInt()}dp", offsetY, -24f..24f) { offsetY = it }
+        LabeledSlider("alpha", "${(alpha * 100).toInt()}%", alpha, 0f..1f) { alpha = it }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        NoteBox(
+            "offset 을 음수로 두면 그림자가 왼쪽·위로 옮겨가 광원이 오른쪽 아래에 있는 것처럼 보인다. " +
+                "shadow(elevation) 만으로는 spread·offset 을 줄 수 없어 drawBehind 로 흉내 내야 했던 값들이다."
+        )
+    }
+}
+
+// ==================== 4. 인터랙티브 ====================
+
+@Composable
+private fun InteractiveShadowCard() {
+    var isPressed by remember { mutableStateOf(false) }
+    val shape = RoundedCornerShape(16.dp)
+
+    // Shadow 의 값은 일반 Dp/Float 라 animate*AsState 결과를 그대로 넣으면 된다
+    val dropRadius by animateDpAsState(targetValue = if (isPressed) 4.dp else 20.dp, label = "dropRadius")
+    val dropOffsetY by animateDpAsState(targetValue = if (isPressed) 1.dp else 10.dp, label = "dropOffsetY")
+    val innerAlpha by animateFloatAsState(targetValue = if (isPressed) 0.4f else 0f, label = "innerAlpha")
+    val scale by animateFloatAsState(
+        targetValue = if (isPressed) 0.97f else 1f,
+        animationSpec = spring(),
+        label = "scale"
+    )
+
+    SectionCard(
+        title = "🎮 인터랙티브 — 떠 있다가 눌려 들어가는 버튼",
+        description = "누르고 있는 동안 dropShadow 는 줄어들고 innerShadow 가 나타난다."
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(120.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(width = 180.dp, height = 64.dp)
+                    .scale(scale)
+                    .dropShadow(
+                        shape,
+                        Shadow(radius = dropRadius, color = Color.Black, offset = DpOffset(0.dp, dropOffsetY), alpha = 0.3f)
+                    )
+                    .background(Color(0xFFFF7043), shape)
+                    .innerShadow(shape, Shadow(radius = 10.dp, color = Color.Black, alpha = innerAlpha))
+                    .pointerInput(Unit) {
+                        detectTapGestures(
+                            onPress = {
+                                isPressed = true
+                                tryAwaitRelease()
+                                isPressed = false
+                            }
+                        )
+                    },
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = if (isPressed) "눌림" else "누르고 있기",
+                    color = Color.White,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+        }
+
+        Text(
+            text = "dropShadow radius ${dropRadius.value.toInt()}dp · y ${dropOffsetY.value.toInt()}dp · " +
+                "innerShadow alpha ${(innerAlpha * 100).toInt()}%",
+            modifier = Modifier.fillMaxWidth(),
+            fontSize = 12.sp,
+            color = Color.Gray,
+            textAlign = TextAlign.Center
+        )
+    }
+}
+
+// ==================== 5. 뉴모피즘 ====================
+
+private val NeuBackground = Color(0xFFE0E5EC)
+private val NeuDark = Color(0xFFA3B1C6)
+
+@Composable
+private fun NeumorphismCard() {
+    var keyPressed by remember { mutableStateOf(false) }
+    val shape = RoundedCornerShape(20.dp)
+
+    SectionCard(
+        title = "🎨 뉴모피즘 — dropShadow ×2 / innerShadow ×2",
+        description = "배경과 같은 색의 도형에 밝은 그림자(왼쪽 위)와 어두운 그림자(오른쪽 아래)를 겹친다. 바깥에 두면 볼록, 안쪽에 두면 오목하다.",
+        containerColor = NeuBackground
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceEvenly
+        ) {
+            DemoItem(label = "볼록", caption = "dropShadow ×2") {
+                Box(modifier = Modifier.size(72.dp).then(raisedNeumorphism(shape)))
+            }
+            DemoItem(label = "오목", caption = "innerShadow ×2") {
+                Box(modifier = Modifier.size(72.dp).then(pressedNeumorphism(shape)))
+            }
+            DemoItem(label = "키보드 키", caption = "탭해서 전환") {
+                Box(
+                    modifier = Modifier
+                        .size(72.dp)
+                        .then(if (keyPressed) pressedNeumorphism(shape) else raisedNeumorphism(shape))
+                        .clickable { keyPressed = !keyPressed },
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "K",
+                        fontSize = 22.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = if (keyPressed) Color(0xFF7B8794) else Color(0xFF4A5568)
+                    )
+                }
+            }
+        }
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        NoteBox(
+            "볼록과 오목을 오가는 3D 키도 같은 두 쌍의 그림자를 바꿔 끼우는 것뿐이다. " +
+                "그림자 색은 배경색을 기준으로 밝게/어둡게 잡아야 자연스럽다."
+        )
+    }
+}
+
+/** 볼록: 밝은 그림자(좌상) + 어두운 그림자(우하)를 도형 바깥에 */
+private fun raisedNeumorphism(shape: Shape): Modifier = Modifier
+    .dropShadow(shape, Shadow(radius = 12.dp, color = Color.White, offset = DpOffset((-6).dp, (-6).dp), alpha = 0.9f))
+    .dropShadow(shape, Shadow(radius = 12.dp, color = NeuDark, offset = DpOffset(6.dp, 6.dp), alpha = 0.8f))
+    .background(NeuBackground, shape)
+
+/** 오목: 같은 한 쌍을 도형 안쪽에 */
+private fun pressedNeumorphism(shape: Shape): Modifier = Modifier
+    .background(NeuBackground, shape)
+    .innerShadow(shape, Shadow(radius = 8.dp, color = NeuDark, offset = DpOffset(4.dp, 4.dp), alpha = 0.9f))
+    .innerShadow(shape, Shadow(radius = 8.dp, color = Color.White, offset = DpOffset((-4).dp, (-4).dp), alpha = 0.9f))
+
+// ==================== 6. 레이어 · 그라디언트 · 글로우 ====================
+
+@Composable
+private fun LayeredShadowCard() {
+    var glow by remember { mutableFloatStateOf(0.8f) }
+    val shape = RoundedCornerShape(16.dp)
+
+    SectionCard(
+        title = "📚 레이어 · 그라디언트 · 글로우",
+        description = "dropShadow 는 여러 번 체이닝할 수 있고, 먼저 쓴 그림자가 아래에 깔린다. brush 를 주면 그라디언트 그림자, 밝은 색에 큰 radius 를 주면 글로우가 된다."
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceEvenly
+        ) {
+            DemoItem(label = "레이어 3겹", caption = "넓고 옅게 → 좁고 진하게") {
+                Box(
+                    modifier = Modifier
+                        .size(64.dp)
+                        .dropShadow(shape, Shadow(radius = 24.dp, color = Color.Black, offset = DpOffset(0.dp, 12.dp), alpha = 0.10f))
+                        .dropShadow(shape, Shadow(radius = 8.dp, color = Color.Black, offset = DpOffset(0.dp, 4.dp), alpha = 0.15f))
+                        .dropShadow(shape, Shadow(radius = 2.dp, color = Color.Black, offset = DpOffset(0.dp, 1.dp), alpha = 0.25f))
+                        .background(Color.White, shape)
+                )
+            }
+            DemoItem(label = "그라디언트", caption = "Shadow(brush = …)") {
+                Box(
+                    modifier = Modifier
+                        .size(64.dp)
+                        .dropShadow(
+                            shape,
+                            Shadow(
+                                radius = 18.dp,
+                                brush = Brush.linearGradient(listOf(Color(0xFF7C4DFF), Color(0xFFFF4081))),
+                                offset = DpOffset(0.dp, 8.dp),
+                                alpha = 0.9f
+                            )
+                        )
+                        .background(Color.White, shape)
+                )
+            }
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(140.dp)
+                .background(Color(0xFF263238), RoundedCornerShape(12.dp)),
+            contentAlignment = Alignment.Center
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(64.dp)
+                    .dropShadow(
+                        CircleShape,
+                        Shadow(radius = 28.dp, color = Color(0xFF00E5FF), spread = 6.dp, alpha = glow)
+                    )
+                    .background(Color(0xFF00E5FF), CircleShape)
+            )
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        LabeledSlider("글로우", "${(glow * 100).toInt()}%", glow, 0f..1f) { glow = it }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        NoteBox(
+            "글로우는 어두운 배경 위에서 offset 없이 큰 radius·spread 를 준 밝은 색 dropShadow 다. " +
+                "별도의 블러 효과나 RenderEffect 가 필요 없다."
+        )
+    }
+}
+
+// ==================== 7. blendMode ====================
+
+@Composable
+private fun BlendModeCard() {
+    val modes = remember {
+        listOf(
+            "SrcOver" to BlendMode.SrcOver,
+            "Multiply" to BlendMode.Multiply,
+            "Screen" to BlendMode.Screen,
+            "Overlay" to BlendMode.Overlay
+        )
+    }
+    var selectedIndex by remember { mutableIntStateOf(0) }
+    val shape = RoundedCornerShape(16.dp)
+
+    SectionCard(
+        title = "🎭 blendMode — 그림자를 아래 픽셀과 섞는 방식",
+        description = "Shadow 의 blendMode 는 그림자를 이미 그려진 배경과 어떻게 합칠지 정한다. 단색 배경에서는 차이가 작고, 무늬가 있는 배경 위에서 드러난다."
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
+            modes.forEachIndexed { index, (name, _) ->
+                Button(
+                    onClick = { selectedIndex = index },
+                    modifier = Modifier.weight(1f),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = if (selectedIndex == index) Color(0xFFD81B60) else Color(0xFFD81B60).copy(alpha = 0.3f)
+                    ),
+                    contentPadding = PaddingValues(horizontal = 2.dp),
+                    shape = RoundedCornerShape(8.dp)
+                ) {
+                    Text(text = name, color = Color.White, fontSize = 10.sp, maxLines = 1)
+                }
+            }
+        }
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(150.dp)
+                .background(
+                    Brush.horizontalGradient(listOf(Color(0xFFFFEB3B), Color(0xFF26C6DA), Color(0xFF7E57C2))),
+                    RoundedCornerShape(12.dp)
+                ),
+            contentAlignment = Alignment.Center
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(80.dp)
+                    .dropShadow(
+                        shape,
+                        Shadow(
+                            radius = 16.dp,
+                            color = Color(0xFFD81B60),
+                            spread = 8.dp,
+                            offset = DpOffset(12.dp, 12.dp),
+                            alpha = 1f,
+                            blendMode = modes[selectedIndex].second
+                        )
+                    )
+                    .background(Color.White, shape),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = modes[selectedIndex].first,
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFFD81B60)
+                )
+            }
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        NoteBox(
+            "SrcOver 는 그대로 덮고, Multiply 는 배경과 곱해 어둡게, Screen 은 밝게 섞는다. " +
+                "Overlay 는 배경의 밝기에 따라 둘 사이를 오간다."
+        )
+    }
+}
+
+// ==================== 공통 UI ====================
+
+@Composable
+private fun SectionCard(
+    title: String,
+    description: String,
+    containerColor: Color = Color(0xFFFAFAFA),
+    content: @Composable () -> Unit
+) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+        colors = CardDefaults.cardColors(containerColor = containerColor),
+        shape = RoundedCornerShape(12.dp)
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Text(
+                text = title,
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color(0xFF1976D2)
+            )
+            Spacer(modifier = Modifier.height(6.dp))
+            Text(
+                text = description,
+                fontSize = 13.sp,
+                color = Color(0xFF616161)
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            content()
         }
     }
 }
 
 @Composable
-private fun OverviewCard() {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-        shape = RoundedCornerShape(12.dp)
-    ) {
-        Column(
-            modifier = Modifier.padding(16.dp)
+private fun DemoItem(
+    label: String,
+    caption: String,
+    demo: @Composable () -> Unit
+) {
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Box(
+            modifier = Modifier.size(96.dp),
+            contentAlignment = Alignment.Center
         ) {
-            Text(
-                text = "✨ New Shadow API for Compose 1.11.1",
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color(0xFF1976D2)
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Text(
-                text = "최신 Compose 1.11.1 버전으로 업데이트되었습니다! 새로운 그림자 API와 향상된 성능을 경험해보세요.",
-                fontSize = 14.sp,
-                color = Color.Gray
-            )
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                FeatureChip("dropShadow", Color(0xFF4CAF50))
-                FeatureChip("innerShadow", Color(0xFF2196F3))
-                FeatureChip("세밀한 제어", Color(0xFFFF9800))
-            }
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            Surface(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(8.dp),
-                color = Color(0xFFF5F5F5)
-            ) {
-                Text(
-                    text = "💡 업데이트 완료! Kotlin 2.4.0 + Compose 1.11.1 환경에서 최신 API를 활용한 그림자 효과",
-                    modifier = Modifier.padding(12.dp),
-                    fontSize = 12.sp,
-                    color = Color(0xFF666666),
-                    fontStyle = androidx.compose.ui.text.font.FontStyle.Italic
-                )
-            }
+            demo()
         }
+        Spacer(modifier = Modifier.height(6.dp))
+        Text(
+            text = label,
+            fontSize = 12.sp,
+            fontWeight = FontWeight.Medium,
+            color = Color(0xFF424242)
+        )
+        Text(
+            text = caption,
+            fontSize = 10.sp,
+            color = Color.Gray,
+            textAlign = TextAlign.Center
+        )
+    }
+}
+
+@Composable
+private fun LabeledSlider(
+    label: String,
+    valueText: String,
+    value: Float,
+    valueRange: ClosedFloatingPointRange<Float>,
+    onValueChange: (Float) -> Unit
+) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = label,
+            modifier = Modifier.width(64.dp),
+            fontSize = 12.sp,
+            color = Color(0xFF424242)
+        )
+        Slider(
+            value = value,
+            onValueChange = onValueChange,
+            valueRange = valueRange,
+            modifier = Modifier.weight(1f),
+            colors = SliderDefaults.colors(
+                thumbColor = Color(0xFF1976D2),
+                activeTrackColor = Color(0xFF1976D2)
+            )
+        )
+        Text(
+            text = valueText,
+            modifier = Modifier.width(44.dp),
+            fontSize = 12.sp,
+            color = Color(0xFF1976D2),
+            textAlign = TextAlign.End
+        )
     }
 }
 
 @Composable
 private fun FeatureChip(text: String, color: Color) {
     Surface(
-        modifier = Modifier,
         shape = RoundedCornerShape(16.dp),
         color = color.copy(alpha = 0.1f)
     ) {
@@ -168,1330 +653,36 @@ private fun FeatureChip(text: String, color: Color) {
 }
 
 @Composable
-private fun BasicShadowCard() {
-    Card(
+private fun NoteBox(text: String) {
+    Surface(
         modifier = Modifier.fillMaxWidth(),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFFE8F5E8)),
-        shape = RoundedCornerShape(12.dp)
+        shape = RoundedCornerShape(8.dp),
+        color = Color(0xFF1976D2).copy(alpha = 0.08f)
     ) {
-        Column(
-            modifier = Modifier.padding(16.dp)
-        ) {
-            Text(
-                text = "🎯 기본 Shadow API 사용법",
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color(0xFF388E3C)
-            )
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            Text(
-                text = "dropShadow와 innerShadow의 기본 사용법을 확인해보세요:",
-                fontSize = 14.sp,
-                color = Color.Gray
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
-            ) {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(
-                        text = "dropShadow",
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.Medium,
-                        color = Color(0xFF388E3C)
-                    )
-                    
-                    Spacer(modifier = Modifier.height(8.dp))
-                    
-                    Box(
-                        modifier = Modifier
-                            .size(80.dp)
-                            .padding(8.dp)
-                            .shadow(
-                                elevation = 12.dp,
-                                shape = RoundedCornerShape(12.dp),
-                                clip = false,
-                                ambientColor = Color(0xFF4CAF50).copy(alpha = 0.3f),
-                                spotColor = Color(0xFF2E7D32).copy(alpha = 0.5f)
-                            )
-                            .background(Color(0xFF4CAF50), RoundedCornerShape(12.dp)),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Icon(
-                            imageVector = Icons.Filled.Favorite,
-                            contentDescription = "Heart",
-                            tint = Color.White,
-                            modifier = Modifier.size(24.dp)
-                        )
-                    }
-                }
-
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(
-                        text = "innerShadow",
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.Medium,
-                        color = Color(0xFF388E3C)
-                    )
-                    
-                    Spacer(modifier = Modifier.height(8.dp))
-                    
-                    Box(
-                        modifier = Modifier
-                            .size(80.dp)
-                            .padding(8.dp)
-                            .background(Color(0xFF4CAF50), RoundedCornerShape(12.dp))
-                            .drawBehind {
-                                val shadowColor = Color.Black.copy(alpha = 0.4f)
-                                val insetSize = 6.dp.toPx()
-                                val cornerRadius = 12.dp.toPx()
-                                
-                                inset(insetSize, insetSize, insetSize, insetSize) {
-                                    drawRoundRect(
-                                        color = shadowColor,
-                                        size = size,
-                                        cornerRadius = CornerRadius(cornerRadius)
-                                    )
-                                }
-                                
-                                drawRoundRect(
-                                    color = Color.White.copy(alpha = 0.2f),
-                                    topLeft = Offset(2.dp.toPx(), 2.dp.toPx()),
-                                    size = Size(size.width - 4.dp.toPx(), size.height - 4.dp.toPx()),
-                                    cornerRadius = CornerRadius(cornerRadius)
-                                )
-                            },
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Icon(
-                            imageVector = Icons.Filled.Favorite,
-                            contentDescription = "Heart",
-                            tint = Color.White,
-                            modifier = Modifier.size(24.dp)
-                        )
-                    }
-                }
-            }
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            Surface(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(8.dp),
-                color = Color(0xFF388E3C).copy(alpha = 0.1f)
-            ) {
-                Text(
-                    text = "✨ 업데이트 완료! Compose 1.11.1의 향상된 shadow API 사용:\n• ambientColor와 spotColor 지원\n• 더 사실적인 그림자 효과",
-                    modifier = Modifier.padding(12.dp),
-                    fontSize = 11.sp,
-                    color = Color(0xFF388E3C)
-                )
-            }
-        }
+        Text(
+            text = text,
+            modifier = Modifier.padding(10.dp),
+            fontSize = 12.sp,
+            color = Color(0xFF37474F),
+            fontStyle = FontStyle.Italic
+        )
     }
 }
 
 @Composable
-private fun ShadowPropertiesCard() {
-    var selectedProperty by remember { mutableStateOf("radius") }
-    var radiusValue by remember { mutableStateOf(30f) }
-    var spreadValue by remember { mutableStateOf(0f) }
-    var offsetX by remember { mutableStateOf(0f) }
-    var offsetY by remember { mutableStateOf(0f) }
-    var alphaValue by remember { mutableStateOf(0.7f) }
-
-    Card(
+private fun CodeBox(code: String) {
+    Surface(
         modifier = Modifier.fillMaxWidth(),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFFE3F2FD)),
-        shape = RoundedCornerShape(12.dp)
+        shape = RoundedCornerShape(8.dp),
+        color = Color(0xFF263238)
     ) {
-        Column(
-            modifier = Modifier.padding(16.dp)
-        ) {
-            Text(
-                text = "🎛️ Shadow Properties 체험",
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color(0xFF1976D2)
-            )
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            Text(
-                text = "각 속성을 조절하여 그림자 효과를 확인해보세요:",
-                fontSize = 14.sp,
-                color = Color.Gray
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(4.dp)
-            ) {
-                listOf("radius", "spread", "offset", "alpha").forEach { property ->
-                    Button(
-                        onClick = { selectedProperty = property },
-                        modifier = Modifier.weight(1f),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = if (selectedProperty == property)
-                                Color(0xFF1976D2) else Color(0xFF1976D2).copy(alpha = 0.3f)
-                        ),
-                        shape = RoundedCornerShape(8.dp)
-                    ) {
-                        Text(
-                            text = property,
-                            color = Color.White,
-                            fontSize = 10.sp
-                        )
-                    }
-                }
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(160.dp)
-                    .background(Color(0xFFF8F8F8), RoundedCornerShape(12.dp))
-                    .padding(24.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                Box(
-                    modifier = Modifier
-                        .size(80.dp)
-                        .drawBehind {
-                            if (spreadValue > 0) {
-                                drawRoundRect(
-                                    color = Color.Black.copy(alpha = alphaValue * 0.3f),
-                                    topLeft = Offset(
-                                        offsetX - spreadValue/2,
-                                        offsetY - spreadValue/2
-                                    ),
-                                    size = Size(
-                                        size.width + spreadValue,
-                                        size.height + spreadValue
-                                    ),
-                                    cornerRadius = CornerRadius(16.dp.toPx())
-                                )
-                            }
-                        }
-                        .offset(offsetX.dp, offsetY.dp)
-                        .shadow(
-                            elevation = (radiusValue / 2).dp,
-                            shape = RoundedCornerShape(16.dp),
-                            clip = false,
-                            ambientColor = Color.Black.copy(alpha = alphaValue * 0.6f),
-                            spotColor = Color.Black.copy(alpha = alphaValue * 0.8f)
-                        )
-                        .background(
-                            Color(0xFF2196F3),
-                            RoundedCornerShape(16.dp)
-                        ),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Text(
-                            text = "DEMO",
-                            color = Color.White,
-                            fontSize = 12.sp,
-                            fontWeight = FontWeight.Bold
-                        )
-                        when (selectedProperty) {
-                            "radius" -> Text(
-                                text = "${radiusValue.toInt()}px",
-                                color = Color.White.copy(alpha = 0.8f),
-                                fontSize = 8.sp
-                            )
-                            "spread" -> Text(
-                                text = "+${spreadValue.toInt()}px",
-                                color = Color.White.copy(alpha = 0.8f),
-                                fontSize = 8.sp
-                            )
-                            "offset" -> Text(
-                                text = "${offsetX.toInt()},${offsetY.toInt()}",
-                                color = Color.White.copy(alpha = 0.8f),
-                                fontSize = 8.sp
-                            )
-                            "alpha" -> Text(
-                                text = "${(alphaValue * 100).toInt()}%",
-                                color = Color.White.copy(alpha = 0.8f),
-                                fontSize = 8.sp
-                            )
-                        }
-                    }
-                }
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            when (selectedProperty) {
-                "radius" -> {
-                    Text(
-                        text = "Blur Radius: ${radiusValue.toInt()}px (elevation: ${(radiusValue/2).toInt()}dp)",
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.Medium
-                    )
-                    Slider(
-                        value = radiusValue,
-                        onValueChange = { radiusValue = it },
-                        valueRange = 0f..60f,
-                        colors = SliderDefaults.colors(thumbColor = Color(0xFF1976D2))
-                    )
-                }
-                "spread" -> {
-                    Text(
-                        text = "Spread: ${spreadValue.toInt()}px (size: ${80 + spreadValue.toInt()}dp)",
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.Medium
-                    )
-                    Slider(
-                        value = spreadValue,
-                        onValueChange = { spreadValue = it },
-                        valueRange = 0f..40f,
-                        colors = SliderDefaults.colors(thumbColor = Color(0xFF1976D2))
-                    )
-                }
-                "offset" -> {
-                    Text(
-                        text = "Offset X: ${offsetX.toInt()}px",
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.Medium
-                    )
-                    Slider(
-                        value = offsetX,
-                        onValueChange = { offsetX = it },
-                        valueRange = -30f..30f,
-                        colors = SliderDefaults.colors(thumbColor = Color(0xFF1976D2))
-                    )
-                    Text(
-                        text = "Offset Y: ${offsetY.toInt()}px",
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.Medium
-                    )
-                    Slider(
-                        value = offsetY,
-                        onValueChange = { offsetY = it },
-                        valueRange = -30f..30f,
-                        colors = SliderDefaults.colors(thumbColor = Color(0xFF1976D2))
-                    )
-                }
-                "alpha" -> {
-                    Text(
-                        text = "Alpha: ${(alphaValue * 100).toInt()}% (opacity)",
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.Medium
-                    )
-                    Slider(
-                        value = alphaValue,
-                        onValueChange = { alphaValue = it },
-                        valueRange = 0f..1f,
-                        colors = SliderDefaults.colors(thumbColor = Color(0xFF1976D2))
-                    )
-                }
-            }
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Surface(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(6.dp),
-                color = Color(0xFF1976D2).copy(alpha = 0.1f)
-            ) {
-            Text(
-                text = "💡 Compose 1.11.1의 향상된 shadow API로 더 세밀하고 사실적인 그림자 효과를 구현할 수 있습니다!",
-                modifier = Modifier.padding(8.dp),
-                fontSize = 11.sp,
-                color = Color(0xFF1976D2),
-                fontStyle = androidx.compose.ui.text.font.FontStyle.Italic
-            )
-            }
-        }
-    }
-}
-
-@Composable
-private fun InteractiveShadowCard() {
-    var isPressed by remember { mutableStateOf(false) }
-    
-    val shadowRadius by animateFloatAsState(
-        targetValue = if (isPressed) 5f else 25f,
-        animationSpec = spring(dampingRatio = 0.6f, stiffness = 300f),
-        label = "shadowRadius"
-    )
-    
-    val shadowAlpha by animateFloatAsState(
-        targetValue = if (isPressed) 0.2f else 0.7f,
-        animationSpec = spring(dampingRatio = 0.6f, stiffness = 300f),
-        label = "shadowAlpha"
-    )
-    
-    val buttonScale by animateFloatAsState(
-        targetValue = if (isPressed) 0.95f else 1f,
-        animationSpec = spring(dampingRatio = 0.6f, stiffness = 400f),
-        label = "buttonScale"
-    )
-
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFFFFF3E0)),
-        shape = RoundedCornerShape(12.dp)
-    ) {
-        Column(
-            modifier = Modifier.padding(16.dp)
-        ) {
-            Text(
-                text = "🎮 인터랙티브 그림자",
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color(0xFFE65100)
-            )
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            Text(
-                text = "터치 상호작용으로 애니메이션되는 그림자 효과:",
-                fontSize = 14.sp,
-                color = Color.Gray
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(120.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                Box(
-                    modifier = Modifier
-                        .size((100 * buttonScale).dp)
-                        .pointerInput(Unit) {
-                            detectTapGestures(
-                                onPress = {
-                                    isPressed = true
-                                    tryAwaitRelease()
-                                    isPressed = false
-                                }
-                            )
-                        }
-                        .shadow(
-                            elevation = shadowRadius.dp,
-                            shape = RoundedCornerShape(20.dp),
-                            clip = false,
-                            ambientColor = Color(0xFFFF9800).copy(alpha = shadowAlpha),
-                            spotColor = Color(0xFFE65100).copy(alpha = shadowAlpha * 1.2f)
-                        )
-                        .background(
-                            Brush.radialGradient(
-                                colors = if (isPressed) listOf(
-                                    Color(0xFFE65100),
-                                    Color(0xFFBF360C)
-                                ) else listOf(
-                                    Color(0xFFFF9800),
-                                    Color(0xFFE65100)
-                                )
-                            ),
-                            RoundedCornerShape(20.dp)
-                        ),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Icon(
-                            imageVector = Icons.Filled.Add,
-                            contentDescription = "Add",
-                            tint = Color.White,
-                            modifier = Modifier.size(32.dp)
-                        )
-                        Text(
-                            text = "TOUCH",
-                            color = Color.White,
-                            fontSize = 10.sp,
-                            fontWeight = FontWeight.Bold
-                        )
-                    }
-                }
-            }
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text(
-                    text = "Shadow Radius: ${shadowRadius.toInt()}px",
-                    fontSize = 12.sp,
-                    color = Color(0xFFE65100)
-                )
-                Text(
-                    text = "Alpha: ${(shadowAlpha * 100).toInt()}%",
-                    fontSize = 12.sp,
-                    color = Color(0xFFE65100)
-                )
-            }
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Surface(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(6.dp),
-                color = Color(0xFFE65100).copy(alpha = 0.1f)
-            ) {
-                Text(
-                    text = "🎯 animateFloatAsState를 사용하여 그림자 속성을 부드럽게 애니메이션할 수 있습니다!",
-                    modifier = Modifier.padding(8.dp),
-                    fontSize = 11.sp,
-                    color = Color(0xFFE65100),
-                    fontStyle = androidx.compose.ui.text.font.FontStyle.Italic
-                )
-            }
-        }
-    }
-}
-
-@Composable
-private fun GlowEffectCard() {
-    var glowIntensity by remember { mutableStateOf(50f) }
-
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFF1A1A1A)),
-        shape = RoundedCornerShape(12.dp)
-    ) {
-        Column(
-            modifier = Modifier.padding(16.dp)
-        ) {
-            Text(
-                text = "✨ 글로우 효과",
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color.White
-            )
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            Text(
-                text = "밝은 색상을 사용하여 글로우 효과를 만들어보세요:",
-                fontSize = 14.sp,
-                color = Color.Gray
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
-            ) {
-                Box(
-                    modifier = Modifier
-                        .size(60.dp)
-                        .shadow(
-                            elevation = (glowIntensity / 5).dp,
-                            shape = CircleShape,
-                            clip = false,
-                            ambientColor = Color(0xFF00E5FF).copy(alpha = glowIntensity / 100f),
-                            spotColor = Color(0xFF00E5FF).copy(alpha = glowIntensity / 80f)
-                        )
-                        .background(Color(0xFF00E5FF), CircleShape)
-                )
-
-                Box(
-                    modifier = Modifier
-                        .size(60.dp)
-                        .shadow(
-                            elevation = (glowIntensity / 5).dp,
-                            shape = CircleShape,
-                            clip = false,
-                            ambientColor = Color(0xFFE91E63).copy(alpha = glowIntensity / 100f),
-                            spotColor = Color(0xFFE91E63).copy(alpha = glowIntensity / 80f)
-                        )
-                        .background(Color(0xFFE91E63), CircleShape)
-                )
-
-                Box(
-                    modifier = Modifier
-                        .size(60.dp)
-                        .shadow(
-                            elevation = (glowIntensity / 5).dp,
-                            shape = CircleShape,
-                            clip = false,
-                            ambientColor = Color(0xFF4CAF50).copy(alpha = glowIntensity / 100f),
-                            spotColor = Color(0xFF4CAF50).copy(alpha = glowIntensity / 80f)
-                        )
-                        .background(Color(0xFF4CAF50), CircleShape)
-                )
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Text(
-                text = "글로우 강도: ${glowIntensity.toInt()}%",
-                fontSize = 12.sp,
-                color = Color.White
-            )
-            
-            Slider(
-                value = glowIntensity,
-                onValueChange = { glowIntensity = it },
-                valueRange = 0f..100f,
-                colors = SliderDefaults.colors(
-                    thumbColor = Color(0xFF00E5FF),
-                    activeTrackColor = Color(0xFF00E5FF)
-                )
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Surface(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(6.dp),
-                color = Color(0xFF00E5FF).copy(alpha = 0.1f)
-            ) {
-                Text(
-                    text = "💡 밝은 색상과 큰 radius를 사용하여 네온사인 같은 글로우 효과를 만들 수 있습니다!",
-                    modifier = Modifier.padding(8.dp),
-                    fontSize = 11.sp,
-                    color = Color(0xFF00E5FF),
-                    fontStyle = androidx.compose.ui.text.font.FontStyle.Italic
-                )
-            }
-        }
-    }
-}
-
-@Composable
-private fun NeumorphismCard() {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFFF5F5F5)),
-        shape = RoundedCornerShape(12.dp)
-    ) {
-        Column(
-            modifier = Modifier.padding(16.dp)
-        ) {
-            Text(
-                text = "🎨 뉴모피즘 디자인",
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color(0xFF424242)
-            )
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            Text(
-                text = "상단: 일반 버튼 vs 하단: 뉴모피즘 효과 (볼록/오목)",
-                fontSize = 14.sp,
-                color = Color.Gray
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Text(
-                text = "🔴 일반 버튼 (비교용)",
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Medium,
-                color = Color(0xFF757575)
-            )
-            
-            Spacer(modifier = Modifier.height(8.dp))
-            
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
-            ) {
-                Box(
-                    modifier = Modifier
-                        .size(70.dp)
-                        .shadow(4.dp, RoundedCornerShape(16.dp))
-                        .background(
-                            Color(0xFFE0E0E0),
-                            RoundedCornerShape(16.dp)
-                        ),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = "A",
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color(0xFF757575)
-                    )
-                }
-                
-                Box(
-                    modifier = Modifier
-                        .size(70.dp)
-                        .shadow(4.dp, RoundedCornerShape(16.dp))
-                        .background(
-                            Color(0xFFE0E0E0),
-                            RoundedCornerShape(16.dp)
-                        ),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = "B",
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color(0xFF757575)
-                    )
-                }
-            }
-            
-            Spacer(modifier = Modifier.height(20.dp))
-            
-            Text(
-                text = "✨ 뉴모피즘 버튼 (이중 그림자)",
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Medium,
-                color = Color(0xFF424242)
-            )
-            
-            Spacer(modifier = Modifier.height(8.dp))
-            
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
-            ) {
-                Box(
-                    modifier = Modifier
-                        .size(70.dp)
-                        .background(
-                            Color(0xFFE0E0E0),
-                            RoundedCornerShape(16.dp)
-                        )
-                        .drawBehind {
-                            val lightShadow = Color.White.copy(alpha = 0.9f)
-                            val darkShadow = Color.Black.copy(alpha = 0.15f)
-                            val offset = 8.dp.toPx()
-                            val cornerRadius = 16.dp.toPx()
-                            
-                            drawRoundRect(
-                                color = darkShadow,
-                                topLeft = Offset(offset, offset),
-                                size = size,
-                                cornerRadius = CornerRadius(cornerRadius)
-                            )
-                            
-                            drawRoundRect(
-                                color = lightShadow,
-                                topLeft = Offset(-offset/2, -offset/2),
-                                size = size,
-                                cornerRadius = CornerRadius(cornerRadius)
-                            )
-                        },
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = "C",
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color(0xFF424242)
-                    )
-                }
-
-                Box(
-                    modifier = Modifier
-                        .size(70.dp)
-                        .background(
-                            Color(0xFFE0E0E0),
-                            RoundedCornerShape(16.dp)
-                        )
-                        .drawBehind {
-                            val darkShadow = Color.Black.copy(alpha = 0.2f)
-                            val lightHighlight = Color.White.copy(alpha = 0.8f)
-                            val inset = 4.dp.toPx()
-                            val cornerRadius = 16.dp.toPx()
-                            
-                            drawRoundRect(
-                                color = darkShadow,
-                                topLeft = Offset(inset, inset),
-                                size = Size(
-                                    size.width - inset * 2,
-                                    size.height - inset * 2
-                                ),
-                                cornerRadius = CornerRadius(cornerRadius - inset)
-                            )
-                            
-                            drawRoundRect(
-                                color = lightHighlight,
-                                topLeft = Offset(inset * 2, inset * 2),
-                                size = Size(
-                                    size.width - inset * 4,
-                                    size.height - inset * 4
-                                ),
-                                cornerRadius = CornerRadius(cornerRadius - inset * 2)
-                            )
-                        },
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = "D",
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color(0xFF424242)
-                    )
-                }
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Surface(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(6.dp),
-                color = Color(0xFF757575).copy(alpha = 0.1f)
-            ) {
-                Text(
-                    text = "🎯 개선된 뉴모피즘: 실제 이중 그림자로 볼록/오목 효과를 구현했습니다!",
-                    modifier = Modifier.padding(8.dp),
-                    fontSize = 11.sp,
-                    color = Color(0xFF757575),
-                    fontStyle = androidx.compose.ui.text.font.FontStyle.Italic
-                )
-            }
-        }
-    }
-}
-
-@Composable
-private fun KeyboardButtonCard() {
-    var isPressed by remember { mutableStateOf(false) }
-
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFFE8F5E8)),
-        shape = RoundedCornerShape(12.dp)
-    ) {
-        Column(
-            modifier = Modifier.padding(16.dp)
-        ) {
-            Text(
-                text = "⌨️ 3D 키보드 버튼",
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color(0xFF388E3C)
-            )
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            Text(
-                text = "여러 그림자를 조합하여 현실적인 3D 버튼 효과:",
-                fontSize = 14.sp,
-                color = Color.Gray
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(120.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                Box(
-                    modifier = Modifier
-                        .size(width = 60.dp, height = 50.dp)
-                        .clickable { isPressed = !isPressed }
-                        .shadow(
-                            elevation = if (isPressed) 2.dp else 6.dp,
-                            shape = RoundedCornerShape(8.dp),
-                            clip = false,
-                            ambientColor = if (isPressed) Color.Gray.copy(alpha = 0.6f) else Color.Gray.copy(alpha = 0.3f),
-                            spotColor = if (isPressed) Color.Gray.copy(alpha = 0.8f) else Color.Gray.copy(alpha = 0.5f)
-                        )
-                        .background(
-                            if (isPressed) Color(0xFFE0E0E0) else Color.White,
-                            RoundedCornerShape(8.dp)
-                        ),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = "A",
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color(0xFF424242)
-                    )
-                }
-            }
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Text(
-                text = if (isPressed) "눌림 상태" else "기본 상태",
-                fontSize = 12.sp,
-                color = Color(0xFF388E3C),
-                textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            Surface(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(6.dp),
-                color = Color(0xFF388E3C).copy(alpha = 0.1f)
-            ) {
-                Text(
-                    text = "💡 실제로는 상단에 하이라이트(흰색), 하단에 드롭 섀도우(검정)를 추가하여 3D 효과를 만듭니다!",
-                    modifier = Modifier.padding(8.dp),
-                    fontSize = 11.sp,
-                    color = Color(0xFF388E3C),
-                    fontStyle = androidx.compose.ui.text.font.FontStyle.Italic
-                )
-            }
-        }
-    }
-}
-
-@Composable
-private fun BlendModeCard() {
-    var selectedBlendMode by remember { mutableStateOf("Normal") }
-    val blendModes = listOf("Normal", "Overlay", "Multiply", "Screen")
-
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFFFFEBEE)),
-        shape = RoundedCornerShape(12.dp)
-    ) {
-        Column(
-            modifier = Modifier.padding(16.dp)
-        ) {
-            Text(
-                text = "🎭 블렌딩 모드",
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color(0xFFD32F2F)
-            )
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            Text(
-                text = "다양한 블렌딩 모드로 현실적인 그림자 효과:",
-                fontSize = 14.sp,
-                color = Color.Gray
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(4.dp)
-            ) {
-                blendModes.forEach { mode ->
-                    Button(
-                        onClick = { selectedBlendMode = mode },
-                        modifier = Modifier.weight(1f),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = if (selectedBlendMode == mode)
-                                Color(0xFFD32F2F) else Color(0xFFD32F2F).copy(alpha = 0.3f)
-                        ),
-                        shape = RoundedCornerShape(8.dp)
-                    ) {
-                        Text(
-                            text = mode,
-                            color = Color.White,
-                            fontSize = 9.sp
-                        )
-                    }
-                }
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
-            ) {
-                Box(
-                    modifier = Modifier
-                        .size(60.dp)
-                        .background(Color(0xFF2196F3), CircleShape),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .size(40.dp)
-                            .background(
-                                when (selectedBlendMode) {
-                                    "Overlay" -> Color(0xFF1565C0)
-                                    "Multiply" -> Color(0xFF0D47A1)
-                                    "Screen" -> Color(0xFF42A5F5)
-                                    else -> Color.Black.copy(alpha = 0.3f)
-                                },
-                                CircleShape
-                            )
-                    )
-                }
-
-                Box(
-                    modifier = Modifier
-                        .size(60.dp)
-                        .background(Color(0xFF4CAF50), CircleShape),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .size(40.dp)
-                            .background(
-                                when (selectedBlendMode) {
-                                    "Overlay" -> Color(0xFF388E3C)
-                                    "Multiply" -> Color(0xFF2E7D32)
-                                    "Screen" -> Color(0xFF66BB6A)
-                                    else -> Color.Black.copy(alpha = 0.3f)
-                                },
-                                CircleShape
-                            )
-                    )
-                }
-
-                Box(
-                    modifier = Modifier
-                        .size(60.dp)
-                        .background(Color(0xFFF44336), CircleShape),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .size(40.dp)
-                            .background(
-                                when (selectedBlendMode) {
-                                    "Overlay" -> Color(0xFFD32F2F)
-                                    "Multiply" -> Color(0xFFB71C1C)
-                                    "Screen" -> Color(0xFFEF5350)
-                                    else -> Color.Black.copy(alpha = 0.3f)
-                                },
-                                CircleShape
-                            )
-                    )
-                }
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Surface(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(6.dp),
-                color = Color(0xFFD32F2F).copy(alpha = 0.1f)
-            ) {
-                Column(
-                    modifier = Modifier.padding(8.dp)
-                ) {
-                    Text(
-                        text = "현재 블렌딩 모드: $selectedBlendMode",
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.Medium,
-                        color = Color(0xFFD32F2F)
-                    )
-                    
-                    Text(
-                        text = when (selectedBlendMode) {
-                            "Overlay" -> "배경색과 혼합되어 더 깊은 그림자"
-                            "Multiply" -> "배경색을 어둡게 만드는 그림자"
-                            "Screen" -> "밝게 만드는 하이라이트 효과"
-                            else -> "기본 블렌딩 (검정 그림자)"
-                        },
-                        fontSize = 10.sp,
-                        color = Color(0xFFD32F2F).copy(alpha = 0.7f),
-                        fontStyle = androidx.compose.ui.text.font.FontStyle.Italic
-                    )
-                }
-            }
-        }
-    }
-}
-
-@Composable
-private fun LayeredShadowCard() {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFFFFF8E1)),
-        shape = RoundedCornerShape(12.dp)
-    ) {
-        Column(
-            modifier = Modifier.padding(16.dp)
-        ) {
-            Text(
-                text = "📚 레이어드 섀도우",
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color(0xFFF57C00)
-            )
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            Text(
-                text = "여러 그림자 레이어를 중첩하여 깊이감 표현:",
-                fontSize = 14.sp,
-                color = Color.Gray
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(180.dp)
-                    .background(Color(0xFFF5F5F5), RoundedCornerShape(12.dp))
-                    .padding(24.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                Box(
-                    modifier = Modifier
-                        .size(100.dp)
-                        .drawBehind {
-                            val shadowLayers = listOf(
-                                Triple(20.dp.toPx(), 0.15f, Offset(0f, 8.dp.toPx())),
-                                Triple(40.dp.toPx(), 0.1f, Offset(0f, 16.dp.toPx())),
-                                Triple(60.dp.toPx(), 0.05f, Offset(0f, 24.dp.toPx()))
-                            )
-                            
-                            shadowLayers.forEach { (blur, alpha, offset) ->
-                                drawRoundRect(
-                                    color = Color.Black.copy(alpha = alpha),
-                                    topLeft = offset,
-                                    size = size,
-                                    cornerRadius = CornerRadius(20.dp.toPx())
-                                )
-                            }
-                        }
-                        .shadow(8.dp, RoundedCornerShape(20.dp))
-                        .background(Color.White, RoundedCornerShape(20.dp)),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Text(
-                            text = "깊이감",
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = Color(0xFFF57C00)
-                        )
-                        Text(
-                            text = "3 Layers",
-                            fontSize = 10.sp,
-                            color = Color.Gray
-                        )
-                    }
-                }
-            }
-
-            Spacer(modifier = Modifier.height(12.dp))
-        }
-    }
-}
-
-@Composable
-private fun ColoredShadowCard() {
-    var selectedColor by remember { mutableStateOf(Color(0xFF9C27B0)) }
-    val colorOptions = listOf(
-        Color(0xFF9C27B0) to "Purple",
-        Color(0xFF00BCD4) to "Cyan",
-        Color(0xFFFF5722) to "Orange",
-        Color(0xFF4CAF50) to "Green"
-    )
-
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFF1A1A1A)),
-        shape = RoundedCornerShape(12.dp)
-    ) {
-        Column(
-            modifier = Modifier.padding(16.dp)
-        ) {
-            Text(
-                text = "🎨 컬러 섀도우",
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color.White
-            )
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            Text(
-                text = "ambientColor와 spotColor로 생동감 있는 그림자:",
-                fontSize = 14.sp,
-                color = Color.Gray
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(140.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                Box(
-                    modifier = Modifier
-                        .size(100.dp)
-                        .shadow(
-                            elevation = 16.dp,
-                            shape = RoundedCornerShape(24.dp),
-                            clip = false,
-                            ambientColor = selectedColor.copy(alpha = 0.5f),
-                            spotColor = selectedColor.copy(alpha = 0.7f)
-                        )
-                        .background(
-                            Brush.linearGradient(
-                                colors = listOf(
-                                    selectedColor.copy(alpha = 0.8f),
-                                    selectedColor
-                                )
-                            ),
-                            RoundedCornerShape(24.dp)
-                        )
-                )
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
-            ) {
-                colorOptions.forEach { (color, name) ->
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Box(
-                            modifier = Modifier
-                                .size(48.dp)
-                                .clickable { selectedColor = color }
-                                .background(color, CircleShape)
-                                .then(
-                                    if (selectedColor == color) {
-                                        Modifier.border(3.dp, Color.White, CircleShape)
-                                    } else Modifier
-                                )
-                        )
-                        Text(
-                            text = name,
-                            fontSize = 10.sp,
-                            color = Color.White,
-                            modifier = Modifier.padding(top = 4.dp)
-                        )
-                    }
-                }
-            }
-
-            Spacer(modifier = Modifier.height(12.dp))
-        }
-    }
-}
-
-@Composable
-private fun ShadowDirectionCard() {
-    var angle by remember { mutableStateOf(45f) }
-
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFFE1F5FE)),
-        shape = RoundedCornerShape(12.dp)
-    ) {
-        Column(
-            modifier = Modifier.padding(16.dp)
-        ) {
-            Text(
-                text = "🧭 방향성 있는 그림자",
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color(0xFF0277BD)
-            )
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            Text(
-                text = "오프셋을 조절하여 광원의 방향을 표현:",
-                fontSize = 14.sp,
-                color = Color.Gray
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(160.dp)
-                    .background(Color(0xFFF5F5F5), RoundedCornerShape(12.dp))
-                    .padding(24.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                val angleRad = Math.toRadians(angle.toDouble())
-                val offsetX = (kotlin.math.cos(angleRad) * 20f).toFloat()
-                val offsetY = (kotlin.math.sin(angleRad) * 20f).toFloat()
-
-                Box(
-                    modifier = Modifier
-                        .size(80.dp)
-                        .drawBehind {
-                            drawRoundRect(
-                                color = Color.Black.copy(alpha = 0.25f),
-                                topLeft = Offset(offsetX, offsetY),
-                                size = size,
-                                cornerRadius = CornerRadius(16.dp.toPx())
-                            )
-                        }
-                        .shadow(
-                            elevation = 8.dp,
-                            shape = RoundedCornerShape(16.dp),
-                            clip = false
-                        )
-                        .background(Color(0xFF0288D1), RoundedCornerShape(16.dp)),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = "${angle.toInt()}°",
-                        color = Color.White,
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Text(
-                text = "광원 각도: ${angle.toInt()}°",
-                fontSize = 12.sp,
-                fontWeight = FontWeight.Medium,
-                color = Color(0xFF0277BD)
-            )
-
-            Slider(
-                value = angle,
-                onValueChange = { angle = it },
-                valueRange = 0f..360f,
-                colors = SliderDefaults.colors(
-                    thumbColor = Color(0xFF0288D1),
-                    activeTrackColor = Color(0xFF0288D1)
-                )
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
-        }
+        Text(
+            text = code,
+            modifier = Modifier.padding(12.dp),
+            fontSize = 11.sp,
+            color = Color(0xFFECEFF1),
+            fontFamily = FontFamily.Monospace,
+            lineHeight = 16.sp
+        )
     }
 }

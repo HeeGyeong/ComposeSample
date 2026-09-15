@@ -3,15 +3,20 @@ package com.example.composesample.presentation.example.component.ui.graphics
 /**
  * Graphics 예제 참고 자료
  *
- * ## NewShadowApiExampleUI (향상된 Shadow 효과)
- * - 별도 외부 출처 없음(Kotlin 2.4.0 + Compose 1.11.1(ComposeBom 2026.05.00) 환경 자체 정리 노트)
+ * ## NewShadowApiExampleUI (dropShadow / innerShadow — Compose 1.9+)
+ * - 공식 문서(Add shadows in Compose): https://developer.android.com/develop/ui/compose/graphics/draw/shadows
+ * - API 레퍼런스(androidx.compose.ui.draw): https://developer.android.com/reference/kotlin/androidx/compose/ui/draw/package-summary
  *
  * ### 핵심 개념
- * - `Modifier.shadow()`의 ambientColor/spotColor로 elevation 기반 그림자에 색상 제어 추가, clip=false로 경계 밖 확장 허용
- * - `drawBehind` + `inset()`으로 인너 섀도우·뉴모피즘(밝은/어두운 이중 그림자) 등 커스텀 그림자 직접 구현
- * - 실시간 속성 제어: radius(elevation 0~30dp)/spread(추가 레이어)/offset/alpha를 슬라이더로 조절
- * - animateFloatAsState + spring()으로 터치 시 elevation·alpha·scale 동시 애니메이션
- * - 주의: 모디파이어 순서(shadow→background), 그림자 잘림 방지 패딩, 과도한 그림자로 인한 성능 저하 회피
+ * - `Modifier.dropShadow(shape, Shadow)` / `Modifier.innerShadow(shape, Shadow)` — 프로젝트가 해석하는 ui 1.11.4 바이트코드에서 확인, opt-in 불필요
+ * - `Shadow(radius, color 또는 brush, spread, offset: DpOffset, alpha, blendMode)` 하나로 모든 속성을 지정한다
+ *   (값을 람다로 주는 블록 오버로드 `dropShadow(shape) { … }` / `innerShadow(shape) { … }` 도 있다 — DropShadowScope/InnerShadowScope)
+ * - 순서가 곧 그리는 순서: dropShadow → background(도형 뒤에 깔림) / background → innerShadow(배경 위, 안쪽 가장자리)
+ * - `Modifier.shadow(elevation)` 은 시스템 광원 기준 플랫폼 그림자라 spread·offset·blendMode 를 줄 수 없다 → 기본 비교 카드에서 대조
+ * - 여러 번 체이닝 가능(먼저 쓴 그림자가 아래에 깔림) → 레이어드 그림자 / brush → 그라디언트 그림자 / 밝은 색 + 큰 radius·spread → 글로우
+ * - 뉴모피즘: 배경색 기준 밝은(좌상)·어두운(우하) 그림자 한 쌍 — 바깥(dropShadow ×2)은 볼록, 안쪽(innerShadow ×2)은 오목
+ * - 2026-09-15 재작성: 이전 버전은 제목과 달리 11개 카드 모두 `Modifier.shadow()`/`drawBehind` 로 구현돼 새 API 호출이 0건이었다
+ *   → 새 API 로 바꾸고 중복 카드(글로우·컬러·방향·키보드 버튼)를 흡수해 7개 카드로 정리
   *
  * ## Dialog Background Blur (다이얼로그 배경 블러)
  * - 공식 문서: https://developer.android.com/develop/ui/views/graphics/blur
