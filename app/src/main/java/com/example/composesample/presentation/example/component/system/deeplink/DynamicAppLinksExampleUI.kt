@@ -250,7 +250,7 @@ private fun SourceReferenceCard() {
             )
                     Spacer(modifier = Modifier.height(4.dp))
             Text(
-                        text = "https://android-developers.googleblog.com/2025/10/dynamic-app-links-elevating-your.html",
+                        text = "원문 링크는 같은 폴더의 exampleGuide.kt 참고",
                         fontSize = 10.sp,
                         color = Color.Gray,
                         fontFamily = FontFamily.Monospace,

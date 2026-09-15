@@ -6,6 +6,7 @@ package com.example.composesample.presentation.example.component.system.deeplink
  * ## DynamicAppLinksExampleUI (Android 15+ Dynamic App Links)
  * - 공식 문서: https://developer.android.com/training/app-links
  * - Digital Asset Links: https://developers.google.com/digital-asset-links/v1/getting-started
+ * - Google Developers Blog (2025-10, 화면의 "출처 및 공식 문서" 카드가 가리키는 원문): https://android-developers.googleblog.com/2025/10/dynamic-app-links-elevating-your.html
  * 핵심 개념:
  * - App Links: https 스킴 딥링크 중 서버의 assetlinks.json으로 소유권이 검증된 링크 (디스앰비규에이션 없이 앱 직행)
  * - Android 15+: 서버의 Digital Asset Links JSON을 갱신해 앱 업데이트 없이 딥링킹 동작을 실시간 제어
