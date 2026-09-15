@@ -67,9 +67,12 @@ material3 = "1.4.0"
 material3WindowSizeClass = "1.4.0"
 room = "2.8.4"
 retrofit = "2.9.0"
-gson = "2.10.1"
-okhttpLoggingInterceptor = "4.11.0"
-ktor = "2.3.7"
+# ktor-serialization-gson 3.5.2 가 2.14.0 을 요구해 해석 결과에 맞춘다(retrofit converter-gson 3.0.0 의 요구 2.13.1 보다 높다).
+gson = "2.14.0"
+# Ktor 3.5.2 가 okhttp 코어를 5.3.2 로 끌어올리므로 logging-interceptor 도 같은 5.3.2 로 맞춘다(4.x 인터셉터를 5.x 코어와 섞지 않는다).
+okhttpLoggingInterceptor = "5.3.2"
+# Ktor 3.5.2 — ktor-client-okhttp 가 okhttp 5.3.2, 전 모듈이 kotlinx-coroutines 1.11.0, ktor-serialization-gson 이 gson 2.14.0 을 요구한다.
+ktor = "3.5.2"
 
 # Test
 junit = "4.13.2"
@@ -77,8 +80,8 @@ androidxTestJunit = "1.2.1"
 espressoCore = "3.5.1"
 # 런타임에 들어온 kotlinx-coroutines-android 가 같은 버전의 kotlinx-coroutines-bom 을 함께 끌고 오고,
 # 그 BOM 의 제약이 test 아티팩트까지 같은 버전으로 올린다(선언 1.7.1 ↔ 해석 1.10.1 불일치였음 — DEP-VERSION-05).
-# coil 3.5.0(coil-core) 이 coroutines 1.10.2 를 요구해 런타임·테스트 모두 1.10.2 로 해석되므로 선언을 맞춘다.
-coroutineTest = "1.10.2"
+# Ktor 3.5.2 가 coroutines 1.11.0 을 요구해 런타임·테스트 모두 1.11.0 으로 해석되므로 선언을 맞춘다(직전에는 coil 3.5.0 발 1.10.2).
+coroutineTest = "1.11.0"
 mockk = "1.13.5"
 turbine = "1.0.0"
 runner = "1.5.2"
