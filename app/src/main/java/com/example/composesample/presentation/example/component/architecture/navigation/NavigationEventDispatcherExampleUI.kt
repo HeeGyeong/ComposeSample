@@ -474,10 +474,11 @@ private fun PitfallCard() {
                 "직접 만든 디스패처라면 dispose() 도 함께 고려한다."
         )
         PitfallRow(
-            "이 라이브러리가 Compose 버전을 끌어올린다",
-            "navigationevent-compose 1.1.2 의 pom 이 compose ui/runtime 1.11.2 를 요구해, BOM(1.11.1)보다 " +
-                "높은 쪽이 이겨 그 둘만 1.11.2 로 올라간다. 실제로 쓰는 API(HostDefaultKey)는 1.11.1 에도 있어 " +
-                "호환 요구일 뿐이지만, 의존성 그래프가 바뀌는 것은 사실이다."
+            "이 라이브러리는 Compose 버전의 하한을 건다",
+            "navigationevent-compose 1.1.2 의 pom 은 compose ui/runtime 1.11.2 를 요구한다. BOM 이 1.11.1 을 " +
+                "가리키던 시절(2026.05.00)에는 높은 쪽이 이겨 그 둘만 1.11.2 로 올라가는 패치 스큐가 생겼고, " +
+                "BOM 2026.06.01(1.11.4)로 올린 지금은 BOM 쪽이 더 높아 스큐가 사라졌다. 실제로 쓰는 API(HostDefaultKey)는 " +
+                "1.11.1 에도 있어 호환 요구일 뿐이지만, BOM 을 1.11.2 미만으로 내리면 다시 끌어올려진다."
         )
     }
 }

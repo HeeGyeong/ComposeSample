@@ -32,5 +32,5 @@ package com.example.composesample.presentation.example.component.ui.autofill
  * - Compose Foundation 1.8+ 에서 자동완성이 stable 로 승격
  * - `Modifier.semantics { contentType = ... }` 가 표준 방식.
  *   일부 버전에서는 `Modifier.contentType(...)` 단축 형태도 제공
- * - 본 프로젝트: ComposeBom 2026.05.00 (Foundation 1.11.x)
+ * - 본 프로젝트: ComposeBom 2026.06.01 (Foundation 1.11.x)
  */

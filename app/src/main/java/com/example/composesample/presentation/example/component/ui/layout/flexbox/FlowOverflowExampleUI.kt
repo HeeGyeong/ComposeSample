@@ -48,7 +48,7 @@ import com.example.composesample.presentation.MainHeader
  * 이 예제는 "줄 수 제한(maxLines)에 걸려 들어가지 못하는 아이템을 어떻게 보여줄 것인가"를 다룬다.
  *
  * ⚠️ `overflow: FlowRowOverflow` / `overflow: ContextualFlowRowOverflow` 파라미터는
- * 이 프로젝트가 해석하는 foundation-layout 1.11.1 기준 `@Deprecated("The overflow parameter has been deprecated")`
+ * 이 프로젝트가 해석하는 foundation-layout 1.11.4 기준(1.11.1 에서도 동일) `@Deprecated("The overflow parameter has been deprecated")`
  * 로 표시돼 있으나, 이 버전에서 오버플로 인디케이터를 붙일 수 있는 **유일한 진입점**이라 대체재가 없다.
  * 그래서 이 파라미터를 직접 쓰는 함수에만 `@Suppress("DEPRECATION")` 을 최소 범위로 달았다.
  */

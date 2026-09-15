@@ -132,7 +132,8 @@ package com.example.composesample.presentation.example.component.architecture.na
  * - 실기기 실측(SM-A725F/Android 13): ① Idle → InProgress(direction=-1) → 완료 후 Idle 복귀
  *   ② isBackEnabled=false 인 핸들러에 시작+완료를 주입하면 콜백 0회(예외 없이 사라진다)
  *   ③ **순서는 강제되지 않는다** — backStarted 없이 backCompleted 만 불러도 콜백이 오고, backProgressed 만 부르면 무시된다
- * - 의존성 주의: navigationevent-compose 1.1.2 의 pom 이 compose ui/runtime 1.11.2 를 요구해 BOM(1.11.1)보다
- *   높은 쪽이 이겨 ui/runtime 만 1.11.2 로 올라간다(foundation/animation/material 은 1.11.1 유지).
+ * - 의존성 주의: navigationevent-compose 1.1.2 의 pom 은 compose ui/runtime 1.11.2 를 요구한다.
+ *   BOM 2026.05.00(1.11.1) 시절에는 높은 쪽이 이겨 ui/runtime 만 1.11.2 로 올라가는 패치 스큐가 있었고
+ *   (foundation/animation/material 은 1.11.1 유지), BOM 2026.06.01(1.11.4) 상향 후에는 BOM 이 더 높아 스큐가 사라졌다.
  *   실제로 쓰는 API(androidx.compose.runtime.HostDefaultKey)는 1.11.1 에도 있으므로 호환 요구일 뿐이다
 */

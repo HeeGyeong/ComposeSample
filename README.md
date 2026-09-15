@@ -23,7 +23,7 @@ Clean Architecture 기반으로 구성되어 있으며, 원하는 예제를 쉽�
 - Kotlin 2.4.20
 - Android Studio
 - AGP 8.13.2 / Gradle 8.13
-- ComposeBom 2026.05.00
+- ComposeBom 2026.06.01
 - Compile SDK 36
 - Target SDK 35
 - Min SDK 24
@@ -34,7 +34,7 @@ Clean Architecture 기반으로 구성되어 있으며, 원하는 예제를 쉽�
 - Koin 3.2.2
 - WorkManager 2.9.1
 - ViewModel 2.9.1
-- Material 1.11.1
+- Material 1.11.4
 - Material3 1.4.0
 - Lottie Compose 6.0.0
 - Coil3 3.1.0

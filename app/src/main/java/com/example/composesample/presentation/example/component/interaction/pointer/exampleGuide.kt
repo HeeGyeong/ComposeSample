@@ -6,7 +6,7 @@ package com.example.composesample.presentation.example.component.interaction.poi
  * ## IndirectPointerExampleUI (간접 포인터 입력 파이프라인)
  * 공식 문서: https://developer.android.com/develop/ui/compose/touch-input/pointer-input/understand-gestures
  *
- * 프로젝트가 실제 해석하는 androidx.compose.ui:ui-android:1.11.1 AAR을 javap -v로 직접 역어셈블해
+ * 작성 시점(ComposeBom 2026.05.00)에 프로젝트가 실제 해석하던 androidx.compose.ui:ui-android:1.11.1 AAR을 javap -v로 직접 역어셈블해
  * 확정한 사실(추측 아님):
  *
  * ### androidx.compose.ui.input.indirect 패키지 (신규, opt-in 불필요)

@@ -62,7 +62,7 @@ import kotlinx.coroutines.launch
  *   `text.contextmenu` 로 옮겼고 `ComposeFoundationFlags.isNewContextMenuEnabled` 기본값이 true 이기 때문이다.
  *   실기기 계측으로 확인했다(기본값: showMenu 0회 / 플래그를 끄면 2회, 액션은 copy·selectAll).
  * - Compose 1.12 의 `SelectionState` 가 무엇을 더 주는지는 5번 카드에서 실물 API 로 대조한다
- *   (프로젝트가 해석하는 foundation 1.11.1 에는 없다).
+ *   (프로젝트가 해석하는 foundation 1.11.4 에는 없다 — 1.11.1 에서도 없었다).
  * - 참고 자료(URL/핵심 개념)는 같은 폴더의 exampleGuide.kt 의 "Text Selection Control" 섹션 참고.
  */
 
@@ -244,7 +244,7 @@ private fun ObserveSelectionCard() {
         )
         Spacer(modifier = Modifier.height(10.dp))
         BodyText(
-            "foundation 1.11.1 의 바이트코드에는 선택 상태를 넘겨받는 오버로드가 분명히 들어 있다 — " +
+            "foundation 1.11.4 의 바이트코드에는 선택 상태를 넘겨받는 오버로드가 분명히 들어 있다 — " +
                 "`SelectionContainer(modifier, selection, onSelectionChange, children)` 과 `Selection` 클래스가 그것이다. " +
                 "그런데 그대로 쓰면 컴파일되지 않는다."
         )
@@ -419,10 +419,10 @@ private fun VersionGapCard() {
     SectionCard(title = "5. Compose 1.12 의 SelectionState 는 무엇을 더 주나") {
         BodyText(
             "3번 카드의 아쉬움(선택된 문자열을 직접 못 받는다)은 다음 버전에서 해소된다. " +
-                "프로젝트가 해석하는 foundation 1.11.1 에는 없고 1.12.1 에 들어 있는 API 를 실물로 대조하면 이렇다."
+                "프로젝트가 해석하는 foundation 1.11.4 에는 없고 1.12.1 에 들어 있는 API 를 실물로 대조하면 이렇다."
         )
         Spacer(modifier = Modifier.height(10.dp))
-        TableRow("구분", "1.11.1(현재) / 1.12.1", isHeader = true)
+        TableRow("구분", "1.11.4(현재) / 1.12.1", isHeader = true)
         TableRow("상태 객체", "없음(Selection 이 internal) / SelectionState + rememberSelectionState()")
         TableRow("선택 텍스트", "클립보드 우회만 가능 / selectedTexts: List<AnnotatedString>")
         TableRow("후보 텍스트", "없음 / selectableTexts: List<AnnotatedString>")
