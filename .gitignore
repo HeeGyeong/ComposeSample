@@ -12,6 +12,9 @@
 *.apk
 *.aab
 
+# Kotlin — Kotlin 2.x 가 프로젝트 루트에 만드는 데몬 세션 마커/에러 로그
+.kotlin/
+
 # Claude Code
 .claude/*
 # 단, 공유용 설정(스킬·에이전트·워크플로 문서)은 추적
