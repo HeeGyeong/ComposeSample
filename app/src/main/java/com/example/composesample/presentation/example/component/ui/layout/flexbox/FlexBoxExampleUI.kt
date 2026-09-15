@@ -14,11 +14,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -29,6 +25,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
+import com.example.composesample.presentation.MainHeader
 import com.example.composesample.util.component.FlexBoxLayout
 import kotlin.random.Random
 
@@ -38,21 +35,10 @@ import kotlin.random.Random
 fun FlexBoxExampleUI(onBackEvent: () -> Unit) {
     LazyColumn(modifier = Modifier.padding(horizontal = 20.dp)) {
         stickyHeader {
-            Box(
-                modifier = Modifier
-                    .background(color = Color.White)
-                    .padding(top = 10.dp, bottom = 10.dp)
-            ) {
-                Row(modifier = Modifier.fillMaxWidth()) {
-                    IconButton(
-                        onClick = {
-                            onBackEvent.invoke()
-                        }
-                    ) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "")
-                    }
-                }
-            }
+            MainHeader(
+                title = "FlexBox Layout Example",
+                onBackIconClicked = onBackEvent
+            )
         }
 
         item {

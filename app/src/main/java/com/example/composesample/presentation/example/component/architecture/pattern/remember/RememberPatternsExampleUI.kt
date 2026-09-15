@@ -14,12 +14,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
@@ -36,6 +32,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.composesample.presentation.MainHeader
 import kotlinx.coroutines.delay
 
 @Composable
@@ -46,21 +43,10 @@ fun RememberPatternsExampleUI(onBackEvent: () -> Unit) {
             .background(Color.White)
     ) {
         // 상단 헤더
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            IconButton(onClick = onBackEvent) {
-                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "뒤로가기")
-            }
-            Text(
-                text = "Remember Patterns",
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold
-            )
-        }
+        MainHeader(
+            title = "Remember Patterns",
+            onBackIconClicked = onBackEvent
+        )
 
         HorizontalDivider()
 

@@ -32,12 +32,9 @@ import androidx.compose.material.DismissDirection
 import androidx.compose.material.DismissValue
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.FractionalThreshold
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
 import androidx.compose.material.SwipeToDismiss
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.rememberDismissState
@@ -58,6 +55,7 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.unit.dp
+import com.example.composesample.presentation.MainHeader
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -114,21 +112,10 @@ fun SimpleSwipeToDismissUI(
             .fillMaxSize()
     ) {
         stickyHeader {
-            Box(
-                modifier = Modifier
-                    .background(color = Color.White)
-                    .padding(top = 10.dp, bottom = 10.dp)
-            ) {
-                Row(modifier = Modifier.fillMaxWidth()) {
-                    IconButton(
-                        onClick = {
-                            onBackEvent.invoke()
-                        }
-                    ) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "")
-                    }
-                }
-            }
+            MainHeader(
+                title = "Swipe to Dismiss Example",
+                onBackIconClicked = onBackEvent
+            )
         }
 
         itemsIndexed(items) { index, data ->

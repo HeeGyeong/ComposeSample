@@ -137,6 +137,32 @@ fun UserProfileScreen(viewModel: UserProfileViewModel = viewModel()) {
 
 By following these guidelines, you ensure that your code is modular, testable, and easier to maintain.
 
+## Screen Headers
+
+Every example screen shows a header with a back button. Use the shared `MainHeader` from `presentation/MainUIComponent.kt`:
+
+```kotlin
+@Composable
+fun NewFeatureExampleUI(onBackEvent: () -> Unit) {
+    Column(modifier = Modifier.fillMaxSize()) {
+        MainHeader(title = "New Feature Example", onBackIconClicked = onBackEvent)
+        // content
+    }
+}
+```
+
+If the screen's back row lives inside a `LazyColumn`'s `stickyHeader { }`, put `MainHeader` inside that `stickyHeader` rather than restructuring the list.
+
+A hand-made header is allowed only in these cases (CONV-09, decided 2026-09-15):
+
+| Case | Why it stays | Examples |
+|------|--------------|----------|
+| The header is the subject of the example | The example demonstrates the app bar / header itself | `FancyTopAppBarExampleUI`, `CustomScrollBehaviorExampleUI`, `StickyHeaderExampleUI`, the drawer, bottom-sheet and `PredictiveBackExampleUI` screens |
+| Card header with a subtitle (`HeaderCard`) | `MainHeader` is a single-line title and would drop the subtitle | `MotionBlurExampleUI`, `LargeContentViewerExampleUI`, `SharedElementTransitionExampleUI` |
+| Themed colored top bar | The color is part of the example's visual theme | `AppSecurityExampleUI`, `Compose17FeaturesExampleUI`, `BiometricAuthExampleUI` |
+
+Anything else — a plain row with a back arrow and a title — should be `MainHeader`.
+
 ## State Management Strategies
 
 - **State Hoisting**: Lift state up to the nearest common ancestor to share state between composables.

@@ -21,12 +21,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -37,6 +33,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.LookaheadScope
 import androidx.compose.ui.unit.dp
+import com.example.composesample.presentation.MainHeader
 import com.example.composesample.presentation.getTextStyle
 
 /**
@@ -47,27 +44,10 @@ import com.example.composesample.presentation.getTextStyle
 fun LookaheadScopeExampleUI(onBackEvent: () -> Unit) {
     LazyColumn(modifier = Modifier.padding(horizontal = 20.dp)) {
         stickyHeader {
-            Box(
-                modifier = Modifier
-                    .background(color = Color.White)
-                    .padding(top = 10.dp, bottom = 10.dp)
-            ) {
-                Row(modifier = Modifier.fillMaxWidth()) {
-                    IconButton(
-                        onClick = {
-                            onBackEvent.invoke()
-                        }
-                    ) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "뒤로가기")
-                    }
-
-                    Text(
-                        text = "LookaheadScope 애니메이션",
-                        modifier = Modifier.align(Alignment.CenterVertically),
-                        style = getTextStyle(20)
-                    )
-                }
-            }
+            MainHeader(
+                title = "LookaheadScope 애니메이션",
+                onBackIconClicked = onBackEvent
+            )
         }
 
         item {

@@ -19,14 +19,11 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
@@ -45,6 +42,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.composesample.presentation.MainHeader
 import java.util.Locale
 
 // ===================== 데이터 모델 =====================
@@ -93,7 +91,7 @@ fun ReboundExampleUI(onBackEvent: () -> Unit) {
             .background(Color(0xFFF5F5F5)),
         contentPadding = PaddingValues(bottom = 24.dp)
     ) {
-        item { ReboundHeader(onBackEvent = onBackEvent) }
+        item { MainHeader(title = "Rebound - 리컴포지션 모니터링", onBackIconClicked = onBackEvent) }
 
         item { ReboundDescription() }
 
@@ -152,29 +150,6 @@ private fun SectionTitle(title: String) {
         fontWeight = FontWeight.Bold,
         modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp)
     )
-}
-
-@Composable
-private fun ReboundHeader(onBackEvent: () -> Unit) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(Color.White)
-            .padding(vertical = 8.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        IconButton(onClick = onBackEvent) {
-            Icon(
-                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                contentDescription = "뒤로가기"
-            )
-        }
-        Text(
-            text = "Rebound - 리컴포지션 모니터링",
-            fontSize = 17.sp,
-            fontWeight = FontWeight.Bold
-        )
-    }
 }
 
 @Composable

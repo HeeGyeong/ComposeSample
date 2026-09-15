@@ -2,21 +2,15 @@ package com.example.composesample.presentation.example.component.architecture.de
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -27,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.example.composesample.presentation.MainHeader
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -41,17 +36,10 @@ fun CursorIDEExampleUI(
             .background(Color.White)
     ) {
         stickyHeader {
-            Box(
-                modifier = Modifier
-                    .background(Color.White)
-                    .padding(top = 10.dp, bottom = 10.dp)
-            ) {
-                Row(modifier = Modifier.fillMaxWidth()) {
-                    IconButton(onClick = onBackEvent) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "")
-                    }
-                }
-            }
+            MainHeader(
+                title = "Cursor IDE Example",
+                onBackIconClicked = onBackEvent
+            )
         }
 
         item {

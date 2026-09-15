@@ -4,7 +4,6 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,12 +11,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
@@ -33,6 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
+import com.example.composesample.presentation.MainHeader
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
@@ -83,20 +79,17 @@ fun KtorExampleUI(
                         .padding(top = 10.dp, bottom = 10.dp)
                 ) {
                     Column {
-                        Row(modifier = Modifier.fillMaxWidth()) {
-                            IconButton(
-                                onClick = onBackEvent
-                            ) {
-                                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "")
-                            }
-                        }
+                        MainHeader(
+                            title = "Ktor API Example",
+                            onBackIconClicked = onBackEvent
+                        )
 
                         Text(
-                            text = "Ktor API Example - Start Pull To Refresh",
+                            text = "Start Pull To Refresh",
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(horizontal = 16.dp),
-                            style = MaterialTheme.typography.titleLarge
+                            style = MaterialTheme.typography.bodyMedium
                         )
 
                         errorMessage?.let {

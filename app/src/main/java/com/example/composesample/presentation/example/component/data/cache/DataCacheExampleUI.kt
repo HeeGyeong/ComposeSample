@@ -23,7 +23,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.runtime.Composable
@@ -37,6 +36,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
+import com.example.composesample.presentation.MainHeader
 import com.example.data.db.UserData
 import org.koin.androidx.compose.koinViewModel
 
@@ -65,15 +65,10 @@ fun DataCacheExampleUI(
                     .padding(top = 10.dp, bottom = 10.dp)
             ) {
                 Column {
-                    Row(modifier = Modifier.fillMaxWidth()) {
-                        IconButton(
-                            onClick = {
-                                onBackEvent.invoke()
-                            }
-                        ) {
-                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "")
-                        }
-                    }
+                    MainHeader(
+                        title = "Data Cache Example",
+                        onBackIconClicked = onBackEvent
+                    )
 
                     Spacer(modifier = Modifier.height(10.dp))
 

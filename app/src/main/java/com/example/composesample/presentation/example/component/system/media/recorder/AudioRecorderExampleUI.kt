@@ -4,8 +4,6 @@ import android.media.MediaPlayer
 import android.media.MediaRecorder
 import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -16,10 +14,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Call
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Clear
@@ -32,9 +28,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import com.example.composesample.presentation.MainHeader
 import com.example.composesample.util.noRippleClickable
 import com.example.composesample.util.noRippleSingleClickable
 import java.io.File
@@ -70,21 +66,10 @@ fun AudioRecorderExampleUI(
 
     LazyColumn(modifier = Modifier.padding(horizontal = 20.dp)) {
         stickyHeader {
-            Box(
-                modifier = Modifier
-                    .background(color = Color.White)
-                    .padding(top = 10.dp, bottom = 10.dp)
-            ) {
-                Row(modifier = Modifier.fillMaxWidth()) {
-                    IconButton(
-                        onClick = {
-                            onBackEvent.invoke()
-                        }
-                    ) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "")
-                    }
-                }
-            }
+            MainHeader(
+                title = "Audio Recorder Example",
+                onBackIconClicked = onBackEvent
+            )
         }
 
         item {

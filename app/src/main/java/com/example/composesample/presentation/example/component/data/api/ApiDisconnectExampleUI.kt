@@ -6,7 +6,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,11 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -34,6 +29,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
+import com.example.composesample.presentation.MainHeader
 import com.example.composesample.util.NetworkUtil
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
@@ -100,15 +96,10 @@ fun ApiDisconnectExampleUI(
                     .padding(top = 10.dp, bottom = 10.dp)
             ) {
                 Column {
-                    Row(modifier = Modifier.fillMaxWidth()) {
-                        IconButton(
-                            onClick = {
-                                onBackEvent.invoke()
-                            }
-                        ) {
-                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "")
-                        }
-                    }
+                    MainHeader(
+                        title = "Api Disconnect Example",
+                        onBackIconClicked = onBackEvent
+                    )
 
                     if (!isConnectNetwork.value) {
                         Column(
