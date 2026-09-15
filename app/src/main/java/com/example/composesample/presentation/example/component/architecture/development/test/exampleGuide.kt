@@ -63,7 +63,7 @@ package com.example.composesample.presentation.example.component.architecture.de
  * - Coil 3 Compose(프리뷰 핸들러): https://coil-kt.github.io/coil/compose/
  * - coil-test(FakeImageLoaderEngine): https://coil-kt.github.io/coil/testing/
  * - AsyncImage 는 LocalInspectionMode.current 가 true 일 때만 LocalAsyncImagePreviewHandler 를 조회한다
- *   (coil 3.1.0 의 coil3.compose.internal.UtilsKt.previewHandler 바이트코드로 확인) → 일반 앱 실행에는 영향이 없다
+ *   (coil 3.1.0 의 coil3.compose.internal.UtilsKt.previewHandler 바이트코드로 확인 — 3.5.0 에도 같은 함수가 있다) → 일반 앱 실행에는 영향이 없다
  * - inspection 모드만 켜고 핸들러를 주지 않으면 기본값 AsyncImagePreviewHandler.Default 가 실제 ImageLoader.execute() 를
  *   그대로 수행한다 → 두 CompositionLocal 을 함께 제공해야 결정론이 생긴다
  * - 팩토리 AsyncImagePreviewHandler { image } 가 만드는 상태는 State.Success 가 아니라 painter 를 실은 State.Loading 이다

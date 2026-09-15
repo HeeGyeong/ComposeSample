@@ -43,8 +43,9 @@ package com.example.composesample.presentation.example.component.system.platform
  *   PictureInPictureModeChangedInfo 를 받는다(DisposableEffect 에서 해제).
  * - PictureInPictureProvider(core 1.18.0)는 액티비티가 직접 구현하는 인터페이스로,
  *   enterPictureInPictureMode(PictureInPictureParamsCompat)/setPictureInPictureParams(compat) 2개를 갖는다.
- *   이 프로젝트의 activity 1.10.0 ComponentActivity 는 아직 구현하지 않으므로, 예제는 compat 으로 만든
- *   파라미터를 변환해 플랫폼 API 를 직접 호출한다.
+ *   activity 1.10.0 의 ComponentActivity 는 이를 구현하지 않았고 activity 1.13.0 부터 구현한다(javap 확인).
+ *   예제의 목적은 compat 파라미터가 플랫폼 파라미터로 잘려 나가는 규칙을 보이는 것이므로, compat 으로 만든
+ *   파라미터를 변환해 플랫폼 API 를 직접 호출하는 경로를 그대로 유지한다.
  * - PictureInPictureUiStateCompat(isStashed API 33+, isTransitioningToPip API 35+)는 PiP 창이
  *   화면 가장자리로 치워졌는지/진입 애니메이션 중인지를 알려준다. 콜백은 API 31+ 의
  *   onPictureInPictureUiStateChanged 라 액티비티 수정이 필요해 이 예제 범위 밖에 둔다.

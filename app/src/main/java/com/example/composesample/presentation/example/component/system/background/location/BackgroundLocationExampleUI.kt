@@ -538,7 +538,7 @@ private fun BgLocationWorkerCard(permissions: BgPermissionState) {
         Text(
             text = "왜 Worker 를 포그라운드로 승격시키지 않았나\n" +
                     "expedited work 는 API 30 이하에서 WorkManager 자신의 SystemForegroundService 로 " +
-                    "승격되는데, work-runtime 2.9.1 의 매니페스트는 그 서비스에 foregroundServiceType 을 " +
+                    "승격되는데, work-runtime 2.11.2 의 매니페스트는 그 서비스에 foregroundServiceType 을 " +
                     "선언하지 않습니다. 위치 타입으로 승격하려면 라이브러리의 서비스 선언을 앱 매니페스트에서 " +
                     "override 해야 합니다. 그런 우회가 필요하다는 것 자체가 '지속 추적은 직접 만든 Service 의 " +
                     "몫'이라는 신호입니다.",

@@ -391,7 +391,7 @@ private fun CoilTestEngineCard() {
         Spacer(modifier = Modifier.height(12.dp))
 
         DeterministicCodeBlock(
-            code = "// testImplementation(\"io.coil-kt.coil3:coil-test:3.1.0\")\n\n" +
+            code = "// testImplementation(\"io.coil-kt.coil3:coil-test:3.5.0\")\n\n" +
                 "val engine = FakeImageLoaderEngine.Builder()\n" +
                 "    .intercept(\"https://example.com/a.jpg\", ColorImage(GREEN))\n" +
                 "    .default(ColorImage(BLUE))\n" +

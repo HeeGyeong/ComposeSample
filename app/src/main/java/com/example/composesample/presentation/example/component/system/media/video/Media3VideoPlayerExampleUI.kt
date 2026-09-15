@@ -156,8 +156,8 @@ private fun ConceptCard() {
 
             CodeBlock(
                 code = "dependencies {\n" +
-                        "    implementation(\"androidx.media3:media3-exoplayer:1.8.0\")\n" +
-                        "    implementation(\"androidx.media3:media3-ui:1.8.0\")\n" +
+                        "    implementation(\"androidx.media3:media3-exoplayer:1.11.1\")\n" +
+                        "    implementation(\"androidx.media3:media3-ui:1.11.1\")\n" +
                         "}\n\n" +
                         "val player = ExoPlayer.Builder(context).build().apply {\n" +
                         "    setMediaItem(MediaItem.fromUri(videoUrl))\n" +

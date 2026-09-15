@@ -19,7 +19,8 @@ libraryVersion = "8.13.2"
 # Compose
 # Compose BOM이 ui/animation/runtime/foundation/material 등의 개별 버전을 통합 관리한다.
 # 개별 라이브러리 선언에서는 version을 지정하지 않음 — BOM이 전파한 버전을 그대로 사용.
-activityCompose = "1.10.0"
+# activity 1.13.0 — aar-metadata minCompileSdk=36 / minAGP=8.9.1. 이 버전부터 ComponentActivity 가 core 의 PictureInPictureProvider 를 구현한다(javap 확인).
+activityCompose = "1.13.0"
 # androidx.navigationevent — back/forward 양방향 내비게이션 이벤트 디스패처.
 # 1.1.2 stable, aar-metadata minCompileSdk=36 / minAGP=8.9.1 로 현재 환경(compileSdk 36, AGP 8.13.2) 충족.
 # navigationevent-compose 의 pom 은 compose ui/runtime 1.11.2 를 요구한다. BOM 2026.05.00(→ 1.11.1) 시절에는
@@ -57,7 +58,8 @@ koinAndroidxCompose = "3.2.2"
 # 선언은 1.13.1 이었지만 실제 해석은 1.16.0 이던 드리프트를 2026-09-02 에 함께 해소했다.
 # core-ktx 가 core 를 전이로 가져오므로 core 를 따로 선언하지 않는다.
 coreKtx = "1.18.0"
-appcompat = "1.7.0"
+# coil-core 3.5.0 이 appcompat-resources 1.7.1 을 요구해 appcompat 그룹이 1.7.1 로 해석된다. 선언을 해석 결과에 맞춘다.
+appcompat = "1.7.1"
 material = "1.11.4"
 material3 = "1.4.0"
 material3WindowSizeClass = "1.4.0"
@@ -71,10 +73,10 @@ ktor = "2.3.7"
 junit = "4.13.2"
 androidxTestJunit = "1.2.1"
 espressoCore = "3.5.1"
-# 런타임에 들어온 kotlinx-coroutines-android 1.10.1 이 kotlinx-coroutines-bom:1.10.1 을 함께 끌고 오고,
-# 그 BOM 의 제약이 test 아티팩트까지 1.10.1 로 올린다(선언 1.7.1 ↔ 해석 1.10.1 불일치였음).
-# 해석 결과에 선언을 맞춘다. (DEP-VERSION-03/04 와 동일 유형 — DEP-VERSION-05)
-coroutineTest = "1.10.1"
+# 런타임에 들어온 kotlinx-coroutines-android 가 같은 버전의 kotlinx-coroutines-bom 을 함께 끌고 오고,
+# 그 BOM 의 제약이 test 아티팩트까지 같은 버전으로 올린다(선언 1.7.1 ↔ 해석 1.10.1 불일치였음 — DEP-VERSION-05).
+# coil 3.5.0(coil-core) 이 coroutines 1.10.2 를 요구해 런타임·테스트 모두 1.10.2 로 해석되므로 선언을 맞춘다.
+coroutineTest = "1.10.2"
 mockk = "1.13.5"
 turbine = "1.0.0"
 runner = "1.5.2"
@@ -82,14 +84,17 @@ rules = "1.5.0"
 espressoIntents = "3.5.1"
 
 # Image Loader
-coil3 = "3.1.0"
+# 3.5.0 이 채택 상한 — 3.6.x 는 aar-metadata minCompileSdk=37 이다.
+coil3 = "3.5.0"
 
 # Media
 lottieCompose = "6.0.0"
-media3 = "1.8.0"
+# 1.11.1 — aar-metadata minCompileSdk=36 / minAGP=1.0.0.
+media3 = "1.11.1"
 
 # WorkManager
-workRuntime = "2.9.1"
+# 2.11.2 — aar-metadata minCompileSdk=35 / minAGP=8.6.0. SystemForegroundService 매니페스트에 foregroundServiceType 이 없는 점은 2.9.1 과 같다(위치 예제 참고).
+workRuntime = "2.11.2"
 
 # Drag and Drop Library
 reorderable = "0.9.6"
@@ -98,14 +103,15 @@ reorderable = "0.9.6"
 okhttpEventSource = "3.0.0"
 
 # Paging
-# room-paging 가 paging-common 3.3.2 를 요구하고, androidx.paging 은 atomic group 이라
-# 스택 전체(runtime/compose/common-ktx)가 3.3.2 로 함께 올라간다.
-# 3.2.1 로 적어두면 선언과 실제 해석 버전이 어긋나므로 해석 결과에 맞춘다. (DEP-VERSION-03)
-paging = "3.3.2"
-pagingCompose = "3.3.2"
+# androidx.paging 은 atomic group 이라 runtime/compose/common-ktx 가 한 버전으로 움직인다.
+# 3.5.1 — paging-runtime minCompileSdk=34, paging-compose-android minCompileSdk=35. room-paging 2.8.4 가 요구하는
+# paging-common 3.3.2 보다 높아 선언이 그대로 해석된다. (이전: 3.2.1 선언 ↔ 3.3.2 해석 드리프트 — DEP-VERSION-03)
+paging = "3.5.1"
+pagingCompose = "3.5.1"
 
 # Glance Widget
-glance = "1.1.1"
+# 1.2.0 — aar-metadata minCompileSdk=35 / minAGP=8.6.0.
+glance = "1.2.0"
 
 # Biometric (alpha — biometric-compose는 alpha 단계만 존재)
 biometric = "1.4.0-alpha05"
@@ -220,7 +226,7 @@ media3Ui = { module = "androidx.media3:media3-ui", version.ref = "media3" }
 workRuntime = { module = "androidx.work:work-runtime", version.ref = "workRuntime" }
 workRuntimeKtx = { module = "androidx.work:work-runtime-ktx", version.ref = "workRuntime" }
 # WorkManager 테스트 하네스(TestDriver/TestListenableWorkerBuilder). work 런타임과 같은 버전을 쓴다.
-# aar-metadata minCompileSdk=34 / minAGP=1.0.0 이라 현재 환경에서 상향 없이 채택 가능하다.
+# 2.11.2 의 aar-metadata 는 minCompileSdk=35 / minAGP=8.6.0 으로 현재 환경(compileSdk 36, AGP 8.13.2)에서 채택 가능하다.
 workTesting = { module = "androidx.work:work-testing", version.ref = "workRuntime" }
 
 # Drag and Drop Library

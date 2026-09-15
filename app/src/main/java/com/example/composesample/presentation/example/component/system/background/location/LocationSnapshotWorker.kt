@@ -33,8 +33,8 @@ import java.util.concurrent.TimeUnit
  * ### 여기서 setForeground()/ForegroundInfo 를 쓰지 않는 이유
  * WorkManager 의 expedited work 는 API 30 이하에서 WorkManager 자신의
  * `androidx.work.impl.foreground.SystemForegroundService` 를 통해 포그라운드로 승격된다.
- * 그런데 work-runtime 2.9.1 의 매니페스트는 이 서비스에 `foregroundServiceType` 을
- * 선언하지 않는다(AAR 매니페스트 확인). 따라서 `ForegroundInfo(id, notification, 위치타입)` 을
+ * 그런데 work-runtime 의 매니페스트는 이 서비스에 `foregroundServiceType` 을
+ * 선언하지 않는다(2.9.1·2.11.2 AAR 매니페스트 모두 확인). 따라서 `ForegroundInfo(id, notification, 위치타입)` 을
  * 넘기려면 앱 매니페스트에서 라이브러리 서비스 선언을 override 해야 한다.
  * → **위치 타입 FGS 가 필요하면 WorkManager 를 우회하지 말고 직접 Service 를 만드는 편이 낫다**는
  * 것이 이 예제가 서비스와 Worker 를 나눠 놓은 이유다.

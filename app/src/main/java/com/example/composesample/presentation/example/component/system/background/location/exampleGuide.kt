@@ -39,7 +39,7 @@ package com.example.composesample.presentation.example.component.system.backgrou
  * ### WorkManager 로는 대체할 수 없는 이유
  * - PeriodicWorkRequest 최소 주기는 15분이며, 시스템이 배터리 상태에 따라 더 미룬다.
  * - expedited work 는 API 30 이하에서 androidx.work 의 SystemForegroundService 를 통해 승격되는데,
- *   work-runtime 2.9.1 의 매니페스트는 그 서비스에 foregroundServiceType 을 선언하지 않는다.
+ *   work-runtime 의 매니페스트는 그 서비스에 foregroundServiceType 을 선언하지 않는다(2.9.1·2.11.2 AAR 매니페스트 모두 확인).
  *   위치 타입으로 승격하려면 라이브러리 서비스 선언을 앱 매니페스트에서 override 해야 한다.
  * - 반대로 실행 조건(Constraints: 충전 중 / 배터리 여유 / 네트워크)과 프로세스 사망 후 재실행 보장은
  *   Service 로는 직접 만들 수 없는 WorkManager 의 강점이다.

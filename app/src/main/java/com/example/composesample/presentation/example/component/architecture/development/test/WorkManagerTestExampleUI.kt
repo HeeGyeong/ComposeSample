@@ -83,7 +83,7 @@ private fun WhyHardCard() {
         Spacer(modifier = Modifier.height(10.dp))
         CaptionText(
             "의존성은 한 줄이면 된다 — androidTestImplementation(\"androidx.work:work-testing\"). " +
-                "런타임 work 와 같은 버전을 쓰면 되고, 이 프로젝트는 상향 없이 2.9.1 을 그대로 썼다."
+                "런타임 work 와 같은 버전을 쓰면 되고, 이 프로젝트는 런타임과 같은 2.11.2 를 쓴다(예제 작성 당시는 2.9.1)."
         )
     }
 }
