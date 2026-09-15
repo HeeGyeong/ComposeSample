@@ -68,6 +68,9 @@ dependencies {
     // Dependency Injection
     implementation(libs.bundles.koin)
 
+    // Navigation Compose — Koin 4 에서 koin-androidx-compose 의 전이 의존이 사라져 직접 선언 (BottomNavigationActivity / NavigationComponent)
+    implementation(libs.navigationCompose)
+
     // Media
     implementation(libs.bundles.media)
 

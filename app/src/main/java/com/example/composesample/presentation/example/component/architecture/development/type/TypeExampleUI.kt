@@ -32,7 +32,7 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun TypeExampleUI(onBackEvent: () -> Unit) {
     val viewModelStoreOwner = checkNotNull(LocalViewModelStoreOwner.current)
-    val viewModel = koinViewModel<TypeExampleViewModel>(owner = viewModelStoreOwner)
+    val viewModel = koinViewModel<TypeExampleViewModel>(viewModelStoreOwner = viewModelStoreOwner)
 
     val intListMutable = viewModel.intListMutable
     val intListImmutable = viewModel.intListImmutable

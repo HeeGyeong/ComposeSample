@@ -35,8 +35,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import com.example.composesample.util.NetworkUtil
-import org.koin.androidx.compose.get
 import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.koinInject
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -45,13 +45,13 @@ fun ApiDisconnectExampleUI(
 ) {
     val viewModelStoreOwner = checkNotNull(LocalViewModelStoreOwner.current)
     val apiExampleViewModel =
-        koinViewModel<ApiExampleViewModel>(owner = viewModelStoreOwner)
+        koinViewModel<ApiExampleViewModel>(viewModelStoreOwner = viewModelStoreOwner)
     val apiExampleUseCaseViewModel =
-        koinViewModel<ApiExampleUseCaseViewModel>(owner = viewModelStoreOwner)
+        koinViewModel<ApiExampleUseCaseViewModel>(viewModelStoreOwner = viewModelStoreOwner)
     val posts by apiExampleViewModel.posts.collectAsStateWithLifecycle()
     val useCasePosts by apiExampleUseCaseViewModel.posts.collectAsStateWithLifecycle()
 
-    val networkUtil: NetworkUtil = get()
+    val networkUtil: NetworkUtil = koinInject()
     val isConnectNetwork = remember { mutableStateOf(networkUtil.isNetworkConnected()) }
 
     Log.d("NetworkLog", "isConnectNetwork : ${isConnectNetwork.value}")

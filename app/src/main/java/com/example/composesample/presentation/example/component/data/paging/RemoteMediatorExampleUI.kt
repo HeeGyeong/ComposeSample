@@ -38,7 +38,7 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun RemoteMediatorExampleUI(onBackEvent: () -> Unit) {
     val viewModelStoreOwner = checkNotNull(LocalViewModelStoreOwner.current)
-    val viewModel = koinViewModel<RemoteMediatorViewModel>(owner = viewModelStoreOwner)
+    val viewModel = koinViewModel<RemoteMediatorViewModel>(viewModelStoreOwner = viewModelStoreOwner)
 
     val pagingItems = viewModel.pagingDataFlow.collectAsLazyPagingItems()
     val isOffline by viewModel.isOffline.collectAsStateWithLifecycle()

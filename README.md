@@ -31,9 +31,9 @@ Clean Architecture 기반으로 구성되어 있으며, 원하는 예제를 쉽�
 
 ## 주요 라이브러리
 - Room 2.8.4
-- Koin 3.2.2
+- Koin 4.2.2
 - WorkManager 2.11.2
-- ViewModel 2.9.1
+- ViewModel 2.10.0
 - Material 1.11.4
 - Material3 1.4.0
 - Lottie Compose 6.0.0

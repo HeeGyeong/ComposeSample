@@ -32,23 +32,25 @@ navigationEvent = "1.1.2"
 composeBom = "2026.06.01"
 
 # Lifecycle
-# compose-bom 2026.06.01 의 runtime-saveable-android:1.11.4 가(2026.05.00 의 1.11.1 과 마찬가지로) lifecycle-runtime-compose 2.9.4 를
-# 요구하고, androidx.lifecycle 은 atomic group 이라 runtime/livedata/viewmodel 스택 전체가
-# 2.9.4 로 함께 올라간다. 2.9.1 로 적어두면 선언과 실제 해석 버전이 어긋나므로
-# 해석 결과에 맞춘다. (DEP-VERSION-03 과 동일 유형)
-lifecycleRuntimeKtx = "2.9.4"
-lifecycleLivedataKtx = "2.9.4"
-lifecycleViewmodelKtx = "2.9.4"
-lifecycleViewmodelCompose = "2.9.4"
+# androidx.lifecycle 은 atomic group 이라 runtime/livedata/viewmodel 스택 전체가 한 버전으로 움직인다.
+# koin-android 4.2.2 가 lifecycle-viewmodel-ktx 2.10.0 을 요구해 스택 전체가 2.10.0 으로 해석되므로 선언을 그에 맞춘다
+# (aar-metadata minCompileSdk: viewmodel/runtime 34, runtime-compose 35). 이전 값 2.9.4 는 compose-bom 의
+# runtime-saveable 이 요구하던 하한이었다(1.11.4 도 2.9.4 요구 — 지금은 Koin 쪽 요구가 더 높다). (DEP-VERSION-03 과 동일 유형)
+lifecycleRuntimeKtx = "2.10.0"
+lifecycleLivedataKtx = "2.10.0"
+lifecycleViewmodelKtx = "2.10.0"
+lifecycleViewmodelCompose = "2.10.0"
 
-# Koin
-# TODO(DI-01): 3.5.x로 업그레이드 시 (1) getViewModel(owner=) API 변경, (2) koin-androidx-compose에서
-# navigation-compose 전이 의존성 제거 → 별도 PR로 분리 필요
-koinCore = "3.2.2"
-# koin-androidx-compose:3.2.2 가 koin-android:3.2.3 을 요구해 이 아티팩트만 3.2.3 으로 해석된다
-# (koin-core 는 3.2.2 그대로). 선언을 해석 결과에 맞춘다.
-koinAndroid = "3.2.3"
-koinAndroidxCompose = "3.2.2"
+# Koin 4.2.2 (DI-01 해소, 2026-09-15). 3.x 대비 코드 영향:
+# ① koinViewModel 의 owner 파라미터 이름이 viewModelStoreOwner 로 바뀜 ② org.koin.androidx.compose.get 제거 → org.koin.compose.koinInject
+# ③ org.koin.androidx.viewmodel.dsl.viewModel deprecated → org.koin.core.module.dsl.viewModel
+# ④ koin-androidx-compose 가 주던 navigation-compose 전이 의존이 사라져 아래 navigationCompose 를 직접 선언한다.
+# koin-android 4.2.2 는 lifecycle 2.10.0 · activity-ktx 1.12.4 · fragment-ktx 1.8.9 · appcompat 1.7.1 을 함께 요구한다.
+koinCore = "4.2.2"
+koinAndroid = "4.2.2"
+koinAndroidxCompose = "4.2.2"
+# navigation-compose — Koin 3.2.2 의 전이로만 들어오던 2.4.2 를 동작 변화 없이 그대로 명시 선언한다(버전 상향은 별도 결정).
+navigationCompose = "2.4.2"
 
 # Core-dependencies
 # 1.17.0: NotificationCompat.ProgressStyle(Android 16 Live Updates)가 이 버전부터.
@@ -200,6 +202,7 @@ uiToolingPreview = { module = "androidx.compose.ui:ui-tooling-preview" }
 activityCompose = { module = "androidx.activity:activity-compose", version.ref = "activityCompose" }
 navigationEvent = { module = "androidx.navigationevent:navigationevent", version.ref = "navigationEvent" }
 navigationEventCompose = { module = "androidx.navigationevent:navigationevent-compose", version.ref = "navigationEvent" }
+navigationCompose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 
 # Lifecycle
 lifecycleViewmodelKtx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycleViewmodelKtx" }

@@ -21,8 +21,8 @@ import com.example.composesample.presentation.example.component.data.repository.
 import com.example.composesample.presentation.example.component.data.sse.SSEViewModel
 import com.example.composesample.presentation.example.component.system.platform.file.SafFileSelectionViewModel
 import org.koin.android.ext.koin.androidApplication
-import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.module.Module
+import org.koin.core.module.dsl.viewModel
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 

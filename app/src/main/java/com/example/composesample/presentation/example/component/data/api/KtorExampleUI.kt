@@ -42,7 +42,7 @@ fun KtorExampleUI(
     onBackEvent: () -> Unit,
 ) {
     val viewModelStoreOwner = checkNotNull(LocalViewModelStoreOwner.current)
-    val apiExampleViewModel = koinViewModel<ApiExampleViewModel>(owner = viewModelStoreOwner)
+    val apiExampleViewModel = koinViewModel<ApiExampleViewModel>(viewModelStoreOwner = viewModelStoreOwner)
     val coroutineScope = rememberCoroutineScope()
     val ktorPosts by apiExampleViewModel.ktorPosts.collectAsStateWithLifecycle()
     val isLoading by apiExampleViewModel.isLoading.collectAsStateWithLifecycle()

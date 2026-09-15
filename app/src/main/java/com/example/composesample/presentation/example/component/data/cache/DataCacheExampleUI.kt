@@ -47,7 +47,7 @@ fun DataCacheExampleUI(
 ) {
     val viewModelStoreOwner = checkNotNull(LocalViewModelStoreOwner.current)
     val dataCacheViewModel =
-        koinViewModel<DataCacheViewModel>(owner = viewModelStoreOwner)
+        koinViewModel<DataCacheViewModel>(viewModelStoreOwner = viewModelStoreOwner)
     val textState = remember { mutableStateOf("") }
     // 저장 된 데이터를 그대로 가져옴. textState의 default 값은 빈 문자열이므로, 전체를 가져온다.
     val userList =

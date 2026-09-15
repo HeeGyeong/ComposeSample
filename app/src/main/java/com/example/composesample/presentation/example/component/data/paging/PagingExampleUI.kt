@@ -35,7 +35,7 @@ fun PagingExampleUI(
     onBackEvent: () -> Unit,
 ) {
     val viewModelStoreOwner = checkNotNull(LocalViewModelStoreOwner.current)
-    val pagingViewModel = koinViewModel<PagingViewModel>(owner = viewModelStoreOwner)
+    val pagingViewModel = koinViewModel<PagingViewModel>(viewModelStoreOwner = viewModelStoreOwner)
     val pagingItems = pagingViewModel.pagingDataFlow.collectAsLazyPagingItems()
     var refreshing by remember { mutableStateOf(false) }
 
