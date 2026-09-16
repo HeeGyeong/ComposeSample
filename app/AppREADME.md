@@ -35,6 +35,7 @@ app
 | Package | Content |
 |---------|---------|
 | `accessibility` | accessibility support (Large Content Viewer, Accessible Focus Indicator) |
+| `autofill` | Compose Autofill (`semantics { contentType }` hints, LocalAutofillManager commit/cancel) |
 | `button` | button styles and interaction (ButtonGroup) |
 | `canvas` | Canvas shapes/animation, Dial, Compose Loaders math curves, Particle Emitter, Month Picker Dial |
 | `graphics` | graphics effects such as Motion Blur, New Shadow API (Compose 1.9) |
@@ -48,6 +49,7 @@ app
 | `layout/drawer` | side Drawer menu |
 | `layout/flexbox` | official FlowRow/FlowColumn Flexbox |
 | `layout/header` | Fancy TopAppBar, scroll-linked header |
+| `layout/grid` | Compose Grid API (non-lazy 2D track layout, Compose 1.11 experimental) |
 | `layout/insets` | Display Cutout & Insets (safe* union rules, cutout-mode/edge-to-edge toggles, consume vs recalculate, cutoutPath/displayShape) |
 | `layout/lazycolumn` | LazyColumn optimization, ReverseLazyColumn, LazyStaggeredGrid |
 | `layout/modifier` | Modifier Order in Compose |
@@ -59,6 +61,7 @@ app
 | `media/shimmer` | loading Shimmer effect |
 | `navigation` | Navigation3 nested routing (NestedRoutesNav3) |
 | `notification` | SnapNotify (Snackbar simplification) |
+| `overlay` | coordinate-driven spotlight overlay (coach mark: Popup + Path difference clipping) |
 | `scroll` | custom scroll behavior, nested scroll |
 | `shapes` | CardCorners (corner styles) |
 | `tab` | Responsive TabRow (SubcomposeLayout) |
@@ -70,6 +73,7 @@ app
 |---------|---------|
 | `clickevent` | click event handling patterns |
 | `drag` | drag gestures |
+| `pointer` | IndirectPointerInputModifierNode (raw trackpad capture vs standard Pan/Scale pipeline) |
 | `refresh` | Pull-to-Refresh |
 | `sticker` | drag/pinch/rotate/spring-physics sticker canvas |
 | `swipe` | Swipe to Dismiss (Material 3) |
@@ -82,6 +86,7 @@ app
 | `paging` | Paging 3 implementation, infinite scroll |
 | `room` | Room deep dive — FTS4 vs LIKE search, Database Indices, Multi-Table Inserts |
 | `sse` | Server-Sent Events |
+| `repository` | advanced Repository pattern (multi-source priority resolution) |
 
 ### System / Platform API (`component/system`)
 | Package | Content |
@@ -97,10 +102,12 @@ app
 | `platform/haptic` | Haptic Feedback (per-API-level support comparison) |
 | `platform/intent` | Intent usage |
 | `platform/language` | in-app language change |
+| `platform/pip` | Picture-in-Picture compat (PictureInPictureParamsCompat field truncation by API level) |
 | `platform/powersave` | power-save mode handling |
 | `platform/predictiveback` | Predictive Back Gesture (Android 14+) |
 | `platform/quicksettings` | Quick Settings Tile |
 | `platform/shortcut` | app shortcuts (dynamic/static/pin) |
+| `platform/sensor` | sensor fusion compass (TYPE_ROTATION_VECTOR, complementary filter, rotation remap) |
 | `platform/version` | per-API-version branching |
 | `platform/webview` | WebView integration |
 | `ui/widget` | Glance home-screen widget |
@@ -115,6 +122,7 @@ app
 | `pattern/compositionLocal` | CompositionLocal data flow, Static/Dynamic comparison, tree visualization |
 | `pattern/coroutine` | coroutine basics/internals, withContext vs launch |
 | `pattern/effect` | SideEffect, LaunchedEffect, SnapshotFlow, rememberCoroutineScope |
+| `pattern/error` | sealed domain error modelling (typed failures instead of exceptions) |
 | `pattern/mvi` | MVI architecture pattern (unidirectional data flow) |
 | `pattern/remember` | rememberSaveable/rememberUpdatedState/derivedStateOf comparison |
 | `pattern/retain` | Compose 1.10 Retain API (state retention without a ViewModel) |
@@ -130,6 +138,8 @@ app
 | `development/performance` | Inline Value Class, Stability Annotations |
 | `development/preview` | @Preview internals, Preview-only Annotation (@RequiresOptIn) |
 | `development/rebound` | recomposition budget allocation and detection |
+| `development/strictmode` | StrictMode violation detection (disk/network on the main thread) |
+| `development/tracing` | Perfetto coroutine/Flow tracing (beginSection thread-pairing trap, async sections, counters) |
 | `development/test` | UI test TDD, recomposition detection, Coroutine Flow (Turbine), Screenshot (Paparazzi/Roborazzi), Compose UI Testing |
 | `development/type` | type system examples (variable types/compile-time optimization) |
 
