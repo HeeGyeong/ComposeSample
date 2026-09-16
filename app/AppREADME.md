@@ -42,6 +42,7 @@ app
 | `shader` | AGSL Shader Live Tuning (real-time RuntimeShader uniform tweaking) |
 | `style` | Foundation Style API (single-CompositionLocal design tokens, Compose 1.11) |
 | `material3` | Material 3 Expressive (new 1.4.0 components such as SecureTextField) |
+| `form` | form validation (field-level rules, error state and submit gating) |
 | `layout/animation` | AnimatedVisibility/AnimatedContent, Shared Element (+Debug Tooling), Spring/Tween/Snap, Animations Showcase |
 | `layout/adaptive` | Adaptive Layout (WindowSizeClass adaptive) |
 | `layout/custom` | Custom Layout (Layout composable + MeasurePolicy) |
@@ -94,9 +95,11 @@ app
 | `ai` | Gemini Nano on-device AI (ML Kit GenAI, Mock simulation) |
 | `security` | App Security (Cert Pinning/Secure Storage/Play Integrity), Hardware-Backed Keystore |
 | `background/workmanager` | WorkManager background work, worker exception handlers (2.11 `WorkerExceptionInfo`) |
+| `background/location` | background location tracking (foreground service, staged permission flow) |
 | `deeplink` | deep link handling, Dynamic App Links (Android 15+) |
 | `media/ffmpeg` | FFmpeg media handling (commented out due to library compatibility issues) |
 | `media/recorder` | audio/video recording |
+| `media/video` | Media3 (ExoPlayer) video playback (PlayerView via AndroidView) |
 | `platform/biometric` | biometric auth (BiometricPrompt, Compose) |
 | `platform/file` | file system access (SAF) |
 | `platform/haptic` | Haptic Feedback (per-API-level support comparison) |
@@ -134,6 +137,7 @@ app
 | `development/featureflag` | Type-Safe Feature Flag (sealed registry + debug override) |
 | `development/flow` | FlatMap vs FlatMapLatest comparison |
 | `development/init` | app initialization/startup optimization (App Startup / Baseline Profile) |
+| `development/internals` | Compose internals (how Compose works, slot tree inspector, Composition observer, Recomposer registry, RememberObserver) |
 | `development/language` | Sealed Class Interface, Name-Based Destructuring |
 | `development/performance` | Inline Value Class, Stability Annotations |
 | `development/preview` | @Preview internals, Preview-only Annotation (@RequiresOptIn) |
@@ -142,6 +146,7 @@ app
 | `development/tracing` | Perfetto coroutine/Flow tracing (beginSection thread-pairing trap, async sections, counters) |
 | `development/test` | UI test TDD, recomposition detection, Coroutine Flow (Turbine), Screenshot (Paparazzi/Roborazzi), Compose UI Testing |
 | `development/type` | type system examples (variable types/compile-time optimization) |
+| `development/time` | Kotlin Time API (kotlin.time Instant/Clock, measureTime) |
 
 ## Dependency Injection
 Uses Koin. Define modules in the `di` package and register all modules in `InjectModules.kt`.
