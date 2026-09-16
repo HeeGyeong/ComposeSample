@@ -80,6 +80,26 @@ diagnostics, **not compiler warnings on the source** (the project's warning scan
 | `FRAMEWORK_ENTRY_SUBCLASS` | 11 | whole class | `BaseApplication`, `LocationTrackingService`, the five Quick Settings `*TileService`s, the four Glance `*WidgetReceiver`s |
 | `GENERIC_DECLARATION` | 8 | method | functions declaring type parameters, e.g. `onEachBatch<T>`, `measureInline<T>` |
 
+### What the interpreter cannot execute — JDK 21 `typeSwitch` (fixed by pinning jvmTarget to 17)
+
+Unlike the `SKIPPED` list above, this one is silent. Kotlin lowers a type-checking `when` — both
+`when (x) { is A -> … }` and the subject-less `when { x is A -> … }` — to a `java.lang.runtime.SwitchBootstraps.typeSwitch`
+invokedynamic **when the JVM target is 21**. The 2.0.0 interpreter does not implement that bootstrap method and throws
+`InterpreterInternalError: INVOKEDYNAMIC not yet implemented (unknown BSM … typeSwitch)` at runtime.
+
+There is no crash and no build warning: the composition fails, is swallowed as "Error was captured in composition while
+live edit was enabled" in logcat, and **the screen renders as a 0x0 semantics tree** — an empty screen.
+
+Measured on 2026-09-16 (SM-A725F / Android 13): 26 of the 1687 instrumented classes carried the bytecode, and the three
+screens whose copy sits on a composition path — `PictureInPictureExampleUI`, `ScreenshotDetectionExampleUI`,
+`FeatureFlagExampleUI` (all reached through `findActivity()` / status rows) — rendered empty. Screens whose type switch
+only runs on interaction (`SealedDomainErrorExampleUI`, `MVIExampleViewModel.onEvent`) rendered normally.
+
+**Fix applied:** `config.gradle` pins the Kotlin/Java bytecode target to 17 (`kotlinOptions.jvmTarget = '17'` +
+`compileOptions` 17) while keeping the Java 21 toolchain. `SwitchBootstraps` is a JDK 21 API, so targeting 17 stops the
+lowering at the source — all 26 classes came back clean and the three screens render again. Raising the target back to 21
+reintroduces the problem for every type-checking `when` in the project, so it should wait for interpreter support.
+
 ## Version Requirements
 
 - **HotSwan 2.0.0 (current):** Kotlin 2.3.x–2.4.x, AGP 9.x (official), IntelliJ IDEA / Android Studio 2025.1+, device API 28+ — runs here on Kotlin 2.4.20 / AGP 8.13.2 (see "Current Status")

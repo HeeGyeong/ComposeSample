@@ -65,6 +65,9 @@ package com.example.composesample.presentation.example.component.ui.layout.inset
  *   증상은 크래시가 아니라 **컴포지션이 조용히 실패해 화면이 0x0** 으로 뜨는 것이었다
  *   (semantics 루트 `(l=0, t=86, r=0, b=86)px`). 그래서 이 예제는 Context 재귀 대신
  *   activity-compose 1.13.0 의 `LocalActivity.current` 를 쓴다.
- *   참고: 같은 바이트코드를 가진 기존 클래스가 26개 있으나(1687개 중), 계측한 화면
- *   (SealedDomainError·MVI)은 정상 렌더됐다 — 해당 메서드가 컴포지션 경로에서 실행될 때만 터진다.
+ *   같은 바이트코드가 1687개 중 26개 클래스에 있었고, 그중 컴포지션 경로에 놓인 PictureInPicture·
+ *   ScreenshotDetection·FeatureFlag 3개 화면도 같은 이유로 비어 있었다(SealedDomainError·MVI 처럼
+ *   상호작용 시에만 도는 것은 정상 렌더). **프로젝트 차원의 조치로 바이트코드 타깃을 17 로 고정해
+ *   (config.gradle) typeSwitch 생성 자체를 막았고, 26개 전부 해소됐다.** 그래도 이 파일은
+ *   `LocalActivity.current` 를 유지한다 — 타깃을 21 로 되돌려도 다시 깨지지 않는 쪽이 낫다.
  */
