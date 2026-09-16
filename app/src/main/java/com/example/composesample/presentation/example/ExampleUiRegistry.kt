@@ -61,6 +61,7 @@ import com.example.composesample.presentation.example.component.system.platform.
 import com.example.composesample.presentation.example.component.system.platform.predictiveback.PredictiveBackExampleUI
 import com.example.composesample.presentation.example.component.system.background.location.BackgroundLocationExampleUI
 import com.example.composesample.presentation.example.component.system.background.workmanager.WorkManagerExampleUI
+import com.example.composesample.presentation.example.component.system.background.workmanager.WorkerExceptionHandlerExampleUI
 import com.example.composesample.presentation.example.component.system.media.recorder.AudioRecorderExampleUI
 import com.example.composesample.presentation.example.component.system.media.video.Media3VideoPlayerExampleUI
 import com.example.composesample.presentation.example.component.system.platform.file.SafFileSelectionExampleUI
@@ -331,6 +332,7 @@ import com.example.composesample.util.ConstValue.SelectExpressionExample
 import com.example.composesample.util.ConstValue.StrictModeExample
 import com.example.composesample.util.ConstValue.PerfettoTracingExample
 import com.example.composesample.util.ConstValue.WorkManagerExample
+import com.example.composesample.util.ConstValue.WorkerExceptionHandlerExample
 import com.example.composesample.util.ConstValue.BackgroundLocationExample
 import com.example.composesample.util.ConstValue.DynamicAppLinksExample
 import com.example.composesample.util.ConstValue.DisplayCutoutInsetsExample
@@ -568,4 +570,5 @@ val exampleUiRegistry: Map<String, @Composable (onBackEvent: () -> Unit) -> Unit
     WorkManagerTestExample to { onBackEvent -> WorkManagerTestExampleUI(onBackEvent) },
     FormValidationExample to { onBackEvent -> FormValidationExampleUI(onBackEvent) },
     DisplayCutoutInsetsExample to { onBackEvent -> DisplayCutoutInsetsExampleUI(onBackEvent) },
+    WorkerExceptionHandlerExample to { onBackEvent -> WorkerExceptionHandlerExampleUI(onBackEvent) },
 )

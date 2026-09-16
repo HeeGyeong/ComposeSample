@@ -242,10 +242,11 @@ object ConstValue {
     const val GeminiNanoExample = "geminiNanoExample"
 
     // ==================== 백그라운드 작업 예제 ====================
-    // WorkManager(백그라운드 작업), AudioRecorder(음성 녹음/재생), BackgroundLocation(Foreground Service 로 앱 이탈 후에도 위치 지속 추적 — 권한 3단계 플로우 + foregroundServiceType + WorkManager 스냅샷 대조)
+    // WorkManager(백그라운드 작업), AudioRecorder(음성 녹음/재생), BackgroundLocation(Foreground Service 로 앱 이탈 후에도 위치 지속 추적 — 권한 3단계 플로우 + foregroundServiceType + WorkManager 스냅샷 대조), WorkerExceptionHandler(work-runtime 2.11 신규 setWorkerExecutionExceptionHandler/setWorkerInitializationExceptionHandler — 실행 중 throw vs Result.failure() vs 생성자 throw vs 생성자 시그니처 불일치 4종을 넣어 어떤 실패가 핸들러를 깨우는지와 전달되는 Throwable 형태(InvocationTargetException 래핑 vs NoSuchMethodException 그대로)를 대조, 등록은 Application 의 Configuration.Provider + 매니페스트 기본 초기화 제거)
     const val WorkManagerExample = "workManagerExample"
     const val AudioRecorderExample = "audioRecorderExample"
     const val BackgroundLocationExample = "backgroundLocationExample"
+    const val WorkerExceptionHandlerExample = "workerExceptionHandlerExample"
 
     // ==================== 비디오 재생 예제 ====================
     // Media3VideoPlayer(Media3 ExoPlayer + PlayerView 통합 재생 — AndroidView 로 PlayerView 임베딩, Player.Listener 로 재생 상태/진행률 실시간 추적, 화면 이탈 시 release + 백그라운드 전환 시 자동 일시정지)

@@ -766,5 +766,12 @@ val examples2026 = listOf(
         description = "safeDrawing/safeGestures/safeContent가 어떤 기본 인셋의 합집합인지 대조(waterfall은 safeDrawing에 없다) + 기기에 컷아웃이 있어도 창이 그 영역까지 확장하지 않으면 displayCutout 인셋이 0인 것을 layoutInDisplayCutoutMode·edge-to-edge 토글로 실측, 인셋 패딩 modifier가 화면 한가운데에서도 넣어버리는 여백을 측정해 consumeWindowInsets/recalculateWindowInsets로 0을 만들기, cutoutPath(Compose 1.11 신규)와 displayShape Path 렌더링",
         blogUrl = "",
         exampleType = ConstValue.DisplayCutoutInsetsExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 09. 17",
+        title = "Worker 예외 핸들러",
+        description = "work-runtime 2.11 신규 setWorkerExecutionExceptionHandler/setWorkerInitializationExceptionHandler — 워커가 예외로 죽어도 앱은 멀쩡하고 로그만 남는 사각지대를 WorkerExceptionInfo(workerClassName·workerParameters·throwable)로 여는 경로. 실행 중 throw / Result.failure() / 생성자 throw / 생성자 시그니처 불일치 4종을 실제로 넣어 무엇이 핸들러를 깨우는지 대조하고(넷 다 WorkInfo 는 FAILED 라 상태로는 구분되지 않는다), 기본 팩토리가 리플렉션을 쓰는 탓에 생성자 예외만 InvocationTargetException 으로 감싸져 오는 것까지 확인. 등록은 Application 의 Configuration.Provider + 매니페스트 기본 초기화(androidx.startup) 제거",
+        blogUrl = "",
+        exampleType = ConstValue.WorkerExceptionHandlerExample
     )
 )

@@ -93,7 +93,7 @@ app
 |---------|---------|
 | `ai` | Gemini Nano on-device AI (ML Kit GenAI, Mock simulation) |
 | `security` | App Security (Cert Pinning/Secure Storage/Play Integrity), Hardware-Backed Keystore |
-| `background/workmanager` | WorkManager background work |
+| `background/workmanager` | WorkManager background work, worker exception handlers (2.11 `WorkerExceptionInfo`) |
 | `deeplink` | deep link handling, Dynamic App Links (Android 15+) |
 | `media/ffmpeg` | FFmpeg media handling (commented out due to library compatibility issues) |
 | `media/recorder` | audio/video recording |
