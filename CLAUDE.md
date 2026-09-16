@@ -172,6 +172,7 @@ val exampleUiRegistry: Map<String, @Composable (onBackEvent: () -> Unit) -> Unit
 
 - Both `gradlew` (Unix) and `gradlew.bat` (Windows) exist
 - Uses the Java 21 toolchain (`javaVersion = "21"` in `gradle/libs.versions.toml`)
+- **Bytecode target is pinned to 17** in `config.gradle` (`kotlinOptions.jvmTarget = '17'` + `compileOptions` 17). Do not raise it back to 21: at target 21 Kotlin lowers type-checking `when` to a JDK 21 `SwitchBootstraps.typeSwitch` invokedynamic that the debug-build HotSwan interpreter cannot execute, and the affected screens render blank with no crash (see `docs/devtools/ComposeHotReloadGuide.md`)
 - Android SDK path: see `sdk.dir` in `local.properties`
 - CLI build command: `./gradlew assembleDebug`
 
