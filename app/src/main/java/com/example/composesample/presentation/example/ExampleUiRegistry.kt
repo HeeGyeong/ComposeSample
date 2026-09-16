@@ -130,6 +130,7 @@ import com.example.composesample.presentation.example.component.ui.layout.adapti
 import com.example.composesample.presentation.example.component.ui.layout.custom.CustomLayoutExampleUI
 import com.example.composesample.presentation.example.component.ui.layout.grid.GridLayoutExampleUI
 import com.example.composesample.presentation.example.component.ui.layout.modifier.ModifierOrderExampleUI
+import com.example.composesample.presentation.example.component.ui.layout.insets.DisplayCutoutInsetsExampleUI
 import com.example.composesample.presentation.example.component.ui.text.AutoSizingTextExampleUI
 import com.example.composesample.presentation.example.component.ui.text.CustomTextRenderingExampleUI
 import com.example.composesample.presentation.example.component.ui.text.LocalContextStringsExampleUI
@@ -332,6 +333,7 @@ import com.example.composesample.util.ConstValue.PerfettoTracingExample
 import com.example.composesample.util.ConstValue.WorkManagerExample
 import com.example.composesample.util.ConstValue.BackgroundLocationExample
 import com.example.composesample.util.ConstValue.DynamicAppLinksExample
+import com.example.composesample.util.ConstValue.DisplayCutoutInsetsExample
 import com.example.composesample.util.ConstValue.BiometricAuthExample
 import com.example.composesample.util.ConstValue.LiveUpdateNotificationExample
 import com.example.composesample.util.ConstValue.SensorFusionCompassExample
@@ -565,4 +567,5 @@ val exampleUiRegistry: Map<String, @Composable (onBackEvent: () -> Unit) -> Unit
     PictureInPictureExample to { onBackEvent -> PictureInPictureExampleUI(onBackEvent) },
     WorkManagerTestExample to { onBackEvent -> WorkManagerTestExampleUI(onBackEvent) },
     FormValidationExample to { onBackEvent -> FormValidationExampleUI(onBackEvent) },
+    DisplayCutoutInsetsExample to { onBackEvent -> DisplayCutoutInsetsExampleUI(onBackEvent) },
 )

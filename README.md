@@ -170,6 +170,7 @@ Cursor IDE를 사용하는 개발자를 위한 **AI 코딩 어시스턴트 규�
 - **custom**: Custom Layout — Layout 컴포저블과 MeasurePolicy로 직접 측정/배치하는 커스텀 레이아웃
 - **grid**: Compose Grid API — non-lazy 2D 트랙 레이아웃(Compose 1.11 실험적 API): 6가지 트랙 크기 + minmax, gap, 자동/명시적 `gridItem` 배치와 span, `GridFlow` 방향, `LazyVerticalGrid`와의 실시간 비교로 Grid가 모든 자식을 컴포즈함을 확인
 - **modifier**: Modifier Order — modifier 순서가 레이아웃/드로잉/히트 테스트에 미치는 영향
+- **insets**: 디스플레이 컷아웃 & 인셋 — `safeDrawing`/`safeGestures`/`safeContent`가 어떤 기본 인셋의 합집합인지 바이트코드로 확인해 대조(waterfall은 safeDrawing에 없음), 컷아웃이 있는 기기에서도 창이 확장하지 않으면 `displayCutout` 인셋이 0인 것을 `layoutInDisplayCutoutMode`·edge-to-edge 토글로 실측, `consumeWindowInsets`/`recalculateWindowInsets`로 인셋 패딩이 0이 되는 과정, `WindowInsets.cutoutPath`(Compose 1.11 신규)와 `displayShape` Path 렌더링
 
 **media**:
 - **image**: Coil 3 이미지 로딩(AsyncImage, GIF 디코딩, 캐싱과 placeholder/error 상태)

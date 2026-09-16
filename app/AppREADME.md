@@ -48,6 +48,7 @@ app
 | `layout/drawer` | side Drawer menu |
 | `layout/flexbox` | official FlowRow/FlowColumn Flexbox |
 | `layout/header` | Fancy TopAppBar, scroll-linked header |
+| `layout/insets` | Display Cutout & Insets (safe* union rules, cutout-mode/edge-to-edge toggles, consume vs recalculate, cutoutPath/displayShape) |
 | `layout/lazycolumn` | LazyColumn optimization, ReverseLazyColumn, LazyStaggeredGrid |
 | `layout/modifier` | Modifier Order in Compose |
 | `layout/pager` | HorizontalPager, VerticalPager |

@@ -759,5 +759,12 @@ val examples2026 = listOf(
         description = "같은 '블러'가 가리키는 세 가지를 분리 — blurBehindRadius+FLAG_BLUR_BEHIND(뒤 윈도우)·setBackgroundBlurRadius(내 윈도우 배경)·Modifier.blur(컴포저블). SDK_INT만으로는 부족해 isCrossWindowBlurEnabled를 리스너로 구독해 시스템이 꺼둔 상태를 드러내고, API 31 미만용 폴백으로 GraphicsLayer 캡처 후 소프트웨어 박스 블러를 돌려 축소 배율별 소요 시간을 실측",
         blogUrl = "",
         exampleType = ConstValue.DialogBlurExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 09. 16",
+        title = "디스플레이 컷아웃 & 인셋",
+        description = "safeDrawing/safeGestures/safeContent가 어떤 기본 인셋의 합집합인지 대조(waterfall은 safeDrawing에 없다) + 기기에 컷아웃이 있어도 창이 그 영역까지 확장하지 않으면 displayCutout 인셋이 0인 것을 layoutInDisplayCutoutMode·edge-to-edge 토글로 실측, 인셋 패딩 modifier가 화면 한가운데에서도 넣어버리는 여백을 측정해 consumeWindowInsets/recalculateWindowInsets로 0을 만들기, cutoutPath(Compose 1.11 신규)와 displayShape Path 렌더링",
+        blogUrl = "",
+        exampleType = ConstValue.DisplayCutoutInsetsExample
     )
 )
