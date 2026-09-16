@@ -66,6 +66,10 @@ import androidx.compose.ui.unit.sp
  * 의도적으로 만든 3가지 상황을 디버그 모드 on/off 로 비교하여, 잘못된 key 사용·중복 정의·
  * 한쪽 화면에만 존재하는 sharedElement 를 런타임에서 즉시 발견할 수 있는 사용법을 보여준다.
  */
+// lintVitalRelease 의 DisallowLookaheadAnimationVisualDebug 는 "릴리즈 코드에 디버깅 도구를 남기지
+// 말라"는 규칙이다. 이 화면은 그 도구 자체가 주제인 예제라 호출을 없앨 수 없으므로 여기서만 억제한다
+// (억제하지 않으면 assembleRelease 가 lint fatal 3건으로 실패한다).
+@Suppress("DisallowLookaheadAnimationVisualDebug")
 @OptIn(ExperimentalSharedTransitionApi::class, ExperimentalLookaheadAnimationVisualDebugApi::class)
 @Composable
 fun SharedElementDebugToolingExampleUI(

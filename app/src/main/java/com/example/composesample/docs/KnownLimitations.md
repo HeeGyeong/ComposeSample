@@ -20,6 +20,16 @@ A human-readable collection of **intentional deferrals, version constraints, and
 
 ---
 
+## Intentional lint suppressions
+
+### LINT-LOOKAHEAD-DEBUG-01 — `DisallowLookaheadAnimationVisualDebug` (2026-09-16)
+
+`lintVitalRelease` treats `LookaheadAnimationVisualDebugging` as a fatal error ("debugging tools … not intended for use
+in release builds"), which made `assembleRelease` fail with three errors in
+`SharedElementDebugToolingExampleUI`. That screen exists to demonstrate the tool itself, so the calls cannot be removed;
+the check is suppressed on that one composable with a comment stating why. Found by the 2026-09-16 pre-work run —
+`assembleDebug` never surfaced it because lint-vital only runs on release.
+
 ## Planned for splitting (separate PR)
 
 ### ARCH-02 — Split core-dependencies per module
