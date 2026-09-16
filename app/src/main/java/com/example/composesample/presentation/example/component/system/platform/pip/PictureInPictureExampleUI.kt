@@ -50,6 +50,7 @@ import androidx.compose.ui.unit.sp
 import androidx.core.app.PictureInPictureParamsCompat
 import androidx.core.util.Consumer
 import com.example.composesample.presentation.MainHeader
+import android.annotation.SuppressLint
 
 /**
  * Picture-in-Picture compat 예제
@@ -352,6 +353,9 @@ private fun PipDemoCard(
     }
 }
 
+// toPictureInPictureParams() 는 @RestrictTo(LIBRARY_GROUP) 이지만, compat 파라미터가 플랫폼
+// 파라미터로 어떻게 잘려 나가는지를 보이는 것이 이 예제의 주제라 의도적으로 호출한다.
+@SuppressLint("RestrictedApi")
 /** 실제 진입. API 26 미만에는 PiP 자체가 없다. */
 private fun enterPip(activity: Activity?, options: PipOptions, hint: Rect?): String {
     if (activity == null) return "Activity 를 찾지 못함"
@@ -366,6 +370,7 @@ private fun enterPip(activity: Activity?, options: PipOptions, hint: Rect?): Str
 }
 
 /** 진입하지 않고 파라미터만 갱신 — autoEnter 를 쓰려면 이 경로가 필요하다 */
+@SuppressLint("RestrictedApi")
 private fun applyPipParams(activity: Activity?, options: PipOptions, hint: Rect?): String {
     if (activity == null) return "Activity 를 찾지 못함"
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return "API 26 미만 — PiP 미지원"
@@ -380,6 +385,7 @@ private fun applyPipParams(activity: Activity?, options: PipOptions, hint: Rect?
 
 // ==================== 3. 변환 결과 되읽기 ====================
 
+@SuppressLint("RestrictedApi")
 @Composable
 private fun PipReadbackCard(options: PipOptions, sourceRectHint: Rect?) {
     PipSectionCard(title = "3. 변환된 파라미터 되읽기 (이 기기 실측)") {

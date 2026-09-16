@@ -13,6 +13,10 @@
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
     <!-- Foreground Service 알림 (API 33+). 없으면 서비스는 돌지만 알림이 보이지 않는다 -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <!-- Android 14(API 34)+ 의 Activity.registerScreenCaptureCallback 가 요구하는 일반 권한.
+         없으면 해당 API 가 SecurityException 을 던진다(ScreenshotDetectionExample). -->
+    <uses-permission android:name="android.permission.DETECT_SCREEN_CAPTURE" />
     <!-- Foreground Service. LOCATION 타입은 API 34+ 에서 별도 선언 + 위치 런타임 권한이 함께 필요하다 -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />

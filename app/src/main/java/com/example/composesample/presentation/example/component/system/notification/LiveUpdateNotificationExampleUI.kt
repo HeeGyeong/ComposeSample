@@ -55,6 +55,7 @@ import androidx.core.os.BundleCompat
 import com.example.composesample.R
 import com.example.composesample.presentation.MainHeader
 import kotlinx.coroutines.delay
+import android.annotation.SuppressLint
 
 /**
  * Android 16 Live Updates 알림 예제
@@ -310,6 +311,9 @@ private fun LiveUpdateDemoCard(
         buildProgressStyle(context, options).progressMax
     }
 
+    // POST_NOTIFICATIONS 는 이 예제 화면이 런타임에 요청하고, 거부 상태면 버튼이 비활성화된다.
+    // lint 는 그 흐름을 따라가지 못해 오탐을 낸다.
+    @SuppressLint("MissingPermission")
     fun postNotification() {
         createLiveUpdateChannel(context)
         NotificationManagerCompat.from(context)

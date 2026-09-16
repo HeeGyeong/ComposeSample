@@ -21,6 +21,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import java.util.concurrent.TimeUnit
+import android.annotation.SuppressLint
 
 /**
  * 주기적으로 위치를 한 번씩만 찍는 Worker — Foreground Service 의 대조군.
@@ -59,6 +60,8 @@ class LocationSnapshotWorker(
             return Result.failure(workDataOf(KEY_ERROR to "no_location_manager"))
         }
 
+        // 위치 권한은 예제 화면이 3단계 플로우로 먼저 받고, 없으면 이 워커를 스케줄하지 않는다.
+        @SuppressLint("MissingPermission")
         val location = PROVIDERS
             .filter { provider -> runCatching { manager.isProviderEnabled(provider) }.getOrDefault(false) }
             .mapNotNull { provider -> runCatching { manager.getLastKnownLocation(provider) }.getOrNull() }

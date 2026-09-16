@@ -31,6 +31,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.core.content.ContextCompat
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
@@ -250,11 +251,9 @@ private fun PendingIntentMutabilitySection() {
             }
         }
         val filter = IntentFilter(IPC_DEMO_ACTION)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            context.registerReceiver(receiver, filter, Context.RECEIVER_NOT_EXPORTED)
-        } else {
-            context.registerReceiver(receiver, filter)
-        }
+        // ContextCompat 이 API 33+ 의 RECEIVER_NOT_EXPORTED 전달과 그 이하의 폴백을 한 번에 처리한다.
+        // 직접 분기하면 하위 분기가 "플래그 없는 registerReceiver" 로 남아 lint 가 오류로 잡는다.
+        ContextCompat.registerReceiver(context, receiver, filter, ContextCompat.RECEIVER_NOT_EXPORTED)
         onDispose { runCatching { context.unregisterReceiver(receiver) } }
     }
 

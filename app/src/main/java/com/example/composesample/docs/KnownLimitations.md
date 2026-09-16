@@ -20,6 +20,43 @@ A human-readable collection of **intentional deferrals, version constraints, and
 
 ---
 
+## Lint status (audited 2026-09-16)
+
+The 2026-09-16 audit ran `./gradlew :app:lintDebug` for the first time: **183 issues, 26 of them errors**. After the pass
+below it is **151 issues, 0 errors**, so `lint` can now be added to the build gate if desired (it is not part of it yet —
+the gate is `assembleDebug` + `assembleRelease` + unit tests + androidTest compile).
+
+**Fixed (behaviour or correctness):**
+
+| Issue | Where | Why it mattered |
+|-------|-------|-----------------|
+| `MissingPermission` | `ScreenshotDetectionExampleUI` | `DETECT_SCREEN_CAPTURE` was missing from the manifest, so `registerScreenCaptureCallback` would throw `SecurityException` on API 34+ |
+| `UnspecifiedRegisterReceiverFlag` | `IpcExportedComponentExampleUI` | the pre-API-33 branch registered a receiver with no export flag; replaced with `ContextCompat.registerReceiver(..., RECEIVER_NOT_EXPORTED)` |
+| `UnusedContentLambdaTargetStateParameter` | `BottomNavigationActivity` | `AnimatedContent` read the outer state instead of the lambda's `targetState`, so both sides of the crossfade drew the same text |
+| `UnusedMaterial3ScaffoldPaddingParameter` | `MainActivity` | the Scaffold's `contentPadding` was dropped; now applied, with `contentWindowInsets = WindowInsets(0)` since the parent already consumed the insets |
+| `NewApi` / `InlinedApi` (9) | insets example | `@RequiresApi(Q)` on the `DisplayCutout` helpers; API 28 constants read only inside the version guard |
+| `NewApi` (2) | `StrictModeExampleUI` | the API 28 calls were gated by a Boolean flag lint cannot follow; call sites now carry the version check |
+| `MissingTranslation` (4) | `values-en/strings.xml` | the four Glance widget descriptions existed only in Korean |
+
+**Suppressed with a stated reason (intentional, each at its call site):**
+
+| Issue | Count | Reason |
+|-------|-------|--------|
+| `MissingPermission` | 4 sites | location/notification examples check the permission at runtime and return early; lint cannot follow the flow |
+| `RestrictedApi` | 3 sites | `PictureInPictureParamsCompat.toPictureInPictureParams()` is `@RestrictTo`, and demonstrating that conversion is the point of the example |
+| `ViewModelConstructorInComposable` | 2 sites | `PreviewExampleUI` demonstrates preview-only ViewModel construction |
+| `DisallowLookaheadAnimationVisualDebug` | 1 site | see the section below — the debug tool is the subject of that screen |
+
+**Remaining 151 warnings (none block a build):**
+
+| Category | Count | Verdict |
+|----------|-------|---------|
+| `ObsoleteSdkInt` | 23 | **Do not "fix"** — lint analyses the debug variant, whose minSdk the HotSwan runtime raises to 26; release is still 24 and needs those guards (ComposeHotReloadGuide) |
+| `GradleDependency` / `NewerVersionAvailable` / `AndroidGradlePluginVersion` | 32 | Deferred — dependency currency needs approval (AGP 9.4.0, compose-bom 2026.09.00, lifecycle 2.11.0, coil 3.6.2, mockk 1.14.11, …) |
+| `UnusedResources` | 17 | Open 🟢 — dead colours/drawables/strings, safe to delete in a dedicated pass |
+| `Recycle` | 2 | False positive — both call sites already use `?.use { }` |
+| `UseKtx`, `UnusedAttribute`, `MonochromeLauncherIcon`, `IconLocation`, `RedundantLabel`, `ConstantLocale`, `SimpleDateFormat`, others | ~77 | Open 🟢 — cosmetic, no behavioural impact |
+
 ## Intentional lint suppressions
 
 ### LINT-LOOKAHEAD-DEBUG-01 — `DisallowLookaheadAnimationVisualDebug` (2026-09-16)

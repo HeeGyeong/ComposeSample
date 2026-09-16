@@ -175,11 +175,13 @@ class BottomNavigationActivity : ComponentActivity() {
                         },
                         modifier = Modifier.background(color = Color.Yellow),
                         label = "TitleAnimation"
-                    ) {
+                    ) { targetNavigationType ->
+                        // 람다 파라미터(targetState)를 써야 전환 중 들어오는 콘텐츠와 나가는 콘텐츠가
+                        // 서로 다른 값을 그린다. 바깥 상태를 읽으면 둘 다 같은 문구라 크로스페이드가 보이지 않는다.
                         Text(
                             modifier = Modifier.fillMaxWidth(),
                             text = "Now Navigation Type : ${
-                                if (!navigationType) {
+                                if (!targetNavigationType) {
                                     "Bottom Navigation API"
                                 } else {
                                     "Custom Bottom Navigation"

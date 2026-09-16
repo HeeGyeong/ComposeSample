@@ -17,15 +17,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.composesample.presentation.MainHeader
 import com.example.composesample.presentation.example.BlogExampleViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun CoordinatorExampleUI(
     onBackEvent: () -> Unit,
 ) {
-    val blogExampleViewModel = viewModel<BlogExampleViewModel>()
+    // BlogExampleViewModel 은 Koin 이 Navigation·Application 을 주입해 만든다. AndroidX 의
+    // viewModel() 기본 팩토리는 <init>(Application) 을 찾다가 NoSuchMethodException 을 던지고,
+    // 컴포지션이 조용히 실패해 화면이 비어 버린다(렌더 감사에서 0x0 으로 검출).
+    // 지금까지 앱에서 동작한 이유는 BlogExampleActivity 가 같은 스토어에 인스턴스를 미리 만들어 뒀기
+    // 때문일 뿐이라, 프로젝트 규약대로 koinViewModel() 로 직접 얻는다.
+    val blogExampleViewModel: BlogExampleViewModel = koinViewModel()
     val context = LocalContext.current
 
     Column(

@@ -9,6 +9,8 @@ import androidx.activity.compose.setContent
 import android.util.Log
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.systemBars
@@ -43,14 +45,19 @@ class MainActivity : ComponentActivity() {
             Surface(
                 color = Color.White
             ) {
-                // windowInsetsPadding이 systemBars를 처리하므로 content padding 불필요
+                // 인셋은 바깥 windowInsetsPadding 이 이미 적용·소비했으므로 Scaffold 는 인셋을 더하지 않는다
+                // (contentWindowInsets = WindowInsets(0)). 그래도 contentPadding 은 그대로 적용해
+                // 나중에 topBar/bottomBar 를 붙였을 때 콘텐츠가 가려지지 않게 한다.
                 Scaffold(
                     modifier = Modifier
                         .fillMaxSize()
                         .background(color = Color.LightGray)
                         .windowInsetsPadding(WindowInsets.systemBars),
-                ) { _ ->
-                    MainActivityScreen()
+                    contentWindowInsets = WindowInsets(0)
+                ) { innerPadding ->
+                    Box(modifier = Modifier.padding(innerPadding)) {
+                        MainActivityScreen()
+                    }
                 }
             }
         }

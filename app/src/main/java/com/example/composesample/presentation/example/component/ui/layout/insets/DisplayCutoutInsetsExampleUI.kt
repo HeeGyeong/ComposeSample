@@ -6,6 +6,7 @@ import android.os.Build
 import android.view.DisplayCutout
 import android.view.WindowManager
 import androidx.activity.compose.LocalActivity
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
@@ -153,6 +154,9 @@ private fun rememberInsetsSnapshot(): InsetsSnapshot {
  * 화면 루트에서 remember 해야 한다. 리스트 항목 안에서 만들면 그 항목이 스크롤로 사라질 때
  * DisposableEffect 의 onDispose 가 돌아 사용자가 켜 둔 설정이 임의로 원복된다.
  */
+/** `LAYOUT_IN_DISPLAY_CUTOUT_MODE_DEFAULT` 의 값. API 28 미만에서 상수를 참조하지 않기 위한 대체. */
+private const val CUTOUT_MODE_DEFAULT_VALUE = 0
+
 private class WindowModeController(
     private val activity: Activity?,
     val originalCutoutMode: Int
@@ -200,11 +204,12 @@ private fun rememberWindowModeController(): WindowModeController {
     // 디버그 빌드의 HotSwan 인터프리터가 그 BSM 을 구현하지 않아 화면이 통째로 렌더되지 않는다(실측).
     val activity = LocalActivity.current
     val controller = remember(activity) {
+        // DEFAULT 는 0 이고 API 28 미만에는 상수 자체가 없으므로, 가드 안에서만 상수를 읽는다.
         val original = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             activity?.window?.attributes?.layoutInDisplayCutoutMode
                 ?: WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_DEFAULT
         } else {
-            WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_DEFAULT
+            CUTOUT_MODE_DEFAULT_VALUE
         }
         WindowModeController(activity = activity, originalCutoutMode = original)
     }
@@ -233,12 +238,19 @@ private fun Int.toDpText(density: Density): String {
     return "${(dp * 10).roundToInt() / 10f}"
 }
 
-/** API 28 부터 존재하는 상수들. 28 미만에서는 버튼 대신 안내 문구가 나온다. */
-private val cutoutModeNames = mapOf(
-    WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_DEFAULT to "DEFAULT",
-    WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES to "SHORT_EDGES",
-    WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_NEVER to "NEVER"
-)
+/**
+ * 모드 값을 이름으로. `LAYOUT_IN_DISPLAY_CUTOUT_MODE_*` 는 API 28 상수라 분기 안에서만 참조한다
+ * (컴파일 타임 상수라 런타임 문제는 없지만, 가드 밖 참조는 lint 가 NewApi 로 잡는다).
+ */
+private fun cutoutModeName(mode: Int): String {
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) return "API 28 미만 — 모드 개념 없음"
+    return when (mode) {
+        WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_DEFAULT -> "DEFAULT"
+        WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES -> "SHORT_EDGES"
+        WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_NEVER -> "NEVER"
+        else -> mode.toString()
+    }
+}
 
 // ==================== 화면 ====================
 
@@ -390,7 +402,8 @@ private fun WindowModeCard(insets: InsetsSnapshot, windowMode: WindowModeControl
         Spacer(modifier = Modifier.height(10.dp))
 
         ResultRow("기기(Display)", deviceCutoutText(deviceCutout))
-        if (deviceCutout != null) {
+        // deviceCutout 은 API 29+ 에서만 채워지지만, 호출부에도 버전 가드를 둬야 lint 가 통과한다.
+        if (deviceCutout != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             ResultRow("safeInset", deviceSafeInsetText(deviceCutout))
             ResultRow("boundingRect", deviceBoundingRectText(deviceCutout))
         }
@@ -404,7 +417,7 @@ private fun WindowModeCard(insets: InsetsSnapshot, windowMode: WindowModeControl
         BodyText("윈도우 설정을 바꿔 위 값이 어떻게 달라지는지 직접 확인한다.")
         Spacer(modifier = Modifier.height(8.dp))
 
-        ResultRow("현재 모드", cutoutModeNames[windowMode.cutoutMode] ?: windowMode.cutoutMode.toString())
+        ResultRow("현재 모드", cutoutModeName(windowMode.cutoutMode))
         ResultRow("edge-to-edge", if (windowMode.edgeToEdge) "ON (decorFitsSystemWindows=false)" else "OFF")
 
         Spacer(modifier = Modifier.height(8.dp))
@@ -452,10 +465,12 @@ private fun deviceCutoutText(cutout: DisplayCutout?): String = when {
     else -> "컷아웃 있음"
 }
 
+@RequiresApi(Build.VERSION_CODES.Q)
 private fun deviceSafeInsetText(cutout: DisplayCutout): String =
     "${cutout.safeInsetLeft} · ${cutout.safeInsetTop} · " +
         "${cutout.safeInsetRight} · ${cutout.safeInsetBottom} px"
 
+@RequiresApi(Build.VERSION_CODES.Q)
 private fun deviceBoundingRectText(cutout: DisplayCutout): String {
     val rects = cutout.boundingRects
     if (rects.isEmpty()) return "0개"
@@ -506,6 +521,8 @@ private fun PaddingCompareCard(insets: InsetsSnapshot) {
     }
 }
 
+// insetModifier 는 이 요소의 modifier 가 아니라 "시연 대상" 이라 이름을 modifier 로 두지 않는다.
+@Suppress("ModifierParameter")
 @Composable
 private fun PaddingDemoRow(
     label: String,
@@ -591,6 +608,8 @@ private fun ConsumeCard(insets: InsetsSnapshot) {
     }
 }
 
+// 위와 같은 이유로 modifier 이름을 쓰지 않는다.
+@Suppress("ModifierParameter")
 @Composable
 private fun ConsumeDemoRow(label: String, insetModifier: Modifier) {
     Column(modifier = Modifier.padding(bottom = 12.dp)) {

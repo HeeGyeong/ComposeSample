@@ -35,6 +35,7 @@ import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import android.annotation.SuppressLint
 
 /** 화면에 표시할 서비스 상태 스냅샷 */
 data class LocationTrackingState(
@@ -198,6 +199,9 @@ class LocationTrackingService : Service() {
 
     // ==================== 위치 수신 ====================
 
+    // 함수 앞부분에서 권한 회수 여부를 직접 확인하고 return 하므로 아래 호출은 권한이 보장된 상태다.
+    // lint 는 그 흐름을 따라가지 못한다.
+    @SuppressLint("MissingPermission")
     private fun startLocationUpdates() {
         val manager = getSystemService(Context.LOCATION_SERVICE) as? LocationManager
         if (manager == null) {
@@ -285,6 +289,8 @@ class LocationTrackingService : Service() {
         }
     }
 
+    // 첫 줄에서 hasNotificationPermission() 으로 직접 확인하고 return 한다.
+    @SuppressLint("MissingPermission")
     private fun updateNotification() {
         // API 33+ 에서 POST_NOTIFICATIONS 가 없으면 알림은 보이지 않는다.
         // 단, 서비스 자체는 정상 동작한다 — 알림 권한과 FGS 실행 가능 여부는 별개다.

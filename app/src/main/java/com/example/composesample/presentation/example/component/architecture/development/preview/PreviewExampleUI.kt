@@ -175,6 +175,9 @@ fun ViewModelPreview2(
  *
  * 수동으로 preview 내부에서 viewModel 인스턴스 생성하여 사용하기
  */
+// 이 파일은 "프리뷰에서 ViewModel 을 어떻게 다루는가" 자체가 주제라, 컴포저블 안에서의 직접 생성이
+// 의도된 시연이다(런타임 화면이 아니라 @Preview 전용).
+@Suppress("ViewModelConstructorInComposable")
 @Preview
 @Composable
 fun ViewModelPreview3() {
@@ -197,6 +200,7 @@ fun ViewModelPreview3() {
  * @Preview 환경에서 LocalInspectionMode.current는 자동으로 true가 되므로
  * 커스텀 CompositionLocal 없이도 preview 분기 처리가 가능합니다.
  */
+@Suppress("ViewModelConstructorInComposable")
 @Composable
 fun ViewModelPreview4() {
     val blogExampleViewModel = BlogExampleViewModel(

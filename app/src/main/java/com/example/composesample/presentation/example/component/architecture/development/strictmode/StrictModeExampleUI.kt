@@ -87,7 +87,12 @@ fun StrictModeExampleUI(onBackEvent: () -> Unit) {
                     description = "detectDiskReads/detectDiskWrites/detectNetwork 정책을 설정하고, 메인 스레드에서 파일 쓰기·읽기를 수행한다. UI 스레드를 막는 디스크 I/O 가 DiskWrite/DiskRead 위반으로 잡힌다.",
                     accent = Color(0xFFE53935),
                     enabled = listenerSupported,
-                    run = { onViolation -> detectThreadViolations(context, onViolation) }
+                    // enabled 플래그만으로는 lint 가 버전 보장을 못 읽어 호출부에도 가드를 둔다.
+                    run = { onViolation ->
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                            detectThreadViolations(context, onViolation)
+                        }
+                    }
                 )
             }
             item {
@@ -97,7 +102,11 @@ fun StrictModeExampleUI(onBackEvent: () -> Unit) {
                     description = "detectLeakedClosableObjects 정책을 설정하고, FileInputStream 을 close() 없이 버린 뒤 GC 를 유도한다. 파이널라이즈 시점에 닫히지 않은 리소스가 LeakedClosableViolation 으로 잡힌다(타이밍 의존, 1~2회 재시도될 수 있음).",
                     accent = Color(0xFF8E24AA),
                     enabled = listenerSupported,
-                    run = { onViolation -> detectVmViolations(context, onViolation) }
+                    run = { onViolation ->
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                            detectVmViolations(context, onViolation)
+                        }
+                    }
                 )
             }
             item { GuideCard() }

@@ -100,6 +100,22 @@ only runs on interaction (`SealedDomainErrorExampleUI`, `MVIExampleViewModel.onE
 lowering at the source — all 26 classes came back clean and the three screens render again. Raising the target back to 21
 reintroduces the problem for every type-checking `when` in the project, so it should wait for interpreter support.
 
+### Side effect: the debug variant's minSdk becomes 26
+
+`interpreter-runtime:2.0.0` declares `minSdkVersion="26"`, and the plugin adds it to debug only. The merged manifests
+therefore differ by variant — verified in `app/build/outputs/logs/manifest-merger-*-report.txt` on 2026-09-16:
+
+| Variant | Merged `minSdkVersion` |
+|---------|------------------------|
+| debug   | **26** (raised by the HotSwan runtime) |
+| release | 24 (the value declared in `libs.versions.toml`) |
+
+Two consequences worth knowing:
+
+1. Debug builds cannot be installed on API 24-25 devices. Release builds still can.
+2. `lint` analyses the debug variant, so it reports 23 `ObsoleteSdkInt` warnings ("SDK_INT is always >= 26") for guards
+   that are **still required by the release variant**. Do not delete those guards on lint's advice.
+
 ## Version Requirements
 
 - **HotSwan 2.0.0 (current):** Kotlin 2.3.x–2.4.x, AGP 9.x (official), IntelliJ IDEA / Android Studio 2025.1+, device API 28+ — runs here on Kotlin 2.4.20 / AGP 8.13.2 (see "Current Status")

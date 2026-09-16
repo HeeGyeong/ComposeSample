@@ -37,4 +37,9 @@
     <string name="test_other_screen">Go to Other Screen</string>
     <string name="test_other_activity">Go to New Activity</string>
     <string name="test_description">Test if language settings are maintained on other screens</string>
+    <!-- Glance widget descriptions (Korean originals live in values/strings.xml). -->
+    <string name="streaks_widget_description">Provider used by the widget example</string>
+    <string name="small_widget_description">1x1 small Glance widget</string>
+    <string name="medium_widget_description">2x2 medium Glance widget</string>
+    <string name="large_widget_description">3x2+ large Glance widget</string>
 </resources> 
