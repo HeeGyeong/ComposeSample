@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- 위젯 초기 로딩 레이아웃 — 앱 테마 위에 겹쳐 그리는 화면이 아니라 배경이 필요하다(Overdraw 억제) -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="Overdraw"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -10,7 +13,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="로딩 중..."
+        android:text="@string/widget_loading"
         android:textColor="@android:color/white"
         android:textSize="14sp"
         android:textStyle="bold" />

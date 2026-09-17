@@ -9,6 +9,7 @@ import android.net.Uri
 import android.os.Build
 import android.util.Log
 import androidx.compose.runtime.MutableState
+import androidx.core.net.toUri
 import java.io.File
 import java.io.IOException
 import java.text.SimpleDateFormat
@@ -95,7 +96,7 @@ fun startMediaPlayer(
     isPlaying: MutableState<Boolean>,
 ) {
     mediaPlayer.value = MediaPlayer
-        .create(context, Uri.parse(outputFile.value?.absolutePath))
+        .create(context, outputFile.value?.absolutePath?.toUri())
         .apply {
             setAudioAttributes(
                 AudioAttributes

@@ -56,6 +56,7 @@ import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -211,7 +212,8 @@ class BottomNavigationActivity : ComponentActivity() {
                         }
 
                         Column(
-                            modifier = Modifier.offset(y = offsetY.value.dp)
+                            // 애니메이션 값은 배치 단계에서 읽어 리컴포지션을 건너뛴다(UseOfNonLambdaOffsetOverload)
+                            modifier = Modifier.offset { IntOffset(0, offsetY.value.dp.roundToPx()) }
                         ) {
                             Spacer(modifier = Modifier.height(20.dp))
 

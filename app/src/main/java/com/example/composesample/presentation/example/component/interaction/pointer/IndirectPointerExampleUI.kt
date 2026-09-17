@@ -37,6 +37,7 @@ import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.PointerType
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.node.ModifierNodeElement
+import androidx.compose.ui.platform.InspectorInfo
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -90,6 +91,12 @@ private data class IndirectPointerLogElement(
     override fun create() = IndirectPointerLogNode(onEvent)
     override fun update(node: IndirectPointerLogNode) {
         node.onEvent = onEvent
+    }
+
+    // 레이아웃 인스펙터에 이 modifier 가 무엇인지 드러낸다(기본 구현은 이름조차 비어 있다)
+    override fun InspectorInfo.inspectableProperties() {
+        name = "logIndirectPointerEvents"
+        properties["onEvent"] = onEvent
     }
 }
 

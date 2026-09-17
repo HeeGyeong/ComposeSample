@@ -224,6 +224,8 @@ fun SafFileSelectionExampleUI(onBackEvent: () -> Unit) {
 }
 
 // 파일 크기 가져오기
+// Recycle 억제: 아래 query 결과는 ?.use { } 로 닫는다(lint 가 ?. 체인을 따라가지 못하는 오탐)
+@Suppress("Recycle")
 private fun getFileSize(context: Context, uri: Uri): Long {
     var fileSize: Long = 0
 

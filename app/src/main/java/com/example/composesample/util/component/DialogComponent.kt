@@ -27,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import com.example.composesample.util.noRippleClickable
 
 
@@ -49,9 +50,7 @@ fun PermissionDialog(
             permissionDialog.value = false
             context.startActivity(
                 Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).setData(
-                    Uri.parse(
-                        "package:${context.packageName}"
-                    )
+                    "package:${context.packageName}".toUri()
                 )
             )
         }

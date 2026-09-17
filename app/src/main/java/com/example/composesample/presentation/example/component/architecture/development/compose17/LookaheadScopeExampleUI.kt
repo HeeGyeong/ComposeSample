@@ -143,6 +143,9 @@ private fun SizeChangeAnimationExample() {
 }
 
 @OptIn(ExperimentalSharedTransitionApi::class)
+// UseOfNonLambdaOffsetOverload 억제: 람다 오버로드는 값을 배치 단계에서 읽는다.
+// 이 예제는 lookahead 패스가 무엇을 관측하는지가 주제라 읽는 시점을 바꾸지 않는다.
+@Suppress("UseOfNonLambdaOffsetOverload")
 @Composable
 private fun PositionChangeAnimationExample() {
     var isRight by remember { mutableStateOf(false) }

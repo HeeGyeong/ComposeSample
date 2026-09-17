@@ -330,16 +330,16 @@ private fun NeumorphismCard() {
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
             DemoItem(label = "볼록", caption = "dropShadow ×2") {
-                Box(modifier = Modifier.size(72.dp).then(raisedNeumorphism(shape)))
+                Box(modifier = Modifier.size(72.dp).raisedNeumorphism(shape))
             }
             DemoItem(label = "오목", caption = "innerShadow ×2") {
-                Box(modifier = Modifier.size(72.dp).then(pressedNeumorphism(shape)))
+                Box(modifier = Modifier.size(72.dp).pressedNeumorphism(shape))
             }
             DemoItem(label = "키보드 키", caption = "탭해서 전환") {
                 Box(
                     modifier = Modifier
                         .size(72.dp)
-                        .then(if (keyPressed) pressedNeumorphism(shape) else raisedNeumorphism(shape))
+                        .then(if (keyPressed) Modifier.pressedNeumorphism(shape) else Modifier.raisedNeumorphism(shape))
                         .clickable { keyPressed = !keyPressed },
                     contentAlignment = Alignment.Center
                 ) {
@@ -363,13 +363,13 @@ private fun NeumorphismCard() {
 }
 
 /** 볼록: 밝은 그림자(좌상) + 어두운 그림자(우하)를 도형 바깥에 */
-private fun raisedNeumorphism(shape: Shape): Modifier = Modifier
+private fun Modifier.raisedNeumorphism(shape: Shape): Modifier = this
     .dropShadow(shape, Shadow(radius = 12.dp, color = Color.White, offset = DpOffset((-6).dp, (-6).dp), alpha = 0.9f))
     .dropShadow(shape, Shadow(radius = 12.dp, color = NeuDark, offset = DpOffset(6.dp, 6.dp), alpha = 0.8f))
     .background(NeuBackground, shape)
 
 /** 오목: 같은 한 쌍을 도형 안쪽에 */
-private fun pressedNeumorphism(shape: Shape): Modifier = Modifier
+private fun Modifier.pressedNeumorphism(shape: Shape): Modifier = this
     .background(NeuBackground, shape)
     .innerShadow(shape, Shadow(radius = 8.dp, color = NeuDark, offset = DpOffset(4.dp, 4.dp), alpha = 0.9f))
     .innerShadow(shape, Shadow(radius = 8.dp, color = Color.White, offset = DpOffset((-4).dp, (-4).dp), alpha = 0.9f))

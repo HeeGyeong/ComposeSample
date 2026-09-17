@@ -22,7 +22,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.example.composesample.presentation.MainHeader
@@ -43,8 +44,8 @@ fun FlexBoxExampleUI(onBackEvent: () -> Unit) {
 
         item {
             // Device Width, Height Size
-            val configuration = LocalConfiguration.current
-            val screenWidth = configuration.screenWidthDp.dp
+            val containerWidth = LocalWindowInfo.current.containerSize.width
+            val screenWidth = with(LocalDensity.current) { containerWidth.toDp() }
 
             // Item Margin 값을 Device에 따라 다르게 설정.
             val widthMargin = if (((screenWidth * 45) / 2000) < 8.dp) {

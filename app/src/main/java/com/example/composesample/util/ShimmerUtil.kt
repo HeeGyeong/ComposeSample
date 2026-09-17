@@ -15,7 +15,8 @@ import androidx.compose.ui.composed
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.TextUnit
@@ -32,8 +33,8 @@ fun Modifier.shimmer(
     shimmerAnimation: Float,
     ratio: Float = 0.6f
 ): Modifier = composed {
-    val configuration = LocalConfiguration.current
-    val screenWidthDp = configuration.screenWidthDp.dp
+    val containerWidth = LocalWindowInfo.current.containerSize.width
+    val screenWidthDp = with(LocalDensity.current) { containerWidth.toDp() }
     val shimmerWidth = screenWidthDp * ratio
 
     background(
@@ -69,8 +70,8 @@ fun shimmerBrush(): Brush {
         ), label = "Shimmer"
     )
 
-    val configuration = LocalConfiguration.current
-    val screenWidthDp = configuration.screenWidthDp.dp
+    val containerWidth = LocalWindowInfo.current.containerSize.width
+    val screenWidthDp = with(LocalDensity.current) { containerWidth.toDp() }
     val shimmerWidth = screenWidthDp * 0.6f
 
     return Brush.linearGradient(
@@ -104,8 +105,8 @@ fun Modifier.defaultShimmerBrush(
         ), label = "Shimmer"
     )
 
-    val configuration = LocalConfiguration.current
-    val screenWidthDp = configuration.screenWidthDp.dp
+    val containerWidth = LocalWindowInfo.current.containerSize.width
+    val screenWidthDp = with(LocalDensity.current) { containerWidth.toDp() }
     val shimmerWidth = screenWidthDp * ratio
 
     background(

@@ -202,6 +202,8 @@ private fun MediaQueryActivationCard(integrationEnabled: Boolean) {
 // ==================== 3. 실제 기기 값 ====================
 
 @OptIn(ExperimentalMediaQueryApi::class)
+// FrequentlyChangingValue 억제: 창 크기 값이 바뀌는 것을 화면에 그대로 드러내는 것이 이 카드의 목적이다
+@Suppress("FrequentlyChangingValue")
 @Composable
 private fun MediaQueryDeviceValuesCard(integrationEnabled: Boolean) {
     ExampleCard(title = "실제 기기 값 (실동작)", titleColor = Color(0xFF2E7D32)) {

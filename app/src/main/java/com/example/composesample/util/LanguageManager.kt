@@ -5,6 +5,9 @@ import android.content.res.Configuration
 import androidx.core.content.edit
 import java.util.Locale
 
+// AppBundleLocaleChanges 억제: Play Feature Delivery 언어 분할이 아니라
+// "앱이 직접 로케일을 바꾸는 경로"를 보여 주는 예제용 유틸이다.
+@Suppress("AppBundleLocaleChanges")
 object LanguageManager {
     private const val LANGUAGE_PREFS = "language_prefs"
     private const val IS_KOREAN_KEY = "is_korean"

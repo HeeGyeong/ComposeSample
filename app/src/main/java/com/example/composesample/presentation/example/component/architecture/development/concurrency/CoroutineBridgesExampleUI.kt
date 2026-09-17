@@ -370,6 +370,7 @@ suspend fun fetchData(query: String): String =
         )
         Spacer(modifier = Modifier.height(8.dp))
         ActionButton(
+            modifier = Modifier.fillMaxWidth(),
             text = "suspendCoroutine 실행",
             color = Color(0xFF4CAF50),
             enabled = !isLoading
@@ -424,6 +425,7 @@ suspend fun fetchData(query: String): String =
         ResultRow(label = "결과", value = result, isLoading = isLoading)
         Spacer(modifier = Modifier.height(8.dp))
         ActionButton(
+            modifier = Modifier.fillMaxWidth(),
             text = "suspendCancellableCoroutine 실행",
             color = Color(0xFF2196F3),
             enabled = !isLoading
@@ -472,6 +474,7 @@ scope.launch {
         ResultRow(label = "결과", value = result, isLoading = isLoading)
         Spacer(modifier = Modifier.height(8.dp))
         ActionButton(
+            modifier = Modifier.fillMaxWidth(),
             text = "실패 시나리오 실행",
             color = Color(0xFFFF5722),
             enabled = !isLoading
@@ -548,6 +551,7 @@ val result = withTimeout(1000L) {
         Spacer(modifier = Modifier.height(8.dp))
         // withTimeout 데모
         ActionButton(
+            modifier = Modifier.fillMaxWidth(),
             text = "500ms 타임아웃 테스트 (자동 취소)",
             color = Color(0xFF607D8B),
             enabled = !isLoading
@@ -735,6 +739,7 @@ val value by liveData.asFlow()
         ResultRow(label = "LiveData → Flow", value = liveDataAsFlow, isLoading = false)
         Spacer(modifier = Modifier.height(6.dp))
         ActionButton(
+            modifier = Modifier.fillMaxWidth(),
             text = "LiveData 값 변경",
             color = Color(0xFFFFAA00),
             enabled = true
@@ -770,6 +775,7 @@ val value by liveData.observeAsState(initial = 0)
         ResultRow(label = "Flow → LiveData", value = flowAsLiveDataValue.toString(), isLoading = false)
         Spacer(modifier = Modifier.height(6.dp))
         ActionButton(
+            modifier = Modifier.fillMaxWidth(),
             text = "StateFlow 값 증가",
             color = Color(0xFF00D4FF),
             enabled = true
@@ -961,7 +967,7 @@ private fun ActionButton(
     text: String,
     color: Color,
     enabled: Boolean,
-    modifier: Modifier = Modifier.fillMaxWidth(),
+    modifier: Modifier = Modifier,
     onClick: () -> Unit
 ) {
     Button(

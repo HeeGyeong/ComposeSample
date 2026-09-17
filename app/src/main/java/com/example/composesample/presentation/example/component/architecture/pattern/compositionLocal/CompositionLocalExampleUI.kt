@@ -9,8 +9,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.darkColors
-import androidx.compose.material.lightColors
+import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
@@ -36,7 +36,7 @@ private const val LOG_TAG = "CompositionLocal"
 // CompositionLocal 선언
 val LocalUserName = compositionLocalOf { "Default User" }
 val LocalUserAge = compositionLocalOf { 0 }
-val LocalColor = compositionLocalOf { lightColors() }
+val LocalColor = compositionLocalOf { lightColorScheme() }
 val LocalViewModel = compositionLocalOf<CompositionLocalViewModel> { error("No ViewModel found!") }
 
 @Composable
@@ -130,7 +130,7 @@ fun MultiCompositionLocalUse() {
     CompositionLocalProvider(
         LocalUserName provides "Alice",
         LocalUserAge provides 30,
-        LocalColor provides lightColors()
+        LocalColor provides lightColorScheme()
     ) {
         UserProfile()
     }
@@ -150,7 +150,7 @@ fun UserProfile() {
 
 @Composable
 fun ColorThemeCase() {
-    CompositionLocalProvider(LocalColor provides darkColors()) {
+    CompositionLocalProvider(LocalColor provides darkColorScheme()) {
         ThemedButton()
     }
 }

@@ -1,3 +1,6 @@
+// UsingMaterialAndMaterial3Libraries 억제: 위 두 M2 바텀시트 예제가 공유하는 콘텐츠라 같은 라이브러리를 쓴다.
+@file:Suppress("UsingMaterialAndMaterial3Libraries")
+
 package com.example.composesample.presentation.example.component.ui.layout.bottomsheet
 
 import android.util.Log

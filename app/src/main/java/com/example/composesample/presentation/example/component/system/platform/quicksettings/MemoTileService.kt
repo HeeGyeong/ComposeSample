@@ -20,7 +20,9 @@ class MemoTileService : TileService() {
         private val _memosFlow = MutableStateFlow<List<MemoItem>>(emptyList())
         val memosFlow: StateFlow<List<MemoItem>> = _memosFlow.asStateFlow()
 
-        private val dateFormat = SimpleDateFormat("MM/dd HH:mm", Locale.getDefault())
+        // 시스템 언어가 바뀌어도 반영되도록 사용 시점에 로케일을 읽는다(ConstantLocale)
+        private val dateFormat: SimpleDateFormat
+            get() = SimpleDateFormat("MM/dd HH:mm", Locale.getDefault())
 
         fun addMemo(content: String) {
             if (content.isNotBlank()) {

@@ -57,6 +57,8 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.window.DialogWindowProvider
+import androidx.core.graphics.drawable.toDrawable
+import androidx.core.graphics.scale
 import com.example.composesample.presentation.MainHeader
 import kotlinx.coroutines.launch
 
@@ -85,7 +87,7 @@ private const val BLUR_MAX_RADIUS = 80
 private fun softwareBlur(source: Bitmap, downscale: Int, radius: Int): Bitmap {
     val w = (source.width / downscale).coerceAtLeast(1)
     val h = (source.height / downscale).coerceAtLeast(1)
-    val small = Bitmap.createScaledBitmap(source, w, h, true)
+    val small = source.scale(w, h)
     val pixels = IntArray(w * h)
     small.getPixels(pixels, 0, w, 0, 0, w, h)
 
@@ -363,7 +365,7 @@ private fun BlurDialog(
         DisposableEffect(window, behindRadius, backgroundRadius, dim) {
             window?.apply {
                 // 배경 블러는 윈도우 배경이 반투명해야 보인다 — 완전 투명이면 블러를 얹을 바탕이 없다.
-                setBackgroundDrawable(ColorDrawable(AndroidColor.argb(70, 255, 255, 255)))
+                setBackgroundDrawable(AndroidColor.argb(70, 255, 255, 255).toDrawable())
                 applyBlur(behindRadius, backgroundRadius, dim)
             }
             onDispose { }

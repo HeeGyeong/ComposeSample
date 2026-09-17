@@ -18,8 +18,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.example.composesample.presentation.MainHeader
@@ -56,8 +57,8 @@ fun WebViewIssueExampleUI(onBackEvent: () -> Unit) {
 fun WebViewYoutubePlayer(youtubeUrl: String) {
     val context = LocalContext.current
     val webChromeClient = remember { YoutubeWebChromeClient(context) }
-    val configuration = LocalConfiguration.current
-    val screenWidth = configuration.screenWidthDp.toFloat()
+    val containerWidth = LocalWindowInfo.current.containerSize.width
+    val screenWidth = with(LocalDensity.current) { containerWidth.toDp().value }
     val screenHeight = (screenWidth * 9 / 16).dp
 
     AndroidView(

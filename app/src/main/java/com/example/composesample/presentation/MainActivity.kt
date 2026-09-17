@@ -23,6 +23,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
+import androidx.core.net.toUri
 import androidx.glance.appwidget.updateAll
 import androidx.lifecycle.lifecycleScope
 import com.example.composesample.presentation.example.BlogExampleActivity
@@ -102,7 +103,7 @@ fun MainActivityScreen() {
 }
 
 fun openWebPage(context: Context, url: String) {
-    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+    val intent = Intent(Intent.ACTION_VIEW, url.toUri())
     context.startActivity(intent)
 }
 

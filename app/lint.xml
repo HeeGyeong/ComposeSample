@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<lint>
+    <!--
+        GifUsage: lint 는 비트맵을 WebP 로 바꾸라고 권고하지만, 이 파일은 Coil 의 GIF 디코딩을
+        보여 주는 예제(ui/media/image, ui/media/lottie)의 입력 자체다. 형식을 바꾸면 예제가 성립하지 않는다.
+        바이너리 리소스라 주석으로 억제할 수 없어 여기에 근거를 남긴다.
+    -->
+    <issue id="GifUsage">
+        <ignore path="src/main/res/drawable-nodpi/gif_lottie_sample.gif" />
+    </issue>
+</lint>

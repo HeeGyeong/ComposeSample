@@ -39,8 +39,11 @@
     <!-- targetSDK 34 이면서 Android OS 14 인 경우 -->
     <uses-permission android:name="android.permission.READ_MEDIA_VISUAL_USER_SELECTED" />
 
+    <!-- PictureInPictureIssue 억제: PiP 예제가 setEnabled(자동 진입)·setSourceRectHint 를
+         화면에서 직접 토글해 보여 주는 것이 주제라, 매니페스트 차원에서 항상 켜 두지 않는다. -->
     <application
         android:name=".application.BaseApplication"
+        tools:ignore="PictureInPictureIssue"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -50,7 +53,6 @@
         <activity
             android:name=".presentation.MainActivity"
             android:exported="true"
-            android:label="@string/app_name"
             android:theme="@style/Theme.ComposeSample">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

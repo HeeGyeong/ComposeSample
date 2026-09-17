@@ -954,6 +954,8 @@ private fun StatusIndicator(label: String, color: Color, emoji: String) {
 
 @Composable
 private fun SealedVsEnumDemoCard() {
+    // 시스템 언어 변경을 컴포지션이 관찰하도록 Locale.current 를 쓴다(NonObservableLocale)
+    val timeLocale = java.util.Locale.forLanguageTag(androidx.compose.ui.text.intl.Locale.current.toLanguageTag())
     var useEnum by remember { mutableStateOf(true) }
     var enumStatus by remember { mutableStateOf(StatusEnum.SUCCESS) }
     var sealedStatus by remember { mutableStateOf<StatusSealed>(StatusSealed.Loading) }
@@ -1145,7 +1147,7 @@ private fun SealedVsEnumDemoCard() {
                                 )
                                 Text(
                                     text = "⏰ 시간: ${
-                                        java.text.SimpleDateFormat("HH:mm:ss")
+                                        java.text.SimpleDateFormat("HH:mm:ss", timeLocale)
                                             .format((sealedStatus as StatusSealed.Success).timestamp)
                                     }",
                                     fontSize = 11.sp,

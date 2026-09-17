@@ -1,5 +1,7 @@
+// UsingMaterialAndMaterial3Libraries 억제: M2 SwipeToDismiss(DismissDirection/FractionalThreshold) 가 이 예제의 주제다 — M3 SwipeToDismissBox 는 임계값 API 가 다르다.
+@file:Suppress("UsingMaterialAndMaterial3Libraries", "DEPRECATION")
+
 // M2 SwipeToDismiss / FractionalThreshold 의 의도적 시연 (M3 대체: SwipeToDismissM3ExampleUI)
-@file:Suppress("DEPRECATION")
 
 package com.example.composesample.presentation.example.component.interaction.swipe
 

@@ -21,7 +21,9 @@ class QuickActionTileService : TileService() {
         private val _lastActionTimeFlow = MutableStateFlow<String?>(null)
         val lastActionTimeFlow: StateFlow<String?> = _lastActionTimeFlow.asStateFlow()
 
-        private val dateFormat = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
+        // 시스템 언어가 바뀌어도 반영되도록 사용 시점에 로케일을 읽는다(ConstantLocale)
+        private val dateFormat: SimpleDateFormat
+            get() = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
 
         fun resetActionCount() {
             _actionCountFlow.value = 0

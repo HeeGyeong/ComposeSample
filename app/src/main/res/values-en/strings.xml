@@ -29,4 +29,5 @@
     <string name="small_widget_description">1x1 small Glance widget</string>
     <string name="medium_widget_description">2x2 medium Glance widget</string>
     <string name="large_widget_description">3x2+ large Glance widget</string>
+    <string name="widget_loading">Loading…</string>
 </resources> 

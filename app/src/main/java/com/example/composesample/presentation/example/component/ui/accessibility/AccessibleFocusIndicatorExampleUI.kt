@@ -343,8 +343,8 @@ private fun DemoScaffold(
 @Composable
 private fun FocusBox(
     label: String,
-    isFocused: Boolean = false,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    isFocused: Boolean = false
 ) {
     Box(
         modifier = Modifier

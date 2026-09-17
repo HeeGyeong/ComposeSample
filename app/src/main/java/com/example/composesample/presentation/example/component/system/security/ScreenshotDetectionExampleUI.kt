@@ -259,6 +259,8 @@ private fun LegacyMediaStoreSection() {
 }
 
 /** 갤러리 최신 이미지의 파일명/경로를 조회한다. RELATIVE_PATH 는 API 29+ 전용 컬럼이라 그 미만은 DATA 로 대체한다. */
+// Recycle 억제: query 결과를 ?.use { } 로 닫는다(위와 같은 오탐)
+@Suppress("Recycle")
 private fun queryLatestImageInfo(context: Context): Pair<String, String>? {
     val pathColumn = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
         MediaStore.Images.Media.RELATIVE_PATH

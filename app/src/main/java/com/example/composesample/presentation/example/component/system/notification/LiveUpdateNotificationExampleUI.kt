@@ -381,6 +381,8 @@ private fun LiveUpdateDemoCard(
                 if (hasPermission) {
                     postNotification()
                 } else {
+                    // InlinedApi 억제: hasPermission 이 API 33 미만에서 항상 true 라 이 줄은 33+ 에서만 실행된다
+                    @Suppress("InlinedApi")
                     permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
                 }
             }

@@ -52,6 +52,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.net.toUri
 import com.example.composesample.presentation.MainHeader
 import kotlinx.coroutines.delay
 
@@ -450,7 +451,7 @@ private fun LiveTestTab() {
                 onTest = { url ->
                     val startTime = System.currentTimeMillis()
                     try {
-                        context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+                        context.startActivity(Intent(Intent.ACTION_VIEW, url.toUri()))
                         val endTime = System.currentTimeMillis()
                         val result = TestResult(
                             url = url,
