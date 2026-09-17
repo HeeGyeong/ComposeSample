@@ -34,6 +34,7 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
@@ -108,7 +109,8 @@ fun CustomOverscrollExampleUI(onBackEvent: () -> Unit) {
     val probe = remember { OverscrollProbe() }
 
     // 모드를 바꾸면 이전 모드의 계측값이 그대로 남아 오해를 만들기 때문에 초기화한다.
-    remember(mode, factoryEnabled) { probe.reset() }
+    // remember 로 상태를 건드리면 컴포지션이 실패했을 때 되돌지 않으므로 LaunchedEffect 로 미룬다.
+    LaunchedEffect(mode, factoryEnabled) { probe.reset() }
 
     Column(
         modifier = Modifier
