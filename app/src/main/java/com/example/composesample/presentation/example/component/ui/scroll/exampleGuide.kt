@@ -33,4 +33,30 @@ package com.example.composesample.presentation.example.component.ui.scroll
  *   `(current - source) / (target - source)`로 실제 시스템 키보드 애니메이션의 진행률(0~1)을 그대로 계산할 수 있다 —
  *   직접 animateFloatAsState로 흉내내는 것보다 실제 IME 곡선과 어긋나지 않는다
  * - 세 값 모두 `@OptIn(ExperimentalLayoutApi::class)` 필요(기존 `ImeStateUtil.rememberImeState`의 `isImeVisible`과 동일 게이팅)
+ *
+ * ## CustomOverscrollExampleUI (커스텀 오버스크롤)
+ * - 공식 문서(오버스크롤 커스터마이즈): https://developer.android.com/develop/ui/compose/touch-input/pointer-input/scroll#custom-overscroll
+ * - API 레퍼런스(OverscrollEffect): https://developer.android.com/reference/kotlin/androidx/compose/foundation/OverscrollEffect
+ * 핵심 개념:
+ * - `OverscrollEffect` 는 세 가지만 요구한다 — `applyToScroll(delta, source, performScroll)`,
+ *   `applyToFling(velocity, performFling)`, `isInProgress`. 시각 효과는 `node: DelegatableNode` 로 따로 낸다.
+ * - `applyToScroll` 안에서 `performScroll(leftForScroll)` 을 호출해야 리스트가 실제로 움직인다.
+ *   반환값(리스트가 소비한 양)을 빼고 남은 것이 "오버스크롤로 넘어가는 delta" 다 — 즉 리스트가 끝에 닿기 전에는
+ *   남는 양이 0 이라 이펙트가 걸리지 않는다.
+ * - 되감기 순서가 중요하다: 이미 오버스크롤이 걸린 상태에서 반대 방향 입력이 오면 리스트보다 오버스크롤을 먼저
+ *   0 쪽으로 되돌려야 손가락과 화면이 어긋나지 않는다(공식 샘플의 `consumedByPreScroll` 단계).
+ * - `source == NestedScrollSource.UserInput` 게이팅 — `SideEffect`(animateScrollTo 등 프로그래매틱 스크롤)까지
+ *   오버스크롤로 넘기면 코드로 스크롤했을 때도 고무줄이 늘어난다.
+ * - `LocalOverscrollFactory` 는 `ProvidableCompositionLocal<OverscrollFactory?>` 다. 팩토리를 제공하면 하위 트리의
+ *   모든 스크롤 컨테이너가 그 이펙트를 쓰고, **null 을 제공하면 오버스크롤이 생성되지 않는다**(비활성화 경로).
+ *   같은 이유로 `rememberOverscrollEffect()` 의 반환 타입도 nullable 이다.
+ * - `OverscrollFactory` 는 `equals`/`hashCode` 를 추상 멤버로 **강제**한다 — CompositionLocal 값 비교로 불필요한
+ *   이펙트 재생성을 막기 위한 것이므로, 람다를 필드로 들고 있으면 매 리컴포지션마다 달라지지 않도록 remember 로 고정해야 한다.
+ * - `withoutVisualEffect()` / `withoutEventHandling()` 는 같은 이펙트를 두 조각으로 나눠 준다. 스크롤 컨테이너는
+ *   전자로 이벤트만 처리하고, 클리핑 밖의 다른 컴포저블에 후자를 `Modifier.overscroll()` 로 붙이면 그림만 그 자리에 나온다.
+ *   (컨테이너가 자기 경계에서 잘라 버리는 효과를 헤더나 배경으로 옮기는 용도)
+ * - `AndroidEdgeEffectOverscrollFactory` 는 public 이 아니라 직접 인스턴스화할 수 없다. "기본 이펙트"가 필요하면
+ *   `rememberOverscrollEffect()` 로 LocalOverscrollFactory 가 만들어 준 것을 받아 쓴다.
+ * - 계측 팁: 임의의 이펙트를 감싸 `applyToScroll`/`applyToFling` 인자만 기록하는 데코레이터를 만들면 기본 이펙트도
+ *   그대로 실측할 수 있다. 단 `node` 는 위임 대상 것을 그대로 돌려주므로 원본과 래퍼를 동시에 modifier 로 붙이면 안 된다.
  */

@@ -773,5 +773,12 @@ val examples2026 = listOf(
         description = "work-runtime 2.11 신규 setWorkerExecutionExceptionHandler/setWorkerInitializationExceptionHandler — 워커가 예외로 죽어도 앱은 멀쩡하고 로그만 남는 사각지대를 WorkerExceptionInfo(workerClassName·workerParameters·throwable)로 여는 경로. 실행 중 throw / Result.failure() / 생성자 throw / 생성자 시그니처 불일치 4종을 실제로 넣어 무엇이 핸들러를 깨우는지 대조하고(넷 다 WorkInfo 는 FAILED 라 상태로는 구분되지 않는다), 기본 팩토리가 리플렉션을 쓰는 탓에 생성자 예외만 InvocationTargetException 으로 감싸져 오는 것까지 확인. 등록은 Application 의 Configuration.Provider + 매니페스트 기본 초기화(androidx.startup) 제거",
         blogUrl = "",
         exampleType = ConstValue.WorkerExceptionHandlerExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 09. 18",
+        title = "커스텀 오버스크롤",
+        description = "스크롤이 끝에 닿은 뒤 남는 delta 를 누가 가져가는지 — OverscrollEffect 를 직접 구현해 안드로이드 기본 스트레치/글로우를 고무줄(translate)로 교체하고, LocalOverscrollFactory 를 갈아끼워 하위 트리 전체에 일괄 적용하거나 null 로 오버스크롤 자체를 없애기. withoutVisualEffect()/withoutEventHandling() 로 같은 이펙트의 이벤트 처리와 시각 효과를 서로 다른 컴포저블에 나눠 붙이고, 어느 모드든 동일한 계측 래퍼로 감싸 delta·리스트 소비분·남은 양·플링 속도를 화면에서 실측",
+        blogUrl = "",
+        exampleType = ConstValue.CustomOverscrollExample
     )
 )

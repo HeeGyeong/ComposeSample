@@ -63,7 +63,7 @@ app
 | `navigation` | Navigation3 nested routing (NestedRoutesNav3) |
 | `notification` | SnapNotify (Snackbar simplification) |
 | `overlay` | coordinate-driven spotlight overlay (coach mark: Popup + Path difference clipping) |
-| `scroll` | custom scroll behavior, nested scroll |
+| `scroll` | custom scroll behavior, nested scroll, custom overscroll |
 | `shapes` | CardCorners (corner styles) |
 | `tab` | Responsive TabRow (SubcomposeLayout) |
 | `text` | text styling/AutoSizing, Rich Content, TextField Max Length, Document Editing, Syntax Highlighting |

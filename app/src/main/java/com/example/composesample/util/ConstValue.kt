@@ -83,7 +83,7 @@ object ConstValue {
     const val Coil3ImageExample = "coil3ImageExample"
 
     // ==================== 스크롤 & 제스처 예제 ====================
-    // PullToRefresh(당겨서 새로고침), PullScreenPager(풀스크린 페이저), FlingBehavior(스크롤 커스텀), SwipeToDismiss(스와이프 삭제), SwipeToDismissM3(M3 스와이프 삭제), DragAndDrop(드래그 앤 드롭), NestedScrolling(중첩 스크롤), CustomScrollBehavior(커스텀 TopAppBarScrollBehavior), StickerCanvas(스티커 제스처 캔버스), ImeNestedScroll(스크롤 제스처로 키보드 열고/닫기 + imeAnimationSource/Target로 애니메이션 진행률에 커스텀 UI 동기화), IndirectPointer(IndirectPointerInputModifierNode 원시 트랙패드 캡처 + PointerEventType.Pan*/Scale* 표준 파이프라인 대조 — 터치스크린 멀티터치로는 Pan*/Scale*가 켜지지 않음을 실측)
+    // PullToRefresh(당겨서 새로고침), PullScreenPager(풀스크린 페이저), FlingBehavior(스크롤 커스텀), SwipeToDismiss(스와이프 삭제), SwipeToDismissM3(M3 스와이프 삭제), DragAndDrop(드래그 앤 드롭), NestedScrolling(중첩 스크롤), CustomScrollBehavior(커스텀 TopAppBarScrollBehavior), StickerCanvas(스티커 제스처 캔버스), ImeNestedScroll(스크롤 제스처로 키보드 열고/닫기 + imeAnimationSource/Target로 애니메이션 진행률에 커스텀 UI 동기화), IndirectPointer(IndirectPointerInputModifierNode 원시 트랙패드 캡처 + PointerEventType.Pan*/Scale* 표준 파이프라인 대조 — 터치스크린 멀티터치로는 Pan*/Scale*가 켜지지 않음을 실측), CustomOverscroll(커스텀 오버스크롤 — OverscrollEffect 직접 구현으로 기본 스트레치/글로우를 고무줄로 교체 + LocalOverscrollFactory 로 하위 트리 일괄 적용/null 비활성화 + withoutVisualEffect()/withoutEventHandling() 로 이벤트와 시각 효과를 서로 다른 컴포저블에 분리)
     const val PullToRefreshExample = "pullToRefreshExample"
     const val PullScreenPager = "pullScreenPager"
     const val FlingBehaviorExample = "flingBehaviorExample"
@@ -95,6 +95,7 @@ object ConstValue {
     const val StickerCanvasExample = "stickerCanvasExample"
     const val ImeNestedScrollExample = "imeNestedScrollExample"
     const val IndirectPointerExample = "indirectPointerExample"
+    const val CustomOverscrollExample = "customOverscrollExample"
 
     // ==================== BottomSheet 예제 ====================
     // BottomSheet(Scaffold), ModalBottomSheet(Modal), CustomBottomSheet(커스텀)

@@ -200,7 +200,7 @@ Cursor IDE를 사용하는 개발자를 위한 **AI 코딩 어시스턴트 규�
 - **navigation**: Navigation3 중첩 라우팅(NestedRoutesNav3)
 - **notification**: SnapNotify(Snackbar 간소화 라이브러리)
 - **overlay**: 좌표 기반 스포트라이트 오버레이(코치마크) — `onGloballyPositioned`로 타깃 좌표 수집 → `Popup` 전체화면 오버레이(부모 클리핑에 갇히지 않음) → `Path.op(Difference)` + `clipPath`로 스크림에 구멍 뚫기 → `animateFloatAsState`로 스텝 전환 애니메이션
-- **scroll**: 커스텀 TopAppBarScrollBehavior, nested scroll, IME 인터랙티브 제어(`Modifier.imeNestedScroll()`로 스크롤 제스처를 키보드 표시/숨김 애니메이션에 연결 + `imeAnimationSource`/`imeAnimationTarget`로 실제 애니메이션 진행률을 커스텀 UI에 동기화)
+- **scroll**: 커스텀 TopAppBarScrollBehavior, nested scroll, IME 인터랙티브 제어(`Modifier.imeNestedScroll()`로 스크롤 제스처를 키보드 표시/숨김 애니메이션에 연결 + `imeAnimationSource`/`imeAnimationTarget`로 실제 애니메이션 진행률을 커스텀 UI에 동기화), 커스텀 오버스크롤(`OverscrollEffect` 직접 구현으로 기본 스트레치/글로우를 고무줄로 교체 + `LocalOverscrollFactory` 로 하위 트리 일괄 적용및 null 비활성화 + `withoutVisualEffect()`/`withoutEventHandling()` 로 이벤트와 시각 효과 분리)
 - **shader**: AGSL Shader Live Tuning(API 33+ `RuntimeShader` + `graphicsLayer` renderEffect, 실시간 uniform 슬라이더와 셰이더 소스 재컴파일)
 - **shapes**: CardCorners(모서리 스타일)
 - **style**: Foundation Style API(Compose 1.11 실험적 API) — `Modifier.styleable` + `Style { }` DSL, 상태 변형, `animate()` 전환, 커스텀 `StyleStateKey`

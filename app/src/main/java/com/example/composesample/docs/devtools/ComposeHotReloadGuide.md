@@ -70,7 +70,7 @@ Compose Hot Reload (HotSwan) is a development tool that, when you save a `.kt` f
 
 ### What 2.0 leaves native (from this project's build log)
 
-`assembleDebug` prints `w: [HotSwan v2] SKIPPED ...` for **39 declarations — 28 methods and 11 whole classes** — that
+`assembleDebug` prints `w: [HotSwan v2] SKIPPED ...` for **40 declarations — 28 methods and 12 whole classes** — that
 cannot be copied to the interpreter. They keep working, but edits to them need a full build. These `w:` lines are plugin
 diagnostics, **not compiler warnings on the source** (the project's warning scan counts only `w: file://` lines).
 
@@ -79,6 +79,7 @@ diagnostics, **not compiler warnings on the source** (the project's warning scan
 | `VIEW_RECEIVER_SUBTYPE` | 20 | method | `super.onCreate()` in activities (`MainActivity`, `BlogExampleActivity`, …), Room `*_Impl.createOpenDelegate`/`clearAllTables`, non-public `ViewModel` members |
 | `FRAMEWORK_ENTRY_SUBCLASS` | 11 | whole class | `BaseApplication`, `LocationTrackingService`, the five Quick Settings `*TileService`s, the four Glance `*WidgetReceiver`s |
 | `GENERIC_DECLARATION` | 8 | method | functions declaring type parameters, e.g. `onEachBatch<T>`, `measureInline<T>` |
+| `HELPER_SUPER_CTOR_NEW_ARG` | 1 | whole class | `RubberBandOverscrollEffect` (the custom overscroll example). A field initialiser that constructs an object — here an `Animatable` plus an anonymous `Modifier.Node()` — lands in the same static `hotswanInit` helper as the super-constructor delegation, which the JVM verifier rejects (`Expected value generated with NEW`). Any class whose constructor builds objects into its fields can land here. |
 
 ### What the interpreter cannot execute — JDK 21 `typeSwitch` (fixed by pinning jvmTarget to 17)
 

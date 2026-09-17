@@ -121,6 +121,7 @@ import com.example.composesample.presentation.example.component.ui.media.shimmer
 import com.example.composesample.presentation.example.component.ui.media.shimmer.TextShimmerExampleUI
 import com.example.composesample.presentation.example.component.ui.navigation.NestedRoutesNav3ExampleUI
 import com.example.composesample.presentation.example.component.ui.notification.SnapNotifyExampleUI
+import com.example.composesample.presentation.example.component.ui.scroll.CustomOverscrollExampleUI
 import com.example.composesample.presentation.example.component.ui.scroll.CustomScrollBehaviorExampleUI
 import com.example.composesample.presentation.example.component.ui.scroll.ImeNestedScrollExampleUI
 import com.example.composesample.presentation.example.component.ui.scroll.NestedScrollingExampleUI
@@ -209,6 +210,7 @@ import com.example.composesample.util.ConstValue.CoroutineExample
 import com.example.composesample.util.ConstValue.CoroutinesInternalsExample
 import com.example.composesample.util.ConstValue.CursorIDEExample
 import com.example.composesample.util.ConstValue.CustomBottomSheetExample
+import com.example.composesample.util.ConstValue.CustomOverscrollExample
 import com.example.composesample.util.ConstValue.CustomScrollBehaviorExample
 import com.example.composesample.util.ConstValue.CustomTextRenderingExample
 import com.example.composesample.util.ConstValue.AdvancedRepositoryPatternExample
@@ -461,6 +463,7 @@ val exampleUiRegistry: Map<String, @Composable (onBackEvent: () -> Unit) -> Unit
     NestedScrollingExample to { onBackEvent -> NestedScrollingExampleUI(onBackEvent) },
     CustomScrollBehaviorExample to { onBackEvent -> CustomScrollBehaviorExampleUI(onBackEvent) },
     ImeNestedScrollExample to { onBackEvent -> ImeNestedScrollExampleUI(onBackEvent) },
+    CustomOverscrollExample to { onBackEvent -> CustomOverscrollExampleUI(onBackEvent) },
     StickerCanvasExample to { onBackEvent -> StickerCanvasExampleUI(onBackEvent) },
     AccessibleFocusIndicatorExample to { onBackEvent -> AccessibleFocusIndicatorExampleUI(onBackEvent) },
     LargeContentViewerExample to { onBackEvent -> LargeContentViewerExampleUI(onBackEvent) },
