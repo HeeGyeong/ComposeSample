@@ -27,6 +27,16 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
+/**
+ * 공용 [com.example.composesample.presentation.MainHeader] 가 뒤로가기 아이콘에 붙이는 contentDescription.
+ *
+ * CONV-09(커밋 `7d525732`)가 예제 화면의 수제 헤더를 MainHeader 로 통일하면서
+ * 이 값이 `""` 에서 `"Back"` 으로 바뀜다. 테스트가 그대로 `""` 을 찾고 있었고,
+ * 계측 테스트 하네스 장애(TEST-COMPOSE-HARNESS-01)가 그 실패를 가리고 있었다.
+ * 값을 상수로 뽑아 다음에 또 바뀔 때 한 곳만 고치게 한다.
+ */
+private const val BackButtonDescription = "Back"
+
 // AndroidJUnit4를 사용하여 안드로이드 테스트 실행
 @RunWith(AndroidJUnit4::class)
 class PassingIntentDataExampleTest {
@@ -63,7 +73,7 @@ class PassingIntentDataExampleTest {
         // - 존재 여부
         // - 클릭 가능 여부
         composeTestRule
-            .onNodeWithContentDescription("") // contentDescription이 빈 문자열인 Compose UI 요소를 찾음
+            .onNodeWithContentDescription(BackButtonDescription) // 공용 MainHeader 의 뒤로가기 아이콘을 contentDescription 으로 찾음
             .assertExists() // 해당 노드가 실제로 존재하는지 확인. 존재하지 않으면 테스트 실패
             .assertHasClickAction() // 해당 노드가 클릭 가능한지 확인. 클릭 이벤트 핸들러가 없으면 실패
 
@@ -91,7 +101,7 @@ class PassingIntentDataExampleTest {
     @Test
     fun test_back_button_click() {
         composeTestRule
-            .onNodeWithContentDescription("")
+            .onNodeWithContentDescription(BackButtonDescription)
             .performClick() // 클릭 이벤트를 발생시킴
         assert(backButtonClicked) // 클릭 이벤트 발생 확인
     }
@@ -152,7 +162,7 @@ class PassingIntentDataExampleTest {
             }
 
         // 주요 UI 요소들의 존재 확인
-        composeTestRule.onNodeWithContentDescription("").assertExists()
+        composeTestRule.onNodeWithContentDescription(BackButtonDescription).assertExists()
         composeTestRule.onNodeWithText("Passing Intent Data Type 1").assertExists()
         composeTestRule.onNodeWithText("Passing Intent Data Type 2").assertExists()
     }

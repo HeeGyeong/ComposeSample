@@ -24,6 +24,7 @@ A collection of rule/guide documents for the ComposeSample project, organized by
 |----------|---------|
 | [`claudecode/ClaudeCodeGuide.md`](claudecode/ClaudeCodeGuide.md) | Using Claude Code — CLAUDE.md/Memory/Hooks/prompt patterns |
 | [`devtools/ComposeHotReloadGuide.md`](devtools/ComposeHotReloadGuide.md) | Compose Hot Reload(HotSwan) install/behavior/version requirements (enabled on `main` with 2.0.0 since 2026-09-15 — runs on AGP 8.13.2 although 2.0.0 officially lists AGP 9.x) |
+| [`devtools/InstrumentedTestGuide.md`](devtools/InstrumentedTestGuide.md) | Running `connectedDebugAndroidTest` — the screen must be on and unlocked or every Compose-rule test fails with "No compose hierarchies found" (TEST-COMPOSE-HARNESS-01), plus selector-hygiene rules |
 | [`pending/PendingExamples.md`](pending/PendingExamples.md) | (archive) Android Weekly #723 example candidate review log |
 
 ## Project root documents
