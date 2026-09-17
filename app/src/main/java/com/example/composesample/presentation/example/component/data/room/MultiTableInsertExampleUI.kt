@@ -20,6 +20,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -45,7 +46,7 @@ fun MultiTableInsertExampleUI(onBackEvent: () -> Unit) {
 
     var snapshot by remember { mutableStateOf<TableSnapshot?>(null) }
     var lastResult by remember { mutableStateOf<String?>(null) }
-    var counter by remember { mutableStateOf(0) }
+    var counter by remember { mutableIntStateOf(0) }
 
     // 초기 스냅샷 로드
     LaunchedEffect(Unit) { snapshot = repo.snapshot() }

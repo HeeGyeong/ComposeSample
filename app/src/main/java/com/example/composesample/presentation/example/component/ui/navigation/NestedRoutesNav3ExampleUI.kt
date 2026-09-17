@@ -37,6 +37,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
@@ -502,7 +503,7 @@ private fun RealStateManagementDemoCard() {
     val entryDecorator = remember { EntryDecoratorSimulator() }
     var currentRoute by remember { mutableStateOf("HomeRoute") }
     var inputText by rememberSaveable(currentRoute) { mutableStateOf("") }
-    var rotationCount by remember { mutableStateOf(0) }
+    var rotationCount by remember { mutableIntStateOf(0) }
 
 
     LaunchedEffect(currentRoute) {

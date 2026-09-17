@@ -17,8 +17,8 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
@@ -50,7 +50,7 @@ fun ReverseLazyColumnExampleUI(onBackEvent: () -> Unit) {
 fun UseNormalLayoutStyle(onBackEvent: () -> Unit) {
     val sseViewModel: SSEViewModel = koinViewModel()
     val uiState = sseViewModel.uiState.collectAsStateWithLifecycle().value
-    val clickCount = remember { mutableStateOf(0) }
+    val clickCount = remember { mutableIntStateOf(0) }
     val listState = rememberLazyListState()
     val loadMoreFlag = sseViewModel.loadMoreFlag.collectAsStateWithLifecycle().value
 
@@ -83,9 +83,9 @@ fun UseNormalLayoutStyle(onBackEvent: () -> Unit) {
                     )
                     if (!uiState.isConnected) {
                         sseViewModel.updateLoadMoreFlag(true)
-                        clickCount.value += 1
+                        clickCount.intValue += 1
                         sseViewModel.incrementCycleCount()
-                        sseViewModel.startSSEConnection("${clickCount.value}&reverseItem=true")
+                        sseViewModel.startSSEConnection("${clickCount.intValue}&reverseItem=true")
                     } else {
                         sseViewModel.closeSSEConnection()
                         sseViewModel.updateLoadMoreFlag(false)
@@ -115,9 +115,9 @@ fun UseNormalLayoutStyle(onBackEvent: () -> Unit) {
                 onClick = {
                     if (!uiState.isConnected) {
                         sseViewModel.updateLoadMoreFlag(false)
-                        clickCount.value += 1
+                        clickCount.intValue += 1
                         sseViewModel.incrementCycleCount()
-                        sseViewModel.startSSEConnection(clickCount.value.toString())
+                        sseViewModel.startSSEConnection(clickCount.intValue.toString())
                     } else {
                         sseViewModel.closeSSEConnection()
                         sseViewModel.updateLoadMoreFlag(false)
@@ -174,7 +174,7 @@ fun UseNormalLayoutStyle(onBackEvent: () -> Unit) {
 fun UseReverseLayoutFlag(onBackEvent: () -> Unit) {
     val sseViewModel: SSEViewModel = koinViewModel()
     val uiState = sseViewModel.uiState.collectAsStateWithLifecycle().value
-    val clickCount = remember { mutableStateOf(0) }
+    val clickCount = remember { mutableIntStateOf(0) }
     val listState = rememberLazyListState()
 
 
@@ -220,9 +220,9 @@ fun UseReverseLayoutFlag(onBackEvent: () -> Unit) {
             Button(
                 onClick = {
                     if (!uiState.isConnected) {
-                        clickCount.value += 1
+                        clickCount.intValue += 1
                         sseViewModel.incrementCycleCount()
-                        sseViewModel.startSSEConnection(clickCount.value.toString())
+                        sseViewModel.startSSEConnection(clickCount.intValue.toString())
                     } else {
                         sseViewModel.closeSSEConnection()
                     }

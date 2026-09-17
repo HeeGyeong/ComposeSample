@@ -27,6 +27,7 @@ import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -444,8 +445,8 @@ private fun MaxLinesExampleCard() {
 
 @Composable
 private fun OnTextLayoutCard() {
-    var measuredWidth by remember { mutableStateOf(0) }
-    var measuredHeight by remember { mutableStateOf(0) }
+    var measuredWidth by remember { mutableIntStateOf(0) }
+    var measuredHeight by remember { mutableIntStateOf(0) }
 
     Card(
         modifier = Modifier.fillMaxWidth(),

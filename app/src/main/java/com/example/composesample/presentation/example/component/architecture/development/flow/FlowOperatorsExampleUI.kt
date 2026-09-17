@@ -23,6 +23,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -176,7 +177,7 @@ private fun OperatorDemoCard(
     val logs = remember { mutableStateListOf<String>() }
     var job by remember { mutableStateOf<Job?>(null) }
     val isRunning = job?.isActive == true
-    var startTimeMs by remember { mutableStateOf(0L) }
+    var startTimeMs by remember { mutableLongStateOf(0L) }
 
     Card(
         modifier = Modifier.fillMaxWidth(),

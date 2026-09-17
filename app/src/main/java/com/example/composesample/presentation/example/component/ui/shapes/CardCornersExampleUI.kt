@@ -35,6 +35,7 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -431,10 +432,10 @@ private fun MixedCornerExampleCard(
 
 @Composable
 private fun InteractiveCornerCard() {
-    var topStartSize by remember { mutableStateOf(16f) }
-    var topEndSize by remember { mutableStateOf(16f) }
-    var bottomStartSize by remember { mutableStateOf(16f) }
-    var bottomEndSize by remember { mutableStateOf(16f) }
+    var topStartSize by remember { mutableFloatStateOf(16f) }
+    var topEndSize by remember { mutableFloatStateOf(16f) }
+    var bottomStartSize by remember { mutableFloatStateOf(16f) }
+    var bottomEndSize by remember { mutableFloatStateOf(16f) }
     
     var topStartType by remember { mutableStateOf("Rounded") }
     var topEndType by remember { mutableStateOf("Rounded") }

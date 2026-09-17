@@ -23,6 +23,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -51,7 +52,7 @@ fun RoomFtsSearchExampleUI(onBackEvent: () -> Unit) {
 
     var seedSize by remember { mutableStateOf("5000") }
     var query by remember { mutableStateOf("kotlin") }
-    var rowCount by remember { mutableStateOf(0) }
+    var rowCount by remember { mutableIntStateOf(0) }
     var likeResult by remember { mutableStateOf<SearchResult?>(null) }
     var matchResult by remember { mutableStateOf<SearchResult?>(null) }
     var status by remember { mutableStateOf("준비 — 시드를 먼저 생성하세요") }

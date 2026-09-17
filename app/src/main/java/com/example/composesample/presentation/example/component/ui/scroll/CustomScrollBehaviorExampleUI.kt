@@ -39,8 +39,8 @@ import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.TopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
@@ -430,8 +430,8 @@ private fun AnimatedBufferDemo() {
 private fun FullEnterAlwaysDemo() {
     val state = remember { TopAppBarState(0f, 0f, 0f) }
     val coroutineScope = rememberCoroutineScope()
-    var bufferValue by remember { mutableStateOf(100f) }
-    var durationValue by remember { mutableStateOf(150) }
+    var bufferValue by remember { mutableFloatStateOf(100f) }
+    var durationValue by remember { mutableIntStateOf(150) }
     val scrollBehavior = remember(state, bufferValue, durationValue) {
         FullEnterAlwaysScrollBehavior(
             state = state,

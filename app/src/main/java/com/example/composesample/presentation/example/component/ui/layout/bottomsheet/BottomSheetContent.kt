@@ -35,7 +35,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -171,7 +171,7 @@ fun CollapsedBottomSheet(
 @Composable
 fun ModalExpandedBottomSheet() {
     val localDensity = LocalDensity.current
-    var sheetContentHeight by remember { mutableStateOf(0f) }
+    var sheetContentHeight by remember { mutableFloatStateOf(0f) }
     Log.d("ModalBottomSheetExampleUI", "ModalExpandedBottomSheet Call $sheetContentHeight")
 
 

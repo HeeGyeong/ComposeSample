@@ -32,6 +32,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.currentRecomposeScope
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -53,8 +54,8 @@ val LocalDynamicCounter = compositionLocalOf { 0 }
 fun StaticDynamicCompositionLocalExampleUI(
     onBackEvent: () -> Unit
 ) {
-    var staticCounter by remember { mutableStateOf(0) }
-    var dynamicCounter by remember { mutableStateOf(0) }
+    var staticCounter by remember { mutableIntStateOf(0) }
+    var dynamicCounter by remember { mutableIntStateOf(0) }
 
     Column(
         modifier = Modifier
@@ -291,7 +292,7 @@ private fun StaticCompositionLocalDemo() {
 @Composable
 private fun StaticReaderComponent(label: String, modifier: Modifier = Modifier) {
     val counter = LocalStaticCounter.current
-    var recomposeCount by remember { mutableStateOf(0) }
+    var recomposeCount by remember { mutableIntStateOf(0) }
 
     LaunchedEffect(counter) {
         recomposeCount++
@@ -309,7 +310,7 @@ private fun StaticReaderComponent(label: String, modifier: Modifier = Modifier) 
 
 @Composable
 private fun StaticNonReaderComponent(label: String, modifier: Modifier = Modifier) {
-    var recomposeCount by remember { mutableStateOf(0) }
+    var recomposeCount by remember { mutableIntStateOf(0) }
 
     LaunchedEffect(Unit) {
         recomposeCount++
@@ -400,7 +401,7 @@ private fun DynamicCompositionLocalDemo() {
 @Composable
 private fun DynamicReaderComponent(label: String, modifier: Modifier = Modifier) {
     val counter = LocalDynamicCounter.current
-    var recomposeCount by remember { mutableStateOf(0) }
+    var recomposeCount by remember { mutableIntStateOf(0) }
 
     LaunchedEffect(counter) {
         recomposeCount++
@@ -418,7 +419,7 @@ private fun DynamicReaderComponent(label: String, modifier: Modifier = Modifier)
 
 @Composable
 private fun DynamicNonReaderComponent(label: String, modifier: Modifier = Modifier) {
-    var recomposeCount by remember { mutableStateOf(0) }
+    var recomposeCount by remember { mutableIntStateOf(0) }
 
     LaunchedEffect(Unit) {
         recomposeCount++
@@ -590,7 +591,7 @@ private fun NestedProviderDemo(staticCounter: Int, dynamicCounter: Int) {
 private fun NestedChild(isStatic: Boolean) {
     val parentCounter = if (isStatic) LocalStaticCounter.current else LocalDynamicCounter.current
     val nestedValue = LocalNestedValue.current
-    var recomposeCount by remember { mutableStateOf(0) }
+    var recomposeCount by remember { mutableIntStateOf(0) }
 
     LaunchedEffect(parentCounter, nestedValue) {
         recomposeCount++
@@ -697,7 +698,7 @@ private fun ConditionalReadingDemo(dynamicCounter: Int) {
 
 @Composable
 private fun ConditionalReader(showValue: Boolean) {
-    var recomposeCount by remember { mutableStateOf(0) }
+    var recomposeCount by remember { mutableIntStateOf(0) }
     
     val displayText = if (showValue) {
         val counter = LocalDynamicCounter.current

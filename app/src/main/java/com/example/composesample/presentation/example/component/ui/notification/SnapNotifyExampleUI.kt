@@ -33,6 +33,7 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -52,7 +53,7 @@ fun SnapNotifyExampleUI(
     onBackEvent: () -> Unit
 ) {
     var formData by remember { mutableStateOf(FormData()) }
-    var cartItems by remember { mutableStateOf(0) }
+    var cartItems by remember { mutableIntStateOf(0) }
     var isLoading by remember { mutableStateOf(false) }
     val snackbarHostState = remember { SnackbarHostState() }
 
@@ -220,7 +221,7 @@ private fun BasicUsageButton(
 
 @Composable
 private fun InteractiveSnackbarsCard(snackbarHostState: SnackbarHostState) {
-    var undoCount by remember { mutableStateOf(0) }
+    var undoCount by remember { mutableIntStateOf(0) }
     val scope = rememberCoroutineScope()
 
     Card(

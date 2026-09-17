@@ -15,7 +15,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
@@ -140,7 +140,7 @@ fun PrintCoroutineOrder(
  */
 @Composable
 fun LightWeightCoroutine() {
-    val createCount = remember { mutableStateOf(0) }
+    val createCount = remember { mutableIntStateOf(0) }
     Button(onClick = {
         runBlocking {
             repeat(10000) {
@@ -152,7 +152,7 @@ fun LightWeightCoroutine() {
                     @Suppress("DEPRECATION") val threadId = Thread.currentThread().id
                     Log.d(
                         "CoroutineExample",
-                        "count : ${createCount.value++} : ${Thread.currentThread().name}[$threadId]"
+                        "count : ${createCount.intValue++} : ${Thread.currentThread().name}[$threadId]"
                     )
                 }
             }

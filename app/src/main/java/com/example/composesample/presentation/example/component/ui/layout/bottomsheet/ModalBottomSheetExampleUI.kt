@@ -24,7 +24,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -44,8 +44,8 @@ fun ModalBottomSheetExampleUI(
     val bottomState = rememberModalBottomSheetState(
         initialValue = ModalBottomSheetValue.Hidden,
     )
-    val containerHeight = remember { mutableStateOf(0) }
-    val sheetContentHeight = remember { mutableStateOf(0) }
+    val containerHeight = remember { mutableIntStateOf(0) }
+    val sheetContentHeight = remember { mutableIntStateOf(0) }
 
     Log.d("ModalBottomSheetExampleUI", "-----------------------------------------------------")
 
@@ -57,8 +57,8 @@ fun ModalBottomSheetExampleUI(
     ) {
         ModalBottomSheetLayout(
             modifier = Modifier.onSizeChanged { size -> // MaxSize라서 처음부터 다 그려둔다
-                containerHeight.value = size.height
-                Log.d("ModalBottomSheetExampleUI", "containerHeight.value ? ${containerHeight.value}")
+                containerHeight.intValue = size.height
+                Log.d("ModalBottomSheetExampleUI", "containerHeight.intValue ? ${containerHeight.intValue}")
             },
             scrimColor = Color.Black.copy(alpha = 0.6f),
             sheetState = bottomState,
@@ -69,10 +69,10 @@ fun ModalBottomSheetExampleUI(
                     modifier = Modifier
                         .fillMaxSize()
                         .onSizeChanged { size -> // MaxSize라서 처음부터 다 그려둔다
-                            sheetContentHeight.value = size.height
+                            sheetContentHeight.intValue = size.height
                             Log.d(
                                 "ModalBottomSheetExampleUI",
-                                "sheetContentHeight.value ? ${sheetContentHeight.value}"
+                                "sheetContentHeight.intValue ? ${sheetContentHeight.intValue}"
                             )
                         }
                 ) {

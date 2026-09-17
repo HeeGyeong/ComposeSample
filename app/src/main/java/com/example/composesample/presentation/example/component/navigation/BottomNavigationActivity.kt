@@ -45,6 +45,7 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -76,7 +77,7 @@ class BottomNavigationActivity : ComponentActivity() {
         setContent {
             val navController = rememberNavController()
             val blogExampleViewModel: BlogExampleViewModel = koinViewModel()
-            val bottomNavigationBarIndex = remember { mutableStateOf(0) }
+            val bottomNavigationBarIndex = remember { mutableIntStateOf(0) }
             var navigationType by remember { mutableStateOf(false) }
             LaunchedEffect(key1 = Unit, block = {
                 blogExampleViewModel.initExampleObject()
@@ -119,13 +120,13 @@ class BottomNavigationActivity : ComponentActivity() {
                         CustomBottomNavigationComponent(
                             clickTabIndex = bottomNavigationBarIndex,
                             onClickHomeTab = {
-                                bottomNavigationBarIndex.value = 0
+                                bottomNavigationBarIndex.intValue = 0
                             },
                             onClickAccountTab = {
-                                bottomNavigationBarIndex.value = 1
+                                bottomNavigationBarIndex.intValue = 1
                             },
                             onClickSettingTab = {
-                                bottomNavigationBarIndex.value = 2
+                                bottomNavigationBarIndex.intValue = 2
                             }
                         )
                     } else {
@@ -239,11 +240,11 @@ class BottomNavigationActivity : ComponentActivity() {
 
                     if (navigationType) {
                         val navigationOffsetY = animateDpAsState(
-                            targetValue = if (bottomNavigationBarIndex.value == 1) (-20).dp else 0.dp,
+                            targetValue = if (bottomNavigationBarIndex.intValue == 1) (-20).dp else 0.dp,
                             animationSpec = tween(durationMillis = 500)
                         )
 
-                        when (bottomNavigationBarIndex.value) {
+                        when (bottomNavigationBarIndex.intValue) {
                             0 -> {
                                 NavigationView1(
                                     text = "CustomBottomNavi 1",
@@ -344,7 +345,7 @@ fun BottomNavigationBar(navController: NavController) {
         BottomNavItem.Profile,
         BottomNavItem.Settings
     )
-    var selectedItem by remember { mutableStateOf(0) }
+    var selectedItem by remember { mutableIntStateOf(0) }
 
     NavigationBar(
         containerColor = Color.Gray,

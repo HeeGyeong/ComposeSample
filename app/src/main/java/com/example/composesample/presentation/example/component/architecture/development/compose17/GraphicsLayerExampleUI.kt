@@ -23,6 +23,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -205,7 +206,7 @@ private fun BlendModeButton(
 
 @Composable
 private fun ColorFilterExample() {
-    var tintStrength by remember { mutableStateOf(0.5f) }
+    var tintStrength by remember { mutableFloatStateOf(0.5f) }
     var selectedColor by remember { mutableStateOf(Color.Red) }
     
     Card(

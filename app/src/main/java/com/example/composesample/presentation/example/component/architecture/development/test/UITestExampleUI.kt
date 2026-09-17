@@ -13,6 +13,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -66,13 +67,13 @@ fun UITestExampleUI(onBackEvent: () -> Unit) {
 
         // 두 번째 테스트 후 코드 구현
         val text = remember { mutableStateOf("Hello") }
-        val clickCount = remember { mutableStateOf(0) }
+        val clickCount = remember { mutableIntStateOf(0) }
 
         // clickEvent 첫 번째 방법
         Button(
             onClick = {
-                clickCount.value++
-                text.value = if (clickCount.value % 2 == 0) "Hello" else "Clicked!"
+                clickCount.intValue++
+                text.value = if (clickCount.intValue % 2 == 0) "Hello" else "Clicked!"
             },
             modifier = Modifier
                 .onGloballyPositioned { coordinates ->
@@ -97,8 +98,8 @@ fun UITestExampleUI(onBackEvent: () -> Unit) {
         // clickEvent 두 번째 방법
         val onClickEvent = remember {
             {
-                clickCount.value++
-                text.value = if (clickCount.value % 2 == 0) "Hello" else "Clicked!"
+                clickCount.intValue++
+                text.value = if (clickCount.intValue % 2 == 0) "Hello" else "Clicked!"
             }
         }
 
@@ -114,8 +115,8 @@ fun UITestExampleUI(onBackEvent: () -> Unit) {
         }
 
         Button(onClick = {
-            clickCount.value++
-            onParamClickEvent(clickCount.value)
+            clickCount.intValue++
+            onParamClickEvent(clickCount.intValue)
         }) {
             Text(text.value)
         }

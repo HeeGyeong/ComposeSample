@@ -22,6 +22,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -178,7 +179,7 @@ private fun BasicFocusRestorerExample() {
 private fun LazyListFocusRestorerExample() {
     var items by remember { mutableStateOf((1..6).map { "아이템 $it" }) }
     var removedItem by remember { mutableStateOf<String?>(null) }
-    var focusedIndex by remember { mutableStateOf(-1) }
+    var focusedIndex by remember { mutableIntStateOf(-1) }
     
     Card(
         modifier = Modifier.fillMaxWidth(),

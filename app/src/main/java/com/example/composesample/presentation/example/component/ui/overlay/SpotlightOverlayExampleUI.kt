@@ -25,6 +25,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -146,7 +147,7 @@ private fun ConceptCard() {
 private fun SpotlightDemoCard() {
     var screenBoundsInWindow by remember { mutableStateOf(Rect.Zero) }
     val targetBoundsInWindow = remember { mutableStateListOf(Rect.Zero, Rect.Zero, Rect.Zero) }
-    var currentStep by remember { mutableStateOf(-1) }
+    var currentStep by remember { mutableIntStateOf(-1) }
 
     Card(
         modifier = Modifier.fillMaxWidth(),

@@ -55,6 +55,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -89,8 +91,8 @@ private data class ShowcaseSpec(
 @Composable
 fun AnimationsShowcaseExampleUI(onBackEvent: () -> Unit) {
     // 카탈로그 공통 입력: 모든 섹션이 이 값을 그대로 받아 같은 톤으로 재생.
-    var durationMs by remember { mutableStateOf(600f) }
-    var easingIndex by remember { mutableStateOf(0) }
+    var durationMs by remember { mutableFloatStateOf(600f) }
+    var easingIndex by remember { mutableIntStateOf(0) }
     val (easing, easingLabel) = remember(easingIndex) { easingOptions[easingIndex] }
     val spec = ShowcaseSpec(durationMs.toInt(), easing, easingLabel)
 
@@ -336,7 +338,7 @@ private fun SectionBVisibilityAndCrossfade(spec: ShowcaseSpec) {
 
 @Composable
 private fun SectionCContentAndTransition(spec: ShowcaseSpec) {
-    var stateIndex by remember { mutableStateOf(0) }
+    var stateIndex by remember { mutableIntStateOf(0) }
     val tween = tween<Float>(durationMillis = spec.durationMs, easing = spec.easing)
     val dpTween = tween<Dp>(durationMillis = spec.durationMs, easing = spec.easing)
     val colorTween = tween<Color>(durationMillis = spec.durationMs, easing = spec.easing)

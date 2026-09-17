@@ -26,6 +26,8 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -82,7 +84,7 @@ fun CoroutinesInternalsExampleUI(
 
 @Composable
 private fun StateMachineDemoCard() {
-    var currentState by remember { mutableStateOf(0) }
+    var currentState by remember { mutableIntStateOf(0) }
     var isRunning by remember { mutableStateOf(false) }
     var results by remember { mutableStateOf(listOf<String>()) }
     val scope = rememberCoroutineScope()
@@ -585,7 +587,7 @@ private fun ChildCoroutineBox(label: String, state: String, modifier: Modifier =
 @Composable
 private fun CancellationDemoCard() {
     var isRunning by remember { mutableStateOf(false) }
-    var iteration by remember { mutableStateOf(0) }
+    var iteration by remember { mutableIntStateOf(0) }
     var status by remember { mutableStateOf("준비") }
     var job: Job? by remember { mutableStateOf(null) }
     val scope = rememberCoroutineScope()
@@ -852,7 +854,7 @@ private fun ParallelExecutionDemoCard() {
     var task1State by remember { mutableStateOf("대기") }
     var task2State by remember { mutableStateOf("대기") }
     var task3State by remember { mutableStateOf("대기") }
-    var totalTime by remember { mutableStateOf(0L) }
+    var totalTime by remember { mutableLongStateOf(0L) }
     var isRunning by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
 

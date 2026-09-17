@@ -24,8 +24,8 @@ import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.MutableIntState
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -138,7 +138,7 @@ fun NavigationView4(
  */
 @Composable
 fun CustomBottomNavigationComponent(
-    clickTabIndex: MutableState<Int> = mutableStateOf(0),
+    clickTabIndex: MutableIntState = mutableIntStateOf(0),
     onClickHomeTab: () -> Unit = { },
     onClickAccountTab: () -> Unit = { },
     onClickSettingTab: () -> Unit = { },
@@ -192,7 +192,7 @@ fun CustomBottomNavigationComponent(
 
 @Composable
 fun RowScope.CustomNavigationComponent(
-    clickTabIndex: MutableState<Int>,
+    clickTabIndex: MutableIntState,
     icon: ImageVector,
     text: String,
     onClickEvent: () -> Unit,
@@ -210,7 +210,7 @@ fun RowScope.CustomNavigationComponent(
             modifier = Modifier.size(24.dp),
             imageVector = icon,
             contentDescription = "",
-            tint = if (clickTabIndex.value == 2) {
+            tint = if (clickTabIndex.intValue == 2) {
                 Color.Blue
             } else {
                 Color.Gray
@@ -221,7 +221,7 @@ fun RowScope.CustomNavigationComponent(
 
         Text(
             text = text,
-            color = if (clickTabIndex.value == 2) {
+            color = if (clickTabIndex.intValue == 2) {
                 Color.Blue
             } else {
                 Color.Gray

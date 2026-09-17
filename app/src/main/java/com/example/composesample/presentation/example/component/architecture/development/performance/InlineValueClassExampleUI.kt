@@ -39,6 +39,8 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -435,12 +437,12 @@ private fun CodeComparisonSection(
 
 @Composable
 private fun PerformanceBenchmarkCard() {
-    var iterations by remember { mutableStateOf(10000) }
+    var iterations by remember { mutableIntStateOf(10000) }
     var isRunning by remember { mutableStateOf(false) }
-    var inlineTime by remember { mutableStateOf(0L) }
-    var nonInlineTime by remember { mutableStateOf(0L) }
-    var inlineFilterTime by remember { mutableStateOf(0L) }
-    var nonInlineFilterTime by remember { mutableStateOf(0L) }
+    var inlineTime by remember { mutableLongStateOf(0L) }
+    var nonInlineTime by remember { mutableLongStateOf(0L) }
+    var inlineFilterTime by remember { mutableLongStateOf(0L) }
+    var nonInlineFilterTime by remember { mutableLongStateOf(0L) }
 
     val scale by animateFloatAsState(
         targetValue = if (isRunning) 1.02f else 1f,

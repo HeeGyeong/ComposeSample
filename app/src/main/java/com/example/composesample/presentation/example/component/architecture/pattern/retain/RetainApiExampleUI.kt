@@ -143,7 +143,7 @@ class TodoPresenter : Presenter {
 fun RetainApiExampleUI(
     onBackEvent: () -> Unit
 ) {
-    var selectedExample by remember { mutableStateOf(0) }
+    var selectedExample by remember { mutableIntStateOf(0) }
 
     Column(
         modifier = Modifier

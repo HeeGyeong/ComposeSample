@@ -449,7 +449,7 @@ private fun CountingButton(label: String, enabled: Boolean) {
 private fun LayoutJumpCard() {
     val state = rememberTextFieldState()
     var showError by remember { mutableStateOf(false) }
-    var measuredHeight by remember { mutableStateOf(0) }
+    var measuredHeight by remember { mutableIntStateOf(0) }
     val density = LocalDensity.current
 
     FormSectionCard(title = "5. 에러 문구가 아래 필드를 밀어낸다 (실측)") {

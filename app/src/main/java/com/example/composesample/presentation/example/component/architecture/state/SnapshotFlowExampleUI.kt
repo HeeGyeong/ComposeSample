@@ -27,7 +27,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
@@ -297,7 +297,7 @@ private fun CollectAsStateWithLifecycleCard(viewModel: SnapshotFlowExampleViewMo
 @Composable
 private fun SnapshotFlowExampleCard(viewModel: SnapshotFlowExampleViewModel) {
     val lazyListState = rememberLazyListState()
-    var scrollPosition by remember { mutableStateOf(0) }
+    var scrollPosition by remember { mutableIntStateOf(0) }
 
     LaunchedEffect(Unit) {
         snapshotFlow { lazyListState.firstVisibleItemIndex }

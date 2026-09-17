@@ -22,6 +22,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -50,7 +51,7 @@ fun RoomIndexExampleUI(onBackEvent: () -> Unit) {
     val compositeDao = remember { db.compositeIndexDao() }
 
     var seedSize by remember { mutableStateOf("20000") }
-    var rowCount by remember { mutableStateOf(0) }
+    var rowCount by remember { mutableIntStateOf(0) }
 
     // age 범위 조회(min~max) 벤치마크 결과
     var ageNoIndex by remember { mutableStateOf<BenchResult?>(null) }

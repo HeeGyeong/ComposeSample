@@ -33,6 +33,8 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -100,7 +102,7 @@ data class RequestStatus(
 private fun FlatMapConcatDemoCard() {
     var isRunning by remember { mutableStateOf(false) }
     var log by remember { mutableStateOf(listOf<String>()) }
-    var totalTime by remember { mutableStateOf(0L) }
+    var totalTime by remember { mutableLongStateOf(0L) }
     var requestStatuses by remember { mutableStateOf(listOf<RequestStatus>()) }
     val scope = rememberCoroutineScope()
 
@@ -280,7 +282,7 @@ private fun FlatMapConcatDemoCard() {
 private fun FlatMapMergeDemoCard() {
     var isRunning by remember { mutableStateOf(false) }
     var log by remember { mutableStateOf(listOf<String>()) }
-    var totalTime by remember { mutableStateOf(0L) }
+    var totalTime by remember { mutableLongStateOf(0L) }
     var requestStatuses by remember { mutableStateOf(listOf<RequestStatus>()) }
     val scope = rememberCoroutineScope()
 
@@ -460,7 +462,7 @@ private fun FlatMapMergeDemoCard() {
 private fun FlatMapLatestDemoCard() {
     var isRunning by remember { mutableStateOf(false) }
     var log by remember { mutableStateOf(listOf<String>()) }
-    var totalTime by remember { mutableStateOf(0L) }
+    var totalTime by remember { mutableLongStateOf(0L) }
     var requestStatuses by remember { mutableStateOf(listOf<RequestStatus>()) }
     val scope = rememberCoroutineScope()
 
@@ -658,7 +660,7 @@ private fun FlatMapLatestDemoCard() {
 private fun ConcurrencyControlCard() {
     var isRunning by remember { mutableStateOf(false) }
     var log by remember { mutableStateOf(listOf<String>()) }
-    var concurrency by remember { mutableStateOf(2) }
+    var concurrency by remember { mutableIntStateOf(2) }
     var requestStatuses by remember { mutableStateOf(listOf<RequestStatus>()) }
     val scope = rememberCoroutineScope()
 
@@ -1276,9 +1278,9 @@ private fun SearchDemoCard() {
 @OptIn(ExperimentalCoroutinesApi::class)
 @Composable
 private fun PerformanceComparisonCard() {
-    var concatTime by remember { mutableStateOf(0L) }
-    var mergeTime by remember { mutableStateOf(0L) }
-    var latestTime by remember { mutableStateOf(0L) }
+    var concatTime by remember { mutableLongStateOf(0L) }
+    var mergeTime by remember { mutableLongStateOf(0L) }
+    var latestTime by remember { mutableLongStateOf(0L) }
     var isRunning by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
 

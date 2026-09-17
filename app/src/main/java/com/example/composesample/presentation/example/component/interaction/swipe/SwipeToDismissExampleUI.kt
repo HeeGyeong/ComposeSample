@@ -43,6 +43,7 @@ import androidx.compose.material.rememberDismissState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -75,7 +76,7 @@ fun SimpleSwipeToDismissUI(
     onBackEvent: () -> Unit
 ) {
     val coroutineScope = rememberCoroutineScope()
-    var cardItemWidth by remember { mutableStateOf(0f) }
+    var cardItemWidth by remember { mutableFloatStateOf(0f) }
     val startDismissEventRatio = 0.15f
     val endDismissEventRatio = 0.60f
     val textData = "Swipe To Dismiss Item"

@@ -21,6 +21,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -102,7 +103,7 @@ private fun IntroCard() {
 // 간단한 카운터 ViewModel 모델 (실제 ViewModel 대신 시뮬레이션)
 // count 는 Compose 가 변경을 추적할 수 있도록 mutableStateOf 로 구성
 private class CounterViewModel(val screenName: String) {
-    var count by mutableStateOf(0)
+    var count by mutableIntStateOf(0)
         private set
 
     fun increment() {
