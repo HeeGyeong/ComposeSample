@@ -787,5 +787,12 @@ val examples2026 = listOf(
         description = "실제 androidx.navigation3 1.1.7 로 SceneStrategy 를 직접 구현 — 엔트리 메타데이터를 보고 OverlayScene(바텀시트)을 돌려주면 NavDisplay 가 overlaidEntries 로 전략을 재귀 호출해 시트가 층층이 쌓이는 과정을 백스택·씬 분해·이벤트 로그로 실측. 시트가 떠 있어도 아래 화면이 컴포지션에 남아(틱이 계속 오름) Lifecycle 만 STARTED 로 캡되고 맨 위 오버레이만 RESUMED 인 것, pop 후 onRemove 가 반환될 때까지 시트가 화면에 남는 퇴장 타이밍, 그리고 같은 창 레이어 오버레이는 NavDisplay 의 back 핸들러(기본 씬 기준)에 맡기면 back 이 액티비티로 새거나 여러 장이 한 번에 pop 되므로 시트가 직접 NavigationBackHandler 를 가져야 하는 이유까지",
         blogUrl = "",
         exampleType = ConstValue.Nav3SceneStrategyExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 09. 22",
+        title = "구조적 동시성 가드레일",
+        description = "kotlinx.coroutines 1.11 이 launch(Job())·launch(NonCancellable)·runInterruptible(Job()) 에 붙인 경고 오버로드(@Deprecated + 더 구체적인 파라미터 타입)의 구조와, 경고가 가리키는 호출을 실제로 돌려 부모 취소가 닿지 않고·coroutineScope 가 기다리지 않아 빈 목록이 반환되고·인터럽트가 안 되는 것을 실측. 정적 타입이 CoroutineContext 면(Job() + Dispatchers.IO) 경고 없이 같은 결과가 나는 빈틈과 withContext(NonCancellable) 등 대안, 같은 릴리스의 StateFlow.onSubscription(StateFlow 반환)·SharedFlow.asFlow·CompletableDeferred.asDeferred 를 캐스팅 시도로 대조(asDeferred 뷰의 cancel() 은 원본까지 취소한다)",
+        blogUrl = "",
+        exampleType = ConstValue.StructuredConcurrencyGuardrailExample
     )
 )

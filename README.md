@@ -278,7 +278,7 @@ Cursor IDE를 사용하는 개발자를 위한 **AI 코딩 어시스턴트 규�
 
 **development**:
 - **compose17**: Compose 1.7 신규 기능(Graphics Layer, Path Graphics, LookaheadScope 등)
-- **concurrency**: 코루틴 내부 동작, withContext 패턴, Coroutine Bridges(suspendCoroutine/suspendCancellableCoroutine으로 콜백 기반 API를 suspend 함수로 변환), 스택 트레이스 복구(suspend 경계에서 호출자 프레임이 사라지는 것을 실측 + assertion 기반 DEBUG 스위치가 안드로이드에서 꺼져 있는 이유 + 필드가 하나만 있어도 반사 복사가 스킵되는 규칙과 `CopyableThrowable` + `_COROUTINE` 경계 프레임 직접 재현)
+- **concurrency**: 코루틴 내부 동작, withContext 패턴, Coroutine Bridges(suspendCoroutine/suspendCancellableCoroutine으로 콜백 기반 API를 suspend 함수로 변환), 스택 트레이스 복구(suspend 경계에서 호출자 프레임이 사라지는 것을 실측 + assertion 기반 DEBUG 스위치가 안드로이드에서 꺼져 있는 이유 + 필드가 하나만 있어도 반사 복사가 스킵되는 규칙과 `CopyableThrowable` + `_COROUTINE` 경계 프레임 직접 재현), 구조적 동시성 가드레일(coroutines 1.11 이 `launch(Job())`·`launch(NonCancellable)`·`runInterruptible(Job())` 에 붙인 경고 오버로드의 구조 + 실제로 돌려 부모 취소가 닿지 않고 `coroutineScope` 가 기다리지 않으며 인터럽트가 안 되는 것을 실측, 정적 타입이 `CoroutineContext` 면 경고 없이 통과하는 빈틈과 대안, `StateFlow.onSubscription`·`SharedFlow.asFlow`·`CompletableDeferred.asDeferred` 노출 대조)
 - **coordinator**: Coordinator 패턴 구현
 - **cursor**: Cursor IDE 관련 예제(AI 코딩 어시스턴트 활용)
 - **di**: Koin Compiler Plugin(KSP 없이 컴파일 타임 DI 해석)

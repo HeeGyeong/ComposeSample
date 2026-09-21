@@ -101,6 +101,33 @@ only runs on interaction (`SealedDomainErrorExampleUI`, `MVIExampleViewModel.onE
 lowering at the source — all 26 classes came back clean and the three screens render again. Raising the target back to 21
 reintroduces the problem for every type-checking `when` in the project, so it should wait for interpreter support.
 
+### Checked exceptions leaving a plain lambda are wrapped in `UndeclaredThrowableException`
+
+The interpreter runs an ordinary (non-inline, non-suspend) Kotlin lambda as a `java.lang.reflect.Proxy`
+(`InterpreterLambda`). `FunctionN.invoke` declares no checked exceptions, so when a **checked** exception escapes the
+lambda, `Proxy` wraps it in `java.lang.reflect.UndeclaredThrowableException`. Any caller that catches the checked type
+misses it. Debug builds only — the release variant has no HotSwan transform, and a plain JVM unit test is unaffected.
+
+Where it bites: `runInterruptible { Thread.sleep(…) }`. When the coroutine is cancelled, the thread is interrupted and
+`Thread.sleep` throws `InterruptedException`. `runInterruptible` is supposed to catch that and turn it into a
+`CancellationException`, but it receives the wrapper instead. The wrapper then escapes as an ordinary failure, and the
+**debug app crashes** when you cancel.
+
+Measured on 2026-09-22 (SM-A725F / Android 13, HotSwan 2.0.0). The lambdas lived in app code and were called from an
+instrumented test:
+
+| Lambda that throws `IOException` | Caught by `catch (e: IOException)`? |
+|---|---|
+| plain `val block: () -> Unit = { throw … }; block()` | ❌ `UndeclaredThrowableException` |
+| inline (`listOf(1).forEach { throw … }`) | ✅ |
+| suspend (`withContext(Dispatchers.IO) { throw … }`) | ✅ |
+| suspend (`coroutineScope { throw … }`) | ✅ |
+
+So Retrofit/Ktor calls wrapped in `withContext` are fine. The risk is limited to function-typed values that let a
+checked exception escape. The workaround is to catch the exception inside the lambda and rethrow it unchecked. Unchecked
+exceptions pass through `Proxy` untouched. `StructuredConcurrencyGuardrailExampleUI` does this and rethrows
+`CancellationException(...).initCause(e)`, which is the same translation `runInterruptible` makes.
+
 ### Side effect: the debug variant's minSdk becomes 26
 
 `interpreter-runtime:2.0.0` declares `minSdkVersion="26"`, and the plugin adds it to debug only. The merged manifests

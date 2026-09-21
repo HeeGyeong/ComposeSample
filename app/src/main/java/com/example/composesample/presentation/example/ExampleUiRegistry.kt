@@ -163,6 +163,7 @@ import com.example.composesample.presentation.example.component.architecture.dev
 import com.example.composesample.presentation.example.component.architecture.development.concurrency.CoroutineStackTraceExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.concurrency.RaceConditionExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.concurrency.SelectExpressionExampleUI
+import com.example.composesample.presentation.example.component.architecture.development.concurrency.StructuredConcurrencyGuardrailExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.strictmode.StrictModeExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.tracing.PerfettoTracingExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.flow.FlatMapExampleUI
@@ -333,6 +334,7 @@ import com.example.composesample.util.ConstValue.CoroutineBridgesExample
 import com.example.composesample.util.ConstValue.CoroutineStackTraceExample
 import com.example.composesample.util.ConstValue.RaceConditionExample
 import com.example.composesample.util.ConstValue.SelectExpressionExample
+import com.example.composesample.util.ConstValue.StructuredConcurrencyGuardrailExample
 import com.example.composesample.util.ConstValue.StrictModeExample
 import com.example.composesample.util.ConstValue.PerfettoTracingExample
 import com.example.composesample.util.ConstValue.WorkManagerExample
@@ -519,6 +521,7 @@ val exampleUiRegistry: Map<String, @Composable (onBackEvent: () -> Unit) -> Unit
     RaceConditionExample to { onBackEvent -> RaceConditionExampleUI(onBackEvent) },
     SelectExpressionExample to { onBackEvent -> SelectExpressionExampleUI(onBackEvent) },
     CoroutineStackTraceExample to { onBackEvent -> CoroutineStackTraceExampleUI(onBackEvent) },
+    StructuredConcurrencyGuardrailExample to { onBackEvent -> StructuredConcurrencyGuardrailExampleUI(onBackEvent) },
     StrictModeExample to { onBackEvent -> StrictModeExampleUI(onBackEvent) },
     PerfettoTracingExample to { onBackEvent -> PerfettoTracingExampleUI(onBackEvent) },
     ButtonGroupExample to { onBackEvent -> ButtonGroupExampleUI(onBackEvent) },

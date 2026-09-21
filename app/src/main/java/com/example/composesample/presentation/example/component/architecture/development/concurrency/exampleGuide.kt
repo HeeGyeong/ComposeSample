@@ -78,4 +78,28 @@ package com.example.composesample.presentation.example.component.architecture.de
  *   (`if (throwableFields != fieldsCountOrDefault(clazz, 0)) return nullResult`) → 필드를 가진 도메인 예외는
  *   CopyableThrowable 을 구현해야 복구 대상이 된다
  * - 비용: 예외마다 복사 + 스택 병합이 일어난다. 디버깅용 스위치이며 프로덕션 상시 활성 대상이 아니다
+ *
+ * ## Structured Concurrency Guardrails (coroutines 1.11.0 가드레일 + 신규 API 3종)
+ * - 릴리스 노트: https://github.com/Kotlin/kotlinx.coroutines/blob/master/CHANGES.md (1.11.0)
+ * - 가드레일 PR: https://github.com/Kotlin/kotlinx.coroutines/issues/4435
+ * - SharedFlow.asFlow: https://github.com/Kotlin/kotlinx.coroutines/issues/4530
+ * - CompletableDeferred.asDeferred: https://github.com/Kotlin/kotlinx.coroutines/issues/4408
+ * - StateFlow.onSubscription: https://github.com/Kotlin/kotlinx.coroutines/issues/4275
+ * 핵심 개념:
+ * - 가드레일 = 같은 이름의 @Deprecated 오버로드. 파라미터 타입을 Job/NonCancellable 로 좁혀 두면
+ *   정적 타입이 Job 인 호출만 그쪽으로 해석된다. 본문은 `launch(context as CoroutineContext, …)` 위임이라 동작은 그대로다
+ * - 1.11.0 신규 WARNING: launch/async(Job) · launch/async(NonCancellable) · runInterruptible(Job) · produce(Job) · future(Job).
+ *   메시지는 모두 "will be deprecated with an error in the future" 로 끝난다
+ * - 1.10.2 부터 있던 ERROR: 스코프 없이 부른 launch { } / async { }. @LowPriorityInOverloadResolution 으로
+ *   리시버가 있을 때는 진짜 CoroutineScope.launch 에 밀리고, 없을 때만 선택돼 "coroutineScope { } 로 감싸라"는 안내를 띄운다
+ * - 빈틈: 정적 타입만 본다. `launch(Job() + Dispatchers.IO)` · CoroutineContext 변수에 담은 Job · withContext(Job()) 는 경고 없음
+ * - Job 을 넘긴 자식은 부모의 children 에 없다 → 부모 취소가 닿지 않고, join/coroutineScope 가 기다리지 않으며, 예외도 부모로 오지 않는다
+ * - runInterruptible(Job): 블록이 넘긴 Job 의 자식이 되어 호출자 취소가 인터럽트로 번역되지 않는다 → 블로킹이 끝까지 간다
+ * - 대안: 정리 작업은 finally { withContext(NonCancellable) { } } · 형제 격리는 supervisorScope · 화면보다 긴 작업은 앱 스코프/WorkManager
+ * - StateFlow.onSubscription: StateFlow 를 돌려준다(SubscribedStateFlow) → .value 유지, collectAsState() 에 초기값 불필요.
+ *   블록은 구독 등록 직후, 구독자마다 실행된다
+ * - opt-in: asFlow()·asDeferred() 는 1.11.0 에서 @ExperimentalCoroutinesApi, StateFlow.onSubscription 은 opt-in 불필요(컴파일로 확인)
+ * - SharedFlow.asFlow: flow { } 로 감싼 평범한 Flow. MutableSharedFlow 로 캐스팅 불가 + replayCache/subscriptionCount 도 숨긴다
+ *   (asSharedFlow 는 쓰기만 막고 SharedFlow 타입은 드러낸다)
+ * - CompletableDeferred.asDeferred: ReadonlyDeferred 래퍼 → complete 캐스팅은 막지만 cancel() 은 원본에 그대로 위임된다
  */
