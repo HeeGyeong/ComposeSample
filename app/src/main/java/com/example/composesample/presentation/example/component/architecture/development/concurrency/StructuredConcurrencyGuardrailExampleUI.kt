@@ -712,6 +712,7 @@ private fun OnSubscriptionCard() {
     val subscriptionCount by counter.subscriptionCount.collectAsState()
     var showA by remember { mutableStateOf(false) }
     var showB by remember { mutableStateOf(false) }
+    var peeked by remember { mutableStateOf<String?>(null) }
 
     SectionCard(title = "6. StateFlow.onSubscription 이 StateFlow 를 돌려준다") {
         BodyText(
@@ -721,7 +722,12 @@ private fun OnSubscriptionCard() {
         Spacer(modifier = Modifier.height(8.dp))
         ResultRow("StateFlow 쪽", "${subscribed::class.java.simpleName} · StateFlow 인가 = ${StateFlow::class.java.isInstance(subscribed)}")
         ResultRow("SharedFlow 쪽", "${sharedOverload::class.java.simpleName} · StateFlow 인가 = ${StateFlow::class.java.isInstance(sharedOverload)}")
-        ResultRow(".value", "${subscribed.value}  ← 구독 없이도 읽힌다")
+        // .value 는 클릭 시점에만 읽는다. 컴포지션에서 읽으면 구독하지 않으므로 값이 바뀌어도 다시 그려지지 않는다
+        // (lint StateFlowValueCalledInComposition).
+        DemoButton(text = ".value 읽기", color = Color(0xFF546E7A)) {
+            peeked = "${subscribed.value} · 읽는 순간 구독자 ${counter.subscriptionCount.value}명 그대로 — 읽기는 구독이 아니다"
+        }
+        peeked?.let { ResultRow(".value", it) }
         Spacer(modifier = Modifier.height(8.dp))
         CodeBlock(
             "val count: StateFlow<Int> = _count.onSubscription { onFirstSeen() }\n" +
