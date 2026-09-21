@@ -12,10 +12,10 @@ apply {
 }
 
 android {
-    namespace 'com.example.coordinator'
+    namespace = 'com.example.coordinator'
 
     buildFeatures {
-        compose true
+        compose = true
     }
 }
 

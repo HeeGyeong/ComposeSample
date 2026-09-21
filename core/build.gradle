@@ -11,5 +11,5 @@ apply {
 }
 
 android {
-    namespace 'com.example.core'
+    namespace = 'com.example.core'
 }
