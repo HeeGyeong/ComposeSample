@@ -299,7 +299,7 @@ Cursor IDE를 사용하는 개발자를 위한 **AI 코딩 어시스턴트 규�
 **others**:
 - **lifecycle**: AutoCloseable(자동 리소스 정리)
 - **modularization**: 모듈화 전략
-- **navigation**: Navigation3, NestedRoutesNav3, NavigationEvent 디스패처(androidx.navigationevent 로 back/forward 양방향 이벤트 — DirectNavigationEventInput 으로 제스처 없이 주입해 콜백 순서를 결정론적으로 재현, 진행률은 콜백이 아니라 transitionState 로만 오는 설계, currentInfo/backInfo/forwardInfo 와 게이팅 실측)
+- **navigation**: Navigation3, NestedRoutesNav3, NavigationEvent 디스패처(androidx.navigationevent 로 back/forward 양방향 이벤트 — DirectNavigationEventInput 으로 제스처 없이 주입해 콜백 순서를 결정론적으로 재현, 진행률은 콜백이 아니라 transitionState 로만 오는 설계, currentInfo/backInfo/forwardInfo 와 게이팅 실측), Nav3 SceneStrategy 바텀시트(실제 androidx.navigation3 로 `SceneStrategy` 를 구현해 `OverlayScene` 시트를 층층이 쌓기 — 시트 아래 화면은 컴포지션에 남아 Lifecycle 만 STARTED 로 캡되는 것, pop 후 `onRemove` 가 끝날 때까지 남는 퇴장 타이밍, 시트가 직접 `NavigationBackHandler` 를 가져야 back 이 새지 않는 이유 실측)
 - **state**: SnapshotFlow(State → Flow 변환), Compose Snapshot System(State<T> 내부 동작 — Snapshot 격리 모델, derivedStateOf 최적화, withMutableSnapshot을 통한 원자적 상태 변경)
 
 ### **etc.**
