@@ -169,6 +169,7 @@ import com.example.composesample.presentation.example.component.architecture.dev
 import com.example.composesample.presentation.example.component.architecture.development.flow.FlowBatchingExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.flow.FlowOperatorsExampleUI
 import com.example.composesample.presentation.example.component.architecture.navigation.Nav3SavedStateHandleExampleUI
+import com.example.composesample.presentation.example.component.architecture.navigation.Nav3SceneStrategyExampleUI
 import com.example.composesample.presentation.example.component.architecture.navigation.Nav3ViewModelScopeExampleUI
 import com.example.composesample.presentation.example.component.architecture.navigation.NavigationEventDispatcherExampleUI
 import com.example.composesample.presentation.example.component.architecture.navigation.Navigation3ExampleUI
@@ -259,6 +260,7 @@ import com.example.composesample.util.ConstValue.ModalDrawExample
 import com.example.composesample.util.ConstValue.ModularizationExample
 import com.example.composesample.util.ConstValue.MotionBlurExample
 import com.example.composesample.util.ConstValue.Nav3SavedStateHandleExample
+import com.example.composesample.util.ConstValue.Nav3SceneStrategyExample
 import com.example.composesample.util.ConstValue.Nav3ViewModelScopeExample
 import com.example.composesample.util.ConstValue.NavigationEventDispatcherExample
 import com.example.composesample.util.ConstValue.Navigation3Example
@@ -510,6 +512,7 @@ val exampleUiRegistry: Map<String, @Composable (onBackEvent: () -> Unit) -> Unit
     NavigationEventDispatcherExample to { onBackEvent -> NavigationEventDispatcherExampleUI(onBackEvent) },
     Nav3ViewModelScopeExample to { onBackEvent -> Nav3ViewModelScopeExampleUI(onBackEvent) },
     Nav3SavedStateHandleExample to { onBackEvent -> Nav3SavedStateHandleExampleUI(onBackEvent) },
+    Nav3SceneStrategyExample to { onBackEvent -> Nav3SceneStrategyExampleUI(onBackEvent) },
     ModularizationExample to { onBackEvent -> ModularizationExampleUI(onBackEvent) },
     WithContextExample to { onBackEvent -> WithContextExampleUI(onBackEvent) },
     CoroutineBridgesExample to { onBackEvent -> CoroutineBridgesExampleUI(onBackEvent) },

@@ -27,6 +27,11 @@ activityCompose = "1.13.0"
 # 이 요구가 이겨 ui/runtime 만 1.11.2 로 올라가는 패치 스큐가 있었으나, BOM 2026.06.01(→ 1.11.4) 상향으로
 # 요구치가 BOM 보다 낮아져 스큐가 사라졌다. BOM 을 1.11.2 미만으로 내리면 다시 끌어올려진다.
 navigationEvent = "1.1.2"
+# androidx.navigation3 — ui 가 SceneStrategy/OverlayScene/NavDisplay, runtime 이 NavEntry/entryProvider/metadata 를 제공한다.
+# 1.1.7 stable, aar-metadata minCompileSdk=36 / minAGP=8.9.1 로 현재 환경(compileSdk 36, AGP 8.13.2) 충족.
+# ui pom 의 요구(activity-compose 1.12.0 · lifecycle 2.10.0 · compose 1.11.2 · navigationevent 1.1.2 · savedstate 1.4.0)가
+# 전부 현재 해석 버전 이하라 전이 끌어올림이 없다. 1.2.0 라인은 minCompileSdk=37 이라 채택하지 않는다.
+navigation3 = "1.1.7"
 # 2026.06.01 = ui/runtime/foundation/animation/material 1.11.4 · material3 1.4.0 (aar-metadata minCompileSdk=35).
 # 2026.08.00 이후(Compose 1.12.x)는 minCompileSdk=37 이라 채택하지 않는다.
 composeBom = "2026.06.01"
@@ -206,6 +211,8 @@ uiToolingPreview = { module = "androidx.compose.ui:ui-tooling-preview" }
 activityCompose = { module = "androidx.activity:activity-compose", version.ref = "activityCompose" }
 navigationEvent = { module = "androidx.navigationevent:navigationevent", version.ref = "navigationEvent" }
 navigationEventCompose = { module = "androidx.navigationevent:navigationevent-compose", version.ref = "navigationEvent" }
+navigation3Runtime = { module = "androidx.navigation3:navigation3-runtime", version.ref = "navigation3" }
+navigation3Ui = { module = "androidx.navigation3:navigation3-ui", version.ref = "navigation3" }
 navigationCompose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 
 # Lifecycle

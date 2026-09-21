@@ -137,3 +137,62 @@ package com.example.composesample.presentation.example.component.architecture.na
  *   (foundation/animation/material 은 1.11.1 유지), BOM 2026.06.01(1.11.4) 상향 후에는 BOM 이 더 높아 스큐가 사라졌다.
  *   실제로 쓰는 API(androidx.compose.runtime.HostDefaultKey)는 1.11.1 에도 있으므로 호환 요구일 뿐이다
 */
+
+/**
+ * Nav3 SceneStrategy 레이어드 바텀시트 Example 참고 자료
+ *
+ * - Navigation 3 릴리스 노트: https://developer.android.com/jetpack/androidx/releases/navigation3
+ * - SceneStrategy API: https://developer.android.com/reference/kotlin/androidx/navigation3/scene/SceneStrategy
+ * - OverlayScene API: https://developer.android.com/reference/kotlin/androidx/navigation3/scene/OverlayScene
+ *   (KDoc 의 `@sample androidx.navigation3.ui.samples.AnimatedBottomSheetSample` 이 이 예제와 같은 주제다)
+ *
+ * 의존성:
+ * - 이 예제가 프로젝트 최초의 실제 navigation3 사용이다(navigation3-ui / navigation3-runtime 1.1.7).
+ *   위의 Navigation3 / Nav3ViewModelScope / Nav3SavedStateHandle 은 여전히 의존성 없는 시뮬레이션이다.
+ * - 1.1.7 aar-metadata = minCompileSdk 36 / minAGP 8.9.1. ui pom 의 요구(activity-compose 1.12.0 · lifecycle 2.10.0 ·
+ *   compose 1.11.2 · navigationevent 1.1.2 · savedstate 1.4.0)가 전부 현재 해석 버전 이하라 전이 끌어올림이 없다.
+ *   1.2.0 라인은 minCompileSdk=37 이라 채택하지 않는다.
+ *
+ * 핵심 개념 (1.1.7 소스 기준):
+ * - SceneStrategy<T> 는 `SceneStrategyScope<T>.calculateScene(entries): Scene<T>?` 하나짜리 fun interface.
+ *   null 이면 "이 전략은 해당 없음" — NavDisplay(sceneStrategies = listOf(...)) 가 앞에서부터 시도하고
+ *   전부 null 이면 SinglePaneSceneStrategy 로 떨어진다. `then` 연산자와 단일 `sceneStrategy` 파라미터 오버로드는 deprecated.
+ * - 판단 근거는 엔트리 메타데이터: `NavMetadataKey<V>` 를 정의하고 `metadata { put(Key, value) }` 로 엔트리에 싣고,
+ *   전략에서 `entry.metadata[Key]` 로 읽는다. 라이브러리의 DialogSceneStrategy 가 정확히 이 모양이다.
+ * - OverlayScene 의 overlaidEntries 는 "아래에서 따로 그려질 엔트리". SceneState 가 결과가 OverlayScene 인 동안
+ *   overlaidEntries 로 전략을 재귀 호출해 overlayScenes 를 모으고, 오버레이가 아닌 마지막 씬이 currentScene(기본 씬)이 된다.
+ *   overlaidEntries 가 비면 require 로 크래시("Overlaid entries from ... must not be empty").
+ * - onRemove(): pop 된 뒤 컴포지션을 떠나기 전에 호출되는 suspend 함수. 퇴장 애니메이션은 여기서 — 반환될 때까지 화면에 남는다.
+ *   실측: 220ms 트윈의 onRemove 가 244~277ms 걸렸고, "시트 전부 닫기"로 2장을 동시에 빼면 두 onRemove 가 병렬로 돌았다(265·269ms).
+ * - NavDisplay 는 오버레이를 key 로 추적해 같은 key 의 재계산 인스턴스는 버리고 처음 인스턴스를 계속 그린다
+ *   (그래서 Animatable 을 씬에 둬도 유지되지만, 생성자로 구운 값은 갱신되지 않는다).
+ * - Lifecycle 상한: 오버레이가 하나라도 있으면 기본 씬은 STARTED(전환 중에도 STARTED), 오버레이 중 맨 위만 RESUMED.
+ *   가려진 화면은 dispose 되지 않는다 — 컴포지션은 살아 있고 RESUMED 만 빠진다.
+ *
+ * ⚠️ back 처리 함정 (이 예제의 핵심 발견):
+ * - NavDisplay 의 NavigationBackHandler 는 `isBackEnabled = currentScene.previousEntries.isNotEmpty()` 이고
+ *   완료 시 `repeat(entries.size - currentScene.previousEntries.size) { onBack() }` 을 한다. currentScene 은 기본 씬이다.
+ *   → [Home, 시트] 이면 핸들러가 꺼져 back 이 액티비티로 샌다. [Home, 상세, 시트, 시트] 이면 back 한 번에 3개가 pop 된다.
+ * - 실기기 대조 실험(SM-A725F/Android 13, 시트 핸들러를 임시로 끈 빌드): ① [Home, 필터#1] + back → BlogExampleActivity 가
+ *   통째로 닫혀 MainActivity 로 나갔다 ② [Home, 상세#1, 정렬#2, 확인#3] + back → [Home] (3개 동시 pop).
+ *   핸들러를 켠 정식 빌드에서는 두 경우 모두 맨 위 시트 1장만 닫혔다.
+ * - DialogScene 은 Dialog 창이 back 을 받아 onDismissRequest 로 처리하므로 이 문제가 없다.
+ *   같은 창 안의 레이어로 그리는 오버레이는 씬 content 안에서 NavigationBackHandler 를 직접 등록해야 하고,
+ *   나중에 등록된 핸들러가 우선하므로 맨 위 오버레이만 isBackEnabled = true 로 두면 한 장씩 닫힌다.
+ *
+ * ⚠️ z-order 함정 (실기기 SM-A725F 에서 발견):
+ * - NavDisplay 는 `currentOverlayScenes` 에 **처음 등장한 key 를 append** 하고(LaunchedEffect) `fastForEachReversed` 로 그린다.
+ *   overlayScenes 는 [위, …, 아래] 순이라 한 번에 여러 장이 생기면 맞게 그려지지만, 한 장씩 push 하면 목록이
+ *   [필터(먼저), 정렬(나중)] 이 되어 정렬을 먼저·필터를 나중에 그린다 → **새로 쌓은 시트가 아래에 깔린다.**
+ * - Dialog 는 창 생성 순서로 z-order 가 정해져 영향이 없다. 같은 창 레이어는 `Modifier.zIndex(백스택 인덱스)` 로 바로잡는다.
+ * - NavDisplay 에는 자체 Box 가 없다 — AnimatedContent(기본 씬)와 오버레이 content 를 **호출한 쪽 레이아웃에 형제로** 내보낸다.
+ *   그래서 zIndex 가 형제끼리 먹는다. 같은 이유로 겹치지 않는 부모(Column 등)에 두면 오버레이가 기본 씬과 겹치지 않을 것이다
+ *   (소스 구조에서의 추론, 미실측) → Box 안에 둔다.
+ *
+ * 이 예제의 선택:
+ * - 백스택은 `mutableStateListOf<SceneDemoKey>()` — NavDisplay 는 T : Any 라 NavKey 가 필수가 아니다.
+ *   rememberNavBackStack 은 @Serializable NavKey + SavedStateConfiguration(polymorphic 모듈)을 요구해
+ *   kotlinx-serialization 컴파일러 플러그인이 추가로 필요하므로 쓰지 않았다(대가: 프로세스 종료 후 백스택 복원 없음).
+ * - contentKey 를 라벨로 지정(`entry<K>(clazzContentKey = { it.label })`)해 씬 key·로그를 사람이 읽을 수 있게 했다.
+ *   기본 contentKey 는 Pair("$key", "${key::class}") 다.
+ */

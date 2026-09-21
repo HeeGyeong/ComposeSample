@@ -780,5 +780,12 @@ val examples2026 = listOf(
         description = "스크롤이 끝에 닿은 뒤 남는 delta 를 누가 가져가는지 — OverscrollEffect 를 직접 구현해 안드로이드 기본 스트레치/글로우를 고무줄(translate)로 교체하고, LocalOverscrollFactory 를 갈아끼워 하위 트리 전체에 일괄 적용하거나 null 로 오버스크롤 자체를 없애기. withoutVisualEffect()/withoutEventHandling() 로 같은 이펙트의 이벤트 처리와 시각 효과를 서로 다른 컴포저블에 나눠 붙이고, 어느 모드든 동일한 계측 래퍼로 감싸 delta·리스트 소비분·남은 양·플링 속도를 화면에서 실측",
         blogUrl = "",
         exampleType = ConstValue.CustomOverscrollExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 09. 21",
+        title = "Nav3 SceneStrategy 바텀시트",
+        description = "실제 androidx.navigation3 1.1.7 로 SceneStrategy 를 직접 구현 — 엔트리 메타데이터를 보고 OverlayScene(바텀시트)을 돌려주면 NavDisplay 가 overlaidEntries 로 전략을 재귀 호출해 시트가 층층이 쌓이는 과정을 백스택·씬 분해·이벤트 로그로 실측. 시트가 떠 있어도 아래 화면이 컴포지션에 남아(틱이 계속 오름) Lifecycle 만 STARTED 로 캡되고 맨 위 오버레이만 RESUMED 인 것, pop 후 onRemove 가 반환될 때까지 시트가 화면에 남는 퇴장 타이밍, 그리고 같은 창 레이어 오버레이는 NavDisplay 의 back 핸들러(기본 씬 기준)에 맡기면 back 이 액티비티로 새거나 여러 장이 한 번에 pop 되므로 시트가 직접 NavigationBackHandler 를 가져야 하는 이유까지",
+        blogUrl = "",
+        exampleType = ConstValue.Nav3SceneStrategyExample
     )
 )

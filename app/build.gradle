@@ -104,6 +104,10 @@ dependencies {
     implementation(libs.navigationEvent)
     implementation(libs.navigationEventCompose)
 
+    // Navigation3 (SceneStrategy/OverlayScene 로 레이어드 바텀시트 스택 — Nav3SceneStrategy 예제)
+    implementation(libs.navigation3Runtime)
+    implementation(libs.navigation3Ui)
+
     // Unit Test
     testImplementation(libs.bundles.unitTest)
 
