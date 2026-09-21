@@ -16,7 +16,7 @@
 
 <!-- Fill in only if this PR adds a new example; otherwise skip. -->
 
-- [ ] Step 1: constant added to `ConstValue.kt` (section comment / `UpdateDate` updated if needed)
+- [ ] Step 1: constant added to `ConstValue.kt` (section comment updated)
 - [ ] Step 2: `ExampleObject` added to `Examples20XX.kt` (`blogUrl = ""`, registered in `ExampleObjectList.kt` if a new year file)
 - [ ] Step 2-1: if it is a sub-category group — children added to `subCategoryList()`, parent's `exampleType` uses the group constant
 - [ ] Step 3: UI file created as `*ExampleUI.kt` with `fun *ExampleUI(onBackEvent: () -> Unit)`

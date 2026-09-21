@@ -82,11 +82,6 @@ blogUrl = "https://heegs.tistory.com/194",  // ❌ never hardcode a raw URL stri
 ```
 Reference URLs used for studying the topic (official docs, other people's articles) still belong **only in `exampleGuide.kt`**, never in the example list or the UI file.
 
-When adding the first example of a new year/month, also update `UpdateDate` in `ConstValue.kt`:
-```kotlin
-const val UpdateDate = "26년 3월"  // update to the current month
-```
-
 `ExampleObjectList.kt` aggregates the per-year files, so when adding a new year file (`Examples20XX.kt`), register it there as well.
 
 ### Step 2-1 (only for sub-category groups): register children in `subCategoryList()`

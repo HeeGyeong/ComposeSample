@@ -6,9 +6,6 @@ package com.example.composesample.util
 //  참조 355곳(15개 파일) + 멤버 import ~140건을 대량 파손시키는데 이득은 파일 길이 단축(미관)뿐 →
 //  이득 < 위험으로 의도적 미진행(중앙 상수 파일 패턴 유지). object 는 Kotlin 에서 파일 분할 불가.
 object ConstValue {
-    // ==================== 기본 설정 ====================
-    const val UpdateDate = "26년 9월"
-
     // ==================== Intent & Code Type ====================
     const val IntentType = "type"
     const val ExampleType = "example"

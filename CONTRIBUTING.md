@@ -53,7 +53,7 @@ ComposeSample
 const val NewFeatureExample = "newFeatureExample"
 ```
 
-해당 섹션 주석도 함께 갱신하고, 새로운 연/월의 첫 예제를 추가하는 경우 `UpdateDate`도 갱신하세요.
+해당 섹션 주석도 함께 갱신하세요.
 
 ### 2단계: `Examples20XX.kt`에 `ExampleObject` 추가
 
