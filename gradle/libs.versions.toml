@@ -93,7 +93,7 @@ espressoCore = "3.5.1"
 # 그 BOM 의 제약이 test 아티팩트까지 같은 버전으로 올린다(선언 1.7.1 ↔ 해석 1.10.1 불일치였음 — DEP-VERSION-05).
 # Ktor 3.5.2 가 coroutines 1.11.0 을 요구해 런타임·테스트 모두 1.11.0 으로 해석되므로 선언을 맞춘다(직전에는 coil 3.5.0 발 1.10.2).
 coroutineTest = "1.11.0"
-mockk = "1.13.5"
+mockk = "1.14.11"
 turbine = "1.0.0"
 runner = "1.5.2"
 rules = "1.5.0"
