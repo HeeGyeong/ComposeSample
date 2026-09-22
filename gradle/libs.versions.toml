@@ -78,8 +78,10 @@ room = "2.8.5"
 retrofit = "3.0.0"
 # ktor-serialization-gson 3.5.2 가 2.14.0 을 요구해 해석 결과에 맞춘다(retrofit converter-gson 3.0.0 의 요구 2.13.1 보다 높다).
 gson = "2.14.0"
-# Ktor 3.5.2 가 okhttp 코어를 5.3.2 로 끌어올리므로 logging-interceptor 도 같은 5.3.2 로 맞춘다(4.x 인터셉터를 5.x 코어와 섞지 않는다).
-okhttpLoggingInterceptor = "5.3.2"
+# logging-interceptor 는 같은 버전의 okhttp 코어를 요구하므로 사실상 코어 버전을 정한다(4.x 인터셉터를 5.x 코어와 섞지 않는다).
+# 5.4.0 = compileSdk 36 에서 쓸 수 있는 최고 버전(okhttp-android aar-metadata minCompileSdk 36).
+# 5.5.0 은 minCompileSdk 37 이라 compileSdk/AGP 상향 묶음(DEP-CURRENCY-02 B)과 함께 올린다.
+okhttpLoggingInterceptor = "5.4.0"
 # Ktor 3.5.2 — ktor-client-okhttp 가 okhttp 5.3.2, 전 모듈이 kotlinx-coroutines 1.11.0, ktor-serialization-gson 이 gson 2.14.0 을 요구한다.
 ktor = "3.5.2"
 
