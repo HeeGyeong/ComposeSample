@@ -54,8 +54,11 @@ lifecycleViewmodelCompose = "2.10.0"
 koinCore = "4.2.2"
 koinAndroid = "4.2.2"
 koinAndroidxCompose = "4.2.2"
-# navigation-compose — Koin 3.2.2 의 전이로만 들어오던 2.4.2 를 동작 변화 없이 그대로 명시 선언한다(버전 상향은 별도 결정).
-navigationCompose = "2.4.2"
+# navigation-compose — Koin 3.2.2 의 전이로 들어오던 2.4.2 를 명시 선언해 두었다가 2.9.8 로 상향(DEP-NAV-01).
+# 2.9.8 = compileSdk 36 / AGP 8.13 에서 쓸 수 있는 최고 버전(aar-metadata minCompileSdk 35 · minAGP 8.6.0).
+# 2.10.0+ 는 minCompileSdk 37 · minAGP 9.1.0 이라 compileSdk/AGP 상향 묶음(DEP-CURRENCY-02 B)과 함께 올린다.
+# 사용처는 BottomNavigationActivity 1곳(문자열 route NavHost/composable/navigate — 2.9 에서도 유지되는 API).
+navigationCompose = "2.9.8"
 
 # Core-dependencies
 # 1.17.0: NotificationCompat.ProgressStyle(Android 16 Live Updates)가 이 버전부터.
