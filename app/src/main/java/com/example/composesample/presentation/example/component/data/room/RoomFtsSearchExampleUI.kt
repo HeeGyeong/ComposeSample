@@ -38,8 +38,9 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.composesample.presentation.MainHeader
-import kotlin.system.measureNanoTime
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @Composable
 fun RoomFtsSearchExampleUI(onBackEvent: () -> Unit) {
@@ -83,6 +84,9 @@ fun RoomFtsSearchExampleUI(onBackEvent: () -> Unit) {
                   - 기본 simple tokenizer 는 공백/구두점 기준 분리
                 • contentEntity 지정 시 외부 테이블과 자동 동기화도 가능
                   (본 예제는 양쪽에 직접 insert 하여 비교를 명확히 함)
+                • LIMIT 의 함정: 'kotlin' 처럼 흔한 단어는 LIKE 도 앞에서부터
+                  100건을 금방 채워 둘의 차이가 거의 없다. 드물거나 없는 단어는
+                  LIKE 가 끝까지 훑어야 해 FTS 가 훨씬 빠르다(없는 단어 실측 약 10~20배)
                 """.trimIndent(),
                 fontSize = 12.sp,
                 fontFamily = FontFamily.Monospace
@@ -140,7 +144,9 @@ fun RoomFtsSearchExampleUI(onBackEvent: () -> Unit) {
                                 status = "시드를 먼저 생성하세요"
                                 return@launch
                             }
-                            likeResult = runSearch { docDao.searchLike(query.trim(), LIMIT) }
+                            val q = query.trim()
+                            status = "LIKE 측정 중… (워밍업 1회 + ${BENCH_ROUNDS}회 반복)"
+                            likeResult = runSearch(db, q, SQL_LIKE, arrayOf(q, q, LIMIT)) { docDao.searchLike(q, LIMIT) }
                             status = "LIKE 완료"
                         }
                     },
@@ -155,7 +161,9 @@ fun RoomFtsSearchExampleUI(onBackEvent: () -> Unit) {
                                 status = "시드를 먼저 생성하세요"
                                 return@launch
                             }
-                            matchResult = runSearch { ftsDao.searchMatch(query.trim(), LIMIT) }
+                            val q = query.trim()
+                            status = "MATCH 측정 중… (워밍업 1회 + ${BENCH_ROUNDS}회 반복)"
+                            matchResult = runSearch(db, q, SQL_MATCH, arrayOf(q, LIMIT)) { ftsDao.searchMatch(q, LIMIT) }
                             status = "MATCH 완료"
                         }
                     },
@@ -173,15 +181,23 @@ fun RoomFtsSearchExampleUI(onBackEvent: () -> Unit) {
             ResultRow("MATCH", matchResult, Color(0xFF42A5F5))
             val l = likeResult
             val m = matchResult
-            if (l != null && m != null && m.elapsedMs > 0) {
+            if (l != null && m != null) {
                 Spacer(Modifier.height(8.dp))
-                val ratio = (l.elapsedMs / m.elapsedMs)
-                Text(
-                    "→ FTS MATCH 가 LIKE 보다 약 %.1fx 빠름".format(ratio),
-                    fontSize = 13.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color(0xFF2E7D32)
-                )
+                // 검색어가 다른 두 측정을 나누면 아무 의미가 없다 → 같은 검색어일 때만 배율을 낸다
+                if (l.query == m.query) {
+                    Text(
+                        speedupText("FTS MATCH", "LIKE", l.stats, m.stats),
+                        fontSize = 13.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFF2E7D32)
+                    )
+                } else {
+                    Text(
+                        "→ 검색어가 달라 비교하지 않음 (LIKE '${l.query}' · MATCH '${m.query}') — 같은 검색어로 둘 다 실행하세요",
+                        fontSize = 12.sp,
+                        color = Color.DarkGray
+                    )
+                }
             }
         }
 
@@ -214,16 +230,34 @@ fun RoomFtsSearchExampleUI(onBackEvent: () -> Unit) {
 private const val LIMIT = 100
 
 private data class SearchResult(
-    val elapsedMs: Double,
+    val query: String,
+    val stats: BenchStats,
     val rows: List<DocEntity>
 )
 
-private suspend inline fun runSearch(crossinline block: suspend () -> List<DocEntity>): SearchResult {
-    var rows: List<DocEntity> = emptyList()
-    val nanos = measureNanoTime {
-        rows = block()
+// DAO 의 @Query 와 같은 SQL. 벤치마크는 이 SQL 을 SQLite 에 직접 실행해 잰다(RoomBenchmark.kt 참고).
+private const val SQL_LIKE =
+    "SELECT * FROM fts_doc WHERE title LIKE '%' || ? || '%' OR body LIKE '%' || ? || '%' ORDER BY id ASC LIMIT ?"
+private const val SQL_MATCH =
+    "SELECT rowid AS id, title, body FROM fts_doc_fts WHERE fts_doc_fts MATCH ? ORDER BY rowid ASC LIMIT ?"
+
+/**
+ * 결과 행은 DAO 로 한 번 읽고, 시간은 같은 SQL 을 SQLite 에 직접 실행해 워밍업 + 반복 측정의 중앙값으로 잰다.
+ * 측정 루프 전체를 IO 스레드 한 번 안에서 돌린다.
+ */
+private suspend fun runSearch(
+    db: FtsSearchDatabase,
+    query: String,
+    sql: String,
+    args: Array<Any?>,
+    daoQuery: suspend () -> List<DocEntity>
+): SearchResult {
+    val rows = daoQuery()
+    val stats = withContext(Dispatchers.IO) {
+        val sqlite = db.openHelper.readableDatabase
+        benchmarkRoundRobin(listOf(suspend { sqlite.runSql(sql, args) })).first()
     }
-    return SearchResult(elapsedMs = nanos / 1_000_000.0, rows = rows)
+    return SearchResult(query = query, stats = stats, rows = rows)
 }
 
 @Composable
@@ -241,7 +275,7 @@ private fun ResultRow(label: String, result: SearchResult?, color: Color) {
             Text("미실행", fontSize = 12.sp, color = Color.Gray)
         } else {
             Text(
-                "%.2f ms · ${result.rows.size}건".format(result.elapsedMs),
+                "${result.stats.summary()} · ${result.rows.size}건",
                 fontSize = 12.sp,
                 fontFamily = FontFamily.Monospace
             )

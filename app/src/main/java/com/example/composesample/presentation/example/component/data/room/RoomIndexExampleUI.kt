@@ -37,8 +37,9 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.composesample.presentation.MainHeader
-import kotlin.system.measureNanoTime
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @Composable
 fun RoomIndexExampleUI(onBackEvent: () -> Unit) {
@@ -86,14 +87,32 @@ fun RoomIndexExampleUI(onBackEvent: () -> Unit) {
                 • 인덱스 없음   : WHERE/ORDER BY 시 전체 행 스캔(O(N))
                 • 단일 인덱스   : @Index(["age"]) → age 범위/등호 조회를 B-Tree 로 가속
                 • 복합 인덱스   : @Index(["city","age"]) → 컬럼 순서 = 정렬 우선순위
-                  - leftmost prefix 규칙: (city) 또는 (city, age) 조건만 인덱스 활용
-                  - age 단독 조건은 복합 인덱스를 타지 못함 → 전체 스캔
+                  - leftmost prefix 규칙: (city) 또는 (city, age) 조건만 인덱스로 '탐색'
+                  - age 단독 조건은 탐색(SEARCH) 불가 → 대신 COUNT 처럼 인덱스
+                    컬럼만 필요하면 인덱스 전체를 훑는 커버링 SCAN(테이블 스캔보단 빠름)
                   - city 등호 + age 정렬은 조회·정렬 모두 인덱스로 처리
                 • 트레이드오프: 인덱스는 읽기를 빠르게 하지만 INSERT/UPDATE 비용과
                   저장 공간이 증가 → 조회 패턴에 맞춰 선택적으로 추가
                 """.trimIndent(),
                 fontSize = 12.sp,
                 fontFamily = FontFamily.Monospace
+            )
+        }
+
+        SectionCardIdx(title = "측정 방법") {
+            Text(
+                "시간은 DAO 가 아니라 같은 SQL 을 SQLite 에 직접 실행해 잰다 — 워밍업 1회 후 세 테이블을 번갈아 " +
+                    "${BENCH_ROUNDS}회씩 돌린 중앙값. DAO 호출 왕복에는 코루틴 스레드 전환과 Room 코드 실행이 더해져 " +
+                    "디버그 빌드에서 호출당 10ms 이상이 섞이고 인덱스 차이가 가려진다.",
+                fontSize = 11.sp,
+                color = Color.DarkGray
+            )
+            Spacer(Modifier.height(4.dp))
+            Text(
+                "디버그 빌드는 측정 코드 자체도 HotSwan 인터프리터로 돌아 호출당 약 1ms 가 더해진다 — 그래서 배율이 " +
+                    "실제보다 작게(약 2배) 나온다. 같은 SQL 을 인터프리터 밖에서 재면 인덱스 없음 3.5ms · 단일 0.5ms(약 7배).",
+                fontSize = 11.sp,
+                color = Color.Gray
             )
         }
 
@@ -138,7 +157,8 @@ fun RoomIndexExampleUI(onBackEvent: () -> Unit) {
 
         SectionCardIdx(title = "벤치마크 ① age BETWEEN 30 AND 40 (범위 조회)") {
             Text(
-                "단일 인덱스(age)가 가장 빠르고, 복합 (city,age)는 leftmost 가 city 라 age 단독 조건엔 인덱스를 못 탐",
+                "단일 인덱스(age)는 범위를 바로 탐색(SEARCH)해 가장 빠르다. 복합 (city,age)는 leftmost 가 city 라 " +
+                    "age 로 탐색은 못 하고 인덱스 전체를 훑는다(커버링 SCAN) — 테이블 스캔보다는 빠르다",
                 fontSize = 11.sp,
                 color = Color.DarkGray
             )
@@ -149,9 +169,14 @@ fun RoomIndexExampleUI(onBackEvent: () -> Unit) {
                         if (rowCount == 0) {
                             status = "시드를 먼저 생성하세요"; return@launch
                         }
-                        ageNoIndex = runBench { noIndexDao.countByAgeRange(30, 40) }
-                        ageSingle = runBench { singleDao.countByAgeRange(30, 40) }
-                        ageComposite = runBench { compositeDao.countByAgeRange(30, 40) }
+                        status = "age 범위 조회 측정 중… (워밍업 1회 + ${BENCH_ROUNDS}회 반복)"
+                        val results = runBenchSet(
+                            db, SQL_COUNT_AGE_RANGE, arrayOf(30, 40),
+                            { noIndexDao.countByAgeRange(30, 40) },
+                            { singleDao.countByAgeRange(30, 40) },
+                            { compositeDao.countByAgeRange(30, 40) }
+                        )
+                        ageNoIndex = results[0]; ageSingle = results[1]; ageComposite = results[2]
                         status = "age 범위 조회 벤치마크 완료"
                     }
                 },
@@ -166,7 +191,8 @@ fun RoomIndexExampleUI(onBackEvent: () -> Unit) {
 
         SectionCardIdx(title = "벤치마크 ② city='Seoul' ORDER BY age (등호+정렬)") {
             Text(
-                "복합 인덱스(city,age)가 조회와 정렬을 모두 처리해 가장 빠름. 단일(age)은 정렬에만 부분 기여",
+                "복합 인덱스(city,age)는 city 로 탐색하고 age 순서 그대로 읽어 정렬이 필요 없다. 단일(age)은 age 순서로 " +
+                    "훑으며 city 를 거르다 LIMIT 에서 멈춰, 이 데이터(도시 10개)에선 복합과 비슷하게 나온다. 인덱스 없음은 전체 스캔 + 정렬용 임시 B-Tree",
                 fontSize = 11.sp,
                 color = Color.DarkGray
             )
@@ -177,9 +203,14 @@ fun RoomIndexExampleUI(onBackEvent: () -> Unit) {
                         if (rowCount == 0) {
                             status = "시드를 먼저 생성하세요"; return@launch
                         }
-                        cityNoIndex = runBench { noIndexDao.findByCity("Seoul", LIMIT).size }
-                        citySingle = runBench { singleDao.findByCity("Seoul", LIMIT).size }
-                        cityComposite = runBench { compositeDao.findByCity("Seoul", LIMIT).size }
+                        status = "city 조회 측정 중… (워밍업 1회 + ${BENCH_ROUNDS}회 반복)"
+                        val results = runBenchSet(
+                            db, SQL_FIND_BY_CITY, arrayOf("Seoul", LIMIT),
+                            { noIndexDao.findByCity("Seoul", LIMIT).size },
+                            { singleDao.findByCity("Seoul", LIMIT).size },
+                            { compositeDao.findByCity("Seoul", LIMIT).size }
+                        )
+                        cityNoIndex = results[0]; citySingle = results[1]; cityComposite = results[2]
                         status = "city 조회 벤치마크 완료"
                     }
                 },
@@ -204,14 +235,31 @@ private const val LIMIT = 100
 private const val BATCH = 2_000
 
 private data class BenchResult(
-    val elapsedMs: Double,
+    val stats: BenchStats,
     val resultValue: Int
 )
 
-private suspend inline fun runBench(crossinline block: suspend () -> Int): BenchResult {
-    var value = 0
-    val nanos = measureNanoTime { value = block() }
-    return BenchResult(elapsedMs = nanos / 1_000_000.0, resultValue = value)
+// DAO 의 @Query 와 같은 SQL — 세 테이블은 이름만 다르다(%s). 벤치마크는 이 SQL 을 SQLite 에 직접 실행해 잰다.
+private const val SQL_COUNT_AGE_RANGE = "SELECT COUNT(*) FROM %s WHERE age BETWEEN ? AND ?"
+private const val SQL_FIND_BY_CITY = "SELECT * FROM %s WHERE city = ? ORDER BY age ASC LIMIT ?"
+private val BENCH_TABLES = listOf("idx_no_index", "idx_single", "idx_composite")
+
+/**
+ * 결과 건수는 DAO 로 읽고(세 테이블이 같은 답을 내는지 확인), 시간은 같은 SQL 을 SQLite 에 직접 실행해
+ * 번갈아 반복 측정한다(RoomBenchmark.kt). 측정 루프 전체를 IO 스레드 한 번 안에서 돌린다.
+ */
+private suspend fun runBenchSet(
+    db: RoomIndexDatabase,
+    sqlTemplate: String,
+    args: Array<Any?>,
+    vararg daoQueries: suspend () -> Int
+): List<BenchResult> {
+    val values = daoQueries.map { it() }
+    val stats = withContext(Dispatchers.IO) {
+        val sqlite = db.openHelper.readableDatabase
+        benchmarkRoundRobin(BENCH_TABLES.map { table -> suspend { sqlite.runSql(sqlTemplate.format(table), args) } })
+    }
+    return stats.mapIndexed { i, s -> BenchResult(stats = s, resultValue = values[i]) }
 }
 
 @Composable
@@ -232,7 +280,7 @@ private fun BenchRow(label: String, result: BenchResult?, color: Color) {
             Text("미실행", fontSize = 12.sp, color = Color.Gray)
         } else {
             Text(
-                "%.2f ms · 결과 ${result.resultValue}건".format(result.elapsedMs),
+                "${result.stats.summary()} · 결과 ${result.resultValue}건",
                 fontSize = 12.sp,
                 fontFamily = FontFamily.Monospace
             )
@@ -242,11 +290,10 @@ private fun BenchRow(label: String, result: BenchResult?, color: Color) {
 
 @Composable
 private fun SpeedupHint(baseline: BenchResult?, best: BenchResult?, bestLabel: String) {
-    if (baseline != null && best != null && best.elapsedMs > 0) {
+    if (baseline != null && best != null) {
         Spacer(Modifier.height(8.dp))
-        val ratio = baseline.elapsedMs / best.elapsedMs
         Text(
-            "→ $bestLabel 가 인덱스 없음보다 약 %.1fx 빠름".format(ratio),
+            speedupText(bestLabel, "인덱스 없음", baseline.stats, best.stats),
             fontSize = 13.sp,
             fontWeight = FontWeight.Bold,
             color = Color(0xFF2E7D32)
