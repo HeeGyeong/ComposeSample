@@ -25,7 +25,7 @@ android {
 
     // 바이트코드 타깃은 17 로 고정한다(툴체인은 21 유지).
     // 21 로 두면 Kotlin 이 타입 분기 when 을 JDK 21 의 SwitchBootstraps.typeSwitch invokedynamic 으로
-    // 낮추는데, 디버그 빌드에 들어가는 HotSwan 2.0.0 인터프리터가 그 BSM 을 구현하지 않아
+    // 낮추는데, 디버그 빌드에 들어가는 HotSwan 2.0 인터프리터가 그 BSM 을 구현하지 않아(2.0.0 에서 실측)
     // 해당 코드를 실행하는 컴포저블이 크래시 없이 0x0 으로 비어 버린다(실기기 실측).
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17

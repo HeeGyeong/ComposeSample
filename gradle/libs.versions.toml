@@ -74,7 +74,7 @@ material = "1.11.4"
 material3 = "1.4.0"
 material3WindowSizeClass = "1.4.0"
 room = "2.8.5"
-# Retrofit 3.0.0 — okhttp 4.12.0 · (converter-gson) gson 2.13.1 을 요구하지만 둘 다 Ktor 쪽 요구(okhttp 5.3.2, gson 2.14.0)보다 낮아 해석은 그대로다.
+# Retrofit 3.0.0 — okhttp 4.12.0 · (converter-gson) gson 2.13.1 을 요구하지만 둘 다 logging-interceptor(okhttp 5.4.0)·Ktor(gson 2.14.0) 쪽 요구보다 낮아 해석은 그대로다.
 retrofit = "3.0.0"
 # ktor-serialization-gson 3.5.2 가 2.14.0 을 요구해 해석 결과에 맞춘다(retrofit converter-gson 3.0.0 의 요구 2.13.1 보다 높다).
 gson = "2.14.0"
@@ -120,7 +120,7 @@ okhttpEventSource = "3.0.0"
 
 # Paging
 # androidx.paging 은 atomic group 이라 runtime/compose/common-ktx 가 한 버전으로 움직인다.
-# 3.5.1 — paging-runtime minCompileSdk=34, paging-compose-android minCompileSdk=35. room-paging 2.8.4 가 요구하는
+# 3.5.1 — paging-runtime minCompileSdk=34, paging-compose-android minCompileSdk=35. room-paging 2.8.5 가 요구하는
 # paging-common 3.3.2 보다 높아 선언이 그대로 해석된다. (이전: 3.2.1 선언 ↔ 3.3.2 해석 드리프트 — DEP-VERSION-03)
 paging = "3.5.1"
 pagingCompose = "3.5.1"

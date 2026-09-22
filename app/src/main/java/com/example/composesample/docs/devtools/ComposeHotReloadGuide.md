@@ -162,7 +162,7 @@ Two consequences worth knowing:
 
 ## Version Requirements
 
-- **HotSwan 2.0.0 (current):** Kotlin 2.3.x–2.4.x, AGP 9.x (official), IntelliJ IDEA / Android Studio 2025.1+, device API 28+ — runs here on Kotlin 2.4.20 / AGP 8.13.2 (see "Current Status")
+- **HotSwan 2.0.x (current: 2.0.2):** Kotlin 2.3.x–2.4.x, AGP 9.x (official), IntelliJ IDEA / Android Studio 2025.1+, device API 28+ — runs here on Kotlin 2.4.20 / AGP 8.13.2 (see "Current Status")
 - **HotSwan 1.3.5–1.3.7:** Kotlin 2.4.0 or later (projects on Kotlin 2.2.x–2.3.x should stay on 1.3.4)
 - **HotSwan 1.2.1:** Kotlin 2.3.x — fails at compiler-extension registration on Kotlin 2.4.0
 - The Gradle plugin adds its runtime dependency and the required compiler flags itself — no extra dependency or configuration block is needed
@@ -177,7 +177,7 @@ Two consequences worth knowing:
 **libs.versions.toml:**
 ```toml
 [plugins]
-hotswan-compiler = { id = "com.github.skydoves.compose.hotswan.compiler", version = "2.0.0" }
+hotswan-compiler = { id = "com.github.skydoves.compose.hotswan.compiler", version = "2.0.2" }
 ```
 
 **root build.gradle:**
