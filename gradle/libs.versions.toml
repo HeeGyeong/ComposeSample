@@ -69,7 +69,7 @@ navigationCompose = "2.9.8"
 # core-ktx 가 core 를 전이로 가져오므로 core 를 따로 선언하지 않는다.
 coreKtx = "1.18.0"
 # coil-core 3.5.0 이 appcompat-resources 1.7.1 을 요구해 appcompat 그룹이 1.7.1 로 해석된다. 선언을 해석 결과에 맞춘다.
-appcompat = "1.7.1"
+appcompat = "1.8.0"
 material = "1.11.4"
 material3 = "1.4.0"
 material3WindowSizeClass = "1.4.0"
