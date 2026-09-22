@@ -380,12 +380,32 @@ private fun NormalExpanded(
 @Composable
 private fun MultipleMatchesSection() {
     var swapped by remember { mutableStateOf(false) }
+    // 같은 key 가 동시에 둘이면 매칭이 확정되지 않아 SharedTransitionLayout 이 '전환 중'에서 벗어나지 못한다 →
+    // 이 데모가 컴포지션에 있는 동안 화면이 정지해 있어도 매 프레임 다시 그린다(실측 2초 124프레임, 끄면 0).
+    // 디버그 오버레이와 무관한 동작이라(오버레이 없이 복제해도 동일) 데모는 켰을 때만 띄운다.
+    var showDemo by remember { mutableStateOf(false) }
 
     SectionCard(
         title = "2. 동일 key 다중 매칭 (Multiple Matches)",
         description = "같은 key 의 sharedElement 가 한 화면에 둘 이상. multipleMatchesColor 로 강조됨."
     ) {
-        SharedTransitionLayout {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Text(
+                text = "데모 표시",
+                fontSize = 13.sp,
+                color = Color(0xFF424242),
+                modifier = Modifier.weight(1f)
+            )
+            Switch(checked = showDemo, onCheckedChange = { showDemo = it })
+        }
+        Text(
+            text = "같은 key 가 동시에 둘이면 매칭이 끝나지 않아 전환이 계속 '진행 중'으로 남는다 — 켜 두는 동안은 " +
+                "화면이 멈춰 있어도 매 프레임 다시 그린다(실측 60fps). 실제 앱에서 key 중복이 배터리를 잡아먹는 이유다.",
+            fontSize = 11.sp,
+            color = Color(0xFF757575)
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        if (showDemo) SharedTransitionLayout {
             AnimatedContent(
                 targetState = swapped,
                 transitionSpec = { fadeIn(tween(300)) togetherWith fadeOut(tween(300)) },

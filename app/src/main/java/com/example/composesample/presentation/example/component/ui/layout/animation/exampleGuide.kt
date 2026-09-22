@@ -18,6 +18,11 @@ package com.example.composesample.presentation.example.component.ui.layout.anima
  * - LookaheadAnimationVisualDebugging(Experimental)으로 SharedTransitionLayout의 key 매칭 상태를 화면 위에 오버레이 시각화
  * - 색상 3종: overlayColor(정상 매칭)·multipleMatchesColor(같은 key 중복 충돌)·unmatchedElementColor(짝 없는 요소)
  * - isShowKeyLabelEnabled로 매칭 key 라벨 표시, runComposeUiTest의 mainClock.advanceTimeBy/awaitFrame으로 결정론적 프레임 검증 가능
+ * - ⚠️ 같은 key 의 sharedElement 가 동시에 둘 이상 보이면 매칭이 확정되지 않아 SharedTransitionLayout 이 '전환 중'
+ *   (foundMatch && isAnimating)에서 벗어나지 못한다 → 화면이 멈춰 있어도 매 프레임 다시 그린다(실측 2초 124프레임,
+ *   key 를 다르게 하면 0). 디버그 오버레이와 무관한 동작이다. 참고로 1.11.4 의 디버그 헬퍼는 전환이 진행 중일 때
+ *   infiniteRepeatable 애니메이션 2개를 붙이며, 그 판단 플래그(isLookaheadAnimationVisualDebuggingEnabled)는
+ *   isEnabled 인자와 무관한 상수 true 다(바이트코드 확인) — 예제의 다중 매칭 데모는 스위치로 켰을 때만 띄운다
  *
  * ## AnimationsShowcaseExampleUI (Compose 애니메이션 API 쇼케이스)
  * - 공식 문서:
