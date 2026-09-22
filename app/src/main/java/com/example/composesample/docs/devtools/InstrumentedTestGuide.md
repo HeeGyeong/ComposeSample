@@ -80,6 +80,41 @@ been invisible for weeks (`TEST-SELECTOR-DRIFT-01`), both of them selector drift
 
 ---
 
+## Screens that render every frame never reach idle
+
+Five registry screens draw a new frame on every vsync, even when nothing appears to move: `agslShaderTuningExample`,
+`flingBehaviorExample`, `particleEmitterExample`, `sharedElementDebugToolingExample` and `waveformCanvasExample`.
+Every harness step that waits for idle hangs on them, and the stack is **not** blocked. The main thread keeps
+cycling through `MessageQueue.nativePollOnce`, so the harness never reports a failure and simply waits until the
+runner kills it.
+
+| Harness call | What waits | Observed on the screen above |
+|---|---|---|
+| `createAndroidComposeRule` teardown (auto clock) | `TestMonotonicFrameClock` issues frames back to back | `waveformCanvasExample` held the runner for the full 900 s test timeout |
+| Same rule with `mainClock.autoAdvance = false` | `Instrumentation.waitForIdleSync()` in teardown | `sharedElementDebugToolingExample` never returned |
+| `ActivityScenario.onActivity { }` / `close()` | also `waitForIdleSync()` (ActivityScenario.java:806) | same screen hung inside `onActivity` |
+
+Measured 2026-09-22 on SM-A725F. `dumpsys gfxinfo` gave about 124 frames every 2 s on the shader and shared-element
+screens (the shared-element screen does this with its debug overlay switched on or off), against 0 on a screen at rest.
+
+To audit these screens, drive them without any idle wait:
+
+1. `ActivityScenario.launch(ComponentActivity::class.java)` and one `onActivity { setContent { … } }`. This call returns,
+   because the content is not drawing yet.
+2. Wait on a real clock with `Thread.sleep`, then read the screen with `uiAutomation.takeScreenshot()` and
+   `uiAutomation.executeShellCommand("dumpsys gfxinfo <pkg>")`. Neither goes through the main thread.
+3. Leave the screen with `input keyevent KEYCODE_BACK` rather than `close()`.
+
+Also:
+
+- For a stack dump when a test hangs without root, add an outer JUnit rule that starts a daemon thread and logs
+  `Thread.getAllStackTraces()` after N seconds. Catch `InterruptedException` in that thread's sleep; otherwise the
+  interrupt that stops it at the end of the test kills the process.
+- Click with `performSemanticsAction(SemanticsActions.OnClick)` instead of `performClick()` on screens whose layout
+  moves while loading, such as paging lists. An injected touch can land on whatever slid under the old coordinates.
+
+---
+
 ## Related
 
 - [`ComposeHotReloadGuide.md`](ComposeHotReloadGuide.md) — HotSwan behaviour. It was ruled out as a cause here.

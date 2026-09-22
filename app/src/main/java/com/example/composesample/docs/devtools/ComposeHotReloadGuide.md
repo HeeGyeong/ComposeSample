@@ -1,6 +1,6 @@
 # Compose Hot Reload (HotSwan) Guide
 
-> ## Current Status — Enabled on `main` with HotSwan 2.0.0 (re-enabled 2026-09-15)
+> ## Current Status — Enabled on `main` with HotSwan 2.0.2 (re-enabled 2026-09-15 on 2.0.0, patched 2026-09-22)
 >
 > **History.** From 2026-06-16 to 2026-09-15 the plugin line in `app/build.gradle` was commented out, because
 > hotswan-compiler 1.2.1 broke the Kotlin 2.4.0 compiler:
@@ -27,6 +27,21 @@
 > - The debug APK gains `libhotswan_interp.so` (arm64-v8a / armeabi-v7a / x86_64) and about 1,700 `assets/hotswan-v2*` entries
 > - Installed on a real device (SM-A725F / API 33), the app launches without a crash and logcat shows
 >   `HotSwanV2: v2 server listening on 127.0.0.1:8601`
+>
+> **2.0.0 → 2.0.2 (2026-09-22).** 2.0.2 fixes "an app could crash at launch on Kotlin 2.4" — a class holding a property
+> declared with `by` over a state value failed during the first composition, surfacing elsewhere as a Compose layout
+> error. This project is on Kotlin 2.4.20, so the patch applies. 2.0.1 only fixed Compose Desktop (Android unaffected).
+> Checks run before committing the bump:
+> - Only the debug runtime changed (`interpreter-runtime` / `-core` / `protocol` 2.0.0 → 2.0.2); the release runtime
+>   classpath still has no HotSwan reference
+> - `SKIPPED` stayed at 40 declarations with an identical list (forced recompile of `:app` and `:coordinator`)
+> - Full render audit on a real device, run on both versions: 179 registry screens rendered with identical root sizes
+>   (0 exceptions, no 0x0), and the 5 always-animating screens rendered identically under a real clock (see the test
+>   guide for why those five need a different harness)
+> - The checked-exception wrapping described below is **unchanged in 2.0.2** (re-measured)
+>
+> No HotSwan IDE plugin was installed on this machine at the time. The Marketplace installs the latest version, so the
+> Gradle plugin follows the latest patch to stay matched.
 >
 > **Not verified:** an actual edit-and-reload round trip from the IDE — that needs the IDE plugin, which a CLI session cannot drive.
 >
@@ -113,7 +128,8 @@ Where it bites: `runInterruptible { Thread.sleep(…) }`. When the coroutine is 
 `CancellationException`, but it receives the wrapper instead. The wrapper then escapes as an ordinary failure, and the
 **debug app crashes** when you cancel.
 
-Measured on 2026-09-22 (SM-A725F / Android 13, HotSwan 2.0.0). The lambdas lived in app code and were called from an
+Measured on 2026-09-22 (SM-A725F / Android 13, HotSwan 2.0.0; the plain-lambda row re-measured on 2.0.2 with the same
+result). The lambdas lived in app code and were called from an
 instrumented test:
 
 | Lambda that throws `IOException` | Caught by `catch (e: IOException)`? |
