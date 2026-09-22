@@ -5,6 +5,7 @@ package com.example.composesample.presentation.example.component.system.security
  *
  * - 본 예제 출처: https://technotalkative.com/android-app-security-practical-steps-every-developer-must-follow/
  * - OkHttp CertificatePinner: https://square.github.io/okhttp/features/https/#certificate-pinning
+ * - Network security config (선언형 pin-set): https://developer.android.com/privacy-and-security/security-config#CertificatePinning
  * - AndroidKeyStore 시스템: https://developer.android.com/privacy-and-security/keystore
  * - EncryptedSharedPreferences (Jetpack Security): https://developer.android.com/topic/security/data
  * - Play Integrity API: https://developer.android.com/google/play/integrity
@@ -12,10 +13,25 @@ package com.example.composesample.presentation.example.component.system.security
  * 핵심 개념 요약
  *
  * 1) Certificate Pinning
- *  - 서버가 사용하는 인증서(또는 그 상위 CA)의 공개키 해시(SHA-256)를 클라이언트에 사전 박제
- *  - OkHttpClient.Builder().certificatePinner(...) 로 적용
+ *  - 서버가 사용하는 인증서(또는 그 상위 CA)의 공개키 해시(SHA-256 SPKI)를 클라이언트에 사전 박제
+ *  - CertificatePinner.Builder().add(host, "sha256/...", "sha256/...") → OkHttpClient.Builder().certificatePinner(...)
  *  - 핀 불일치 시 OkHttp 가 SSLPeerUnverifiedException 으로 연결 차단
  *  - 운영 시 주의: 인증서 갱신 주기를 고려해 backup pin 을 함께 등록해야 핸드오버 가능
+ *
+ *  핀 값을 얻는 방법 (예제가 ①에서 실제로 하는 일)
+ *   - 핀을 걸지 않은 클라이언트로 한 번 접속해 Response.handshake.peerCertificates 를 읽고,
+ *     각 인증서를 CertificatePinner.pin(certificate) 에 넣으면 등록할 "sha256/..." 문자열이 나온다
+ *   - 또는 아무 값이나 틀린 핀으로 찔러보면, SSLPeerUnverifiedException 메시지의
+ *     "Peer certificate chain" 에 서버가 제시한 실제 핀이 전부 찍혀 나온다
+ *   - 운영에서는 이 값을 빌드 시점에 뽑아 상수/설정에 박아둔다 (런타임 조회는 핀의 의미가 없다 —
+ *     중간자가 끼어든 연결에서 조회하면 중간자의 핀을 그대로 신뢰하게 되기 때문)
+ *
+ *  코드 경로 vs 선언형 경로
+ *   - CertificatePinner: OkHttp 를 쓰는 요청에만 적용, 클라이언트 단위로 다르게 걸 수 있다
+ *   - res/xml/network_security_config.xml 의 <pin-set>: 매니페스트에 연결하면 앱 전체 트래픽에 적용
+ *     · expiration 속성을 넘기면 그 시점부터 핀 검사를 건너뛴다 — 핀 갱신을 놓쳤을 때
+ *       앱이 통신 불가로 죽는 대신 검사가 풀리도록 하는 안전장치
+ *     · 전역이라 핀이 틀리면 앱의 모든 네트워크가 끊기므로 이 예제에서는 코드 블록으로만 다룬다
  *
  * 2) AndroidKeyStore + AES-GCM (EncryptedSharedPreferences 내부 동작)
  *  - KeyGenParameterSpec 으로 setBlockModes(GCM), setEncryptionPaddings(NONE), keySize(256)
@@ -33,7 +49,10 @@ package com.example.composesample.presentation.example.component.system.security
  *  - 응답은 JWT(JWS) 형태로 서명되어 오며, **서버에서** 디코딩/검증해야 안전 (클라이언트 디코딩은 변조 가능)
  *
  * 본 예제의 단순화 포인트
- *  - Certificate Pinning: 자가 서명 HeldCertificate 로 서버/공격자 인증서를 동적으로 생성해 핀 비교만 시연
+ *  - Certificate Pinning: 실제 TLS 요청을 보낸다(시뮬레이션 아님). 다만 핀 값을 하드코딩하지 않고
+ *    매번 ①에서 조회해 쓰는데, 이는 인증서가 갱신되면 핀도 바뀌어 예제가 깨지기 때문이다.
+ *    같은 이유로 이 섹션은 계측 테스트 대상으로 삼지 않는다 — 인증서 갱신일에 CI 가 실패한다.
+ *    선언형 <pin-set> 경로는 앱 전역 설정이라 코드 블록으로만 보여주고 실제로 적용하지는 않는다.
  *  - Secure Storage: 디스크 저장 없이 메모리에서만 ciphertext/IV 를 보관 (실제는 EncryptedSharedPreferences 사용 권장)
  *  - Play Integrity: 네트워크 호출 없이 Mock JSON 으로 verdict 필드 형태만 보여줌
  */

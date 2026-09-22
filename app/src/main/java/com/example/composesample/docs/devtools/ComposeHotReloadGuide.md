@@ -138,11 +138,24 @@ instrumented test:
 | inline (`listOf(1).forEach { throw … }`) | ✅ |
 | suspend (`withContext(Dispatchers.IO) { throw … }`) | ✅ |
 | suspend (`coroutineScope { throw … }`) | ✅ |
+| **suspend function-typed parameter** (`fun run(block: suspend () -> T)`, called as `block()`) | ❌ `UndeclaredThrowableException` (2026-09-23) |
+
+**The dividing line is not plain vs. suspend — it is whether the lambda exists as a value.** The two ✅ suspend rows
+above are `withContext`/`coroutineScope` call sites, and both functions are `inline`, so the lambda body is compiled
+into the caller and no `Proxy` is involved. A `suspend () -> T` **parameter** is still a function-typed value, so it is
+still run as a `Proxy` and still wraps. Measured on 2026-09-23 (SM-A725F / Android 13, HotSwan 2.0.2) while building the
+Certificate Pinning example: OkHttp's `SSLPeerUnverifiedException` escaping a `block: () -> StepResult` parameter was
+wrapped, and converting the parameter to `suspend () -> StepResult` did **not** help.
 
 So Retrofit/Ktor calls wrapped in `withContext` are fine. The risk is limited to function-typed values that let a
-checked exception escape. The workaround is to catch the exception inside the lambda and rethrow it unchecked. Unchecked
-exceptions pass through `Proxy` untouched. `StructuredConcurrencyGuardrailExampleUI` does this and rethrows
-`CancellationException(...).initCause(e)`, which is the same translation `runInterruptible` makes.
+checked exception escape. Two workarounds, both in use here:
+
+- Catch the exception inside the lambda and rethrow it unchecked — `Proxy` passes unchecked exceptions through
+  untouched. `StructuredConcurrencyGuardrailExampleUI` does this and rethrows `CancellationException(...).initCause(e)`,
+  which is the same translation `runInterruptible` makes.
+- Classify by walking the **cause chain** instead of the outermost type, so the wrapper is transparent.
+  `AppSecurityViewModel.toLog()` does this; it also survives wrapping introduced by OkHttp interceptors or coroutines,
+  which is why it is the better default for network error handling.
 
 ### Side effect: the debug variant's minSdk becomes 26
 

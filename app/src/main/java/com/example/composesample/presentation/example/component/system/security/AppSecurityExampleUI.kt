@@ -4,9 +4,11 @@ import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
 import android.util.Base64
 import androidx.compose.foundation.background
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -40,6 +42,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import org.koin.androidx.compose.koinViewModel
 import java.security.KeyStore
 import java.security.MessageDigest
 import javax.crypto.Cipher
@@ -51,12 +55,14 @@ import javax.crypto.spec.GCMParameterSpec
  * 앱 보안 실무 예제
  *
  * 3가지 보안 패턴을 한 화면에서 데모합니다.
- * 1) Certificate Pinning  — OkHttp CertificatePinner 매칭/불일치 시뮬레이션
+ * 1) Certificate Pinning  — 실제 OkHttp CertificatePinner 로 공개 호스트에 TLS 요청 (핀 조회 / 일치 / 불일치)
  * 2) Secure Storage      — AndroidKeyStore + AES-GCM 으로 평문 암호화/복호화 (EncryptedSharedPreferences 내부 동작과 동일)
  * 3) Play Integrity Mock — 토큰 디코딩 + verdict 필드 파싱 (실제 호출 없이 Mock JSON)
  */
 @Composable
 fun AppSecurityExampleUI(onBackEvent: () -> Unit) {
+    val viewModel: AppSecurityViewModel = koinViewModel()
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -92,7 +98,7 @@ fun AppSecurityExampleUI(onBackEvent: () -> Unit) {
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            CertificatePinningSection()
+            CertificatePinningSection(viewModel)
             SecureStorageSection()
             PlayIntegritySection()
             Spacer(modifier = Modifier.height(24.dp))
@@ -101,61 +107,141 @@ fun AppSecurityExampleUI(onBackEvent: () -> Unit) {
 }
 
 // ============================================================
-// 1) Certificate Pinning — OkHttp CertificatePinner 데모
+// 1) Certificate Pinning — 실제 OkHttp CertificatePinner 로 TLS 요청
 // ============================================================
 
+/**
+ * 실제 공개 호스트에 TLS 요청을 보내 핀 검증을 시연한다.
+ *
+ * 네트워크 호출은 전부 [AppSecurityViewModel] 이 담당하고 여기서는 상태만 그린다.
+ * 핀 값을 소스에 박지 않고 ①에서 매번 조회하는 이유는 ViewModel KDoc 참고
+ * (인증서가 갱신되면 핀도 바뀌므로 하드코딩한 예제는 언젠가 반드시 깨진다).
+ */
 @Composable
-private fun CertificatePinningSection() {
-    // 실제 OkHttp CertificatePinner 가 내부에서 수행하는 SHA-256 SPKI 해시 비교를 직접 시뮬레이션
-    // (HeldCertificate / okhttp-tls 의존성 없이 핀 매칭 로직만 재현)
-    val host = "api.example.com"
-    val serverPublicKey = "SERVER_PUBLIC_KEY_v1_2026"
-    val attackerPublicKey = "ATTACKER_FORGED_KEY"
+private fun CertificatePinningSection(viewModel: AppSecurityViewModel) {
+    val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
 
-    val expectedPin = remember { sha256Pin(serverPublicKey) }
-    val serverPin = remember { sha256Pin(serverPublicKey) }
-    val attackerPin = remember { sha256Pin(attackerPublicKey) }
-
-    var verifyResult by remember { mutableStateOf<VerifyResult?>(null) }
-
-    SectionCard(title = "① Certificate Pinning (SHA-256 SPKI 매칭)") {
-        BodyText("MITM 공격을 차단하기 위해 서버 인증서의 공개키 해시(SHA-256)를 클라이언트에 사전 고정합니다. OkHttp CertificatePinner 가 같은 방식으로 동작 — 핀 불일치 시 SSLPeerUnverifiedException 으로 연결 차단.")
+    SectionCard(title = "① Certificate Pinning (실제 TLS 핸드셰이크)") {
+        BodyText("MITM 공격을 차단하기 위해 서버 인증서의 공개키 해시(SHA-256 SPKI)를 클라이언트에 사전 고정합니다. 아래 버튼은 시뮬레이션이 아니라 실제로 요청을 보내며, 핀이 틀리면 OkHttp 가 SSLPeerUnverifiedException 으로 연결을 끊습니다.")
 
         Spacer(modifier = Modifier.height(8.dp))
-        MonoText("host         = $host")
-        MonoText("expected pin = sha256/${expectedPin.take(20)}...")
-        MonoText("server  pin  = sha256/${serverPin.take(20)}...")
-        MonoText("attacker pin = sha256/${attackerPin.take(20)}...")
-
-        Spacer(modifier = Modifier.height(12.dp))
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            SmallButton("정상 서버 검증") {
-                verifyResult = if (serverPin == expectedPin) {
-                    VerifyResult.Ok("✅ 핀 일치 — 연결 허용")
-                } else {
-                    VerifyResult.Err("❌ 핀 불일치 — 차단")
-                }
-            }
-            SmallButton("MITM 공격자 검증") {
-                verifyResult = if (attackerPin == expectedPin) {
-                    VerifyResult.Ok("✅ 핀 일치 (예상치 못함)")
-                } else {
-                    VerifyResult.Err("❌ SSLPeerUnverifiedException — MITM 차단")
-                }
-            }
+        MonoText("host = ${viewModel.host}")
+        MonoText("url  = ${viewModel.url}")
+        if (uiState.tlsInfo.isNotEmpty()) {
+            MonoText("tls  = ${uiState.tlsInfo}")
         }
 
-        verifyResult?.let {
+        Spacer(modifier = Modifier.height(12.dp))
+        // 좁은 화면(360dp)에서도 버튼이 잘리지 않도록 FlowRow 로 감싼다
+        FlowRow(
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            SmallButton("① 핀 조회", enabled = !uiState.isRunning) { viewModel.fetchPeerPins() }
+            SmallButton("② 올바른 핀", enabled = !uiState.isRunning) { viewModel.requestWithCorrectPin() }
+            SmallButton("③ 틀린 핀", enabled = !uiState.isRunning) { viewModel.requestWithWrongPin() }
+            SmallButton("로그 지우기", enabled = uiState.logs.isNotEmpty()) { viewModel.clearLogs() }
+        }
+
+        if (uiState.isRunning) {
             Spacer(modifier = Modifier.height(8.dp))
-            ResultText(it)
+            MonoText("요청 중...")
+        }
+
+        if (uiState.chain.isNotEmpty()) {
+            Spacer(modifier = Modifier.height(12.dp))
+            Text(
+                text = "서버가 제시한 인증서 체인 — 이 핀 값을 그대로 등록한다",
+                color = Color(0xFFB0BEC5),
+                fontSize = 12.sp,
+                fontWeight = FontWeight.Bold
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+            uiState.chain.forEach { CertPinRow(it) }
+        }
+
+        uiState.logs.forEach { log ->
+            Spacer(modifier = Modifier.height(8.dp))
+            PinningLogRow(log)
+        }
+
+        Spacer(modifier = Modifier.height(12.dp))
+        BodyText("코드 대신 설정으로 거는 방법 — 아래는 앱 전역에 적용되는 선언형 경로입니다. 이 예제는 다른 네트워크 예제까지 영향받지 않도록 코드 경로만 실제로 적용하고, 선언형은 코드 블록으로만 보여줍니다.")
+        Spacer(modifier = Modifier.height(6.dp))
+        CodeBlock(NETWORK_SECURITY_CONFIG_SNIPPET)
+    }
+}
+
+/** 인증서 1장 — leaf(0)가 서버 자신이고 그 위가 중간 CA·루트 CA 다. */
+@Composable
+private fun CertPinRow(certPin: AppSecurityViewModel.CertPin) {
+    val role = when (certPin.index) {
+        0 -> "leaf (서버)"
+        else -> "CA #${certPin.index}"
+    }
+
+    Column(modifier = Modifier.padding(vertical = 4.dp)) {
+        Text(
+            text = "[${certPin.index}] $role  CN=${certPin.subject}",
+            color = Color(0xFF90CAF9),
+            fontSize = 12.sp,
+            fontFamily = FontFamily.Monospace
+        )
+        MonoText(certPin.pin)
+        MonoText("issuer=${certPin.issuer}  expires=${certPin.expiresOn}")
+    }
+}
+
+/** 단계별 실행 결과 — 차단(BLOCKED)은 실패가 아니라 핀이 제 일을 한 상태라 색을 따로 준다. */
+@Composable
+private fun PinningLogRow(log: AppSecurityViewModel.PinningLog) {
+    val color = when (log.outcome) {
+        AppSecurityViewModel.PinOutcome.CONNECTED -> Color(0xFF81C784)
+        AppSecurityViewModel.PinOutcome.BLOCKED -> Color(0xFFFFB74D)
+        AppSecurityViewModel.PinOutcome.FAILED -> Color(0xFFEF9A9A)
+    }
+
+    Column {
+        Text(
+            text = buildAnnotatedString {
+                withStyle(SpanStyle(color = color, fontWeight = FontWeight.Bold)) {
+                    append("${log.step} · ${log.outcome.name}")
+                }
+            },
+            fontSize = 13.sp,
+            fontFamily = FontFamily.Monospace
+        )
+        MonoText(log.summary)
+        if (log.detail.isNotEmpty()) {
+            CodeBlock(log.detail)
         }
     }
 }
 
-private fun sha256Pin(input: String): String {
-    val digest = MessageDigest.getInstance("SHA-256").digest(input.toByteArray())
-    return Base64.encodeToString(digest, Base64.NO_WRAP)
-}
+/**
+ * res/xml/network_security_config.xml 로 거는 선언형 핀 — 실행하지 않고 코드로만 보여준다.
+ *
+ * 코드 경로(CertificatePinner)와 달리 매니페스트에 연결하는 순간 앱 전체 트래픽에 적용되므로,
+ * 핀이 만료되거나 틀리면 이 앱의 다른 네트워크 예제까지 전부 끊긴다.
+ * expiration 을 넘기면 그 시점부터 핀 검사를 건너뛰어, 핀 갱신을 놓쳤을 때 앱이 죽는 대신 풀리게 한다.
+ */
+private val NETWORK_SECURITY_CONFIG_SNIPPET = """
+    <!-- res/xml/network_security_config.xml -->
+    <network-security-config>
+        <domain-config>
+            <domain includeSubdomains="true">example.com</domain>
+            <pin-set expiration="2027-01-01">
+                <!-- 현재 인증서 -->
+                <pin digest="SHA-256">AAAA...=</pin>
+                <!-- backup pin: 교체 주기가 긴 중간 CA — 없으면 인증서 갱신 시 앱이 연결 불가가 된다 -->
+                <pin digest="SHA-256">BBBB...=</pin>
+            </pin-set>
+        </domain-config>
+    </network-security-config>
+
+    <!-- AndroidManifest.xml -->
+    <application android:networkSecurityConfig="@xml/network_security_config" />
+""".trimIndent()
 
 private sealed interface VerifyResult {
     val text: String
@@ -376,11 +462,41 @@ private fun ResultText(result: VerifyResult) {
 }
 
 @Composable
-private fun SmallButton(label: String, onClick: () -> Unit) {
+private fun SmallButton(label: String, enabled: Boolean = true, onClick: () -> Unit) {
     Button(
         onClick = onClick,
-        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF455A64))
+        enabled = enabled,
+        colors = ButtonDefaults.buttonColors(
+            containerColor = Color(0xFF455A64),
+            disabledContainerColor = Color(0xFF37474F)
+        )
     ) {
-        Text(label, color = Color.White, fontSize = 13.sp)
+        Text(
+            text = label,
+            color = if (enabled) Color.White else Color(0xFF78909C),
+            fontSize = 13.sp
+        )
+    }
+}
+
+/**
+ * 코드/예외 전문 표시용 블록.
+ * 핀 불일치 예외 메시지는 인증서 체인이 통째로 들어와 길기 때문에 가로 스크롤을 둔다.
+ */
+@Composable
+private fun CodeBlock(text: String) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(Color(0xFF16232B), RoundedCornerShape(6.dp))
+            .horizontalScroll(rememberScrollState())
+            .padding(8.dp)
+    ) {
+        Text(
+            text = text,
+            color = Color(0xFF9FB6C1),
+            fontSize = 11.sp,
+            fontFamily = FontFamily.Monospace
+        )
     }
 }

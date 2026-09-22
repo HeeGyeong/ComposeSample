@@ -418,9 +418,9 @@ val examples2026 = listOf(
         exampleType = ConstValue.SyntaxHighlightingExample
     ),
     ExampleObject(
-        lastUpdate = "26. 05. 11",
+        lastUpdate = "26. 09. 23",
         title = "App Security 실무 (Cert Pinning + KeyStore AES-GCM + Play Integrity)",
-        description = "CertificatePinner·KeyStore AES-GCM·Play Integrity 3대 보안 패턴 비교",
+        description = "실제 TLS 핀 검증(조회/일치/불일치)·KeyStore AES-GCM·Play Integrity 3대 보안 패턴 비교",
         blogUrl = "",
         exampleType = ConstValue.AppSecurityExample
     ),
