@@ -29,6 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -45,9 +46,11 @@ fun MainHeader(
 ) {
     TopAppBar(
         title = {
+            // 좁은 화면·큰 글꼴에서 긴 제목이 잘린 채 끝나지 않도록 말줄임으로 표시한다.
             Text(
                 text = title,
                 maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
             )
         },
         navigationIcon = {
