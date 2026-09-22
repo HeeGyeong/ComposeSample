@@ -76,7 +76,7 @@ fun RoomIndexExampleUI(onBackEvent: () -> Unit) {
             .verticalScroll(rememberScrollState())
     ) {
         MainHeader(
-            title = "Room Database Indices 성능 비교",
+            title = "Room 인덱스 성능 비교",
             onBackIconClicked = onBackEvent
         )
 

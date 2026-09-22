@@ -49,7 +49,7 @@ fun TextFieldMaxLengthExampleUI(onBackEvent: () -> Unit) {
             .fillMaxSize()
             .background(Color.White)
     ) {
-        MainHeader(title = "TextField Max Length 숨겨진 버그", onBackIconClicked = onBackEvent)
+        MainHeader(title = "TextField Max Length 버그", onBackIconClicked = onBackEvent)
 
         LazyColumn(
             modifier = Modifier.fillMaxSize(),

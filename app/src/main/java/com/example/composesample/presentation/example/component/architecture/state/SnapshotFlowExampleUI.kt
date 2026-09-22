@@ -60,7 +60,7 @@ fun SnapshotFlowExampleUI(
             .background(Color.White)
     ) {
         MainHeader(
-            title = "SnapshotFlow vs collectAsState",
+            title = "snapshotFlow/collectAsState",
             onBackIconClicked = onBackEvent
         )
 

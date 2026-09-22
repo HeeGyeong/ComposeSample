@@ -63,7 +63,7 @@ fun StaticDynamicCompositionLocalExampleUI(
             .background(Color.White)
     ) {
         MainHeader(
-            title = "Static vs Dynamic CompositionLocal",
+            title = "Static vs Dynamic Local",
             onBackIconClicked = onBackEvent
         )
 

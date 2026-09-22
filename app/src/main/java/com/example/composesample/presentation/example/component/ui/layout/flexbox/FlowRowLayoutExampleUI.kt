@@ -46,7 +46,7 @@ fun FlowRowLayoutExampleUI(onBackEvent: () -> Unit) {
             .fillMaxSize()
             .background(Color.White)
     ) {
-        MainHeader(title = "FlowRow / FlowColumn (Compose Flexbox)", onBackIconClicked = onBackEvent)
+        MainHeader(title = "FlowRow / FlowColumn", onBackIconClicked = onBackEvent)
 
         LazyColumn(
             modifier = Modifier.fillMaxSize(),

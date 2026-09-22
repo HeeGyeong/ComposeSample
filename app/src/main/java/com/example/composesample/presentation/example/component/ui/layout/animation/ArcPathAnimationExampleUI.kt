@@ -76,7 +76,7 @@ fun ArcPathAnimationExampleUI(onBackEvent: () -> Unit) {
             .background(Color.White)
     ) {
         MainHeader(
-            title = "2D 경로 애니메이션 (Arc / Spline)",
+            title = "2D 경로 애니메이션",
             onBackIconClicked = onBackEvent
         )
 

@@ -38,7 +38,7 @@ fun PreviewOnlyAnnotationExampleUI(onBackEvent: () -> Unit) {
             .fillMaxSize()
             .background(Color(0xFF1E1E1E))
     ) {
-        MainHeader(title = "Preview-only Composable (@RequiresOptIn)", onBackIconClicked = onBackEvent)
+        MainHeader(title = "Preview-only Composable", onBackIconClicked = onBackEvent)
 
         LazyColumn(
             modifier = Modifier.fillMaxSize(),

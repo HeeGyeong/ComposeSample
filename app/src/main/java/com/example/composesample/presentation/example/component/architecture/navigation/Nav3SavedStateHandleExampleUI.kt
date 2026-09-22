@@ -56,7 +56,7 @@ fun Nav3SavedStateHandleExampleUI(
             .background(Color.White)
     ) {
         MainHeader(
-            title = "Nav3 SavedStateHandle 크래시 & 복원",
+            title = "Nav3 SavedStateHandle 복원",
             onBackIconClicked = onBackEvent
         )
 

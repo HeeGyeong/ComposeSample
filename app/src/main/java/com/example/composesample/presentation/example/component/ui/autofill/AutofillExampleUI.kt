@@ -55,7 +55,7 @@ fun AutofillExampleUI(onBackEvent: () -> Unit) {
             .fillMaxSize()
             .background(Color.White)
     ) {
-        MainHeader(title = "Compose Autofill (semantics API)", onBackIconClicked = onBackEvent)
+        MainHeader(title = "Compose Autofill", onBackIconClicked = onBackEvent)
 
         LazyColumn(
             modifier = Modifier.fillMaxSize(),

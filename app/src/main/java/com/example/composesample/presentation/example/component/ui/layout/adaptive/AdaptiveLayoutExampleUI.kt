@@ -51,7 +51,7 @@ fun AdaptiveLayoutExampleUI(onBackEvent: () -> Unit) {
         item {
             // 상단 뒤로가기 헤더
             MainHeader(
-                title = "Adaptive Layout (WindowSizeClass)",
+                title = "Adaptive Layout",
                 onBackIconClicked = onBackEvent
             )
         }

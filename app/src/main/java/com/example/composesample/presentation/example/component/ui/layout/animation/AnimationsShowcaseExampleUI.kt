@@ -102,7 +102,7 @@ fun AnimationsShowcaseExampleUI(onBackEvent: () -> Unit) {
             .background(Color.White)
     ) {
         MainHeader(
-            title = "Compose Animations Showcase",
+            title = "Animations Showcase",
             onBackIconClicked = onBackEvent
         )
 

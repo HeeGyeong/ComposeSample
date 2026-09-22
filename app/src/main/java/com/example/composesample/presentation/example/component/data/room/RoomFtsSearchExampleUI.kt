@@ -70,7 +70,7 @@ fun RoomFtsSearchExampleUI(onBackEvent: () -> Unit) {
     ) {
         // 상단 바
         MainHeader(
-            title = "Room FTS4 vs LIKE 검색 성능 비교",
+            title = "Room FTS4 vs LIKE 검색",
             onBackIconClicked = onBackEvent
         )
 

@@ -66,7 +66,7 @@ fun RememberObserverExampleUI(onBackEvent: () -> Unit) {
             .background(Color.White)
     ) {
         MainHeader(
-            title = "RememberObserver / Composition Lifecycle",
+            title = "RememberObserver 수명주기",
             onBackIconClicked = onBackEvent
         )
 

@@ -31,7 +31,7 @@ fun WebViewIssueExampleUI(onBackEvent: () -> Unit) {
     LazyColumn(modifier = Modifier.padding(horizontal = 20.dp)) {
         stickyHeader {
             MainHeader(
-                title = "Youtube WebView Issue Example",
+                title = "Youtube WebView Issue",
                 onBackIconClicked = onBackEvent
             )
         }

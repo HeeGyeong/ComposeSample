@@ -123,7 +123,7 @@ fun PreviewDrivenScreenshotExampleUI(onBackEvent: () -> Unit) {
     ) {
         item {
             MainHeader(
-                title = "Preview-Driven Screenshot Testing",
+                title = "Preview 기반 스크린샷 테스트",
                 onBackIconClicked = onBackEvent
             )
         }

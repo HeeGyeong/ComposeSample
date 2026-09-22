@@ -59,7 +59,7 @@ fun GridLayoutExampleUI(onBackEvent: () -> Unit) {
             .fillMaxSize()
             .background(Color.White)
     ) {
-        MainHeader(title = "Compose Grid API (2D 레이아웃)", onBackIconClicked = onBackEvent)
+        MainHeader(title = "Compose Grid API", onBackIconClicked = onBackEvent)
 
         LazyColumn(
             modifier = Modifier.fillMaxSize(),

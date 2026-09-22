@@ -68,7 +68,7 @@ fun KtorAdvancedConfigExampleUI(onBackEvent: () -> Unit) {
             .background(Color.White)
     ) {
         MainHeader(
-            title = "Advanced Ktor Config (Auth/Retry)",
+            title = "Advanced Ktor Config",
             onBackIconClicked = onBackEvent
         )
 

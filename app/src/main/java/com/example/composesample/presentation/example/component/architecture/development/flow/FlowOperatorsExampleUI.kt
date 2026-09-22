@@ -61,7 +61,7 @@ fun FlowOperatorsExampleUI(onBackEvent: () -> Unit) {
             .background(Color.White)
     ) {
         MainHeader(
-            title = "Flow: Buffer / Conflate / Debounce / Sample",
+            title = "Flow 속도 제어 연산자",
             onBackIconClicked = onBackEvent
         )
 

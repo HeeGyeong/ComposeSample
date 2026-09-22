@@ -73,7 +73,7 @@ fun MediaQueryExampleUI(onBackEvent: () -> Unit) {
             .fillMaxSize()
             .background(Color.White)
     ) {
-        MainHeader(title = "MediaQuery API (선언적 환경 적응)", onBackIconClicked = onBackEvent)
+        MainHeader(title = "MediaQuery API", onBackIconClicked = onBackEvent)
 
         LazyColumn(
             modifier = Modifier.fillMaxSize(),

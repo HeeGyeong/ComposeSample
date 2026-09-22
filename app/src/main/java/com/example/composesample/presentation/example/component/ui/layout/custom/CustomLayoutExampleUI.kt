@@ -40,7 +40,7 @@ fun CustomLayoutExampleUI(onBackEvent: () -> Unit) {
     ) {
         item {
             MainHeader(
-                title = "Custom Layout (MeasurePolicy)",
+                title = "Custom Layout",
                 onBackIconClicked = onBackEvent
             )
         }

@@ -145,7 +145,7 @@ fun SlotTreeInspectorExampleUI(onBackEvent: () -> Unit) {
             .background(Color.White)
     ) {
         MainHeader(
-            title = "Slot Tree Inspector (컴포지션 구조 덤프)",
+            title = "Slot Tree Inspector",
             onBackIconClicked = onBackEvent
         )
 

@@ -65,7 +65,7 @@ fun PerItemViewModelExampleUI(onBackEvent: () -> Unit) {
     ) {
         // 헤더
         MainHeader(
-            title = "Per-Item ViewModels in Compose",
+            title = "Per-Item ViewModels",
             onBackIconClicked = onBackEvent
         )
 

@@ -123,7 +123,7 @@ fun InlineValueClassExampleUI(
             .background(Color.White)
     ) {
         MainHeader(
-            title = "Inline Functions & Value Classes",
+            title = "Inline & Value Classes",
             onBackIconClicked = onBackEvent
         )
 

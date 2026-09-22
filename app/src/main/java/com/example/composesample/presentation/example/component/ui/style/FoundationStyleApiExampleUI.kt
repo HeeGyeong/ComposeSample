@@ -88,7 +88,7 @@ fun FoundationStyleApiExampleUI(onBackEvent: () -> Unit) {
             .background(Color.White)
     ) {
         MainHeader(
-            title = "Foundation Style API (Compose 1.11)",
+            title = "Foundation Style API",
             onBackIconClicked = onBackEvent
         )
 

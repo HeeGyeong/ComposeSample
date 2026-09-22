@@ -64,7 +64,7 @@ fun ImeNestedScrollExampleUI(onBackEvent: () -> Unit) {
             .background(Color.White)
     ) {
         MainHeader(
-            title = "IME Interactive Control Example",
+            title = "IME Interactive Control",
             onBackIconClicked = onBackEvent
         )
 

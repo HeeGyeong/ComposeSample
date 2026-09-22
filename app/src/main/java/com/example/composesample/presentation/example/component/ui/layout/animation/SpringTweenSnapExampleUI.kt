@@ -52,7 +52,7 @@ fun SpringTweenSnapExampleUI(onBackEvent: () -> Unit) {
             .background(Color.White)
     ) {
         MainHeader(
-            title = "Spring / Tween / Snap 애니메이션",
+            title = "Spring / Tween / Snap",
             onBackIconClicked = onBackEvent
         )
 

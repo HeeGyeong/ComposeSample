@@ -55,7 +55,7 @@ fun RemoteMediatorExampleUI(onBackEvent: () -> Unit) {
             .background(Color(0xFFF5F5F5))
     ) {
         MainHeader(
-            title = "RemoteMediator 오프라인 우선 페이징",
+            title = "RemoteMediator 페이징",
             onBackIconClicked = onBackEvent
         )
 

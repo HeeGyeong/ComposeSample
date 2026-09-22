@@ -268,7 +268,7 @@ fun CompositionObserverExampleUI(onBackEvent: () -> Unit) {
             .background(Color.White)
     ) {
         MainHeader(
-            title = "Composition Observer (왜 리컴포즈됐나)",
+            title = "Composition Observer",
             onBackIconClicked = onBackEvent
         )
 

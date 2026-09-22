@@ -18,7 +18,7 @@
     <string name="language_setting_description">Press the button above to change system language settings\nand return to the app to see the changes reflected.</string>
     
     <!-- Local Language Change Example -->
-    <string name="local_language_title">Local Language Change Example</string>
+    <string name="local_language_title">Local Language Change</string>
     <string name="current_language">Current Language</string>
     <string name="language_toggle_button">Change Language</string>
     <string name="welcome_message">Welcome!</string>

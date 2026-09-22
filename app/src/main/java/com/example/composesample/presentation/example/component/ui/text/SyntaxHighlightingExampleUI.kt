@@ -120,7 +120,7 @@ fun SyntaxHighlightingExampleUI(onBackEvent: () -> Unit) {
             .background(Color.White)
     ) {
         MainHeader(
-            title = "Syntax Highlighting (간소화 데모)",
+            title = "Syntax Highlighting",
             onBackIconClicked = onBackEvent
         )
 
