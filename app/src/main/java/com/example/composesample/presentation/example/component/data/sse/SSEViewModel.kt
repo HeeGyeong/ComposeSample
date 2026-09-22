@@ -13,8 +13,15 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import okhttp3.Headers.Companion.headersOf
 import java.net.URI
 import java.util.concurrent.TimeUnit
+
+/**
+ * Wikimedia 스트림은 앱을 식별할 수 없는 User-Agent(기본값인 okhttp/…, Java/… 포함)를 403 으로 거절한다.
+ * 연락처(저장소 URL)를 담은 UA 를 직접 보내야 연결된다 — 정책 문서는 같은 폴더 exampleGuide.kt 참고.
+ */
+private const val SSE_USER_AGENT = "ComposeSample/1.0 (https://github.com/HeeGyeong/ComposeSample)"
 
 class SSEViewModel() : ViewModel() {
     /**
@@ -86,6 +93,7 @@ class SSEViewModel() : ViewModel() {
                     createEventHandler(),
                     URI.create(sseUrl)
                 )
+                    .headers(headersOf("User-Agent", SSE_USER_AGENT))
                     .reconnectTime(3, TimeUnit.SECONDS)
                     .build()
                 eventSourceHolder?.start()
