@@ -80,22 +80,31 @@ been invisible for weeks (`TEST-SELECTOR-DRIFT-01`), both of them selector drift
 
 ---
 
-## Screens that render every frame never reach idle
+## Screens that never reach idle under the Compose test rule
 
-Five registry screens draw a new frame on every vsync, even when nothing appears to move: `agslShaderTuningExample`,
-`flingBehaviorExample`, `particleEmitterExample`, `sharedElementDebugToolingExample` and `waveformCanvasExample`.
-Every harness step that waits for idle hangs on them, and the stack is **not** blocked. The main thread keeps
-cycling through `MessageQueue.nativePollOnce`, so the harness never reports a failure and simply waits until the
+Five registry screens never let the Compose test rule reach idle: `agslShaderTuningExample`, `flingBehaviorExample`,
+`particleEmitterExample`, `sharedElementDebugToolingExample` and `waveformCanvasExample`. They do not all behave the
+same way on a real clock (`dumpsys gfxinfo`, frames per 2 s, measured 2026-09-22 on SM-A725F):
+
+| Screen | Real clock at rest | Why the harness never idles |
+|---|---|---|
+| `agslShaderTuningExample` | ~124 | the shader animates on every frame by design |
+| `waveformCanvasExample` | ~35 (debug interpreter limits the rate) | a `withFrameNanos` loop generates the signal by design |
+| `sharedElementDebugToolingExample` | 0 since `654ac484` (was ~124) | its duplicate-key demo kept the shared transition "active" forever; the demo is now off until the user switches it on |
+| `flingBehaviorExample`, `particleEmitterExample` | 0 | idle on a real clock; only the test clock keeps them busy |
+
+Every harness step that waits for idle hangs on the first two groups. The stack is **not** blocked: the main thread
+keeps cycling through `MessageQueue.nativePollOnce`, so the harness never reports a failure. It just waits until the
 runner kills it.
 
-| Harness call | What waits | Observed on the screen above |
+| Harness call | What waits | Observed |
 |---|---|---|
 | `createAndroidComposeRule` teardown (auto clock) | `TestMonotonicFrameClock` issues frames back to back | `waveformCanvasExample` held the runner for the full 900 s test timeout |
-| Same rule with `mainClock.autoAdvance = false` | `Instrumentation.waitForIdleSync()` in teardown | `sharedElementDebugToolingExample` never returned |
+| Same rule with `mainClock.autoAdvance = false` | `Instrumentation.waitForIdleSync()` in teardown | `sharedElementDebugToolingExample` (before the fix) never returned |
 | `ActivityScenario.onActivity { }` / `close()` | also `waitForIdleSync()` (ActivityScenario.java:806) | same screen hung inside `onActivity` |
 
-Measured 2026-09-22 on SM-A725F. `dumpsys gfxinfo` gave about 124 frames every 2 s on the shader and shared-element
-screens (the shared-element screen does this with its debug overlay switched on or off), against 0 on a screen at rest.
+Under the Compose rule, animations advance only on the test clock. `dumpsys gfxinfo` therefore reports 0 frames there
+even for a screen that animates, so measure rendering on a real clock (below), not inside the rule.
 
 To audit these screens, drive them without any idle wait:
 
@@ -112,6 +121,9 @@ Also:
   interrupt that stops it at the end of the test kills the process.
 - Click with `performSemanticsAction(SemanticsActions.OnClick)` instead of `performClick()` on screens whose layout
   moves while loading, such as paging lists. An injected touch can land on whatever slid under the old coordinates.
+- To reach a Compose control on a real clock (outside the rule), walk `uiAutomation.rootInActiveWindow`
+  (`AccessibilityNodeInfo`) and tap its screen bounds with `input tap`. `uiautomator dump` does not work while the
+  instrumentation holds the UiAutomation connection.
 
 ---
 
