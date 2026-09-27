@@ -264,7 +264,7 @@ Cursor IDE를 사용하는 개발자를 위한 **AI 코딩 어시스턴트 규�
 
 **others**:
 - **ai**: Gemini Nano 온디바이스 추론(AICore)
-- **security**: App Security 진단(인증서 피닝, Play Integrity mock), Hardware-Backed Keystore, IPC/Exported Component 보안, Screenshot Detection
+- **security**: App Security 진단(실제 TLS 인증서 피닝, Play Integrity mock), API 요청 서명(HMAC + 재전송 방지), Hardware-Backed Keystore, IPC/Exported Component 보안, Screenshot Detection
 
 ### **architecture** - 아키텍처 & 개발 도구
 **pattern**:
