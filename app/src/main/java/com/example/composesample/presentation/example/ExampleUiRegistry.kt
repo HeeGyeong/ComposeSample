@@ -54,6 +54,7 @@ import com.example.composesample.presentation.example.component.system.ai.Gemini
 import com.example.composesample.presentation.example.component.system.deeplink.DynamicAppLinksExampleUI
 import com.example.composesample.presentation.example.component.system.platform.biometric.BiometricAuthExampleUI
 import com.example.composesample.presentation.example.component.system.security.AppSecurityExampleUI
+import com.example.composesample.presentation.example.component.system.security.RequestSigningExampleUI
 import com.example.composesample.presentation.example.component.system.security.HardwareKeystoreExampleUI
 import com.example.composesample.presentation.example.component.system.security.IpcExportedComponentExampleUI
 import com.example.composesample.presentation.example.component.system.security.ScreenshotDetectionExampleUI
@@ -189,6 +190,7 @@ import com.example.composesample.presentation.example.component.architecture.sta
 import com.example.composesample.util.ConstValue.AgslShaderTuningExample
 import com.example.composesample.util.ConstValue.AnimatedContentExample
 import com.example.composesample.util.ConstValue.AppSecurityExample
+import com.example.composesample.util.ConstValue.RequestSigningExample
 import com.example.composesample.util.ConstValue.HardwareKeystoreExample
 import com.example.composesample.util.ConstValue.IpcExportedComponentExample
 import com.example.composesample.util.ConstValue.ScreenshotDetectionExample
@@ -533,6 +535,7 @@ val exampleUiRegistry: Map<String, @Composable (onBackEvent: () -> Unit) -> Unit
     PreviewOnlyAnnotationExample to { onBackEvent -> PreviewOnlyAnnotationExampleUI(onBackEvent) },
     StartupOptimizationExample to { onBackEvent -> StartupOptimizationExampleUI(onBackEvent) },
     AppSecurityExample to { onBackEvent -> AppSecurityExampleUI(onBackEvent) },
+    RequestSigningExample to { onBackEvent -> RequestSigningExampleUI(onBackEvent) },
     HardwareKeystoreExample to { onBackEvent -> HardwareKeystoreExampleUI(onBackEvent) },
     ScreenshotDetectionExample to { onBackEvent -> ScreenshotDetectionExampleUI(onBackEvent) },
     IpcExportedComponentExample to { onBackEvent -> IpcExportedComponentExampleUI(onBackEvent) },

@@ -154,3 +154,51 @@ package com.example.composesample.presentation.example.component.system.security
  *    같은 서명으로 빌드된 앱끼리만 호출을 허용할 수 있음 — 코드는 IpcExportedComponentExampleUI.kt 의
  *    PermissionEnforcementSection() CodeBlock 참고.
  */
+
+/**
+ * API 요청 서명(HMAC) + 재전송 방지 예제 참고 자료
+ *
+ * - 본 예제 출처: https://lopez-manas.com/articles/2026-09-02_securing-android-sdks-a-defense-in-depth/
+ * - OkHttp Interceptor: https://square.github.io/okhttp/features/interceptors/
+ * - javax.crypto.Mac: https://developer.android.com/reference/javax/crypto/Mac
+ * - MessageDigest.isEqual (상수 시간 비교): https://developer.android.com/reference/java/security/MessageDigest#isEqual(byte[],%20byte[])
+ * - AWS SigV4 canonical request (같은 설계의 실제 사례): https://docs.aws.amazon.com/IAM/latest/UserGuide/create-signed-request.html
+ *
+ * 핵심 개념 요약
+ *
+ * 1) canonical string — 무엇을 서명 대상에 넣는가
+ *  - 메서드 / 경로 / 타임스탬프 / nonce / **바디의 SHA-256** 을 줄바꿈으로 이어 붙인다
+ *  - 줄바꿈 구분자가 필요한 이유: 구분 없이 이어 붙이면 a="xy",b="z" 와 a="x",b="yz" 가 같은 문자열이 되어
+ *    서로 다른 요청이 같은 서명을 갖는 모호함(canonicalization 취약점)이 생긴다
+ *  - 바디 해시를 넣어야 헤더만 베끼고 바디를 바꾸는 변조가 서명 검사에서 걸린다
+ *
+ * 2) 검사 순서 — 신선도 → nonce → 서명
+ *  - HMAC 계산이 가장 비싸므로 값싼 검사로 먼저 걸러낸다(계산 자원 자체가 공격 표면이다)
+ *  - 타임스탬프 창은 초 단위면 기기 시계 오차로 정상 요청이 튕기고, 시간 단위면 재전송 여지가 커진다 → 분 단위
+ *  - 서명이 유효해도 창 밖이면 거절한다 — "유효한 서명"과 "지금 유효한 요청"은 다른 질문이다
+ *
+ * 3) 재전송 방지 — 서명만으로는 막지 못한다
+ *  - 가로챈 요청은 서명이 멀쩡하므로 그대로 다시 보내면 통과한다
+ *  - 서버가 nonce 를 기억해 두 번째부터 거절해야 비로소 한 번만 유효해진다
+ *  - nonce 저장소에는 허용 창보다 조금 긴 TTL 이 필요하다(없으면 무한히 커지고, 창보다 짧으면 재전송이 되살아난다)
+ *
+ * 4) 상수 시간 비교
+ *  - == 비교는 첫 불일치에서 즉시 반환 → 맞는 바이트가 많을수록 응답이 미세하게 느려진다
+ *  - 공격자는 그 차이를 반복 측정해 서명을 앞에서부터 한 바이트씩 맞춰 나갈 수 있다(timing attack)
+ *  - 결과와 무관하게 전부 읽고 XOR 을 OR 로 누적하는 비교를 쓴다 — JDK 는 MessageDigest.isEqual 로 제공
+ *
+ * 5) 이 층이 막지 못하는 것 (defense-in-depth 의 '한 층'일 뿐)
+ *  - 키가 앱 안에 있으면 추출 즉시 서명 위조가 가능하다. 문자열 난독화는 정적 분석만 늦출 뿐 Frida 같은 동적 계측은 막지 못한다
+ *  - 요청 서명은 인증 수단이 아니라 자동화된 대량 남용의 단가를 올리는 층이다
+ *  - 기기 무결성은 별개 축 → Play Integrity(같은 폴더 AppSecurityExample 의 ③ 섹션)
+ *
+ * 본 예제의 단순화 포인트
+ *  - **네트워크를 쓰지 않는다**: 서명 인터셉터 뒤에 "서버" 역할 검증 인터셉터를 두고, 그 인터셉터가
+ *    chain.proceed() 대신 Response 를 직접 만들어 반환한다. 실제 인터셉터 파이프라인은 그대로 쓰면서
+ *    외부 서버 없이 4분기(정상/바디 변조/만료/재전송)를 실동작으로 보여주기 위한 구조다.
+ *  - 공유 비밀 키를 소스 상수로 둔다 — 실제 앱에서는 하면 안 되는 일이며, 그 한계를 화면 4번 카드에서 다룬다.
+ *  - nonce 저장소는 메모리 Set(TTL 없음). 화면을 벗어나면 사라진다.
+ *  - **상수 시간 비교는 시간을 재지 않고 '읽은 바이트 수'를 센다** — 디버그 빌드는 인터프리터로 돌아
+ *    ns 측정이 실행마다 요동치므로(프로젝트의 Room 벤치마크가 같은 이유로 배율이 튀었다),
+ *    결정적인 지표로 성질 자체를 보여준다.
+ */

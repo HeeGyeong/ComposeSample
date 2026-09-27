@@ -425,6 +425,13 @@ val examples2026 = listOf(
         exampleType = ConstValue.AppSecurityExample
     ),
     ExampleObject(
+        lastUpdate = "26. 09. 28",
+        title = "API 요청 서명 (HMAC + 재전송 방지)",
+        description = "OkHttp 인터셉터로 HMAC-SHA256 서명 — 바디 변조·타임스탬프 만료·nonce 재전송 거절을 서버 없이 대조",
+        blogUrl = "",
+        exampleType = ConstValue.RequestSigningExample
+    ),
+    ExampleObject(
         lastUpdate = "26. 04. 20",
         title = "Nav3 ViewModel Scope",
         description = "Navigation 3의 ViewModel 스코프 변화(Nav2 vs Nav3 vs NavKey) 비교",

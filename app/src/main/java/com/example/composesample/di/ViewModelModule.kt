@@ -21,6 +21,7 @@ import com.example.composesample.presentation.example.component.data.repository.
 import com.example.composesample.presentation.example.component.data.sse.SSEViewModel
 import com.example.composesample.presentation.example.component.system.platform.file.SafFileSelectionViewModel
 import com.example.composesample.presentation.example.component.system.security.AppSecurityViewModel
+import com.example.composesample.presentation.example.component.system.security.RequestSigningViewModel
 import org.koin.android.ext.koin.androidApplication
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.viewModel
@@ -44,6 +45,7 @@ val viewModelModule: Module = module {
     viewModel { MVIExampleViewModel(get()) }
     viewModel { SSEViewModel() }
     viewModel { AppSecurityViewModel() }
+    viewModel { RequestSigningViewModel() }
     viewModel { CompositionLocalViewModel() }
     viewModel { InitTestViewModel() }
     viewModel { PagingViewModel() }
