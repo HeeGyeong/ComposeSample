@@ -109,8 +109,11 @@ lottieCompose = "6.7.1"
 media3 = "1.11.1"
 
 # WorkManager
-# 2.11.2 — aar-metadata minCompileSdk=35 / minAGP=8.6.0. SystemForegroundService 매니페스트에 foregroundServiceType 이 없는 점은 2.9.1 과 같다(위치 예제 참고).
-workRuntime = "2.11.2"
+# 2.12.0 — aar-metadata minCompileSdk=35 / minAGP=8.6.0(실측). SystemForegroundService 매니페스트에 foregroundServiceType 이 없는 점은 2.9.1 과 같다(위치 예제 참고).
+# pom 전이 끌어올림 0: tracing-ktx 1.2.0(프로젝트와 동일) · annotation-experimental 1.4.1(해석 1.5.0) · room 2.7.0(<2.8.5) · coroutines-android 1.9.0(<1.11.0).
+# 2.11 의 워커 예외 핸들러 4종은 2.12 에도 그대로 있고 deprecated 도 아니다(javap 확인) → BaseApplication 무영향.
+# 이 version.ref 는 work-runtime / work-runtime-ktx / work-testing 3개가 공유한다.
+workRuntime = "2.12.0"
 
 # Drag and Drop Library
 reorderable = "0.9.6"
