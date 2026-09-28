@@ -426,6 +426,13 @@ val examples2026 = listOf(
     ),
     ExampleObject(
         lastUpdate = "26. 09. 28",
+        title = "WorkManager 이벤트 리스너 (work 2.12)",
+        description = "작업 수명주기를 suspend 스트림으로 관찰 — 체인 실패·취소·제약 대기 타임라인, 2.11 Consumer 핸들러와 대조",
+        blogUrl = "",
+        exampleType = ConstValue.WorkEventListenerExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 09. 28",
         title = "API 요청 서명 (HMAC + 재전송 방지)",
         description = "OkHttp 인터셉터로 HMAC-SHA256 서명 — 바디 변조·타임스탬프 만료·nonce 재전송 거절을 서버 없이 대조",
         blogUrl = "",

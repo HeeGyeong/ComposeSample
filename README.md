@@ -32,7 +32,7 @@ Clean Architecture 기반으로 구성되어 있으며, 원하는 예제를 쉽�
 ## 주요 라이브러리
 - Room 2.8.5
 - Koin 4.2.2
-- WorkManager 2.11.2
+- WorkManager 2.12.0
 - ViewModel 2.10.0
 - Material 1.11.4
 - Material3 1.4.0
@@ -254,7 +254,7 @@ Cursor IDE를 사용하는 개발자를 위한 **AI 코딩 어시스턴트 규�
 
 **background**:
 - **location**: Background Location Tracking — 실제 `foregroundServiceType="location"` 서비스, 순차적 권한 처리(포그라운드 → 알림 → 백그라운드), `CoroutineWorker`와 대비해 WorkManager가 지속적인 위치 추적을 대체할 수 없는 이유 설명
-- **workmanager**: 백그라운드 작업과 태스크 스케줄링 / Worker 예외 핸들러 — work-runtime 2.11 의 `setWorkerExecutionExceptionHandler`·`setWorkerInitializationExceptionHandler` 로 워커가 예외로 죽는 사각지대를 열고, 실행 중 throw / `Result.failure()` / 생성자 throw / 생성자 시그니처 불일치 4종을 넣어 무엇이 핸들러를 깨우는지 실측 대조(넷 다 WorkInfo 는 FAILED, 생성자 예외만 `InvocationTargetException` 으로 감싸져 message 가 null)
+- **workmanager**: 백그라운드 작업과 태스크 스케줄링 / Worker 예외 핸들러 — work-runtime 2.11 의 `setWorkerExecutionExceptionHandler`·`setWorkerInitializationExceptionHandler` 로 워커가 예외로 죽는 사각지대를 열고, 실행 중 throw / `Result.failure()` / 생성자 throw / 생성자 시그니처 불일치 4종을 넣어 무엇이 핸들러를 깨우는지 실측 대조(넷 다 WorkInfo 는 FAILED, 생성자 예외만 `InvocationTargetException` 으로 감싸져 message 가 null) / WorkManager 이벤트 리스너 — work 2.12 의 `setExecutionEventListener`·`setScheduleEventListener` 로 작업 수명주기를 suspend 스트림으로 관찰. 정상 체인·체인 실패·실행 중 취소·예외 4개 시나리오의 콜백 순서를 타임라인으로 대조하고(체인 실패 시 실행 축은 조용하고 스케줄 축만 `onPrerequisiteFailed` 를 준다), 같은 실패를 2.11 Consumer 핸들러와 나란히 받아 호출 모델·순서 차이를 비교
 
 **notification**:
 - **Live Updates 알림**: Android 16 승격(promoted) 알림 — `NotificationCompat.ProgressStyle`의 세그먼트/포인트/트래커 아이콘, 설정자가 없고 세그먼트 길이 합으로 정해지는 `progressMax`, API 36 미만에서 단색 진행 막대 한 줄로 축약되는 폴백을 빌드된 Notification의 extras 실측으로 확인

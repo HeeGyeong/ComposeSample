@@ -20,6 +20,7 @@ import com.example.composesample.presentation.example.component.data.paging.Remo
 import com.example.composesample.presentation.example.component.data.repository.AdvancedRepositoryPatternViewModel
 import com.example.composesample.presentation.example.component.data.sse.SSEViewModel
 import com.example.composesample.presentation.example.component.system.platform.file.SafFileSelectionViewModel
+import com.example.composesample.presentation.example.component.system.background.workmanager.WorkEventListenerViewModel
 import com.example.composesample.presentation.example.component.system.security.AppSecurityViewModel
 import com.example.composesample.presentation.example.component.system.security.RequestSigningViewModel
 import org.koin.android.ext.koin.androidApplication
@@ -46,6 +47,8 @@ val viewModelModule: Module = module {
     viewModel { SSEViewModel() }
     viewModel { AppSecurityViewModel() }
     viewModel { RequestSigningViewModel() }
+    // WorkManager 인스턴스를 얻어야 하므로 Application 컨텍스트를 주입한다
+    viewModel { WorkEventListenerViewModel(androidApplication()) }
     viewModel { CompositionLocalViewModel() }
     viewModel { InitTestViewModel() }
     viewModel { PagingViewModel() }

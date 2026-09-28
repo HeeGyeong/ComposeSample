@@ -4,8 +4,12 @@ import android.app.Application
 import android.util.Log
 import androidx.core.util.Consumer
 import androidx.work.Configuration
+import androidx.work.ExperimentalEventsApi
 import com.example.composesample.di.CleanArchitectureAddModules
 import com.example.composesample.di.KoinModules
+import com.example.composesample.presentation.example.component.system.background.workmanager.DemoExecutionEventListener
+import com.example.composesample.presentation.example.component.system.background.workmanager.DemoScheduleEventListener
+import com.example.composesample.presentation.example.component.system.background.workmanager.WorkEventRecorder
 import com.example.composesample.presentation.example.component.system.background.workmanager.WorkerExceptionHandlerKind
 import com.example.composesample.presentation.example.component.system.background.workmanager.WorkerExceptionReporter
 import org.koin.android.ext.koin.androidContext
@@ -31,6 +35,9 @@ class BaseApplication : Application(), Configuration.Provider {
         }
     }
 
+    // setExecutionEventListener/setScheduleEventListener 가 @ExperimentalEventsApi(level=WARNING) 라 opt-in 한다.
+    // 향후 버전에서 시그니처가 바뀔 수 있다는 표시이며, 붙이지 않으면 경고만 나고 컴파일은 된다.
+    @OptIn(ExperimentalEventsApi::class)
     override val workManagerConfiguration: Configuration
         get() = Configuration.Builder()
             .setMinimumLoggingLevel(Log.INFO)
@@ -44,7 +51,16 @@ class BaseApplication : Application(), Configuration.Provider {
             .setWorkerExecutionExceptionHandler(
                 Consumer { info ->
                     WorkerExceptionReporter.record(WorkerExceptionHandlerKind.EXECUTION, info)
+                    // 같은 실패를 2.12 의 onException 과 나란히 보여주기 위해 이벤트 타임라인에도 남긴다
+                    WorkEventRecorder.recordLegacy(
+                        workName = info.workerClassName.substringAfterLast('.'),
+                        throwableName = info.throwable.javaClass.simpleName
+                    )
                 }
             )
+            // work 2.12 신규 — 작업 수명주기를 suspend 리스너로 관찰한다(WorkEventListener 예제).
+            // 리스너는 Configuration 에만 등록할 수 있고 앱 전역에 하나뿐이라 화면이 직접 달 수 없다.
+            .setExecutionEventListener(DemoExecutionEventListener())
+            .setScheduleEventListener(DemoScheduleEventListener())
             .build()
 }
