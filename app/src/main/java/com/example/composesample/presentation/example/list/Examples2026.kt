@@ -439,6 +439,13 @@ val examples2026 = listOf(
         exampleType = ConstValue.RequestSigningExample
     ),
     ExampleObject(
+        lastUpdate = "26. 09. 29",
+        title = "Composable 범위 LifecycleOwner (lifecycle 2.10)",
+        description = "rememberLifecycleOwner 로 하위 트리에 상한 걸린 수명주기 부여 — Pager 의 화면 밖 페이지를 STARTED 로 캡해 RESUMED 작업이 멈추는 것을 틱 수로 대조, 상한·백그라운드 전환·컴포지션 이탈 이벤트 로그",
+        blogUrl = "",
+        exampleType = ConstValue.ComposeLifecycleOwnerExample
+    ),
+    ExampleObject(
         lastUpdate = "26. 04. 20",
         title = "Nav3 ViewModel Scope",
         description = "Navigation 3의 ViewModel 스코프 변화(Nav2 vs Nav3 vs NavKey) 비교",

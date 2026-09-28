@@ -178,6 +178,7 @@ import com.example.composesample.presentation.example.component.architecture.nav
 import com.example.composesample.presentation.example.component.architecture.navigation.Navigation3ExampleUI
 import com.example.composesample.presentation.example.component.architecture.modularization.ModularizationExampleUI
 import com.example.composesample.presentation.example.component.architecture.lifecycle.AutoCloseableExampleUI
+import com.example.composesample.presentation.example.component.architecture.lifecycle.ComposeLifecycleOwnerExampleUI
 import com.example.composesample.presentation.example.component.architecture.pattern.compositionLocal.StaticDynamicCompositionLocalExampleUI
 import com.example.composesample.presentation.example.component.architecture.pattern.compositionLocal.tree.CompositionLocalTreeExampleUI
 import com.example.composesample.presentation.example.component.architecture.pattern.remember.RememberPatternsExampleUI
@@ -198,6 +199,7 @@ import com.example.composesample.util.ConstValue.ScreenshotDetectionExample
 import com.example.composesample.util.ConstValue.AnimationExample
 import com.example.composesample.util.ConstValue.ApiDisconnectExample
 import com.example.composesample.util.ConstValue.AutoCloseableExample
+import com.example.composesample.util.ConstValue.ComposeLifecycleOwnerExample
 import com.example.composesample.util.ConstValue.AutofillExample
 import com.example.composesample.util.ConstValue.DeterministicImageTestExample
 import com.example.composesample.util.ConstValue.AutoSizingTextExample
@@ -586,4 +588,5 @@ val exampleUiRegistry: Map<String, @Composable (onBackEvent: () -> Unit) -> Unit
     DisplayCutoutInsetsExample to { onBackEvent -> DisplayCutoutInsetsExampleUI(onBackEvent) },
     WorkerExceptionHandlerExample to { onBackEvent -> WorkerExceptionHandlerExampleUI(onBackEvent) },
     WorkEventListenerExample to { onBackEvent -> WorkEventListenerExampleUI(onBackEvent) },
+    ComposeLifecycleOwnerExample to { onBackEvent -> ComposeLifecycleOwnerExampleUI(onBackEvent) },
 )

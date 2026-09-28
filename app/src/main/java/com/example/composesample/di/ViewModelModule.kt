@@ -9,6 +9,7 @@ import com.example.composesample.presentation.example.component.architecture.pat
 import com.example.composesample.presentation.example.component.architecture.pattern.mvi.MVIExampleViewModel
 import com.example.composesample.presentation.example.component.architecture.state.SnapshotFlowExampleViewModel
 import com.example.composesample.presentation.example.component.architecture.lifecycle.AutoCloseableExampleViewModel
+import com.example.composesample.presentation.example.component.architecture.lifecycle.ComposeLifecycleOwnerViewModel
 import com.example.composesample.presentation.example.component.architecture.lifecycle.RealItemsService
 import com.example.composesample.presentation.example.component.architecture.lifecycle.RealCustomersService
 import com.example.composesample.presentation.example.component.architecture.lifecycle.RealNetworkService
@@ -57,6 +58,7 @@ val viewModelModule: Module = module {
     viewModel { TypeExampleViewModel() }
     viewModel { SafFileSelectionViewModel() }
     viewModel { SnapshotFlowExampleViewModel() }
+    viewModel { ComposeLifecycleOwnerViewModel() }
     viewModel { BaseViewModel(get(), get()) }
     viewModel { CoordinatorViewModel(get(), get()) }
     viewModel {

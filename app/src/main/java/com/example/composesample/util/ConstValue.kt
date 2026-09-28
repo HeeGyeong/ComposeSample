@@ -157,7 +157,7 @@ object ConstValue {
     const val SealedDomainErrorExample = "sealedDomainErrorExample"
 
     // ==================== Compose 상태 & Side Effect 예제 ====================
-    // SideEffect(부수 효과 함수들), CompositionLocal(암시적 전달), StaticDynamicCompositionLocal(Static vs Dynamic), CompositionLocalTree(트리 시각화), RetainApi(retain API), SnapshotFlow(Flow 변환), InitTest(초기화 케이스), LocalContextStrings(LocalContext 문자열 안티패턴), RememberPatterns(rememberSaveable/rememberUpdatedState/derivedStateOf 비교), ComposeSnapshot(Snapshot 시스템 내부 동작), PerItemViewModel(LazyColumn 아이템별 독립 ViewModelStoreOwner)
+    // SideEffect(부수 효과 함수들), CompositionLocal(암시적 전달), StaticDynamicCompositionLocal(Static vs Dynamic), CompositionLocalTree(트리 시각화), RetainApi(retain API), SnapshotFlow(Flow 변환), InitTest(초기화 케이스), LocalContextStrings(LocalContext 문자열 안티패턴), RememberPatterns(rememberSaveable/rememberUpdatedState/derivedStateOf 비교), ComposeSnapshot(Snapshot 시스템 내부 동작), PerItemViewModel(LazyColumn 아이템별 독립 ViewModelStoreOwner), ComposeLifecycleOwner(lifecycle 2.10 rememberLifecycleOwner — Pager 의 화면 밖 페이지를 STARTED 로 캡해 RESUMED 작업을 멈추고, 상한·부모 상태·컴포지션 이탈에 따른 자식 owner 이벤트를 대조)
     const val SideEffectExample = "sideEffectExample"
     const val CompositionLocalExample = "compositionLocalExample"
     const val StaticDynamicCompositionLocalExample = "staticDynamicCompositionLocalExample"
@@ -169,6 +169,7 @@ object ConstValue {
     const val RememberPatternsExample = "rememberPatternsExample"
     const val ComposeSnapshotExample = "composeSnapshotExample"
     const val PerItemViewModelExample = "perItemViewModelExample"
+    const val ComposeLifecycleOwnerExample = "composeLifecycleOwnerExample"
 
     // ==================== 코루틴 & 동시성 예제 ====================
     // Coroutine(기본 특징), CoroutinesInternals(내부 동작 원리), WithContext(withContext vs launch), CoroutineBridges(콜백→suspend 변환 패턴), RaceCondition(공유 가변 상태 보호 4전략 비교 — 비보호/Atomic/Mutex/단일스레드 confinement), SelectExpression(select{}로 여러 suspending 작업 경쟁 — onAwait 최속 미러/onTimeout 폴백/onReceiveCatching 다중 채널 멀티플렉싱), CoroutineStackTrace(suspend 경계에서 잘린 스택 트레이스와 kotlinx.coroutines 의 복구 — DEBUG 스위치 실측/반사 복사가 스킵되는 규칙/CopyableThrowable/_COROUTINE 인공 프레임), StructuredConcurrencyGuardrail(coroutines 1.11 가드레일 — launch(Job())·launch(NonCancellable)·runInterruptible(Job()) 경고 오버로드와 런타임에 끊기는 것 실측/정적 타입 빈틈 + StateFlow.onSubscription·SharedFlow.asFlow·CompletableDeferred.asDeferred 노출 대조)
