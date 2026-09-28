@@ -3,7 +3,6 @@ package com.example.composesample.presentation.example
 import android.app.Application
 import com.example.core.BaseViewModel
 import com.example.core.navigation.Navigation
-import com.example.composesample.presentation.example.model.ExampleMoveType
 import com.example.composesample.presentation.example.model.ExampleObject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
