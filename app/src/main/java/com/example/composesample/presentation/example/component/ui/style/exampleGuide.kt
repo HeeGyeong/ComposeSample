@@ -20,7 +20,21 @@ package com.example.composesample.presentation.example.component.ui.style
  * 분리해 남겼고, 혼동을 막기 위해 타입 이름에서 Style 을 제거했다
  * (`AppStyle` → `AppTokens`, `LocalAppStyle` → `LocalAppTokens`, `StylePreset` → `TokenPreset`).
  *
- * ## API 표면 (1.11.1 기준, AAR javap + 실제 컴파일로 확인)
+ * ## 1.12.1 에서 바뀐 것 (2026-09-29 compose-bom 2026.09.00 상향, foundation 1.12.1 javap + 컴파일로 확인)
+ * 1.11 의 실험 API 가 스코프 인터페이스 구조로 재편되어 이 예제의 컴파일 오류 28건이 났다. 옮긴 규칙:
+ * - `Style` 은 `CustomStyle<StyleScope>` 를 확장하는 인터페이스가 됐고 `StyleScope` 는
+ *   `LayoutStyleScope`(패딩·크기·위치) · `LayerStyleScope`(alpha·scale·translation·rotation·clip·zIndex) ·
+ *   `DrawStyleScope`(border·background·foreground·shape·shadow) · `TextStyleStyleScope` · `StyleStateScope` ·
+ *   `AnimateStyleScope` 를 합친 것이다. `Style { }` 람다 생성은 그대로 된다.
+ * - `contentPadding` · `scale` · `border` · `animate` · `fillWidth` 등은 멤버가 아니라
+ *   **최상위 확장 함수**라 `androidx.compose.foundation.style.*` 를 각각 import 해야 한다(안 하면 Unresolved reference).
+ * - 상태 블록은 `pressed(Style { … })` 가 아니라 **`pressed { … }` 람다**를 받는다(checked·selected·focused 등 동일).
+ * - 전이는 `animate(spec, style)` → **`animate(spec) { … }`**, 커스텀 상태는 `state(key, style) { 판정 }` →
+ *   **`state(key, { … }) { key, state -> 판정 }`**.
+ * - 검증: 컴파일 경고 0, 실기기 전 화면 감사에서 이 화면의 삼켜진 컴포지션 오류 0. 상태별 모양 변화(눌림 등)의
+ *   상호작용은 다시 재지 않았다.
+ *
+ * ## API 표면 (1.11.1 기준 — 위 1.12.1 변경 이전의 형태, AAR javap + 실제 컴파일로 확인)
  * - 진입점: `Modifier.styleable(state: StyleState, style: Style)` /
  *   `styleable(state, vararg styles)`.
  *   `styleable(state)` 단독 오버로드는 **deprecated** (스타일이 없으면 효과가 없음).
@@ -69,8 +83,8 @@ package com.example.composesample.presentation.example.component.ui.style
  *   전파되는지도 런타임 미검증이라 실동작 데모에서는 사용하지 않았다.
  *
  * ## 프로덕션 적용 시 주의
- * - 전부 `@OptIn(ExperimentalFoundationStyleApi::class)` 가 필요하며 1.11 단계에서는
- *   네이밍/시그니처가 바뀔 수 있다.
+ * - 전부 `@OptIn(ExperimentalFoundationStyleApi::class)` 가 필요하다. 실제로 1.12 에서 DSL 형태가 바뀌었으므로
+ *   (위 "1.12.1 에서 바뀐 것") 버전을 올릴 때마다 다시 확인한다.
  * - `Style` 객체는 값 객체이므로 `remember` 로 유지한다. 매 컴포지션마다 새로 만들면
  *   노드가 매번 스타일을 다시 해석한다.
  */

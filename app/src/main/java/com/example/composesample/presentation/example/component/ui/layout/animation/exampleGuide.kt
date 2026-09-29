@@ -65,7 +65,8 @@ package com.example.composesample.presentation.example.component.ui.layout.anima
  *   따라서 마지막 키프레임에 붙이면 뒤에 구간이 없어 효과가 없다.
  *
  * ### opt-in 경계 (프로브 컴파일로 확정)
- * - @OptIn 필요: ArcAnimationSpec → ExperimentalAnimationSpecApi / DeferredTargetAnimation → ExperimentalAnimatableApi
+ * - @OptIn 필요: ArcAnimationSpec → ExperimentalAnimationSpecApi. DeferredTargetAnimation 은 Compose 1.12 에서 정식 API 가 되어
+ *   ExperimentalAnimatableApi 옵트인이 없어졌다(1.11 까지는 필요)
  * - opt-in 불필요(안정 API): keyframesWithSpline { }, keyframes { } 안의 `using ArcMode.X`
  *   → 게이팅이 ArcMode 자체가 아니라 ArcAnimationSpec 클래스에 붙어 있기 때문이다.
  *

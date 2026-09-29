@@ -23,6 +23,10 @@ import androidx.compose.foundation.style.ExperimentalFoundationStyleApi
 import androidx.compose.foundation.style.Style
 import androidx.compose.foundation.style.StyleState
 import androidx.compose.foundation.style.StyleStateKey
+import androidx.compose.foundation.style.animate
+import androidx.compose.foundation.style.border
+import androidx.compose.foundation.style.contentPadding
+import androidx.compose.foundation.style.scale
 import androidx.compose.foundation.style.checked
 import androidx.compose.foundation.style.disabled
 import androidx.compose.foundation.style.fillWidth
@@ -129,7 +133,7 @@ private fun RealApiOverviewCard() {
             "Modifier.styleable" to "state + style 을 노드에 연결하는 진입점",
             "Style { }" to "StyleScope 리시버 람다. 배경·테두리·패딩·변형·텍스트 속성 선언",
             "상태 변형" to "pressed / hovered / focused / checked / selected / disabled",
-            "animate(spec, style)" to "그 블록의 진입·이탈을 애니메이션으로 전이",
+            "animate(spec) { }" to "그 블록의 진입·이탈을 애니메이션으로 전이",
             "StyleStateKey<T>" to "앱이 정의하는 커스텀 상태 키",
             "rememberUpdatedStyleState" to "InteractionSource → StyleState 로 연결"
         )
@@ -165,7 +169,7 @@ private fun RealApiOverviewCard() {
                         contentPadding(16.dp)          // 내부 여백 (CSS padding)
                         background(Color(0xFF6750A4))
                         shape(RoundedCornerShape(12.dp))
-                        pressed(Style { background(Color(0xFFD32F2F)) })
+                        pressed { background(Color(0xFFD32F2F)) }
                     }
                 }
 
@@ -208,16 +212,14 @@ private fun StyleableLiveCard() {
             border(2.dp, Color(0xFF4A3880))
 
             // 눌린 동안
-            pressed(
-                Style {
-                    background(Color(0xFFD32F2F))
-                    scale(0.97f)
-                }
-            )
+            pressed {
+                background(Color(0xFFD32F2F))
+                scale(0.97f)
+            }
             // 마우스/스타일러스 호버 (터치 전용 기기에서는 발생하지 않음)
-            hovered(Style { background(Color(0xFF7E57C2)) })
+            hovered { background(Color(0xFF7E57C2)) }
             // 포커스 (아래 버튼으로 요청)
-            focused(Style { border(4.dp, Color(0xFFFFC107)) })
+            focused { border(4.dp, Color(0xFFFFC107)) }
         }
     }
 
@@ -330,9 +332,9 @@ private fun AppDrivenStateCard() {
             contentPadding(20.dp)
             background(Color(0xFF455A64))
             shape(RoundedCornerShape(14.dp))
-            selected(Style { background(Color(0xFFEF6C00)) })
-            checked(Style { background(Color(0xFF1565C0)) })
-            disabled(Style { alpha(0.35f) })
+            selected { background(Color(0xFFEF6C00)) }
+            checked { background(Color(0xFF1565C0)) }
+            disabled { alpha(0.35f) }
         }
     }
     val selectedLastStyle = remember {
@@ -341,9 +343,9 @@ private fun AppDrivenStateCard() {
             contentPadding(20.dp)
             background(Color(0xFF455A64))
             shape(RoundedCornerShape(14.dp))
-            checked(Style { background(Color(0xFF1565C0)) })
-            selected(Style { background(Color(0xFFEF6C00)) })
-            disabled(Style { alpha(0.35f) })
+            checked { background(Color(0xFF1565C0)) }
+            selected { background(Color(0xFFEF6C00)) }
+            disabled { alpha(0.35f) }
         }
     }
 
@@ -409,9 +411,9 @@ private fun AppDrivenStateCard() {
 
                 Style {
                     background(Gray)
-                    selected(Style { background(Orange) })
-                    checked(Style { background(Blue) })   // 나중 선언 → 둘 다 켜지면 이쪽이 최종
-                    disabled(Style { alpha(0.35f) })      // isEnabled == false 일 때
+                    selected { background(Orange) }
+                    checked { background(Blue) }   // 나중 선언 → 둘 다 켜지면 이쪽이 최종
+                    disabled { alpha(0.35f) }      // isEnabled == false 일 때
                 }
             """.trimIndent(),
             borderColor = Color(0xFF00695C)
@@ -438,17 +440,12 @@ private fun AnimateTransitionCard() {
             background(Color(0xFF546E7A))
             shape(RoundedCornerShape(12.dp))
             // 이 블록 안의 상태 전환은 spec 을 따라 보간된다
-            animate(
-                tween(700),
-                Style {
-                    checked(
-                        Style {
-                            background(Color(0xFF2E7D32))
-                            scale(1.05f)
-                        }
-                    )
+            animate(tween(700)) {
+                checked {
+                    background(Color(0xFF2E7D32))
+                    scale(1.05f)
                 }
-            )
+            }
         }
     }
     val instantStyle = remember {
@@ -457,16 +454,14 @@ private fun AnimateTransitionCard() {
             contentPadding(18.dp)
             background(Color(0xFF546E7A))
             shape(RoundedCornerShape(12.dp))
-            checked(
-                Style {
-                    background(Color(0xFF2E7D32))
-                    scale(1.05f)
-                }
-            )
+            checked {
+                background(Color(0xFF2E7D32))
+                scale(1.05f)
+            }
         }
     }
 
-    ExampleCard(title = "animate(spec, style) — 선언적 전이", titleColor = Color(0xFF1B5E20)) {
+    ExampleCard(title = "animate(spec) { } — 선언적 전이", titleColor = Color(0xFF1B5E20)) {
         Text(
             text = "같은 상태 전환을 두 상자에 동시에 겁니다. 위쪽은 animate 블록 안에 있어 700ms 로 " +
                     "보간되고, 아래쪽은 즉시 스냅됩니다. animateColorAsState 를 따로 붙이지 않아도 " +
@@ -506,7 +501,7 @@ private fun AnimateTransitionCard() {
 
         Spacer(modifier = Modifier.height(12.dp))
         TipBox(
-            text = "animate(enterSpec, exitSpec, style) 오버로드로 진입/이탈 스펙을 따로 줄 수 있습니다. " +
+            text = "animate(enterSpec, exitSpec) { } 오버로드로 진입/이탈 스펙을 따로 줄 수 있습니다. " +
                     "인자를 하나만 주면 양쪽에 같은 스펙이 쓰입니다."
         )
     }
@@ -533,7 +528,7 @@ private fun CustomStateKeyCard() {
             background(Color(0xFF37474F))
             shape(RoundedCornerShape(12.dp))
             // predefined 상태가 아닌 앱 정의 상태 — 판정 람다를 직접 넘긴다
-            state(UrgentKey, Style {
+            state(UrgentKey, {
                 background(Color(0xFFC62828))
                 border(3.dp, Color(0xFFFFD54F))
             }) { key, state -> state.get(key) }
@@ -543,7 +538,7 @@ private fun CustomStateKeyCard() {
     ExampleCard(title = "커스텀 StyleStateKey", titleColor = Color(0xFFB71C1C)) {
         Text(
             text = "pressed/checked 같은 미리 정의된 상태로 부족하면 StyleStateKey<T> 를 만들어 " +
-                    "앱 고유의 상태축을 추가할 수 있습니다. state(key, style) { key, state -> 판정 } 형태로 " +
+                    "앱 고유의 상태축을 추가할 수 있습니다. state(key, { 스타일 }) { key, state -> 판정 } 형태로 " +
                     "언제 적용할지도 직접 정합니다.",
             fontSize = 13.sp,
             color = Color(0xFF616161),
@@ -648,7 +643,7 @@ private fun StyleableProbe(counter: CompositionCounter) {
             contentPadding(16.dp)
             background(Color(0xFF5E35B1))
             shape(RoundedCornerShape(10.dp))
-            pressed(Style { background(Color(0xFFD32F2F)) })
+            pressed { background(Color(0xFFD32F2F)) }
         }
     }
 
@@ -899,8 +894,8 @@ private fun SummaryCard() {
             "상태 소스" to "InteractionSource 를 styleable 노드가 직접 수집",
             "앱 상태 주입" to "rememberUpdatedStyleState 의 블록에서 MutableStyleState 에 대입",
             "우선순위" to "특이도 없음 — 선언 순서대로 적용, 같은 속성은 마지막 선언이 승",
-            "전이" to "animate(spec, style) 로 블록 단위 진입·이탈 보간",
-            "확장" to "StyleStateKey<T> + state(key, style) { 판정 } 으로 커스텀 상태축",
+            "전이" to "animate(spec) { } 로 블록 단위 진입·이탈 보간",
+            "확장" to "StyleStateKey<T> + state(key, { 스타일 }) { 판정 } 으로 커스텀 상태축",
             "합성" to "Style(a, b) 또는 a then b 로 스타일 객체를 값처럼 조합",
             "주의" to "Style 은 remember 로 유지 / styleable(state) 단독 호출은 deprecated"
         )

@@ -4,7 +4,6 @@ import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.ArcAnimationSpec
 import androidx.compose.animation.core.ArcMode
 import androidx.compose.animation.core.DeferredTargetAnimation
-import androidx.compose.animation.core.ExperimentalAnimatableApi
 import androidx.compose.animation.core.ExperimentalAnimationSpecApi
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.TargetBasedAnimation
@@ -176,13 +175,13 @@ fun ArcPathAnimationExampleUI(onBackEvent: () -> Unit) {
             item { HorizontalDivider() }
             item {
                 InfoCard(
-                    title = "opt-in 요구 정리 (Compose 1.11.1 기준)",
+                    title = "opt-in 요구 정리 (Compose 1.12.1 기준)",
                     description = "@OptIn 이 필요한 것:\n" +
-                            "• ArcAnimationSpec → ExperimentalAnimationSpecApi\n" +
-                            "• DeferredTargetAnimation → ExperimentalAnimatableApi\n\n" +
+                            "• ArcAnimationSpec → ExperimentalAnimationSpecApi\n\n" +
                             "opt-in 없이 쓸 수 있는 것:\n" +
                             "• keyframesWithSpline { }\n" +
-                            "• keyframes { } 안의 `using ArcMode.X`\n\n" +
+                            "• keyframes { } 안의 `using ArcMode.X`\n" +
+                            "• DeferredTargetAnimation (1.11 까지는 ExperimentalAnimatableApi 필요, 1.12 에서 정식화)\n\n" +
                             "같은 ArcMode 를 쓰는데도 한쪽만 실험 API 인 이유는 게이팅이 " +
                             "ArcMode 자체가 아니라 ArcAnimationSpec 클래스에 붙어 있기 때문이다.",
                     bgColor = Color(0xFFF3E5F5)
@@ -450,7 +449,7 @@ private fun DrawScope.drawTracks(tracks: List<PathTrack>, progress: Float) {
  * approachLayout 은 lookahead 가 계산한 "최종 크기"를 알려주고, 실제로 배치할 크기는
  * 이 애니메이션이 정한다. 목표와 현재값이 갈라져 있는 상태를 숫자로 함께 보여준다.
  */
-@OptIn(ExperimentalAnimatableApi::class)
+// DeferredTargetAnimation 은 Compose 1.12 에서 정식 API 가 되어 ExperimentalAnimatableApi 옵트인이 사라졌다
 @Composable
 private fun DeferredTargetDemo() {
     var expanded by remember { mutableStateOf(false) }

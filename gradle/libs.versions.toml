@@ -35,9 +35,11 @@ navigationEvent = "1.1.2"
 # ui pom 의 요구(activity-compose 1.12.0 · lifecycle 2.10.0 · compose 1.11.2 · navigationevent 1.1.2 · savedstate 1.4.0)가
 # 전부 현재 해석 버전 이하라 전이 끌어올림이 없다. 1.2.0 라인은 minCompileSdk=37 이라 채택하지 않는다.
 navigation3 = "1.1.7"
-# 2026.06.01 = ui/runtime/foundation/animation/material 1.11.4 · material3 1.4.0 (aar-metadata minCompileSdk=35).
-# 2026.08.00 이후(Compose 1.12.x)는 minCompileSdk=37 이라 채택하지 않는다.
-composeBom = "2026.06.01"
+# 2026.09.00(2026-09-29 상향) = ui/runtime/foundation/animation/material 1.12.1 · material3 1.4.0 (minCompileSdk=37).
+# 1.12 변경 중 영향: foundation Style API 가 스코프 인터페이스로 재편(예제 이관) · DeferredTargetAnimation 정식화
+# (ExperimentalAnimatableApi 제거) · 클릭/포커스 이동 시 시스템 효과음 기본 재생 · ui 가 androidx.transition 의존을
+# 끊어 transition·dynamicanimation·legacy-support-core-utils 등 레거시 6종이 런타임에서 빠진다.
+composeBom = "2026.09.00"
 
 # Lifecycle
 # androidx.lifecycle 은 atomic group 이라 runtime/livedata/viewmodel 스택 전체가 한 버전으로 움직인다.

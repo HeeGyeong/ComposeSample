@@ -23,7 +23,7 @@ Clean Architecture 기반으로 구성되어 있으며, 원하는 예제를 쉽�
 - Kotlin 2.4.20
 - Android Studio
 - AGP 9.4.1(내장 Kotlin) / Gradle 9.8.0
-- ComposeBom 2026.06.01
+- ComposeBom 2026.09.00 (Compose 1.12.1)
 - Compile SDK 37
 - Target SDK 35
 - Min SDK 24
@@ -203,7 +203,7 @@ Cursor IDE를 사용하는 개발자를 위한 **AI 코딩 어시스턴트 규�
 - **scroll**: 커스텀 TopAppBarScrollBehavior, nested scroll, IME 인터랙티브 제어(`Modifier.imeNestedScroll()`로 스크롤 제스처를 키보드 표시/숨김 애니메이션에 연결 + `imeAnimationSource`/`imeAnimationTarget`로 실제 애니메이션 진행률을 커스텀 UI에 동기화), 커스텀 오버스크롤(`OverscrollEffect` 직접 구현으로 기본 스트레치/글로우를 고무줄로 교체 + `LocalOverscrollFactory` 로 하위 트리 일괄 적용및 null 비활성화 + `withoutVisualEffect()`/`withoutEventHandling()` 로 이벤트와 시각 효과 분리)
 - **shader**: AGSL Shader Live Tuning(API 33+ `RuntimeShader` + `graphicsLayer` renderEffect, 실시간 uniform 슬라이더와 셰이더 소스 재컴파일)
 - **shapes**: CardCorners(모서리 스타일)
-- **style**: Foundation Style API(Compose 1.11 실험적 API) — `Modifier.styleable` + `Style { }` DSL, 상태 변형, `animate()` 전환, 커스텀 `StyleStateKey`
+- **style**: Foundation Style API(Compose 1.11 도입 실험적 API, 1.12 에서 스코프 인터페이스 구조로 재편) — `Modifier.styleable` + `Style { }` DSL, 상태 블록(`pressed { }` 등), `animate(spec) { }` 전환, 커스텀 `StyleStateKey`
 - **tab**: ResponsiveTabRow(SubcomposeLayout 기반 반응형 탭)
 - **visibility**: Visibility 처리 패턴
 

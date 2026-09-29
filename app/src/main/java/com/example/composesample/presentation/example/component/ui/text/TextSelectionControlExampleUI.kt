@@ -419,10 +419,10 @@ private fun VersionGapCard() {
     SectionCard(title = "5. Compose 1.12 의 SelectionState 는 무엇을 더 주나") {
         BodyText(
             "3번 카드의 아쉬움(선택된 문자열을 직접 못 받는다)은 다음 버전에서 해소된다. " +
-                "프로젝트가 해석하는 foundation 1.11.4 에는 없고 1.12.1 에 들어 있는 API 를 실물로 대조하면 이렇다."
+                "이 예제를 작성할 때 쓰던 foundation 1.11.4 에는 없고 1.12.1 에 들어 있는 API 를 실물로 대조하면 이렇다."
         )
         Spacer(modifier = Modifier.height(10.dp))
-        TableRow("구분", "1.11.4(현재) / 1.12.1", isHeader = true)
+        TableRow("구분", "1.11.4(작성 당시) / 1.12.1", isHeader = true)
         TableRow("상태 객체", "없음(Selection 이 internal) / SelectionState + rememberSelectionState()")
         TableRow("선택 텍스트", "클립보드 우회만 가능 / selectedTexts: List<AnnotatedString>")
         TableRow("후보 텍스트", "없음 / selectableTexts: List<AnnotatedString>")
@@ -434,8 +434,8 @@ private fun VersionGapCard() {
                 "\"선택된 텍스트를 코드로 읽어 가공한다\"만 1.12 를 기다려야 한다."
         )
         CaptionText(
-            "1.12 채택은 별개 문제다 — foundation 1.12.1 의 aar-metadata 가 minCompileSdk=37 을 요구하는데 " +
-                "이 프로젝트는 compileSdk 36 이다."
+            "2026-09-29 compose-bom 2026.09.00 상향으로 이 프로젝트도 foundation 1.12.1 을 쓴다. " +
+                "위 표를 실제 SelectionState 호출로 바꾸는 작업과 1~4번 카드의 1.11.4 실측을 1.12 에서 다시 재는 작업은 후속으로 남겼다."
         )
     }
 }

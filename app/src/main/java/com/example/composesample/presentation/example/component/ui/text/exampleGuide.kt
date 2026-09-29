@@ -107,6 +107,6 @@ package com.example.composesample.presentation.example.component.ui.text
  *   `getClipEntry()?.clipData` 를 되읽는다. 단 Android 12+ 는 클립보드 읽기 시 사용자에게 토스트를 띄운다
  * - Compose 1.12.1 의 `SelectionState`(현재 프로젝트엔 없음): `rememberSelectionState()` · `selectedTexts:
  *   List<AnnotatedString>` · `selectableTexts` · `selectAll()` · `clear()` · `extendSelectionByWord()` · Saver 내장.
- *   즉 "선택된 텍스트 읽기"는 1.12 에서 공개 API 가 된다. 다만 foundation 1.12.1 은 aar-metadata 가
- *   minCompileSdk=37 이라 현재 프로젝트(compileSdk 36)에서는 채택할 수 없다
+ *   즉 "선택된 텍스트 읽기"는 1.12 에서 공개 API 가 된다. 2026-09-29 compose-bom 2026.09.00 상향(compileSdk 37)으로
+ *   이 프로젝트도 1.12.1 을 쓰게 됐다 — 예제의 1.11.4 실측(컨텍스트 메뉴 등)은 1.12 에서 다시 재지 않았다
 */

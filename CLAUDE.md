@@ -14,7 +14,7 @@ A guide that helps Claude Code write consistent code in this project.
 - **Local DB**: Room
 - **Async**: Coroutine + Flow
 - **Target SDK**: 35 / Min SDK: 24
-- **Kotlin**: 2.4.20 / **ComposeBom**: 2026.06.01
+- **Kotlin**: 2.4.20 / **ComposeBom**: 2026.09.00 (Compose 1.12.1)
 
 ---
 
