@@ -138,8 +138,11 @@ biometric = "1.4.0-alpha07"
 
 # Tracing (Perfetto 커스텀 트레이스 이벤트)
 # debugRuntimeClasspath 에는 이미 전이 해석되어 있으나 debugCompileClasspath 에는 없어(실측 확인)
-# 코드에서 Trace 클래스를 직접 참조하려면 명시적 선언이 필요하다. 이미 해석 중이던 버전과 동일하게 고정.
-tracing = "1.2.0"
+# 코드에서 Trace 클래스를 직접 참조하려면 명시적 선언이 필요하다.
+# 2.0.3(2026-09-29 상향): KMP 분리(tracing → tracing-android), aar minCompileSdk 34 / minAGP 8.1.1.
+# Trace 정적 메서드 시그니처 동일 · trace{}/traceAsync 는 tracing-android 의 같은 TraceKt 로 이동(tracing-ktx 2.0.3 은 빈 껍데기)
+# → 바이너리 호환. 전이: coroutines 1.9.0 · stdlib 2.1.20 · annotation 1.10.0 — 끌어올림 0.
+tracing = "2.0.3"
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "applicationVersion" }

@@ -20,9 +20,15 @@ package com.example.composesample.presentation.example.component.architecture.de
  *   이 값으로 가드해 오버헤드를 줄일 수 있다.
  *
  * 편의 API:
- * - androidx.tracing:tracing-ktx 의 trace(label) { ... } 확장 함수는 try/finally 로 beginSection/
- *   endSection 을 자동 페어링해준다. 이 프로젝트는 스레드 페어링 함정을 직접 보여주는 것이 목적이라
- *   별도 의존성으로 추가하지 않았다 — 필요하면 tracing-ktx 를 추가해 동기 구간에 한정해 쓸 수 있다.
+ * - trace(label) { ... } 확장 함수는 try/finally 로 beginSection/endSection 을 자동 페어링해준다.
+ *   1.x 에서는 tracing-ktx 에 있었지만 2.0 부터는 tracing-android 본체의 같은 TraceKt 로 옮겨져
+ *   별도 의존성 없이 쓸 수 있다(tracing-ktx 2.0.3 은 빈 껍데기). 이 예제는 스레드 페어링 함정을 직접
+ *   보여주는 것이 목적이라 쓰지 않았다 — 쓰더라도 동기 구간에 한정해야 한다.
+ *
+ * 2.0.3 상향 (2026-09-29):
+ * - KMP 분리로 tracing → tracing-android 로 해석된다. Trace 정적 메서드 시그니처는 1.2.0 과 동일(바이너리 호환)
+ * - 신규 setCounter(String, Long) 오버로드는 SDK 가드 없이 API 29+ 경로만 탄다 — minSdk 24 에서는 Int 버전을 쓸 것
+ * - 상향 전후 atrace 실측 동일: 동기 B 8건, 비동기 S/F 8/8, 카운터 트랙 기록
  *
  * 실측 결과 (2026-08-17, 이 프로젝트 debugRuntimeClasspath/debugCompileClasspath 대조):
  * - androidx.tracing:tracing:1.2.0 은 이미 다른 라이브러리(profileinstaller 등)를 통해
