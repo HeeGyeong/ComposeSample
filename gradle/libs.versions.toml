@@ -133,7 +133,8 @@ pagingCompose = "3.5.1"
 glance = "1.2.0"
 
 # Biometric (alpha — biometric-compose는 alpha 단계만 존재)
-biometric = "1.4.0-alpha05"
+# alpha07: minCompileSdk 36 / minAGP 8.9.1(충족) · pom 전이 끌어올림 0 · NegativeButton→DefaultCancel, 폴백 vararg(최대 4)
+biometric = "1.4.0-alpha07"
 
 # Tracing (Perfetto 커스텀 트레이스 이벤트)
 # debugRuntimeClasspath 에는 이미 전이 해석되어 있으나 debugCompileClasspath 에는 없어(실측 확인)

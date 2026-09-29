@@ -78,6 +78,12 @@ fun BiometricAuthExampleUI(onBackEvent: () -> Unit) {
                         lastResultColor = Color(0xFFEF5350)
                         pushLog("Error[${result.errorCode}]: ${result.errString}")
                     }
+                    // alpha06+ 신규 — CustomOption 폴백을 누르면 Error 가 아니라 이 분기로 온다
+                    is AuthenticationResult.CustomFallbackSelected -> {
+                        lastResult = "↪ 사용자 지정 폴백 선택: ${result.fallback.text}"
+                        lastResultColor = Color(0xFF4FC3F7)
+                        pushLog("CustomFallbackSelected: ${result.fallback.text}")
+                    }
                 }
             }
 
@@ -90,12 +96,10 @@ fun BiometricAuthExampleUI(onBackEvent: () -> Unit) {
 
     val launcher = rememberAuthenticationLauncher(resultCallback)
 
-    // 시나리오 1: Class2 + NegativeButton 폴백 (가장 단순)
+    // 시나리오 1: Class2 + 폴백 없음 → 라이브러리가 기본 취소 버튼을 붙인다
+    // (alpha05 의 NegativeButton("취소") 는 alpha06+ 에서 internal DefaultCancel 로 바뀌어 앱이 만들 수 없다)
     val basicRequest = remember {
-        biometricRequest(
-            title = "기본 생체 인증",
-            authFallback = AuthenticationRequest.Biometric.Fallback.NegativeButton("취소")
-        ) {
+        biometricRequest("기본 생체 인증") {
             setSubtitle("등록된 생체 정보로 인증해 주세요")
             setMinStrength(AuthenticationRequest.Biometric.Strength.Class2)
         }
@@ -104,8 +108,8 @@ fun BiometricAuthExampleUI(onBackEvent: () -> Unit) {
     // 시나리오 2: Class2 + DeviceCredential 폴백 (PIN/Pattern/Password로 폴백)
     val credentialFallbackRequest = remember {
         biometricRequest(
-            title = "보안 인증",
-            authFallback = AuthenticationRequest.Biometric.Fallback.DeviceCredential
+            "보안 인증",
+            AuthenticationRequest.Biometric.Fallback.DeviceCredential
         ) {
             setSubtitle("생체 인증 또는 화면 잠금 자격 증명")
             setMinStrength(AuthenticationRequest.Biometric.Strength.Class2)
@@ -114,12 +118,41 @@ fun BiometricAuthExampleUI(onBackEvent: () -> Unit) {
 
     // 시나리오 3: Class3 강력 인증 (Crypto와 결합 가능, 단 API 28/29에서 DeviceCredential과 동시 사용 불가)
     val strongRequest = remember {
-        biometricRequest(
-            title = "강력 인증 (Class3)",
-            authFallback = AuthenticationRequest.Biometric.Fallback.NegativeButton("취소")
-        ) {
+        biometricRequest("강력 인증 (Class3)") {
             setSubtitle("결제·키 보호 등 민감 동작에 사용")
             setMinStrength(AuthenticationRequest.Biometric.Strength.Class3())
+        }
+    }
+
+    // 시나리오 4 (alpha06+): 앱이 처리하는 사용자 지정 폴백 1개 — 누르면 CustomFallbackSelected 로 돌아온다
+    val customOptionRequest = remember {
+        biometricRequest(
+            "사용자 지정 폴백",
+            AuthenticationRequest.Biometric.Fallback.CustomOption(
+                "비밀번호로 로그인",
+                AuthenticationRequest.Biometric.Fallback.ICON_TYPE_PASSWORD
+            )
+        ) {
+            setSubtitle("폴백 버튼을 누르면 앱의 비밀번호 로그인으로 넘어간다")
+            setMinStrength(AuthenticationRequest.Biometric.Strength.Class2)
+        }
+    }
+
+    // 시나리오 5 (alpha06+): 폴백 여러 개(최대 4)
+    // Android 16 QPR2(SDK_INT_FULL 3600001) 이상에서만 전부 표시되고, 그 미만에서는 첫 번째만 쓰이고 나머지는 버려진다
+    val multiFallbackRequest = remember {
+        biometricRequest(
+            "폴백 여러 개",
+            AuthenticationRequest.Biometric.Fallback.CustomOption(
+                "비밀번호로 로그인",
+                AuthenticationRequest.Biometric.Fallback.ICON_TYPE_PASSWORD
+            ),
+            AuthenticationRequest.Biometric.Fallback.CustomOption(
+                "QR 코드로 로그인",
+                AuthenticationRequest.Biometric.Fallback.ICON_TYPE_QR_CODE
+            )
+        ) {
+            setMinStrength(AuthenticationRequest.Biometric.Strength.Class2)
         }
     }
 
@@ -167,8 +200,8 @@ fun BiometricAuthExampleUI(onBackEvent: () -> Unit) {
             Spacer(modifier = Modifier.height(16.dp))
 
             ScenarioCard(
-                title = "1) 기본 인증 (Class2 + NegativeButton)",
-                description = "가장 단순한 형태. NegativeButton 폴백은 다이얼로그 좌측에 표시되며 누르면 Error로 종료.",
+                title = "1) 기본 인증 (Class2, 폴백 없음)",
+                description = "폴백을 주지 않으면 라이브러리가 시스템 문구의 기본 취소 버튼을 붙인다. 누르면 Error로 종료. (alpha05 의 NegativeButton 은 alpha06+ 에서 internal 로 바뀌었다)",
                 buttonLabel = "기본 인증 시작",
                 enabled = availability.canAuthenticate,
                 onClick = { launcher.launch(basicRequest) }
@@ -192,6 +225,26 @@ fun BiometricAuthExampleUI(onBackEvent: () -> Unit) {
                 buttonLabel = "강력 인증 시작",
                 enabled = availability.canAuthenticate,
                 onClick = { launcher.launch(strongRequest) }
+            )
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            ScenarioCard(
+                title = "4) 사용자 지정 폴백 (CustomOption)",
+                description = "폴백 버튼을 앱이 처리한다. 누르면 Error 가 아니라 CustomFallbackSelected 결과가 온다. 폴백이 1개면 기존 좌측 버튼 자리에 표시된다.",
+                buttonLabel = "사용자 지정 폴백 인증",
+                enabled = availability.canAuthenticate,
+                onClick = { launcher.launch(customOptionRequest) }
+            )
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            ScenarioCard(
+                title = "5) 폴백 여러 개 (최대 4)",
+                description = "Android 16 QPR2 이상에서만 목록 전체가 표시된다. 그 미만(예: API 33)에서는 첫 번째 폴백('비밀번호로 로그인')만 쓰이고 나머지는 조용히 버려진다(바이트코드 확인). 5개 이상이면 요청 생성 단계에서 IllegalArgumentException, DeviceCredential 은 하나만 허용.",
+                buttonLabel = "폴백 여러 개 인증",
+                enabled = availability.canAuthenticate,
+                onClick = { launcher.launch(multiFallbackRequest) }
             )
 
             Spacer(modifier = Modifier.height(20.dp))

@@ -10,9 +10,9 @@ A human-readable collection of **intentional deferrals, version constraints, and
 - Koin 3.2.2 → 4.2.2. Both concerns recorded here were real but smaller than feared: ① the `owner` parameter became `viewModelStoreOwner` — on `koinViewModel`, not `getViewModel` (7 call sites, a rename), plus `org.koin.androidx.compose.get` → `org.koin.compose.koinInject` (1) and the deprecated `org.koin.androidx.viewmodel.dsl.viewModel` import → `org.koin.core.module.dsl.viewModel` (1); ② `koin-androidx-compose` no longer brings `navigation-compose`, so it is now declared directly at the version it used to resolve to (2.4.2) — moving it forward is a separate decision.
 - Koin 4.2.2 also lifts the `androidx.lifecycle` stack to 2.10.0, which the catalog now declares (appcompat 1.7.1, which it also requires, was already declared after Coil 3.5.0).
 
-### biometric pinned to alpha05
-- **Current**: `androidx.biometric:biometric(-compose):1.4.0-alpha05`
-- **Why**: alpha06+ used to be blocked by two things — it requires compileSdk 36, and it changes the `biometricRequest` API to vararg + CustomOption. The compileSdk half was removed on 2026-09-02 when the project moved to compileSdk 36 for the Live Updates notification example, so the only remaining blocker is the call-site API change. Still pinned to alpha05 because upgrading is a dependency decision of its own, not a side effect of the compileSdk bump.
+### biometric on alpha07 (upgraded 2026-09-29)
+- **Current**: `androidx.biometric:biometric(-compose):1.4.0-alpha07` (the line has no stable release with Compose support)
+- **Limits**: below Android 16 QPR2 only the first of several fallbacks is shown; the rest are dropped silently. The test device has no enrolled fingerprint, so the `CustomFallbackSelected` path has not been exercised on hardware.
 
 ### ffmpeg commented out
 - **Current**: the encoding/decoding example under `system/media/ffmpeg` is fully commented out

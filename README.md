@@ -237,7 +237,7 @@ Cursor IDE를 사용하는 개발자를 위한 **AI 코딩 어시스턴트 규�
 - **pip**: Picture-in-Picture compat(core 1.18.0) — `PictureInPictureParamsCompat`로 9개 필드를 버전 분기 없이 구성하고 `toPictureInPictureParams()`가 API 33/31/26으로 잘라내는 규칙을 플랫폼 getter 되읽기로 확인, 종횡비 허용 범위(0.418410~2.390000)와 `enterPictureInPictureMode`(RESUMED 필요) vs `setPictureInPictureParams`(정지 상태에서도 가능) 대조
 - **powersave**: 절전 모드 감지와 배터리 최적화
 - **predictiveback**: Predictive Back Gesture(Android 14+ Flow 기반 엣지 스와이프 진행률 실시간 애니메이션)
-- **biometric**: Biometric Authentication(biometric-compose alpha — Compose 연동)
+- **biometric**: Biometric Authentication(biometric-compose 1.4.0-alpha07 — Compose 연동. 폴백 없음=기본 취소 버튼, `CustomOption` → `CustomFallbackSelected` 결과, 폴백 여러 개(최대 4)는 Android 16 QPR2 미만에서 첫 번째만 쓰이는 규칙까지)
 - **quicksettings**: Quick Settings Tile
 - **sensor**: 센서 퓨전 나침반(TYPE_ROTATION_VECTOR 방위각 파이프라인, remapCoordinateSystem 화면 회전 보정, 각도 랩어라운드를 견디는 저역통과 필터)
 - **shortcut**: 앱 바로가기(dynamic, static, pin)
