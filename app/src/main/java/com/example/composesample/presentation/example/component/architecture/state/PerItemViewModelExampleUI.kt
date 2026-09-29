@@ -110,7 +110,10 @@ private class SharedItemsViewModel : ViewModel() {
 
 @Composable
 private fun SharedScopeSection() {
-    val vm: SharedItemsViewModel = viewModel()
+    // private 클래스라 기본 viewModel() 의 리플렉션 생성(NewInstanceFactory)이 IllegalAccessException 으로 실패한다
+    // (release 는 화면 진입 즉시 크래시, debug 는 live edit 이 오류를 삼켜 이 영역이 비고 이후 클릭이 반영되지 않았다).
+    // 초기화 람다로 생성자를 직접 호출한다 — 아래 ItemCounterViewModel 의 명시적 factory 와 같은 원리.
+    val vm: SharedItemsViewModel = viewModel { SharedItemsViewModel() }
     val items = remember { (1..4).map { "Item #$it" } }
 
     Card(
