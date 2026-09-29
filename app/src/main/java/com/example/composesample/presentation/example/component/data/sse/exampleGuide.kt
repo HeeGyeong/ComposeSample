@@ -11,7 +11,9 @@ package com.example.composesample.presentation.example.component.data.sse
  * - SSE: 서버 → 클라이언트 단방향 텍스트 스트림 (WebSocket과 달리 단방향, HTTP 기반)
  * - EventSource로 이벤트 수신 → callbackFlow/Channel 로 Compose State에 브릿지
  * - StateFlow.update { } 패턴으로 누적 메시지를 불변 리스트로 갱신
- * - 화면 이탈 시 EventSource close + 코루틴 취소로 리소스 정리
+ * - 화면 이탈 시 EventSource close + 코루틴 취소로 리소스 정리 — ViewModel.onCleared() 에서 닫는다.
+ *   viewModelScope 가 먼저 취소되므로 스코프 안의 종료 로직에 기대면 안 된다(2026-09-29 실측: 이탈 6초 뒤에도
+ *   eventsource 스레드 2개 생존 → onCleared 추가 후 1초 안에 0)
  * - Wikimedia 스트림은 식별 가능한 User-Agent 가 없으면 403 — ConnectStrategy.http(uri).header() 로 UA 를 직접 보낸다
  *
  * okhttp-eventsource 5.0.0 (2026-09-29, 3.0.0 에서 상향):

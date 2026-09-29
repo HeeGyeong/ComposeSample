@@ -18,6 +18,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.net.URI
 import java.util.concurrent.TimeUnit
+import kotlin.concurrent.thread
 
 /**
  * Wikimedia 스트림은 앱을 식별할 수 없는 User-Agent(기본값인 okhttp/…, Java/… 포함)를 403 으로 거절한다.
@@ -127,6 +128,23 @@ class SSEViewModel() : ViewModel() {
                     isConnected = false,
                     messageList = it.messageList + SSEMessage.Disconnected()
                 )
+            }
+        }
+    }
+
+    /**
+     * 연결된 채로 화면을 나가면 viewModelScope 가 먼저 취소돼 closeSSEConnection() 이 더는 돌지 않는다.
+     * 그러면 스트림·이벤트 스레드가 남아 계속 수신하므로 여기서 직접 닫는다.
+     * close() 는 실행기 종료를 최대 1초씩 기다리므로 메인 스레드를 막지 않도록 별도 스레드에서 호출한다.
+     */
+    override fun onCleared() {
+        val holder = eventSourceHolder ?: return
+        eventSourceHolder = null
+        thread(name = "sse-close") {
+            try {
+                holder.close()
+            } catch (e: Exception) {
+                Log.e("SSE", "Error closing connection on clear: ${e.message}")
             }
         }
     }
