@@ -4,16 +4,18 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.composesample.util.ConstValue.SSEWikiURL
-import com.launchdarkly.eventsource.EventHandler
+import com.launchdarkly.eventsource.ConnectStrategy
 import com.launchdarkly.eventsource.EventSource
 import com.launchdarkly.eventsource.MessageEvent
+import com.launchdarkly.eventsource.RetryDelayStrategy
+import com.launchdarkly.eventsource.background.BackgroundEventHandler
+import com.launchdarkly.eventsource.background.BackgroundEventSource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import okhttp3.Headers.Companion.headersOf
 import java.net.URI
 import java.util.concurrent.TimeUnit
 
@@ -80,7 +82,8 @@ class SSEViewModel() : ViewModel() {
     private val _uiState = MutableStateFlow(SSEUIState())
     val uiState: StateFlow<SSEUIState> = _uiState.asStateFlow()
 
-    private var eventSourceHolder: EventSource? = null
+    // 4.0 부터 EventSource 는 자체 스레드를 만들지 않는다 — 콜백 방식은 BackgroundEventSource 가 담당한다
+    private var eventSourceHolder: BackgroundEventSource? = null
 
     fun startSSEConnection(subUrl: String) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -89,13 +92,17 @@ class SSEViewModel() : ViewModel() {
                 val sseUrl = "$SSEWikiURL?tab=$subUrl"
                 Log.d("SSE", "Connecting to SSE URL: $sseUrl")
 
-                eventSourceHolder = EventSource.Builder(
+                // 헤더·URI 는 ConnectStrategy, 재연결 지연은 RetryDelayStrategy 로 옮겨졌다(3.x 의 headers/reconnectTime)
+                val connectStrategy = ConnectStrategy.http(URI.create(sseUrl))
+                    .header("User-Agent", SSE_USER_AGENT)
+                val eventSourceBuilder = EventSource.Builder(connectStrategy)
+                    .retryDelayStrategy(
+                        RetryDelayStrategy.defaultStrategy().initialDelay(3, TimeUnit.SECONDS)
+                    )
+                eventSourceHolder = BackgroundEventSource.Builder(
                     createEventHandler(),
-                    URI.create(sseUrl)
-                )
-                    .headers(headersOf("User-Agent", SSE_USER_AGENT))
-                    .reconnectTime(3, TimeUnit.SECONDS)
-                    .build()
+                    eventSourceBuilder
+                ).build()
                 eventSourceHolder?.start()
             } catch (e: Exception) {
                 Log.e("SSE", "Error starting connection: ${e.message}")
@@ -105,20 +112,30 @@ class SSEViewModel() : ViewModel() {
 
     fun closeSSEConnection() {
         viewModelScope.launch(Dispatchers.IO) {
+            // 10글자 이후 들어오는 메시지마다 종료를 요청하므로, 참조를 먼저 비워 한 번만 닫는다
+            val holder = eventSourceHolder ?: return@launch
+            eventSourceHolder = null
             try {
-                eventSourceHolder?.close()
-                eventSourceHolder = null
+                holder.close()
             } catch (e: Exception) {
                 Log.e("SSE", "Error closing connection: ${e.message}")
+            }
+            // 4.0+ BackgroundEventSource 는 close() 이후의 이벤트를 버리므로 호출자가 닫으면 onClosed 가 오지 않는다
+            // (3.x 는 왔다). 연결 종료 상태는 여기서 직접 반영하고, onClosed 는 서버가 끊은 경우만 처리한다
+            _uiState.update {
+                it.copy(
+                    isConnected = false,
+                    messageList = it.messageList + SSEMessage.Disconnected()
+                )
             }
         }
     }
 
-    private fun createEventHandler(): EventHandler = object : EventHandler {
+    private fun createEventHandler(): BackgroundEventHandler = object : BackgroundEventHandler {
         override fun onOpen() {
             viewModelScope.launch {
                 Log.d("SSE", "eventHandler onOpen")
-                Log.d("SSE", "Connected to: ${eventSourceHolder?.uri}")
+                Log.d("SSE", "Connected to: ${eventSourceHolder?.eventSource?.origin}")
                 _uiState.update {
                     it.copy(
                         isConnected = true,
@@ -142,9 +159,11 @@ class SSEViewModel() : ViewModel() {
 
         override fun onMessage(event: String, messageEvent: MessageEvent) {
             viewModelScope.launch {
+                // 종료를 요청한 뒤 이미 큐에 들어와 있던 메시지는 버린다 — 반영하면 종료 카드 뒤에 수집 카드가 다시 붙는다
+                if (eventSourceHolder == null) return@launch
                 // Handle message
                 try {
-                    val inputUrl = eventSourceHolder?.uri.toString()
+                    val inputUrl = eventSourceHolder?.eventSource?.origin.toString()
 
                     // 메시지에서 첫 글자만 추출
                     val firstChar = messageEvent.data.firstOrNull()?.toString() ?: ""

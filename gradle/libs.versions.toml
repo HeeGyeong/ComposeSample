@@ -119,7 +119,9 @@ workRuntime = "2.12.0"
 reorderable = "0.9.6"
 
 # SSE
-okhttpEventSource = "3.0.0"
+# 5.0.0(2026-09-29 상향): 4.0 에서 API 재설계 — EventHandler → background.BackgroundEventHandler,
+# 헤더/URI 는 ConnectStrategy.http(), reconnectTime → RetryDelayStrategy. pom 이 okhttp 4.12.0 요구(프로젝트 5.4.0) → 끌어올림 0.
+okhttpEventSource = "5.0.0"
 
 # Paging
 # androidx.paging 은 atomic group 이라 runtime/compose/common-ktx 가 한 버전으로 움직인다.
