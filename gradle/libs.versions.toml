@@ -111,8 +111,9 @@ rules = "1.7.0"
 espressoIntents = "3.7.0"
 
 # Image Loader
-# 3.5.0 이 채택 상한 — 3.6.x 는 aar-metadata minCompileSdk=37 이다.
-coil3 = "3.5.0"
+# coil 3.6.3(2026-09-29 상향, minCompileSdk 37): coil-compose-core 가 org.jetbrains.compose.foundation 1.12.0 을 요구해
+# Compose BOM 1.12 상향 뒤에 올렸다. JetBrains CMP 아티팩트의 -android 변형이 새로 해석되지만 클래스 0개인 빈 aar(androidx 로 위임).
+coil3 = "3.6.3"
 
 # Media
 lottieCompose = "6.7.1"
