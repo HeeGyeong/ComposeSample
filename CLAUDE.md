@@ -167,7 +167,8 @@ val exampleUiRegistry: Map<String, @Composable (onBackEvent: () -> Unit) -> Unit
 
 - Both `gradlew` (Unix) and `gradlew.bat` (Windows) exist
 - Uses the Java 21 toolchain (`javaVersion = "21"` in `gradle/libs.versions.toml`)
-- **Bytecode target is pinned to 17** in `config.gradle` (`kotlinOptions.jvmTarget = '17'` + `compileOptions` 17). Do not raise it back to 21: at target 21 Kotlin lowers type-checking `when` to a JDK 21 `SwitchBootstraps.typeSwitch` invokedynamic that the debug-build HotSwan interpreter cannot execute, and the affected screens render blank with no crash (see `docs/devtools/ComposeHotReloadGuide.md`)
+- AGP 9.4.1 + Gradle 9.8.0 with **built-in Kotlin**: Android modules do not apply `org.jetbrains.kotlin.android` (applying it fails under AGP 9). compileSdk 37 / targetSdk 35
+- **Bytecode target is pinned to 17** in `config.gradle` (`kotlin { compilerOptions { jvmTarget } }` + `compileOptions` 17; `config.gradle` is an `apply from` script, so it cannot import KGP's `JvmTarget` and uses `jvmTarget.get().valueOf('JVM_17')`). Do not raise it back to 21: at target 21 Kotlin lowers type-checking `when` to a JDK 21 `SwitchBootstraps.typeSwitch` invokedynamic that the debug-build HotSwan interpreter cannot execute, and the affected screens render blank with no crash (see `docs/devtools/ComposeHotReloadGuide.md`)
 - Android SDK path: see `sdk.dir` in `local.properties`
 - CLI build command: `./gradlew assembleDebug`
 

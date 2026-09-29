@@ -1,5 +1,6 @@
 package com.example.composesample.presentation.example.component.system.platform.quicksettings
 
+import android.annotation.SuppressLint
 import android.app.PendingIntent
 import android.content.Intent
 import android.os.Build
@@ -69,7 +70,10 @@ class MemoTileService : TileService() {
             )
             startActivityAndCollapse(pendingIntent)
         } else {
+            // Intent 버전은 targetSdk 34+ 앱에서 UnsupportedOperationException 을 던지지만, 그 검사는 API 34+ 플랫폼에만 있다.
+            // 이 분기는 SDK_INT < 34 에서만 실행되므로 안전하다 — lint(StartActivityAndCollapseDeprecated)가 버전 분기를 인식하지 못해 억제한다.
             @Suppress("DEPRECATION")
+            @SuppressLint("StartActivityAndCollapseDeprecated")
             startActivityAndCollapse(intent)
         }
     }

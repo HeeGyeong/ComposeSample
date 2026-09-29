@@ -45,9 +45,16 @@
 >
 > **Not verified:** an actual edit-and-reload round trip from the IDE — that needs the IDE plugin, which a CLI session cannot drive.
 >
-> **⚠️ Outside the official support matrix:** the 2.0.0 release notes list **AGP 9.x** (plus IntelliJ IDEA / Android Studio
-> 2025.1+ and device API 28+). This project is on AGP 8.13.2; the build and the runtime start-up work, but if hot reload
-> misbehaves, suspect AGP first — either fall back to 1.3.7 (Gradle **and** IDE plugin together) or upgrade AGP.
+> **AGP 9.4.1 (2026-09-29) — now inside the official support matrix.** The 2.0.0 release notes list **AGP 9.x** (plus
+> IntelliJ IDEA / Android Studio 2025.1+ and device API 28+); until this date the project ran it on AGP 8.13.2. Moving to
+> Gradle 9.8.0 / AGP 9.4.1 with built-in Kotlin (compileSdk 37) changed nothing HotSwan-visible:
+> - Forced recompile of `:app` and `:coordinator`: **the same 42 `SKIPPED` declarations** before and after (list diffed)
+> - All Kotlin classes in the Android modules stay at class-file major 61 with zero `SwitchBootstraps` (see below)
+> - On the device the app starts and logs `HotSwanV2: v2 server listening on 127.0.0.1:8601`, then registers 1,842
+>   interpreter baseline classes
+> - Full render audit: all 187 registry screens render with a non-zero root size
+> The debug APK now also carries D8 API stubs for framework classes newer than minSdk (`SYNTHETIC`, `<clinit>` throws
+> `NoClassDefFoundError`); they are unrelated to HotSwan and the release APK is unchanged.
 
 ## Overview
 
@@ -111,7 +118,7 @@ screens whose copy sits on a composition path — `PictureInPictureExampleUI`, `
 `FeatureFlagExampleUI` (all reached through `findActivity()` / status rows) — rendered empty. Screens whose type switch
 only runs on interaction (`SealedDomainErrorExampleUI`, `MVIExampleViewModel.onEvent`) rendered normally.
 
-**Fix applied:** `config.gradle` pins the Kotlin/Java bytecode target to 17 (`kotlinOptions.jvmTarget = '17'` +
+**Fix applied:** `config.gradle` pins the Kotlin/Java bytecode target to 17 (`kotlin { compilerOptions { jvmTarget } }` since AGP 9 built-in Kotlin, formerly `kotlinOptions.jvmTarget = '17'` +
 `compileOptions` 17) while keeping the Java 21 toolchain. `SwitchBootstraps` is a JDK 21 API, so targeting 17 stops the
 lowering at the source — all 26 classes came back clean and the three screens render again. Raising the target back to 21
 reintroduces the problem for every type-checking `when` in the project, so it should wait for interpreter support.
@@ -175,7 +182,7 @@ Two consequences worth knowing:
 
 ## Version Requirements
 
-- **HotSwan 2.0.x (current: 2.0.2):** Kotlin 2.3.x–2.4.x, AGP 9.x (official), IntelliJ IDEA / Android Studio 2025.1+, device API 28+ — runs here on Kotlin 2.4.20 / AGP 8.13.2 (see "Current Status")
+- **HotSwan 2.0.x (current: 2.0.2):** Kotlin 2.3.x–2.4.x, AGP 9.x (official), IntelliJ IDEA / Android Studio 2025.1+, device API 28+ — runs here on Kotlin 2.4.20 / AGP 9.4.1 / Gradle 9.8.0 (see "Current Status")
 - **HotSwan 1.3.5–1.3.7:** Kotlin 2.4.0 or later (projects on Kotlin 2.2.x–2.3.x should stay on 1.3.4)
 - **HotSwan 1.2.1:** Kotlin 2.3.x — fails at compiler-extension registration on Kotlin 2.4.0
 - The Gradle plugin adds its runtime dependency and the required compiler flags itself — no extra dependency or configuration block is needed

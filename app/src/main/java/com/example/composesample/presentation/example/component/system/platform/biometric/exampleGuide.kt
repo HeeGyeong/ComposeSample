@@ -8,7 +8,8 @@ package com.example.composesample.presentation.example.component.system.platform
  * - 공식 릴리스 노트: https://developer.android.com/jetpack/androidx/releases/biometric
  *
  * ### 버전 선택 메모
- * - 1.4.0-alpha07 — `minCompileSdk=36` / `minAGP=8.9.1` (현재 compileSdk 36 · AGP 8.13.2 로 충족), pom 전이 끌어올림 0
+ * - 1.4.0-alpha07 — `minCompileSdk=36` + **`minCompileMinorSdk=1`**(= 36.1) / `minAGP=8.9.1`, pom 전이 끌어올림 0
+ *   (AGP 8.13 은 minor 를 검사하지 않아 compileSdk 36 에서 통과했지만 AGP 9.4 는 36.1 이상을 요구한다 — 현재 compileSdk 37)
  * - 2026-09-29 alpha05 → alpha07 상향. 상향 전후 실기기(SM-A725F/API 33) 결과 동일
  * - 1.1.0(stable)은 Activity 기반 `BiometricPrompt`만 제공하며 Compose 통합 API 없음
  *

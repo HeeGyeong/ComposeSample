@@ -17,7 +17,7 @@ android {
         }
     }
 
-    packagingOptions {
+    packaging {
         resources {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
         }
@@ -32,14 +32,19 @@ android {
         targetCompatibility JavaVersion.VERSION_17
     }
 
-    kotlinOptions {
-        jvmTarget = '17'
-    }
 }
 
 kotlin {
     // jvmToolchain(Int) 오버로드 하나로 JavaLanguageVersion 설정 완결. 람다 블록과 중복 호출 불필요.
     jvmToolchain(libs.versions.javaVersion.get().toInteger())
+
+    // Kotlin 바이트코드 타깃 17 — 위 compileOptions 와 같은 이유(HotSwan typeSwitch).
+    // AGP 9 내장 Kotlin 에서는 android { kotlinOptions } 가 없어져 kotlin { compilerOptions } 로 옮겼다.
+    // 이 파일은 apply from 스크립트 플러그인이라 KGP 의 JvmTarget 클래스를 직접 참조할 수 없다
+    // (별도 클래스로더 — "Could not get unknown property 'org'" 로 실측). 현재 값의 enum 타입에서 valueOf 로 얻는다.
+    compilerOptions {
+        jvmTarget.set(jvmTarget.get().valueOf('JVM_17'))
+    }
 
     // Kotlin 2.3.20 Name-Based Destructuring (Experimental)
     // 프로젝트 전역 적용은 기존 Pair/Triple 구조 분해와 충돌 → 예제에서 개념만 시연
