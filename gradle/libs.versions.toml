@@ -66,11 +66,12 @@ navigationCompose = "2.9.8"
 # Core-dependencies
 # 1.17.0: NotificationCompat.ProgressStyle(Android 16 Live Updates)가 이 버전부터.
 # 1.18.0: PictureInPictureParamsCompat / PictureInPictureProvider / PictureInPictureUiStateCompat /
-#         DisplayShapeCompat 신규(PiP 예제가 사용). aar-metadata 는 minCompileSdk=36 / minAGP=8.9.1 로
-#         현재 환경(compileSdk 36, AGP 8.13.2)과 호환된다. 1.19.0 은 minCompileSdk=37 이라 채택하지 않는다.
+#         DisplayShapeCompat 신규(PiP 예제가 사용).
+# 1.19.1(2026-09-29 상향, minCompileSdk 37 / minAGP 9.1.0): core-ktx 가 core 로 병합돼 core-ktx 는 빈 아티팩트다
+#         (core-ktx 1.18 의 132개 클래스가 core 1.19.1 에 전부 있음 — 바이너리 호환). BuildCompat.isAtLeastB* deprecated(미사용).
 # 선언은 1.13.1 이었지만 실제 해석은 1.16.0 이던 드리프트를 2026-09-02 에 함께 해소했다.
 # core-ktx 가 core 를 전이로 가져오므로 core 를 따로 선언하지 않는다.
-coreKtx = "1.18.0"
+coreKtx = "1.19.1"
 # coil-core 3.5.0 이 appcompat-resources 1.7.1 을 요구해 appcompat 그룹이 1.7.1 로 해석된다. 선언을 해석 결과에 맞춘다.
 appcompat = "1.8.0"
 material = "1.11.4"
