@@ -68,7 +68,8 @@ package com.example.composesample.presentation.example.component.architecture.na
  * - ⚠️ 단계 표기 정정(2026-09-07 실측): Navigation 3 는 더 이상 alpha 가 아니다.
  *   **stable 1.1.x 라인(최신 1.1.7)이 1.2.0 알파/베타 라인과 병행**하며,
  *   navigation3-ui-android:1.1.7 의 aar-metadata 는 minCompileSdk=36 이라 이 프로젝트에서 채택 가능하다.
- *   다만 1.2.0-beta01 은 minCompileSdk=37 을 요구해 현재(compileSdk 36)로는 쓸 수 없다.
+ *   1.2.0 라인은 minCompileSdk=37 이라 당시(compileSdk 36)에는 쓸 수 없었다 — 2026-09-29 compileSdk 37 상향으로
+ *   채택 조건은 갖췄지만 아직 1.1.7 을 유지한다(상향은 별도 승인 항목).
  *   → 시뮬레이션을 유지하는 이유는 라이브러리 단계가 아니라 위에 적은 예제의 목적이다.
  */
 
@@ -151,7 +152,7 @@ package com.example.composesample.presentation.example.component.architecture.na
  *   위의 Navigation3 / Nav3ViewModelScope / Nav3SavedStateHandle 은 여전히 의존성 없는 시뮬레이션이다.
  * - 1.1.7 aar-metadata = minCompileSdk 36 / minAGP 8.9.1. ui pom 의 요구(activity-compose 1.12.0 · lifecycle 2.10.0 ·
  *   compose 1.11.2 · navigationevent 1.1.2 · savedstate 1.4.0)가 전부 현재 해석 버전 이하라 전이 끌어올림이 없다.
- *   1.2.0 라인은 minCompileSdk=37 이라 채택하지 않는다.
+ *   1.2.0 라인(minCompileSdk=37)은 2026-09-29 compileSdk 37 상향으로 채택 가능해졌지만 아직 올리지 않았다.
  *
  * 핵심 개념 (1.1.7 소스 기준):
  * - SceneStrategy<T> 는 `SceneStrategyScope<T>.calculateScene(entries): Scene<T>?` 하나짜리 fun interface.

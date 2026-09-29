@@ -57,6 +57,8 @@ the gate is `assembleDebug` + `assembleRelease` + unit tests + androidTest compi
 | `Recycle` | 2 | False positive — both call sites already use `?.use { }` |
 | `UseKtx`, `UnusedAttribute`, `MonochromeLauncherIcon`, `IconLocation`, `RedundantLabel`, `ConstantLocale`, `SimpleDateFormat`, others | ~77 | Open 🟢 — cosmetic, no behavioural impact |
 
+> **Update 2026-09-29:** the "Deferred — dependency currency" row was cleared by DEP-CURRENCY-02 (AGP 9.4.1 · compose-bom 2026.09.00 · lifecycle 2.11.0 · core 1.19.1 · navigation-compose 2.10.2 · OkHttp 5.5.0 · Ktor 3.6.0 · Coil 3.6.3 · tracing 2.0.3 · okhttp-eventsource 5.0.0 · biometric alpha07). Current baseline: **0 errors / 33 warnings**.
+
 ## Intentional lint suppressions
 
 ### LINT-LOOKAHEAD-DEBUG-01 — `DisallowLookaheadAnimationVisualDebug` (2026-09-16)

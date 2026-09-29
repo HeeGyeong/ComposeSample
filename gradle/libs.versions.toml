@@ -33,7 +33,8 @@ navigationEvent = "1.1.2"
 # androidx.navigation3 — ui 가 SceneStrategy/OverlayScene/NavDisplay, runtime 이 NavEntry/entryProvider/metadata 를 제공한다.
 # 1.1.7 stable, aar-metadata minCompileSdk=36 / minAGP=8.9.1(채택 당시 compileSdk 36 · AGP 8.13.2 로 충족).
 # ui pom 의 요구(activity-compose 1.12.0 · lifecycle 2.10.0 · compose 1.11.2 · navigationevent 1.1.2 · savedstate 1.4.0)가
-# 전부 현재 해석 버전 이하라 전이 끌어올림이 없다. 1.2.0 라인은 minCompileSdk=37 이라 채택하지 않는다.
+# 전부 현재 해석 버전 이하라 전이 끌어올림이 없다. 1.2.0 라인(minCompileSdk=37)은 2026-09-29 compileSdk 37 상향으로
+# 채택 가능해졌지만 아직 올리지 않았다(별도 승인 항목).
 navigation3 = "1.1.7"
 # 2026.09.00(2026-09-29 상향) = ui/runtime/foundation/animation/material 1.12.1 · material3 1.4.0 (minCompileSdk=37).
 # 1.12 변경 중 영향: foundation Style API 가 스코프 인터페이스로 재편(예제 이관) · DeferredTargetAnimation 정식화
