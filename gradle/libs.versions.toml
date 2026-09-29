@@ -89,8 +89,10 @@ gson = "2.14.0"
 # 5.5.0(2026-09-29 상향, okhttp-android aar-metadata minCompileSdk 37 — DEP-CURRENCY-02 A). 변경: ECH 옵트인(API 37 플랫폼만)·
 # Dns API 가 IP 외 레코드 지원·Okio 3.18.1. 커스텀 Dns 구현 없음.
 okhttpLoggingInterceptor = "5.5.0"
-# Ktor 3.5.2 — ktor-client-okhttp 가 okhttp 5.3.2, 전 모듈이 kotlinx-coroutines 1.11.0, ktor-serialization-gson 이 gson 2.14.0 을 요구한다.
-ktor = "3.5.2"
+# Ktor 3.6.0(2026-09-29 상향) — ktor-client-okhttp 가 okhttp 5.5.0 을 요구해 OkHttp 상향 뒤에 올렸다(5.5.0 은 minCompileSdk 37).
+# 3.6.0 변경 중 영향권: Bearer 인증의 refresh 요청에서 Authorization 헤더 제거, OkHttp 엔진 취소 시 메인 스레드 본문 닫기 수정.
+# (이전 3.5.2 는 okhttp 5.3.2 · coroutines 1.11.0 · gson 2.14.0 을 요구했다)
+ktor = "3.6.0"
 
 # Test
 junit = "4.13.2"
