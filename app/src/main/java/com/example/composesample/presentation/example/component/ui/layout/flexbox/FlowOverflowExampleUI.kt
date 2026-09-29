@@ -37,6 +37,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.foundation.layout.size
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.drawText
+import androidx.compose.ui.text.rememberTextMeasurer
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.composesample.presentation.MainHeader
@@ -169,8 +178,13 @@ private fun ExpandIndicatorCard() {
                     maxLines = if (expanded) Int.MAX_VALUE else 2,
                     overflow = FlowRowOverflow.expandIndicator {
                         // this: FlowRowOverflowScope — totalItemCount/shownItemCount 조회 가능
+                        // shownItemCount 는 측정이 끝난 뒤에야 정해져 컴포지션에서 읽으면 IllegalStateException
+                        // (release 는 화면 진입 즉시 크래시) — 그리기 단계에서 읽도록 라벨을 람다로 넘긴다
                         OverflowIndicatorChip(
-                            label = "+${totalItemCount - shownItemCount}개 더보기",
+                            label = { "+${totalItemCount - shownItemCount}개 더보기" },
+                            widestLabel = "+${allTags.size}개 더보기",
+                            a11yLabel = "더보기",
+
                             color = Color(0xFFEF6C00),
                             onClick = { expanded = true }
                         )
@@ -240,14 +254,20 @@ private fun ExpandCollapseIndicatorCard() {
                         minHeightToShowCollapse = 0.dp,
                         expandIndicator = {
                             OverflowIndicatorChip(
-                                label = "펼치기 (+${totalItemCount - shownItemCount})",
+                                label = { "펼치기 (+${totalItemCount - shownItemCount})" },
+                                widestLabel = "펼치기 (+${allTags.size})",
+                                a11yLabel = "펼치기",
+
                                 color = Color(0xFF9C27B0),
                                 onClick = { expanded = true }
                             )
                         },
                         collapseIndicator = {
                             OverflowIndicatorChip(
-                                label = "접기",
+                                label = { "접기" },
+                                widestLabel = "접기",
+                                a11yLabel = "접기",
+
                                 color = Color(0xFF6A1B9A),
                                 onClick = { expanded = false }
                             )
@@ -347,8 +367,12 @@ private fun ComposeCountComparisonCard() {
                     maxLines = maxLines,
                     overflow = ContextualFlowRowOverflow.expandIndicator {
                         // this: ContextualFlowRowOverflowScope
+                        // ContextualFlowRow 는 인디케이터를 측정 중에 서브컴포즈해 여기서 읽어도 되지만, 칩을 공용으로 쓰므로 같은 형태로 넘긴다
                         OverflowIndicatorChip(
-                            label = "+${totalItemCount - shownItemCount}",
+                            label = { "+${totalItemCount - shownItemCount}" },
+                            widestLabel = "+${items.size}",
+                            a11yLabel = "더보기",
+
                             color = Color(0xFF43A047),
                             onClick = {}
                         )
@@ -411,8 +435,12 @@ private fun PracticalRecipientChipsCard() {
                 verticalArrangement = Arrangement.spacedBy(8.dp),
                 maxLines = if (expanded) Int.MAX_VALUE else 1,
                 overflow = FlowRowOverflow.expandIndicator {
+                    // 일반 FlowRow — shownItemCount 는 그리기 단계에서만 읽는다(OverflowIndicatorChip 참고)
                     OverflowIndicatorChip(
-                        label = "+${totalItemCount - shownItemCount}명",
+                        label = { "+${totalItemCount - shownItemCount}명" },
+                        widestLabel = "+${recipients.size}명",
+                        a11yLabel = "받는 사람 더보기",
+
                         color = Color(0xFFF9A825),
                         onClick = { expanded = true }
                     )
@@ -447,17 +475,47 @@ private fun TagChip(label: String, color: Color) {
     }
 }
 
+/**
+ * FlowRowOverflowScope 의 shownItemCount 는 FlowRow 측정이 끝나야 정해지므로 **그리기 단계에서만** 읽을 수 있다.
+ * 그래서 라벨을 람다로 받아 drawBehind 안에서 계산해 그리고, 칩 크기는 나올 수 있는 가장 긴 문구([widestLabel])로
+ * 미리 잡아 레이아웃이 흔들리지 않게 한다. 그린 글자는 시맨틱 텍스트가 아니므로 [a11yLabel] 로 접근성 설명을 준다.
+ */
 @Composable
-private fun OverflowIndicatorChip(label: String, color: Color, onClick: () -> Unit) {
+private fun OverflowIndicatorChip(
+    label: () -> String,
+    widestLabel: String,
+    a11yLabel: String,
+    color: Color,
+    onClick: () -> Unit
+) {
+    val textMeasurer = rememberTextMeasurer()
+    val style = TextStyle(fontSize = 12.sp, color = Color.White, fontWeight = FontWeight.Medium)
+    val slot = remember(widestLabel) { textMeasurer.measure(widestLabel, style).size }
+    val density = LocalDensity.current
     Button(
         onClick = onClick,
         colors = ButtonDefaults.buttonColors(containerColor = color),
         shape = RoundedCornerShape(20.dp),
         elevation = null,
-        modifier = Modifier.height(32.dp),
+        modifier = Modifier
+            .height(32.dp)
+            .semantics { contentDescription = a11yLabel },
         contentPadding = PaddingValues(horizontal = 12.dp, vertical = 0.dp)
     ) {
-        Text(text = label, fontSize = 12.sp, color = Color.White, fontWeight = FontWeight.Medium)
+        Box(
+            modifier = Modifier
+                .size(with(density) { slot.width.toDp() }, with(density) { slot.height.toDp() })
+                .drawBehind {
+                    val layout = textMeasurer.measure(label(), style)
+                    drawText(
+                        textLayoutResult = layout,
+                        topLeft = Offset(
+                            (size.width - layout.size.width) / 2f,
+                            (size.height - layout.size.height) / 2f
+                        )
+                    )
+                }
+        )
     }
 }
 
