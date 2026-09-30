@@ -10,6 +10,7 @@ import com.example.composesample.presentation.example.component.architecture.pat
 import com.example.composesample.presentation.example.component.architecture.state.SnapshotFlowExampleViewModel
 import com.example.composesample.presentation.example.component.architecture.lifecycle.AutoCloseableExampleViewModel
 import com.example.composesample.presentation.example.component.architecture.lifecycle.ComposeLifecycleOwnerViewModel
+import com.example.composesample.presentation.example.component.data.cache.KtorHttpCacheViewModel
 import com.example.composesample.presentation.example.component.architecture.lifecycle.RealItemsService
 import com.example.composesample.presentation.example.component.architecture.lifecycle.RealCustomersService
 import com.example.composesample.presentation.example.component.architecture.lifecycle.RealNetworkService
@@ -59,6 +60,7 @@ val viewModelModule: Module = module {
     viewModel { SafFileSelectionViewModel() }
     viewModel { SnapshotFlowExampleViewModel() }
     viewModel { ComposeLifecycleOwnerViewModel() }
+    viewModel { KtorHttpCacheViewModel() }
     viewModel { BaseViewModel(get(), get()) }
     viewModel { CoordinatorViewModel(get(), get()) }
     viewModel {

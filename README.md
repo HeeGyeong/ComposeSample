@@ -222,7 +222,7 @@ Cursor IDE를 사용하는 개발자를 위한 **AI 코딩 어시스턴트 규�
 
 ### **data** - 데이터 관리 & 네트워크
 - **api**: Retrofit API 호출, UseCase 패턴, 연결 끊김 처리
-- **cache**: Room 로컬 데이터 캐싱과 CRUD, 실시간 검색
+- **cache**: Room 로컬 데이터 캐싱과 CRUD, 실시간 검색 / Ktor HTTP 캐시 — `HttpCache` 플러그인과 MockEngine 원 서버로 max-age·no-cache·no-store·ETag·Last-Modified 응답별 서버 도달·조건부 헤더·304 를 요청 단위로 대조(304 는 앱에 200 으로 보인다), private 응답 × `isShared`, Ktor 3.6.0 신규 `clearAllCaches()`·`FileStorage(Path, SystemFileSystem)` 디스크 영속·`acceptHeaderMergeStrategy`
 - **paging**: 페이징과 무한 스크롤; Paging3 `RemoteMediator` 오프라인 우선 페이징(네트워크 + DB 이중 소스, DB를 단일 진실 공급원으로 — `LoadType` REFRESH/PREPEND/APPEND 분기, RemoteKeys 테이블, `initialize()` 캐시 게이팅, `loadState.source`와 `loadState.mediator`를 별개 축으로 관찰)
 - **repository**: Advanced Repository Pattern — Memory → Disk → Network 다중 소스 우선순위 해석과 캐시 채우기
 - **room**: Room `@Fts4` MATCH 검색 vs `LIKE '%q%'` 전체 스캔, `@Index` 단일/복합 인덱스 쿼리 성능, DAO 인터페이스 상속 + `withTransaction`을 통한 멀티 테이블 삽입

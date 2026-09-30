@@ -206,7 +206,7 @@ object ConstValue {
     const val KtorAdvancedConfigExample = "ktorAdvancedConfigExample"
 
     // ==================== 데이터 & 캐시 예제 ====================
-    // DataCache(캐시 관리), Paging(무한 스크롤), RemoteMediator(네트워크+DB 이중 소스 오프라인 우선 페이징 — LoadType 분기·RemoteKeys·initialize() 캐시 게이트), MultiTableInsert(Room DAO 인터페이스 상속 + withTransaction 다중 테이블 insert), RoomFtsSearch(Room @Fts4 가상 테이블의 MATCH 검색 vs LIKE '%q%' 전체 스캔 성능 비교), RoomIndex(@Index 단일/복합 인덱스의 범위/등호+정렬 쿼리 성능 비교), AdvancedRepositoryPattern(Memory→Disk→Network 다중 소스 우선순위 해석 + cache population)
+    // DataCache(캐시 관리), Paging(무한 스크롤), RemoteMediator(네트워크+DB 이중 소스 오프라인 우선 페이징 — LoadType 분기·RemoteKeys·initialize() 캐시 게이트), MultiTableInsert(Room DAO 인터페이스 상속 + withTransaction 다중 테이블 insert), RoomFtsSearch(Room @Fts4 가상 테이블의 MATCH 검색 vs LIKE '%q%' 전체 스캔 성능 비교), RoomIndex(@Index 단일/복합 인덱스의 범위/등호+정렬 쿼리 성능 비교), AdvancedRepositoryPattern(Memory→Disk→Network 다중 소스 우선순위 해석 + cache population), KtorHttpCache(Ktor HttpCache 플러그인 — MockEngine 원 서버로 max-age/no-cache/no-store/ETag/Last-Modified 별 서버 도달·조건부 헤더·304 를 요청 단위로 대조, private 응답 × isShared, 3.6.0 clearAllCaches()·FileStorage(Path, FileSystem) 디스크 영속·acceptHeaderMergeStrategy)
     const val DataCacheExample = "dataCacheExample"
     const val PagingExample = "pagingExample"
     const val RemoteMediatorExample = "remoteMediatorExample"
@@ -214,6 +214,7 @@ object ConstValue {
     const val RoomFtsSearchExample = "roomFtsSearchExample"
     const val RoomIndexExample = "roomIndexExample"
     const val AdvancedRepositoryPatternExample = "advancedRepositoryPatternExample"
+    const val KtorHttpCacheExample = "ktorHttpCacheExample"
 
     // ==================== 시스템 & 설정 예제 ====================
     // PowerSaveMode(절전 모드), TargetSDK34Permission(권한 처리), PassingIntentData(Intent 전달), LanguageSetting(시스템 언어), LocalLanguageChange(앱 내 언어), Shortcut(앱 숏컷), QuickSettingsTile(빠른 설정 타일), DynamicAppLinks(동적 앱 링크), PredictiveBack(예측형 뒤로가기 제스처), HapticFeedback(햅틱 피드백), BiometricAuth(생체 인증 — biometric-compose alpha), SensorFusionCompass(TYPE_ROTATION_VECTOR 퓨전 나침반 — remapCoordinateSystem 화면 회전 보정 + 각도 랩어라운드를 견디는 저역통과 필터), LiveUpdateNotification(Android 16 Live Updates — NotificationCompat.ProgressStyle 세그먼트/포인트/트래커, 설정자 없는 progressMax, API 36 미만 단색 막대 폴백), PictureInPicture(PictureInPictureParamsCompat — 9개 필드를 버전 분기 없이 구성하고 변환 시점에 33/31/26 로 잘라내는 규칙 + 종횡비 허용 범위 실측)

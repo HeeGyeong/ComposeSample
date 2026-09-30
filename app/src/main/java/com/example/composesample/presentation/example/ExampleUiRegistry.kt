@@ -36,6 +36,7 @@ import com.example.composesample.presentation.example.component.data.api.ApiDisc
 import com.example.composesample.presentation.example.component.data.api.KtorAdvancedConfigExampleUI
 import com.example.composesample.presentation.example.component.data.api.KtorExampleUI
 import com.example.composesample.presentation.example.component.data.cache.DataCacheExampleUI
+import com.example.composesample.presentation.example.component.data.cache.KtorHttpCacheExampleUI
 import com.example.composesample.presentation.example.component.data.paging.PagingExampleUI
 import com.example.composesample.presentation.example.component.data.paging.RemoteMediatorExampleUI
 import com.example.composesample.presentation.example.component.data.repository.AdvancedRepositoryPatternExampleUI
@@ -224,6 +225,7 @@ import com.example.composesample.util.ConstValue.CustomTextRenderingExample
 import com.example.composesample.util.ConstValue.AdvancedRepositoryPatternExample
 import com.example.composesample.util.ConstValue.Media3VideoPlayerExample
 import com.example.composesample.util.ConstValue.DataCacheExample
+import com.example.composesample.util.ConstValue.KtorHttpCacheExample
 import com.example.composesample.util.ConstValue.DialComponentExample
 import com.example.composesample.util.ConstValue.DragAndDropExample
 import com.example.composesample.util.ConstValue.IndirectPointerExample
@@ -421,6 +423,7 @@ val exampleUiRegistry: Map<String, @Composable (onBackEvent: () -> Unit) -> Unit
     SwipeToDismissM3Example to { onBackEvent -> SwipeToDismissM3ExampleUI(onBackEvent) },
     SideEffectExample to { onBackEvent -> SideEffectExampleUI(onBackEvent) },
     DataCacheExample to { onBackEvent -> DataCacheExampleUI(onBackEvent) },
+    KtorHttpCacheExample to { onBackEvent -> KtorHttpCacheExampleUI(onBackEvent) },
     AdvancedRepositoryPatternExample to { onBackEvent -> AdvancedRepositoryPatternExampleUI(onBackEvent) },
     ApiDisconnectExample to { onBackEvent -> ApiDisconnectExampleUI(onBackEvent) },
     PowerSaveModeExample to { onBackEvent -> PowerSaveModeExampleUI(onBackEvent) },

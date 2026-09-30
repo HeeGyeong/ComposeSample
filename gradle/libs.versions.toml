@@ -96,6 +96,9 @@ okhttpLoggingInterceptor = "5.5.0"
 # 3.6.0 변경 중 영향권: Bearer 인증의 refresh 요청에서 Authorization 헤더 제거, OkHttp 엔진 취소 시 메인 스레드 본문 닫기 수정.
 # (이전 3.5.2 는 okhttp 5.3.2 · coroutines 1.11.0 · gson 2.14.0 을 요구했다)
 ktor = "3.6.0"
+# kotlinx-io 0.9.1 — Ktor 3.6.0 이 전이로 끌어오는 버전 그대로 선언(해석 결과 변화 0). HttpCache 의 FileStorage(Path, FileSystem) 가
+# kotlinx.io.files.Path/SystemFileSystem 을 요구해 앱 코드가 직접 쓰므로 명시한다(DEP-VERSION-05: 직접 쓰는 라이브러리는 선언=해석).
+kotlinxIoCore = "0.9.1"
 
 # Test
 junit = "4.13.2"
@@ -204,6 +207,7 @@ ktorClientContentNegotiation = { module = "io.ktor:ktor-client-content-negotiati
 ktorSerializationGson = { module = "io.ktor:ktor-serialization-gson", version.ref = "ktor" }
 ktorClientAuth = { module = "io.ktor:ktor-client-auth", version.ref = "ktor" }
 ktorClientMock = { module = "io.ktor:ktor-client-mock", version.ref = "ktor" }
+kotlinxIoCore = { module = "org.jetbrains.kotlinx:kotlinx-io-core", version.ref = "kotlinxIoCore" }
 
 junit = { module = "junit:junit", version.ref = "junit" }
 androidxTestJunit = { module = "androidx.test.ext:junit", version.ref = "androidxTestJunit" }
