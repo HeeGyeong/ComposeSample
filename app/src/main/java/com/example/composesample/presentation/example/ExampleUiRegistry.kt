@@ -60,6 +60,7 @@ import com.example.composesample.presentation.example.component.system.security.
 import com.example.composesample.presentation.example.component.system.security.IpcExportedComponentExampleUI
 import com.example.composesample.presentation.example.component.system.security.ScreenshotDetectionExampleUI
 import com.example.composesample.presentation.example.component.system.platform.haptic.HapticFeedbackExampleUI
+import com.example.composesample.presentation.example.component.system.platform.process.MultiProcessExampleUI
 import com.example.composesample.presentation.example.component.system.platform.predictiveback.PredictiveBackExampleUI
 import com.example.composesample.presentation.example.component.system.background.location.BackgroundLocationExampleUI
 import com.example.composesample.presentation.example.component.system.background.workmanager.WorkManagerExampleUI
@@ -285,6 +286,7 @@ import com.example.composesample.util.ConstValue.RemoteMediatorExample
 import com.example.composesample.util.ConstValue.PassingIntentDataExample
 import com.example.composesample.util.ConstValue.PathGraphicsExample
 import com.example.composesample.util.ConstValue.PictureInPictureExample
+import com.example.composesample.util.ConstValue.MultiProcessExample
 import com.example.composesample.util.ConstValue.FormValidationExample
 import com.example.composesample.util.ConstValue.WorkManagerTestExample
 import com.example.composesample.util.ConstValue.PowerSaveModeExample
@@ -589,6 +591,7 @@ val exampleUiRegistry: Map<String, @Composable (onBackEvent: () -> Unit) -> Unit
     SensorFusionCompassExample to { onBackEvent -> SensorFusionCompassExampleUI(onBackEvent) },
     LiveUpdateNotificationExample to { onBackEvent -> LiveUpdateNotificationExampleUI(onBackEvent) },
     PictureInPictureExample to { onBackEvent -> PictureInPictureExampleUI(onBackEvent) },
+    MultiProcessExample to { onBackEvent -> MultiProcessExampleUI(onBackEvent) },
     WorkManagerTestExample to { onBackEvent -> WorkManagerTestExampleUI(onBackEvent) },
     FormValidationExample to { onBackEvent -> FormValidationExampleUI(onBackEvent) },
     DisplayCutoutInsetsExample to { onBackEvent -> DisplayCutoutInsetsExampleUI(onBackEvent) },

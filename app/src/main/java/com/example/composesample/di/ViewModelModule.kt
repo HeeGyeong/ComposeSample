@@ -22,6 +22,7 @@ import com.example.composesample.presentation.example.component.data.paging.Remo
 import com.example.composesample.presentation.example.component.data.repository.AdvancedRepositoryPatternViewModel
 import com.example.composesample.presentation.example.component.data.sse.SSEViewModel
 import com.example.composesample.presentation.example.component.system.platform.file.SafFileSelectionViewModel
+import com.example.composesample.presentation.example.component.system.platform.process.MultiProcessViewModel
 import com.example.composesample.presentation.example.component.system.background.workmanager.WorkEventListenerViewModel
 import com.example.composesample.presentation.example.component.system.security.AppSecurityViewModel
 import com.example.composesample.presentation.example.component.system.security.RequestSigningViewModel
@@ -61,6 +62,8 @@ val viewModelModule: Module = module {
     viewModel { SnapshotFlowExampleViewModel() }
     viewModel { ComposeLifecycleOwnerViewModel() }
     viewModel { KtorHttpCacheViewModel() }
+    // 서비스를 bind 해야 하므로 Application 컨텍스트를 주입한다
+    viewModel { MultiProcessViewModel(androidApplication()) }
     viewModel { BaseViewModel(get(), get()) }
     viewModel { CoordinatorViewModel(get(), get()) }
     viewModel {

@@ -12,6 +12,7 @@ import com.example.composesample.presentation.example.component.system.backgroun
 import com.example.composesample.presentation.example.component.system.background.workmanager.WorkEventRecorder
 import com.example.composesample.presentation.example.component.system.background.workmanager.WorkerExceptionHandlerKind
 import com.example.composesample.presentation.example.component.system.background.workmanager.WorkerExceptionReporter
+import com.example.composesample.util.isMainProcess
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.loadKoinModules
 import org.koin.core.context.startKoin
@@ -27,6 +28,11 @@ import org.koin.core.context.startKoin
 class BaseApplication : Application(), Configuration.Provider {
     override fun onCreate() {
         super.onCreate()
+
+        // Application.onCreate 는 프로세스마다 실행된다 — android:process 로 분리한 서비스
+        // (MultiProcessExample 의 :remote · :isolated)가 뜰 때도 이 코드가 다시 돈다.
+        // Koin 그래프는 화면이 있는 기본 프로세스에서만 쓰므로 그 밖의 프로세스에서는 만들지 않는다.
+        if (!isMainProcess()) return
 
         startKoin {
             androidContext(this@BaseApplication)

@@ -237,6 +237,7 @@ Cursor IDE를 사용하는 개발자를 위한 **AI 코딩 어시스턴트 규�
 - **pip**: Picture-in-Picture compat(core 1.18.0) — `PictureInPictureParamsCompat`로 9개 필드를 버전 분기 없이 구성하고 `toPictureInPictureParams()`가 API 33/31/26으로 잘라내는 규칙을 플랫폼 getter 되읽기로 확인, 종횡비 허용 범위(0.418410~2.390000)와 `enterPictureInPictureMode`(RESUMED 필요) vs `setPictureInPictureParams`(정지 상태에서도 가능) 대조
 - **powersave**: 절전 모드 감지와 배터리 최적화
 - **predictiveback**: Predictive Back Gesture(Android 14+ Flow 기반 엣지 스와이프 진행률 실시간 애니메이션)
+- **process**: 멀티프로세스 앱 구조 — 같은 서비스를 기본 프로세스·`:remote`·`:isolated`(`isolatedProcess`)에 띄워 Messenger 로 왕복하며 프로세스별 PID·싱글턴·Koin 초기화 분리(`Application.onCreate` 프로세스 가드), 같은 프로세스는 통과하고 프로세스를 넘으면 `TransactionTooLargeException` 이 되는 바인더 한계(이진 탐색 경계 · 동기 1,040,384 B / oneway 520,096 B 실측), 원격 kill·크래시 후 자동 재연결과 1분 안 두 번째 크래시의 `onBindingDied`, 옛 Messenger 의 `DeadObjectException`, 격리 UID 의 권한·파일(ENOENT)·소켓(EACCES) 박탈, `getRunningAppProcesses` 프로세스 표와 PSS
 - **biometric**: Biometric Authentication(biometric-compose 1.4.0-alpha07 — Compose 연동. 폴백 없음=기본 취소 버튼, `CustomOption` → `CustomFallbackSelected` 결과, 폴백 여러 개(최대 4)는 Android 16 QPR2 미만에서 첫 번째만 쓰이는 규칙까지)
 - **quicksettings**: Quick Settings Tile
 - **sensor**: 센서 퓨전 나침반(TYPE_ROTATION_VECTOR 방위각 파이프라인, remapCoordinateSystem 화면 회전 보정, 각도 랩어라운드를 견디는 저역통과 필터)

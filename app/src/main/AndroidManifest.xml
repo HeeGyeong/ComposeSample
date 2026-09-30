@@ -212,6 +212,25 @@
             android:exported="false"
             android:foregroundServiceType="location" />
 
+        <!-- MultiProcessExample: 같은 서비스 코드를 세 프로세스에 띄워 비교한다.
+             매니페스트에는 클래스 하나를 두 번 선언할 수 없어 빈 하위 클래스로 이름만 나눴다.
+             - Local    : process 지정 없음 → 화면과 같은 기본 프로세스
+             - Remote   : ":remote" → 앱 전용 별도 프로세스(같은 UID)
+             - Isolated : ":isolated" + isolatedProcess → 매번 새 격리 UID, 앱 권한·데이터 접근 없음
+             Application.onCreate 는 세 프로세스 모두에서 실행되므로 BaseApplication 이 기본 프로세스에서만 Koin 을 시작한다. -->
+        <service
+            android:name=".presentation.example.component.system.platform.process.LocalProcessDemoService"
+            android:exported="false" />
+        <service
+            android:name=".presentation.example.component.system.platform.process.RemoteProcessDemoService"
+            android:exported="false"
+            android:process=":remote" />
+        <service
+            android:name=".presentation.example.component.system.platform.process.IsolatedProcessDemoService"
+            android:exported="false"
+            android:isolatedProcess="true"
+            android:process=":isolated" />
+
         <!-- Memo Input Activity (for Quick Settings Tile) -->
         <activity
             android:name=".presentation.example.component.system.platform.quicksettings.MemoInputActivity"

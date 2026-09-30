@@ -829,5 +829,12 @@ val examples2026 = listOf(
         description = "Ktor 클라이언트 HttpCache 를 MockEngine 원 서버와 함께 — max-age·no-cache·no-store·ETag 만·Last-Modified·콘텐츠 변경 응답을 몇 번씩 요청하며 요청마다 서버 도달 여부·조건부 헤더(If-None-Match/If-Modified-Since)·서버 304 와 앱이 받은 상태·캐시 이벤트를 나란히 기록(304 는 앱에 200 으로 보인다). private 응답 × isShared 2×2 에서 저장소 건수를 직접 조회하고, 3.6.0 신규 clearAllCaches() 로 public/private 을 한꺼번에 비우며, 새 FileStorage(Path, SystemFileSystem) 로 클라이언트를 새로 만들어도 디스크에서 적중하는 것(메모리 저장소는 빗나감)과 기존 FileStorage(File) 이 같은 저장소를 돌려주는 것, acceptHeaderMergeStrategy(Default/SkipIfPresent)가 서버에 보내는 Accept 헤더까지",
         blogUrl = "",
         exampleType = ConstValue.KtorHttpCacheExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 10. 01",
+        title = "멀티프로세스 앱 구조 (android:process · isolatedProcess)",
+        description = "같은 서비스 코드를 기본 프로세스·:remote·:isolated 세 곳에 띄워 Messenger 로 왕복 — 프로세스마다 PID·싱글턴 카운터·Koin 초기화가 따로인 것, 같은 프로세스에선 그대로 넘어가는 바이트 배열이 프로세스를 넘으면 TransactionTooLargeException 이 되는 바인더 한계(이진 탐색으로 경계 실측), 원격을 예외로 죽이거나 kill 해도 화면은 살아남고 시스템이 서비스를 다시 띄워 onServiceConnected 가 다시 오는 과정(옛 Messenger 는 DeadObjectException, 1분 안 두 번째 크래시는 onBindingDied 로 재연결 중단), isolatedProcess 의 격리 UID·권한·파일·소켓 박탈, getRunningAppProcesses 프로세스 표까지. Application.onCreate 가 프로세스마다 도는 것에 대비한 프로세스 가드 포함",
+        blogUrl = "",
+        exampleType = ConstValue.MultiProcessExample
     )
 )
