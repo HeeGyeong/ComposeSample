@@ -446,6 +446,13 @@ val examples2026 = listOf(
         exampleType = ConstValue.ComposeLifecycleOwnerExample
     ),
     ExampleObject(
+        lastUpdate = "26. 09. 30",
+        title = "Mesh Gradient (Compose 1.12)",
+        description = "Compose 1.12 신규 메시 그라데이션 — 격자 꼭짓점마다 위치·색·베지어 제어점을 주는 MeshGradientPainter(Config·Renderer 는 Kotlin internal 이라 공개 진입점은 Painter 하나). 행·열 수와 hasBicubicColor(bilinear vs Catmull-Rom) 를 나란히 대조하고, 꼭짓점을 드래그하며 제어점을 자동 추론/직접 지정으로 바꿔 곡면이 비틀리는 것을 확인. ImageBitmap 에 그려 가운데 픽셀을 읽어 색이 OkLab 으로 보간되는 것을 실측하고, draw 단계에서만 시간을 읽는 애니메이션의 그리기 비용·리컴포지션 수, 꼭짓점 누락·Painter 고유 크기 없음·그리는 시점에야 터지는 범위 예외 함정까지. 렌더러가 기본 검정 Paint 로 drawVertices 를 불러 Paint 색을 곱하는 기기(Galaxy A72/API 33 실측)에서는 메시가 전부 검게 나오는 것을 화면이 뜰 때 판정하고, drawVertices 만 흰 Paint 로 바꾸는 소프트웨어 캔버스 호환 모드로 우회",
+        blogUrl = "",
+        exampleType = ConstValue.MeshGradientExample
+    ),
+    ExampleObject(
         lastUpdate = "26. 04. 20",
         title = "Nav3 ViewModel Scope",
         description = "Navigation 3의 ViewModel 스코프 변화(Nav2 vs Nav3 vs NavKey) 비교",

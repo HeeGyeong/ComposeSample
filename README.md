@@ -196,7 +196,7 @@ Cursor IDE를 사용하는 개발자를 위한 **AI 코딩 어시스턴트 규�
 - **autofill**: semantics API를 통한 Compose Autofill(`contentType` 힌트 + `LocalAutofillManager` commit/cancel)
 - **button**: ButtonGroup(Material 3 Expressive)
 - **canvas**: Canvas 도형과 애니메이션, Dial 컴포넌트, Motion Blur(회전하는 바퀴), Compose Loaders 수학 곡선 기반 로딩 애니메이션(Rose/Lissajous/Lemniscate/Spirograph/Cardioid/Butterfly — 6가지 곡선)
-- **graphics**: New Shadow API(Compose 1.9), 다이얼로그 배경 블러(`blurBehindRadius`+`FLAG_BLUR_BEHIND` 크로스 윈도우 · `setBackgroundBlurRadius` 윈도우 배경 · `Modifier.blur` 컴포저블 세 가지를 구분하고, `isCrossWindowBlurEnabled` 를 리스너로 구독해 "코드는 성공하고 그림만 없는" 상태를 드러냄 + API 31 미만용 GraphicsLayer 캡처·소프트웨어 블러 폴백 비용 실측)
+- **graphics**: New Shadow API(Compose 1.9), 다이얼로그 배경 블러(`blurBehindRadius`+`FLAG_BLUR_BEHIND` 크로스 윈도우 · `setBackgroundBlurRadius` 윈도우 배경 · `Modifier.blur` 컴포저블 세 가지를 구분하고, `isCrossWindowBlurEnabled` 를 리스너로 구독해 "코드는 성공하고 그림만 없는" 상태를 드러냄 + API 31 미만용 GraphicsLayer 캡처·소프트웨어 블러 폴백 비용 실측), Mesh Gradient(Compose 1.12 `MeshGradientPainter` — 꼭짓점 위치·색·베지어 제어점, bilinear/bicubic 대조, 꼭짓점 드래그 편집과 제어점 추론 규칙의 픽셀 단위 검증, OkLab 보간 실측, draw 단계 애니메이션 비용. 렌더러가 기본 검정 Paint 로 `drawVertices` 를 불러 Paint 색을 곱하는 기기(Galaxy A72/API 33 실측)에서는 전부 검게 나오는 문제를 판정하고 흰 Paint 소프트웨어 캔버스 호환 모드로 우회)
 - **navigation**: Navigation3 중첩 라우팅(NestedRoutesNav3)
 - **notification**: SnapNotify(Snackbar 간소화 라이브러리)
 - **overlay**: 좌표 기반 스포트라이트 오버레이(코치마크) — `onGloballyPositioned`로 타깃 좌표 수집 → `Popup` 전체화면 오버레이(부모 클리핑에 갇히지 않음) → `Path.op(Difference)` + `clipPath`로 스크림에 구멍 뚫기 → `animateFloatAsState`로 스텝 전환 애니메이션
