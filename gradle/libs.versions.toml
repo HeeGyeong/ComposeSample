@@ -80,7 +80,9 @@ navigationCompose = "2.10.2"
 coreKtx = "1.19.1"
 # coil-core 3.5.0 이 appcompat-resources 1.7.1 을 요구해 appcompat 그룹이 1.7.1 로 해석된다. 선언을 해석 결과에 맞춘다.
 appcompat = "1.8.0"
-material = "1.11.4"
+# Compose material 은 BOM 이 관리하는 아티팩트지만 core-dependencies.gradle 을 쓰는 모듈 일부가 BOM 플랫폼 없이 받으므로 버전을 명시한다.
+# → BOM 을 올릴 때 함께 올린다(2026-09-29 BOM 2026.09.00 상향 때 누락돼 1.11.4 선언 · 1.12.1 해석 드리프트가 남았다 — 2026-09-30 해소).
+material = "1.12.1"
 material3 = "1.4.0"
 material3WindowSizeClass = "1.4.0"
 room = "2.8.5"
