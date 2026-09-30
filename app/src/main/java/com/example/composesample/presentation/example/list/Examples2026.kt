@@ -425,34 +425,6 @@ val examples2026 = listOf(
         exampleType = ConstValue.AppSecurityExample
     ),
     ExampleObject(
-        lastUpdate = "26. 09. 28",
-        title = "WorkManager 이벤트 리스너 (work 2.12)",
-        description = "작업 수명주기를 suspend 스트림으로 관찰 — 체인 실패·취소·제약 대기 타임라인, 2.11 Consumer 핸들러와 대조",
-        blogUrl = "",
-        exampleType = ConstValue.WorkEventListenerExample
-    ),
-    ExampleObject(
-        lastUpdate = "26. 09. 28",
-        title = "API 요청 서명 (HMAC + 재전송 방지)",
-        description = "OkHttp 인터셉터로 HMAC-SHA256 서명 — 바디 변조·타임스탬프 만료·nonce 재전송 거절을 서버 없이 대조",
-        blogUrl = "",
-        exampleType = ConstValue.RequestSigningExample
-    ),
-    ExampleObject(
-        lastUpdate = "26. 09. 29",
-        title = "Composable 범위 LifecycleOwner (lifecycle 2.10)",
-        description = "rememberLifecycleOwner 로 하위 트리에 상한 걸린 수명주기 부여 — Pager 의 화면 밖 페이지를 STARTED 로 캡해 RESUMED 작업이 멈추는 것을 틱 수로 대조, 상한·백그라운드 전환·컴포지션 이탈 이벤트 로그",
-        blogUrl = "",
-        exampleType = ConstValue.ComposeLifecycleOwnerExample
-    ),
-    ExampleObject(
-        lastUpdate = "26. 09. 30",
-        title = "Mesh Gradient (Compose 1.12)",
-        description = "Compose 1.12 신규 메시 그라데이션 — 격자 꼭짓점마다 위치·색·베지어 제어점을 주는 MeshGradientPainter(Config·Renderer 는 Kotlin internal 이라 공개 진입점은 Painter 하나). 행·열 수와 hasBicubicColor(bilinear vs Catmull-Rom) 를 나란히 대조하고, 꼭짓점을 드래그하며 제어점을 자동 추론/직접 지정으로 바꿔 곡면이 비틀리는 것을 확인. ImageBitmap 에 그려 가운데 픽셀을 읽어 색이 OkLab 으로 보간되는 것을 실측하고, draw 단계에서만 시간을 읽는 애니메이션의 그리기 비용·리컴포지션 수, 꼭짓점 누락·Painter 고유 크기 없음·그리는 시점에야 터지는 범위 예외 함정까지. 렌더러가 기본 검정 Paint 로 drawVertices 를 불러 Paint 색을 곱하는 기기(Galaxy A72/API 33 실측)에서는 메시가 전부 검게 나오는 것을 화면이 뜰 때 판정하고, drawVertices 만 흰 Paint 로 바꾸는 소프트웨어 캔버스 호환 모드로 우회",
-        blogUrl = "",
-        exampleType = ConstValue.MeshGradientExample
-    ),
-    ExampleObject(
         lastUpdate = "26. 04. 20",
         title = "Nav3 ViewModel Scope",
         description = "Navigation 3의 ViewModel 스코프 변화(Nav2 vs Nav3 vs NavKey) 비교",
@@ -822,5 +794,33 @@ val examples2026 = listOf(
         description = "kotlinx.coroutines 1.11 이 launch(Job())·launch(NonCancellable)·runInterruptible(Job()) 에 붙인 경고 오버로드(@Deprecated + 더 구체적인 파라미터 타입)의 구조와, 경고가 가리키는 호출을 실제로 돌려 부모 취소가 닿지 않고·coroutineScope 가 기다리지 않아 빈 목록이 반환되고·인터럽트가 안 되는 것을 실측. 정적 타입이 CoroutineContext 면(Job() + Dispatchers.IO) 경고 없이 같은 결과가 나는 빈틈과 withContext(NonCancellable) 등 대안, 같은 릴리스의 StateFlow.onSubscription(StateFlow 반환)·SharedFlow.asFlow·CompletableDeferred.asDeferred 를 캐스팅 시도로 대조(asDeferred 뷰의 cancel() 은 원본까지 취소한다)",
         blogUrl = "",
         exampleType = ConstValue.StructuredConcurrencyGuardrailExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 09. 28",
+        title = "API 요청 서명 (HMAC + 재전송 방지)",
+        description = "OkHttp 인터셉터로 HMAC-SHA256 서명 — 바디 변조·타임스탬프 만료·nonce 재전송 거절을 서버 없이 대조",
+        blogUrl = "",
+        exampleType = ConstValue.RequestSigningExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 09. 28",
+        title = "WorkManager 이벤트 리스너 (work 2.12)",
+        description = "작업 수명주기를 suspend 스트림으로 관찰 — 체인 실패·취소·제약 대기 타임라인, 2.11 Consumer 핸들러와 대조",
+        blogUrl = "",
+        exampleType = ConstValue.WorkEventListenerExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 09. 29",
+        title = "Composable 범위 LifecycleOwner (lifecycle 2.10)",
+        description = "rememberLifecycleOwner 로 하위 트리에 상한 걸린 수명주기 부여 — Pager 의 화면 밖 페이지를 STARTED 로 캡해 RESUMED 작업이 멈추는 것을 틱 수로 대조, 상한·백그라운드 전환·컴포지션 이탈 이벤트 로그",
+        blogUrl = "",
+        exampleType = ConstValue.ComposeLifecycleOwnerExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 09. 30",
+        title = "Mesh Gradient (Compose 1.12)",
+        description = "Compose 1.12 신규 메시 그라데이션 — 격자 꼭짓점마다 위치·색·베지어 제어점을 주는 MeshGradientPainter(Config·Renderer 는 Kotlin internal 이라 공개 진입점은 Painter 하나). 행·열 수와 hasBicubicColor(bilinear vs Catmull-Rom) 를 나란히 대조하고, 꼭짓점을 드래그하며 제어점을 자동 추론/직접 지정으로 바꿔 곡면이 비틀리는 것을 확인. ImageBitmap 에 그려 가운데 픽셀을 읽어 색이 OkLab 으로 보간되는 것을 실측하고, draw 단계에서만 시간을 읽는 애니메이션의 그리기 비용·리컴포지션 수, 꼭짓점 누락·Painter 고유 크기 없음·그리는 시점에야 터지는 범위 예외 함정까지. 렌더러가 기본 검정 Paint 로 drawVertices 를 불러 Paint 색을 곱하는 기기(Galaxy A72/API 33 실측)에서는 메시가 전부 검게 나오는 것을 화면이 뜰 때 판정하고, drawVertices 만 흰 Paint 로 바꾸는 소프트웨어 캔버스 호환 모드로 우회",
+        blogUrl = "",
+        exampleType = ConstValue.MeshGradientExample
     )
 )
