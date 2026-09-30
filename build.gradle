@@ -13,3 +13,17 @@ plugins {
 tasks.register('clean', Delete) {
     delete rootProject.layout.buildDirectory
 }
+
+// BUILD-LINT-KSP-RACE-01: lint 분석이 KSP 처리와 같은 시간대에 돌지 않도록 순서만 선언한다.
+// 같은 실행에서 KSP 가 증분 백업(build/kspCaches/<variant>/backups)을 지우고 다시 쓰는 동안 병렬로 돌던 lint 분석이
+// 그 백업 파일을 읽다 FileNotFoundException 으로 간헐 실패했다(AGP 9.4.1 + KSP 2.3.9, 다른 변형의 백업까지 읽음).
+// KSP 가 쉬고 있을 때는 lint 가 백업을 읽지 않으므로(백업 읽기 권한을 막아도 lint 성공 — 실측) 겹침만 없애면 된다.
+// mustRunAfter 는 두 태스크가 같은 실행에 있을 때 순서만 정하고 할 일을 늘리지 않는다.
+// 모듈을 가리지 않는다 — 실측에서 core·data·coordinator 의 lint 도 app 의 KSP 와 겹쳤다.
+subprojects {
+    tasks.named { it ==~ /lint(Vital)?Analyze\w*/ }.configureEach { lintTask ->
+        rootProject.subprojects.each { other ->
+            lintTask.mustRunAfter(other.tasks.named { it ==~ /ksp\w*Kotlin/ })
+        }
+    }
+}
