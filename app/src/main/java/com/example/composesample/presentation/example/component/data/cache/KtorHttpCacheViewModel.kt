@@ -237,6 +237,8 @@ class KtorHttpCacheViewModel : ViewModel() {
             val pathEntry = FileStorage(Path(directory.path), SystemFileSystem)
             // 두 입구가 무엇을 돌려주는지 비교만 하고, File 입구용 디렉터리는 바로 지운다
             val fileApiDirectory = File(cacheRoot, "ktor-http-cache-file-api")
+            // FileStorage(File) 은 3.6.0 에서 deprecated — 새 입구와 같은 저장소를 돌려주는지 비교하려고 일부러 부른다
+            @Suppress("DEPRECATION")
             val fileEntry = FileStorage(fileApiDirectory)
             fileApiDirectory.deleteRecursively()
 
