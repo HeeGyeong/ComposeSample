@@ -637,203 +637,203 @@ val examples2026 = listOf(
     ExampleObject(
         lastUpdate = "26. 08. 15",
         title = "Flow 레이아웃 오버플로 제어",
-        description = "maxLines + expandIndicator/expandOrCollapseIndicator, ContextualFlowRow 지연 생성 실측",
+        description = "FlowRow의 maxLines·펼치기 표시와 ContextualFlowRow 지연 생성 실측",
         blogUrl = "",
         exampleType = ConstValue.FlowOverflowExample
     ),
     ExampleObject(
         lastUpdate = "26. 08. 16",
         title = "Recomposer 레지스트리 관찰",
-        description = "runningRecomposers + CompositionRegistrationObserver로 컴포지션 등록/해제를 실시간 관찰",
+        description = "runningRecomposers와 등록 옵저버로 컴포지션 등록/해제를 실시간 관찰",
         blogUrl = "",
         exampleType = ConstValue.RecomposerRegistryExample
     ),
     ExampleObject(
         lastUpdate = "26. 08. 17",
         title = "Perfetto 코루틴/Flow 트레이싱",
-        description = "beginSection/endSection의 스레드 페어링 함정을 실측 + beginAsyncSection/setCounter로 안전하게 트레이싱",
+        description = "동기 구간의 스레드 페어링 함정을 실측하고 비동기 구간·카운터로 안전하게 트레이싱",
         blogUrl = "",
         exampleType = ConstValue.PerfettoTracingExample
     ),
     ExampleObject(
         lastUpdate = "26. 08. 18",
         title = "IME 인터랙티브 제어",
-        description = "imeNestedScroll로 제스처 드래그해서 키보드 열고/닫기 + imeAnimationSource/Target로 애니메이션 진행률에 커스텀 UI 동기화",
+        description = "드래그로 키보드를 여닫는 imeNestedScroll과 IME 애니메이션 진행률 동기화",
         blogUrl = "",
         exampleType = ConstValue.ImeNestedScrollExample
     ),
     ExampleObject(
         lastUpdate = "26. 08. 19",
         title = "간접 포인터 입력 파이프라인",
-        description = "IndirectPointerInputModifierNode 원시 트랙패드 캡처와 PointerEventType.Pan*/Scale* 표준 파이프라인을 대조 — 터치스크린 멀티터치로는 Pan*/Scale*가 켜지지 않음을 실측",
+        description = "트랙패드 원시 입력 캡처와 Pan/Scale 표준 파이프라인 대조",
         blogUrl = "",
         exampleType = ConstValue.IndirectPointerExample
     ),
     ExampleObject(
         lastUpdate = "26. 08. 20",
         title = "kotlin.time 시간 API",
-        description = "Clock.System.now()/Instant 벽시계 vs TimeSource.Monotonic.markNow()/elapsedNow() 단조시계, measureTimedValue의 Duration 정밀도, TestTimeSource로 실시간 대기 없이 시간을 직접 전진",
+        description = "벽시계 Instant와 단조시계 TimeSource 대조, 테스트 시계로 대기 없이 시간 전진",
         blogUrl = "",
         exampleType = ConstValue.KotlinTimeApiExample
     ),
     ExampleObject(
         lastUpdate = "26. 08. 24",
         title = "Sealed 인터페이스 도메인 에러 처리",
-        description = "예외 던지기 대신 sealed interface로 실패를 함수 시그니처에 직접 반환 — exhaustive when으로 컴파일 타임에 모든 에러 케이스 처리를 강제",
+        description = "예외 대신 sealed interface로 실패를 반환하고 when으로 모든 처리를 강제",
         blogUrl = "",
         exampleType = ConstValue.SealedDomainErrorExample
     ),
     ExampleObject(
         lastUpdate = "26. 08. 25",
         title = "좌표 기반 스포트라이트 오버레이",
-        description = "onGloballyPositioned로 타깃 좌표 수집 → Popup 전체화면 오버레이 → Path.op(Difference)+clipPath로 스크림에 구멍 뚫기 → animateFloatAsState 스텝 전환 애니메이션",
+        description = "타깃 좌표를 모아 스크림에 구멍을 뚫는 단계별 스포트라이트 오버레이",
         blogUrl = "",
         exampleType = ConstValue.SpotlightOverlayExample
     ),
     ExampleObject(
         lastUpdate = "26. 08. 31",
         title = "스크린샷 테스트 이미지 결정론화",
-        description = "네트워크 이미지가 회차마다 출처(NETWORK/MEMORY_CACHE)와 소요 시간이 달라지는 것을 실측하고, LocalAsyncImagePreviewHandler로 픽셀을 고정 — inspection 모드 게이팅과 팩토리가 State.Loading을 반환하는 함정까지",
+        description = "회차마다 달라지는 네트워크 이미지를 프리뷰 핸들러로 고정해 스크린샷 결정론화",
         blogUrl = "",
         exampleType = ConstValue.DeterministicImageTestExample
     ),
     ExampleObject(
         lastUpdate = "26. 09. 01",
         title = "센서 퓨전 나침반",
-        description = "TYPE_ROTATION_VECTOR 한 개로 방위각을 뽑는 4단계 파이프라인 + remapCoordinateSystem 화면 회전 보정 + 359°→3° 랩어라운드에서 바늘이 역주행하는 저역통과 필터 함정 비교",
+        description = "회전 벡터 센서 방위각 파이프라인, 화면 회전 보정과 랩어라운드 필터 함정",
         blogUrl = "",
         exampleType = ConstValue.SensorFusionCompassExample
     ),
     ExampleObject(
         lastUpdate = "26. 09. 02",
         title = "Live Updates 알림",
-        description = "NotificationCompat.ProgressStyle 세그먼트/포인트/트래커 아이콘 + 설정자가 없는 progressMax(세그먼트 길이 합) + API 36 미만에서 단색 막대로 축약되는 폴백을 빌드된 Notification extras 실측으로 확인",
+        description = "ProgressStyle 세그먼트·포인트·트래커 알림과 API 36 미만 폴백 실측",
         blogUrl = "",
         exampleType = ConstValue.LiveUpdateNotificationExample
     ),
     ExampleObject(
         lastUpdate = "26. 09. 03",
         title = "Picture-in-Picture compat",
-        description = "PictureInPictureParamsCompat로 9개 필드를 버전 분기 없이 구성 → toPictureInPictureParams()가 API 33/31/26으로 잘라내는 규칙을 되읽기로 확인 + 종횡비 허용 범위(0.418410~2.390000)와 enter/set의 상태 요구 차이를 실측",
+        description = "PiP 파라미터 compat의 버전별 필드 절삭 규칙과 종횡비 허용 범위 실측",
         blogUrl = "",
         exampleType = ConstValue.PictureInPictureExample
     ),
     ExampleObject(
         lastUpdate = "26. 09. 07",
         title = "WorkManager 테스트 하네스",
-        description = "work-testing의 TestDriver로 네트워크·충전 제약과 24시간 초기 지연을 실제로 만족시키지 않고 통과시키기 + TestListenableWorkerBuilder로 워커를 격리 실행하고 runAttemptCount를 주입해 재시도 분기 검증",
+        description = "TestDriver로 제약·지연을 즉시 통과시키고 워커를 격리 실행해 재시도 분기 검증",
         blogUrl = "",
         exampleType = ConstValue.WorkManagerTestExample
     ),
     ExampleObject(
         lastUpdate = "26. 09. 08",
         title = "폼 상태와 검증",
-        description = "다중 필드 폼 — 검증 시점 3종(입력 즉시/포커스 이탈/제출)을 같은 규칙으로 나란히 대조하고 에러 표시 전환 횟수로 실측 + isError/supportingText·IME 액션 포커스 이동·derivedStateOf 제출 게이팅·에러 문구가 만드는 레이아웃 점프",
+        description = "다중 필드 폼의 검증 시점 3종(즉시·포커스 이탈·제출)을 같은 규칙으로 대조",
         blogUrl = "",
         exampleType = ConstValue.FormValidationExample
     ),
     ExampleObject(
         lastUpdate = "26. 09. 09",
         title = "코루틴 스택 트레이스 복구",
-        description = "suspend 경계를 넘으면 호출자 프레임이 사라지는 것을 실측하고, kotlinx.coroutines 의 복구가 언제 켜지는지(assertion 기반 DEBUG 스위치)와 필드가 하나만 있어도 반사 복사가 통째로 스킵되는 규칙 + CopyableThrowable 로 되살리기 + _COROUTINE 인공 프레임 직접 재현",
+        description = "suspend 경계에서 사라지는 호출자 프레임과 코루틴 스택 트레이스 복구 규칙 실측",
         blogUrl = "",
         exampleType = ConstValue.CoroutineStackTraceExample
     ),
     ExampleObject(
         lastUpdate = "26. 09. 10",
         title = "NavigationEvent 디스패처",
-        description = "androidx.navigationevent 로 back/forward 양방향 내비게이션 이벤트를 다루기 — DirectNavigationEventInput 으로 제스처 없이 started/progressed/completed 를 주입해 콜백 순서를 결정론적으로 재현하고, 진행률이 콜백이 아니라 transitionState 로만 오는 설계와 currentInfo/backInfo/forwardInfo 목록·게이팅을 화면에서 실측",
+        description = "제스처 없이 back/forward 이벤트를 주입해 NavigationEvent 콜백 순서 재현",
         blogUrl = "",
         exampleType = ConstValue.NavigationEventDispatcherExample
     ),
     ExampleObject(
         lastUpdate = "26. 09. 11",
         title = "텍스트 선택 제어",
-        description = "읽기 전용 텍스트의 선택 경로 — SelectionContainer로 선택을 열고 DisableSelection으로 일부만 잠그기, controlled 오버로드로 Selection(오프셋·selectableId·handlesCrossed)을 실시간 관찰, LocalTextToolbar를 갈아끼워 플랫폼 플로팅 툴바를 가로채고 넘어온 콜백이 무엇인지 실측 + Compose 1.12 SelectionState가 더 주는 것(selectedTexts/selectAll/clear) 실물 대조",
+        description = "SelectionContainer 선택 범위 제어, 선택 상태 관찰과 플로팅 툴바 가로채기",
         blogUrl = "",
         exampleType = ConstValue.TextSelectionControlExample
     ),
     ExampleObject(
         lastUpdate = "26. 09. 14",
         title = "다이얼로그 배경 블러",
-        description = "같은 '블러'가 가리키는 세 가지를 분리 — blurBehindRadius+FLAG_BLUR_BEHIND(뒤 윈도우)·setBackgroundBlurRadius(내 윈도우 배경)·Modifier.blur(컴포저블). SDK_INT만으로는 부족해 isCrossWindowBlurEnabled를 리스너로 구독해 시스템이 꺼둔 상태를 드러내고, API 31 미만용 폴백으로 GraphicsLayer 캡처 후 소프트웨어 박스 블러를 돌려 축소 배율별 소요 시간을 실측",
+        description = "뒤 윈도우·내 윈도우 배경·컴포저블 세 가지 블러의 차이와 API 31 미만 폴백",
         blogUrl = "",
         exampleType = ConstValue.DialogBlurExample
     ),
     ExampleObject(
         lastUpdate = "26. 09. 16",
         title = "디스플레이 컷아웃 & 인셋",
-        description = "safeDrawing/safeGestures/safeContent가 어떤 기본 인셋의 합집합인지 대조(waterfall은 safeDrawing에 없다) + 기기에 컷아웃이 있어도 창이 그 영역까지 확장하지 않으면 displayCutout 인셋이 0인 것을 layoutInDisplayCutoutMode·edge-to-edge 토글로 실측, 인셋 패딩 modifier가 화면 한가운데에서도 넣어버리는 여백을 측정해 consumeWindowInsets/recalculateWindowInsets로 0을 만들기, cutoutPath(Compose 1.11 신규)와 displayShape Path 렌더링",
+        description = "safe 인셋 합집합 대조, 컷아웃 모드별 인셋 실측과 중복 여백 제거",
         blogUrl = "",
         exampleType = ConstValue.DisplayCutoutInsetsExample
     ),
     ExampleObject(
         lastUpdate = "26. 09. 17",
         title = "Worker 예외 핸들러",
-        description = "work-runtime 2.11 신규 setWorkerExecutionExceptionHandler/setWorkerInitializationExceptionHandler — 워커가 예외로 죽어도 앱은 멀쩡하고 로그만 남는 사각지대를 WorkerExceptionInfo(workerClassName·workerParameters·throwable)로 여는 경로. 실행 중 throw / Result.failure() / 생성자 throw / 생성자 시그니처 불일치 4종을 실제로 넣어 무엇이 핸들러를 깨우는지 대조하고(넷 다 WorkInfo 는 FAILED 라 상태로는 구분되지 않는다), 기본 팩토리가 리플렉션을 쓰는 탓에 생성자 예외만 InvocationTargetException 으로 감싸져 오는 것까지 확인. 등록은 Application 의 Configuration.Provider + 매니페스트 기본 초기화(androidx.startup) 제거",
+        description = "work 2.11 워커 예외 핸들러 — 실행·생성 실패 4종 중 무엇이 핸들러를 깨우는지 대조",
         blogUrl = "",
         exampleType = ConstValue.WorkerExceptionHandlerExample
     ),
     ExampleObject(
         lastUpdate = "26. 09. 18",
         title = "커스텀 오버스크롤",
-        description = "스크롤이 끝에 닿은 뒤 남는 delta 를 누가 가져가는지 — OverscrollEffect 를 직접 구현해 안드로이드 기본 스트레치/글로우를 고무줄(translate)로 교체하고, LocalOverscrollFactory 를 갈아끼워 하위 트리 전체에 일괄 적용하거나 null 로 오버스크롤 자체를 없애기. withoutVisualEffect()/withoutEventHandling() 로 같은 이펙트의 이벤트 처리와 시각 효과를 서로 다른 컴포저블에 나눠 붙이고, 어느 모드든 동일한 계측 래퍼로 감싸 delta·리스트 소비분·남은 양·플링 속도를 화면에서 실측",
+        description = "OverscrollEffect를 직접 구현해 기본 스트레치를 고무줄 효과로 교체하고 delta 실측",
         blogUrl = "",
         exampleType = ConstValue.CustomOverscrollExample
     ),
     ExampleObject(
         lastUpdate = "26. 09. 21",
         title = "Nav3 SceneStrategy 바텀시트",
-        description = "실제 androidx.navigation3 1.1.7 로 SceneStrategy 를 직접 구현 — 엔트리 메타데이터를 보고 OverlayScene(바텀시트)을 돌려주면 NavDisplay 가 overlaidEntries 로 전략을 재귀 호출해 시트가 층층이 쌓이는 과정을 백스택·씬 분해·이벤트 로그로 실측. 시트가 떠 있어도 아래 화면이 컴포지션에 남아(틱이 계속 오름) Lifecycle 만 STARTED 로 캡되고 맨 위 오버레이만 RESUMED 인 것, pop 후 onRemove 가 반환될 때까지 시트가 화면에 남는 퇴장 타이밍, 그리고 같은 창 레이어 오버레이는 NavDisplay 의 back 핸들러(기본 씬 기준)에 맡기면 back 이 액티비티로 새거나 여러 장이 한 번에 pop 되므로 시트가 직접 NavigationBackHandler 를 가져야 하는 이유까지",
+        description = "SceneStrategy로 바텀시트를 오버레이 씬으로 쌓고 수명주기·back 처리 실측",
         blogUrl = "",
         exampleType = ConstValue.Nav3SceneStrategyExample
     ),
     ExampleObject(
         lastUpdate = "26. 09. 22",
         title = "구조적 동시성 가드레일",
-        description = "kotlinx.coroutines 1.11 이 launch(Job())·launch(NonCancellable)·runInterruptible(Job()) 에 붙인 경고 오버로드(@Deprecated + 더 구체적인 파라미터 타입)의 구조와, 경고가 가리키는 호출을 실제로 돌려 부모 취소가 닿지 않고·coroutineScope 가 기다리지 않아 빈 목록이 반환되고·인터럽트가 안 되는 것을 실측. 정적 타입이 CoroutineContext 면(Job() + Dispatchers.IO) 경고 없이 같은 결과가 나는 빈틈과 withContext(NonCancellable) 등 대안, 같은 릴리스의 StateFlow.onSubscription(StateFlow 반환)·SharedFlow.asFlow·CompletableDeferred.asDeferred 를 캐스팅 시도로 대조(asDeferred 뷰의 cancel() 은 원본까지 취소한다)",
+        description = "coroutines 1.11이 경고하는 launch(Job()) 등 구조 이탈 호출의 결과와 대안",
         blogUrl = "",
         exampleType = ConstValue.StructuredConcurrencyGuardrailExample
     ),
     ExampleObject(
         lastUpdate = "26. 09. 28",
         title = "API 요청 서명 (HMAC + 재전송 방지)",
-        description = "OkHttp 인터셉터로 HMAC-SHA256 서명 — 바디 변조·타임스탬프 만료·nonce 재전송 거절을 서버 없이 대조",
+        description = "OkHttp 인터셉터 HMAC 서명으로 변조·만료·재전송 거절을 서버 없이 대조",
         blogUrl = "",
         exampleType = ConstValue.RequestSigningExample
     ),
     ExampleObject(
         lastUpdate = "26. 09. 28",
         title = "WorkManager 이벤트 리스너 (work 2.12)",
-        description = "작업 수명주기를 suspend 스트림으로 관찰 — 체인 실패·취소·제약 대기 타임라인, 2.11 Consumer 핸들러와 대조",
+        description = "work 2.12 이벤트 리스너로 작업 수명주기를 관찰하고 2.11 예외 핸들러와 대조",
         blogUrl = "",
         exampleType = ConstValue.WorkEventListenerExample
     ),
     ExampleObject(
         lastUpdate = "26. 09. 29",
         title = "Composable 범위 LifecycleOwner (lifecycle 2.10)",
-        description = "rememberLifecycleOwner 로 하위 트리에 상한 걸린 수명주기 부여 — Pager 의 화면 밖 페이지를 STARTED 로 캡해 RESUMED 작업이 멈추는 것을 틱 수로 대조, 상한·백그라운드 전환·컴포지션 이탈 이벤트 로그",
+        description = "rememberLifecycleOwner로 화면 밖 페이지를 STARTED로 묶어 작업 정지",
         blogUrl = "",
         exampleType = ConstValue.ComposeLifecycleOwnerExample
     ),
     ExampleObject(
         lastUpdate = "26. 09. 30",
         title = "Mesh Gradient (Compose 1.12)",
-        description = "Compose 1.12 신규 메시 그라데이션 — 격자 꼭짓점마다 위치·색·베지어 제어점을 주는 MeshGradientPainter(Config·Renderer 는 Kotlin internal 이라 공개 진입점은 Painter 하나). 행·열 수와 hasBicubicColor(bilinear vs Catmull-Rom) 를 나란히 대조하고, 꼭짓점을 드래그하며 제어점을 자동 추론/직접 지정으로 바꿔 곡면이 비틀리는 것을 확인. ImageBitmap 에 그려 가운데 픽셀을 읽어 색이 OkLab 으로 보간되는 것을 실측하고, draw 단계에서만 시간을 읽는 애니메이션의 그리기 비용·리컴포지션 수, 꼭짓점 누락·Painter 고유 크기 없음·그리는 시점에야 터지는 범위 예외 함정까지. 렌더러가 기본 검정 Paint 로 drawVertices 를 불러 Paint 색을 곱하는 기기(Galaxy A72/API 33 실측)에서는 메시가 전부 검게 나오는 것을 화면이 뜰 때 판정하고, drawVertices 만 흰 Paint 로 바꾸는 소프트웨어 캔버스 호환 모드로 우회",
+        description = "MeshGradientPainter로 꼭짓점·제어점·색 보간을 편집하고 그리기 비용 실측",
         blogUrl = "",
         exampleType = ConstValue.MeshGradientExample
     ),
     ExampleObject(
         lastUpdate = "26. 09. 30",
         title = "Ktor HTTP 캐시 (HttpCache · 3.6.0)",
-        description = "Ktor 클라이언트 HttpCache 를 MockEngine 원 서버와 함께 — max-age·no-cache·no-store·ETag 만·Last-Modified·콘텐츠 변경 응답을 몇 번씩 요청하며 요청마다 서버 도달 여부·조건부 헤더(If-None-Match/If-Modified-Since)·서버 304 와 앱이 받은 상태·캐시 이벤트를 나란히 기록(304 는 앱에 200 으로 보인다). private 응답 × isShared 2×2 에서 저장소 건수를 직접 조회하고, 3.6.0 신규 clearAllCaches() 로 public/private 을 한꺼번에 비우며, 새 FileStorage(Path, SystemFileSystem) 로 클라이언트를 새로 만들어도 디스크에서 적중하는 것(메모리 저장소는 빗나감)과 기존 FileStorage(File) 이 같은 저장소를 돌려주는 것, acceptHeaderMergeStrategy(Default/SkipIfPresent)가 서버에 보내는 Accept 헤더까지",
+        description = "MockEngine 서버로 HttpCache의 캐시 정책별 서버 도달과 304 재검증 실측",
         blogUrl = "",
         exampleType = ConstValue.KtorHttpCacheExample
     ),
     ExampleObject(
         lastUpdate = "26. 10. 01",
         title = "멀티프로세스 앱 구조 (android:process · isolatedProcess)",
-        description = "같은 서비스 코드를 기본 프로세스·:remote·:isolated 세 곳에 띄워 Messenger 로 왕복 — 프로세스마다 PID·싱글턴 카운터·Koin 초기화가 따로인 것, 같은 프로세스에선 그대로 넘어가는 바이트 배열이 프로세스를 넘으면 TransactionTooLargeException 이 되는 바인더 한계(이진 탐색으로 경계 실측), 원격을 예외로 죽이거나 kill 해도 화면은 살아남고 시스템이 서비스를 다시 띄워 onServiceConnected 가 다시 오는 과정(옛 Messenger 는 DeadObjectException, 1분 안 두 번째 크래시는 onBindingDied 로 재연결 중단), isolatedProcess 의 격리 UID·권한·파일·소켓 박탈, getRunningAppProcesses 프로세스 표까지. Application.onCreate 가 프로세스마다 도는 것에 대비한 프로세스 가드 포함",
+        description = "같은 서비스를 세 프로세스에 띄워 싱글턴 분리·바인더 한계·크래시 격리 실측",
         blogUrl = "",
         exampleType = ConstValue.MultiProcessExample
     )

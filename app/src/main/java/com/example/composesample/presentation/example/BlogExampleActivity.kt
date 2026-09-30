@@ -431,11 +431,11 @@ fun ExampleCardSection(
 
             Spacer(modifier = Modifier.height(16.dp))
 
+            // 좌우 여백은 바깥 Column 의 padding(20.dp) 하나만 — 제목·설명과 버튼의 좌우 끝을 맞춘다
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .wrapContentHeight()
-                    .padding(horizontal = 10.dp)
             ) {
                 Card(
                     modifier = Modifier
@@ -452,20 +452,21 @@ fun ExampleCardSection(
                     shape = RoundedCornerShape(12.dp),
                     colors = CardDefaults.cardColors(containerColor = Color.White),
                 ) {
-                    Column {
-                        Text(
-                            modifier = Modifier
-                                .padding(horizontal = 10.dp, vertical = 5.dp)
-                                .align(Alignment.CenterHorizontally),
-                            text = if (subCategory.isEmpty()) {
-                                "Sample UI"
-                            } else {
-                                "Sample List"
-                            },
-                            color = Color.Black,
-                            style = getTextStyle(18)
-                        )
-                    }
+                    // 글자를 버튼 폭 전체에 펼쳐 가운데 정렬한다 — 내용 폭만 차지하는 Column 안에서
+                    // align(CenterHorizontally) 를 쓰면 버튼 왼쪽에 붙어 보인다
+                    Text(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 10.dp, vertical = 5.dp),
+                        text = if (subCategory.isEmpty()) {
+                            "Sample UI"
+                        } else {
+                            "Sample List"
+                        },
+                        color = Color.Black,
+                        textAlign = TextAlign.Center,
+                        style = getTextStyle(18)
+                    )
                 }
 
                 if (exampleBlogUrl.isNotEmpty()) {
@@ -483,16 +484,15 @@ fun ExampleCardSection(
                         shape = RoundedCornerShape(12.dp),
                         colors = CardDefaults.cardColors(containerColor = Color.White),
                     ) {
-                        Column {
-                            Text(
-                                modifier = Modifier
-                                    .padding(horizontal = 10.dp, vertical = 5.dp)
-                                    .align(Alignment.CenterHorizontally),
-                                text = "Explain Blog",
-                                color = Color.Black,
-                                style = getTextStyle(18)
-                            )
-                        }
+                        Text(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 10.dp, vertical = 5.dp),
+                            text = "Explain Blog",
+                            color = Color.Black,
+                            textAlign = TextAlign.Center,
+                            style = getTextStyle(18)
+                        )
                     }
                 }
             }
