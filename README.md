@@ -226,7 +226,7 @@ Cursor IDE를 사용하는 개발자를 위한 **AI 코딩 어시스턴트 규�
 - **paging**: 페이징과 무한 스크롤; Paging3 `RemoteMediator` 오프라인 우선 페이징(네트워크 + DB 이중 소스, DB를 단일 진실 공급원으로 — `LoadType` REFRESH/PREPEND/APPEND 분기, RemoteKeys 테이블, `initialize()` 캐시 게이팅, `loadState.source`와 `loadState.mediator`를 별개 축으로 관찰)
 - **repository**: Advanced Repository Pattern — Memory → Disk → Network 다중 소스 우선순위 해석과 캐시 채우기
 - **room**: Room `@Fts4` MATCH 검색 vs `LIKE '%q%'` 전체 스캔, `@Index` 단일/복합 인덱스 쿼리 성능, DAO 인터페이스 상속 + `withTransaction`을 통한 멀티 테이블 삽입
-- **sse**: Server-Sent Events와 실시간 데이터 스트리밍(okhttp-eventsource 5.0.0 `BackgroundEventSource` — 호출자가 close() 하면 onClosed 가 오지 않는 4.0+ 동작을 반영)
+- **sse**: Server-Sent Events와 실시간 데이터 스트리밍(okhttp-eventsource 5.0.0 `BackgroundEventSource` — 호출자가 close() 하면 onClosed 가 오지 않는 4.0+ 동작을 반영) / Ktor 3.6.0 SSE 클라이언트로 같은 스트림을 Flow 로 받아 콜백 방식과 대조 — 전용 스레드 유무, 종료를 정한 뒤 도착하는 이벤트(콜백 0~15개 vs Flow 0개), Job 취소·화면 이탈 시 정리, Ktor 기본 재연결 0회
 
 ### **system** - 시스템 연동 & 플랫폼
 **platform**:

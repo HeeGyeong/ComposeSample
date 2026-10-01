@@ -25,4 +25,22 @@ package com.example.composesample.presentation.example.component.data.sse
  *   **호출자가 닫으면 onClosed 가 오지 않는다**(3.x 는 왔다, 바이트코드·실기기 확인). onClosed 는 서버가 끊은 경우만.
  *   그래서 연결 종료 상태는 closeSSEConnection() 에서 직접 반영하고, 종료 뒤 늦게 도착한 메시지는 버린다
  * - pom 이 okhttp 4.12.0 을 요구하지만 프로젝트는 5.4.0 을 해석 — okhttp 5 위에서 정상 동작 실측
+ *
+ * ## (보강) Ktor 3 SSE 클라이언트 — 같은 스트림을 Flow 로 (#105, Ktor 3.6.0)
+ * - 공식 문서: https://ktor.io/docs/client-server-sent-events.html
+ * - 구성: `HttpClient(OkHttp) { install(SSE) }` → `client.sse(url, request = { header(UserAgent, …) }) { incoming.take(10).collect { } }`.
+ *   이벤트는 `ServerSentEvent(data, event, id, retry, comments)` — okhttp-eventsource 의 MessageEvent(eventName·lastEventId·data)와 같은 필드
+ * - 같은 OkHttp 위에서 비교하려고 OkHttp 엔진을 쓴다(SSECapability 지원). MockEngine 은 SSE 를 지원하지 않아 실제 스트림으로 잰다
+ * - 3.6.0 SSEConfig: `reconnectionTime`(기본 3s) · `maxReconnectionAttempts`(기본 **0 = 재연결 안 함**) · `showCommentEvents()` ·
+ *   `showRetryEvents()` · `bufferPolicy`. okhttp-eventsource 는 RetryDelayStrategy 로 기본 재연결한다
+ *
+ * ### 실측 (SM-A725F · Android 13, Wikimedia recentchange, debug 실기기)
+ * - 스레드: eventsource 는 전용 스레드 2개(`okhttp-eventsource-events`·`-stream`)를 쓰고 close 1초 뒤 0. Ktor 는 전용 스레드 없이
+ *   OkHttp 스레드(`OkHttp Dispatcher`·`OkHttp stream.wikimedia.org`·`… onSettings`)만 쓴다
+ * - 종료: Ktor 는 take(10) 이 끝나면 블록을 빠져나오며 세션이 닫히고, 중간 종료는 Job 취소 — 종료 뒤 처리된 이벤트 0개.
+ *   eventsource 는 종료를 정한 뒤에도 close() 가 끝날 때까지 받은 이벤트가 콜백으로 계속 온다(0~15개, 실행마다 다름) →
+ *   종료를 정한 순간 플래그를 세워 거른다(참조가 비워질 때까지 기다리면 10개에서 멈췄는데 11개가 반영됐다)
+ * - 화면 이탈(ViewModel 정리): Ktor 는 viewModelScope 취소로 수집이 멈추고 onCleared 에서 클라이언트를 닫으면 연결 스레드가 사라진다.
+ *   eventsource 는 onCleared 의 close() 로 멈춘다. 둘 다 1.5초 안에 연결 스레드가 정리되고 이벤트 수가 더 늘지 않았다
+ * - 첫 이벤트까지 1~2초(네트워크 상태에 따른 참고값)
  */

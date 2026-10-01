@@ -5,9 +5,9 @@ import com.example.composesample.presentation.example.model.ExampleObject
 
 val examples2025 = listOf(
     ExampleObject(
-        lastUpdate = "25. 01. 07",
+        lastUpdate = "26. 10. 01",
         title = "Server-Sent Events Example",
-        description = "SSE를 사용하여 서버로부터 실시간 업데이트를 받는 예제",
+        description = "SSE 실시간 수신 — okhttp-eventsource 콜백과 Ktor SSE(Flow) 대조",
         blogUrl = blogUrl(181),
         exampleType = ConstValue.SSEExample
     ),
