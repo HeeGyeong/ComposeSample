@@ -12,7 +12,9 @@ javaVersion = "21"
 # Kotlin & KSP
 # kotlin-compose 플러그인(Kotlin 2.x) 사용으로 kotlinCompilerExtension 선언 불필요.
 kotlinVersion = "2.4.20"
-ksp = "2.3.9"
+# KSP 2.3.12(2026-10-01, 2.3.9 에서 패치 상향) — Room 생성 코드 34개 파일이 상향 전과 동일, 앱 클래스패스 4종·프로세서 클래스패스 변화 0.
+# lint↔KSP 경쟁 우회(루트 build.gradle 의 mustRunAfter)는 유지 — 2.3.12 의 lint 관련 수정은 Android KMP 대상이라 이 프로젝트와 무관.
+ksp = "2.3.12"
 # AGP 9.4.1(2026-09-29 상향): Gradle 9.6.0+ 필요, 최대 API 37. AGP 8.x 는 Gradle 9.6+ 에서 제거된 내부 API 를 써서
 # Gradle 만 먼저 올릴 수 없다(실측) → wrapper 9.8.0 과 한 번에 올린다. 내장 Kotlin(android.builtInKotlin) 사용 —
 # Android 모듈은 org.jetbrains.kotlin.android 를 적용하지 않는다.
