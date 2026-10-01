@@ -37,7 +37,7 @@ import androidx.compose.runtime.MutableState
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ComposeUiFlags
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -127,8 +127,10 @@ fun BlogExampleScreen(
     blogExampleViewModel: BlogExampleViewModel
 ) {
     val context = LocalContext.current
-    val exampleType = remember { mutableStateOf("") }
-    val exampleMoveType = remember { mutableStateOf(ExampleMoveType.UI) }
+    // 열려 있는 예제는 저장 가능한 상태로 둔다 — remember 만 쓰면 configChanges 에 없는 구성 변경(다크 모드·언어·글꼴 크기 등)으로
+    // 액티비티가 재생성될 때 열린 예제가 닫히고 목록으로 돌아간다(실측)
+    val exampleType = rememberSaveable { mutableStateOf("") }
+    val exampleMoveType = rememberSaveable { mutableStateOf(ExampleMoveType.UI) }
     val exampleObjectList = blogExampleViewModel.exampleObjectList.collectAsStateWithLifecycle().value
     val searchText by blogExampleViewModel.searchText.collectAsStateWithLifecycle()
     val searchExampleList = blogExampleViewModel.searchExampleList.collectAsStateWithLifecycle(initialValue = listOf()).value
