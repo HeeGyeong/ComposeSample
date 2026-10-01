@@ -171,15 +171,18 @@ android-library = { id = "com.android.library", version.ref = "libraryVersion" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlinVersion" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlinVersion" }
 # Power-Assert — 단언 실패 메시지에 식의 중간값을 펼쳐 넣는 Kotlin 컴파일러 플러그인(PowerAssertExample).
-# Kotlin 과 같은 버전으로 배포되므로 kotlinVersion 을 따른다(신규 외부 의존성 0).
+# Kotlin 과 같은 버전으로 배포되므로 kotlinVersion 을 따른다. 적용된 컴파일에는 kotlin-power-assert-runtime(같은 버전, 27KB, stdlib 만 의존)이
+# 플러그인에 의해 자동으로 추가된다(addRuntimeDependency 기본 true) — 카탈로그에 따로 선언하지 않는다.
 kotlin-power-assert = { id = "org.jetbrains.kotlin.plugin.power-assert", version.ref = "kotlinVersion" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 # HotSwan(Compose Hot Reload) — 2026-09-15 2.0.0 으로 재활성화 (1.2.1 은 Kotlin 2.4.0 컴파일러 확장 API 와 충돌해 06-16~09-15 비활성).
 # Gradle 플러그인 버전은 IDE 플러그인 버전과 일치해야 한다 — Marketplace 는 최신을 설치하므로 최신 patch 를 따른다.
 # 2026-09-22 2.0.0 → 2.0.2: "Kotlin 2.4 에서 by-state 위임 프로퍼티를 가진 클래스가 첫 컴포지션에서 실패" 수정 포함.
 # 2.0 의 공식 요구는 AGP 9.x — 2026-09-29 AGP 9.4.1 상향으로 공식 지원 범위 안(SKIPPED 42개 전후 동일, 서버 기동 확인).
+# 2026-10-01 2.0.2 → 2.1.0: SKIPPED 49개 전후 동일, 서버 기동·기준 클래스 1936개 등록, 전 화면 렌더 감사 191/191.
+#   Power-Assert 예제의 hotSwanCompiler.exclude 2줄은 2.1.0 에서도 필요(빼면 NotImplementedError 재현).
 # 핫 리로드가 오동작하면 1.3.7(Kotlin 2.4.0 지원)로 IDE 플러그인과 함께 내릴 것 (상세: ComposeHotReloadGuide.md).
-hotswan-compiler = { id = "com.github.skydoves.compose.hotswan.compiler", version = "2.0.2" }
+hotswan-compiler = { id = "com.github.skydoves.compose.hotswan.compiler", version = "2.1.0" }
 
 [libraries]
 # Core-dependencies

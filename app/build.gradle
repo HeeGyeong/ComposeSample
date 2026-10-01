@@ -1,7 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
-    // Compose Hot Reload(HotSwan) 2.0.0 — 변환 태스크는 debug 빌드에만 붙는다(release 태스크 그래프에는 없음).
+    // Compose Hot Reload(HotSwan) 2.1.0(2026-10-01 상향, 2.0.0 으로 재활성화) — 변환 태스크는 debug 빌드에만 붙는다(release 태스크 그래프에는 없음).
     // 1.2.1 이 Kotlin 2.4.0 컴파일러 확장 등록 API 와 충돌해(ClassCastException) 2026-06-16 부터 주석 처리했던 줄을
     // 2026-09-15 2.0.0 으로 재활성화했다. 2.0 공식 요구는 AGP 9.x — 2026-09-29 AGP 9.4.1 상향으로 공식 지원 범위 안에 들어왔다
     // (SKIPPED 42개 목록 상향 전후 동일 + 실기기 logcat "HotSwanV2: v2 server listening" 확인).

@@ -1,6 +1,6 @@
 # Compose Hot Reload (HotSwan) Guide
 
-> ## Current Status — Enabled on `main` with HotSwan 2.0.2 (re-enabled 2026-09-15 on 2.0.0, patched 2026-09-22)
+> ## Current Status — Enabled on `main` with HotSwan 2.1.0 (re-enabled 2026-09-15 on 2.0.0, patched 2026-09-22, 2.1.0 on 2026-10-01)
 >
 > **History.** From 2026-06-16 to 2026-09-15 the plugin line in `app/build.gradle` was commented out, because
 > hotswan-compiler 1.2.1 broke the Kotlin 2.4.0 compiler:
@@ -55,6 +55,22 @@
 > - Full render audit: all 187 registry screens render with a non-zero root size
 > The debug APK now also carries D8 API stubs for framework classes newer than minSdk (`SYNTHETIC`, `<clinit>` throws
 > `NoClassDefFoundError`); they are unrelated to HotSwan and the release APK is unchanged.
+>
+> **2.0.2 → 2.1.0 (2026-10-01).** The 2.1.0 release notes (2026-09-28) are mostly IDE and iOS work; the Android-relevant
+> fixes are saves that silently vanished, screens showing "applied" over stale content and state leaking into neighbouring
+> composables. No requirement changed. Checks run before committing the bump (SM-A725F / Android 13):
+> - Only the debug runtime changed (`interpreter-runtime` / `-core` / `protocol` 2.0.2 → 2.1.0); the release runtime
+>   classpath is unchanged and still has no HotSwan reference
+> - Forced recompile of `:app` and `:coordinator`: **the same 49 `SKIPPED` declarations** before and after (list diffed)
+> - The app starts, logs `HotSwanV2: v2 server listening on 127.0.0.1:8601` and registers 1,936 interpreter baseline classes;
+>   the debug variant's merged minSdk is still 26
+> - Full render audit: all 191 registry screens render with a non-zero root size, no composition error swallowed, no crash
+>   (same result as on 2.0.2 earlier that day)
+> - The Power-Assert problem described below is **unchanged in 2.1.0**: with the exclusions removed the example fails with the
+>   same `NotImplementedError`, so the two `exclude(...)` lines stay
+>
+> No HotSwan IDE plugin was installed in Android Studio on this machine at the time (2025.3.4). Install the 2.1.0 IDE plugin
+> to match the Gradle plugin before using hot reload.
 
 ## Overview
 
@@ -168,7 +184,8 @@ checked exception escape. Two workarounds, both in use here:
 
 The Power-Assert compiler plugin (`org.jetbrains.kotlin.plugin.power-assert`, added for `PowerAssertExample`) rewrites
 call sites and replaces the intrinsic `PowerAssert.explanation` inside `@PowerAssert` functions. Code that HotSwan runs
-in debug does not get those rewrites right. Measured on 2026-10-01 (SM-A725F / Android 13, HotSwan 2.0.2, Kotlin 2.4.20):
+in debug does not get those rewrites right. Measured on 2026-10-01 (SM-A725F / Android 13, HotSwan 2.0.2, Kotlin 2.4.20; the
+`NotImplementedError` re-measured on 2.1.0 the same day — unchanged):
 
 | Symptom | Where | With the class excluded |
 |---|---|---|
@@ -207,7 +224,7 @@ Two consequences worth knowing:
 
 ## Version Requirements
 
-- **HotSwan 2.0.x (current: 2.0.2):** Kotlin 2.3.x–2.4.x, AGP 9.x (official), IntelliJ IDEA / Android Studio 2025.1+, device API 28+ — runs here on Kotlin 2.4.20 / AGP 9.4.1 / Gradle 9.8.0 (see "Current Status")
+- **HotSwan 2.0.x–2.1.x (current: 2.1.0):** Kotlin 2.3.x–2.4.x, AGP 9.x (official), IntelliJ IDEA / Android Studio 2025.1+, device API 28+ — runs here on Kotlin 2.4.20 / AGP 9.4.1 / Gradle 9.8.0 (see "Current Status")
 - **HotSwan 1.3.5–1.3.7:** Kotlin 2.4.0 or later (projects on Kotlin 2.2.x–2.3.x should stay on 1.3.4)
 - **HotSwan 1.2.1:** Kotlin 2.3.x — fails at compiler-extension registration on Kotlin 2.4.0
 - The Gradle plugin adds its runtime dependency and the required compiler flags itself — no extra dependency is needed. The only configuration block in this project is the `hotSwanCompiler { exclude(...) }` list for the Power-Assert example (see above)
@@ -242,7 +259,7 @@ alias(libs.plugins.hotswan.compiler)
 
 ## Notes
 
-- **The IDE and Gradle plugin versions must match** (current Gradle plugin: 2.0.0)
+- **The IDE and Gradle plugin versions must match** (current Gradle plugin: 2.1.0)
 - When you update the IDE plugin, also change the version in `libs.versions.toml`
 - Structural changes (class hierarchy changes, adding interfaces, etc.) may require an app restart
 - Hot Reload is a development convenience tool and does not affect the final build — its tasks are absent from the release task graph
