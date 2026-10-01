@@ -252,7 +252,7 @@ When the user types **"NN번 항목을 진행해주세요"** (please proceed wit
 ### Notes
 
 - Always run `git push origin main` after each commit (commit and push always go together).
-- During the pre-work loop, skip items with constraints (e.g. requiring a version upgrade) and only handle items that can be fixed immediately.
+- During the pre-work loop, skip items with constraints (e.g. a version upgrade that needs approval — see "Dependency Upgrade Classification") and only handle items that can be fixed immediately. Patch-level upgrades count as immediately fixable.
 - Always tidy memory last, after the pre-work loop ends.
 
 ---
@@ -285,7 +285,27 @@ When the pre-work finds **🔴 High / 🟡 Medium / 🟢 Low all "none"**, end t
 
 - After each fix, always complete build verification → commit → push before running the next pre-work.
 - Intentionally excluded items (educational code, etc.) are excluded from improvement targets.
-- During the loop, skip items with constraints (e.g. requiring a version upgrade) and only handle items that can be fixed immediately.
+- During the loop, skip items with constraints (e.g. a version upgrade that needs approval — see "Dependency Upgrade Classification") and only handle items that can be fixed immediately. Patch-level upgrades count as immediately fixable.
+
+---
+
+## Dependency Upgrade Classification
+
+Library / build-tool upgrades found by the pre-work currency scan are classified like this, so that small upgrades do not pile up as permanent "needs approval" leftovers:
+
+| Kind | Handling |
+|------|----------|
+| **Patch** upgrade (`x.y.Z`) of a library or build tool already in use, whose aar-metadata `minCompileSdk` / `minAgpVersion` stays within the current environment | **Immediately fixable** — handled inside the pre-work loops like any other item |
+| **Minor / major** upgrade, a new `minCompileSdk` / AGP requirement, an IDE-coupled tool (HotSwan — the Gradle plugin must match the IDE plugin), or an upgrade that changes the scope of an example or a pending candidate | **Needs approval** — skipped by the loops and reported as "승인 필요" |
+
+Either way, upgrade **one library family per commit**:
+1. Check the target version's aar-metadata (`minCompileSdk`, `minCompileMinorSdk`, `minAgpVersion`) first
+2. Compare the release notes' behaviour changes against how the project uses the library
+3. Diff the resolved classpaths (debug/release runtime, compile, unit test, androidTest; KSP output where relevant)
+4. Run the examples that use it on a device before and after the upgrade and compare the results
+5. Gate (`assembleDebug assembleRelease testDebugUnitTest :app:compileDebugAndroidTestKotlin :app:lintDebug`) → CHANGELOG → commit → push
+
+After upgrading a debug-global tool (HotSwan) or several libraries, also run the full-screen render audit.
 
 ---
 
