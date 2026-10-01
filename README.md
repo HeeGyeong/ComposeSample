@@ -259,6 +259,7 @@ Cursor IDE를 사용하는 개발자를 위한 **AI 코딩 어시스턴트 규�
 
 **notification**:
 - **Live Updates 알림**: Android 16 승격(promoted) 알림 — `NotificationCompat.ProgressStyle`의 세그먼트/포인트/트래커 아이콘, 설정자가 없고 세그먼트 길이 합으로 정해지는 `progressMax`, API 36 미만에서 단색 진행 막대 한 줄로 축약되는 폴백을 빌드된 Notification의 extras 실측으로 확인
+- **Notification MetricStyle**: androidx.core 1.19 의 지표 알림 — `NotificationCompat.MetricStyle` + `Metric` 값 6종(FixedInt·FixedFloat·FixedText·FixedDate·FixedTime·TimeDifference)과 semantic style, 앱 도메인 값 하나에서 (API 37+) MetricStyle 과 (전 버전) content text·크로노미터 폴백을 함께 만드는 구조(생성자·TimeDifference 팩토리가 `@RequiresApi(37)`), API 37 미만에서 `apply()` 가 아무것도 그리지 않고 extras 에만 싣는 것을 앱 경로/강제 부착 extras 대조로 실측, `setCriticalMetric` 범위 미검사와 Api37Impl 의 `indexOf` 변환(범위 밖 → -1, 같은 지표 둘 → 첫 번째), 생성·빌드 시점 검증 예외, `NotificationCompat.Builder(context, notification)` 왕복 복원
 
 **ui**:
 - **widget**: Glance 위젯(App Widget)

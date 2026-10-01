@@ -843,5 +843,12 @@ val examples2026 = listOf(
         description = "plain·@PowerAssert 함수의 실패 메시지와 CallExplanation 구조 비교",
         blogUrl = "",
         exampleType = ConstValue.PowerAssertExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 10. 02",
+        title = "Notification MetricStyle (core 1.19)",
+        description = "MetricStyle 지표 알림과 API 37 미만 폴백·critical 인덱스 실측",
+        blogUrl = "",
+        exampleType = ConstValue.MetricStyleNotificationExample
     )
 )
