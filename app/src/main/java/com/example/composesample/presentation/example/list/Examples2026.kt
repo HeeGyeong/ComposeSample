@@ -467,9 +467,9 @@ val examples2026 = listOf(
         exampleType = ConstValue.AnimationsShowcaseExample
     ),
     ExampleObject(
-        lastUpdate = "26. 05. 22",
+        lastUpdate = "26. 10. 01",
         title = "Per-Item ViewModels in Compose",
-        description = "LazyColumn 아이템별 독립 ViewModel 스코프를 부여하는 패턴",
+        description = "아이템별 ViewModel — 수작업 Store와 lifecycle 2.11 공식 API 대조",
         blogUrl = "",
         exampleType = ConstValue.PerItemViewModelExample
     ),
