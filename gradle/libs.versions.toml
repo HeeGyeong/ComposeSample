@@ -33,11 +33,10 @@ activityCompose = "1.13.0"
 # 요구치가 BOM 보다 낮아져 스큐가 사라졌다. BOM 을 1.11.2 미만으로 내리면 다시 끌어올려진다.
 navigationEvent = "1.1.2"
 # androidx.navigation3 — ui 가 SceneStrategy/OverlayScene/NavDisplay, runtime 이 NavEntry/entryProvider/metadata 를 제공한다.
-# 1.1.7 stable, aar-metadata minCompileSdk=36 / minAGP=8.9.1(채택 당시 compileSdk 36 · AGP 8.13.2 로 충족).
-# ui pom 의 요구(activity-compose 1.12.0 · lifecycle 2.10.0 · compose 1.11.2 · navigationevent 1.1.2 · savedstate 1.4.0)가
-# 전부 현재 해석 버전 이하라 전이 끌어올림이 없다. 1.2.0 라인(minCompileSdk=37)은 2026-09-29 compileSdk 37 상향으로
-# 채택 가능해졌지만 아직 올리지 않았다(별도 승인 항목).
-navigation3 = "1.1.7"
+# 1.1.7 로 도입(minCompileSdk=36 / minAGP=8.9.1) → 2026-10-01 1.2.0 stable 로 상향(minCompileSdk=37 / minAGP=9.1.0, 현재 37 / 9.4.1).
+# 상향 전후 해석 변화는 navigation3 4개 좌표뿐(navigationevent 요청 1.1.1 은 이미 1.1.2 로 해석). Nav3SceneStrategy 예제의
+# back·수명주기·onRemove 동작을 back 핸들러 없는 같은 구조 오버레이로 실기기 대조 — 1.1.7 과 동일.
+navigation3 = "1.2.0"
 # 2026.09.00(2026-09-29 상향) = ui/runtime/foundation/animation/material 1.12.1 · material3 1.4.0 (minCompileSdk=37).
 # 1.12 변경 중 영향: foundation Style API 가 스코프 인터페이스로 재편(예제 이관) · DeferredTargetAnimation 정식화
 # (ExperimentalAnimatableApi 제거) · 클릭/포커스 이동 시 시스템 효과음 기본 재생 · ui 가 androidx.transition 의존을

@@ -69,7 +69,7 @@ package com.example.composesample.presentation.example.component.architecture.na
  *   **stable 1.1.x 라인(최신 1.1.7)이 1.2.0 알파/베타 라인과 병행**하며,
  *   navigation3-ui-android:1.1.7 의 aar-metadata 는 minCompileSdk=36 이라 이 프로젝트에서 채택 가능하다.
  *   1.2.0 라인은 minCompileSdk=37 이라 당시(compileSdk 36)에는 쓸 수 없었다 — 2026-09-29 compileSdk 37 상향으로
- *   채택 조건은 갖췄지만 아직 1.1.7 을 유지한다(상향은 별도 승인 항목).
+ *   채택 조건을 갖췄고, **2026-10-01 1.2.0 stable 로 올렸다**(아래 Nav3SceneStrategy 의존성 절 참고).
  *   → 시뮬레이션을 유지하는 이유는 라이브러리 단계가 아니라 위에 적은 예제의 목적이다.
  */
 
@@ -148,13 +148,19 @@ package com.example.composesample.presentation.example.component.architecture.na
  *   (KDoc 의 `@sample androidx.navigation3.ui.samples.AnimatedBottomSheetSample` 이 이 예제와 같은 주제다)
  *
  * 의존성:
- * - 이 예제가 프로젝트 최초의 실제 navigation3 사용이다(navigation3-ui / navigation3-runtime 1.1.7).
+ * - 이 예제가 프로젝트 최초의 실제 navigation3 사용이다(navigation3-ui / navigation3-runtime, 도입 1.1.7 → 2026-10-01 1.2.0).
  *   위의 Navigation3 / Nav3ViewModelScope / Nav3SavedStateHandle 은 여전히 의존성 없는 시뮬레이션이다.
  * - 1.1.7 aar-metadata = minCompileSdk 36 / minAGP 8.9.1. ui pom 의 요구(activity-compose 1.12.0 · lifecycle 2.10.0 ·
  *   compose 1.11.2 · navigationevent 1.1.2 · savedstate 1.4.0)가 전부 현재 해석 버전 이하라 전이 끌어올림이 없다.
- *   1.2.0 라인(minCompileSdk=37)은 2026-09-29 compileSdk 37 상향으로 채택 가능해졌지만 아직 올리지 않았다.
+ *   1.2.0 라인(minCompileSdk=37)은 2026-09-29 compileSdk 37 상향으로 채택 가능해졌다.
+ * - **1.2.0 상향(2026-10-01)**: aar-metadata minCompileSdk 37 / minAGP 9.1.0(현재 37 / 9.4.1). 해석 버전 변화는 navigation3 4개 좌표뿐.
+ *   1.2.0 의 신규(Result API·Deep Link API·NavigationBackHandler 연결 헬퍼)와 수정(SceneState 의 이전 씬 계산,
+ *   중첩 오버레이 재애니메이션, pop 된 항목이 즉시 사라짐)이 이 예제의 관찰과 맞닿아, back 핸들러 없는 같은 구조의 오버레이로
+ *   상향 전후를 실기기에서 대조했다 — **결과 동일**: Home 위 시트의 back 은 액티비티로 새고, 상세 위 시트 2장은 back 한 번에
+ *   3개가 pop 되며, 기본 씬 STARTED · 맨 위 오버레이 RESUMED · 아래 오버레이 STARTED, 시트 2장 동시 제거 시 onRemove 는 위→아래 순.
+ *   그래서 아래 함정 설명은 1.2.0 에서도 그대로다.
  *
- * 핵심 개념 (1.1.7 소스 기준):
+ * 핵심 개념 (1.1.7 소스 기준, 1.2.0 에서 실기기 대조로 같은 동작 확인):
  * - SceneStrategy<T> 는 `SceneStrategyScope<T>.calculateScene(entries): Scene<T>?` 하나짜리 fun interface.
  *   null 이면 "이 전략은 해당 없음" — NavDisplay(sceneStrategies = listOf(...)) 가 앞에서부터 시도하고
  *   전부 null 이면 SinglePaneSceneStrategy 로 떨어진다. `then` 연산자와 단일 `sceneStrategy` 파라미터 오버로드는 deprecated.
