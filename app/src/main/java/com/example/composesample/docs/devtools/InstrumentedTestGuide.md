@@ -44,7 +44,7 @@ A bad state is `Dozing`, or a focus of `NotificationShade` / a keyguard window.
 
 Same commit, same APK, same tests — only the screen state differed:
 
-| Device state | `InitTestExampleUITest` |
+| Device state | `InitTestExampleTest` |
 |---|---|
 | screen off (`Dozing`, focus `NotificationShade`) | 3 failures, all `No compose hierarchies found` |
 | screen on + unlocked (`Awake`) | all pass |

@@ -22,11 +22,11 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 /**
- * InitTestExampleUITest Class를 실행하는 경우,
+ * InitTestExampleTest Class를 실행하는 경우,
  * 이하의 @Test 함수는 순차적으로 실행되지 않는다.
  */
 @RunWith(AndroidJUnit4::class)
-class InitTestExampleUITest {
+class InitTestExampleTest {
 
     @get:Rule
     val composeTestRule = createComposeRule()
