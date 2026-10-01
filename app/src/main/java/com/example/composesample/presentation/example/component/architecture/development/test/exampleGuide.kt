@@ -107,4 +107,41 @@ package com.example.composesample.presentation.example.component.architecture.de
  * - ⚠️ TestDriver 는 "조건이 만족됐다"고 알릴 뿐 조건 판정 자체를 검증하지 않는다. 제약이 제대로 걸렸는지는
  *   WorkRequest 의 Constraints 를 단언하는 편이 맞다.
  * - 실제 검증 코드: `app/src/androidTest/java/com/example/composesample/example/WorkManagerTestExampleTest.kt`
+ *
+ * ## PowerAssertExampleUI (Kotlin Power-Assert 컴파일러 플러그인 — 2.4.20)
+ * - 공식 문서: https://kotlinlang.org/docs/power-assert.html
+ *
+ * ### 설정 (2.4.20 Gradle 플러그인 바이트코드 + 실측)
+ * - 플러그인 `org.jetbrains.kotlin.plugin.power-assert` 는 Kotlin 과 같은 버전으로 배포된다(카탈로그 kotlinVersion 참조)
+ * - `functions` 기본값은 `kotlin.assert` 하나. 변환 대상은 마지막 파라미터가 String / () -> String 인 함수
+ * - `compilationFilter` 기본값 TESTS 는 **컴파일 이름이 정확히 "test"** 인 것만 고른다. AGP 9 내장 Kotlin 의 컴파일은
+ *   debug / release / debugUnitTest / debugAndroidTest 라서 기본값으로는 아무 데도 적용되지 않는다 → 이름 목록으로 직접 지정
+ * - `includedSourceSets` 는 2.4.20 에서 deprecated("compilationFilter 를 쓰라")
+ * - `addRuntimeDependency` 기본 true — 적용된 컴파일에 `org.jetbrains.kotlin:kotlin-power-assert-runtime`(jvm 27KB, stdlib 만 의존)이 붙는다
+ *
+ * ### @PowerAssert (2.4.20, @ExperimentalPowerAssert)
+ * - 함수에 @PowerAssert 를 붙이면 functions 에 적지 않아도 호출부가 변환되고, 함수 안에서 `PowerAssert.explanation` 으로
+ *   `CallExplanation`(source · offset · arguments[kind, startOffset, endOffset, expressions] · expressions)을 받는다
+ * - 부분식은 ValueExpression / LiteralExpression / EqualityExpression(lhs·rhs) — 값으로 직접 메시지를 만들 수 있다.
+ *   `source` 는 호출이 있는 줄의 들여쓰기부터 담고 offset 도 그 기준. `@PowerAssert.Ignore` 파라미터는 arguments 에서 null
+ * - 컴파일러는 `powerCheck$powerassert(…, Function0<CallExplanation>)` 오버로드를 만들고 변환된 호출부는 이쪽을 부른다.
+ *   원래 함수 안의 `PowerAssert.explanation` 은 null 상수로 컴파일된다(release javap) → 리플렉션 호출이면 설명 null
+ * - 플러그인 없이 컴파일된 본문에서 `PowerAssert.explanation` 을 읽으면 런타임 스텁이 NotImplementedError 를 던진다
+ *
+ * ### 실측 (Galaxy A72 · Android 13, debug·release / 로컬 JVM 단위 테스트)
+ * - plain 은 "조건이 false 입니다" 뿐, power 는 각 부분식의 값(합계 13600·총액 13000, count 2, null 체인, 'm', 범위 1..99)을 도식으로
+ * - && 오른쪽이 평가되면 값이 찍히고, 평가되지 않은 부분에는 값이 없다. message 는 도식 위에 붙는다
+ * - 부수효과: `powerCheck(counter.incrementAndGet() == 5)` → 1회. 메시지를 위해 식을 다시 적은 plain 은 2회
+ * - 성공 경로: 값의 toString 0회(설명은 람다라 실패할 때만 만든다) / 실패 1회 / 메시지를 미리 만든 plain 은 성공해도 1회
+ * - `kotlin.assert` 는 `kotlin._Assertions.ENABLED` 일 때만 검사(변환 뒤에도 같음). 기기에서 debug 는 던지고 release 는 건너뛴다
+ *   (desiredAssertionStatus() 는 둘 다 false). 로컬 JVM 단위 테스트는 단언이 켜진 채 돈다
+ * - 단위 테스트 before/after: `expected:<13000> but was:<13600>` → 식 도식 + 같은 문장 / `Assertion failed` → 식 도식
+ * - 계측 테스트(debugAndroidTest)의 assert 도 도식과 함께 던진다(필터에 포함)
+ *
+ * ### ⚠️ debug 핫 리로드(HotSwan 2.0.2)와 함께 쓸 때
+ * - @PowerAssert 함수 본문을 HotSwan 이 실행하면 `PowerAssert.explanation` 이 치환되지 않아 NotImplementedError(기기·JVM 테스트)
+ * - 변환된 호출부를 HotSwan 이 실행하면 부수효과 있는 식이 3회 평가(`-Photswan.dispatchRewriteEnabled=false` 면 1회)
+ * - → `hotSwanCompiler { exclude("…PowerAssertChecksKt"); exclude("…PowerAssertViewModel") }` (정확한 클래스명) 로 해결.
+ *   상세는 docs/devtools/ComposeHotReloadGuide.md
+ * - 실제 검증 코드: `app/src/test/java/com/example/composesample/example/PowerAssertExampleTest.kt`
  */

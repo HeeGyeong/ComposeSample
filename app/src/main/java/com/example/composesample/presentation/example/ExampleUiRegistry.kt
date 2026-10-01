@@ -22,6 +22,7 @@ import com.example.composesample.presentation.example.component.architecture.dev
 import com.example.composesample.presentation.example.component.architecture.development.test.PreviewDrivenScreenshotExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.test.DeterministicImageTestExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.test.WorkManagerTestExampleUI
+import com.example.composesample.presentation.example.component.architecture.development.test.PowerAssertExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.test.UITestExampleUI
 import com.example.composesample.presentation.example.component.system.platform.quicksettings.QuickSettingsTileExampleUI
 import com.example.composesample.presentation.example.component.system.notification.LiveUpdateNotificationExampleUI
@@ -289,6 +290,7 @@ import com.example.composesample.util.ConstValue.PictureInPictureExample
 import com.example.composesample.util.ConstValue.MultiProcessExample
 import com.example.composesample.util.ConstValue.FormValidationExample
 import com.example.composesample.util.ConstValue.WorkManagerTestExample
+import com.example.composesample.util.ConstValue.PowerAssertExample
 import com.example.composesample.util.ConstValue.PowerSaveModeExample
 import com.example.composesample.util.ConstValue.PullScreenPager
 import com.example.composesample.util.ConstValue.PullToRefreshExample
@@ -593,6 +595,7 @@ val exampleUiRegistry: Map<String, @Composable (onBackEvent: () -> Unit) -> Unit
     PictureInPictureExample to { onBackEvent -> PictureInPictureExampleUI(onBackEvent) },
     MultiProcessExample to { onBackEvent -> MultiProcessExampleUI(onBackEvent) },
     WorkManagerTestExample to { onBackEvent -> WorkManagerTestExampleUI(onBackEvent) },
+    PowerAssertExample to { onBackEvent -> PowerAssertExampleUI(onBackEvent) },
     FormValidationExample to { onBackEvent -> FormValidationExampleUI(onBackEvent) },
     DisplayCutoutInsetsExample to { onBackEvent -> DisplayCutoutInsetsExampleUI(onBackEvent) },
     WorkerExceptionHandlerExample to { onBackEvent -> WorkerExceptionHandlerExampleUI(onBackEvent) },

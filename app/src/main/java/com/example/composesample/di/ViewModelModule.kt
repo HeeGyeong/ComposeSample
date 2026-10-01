@@ -5,6 +5,7 @@ import com.example.coordinator.CoordinatorViewModel
 import com.example.core.BaseViewModel
 import com.example.composesample.presentation.example.component.architecture.development.init.InitTestViewModel
 import com.example.composesample.presentation.example.component.architecture.development.type.TypeExampleViewModel
+import com.example.composesample.presentation.example.component.architecture.development.test.PowerAssertViewModel
 import com.example.composesample.presentation.example.component.architecture.pattern.compositionLocal.CompositionLocalViewModel
 import com.example.composesample.presentation.example.component.architecture.pattern.mvi.MVIExampleViewModel
 import com.example.composesample.presentation.example.component.architecture.state.SnapshotFlowExampleViewModel
@@ -64,6 +65,7 @@ val viewModelModule: Module = module {
     viewModel { KtorHttpCacheViewModel() }
     // 서비스를 bind 해야 하므로 Application 컨텍스트를 주입한다
     viewModel { MultiProcessViewModel(androidApplication()) }
+    viewModel { PowerAssertViewModel() }
     viewModel { BaseViewModel(get(), get()) }
     viewModel { CoordinatorViewModel(get(), get()) }
     viewModel {

@@ -836,5 +836,12 @@ val examples2026 = listOf(
         description = "같은 서비스를 세 프로세스에 띄워 싱글턴 분리·바인더 한계·크래시 격리 실측",
         blogUrl = "",
         exampleType = ConstValue.MultiProcessExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 10. 01",
+        title = "Power-Assert (단언 실패 메시지 도식)",
+        description = "plain·@PowerAssert 함수의 실패 메시지와 CallExplanation 구조 비교",
+        blogUrl = "",
+        exampleType = ConstValue.PowerAssertExample
     )
 )

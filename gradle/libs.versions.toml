@@ -169,6 +169,9 @@ android-application = { id = "com.android.application", version.ref = "applicati
 android-library = { id = "com.android.library", version.ref = "libraryVersion" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlinVersion" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlinVersion" }
+# Power-Assert — 단언 실패 메시지에 식의 중간값을 펼쳐 넣는 Kotlin 컴파일러 플러그인(PowerAssertExample).
+# Kotlin 과 같은 버전으로 배포되므로 kotlinVersion 을 따른다(신규 외부 의존성 0).
+kotlin-power-assert = { id = "org.jetbrains.kotlin.plugin.power-assert", version.ref = "kotlinVersion" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 # HotSwan(Compose Hot Reload) — 2026-09-15 2.0.0 으로 재활성화 (1.2.1 은 Kotlin 2.4.0 컴파일러 확장 API 와 충돌해 06-16~09-15 비활성).
 # Gradle 플러그인 버전은 IDE 플러그인 버전과 일치해야 한다 — Marketplace 는 최신을 설치하므로 최신 patch 를 따른다.

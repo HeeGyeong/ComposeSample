@@ -164,6 +164,31 @@ checked exception escape. Two workarounds, both in use here:
   `AppSecurityViewModel.toLog()` does this; it also survives wrapping introduced by OkHttp interceptors or coroutines,
   which is why it is the better default for network error handling.
 
+### Kotlin Power-Assert breaks under the interpreter — two classes are excluded
+
+The Power-Assert compiler plugin (`org.jetbrains.kotlin.plugin.power-assert`, added for `PowerAssertExample`) rewrites
+call sites and replaces the intrinsic `PowerAssert.explanation` inside `@PowerAssert` functions. Code that HotSwan runs
+in debug does not get those rewrites right. Measured on 2026-10-01 (SM-A725F / Android 13, HotSwan 2.0.2, Kotlin 2.4.20):
+
+| Symptom | Where | With the class excluded |
+|---|---|---|
+| `NotImplementedError: Intrinsic property! Make sure the Power-Assert compiler plugin is applied` | a `@PowerAssert` function body that reads `PowerAssert.explanation` — on the device **and** in JVM unit tests (`debugUnitTest`) | explanation is delivered |
+| A side-effecting sub-expression is evaluated **three times** (`powerCheck(counter.incrementAndGet() == 5)` → 3) | a Power-Assert-transformed call site | evaluated once, as in release |
+
+Building with `-Photswan.dispatchRewriteEnabled=false` also gives the correct count, which isolates the cause to the
+dispatch rewrite. `app/build.gradle` therefore excludes the two classes involved, by exact class name:
+
+```groovy
+hotSwanCompiler {
+    exclude("com.example.composesample.presentation.example.component.architecture.development.test.PowerAssertChecksKt")
+    exclude("com.example.composesample.presentation.example.component.architecture.development.test.PowerAssertViewModel")
+}
+```
+
+Edits to those two classes need a full build. Any new `@PowerAssert` function, or a class that calls one, should be
+added to the list. The transformed `kotlin.assert` / `kotlin.test` calls in this project's test code produced the
+expected diagrams without any exclusion (JVM unit test and on-device instrumented test).
+
 ### Side effect: the debug variant's minSdk becomes 26
 
 `interpreter-runtime:2.0.0` declares `minSdkVersion="26"`, and the plugin adds it to debug only. The merged manifests
@@ -185,7 +210,7 @@ Two consequences worth knowing:
 - **HotSwan 2.0.x (current: 2.0.2):** Kotlin 2.3.x–2.4.x, AGP 9.x (official), IntelliJ IDEA / Android Studio 2025.1+, device API 28+ — runs here on Kotlin 2.4.20 / AGP 9.4.1 / Gradle 9.8.0 (see "Current Status")
 - **HotSwan 1.3.5–1.3.7:** Kotlin 2.4.0 or later (projects on Kotlin 2.2.x–2.3.x should stay on 1.3.4)
 - **HotSwan 1.2.1:** Kotlin 2.3.x — fails at compiler-extension registration on Kotlin 2.4.0
-- The Gradle plugin adds its runtime dependency and the required compiler flags itself — no extra dependency or configuration block is needed
+- The Gradle plugin adds its runtime dependency and the required compiler flags itself — no extra dependency is needed. The only configuration block in this project is the `hotSwanCompiler { exclude(...) }` list for the Power-Assert example (see above)
 
 ## Installation (Gradle setup already applied to the project)
 
