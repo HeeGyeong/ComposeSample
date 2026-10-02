@@ -206,6 +206,33 @@ Edits to those two classes need a full build. Any new `@PowerAssert` function, o
 added to the list. The transformed `kotlin.assert` / `kotlin.test` calls in this project's test code produced the
 expected diagrams without any exclusion (JVM unit test and on-device instrumented test).
 
+### Pausable composition in lazy prefetch does not pause — one more file is excluded
+
+`LazyListCacheWindowExampleUI` measures whether a heavy LazyColumn item (12 child composables × 1.5 ms of busy work)
+that is prefetched while the list is scrolling gets split across frames. Foundation's prefetch pauses only at the
+start of a newly inserted restartable composable call, when the time left before the next frame runs out. Measured on
+2026-10-02 (SM-A725F / Android 13, HotSwan 2.1.0, Compose 1.12.1), the same 4-second scroll in the real app:
+
+| Build | Items composed by prefetch while scrolling | Split into 2 frames |
+|---|---|---|
+| debug, HotSwan as configured | 1 (about 50 ms in one chunk) | 0 |
+| debug, `-Photswan.dispatchRewriteEnabled=false` | 5 | 2 |
+| debug, file excluded (current setup) | 5 | 3 |
+| release (debug-key signed) | 8 | 6 |
+
+Even the first prefetched item, which had no learned timing to stop it, ran to completion in one chunk under the
+dispatch rewrite, so the pause points were not reached. The file facade is therefore excluded:
+
+```groovy
+exclude("com.example.composesample.presentation.example.component.ui.layout.lazycolumn.LazyListCacheWindowExampleUIKt")
+```
+
+The rest of that example (cache window sizes, visibility callbacks) gave the same numbers before and after the
+exclusion. Note that an instrumented test did not reproduce the split at all, even with the file excluded and frames
+advanced one by one at 12 ms intervals: every prefetched item came out in one chunk. The likely reason (not verified)
+is that the View does not draw at the real frame rate under the test clock, so the prefetch scheduler sees an idle
+frame and grants an unlimited budget. Measure this kind of behaviour in the real app.
+
 ### Side effect: the debug variant's minSdk becomes 26
 
 `interpreter-runtime:2.0.0` declares `minSdkVersion="26"`, and the plugin adds it to debug only. The merged manifests

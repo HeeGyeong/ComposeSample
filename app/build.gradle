@@ -41,14 +41,18 @@ android {
     namespace = 'com.example.composesample'
 }
 
-// HotSwan(debug 핫 리로드)에서 뺄 클래스 — Power-Assert 와 함께 쓸 때의 두 가지 문제(실기기 실측, ComposeHotReloadGuide.md)
+// HotSwan(debug 핫 리로드)에서 뺄 클래스 — 실행 결과가 release 와 달라지는 것들(실기기 실측, ComposeHotReloadGuide.md)
+// Power-Assert 와 함께 쓸 때의 두 가지 문제:
 // - PowerAssertChecksKt: @PowerAssert 함수 안의 PowerAssert.explanation 은 Power-Assert 플러그인이 바꿔 넣는 intrinsic 인데,
 //   HotSwan 이 실행하는 본문에는 그 치환이 없어 원래 스텁이 불려 NotImplementedError 가 난다(JVM 단위 테스트도 동일).
 // - PowerAssertViewModel: 변환된 호출부를 HotSwan 이 실행하면 부수효과 있는 식이 여러 번 평가된다
 //   (counter.incrementAndGet() 3회 — dispatchRewriteEnabled=false 거나 제외하면 1회).
+// LazyListCacheWindowExampleUIKt: prefetch 의 Pausable composition 이 멈추지 않는다 — 스크롤 중 prefetch 된 무거운
+//   아이템이 debug 에서는 늘 한 덩어리(약 50ms)였고, release 와 dispatchRewriteEnabled=false 의 debug 에서는 2조각으로 나뉘었다.
 hotSwanCompiler {
     exclude("com.example.composesample.presentation.example.component.architecture.development.test.PowerAssertChecksKt")
     exclude("com.example.composesample.presentation.example.component.architecture.development.test.PowerAssertViewModel")
+    exclude("com.example.composesample.presentation.example.component.ui.layout.lazycolumn.LazyListCacheWindowExampleUIKt")
 }
 
 // Power-Assert(PowerAssertExample) — 단언 실패 메시지에 식의 중간값을 펼쳐 넣는 컴파일러 플러그인.

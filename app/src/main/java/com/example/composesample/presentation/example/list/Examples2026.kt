@@ -850,5 +850,12 @@ val examples2026 = listOf(
         description = "MetricStyle 지표 알림과 API 37 미만 폴백·critical 인덱스 실측",
         blogUrl = "",
         exampleType = ConstValue.MetricStyleNotificationExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 10. 02",
+        title = "LazyList 캐시 윈도우와 노출 추적",
+        description = "캐시 윈도우로 미리 컴포즈되는 아이템과 노출 콜백·LaunchedEffect 로그 대조",
+        blogUrl = "",
+        exampleType = ConstValue.LazyListCacheWindowExample
     )
 )

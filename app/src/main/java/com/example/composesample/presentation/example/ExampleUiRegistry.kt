@@ -116,6 +116,7 @@ import com.example.composesample.presentation.example.component.ui.layout.header
 import com.example.composesample.presentation.example.component.ui.layout.lazycolumn.LazyColumnFlingBehaviorExampleUI
 import com.example.composesample.presentation.example.component.ui.layout.lazycolumn.LazyColumnIssueExampleUI
 import com.example.composesample.presentation.example.component.ui.layout.lazycolumn.LazyListReusePoolExampleUI
+import com.example.composesample.presentation.example.component.ui.layout.lazycolumn.LazyListCacheWindowExampleUI
 import com.example.composesample.presentation.example.component.ui.layout.lazycolumn.LazyStaggeredGridExampleUI
 import com.example.composesample.presentation.example.component.ui.layout.lazycolumn.ReverseLazyColumnExampleUI
 import com.example.composesample.presentation.example.component.ui.layout.pager.PullScreenPagerExampleUI
@@ -255,6 +256,7 @@ import com.example.composesample.util.ConstValue.LargeContentViewerExample
 import com.example.composesample.util.ConstValue.LanguageSettingExample
 import com.example.composesample.util.ConstValue.LazyColumnExample
 import com.example.composesample.util.ConstValue.LazyListReusePoolExample
+import com.example.composesample.util.ConstValue.LazyListCacheWindowExample
 import com.example.composesample.util.ConstValue.LazyStaggeredGridExample
 import com.example.composesample.util.ConstValue.LocalContextStringsExample
 import com.example.composesample.util.ConstValue.LocalLanguageChangeExample
@@ -604,4 +606,5 @@ val exampleUiRegistry: Map<String, @Composable (onBackEvent: () -> Unit) -> Unit
     WorkEventListenerExample to { onBackEvent -> WorkEventListenerExampleUI(onBackEvent) },
     ComposeLifecycleOwnerExample to { onBackEvent -> ComposeLifecycleOwnerExampleUI(onBackEvent) },
     MetricStyleNotificationExample to { onBackEvent -> MetricStyleNotificationExampleUI(onBackEvent) },
+    LazyListCacheWindowExample to { onBackEvent -> LazyListCacheWindowExampleUI(onBackEvent) },
 )

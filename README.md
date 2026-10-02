@@ -163,7 +163,7 @@ Cursor IDE를 사용하는 개발자를 위한 **AI 코딩 어시스턴트 규�
 - **drawer**: Navigation Drawer, Modal Drawer
 - **flexbox**: FlexBox 레이아웃과 반응형 디자인, 공식 FlowRow/FlowColumn Flexbox(CSS Flexbox에서 영감을 받은 줄바꿈, maxItemsInEachRow 제한, weight 공간 분배), Flow 오버플로 제어(`maxLines`, `FlowRowOverflow.expandIndicator`/`expandOrCollapseIndicator`, `ContextualFlowRow`의 인덱스 기반 지연 컴포지션, 일반 `FlowRow`와의 컴포지션 항목 수 실측 비교)
 - **header**: 스크롤 상태와 연동되는 Sticky Header
-- **lazycolumn**: LazyColumn 성능 최적화, FlingBehavior 커스터마이징, targetSDK 35 대응, ReverseLazyColumn, LazyStaggeredGrid 폭포수 그리드(동적 높이, 필터링 애니메이션), LazyList `contentType` 재사용 풀 함정(아이템별 고유 contentType이 재사용 버킷을 폭증시켜 슬롯이 회수되지 않는 현상 — GC 이후 `WeakReference`로 실측)
+- **lazycolumn**: LazyColumn 성능 최적화, FlingBehavior 커스터마이징, targetSDK 35 대응, ReverseLazyColumn, LazyStaggeredGrid 폭포수 그리드(동적 높이, 필터링 애니메이션), LazyList `contentType` 재사용 풀 함정(아이템별 고유 contentType이 재사용 버킷을 폭증시켜 슬롯이 회수되지 않는 현상 — GC 이후 `WeakReference`로 실측), LazyList 캐시 윈도우와 노출 추적(Compose 1.12 `LazyLayoutCacheWindow` 를 `rememberLazyListState(cacheWindow)` 로 걸어 Dp·뷰포트 비율별로 미리 컴포즈(ahead)·유지(behind)되는 아이템 수 실측, 그 상태에서 `LaunchedEffect` 노출 로그가 화면 밖 아이템까지 세는 함정 vs `onVisibilityChanged`(리스트 경계 `layoutBounds` / 윈도우 기준 차이), 1.11 에서 deprecated 된 `onFirstVisible` 의 재부착 중복과 본 key 집합 대안, 무거운 아이템의 Pausable composition prefetch 분할 — 정지 화면은 예산 무제한·평균 학습 뒤 측정 패스 전락·debug HotSwan 제외)
 - **pager**: ViewPager와 페이지 전환
 - **topappbar**: FancyTopAppBar(Collapsing Toolbar, 다양한 스크롤 동작)
 - **adaptive**: Adaptive Layout — WindowSizeClass(Compact/Medium/Expanded)를 통한 폰/태블릿/폴더블 적응형 레이아웃, Compose MediaQuery API — 윈도우 크기·폴더블 자세·포인터 정밀도·키보드 종류·시청 거리를 다루는 선언적 환경 쿼리(Compose 1.11 실험적 API)
