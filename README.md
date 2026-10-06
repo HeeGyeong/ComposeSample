@@ -230,6 +230,7 @@ Cursor IDE를 사용하는 개발자를 위한 **AI 코딩 어시스턴트 규�
 
 ### **system** - 시스템 연동 & 플랫폼
 **platform**:
+- **display**: 디스플레이 주사율과 프레임 간격 — `Display.supportedModes`(사용자 설정에 따라 걸러지는 모드 목록)와 `preferredDisplayModeId` 창 단위 60/90Hz 요청을 `DisplayListener` 로 반영 확인(화면을 떠날 때 원복), `withFrameNanos` 2초 창으로 FPS·늦은 프레임 비율·p95/p99·최악 간격을 재고 부하(50ms 멈춤·매 프레임 13ms)로 평균 FPS 가 숨기는 끊김과 90Hz 의 줄어든 예산을 실측, Compose `preferredFrameRate` 가 API 35+ 에서만 `View.requestedFrameRate` 로 전달되는 경로(레이어가 다시 그려질 때 투표·움직이면 High 자동 투표), 지속 성능 모드
 - **file**: 파일 선택과 SAF(Storage Access Framework) 처리
 - **haptic**: Haptic Feedback(LocalHapticFeedback vs HapticFeedbackConstants 비교와 API 레벨별 지원 범위)
 - **intent**: Intent 처리와 앱 간 데이터 공유

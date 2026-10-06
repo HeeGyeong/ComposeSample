@@ -233,6 +233,33 @@ advanced one by one at 12 ms intervals: every prefetched item came out in one ch
 is that the View does not draw at the real frame rate under the test clock, so the prefetch scheduler sees an idle
 frame and grants an unlimited budget. Measure this kind of behaviour in the real app.
 
+### A per-frame drawing loop is 20x slower under the dispatch rewrite — two more classes are excluded
+
+`DisplayRefreshRateExampleUI` measures frame intervals with a `withFrameNanos` loop and redraws a 90-bar interval chart
+on every frame. Under HotSwan the chart's draw phase alone took longer than a whole frame, so the thing being measured
+(the frame interval) collapsed. Measured on 2026-10-06 (SM-A725F / Android 13, 60 Hz, HotSwan 2.1.0, Compose 1.12.1)
+with `dumpsys gfxinfo <pkg> framestats` over 2 seconds:
+
+| Build | Frames in 2 s | Draw phase median | Late frames (> 25 ms) |
+|---|---|---|---|
+| debug, HotSwan as configured | 44 | 44.5 ms | 43 |
+| debug, `-Photswan.dispatchRewriteEnabled=false` | 120 | 2.3 ms | 1 |
+| debug, file facade excluded only | 112 | 14.4 ms | 19 |
+| debug, file facade + `FramePacingMeter` excluded (current setup) | 120 | 1.8 ms | 1 |
+| release (debug-key signed) | 120 | 1.0 ms | 1 (0 after `cmd package compile -m speed`) |
+
+Excluding the file facade was not enough: the measuring class that the frame loop and the chart call on every frame
+(`record()` once, `recentAt()` 90 times) is a separate class, so it is excluded by its own name:
+
+```groovy
+exclude("com.example.composesample.presentation.example.component.system.platform.display.DisplayRefreshRateExampleUIKt")
+exclude("com.example.composesample.presentation.example.component.system.platform.display.FramePacingMeter")
+```
+
+The one late frame left in every 2-second window is not HotSwan: it is the frame that inserts a row into the result
+table, a path that runs once every 2 seconds and stays cold under JIT. It disappears in a release build after
+`adb shell cmd package compile -m speed -f com.example.composesample`.
+
 ### Side effect: the debug variant's minSdk becomes 26
 
 `interpreter-runtime:2.0.0` declares `minSdkVersion="26"`, and the plugin adds it to debug only. The merged manifests

@@ -27,6 +27,7 @@ import com.example.composesample.presentation.example.component.architecture.dev
 import com.example.composesample.presentation.example.component.system.platform.quicksettings.QuickSettingsTileExampleUI
 import com.example.composesample.presentation.example.component.system.notification.LiveUpdateNotificationExampleUI
 import com.example.composesample.presentation.example.component.system.notification.MetricStyleNotificationExampleUI
+import com.example.composesample.presentation.example.component.system.platform.display.DisplayRefreshRateExampleUI
 import com.example.composesample.presentation.example.component.system.platform.pip.PictureInPictureExampleUI
 import com.example.composesample.presentation.example.component.system.platform.sensor.SensorFusionCompassExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.type.TypeExampleUI
@@ -362,6 +363,7 @@ import com.example.composesample.util.ConstValue.DisplayCutoutInsetsExample
 import com.example.composesample.util.ConstValue.BiometricAuthExample
 import com.example.composesample.util.ConstValue.LiveUpdateNotificationExample
 import com.example.composesample.util.ConstValue.MetricStyleNotificationExample
+import com.example.composesample.util.ConstValue.DisplayRefreshRateExample
 import com.example.composesample.util.ConstValue.SensorFusionCompassExample
 import com.example.composesample.util.ConstValue.HapticFeedbackExample
 import com.example.composesample.util.ConstValue.StabilityAnnotationsExample
@@ -607,4 +609,5 @@ val exampleUiRegistry: Map<String, @Composable (onBackEvent: () -> Unit) -> Unit
     ComposeLifecycleOwnerExample to { onBackEvent -> ComposeLifecycleOwnerExampleUI(onBackEvent) },
     MetricStyleNotificationExample to { onBackEvent -> MetricStyleNotificationExampleUI(onBackEvent) },
     LazyListCacheWindowExample to { onBackEvent -> LazyListCacheWindowExampleUI(onBackEvent) },
+    DisplayRefreshRateExample to { onBackEvent -> DisplayRefreshRateExampleUI(onBackEvent) },
 )

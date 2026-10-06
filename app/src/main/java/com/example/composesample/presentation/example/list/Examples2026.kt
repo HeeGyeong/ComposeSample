@@ -857,5 +857,12 @@ val examples2026 = listOf(
         description = "캐시 윈도우로 미리 컴포즈되는 아이템과 노출 콜백·LaunchedEffect 로그 대조",
         blogUrl = "",
         exampleType = ConstValue.LazyListCacheWindowExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 10. 06",
+        title = "디스플레이 주사율과 프레임 간격",
+        description = "창 단위 60/90Hz 모드 요청과 평균 FPS 가 숨기는 늦은 프레임·p99 측정",
+        blogUrl = "",
+        exampleType = ConstValue.DisplayRefreshRateExample
     )
 )

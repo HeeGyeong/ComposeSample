@@ -49,10 +49,15 @@ android {
 //   (counter.incrementAndGet() 3회 — dispatchRewriteEnabled=false 거나 제외하면 1회).
 // LazyListCacheWindowExampleUIKt: prefetch 의 Pausable composition 이 멈추지 않는다 — 스크롤 중 prefetch 된 무거운
 //   아이템이 debug 에서는 늘 한 덩어리(약 50ms)였고, release 와 dispatchRewriteEnabled=false 의 debug 에서는 2조각으로 나뉘었다.
+// DisplayRefreshRateExampleUIKt · FramePacingMeter: 매 프레임 다시 그리는 프레임 간격 그래프의 그리기 단계가 debug 에서
+//   중앙값 44.5ms 라 측정 대상인 프레임 간격 자체가 약 20fps 로 무너진다(dispatchRewriteEnabled=false 의 debug 2.3ms ·
+//   release 1.0ms, 60fps). 매 프레임 불리는 측정기 클래스는 파일 facade 와 별개라 따로 뺀다.
 hotSwanCompiler {
     exclude("com.example.composesample.presentation.example.component.architecture.development.test.PowerAssertChecksKt")
     exclude("com.example.composesample.presentation.example.component.architecture.development.test.PowerAssertViewModel")
     exclude("com.example.composesample.presentation.example.component.ui.layout.lazycolumn.LazyListCacheWindowExampleUIKt")
+    exclude("com.example.composesample.presentation.example.component.system.platform.display.DisplayRefreshRateExampleUIKt")
+    exclude("com.example.composesample.presentation.example.component.system.platform.display.FramePacingMeter")
 }
 
 // Power-Assert(PowerAssertExample) — 단언 실패 메시지에 식의 중간값을 펼쳐 넣는 컴파일러 플러그인.
