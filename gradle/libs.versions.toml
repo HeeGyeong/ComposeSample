@@ -148,8 +148,10 @@ okhttpEventSource = "5.0.0"
 # androidx.paging 은 atomic group 이라 runtime/compose/common-ktx 가 한 버전으로 움직인다.
 # 3.5.1 — paging-runtime minCompileSdk=34, paging-compose-android minCompileSdk=35. room-paging 2.8.5 가 요구하는
 # paging-common 3.3.2 보다 높아 선언이 그대로 해석된다. (이전: 3.2.1 선언 ↔ 3.3.2 해석 드리프트 — DEP-VERSION-03)
-paging = "3.5.1"
-pagingCompose = "3.5.1"
+# 2026-10-08 3.5.2 패치 상향(DEP-CURRENCY-05) — Pager.append() 를 초기 refresh 전에 부르면 예외 대신 no-op(프로젝트는 append() 미사용).
+# aar minCompileSdk: runtime/common 34 · compose 35, minAGP 8.6.0 이하.
+paging = "3.5.2"
+pagingCompose = "3.5.2"
 
 # Glance Widget
 # 1.2.0 — aar-metadata minCompileSdk=35 / minAGP=8.6.0.
