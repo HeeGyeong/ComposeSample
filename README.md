@@ -189,7 +189,7 @@ Cursor IDE를 사용하는 개발자를 위한 **AI 코딩 어시스턴트 규�
 - TextField Max Length 숨겨진 버그(프로그래밍적 변경에는 InputTransformation이 적용되지 않는 버그 + LaunchedEffect+snapshotFlow 해결책)
 
 **material3**:
-- Material 3 Expressive(1.4.0 신규) — SecureTextField/OutlinedSecureTextField(비밀번호 입력 + 3가지 TextObfuscationMode)
+- Material 3 Expressive(1.4.0 신규) — SecureTextField/OutlinedSecureTextField(비밀번호 입력 + TextObfuscationMode 4종) + foundation 1.12 `TextObfuscationMode.System`(시스템 '비밀번호 표시' 설정을 따름, API 37+ 터치·물리 키보드 분리)과 1.12 에서 설정을 무시하게 된 `RevealLastTyped` 를 설정 켬/끔으로 나란히 실측(M3 1.4.0 기본값이 RevealLastTyped 라 설정을 꺼도 노출), `LocalTextFieldContentObserverRegistrationExecutor` 로 관찰자 등록·해제를 백그라운드 스레드로
 
 **others**:
 - **accessibility**: Large Content Viewer(iOS 스타일 접근성, 키보드 & 스크린 리더 지원)
