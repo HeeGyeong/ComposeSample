@@ -180,6 +180,35 @@ checked exception escape. Two workarounds, both in use here:
   `AppSecurityViewModel.toLog()` does this; it also survives wrapping introduced by OkHttp interceptors or coroutines,
   which is why it is the better default for network error handling.
 
+### A framework-class callback that writes a composable's `by` local crashes with `NoSuchMethodError`
+
+Inside a composable, an anonymous object that **extends a framework class** — `ContentObserver`, `BroadcastReceiver`,
+a `Handler` subclass — and assigns a `var x by remember { mutableStateOf(...) }` local of that composable crashes in
+debug **at the moment the system calls it**:
+`NoSuchMethodError: No static method access$<function>$lambda$N(MutableState;…)V in class …Kt`. The write goes through a
+synthetic accessor on the file facade, and under the dispatch rewrite that accessor is not there when the framework
+enters the native method body. Release and a debug build with `-Photswan.dispatchRewriteEnabled=false` are fine.
+
+Found on 2026-10-07 while adding the click-sound section to `HapticFeedbackExampleUI` (#108): a `ContentObserver` for
+`Settings.System.SOUND_EFFECTS_ENABLED` crashed the debug app as soon as the setting changed (reproduced twice). A probe
+file then separated the cases (SM-A725F / Android 13, HotSwan 2.1.0; each write wrapped in `try/catch` and logged):
+
+| Anonymous object writing a composable's `by` local | Who calls it | Result |
+|---|---|---|
+| `Runnable`, `ContentObserver`, `BroadcastReceiver`, an app abstract class | app code, directly (`o.onChange(false)`), at once or 2 s later | ✅ |
+| `ContentObserver` registered on a real setting | system (setting changed) | ❌ `NoSuchMethodError` |
+| `BroadcastReceiver` (own-app broadcast) | system | ❌ `NoSuchMethodError` |
+| `Handler` subclass (`handleMessage`) | system (`Looper`) | ❌ `NoSuchMethodError` |
+| `Choreographer.FrameCallback` (interface) | system | ✅ |
+| `Handler.Callback` (interface) | system | ✅ |
+
+Whether the composable returns a value, is `private`, or uses `DisposableEffect` vs `remember` made no difference; reads
+and writes from interface callbacks invoked by libraries (`AuthenticationResultCallback` in the biometric example,
+`Player.Listener` in the Media3 example) also work. **The fix used here:** move the observer into a plain state-holder
+class whose own `mutableStateOf` property it writes (`ClickSoundEnvironment`), and let the composable only `remember` it
+and start/stop it in a `DisposableEffect`. A scan of the project found no other framework-class anonymous object writing
+a composable local (the five anonymous objects that touch one all implement interfaces or sit inside code-sample strings).
+
 ### Kotlin Power-Assert breaks under the interpreter — two classes are excluded
 
 The Power-Assert compiler plugin (`org.jetbrains.kotlin.plugin.power-assert`, added for `PowerAssertExample`) rewrites

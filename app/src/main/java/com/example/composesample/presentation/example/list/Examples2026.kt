@@ -229,9 +229,9 @@ val examples2026 = listOf(
         exampleType = ConstValue.SpringTweenSnapExample
     ),
     ExampleObject(
-        lastUpdate = "26. 04. 02",
+        lastUpdate = "26. 10. 07",
         title = "Haptic Feedback",
-        description = "LocalHapticFeedback과 HapticFeedbackConstants의 진동 타입 비교",
+        description = "진동 타입 비교와 Compose 1.12 클릭음 자동 재생·구역별 끄기",
         blogUrl = "",
         exampleType = ConstValue.HapticFeedbackExample
     ),
