@@ -31,6 +31,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.example.composesample.presentation.example.list.blogHomeUrl
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -101,7 +102,7 @@ fun MainScreenContent(
         MainMenuCard(
             title = "Open Blog",
             description = "예제 설명 글 페이지 열기",
-            onClick = { onWebViewClick("https://johyun-dev.tistory.com") }
+            onClick = { onWebViewClick(blogHomeUrl()) }
         )
     }
 }
