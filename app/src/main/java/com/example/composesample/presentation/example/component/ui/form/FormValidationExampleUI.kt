@@ -15,12 +15,14 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.TextFieldState
+import androidx.compose.foundation.text.input.TextObfuscationMode
 import androidx.compose.foundation.text.input.clearText
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.OutlinedSecureTextField
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -369,17 +371,32 @@ private fun FormField(
     keyboardType: KeyboardType = KeyboardType.Text,
     focusRequester: FocusRequester? = null
 ) {
-    OutlinedTextField(
-        state = state,
-        modifier = Modifier
-            .fillMaxWidth()
-            .let { if (focusRequester != null) it.focusRequester(focusRequester) else it },
-        label = { Text(label) },
-        isError = error != null,
-        supportingText = { Text(error?.message ?: hint) },
-        keyboardOptions = KeyboardOptions(keyboardType = keyboardType, imeAction = imeAction),
-        onKeyboardAction = { onNext() }
-    )
+    val fieldModifier = Modifier
+        .fillMaxWidth()
+        .let { if (focusRequester != null) it.focusRequester(focusRequester) else it }
+    if (keyboardType == KeyboardType.Password) {
+        // 비밀번호는 가려서 보여준다 — System 모드는 사용자의 '비밀번호 표시' 설정을 따른다(foundation 1.12)
+        OutlinedSecureTextField(
+            state = state,
+            modifier = fieldModifier,
+            label = { Text(label) },
+            isError = error != null,
+            supportingText = { Text(error?.message ?: hint) },
+            textObfuscationMode = TextObfuscationMode.System,
+            keyboardOptions = KeyboardOptions(keyboardType = keyboardType, imeAction = imeAction),
+            onKeyboardAction = { onNext() }
+        )
+    } else {
+        OutlinedTextField(
+            state = state,
+            modifier = fieldModifier,
+            label = { Text(label) },
+            isError = error != null,
+            supportingText = { Text(error?.message ?: hint) },
+            keyboardOptions = KeyboardOptions(keyboardType = keyboardType, imeAction = imeAction),
+            onKeyboardAction = { onNext() }
+        )
+    }
     Spacer(modifier = Modifier.height(4.dp))
 }
 
