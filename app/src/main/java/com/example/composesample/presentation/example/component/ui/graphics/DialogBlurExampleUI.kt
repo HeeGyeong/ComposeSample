@@ -60,6 +60,7 @@ import androidx.compose.ui.window.DialogWindowProvider
 import androidx.core.graphics.drawable.toDrawable
 import androidx.core.graphics.scale
 import com.example.composesample.presentation.MainHeader
+import com.example.composesample.util.boldMarkup
 import kotlinx.coroutines.launch
 
 /**
@@ -629,12 +630,12 @@ private fun SectionCard(
 
 @Composable
 private fun BodyText(text: String) {
-    Text(text = text, fontSize = 13.sp, color = Color(0xFF424242), lineHeight = 19.sp)
+    Text(text = text.boldMarkup(), fontSize = 13.sp, color = Color(0xFF424242), lineHeight = 19.sp)
 }
 
 @Composable
 private fun CaptionText(text: String) {
-    Text(text = text, fontSize = 11.sp, color = Color(0xFF757575), lineHeight = 16.sp)
+    Text(text = text.boldMarkup(), fontSize = 11.sp, color = Color(0xFF757575), lineHeight = 16.sp)
 }
 
 @Composable
@@ -670,14 +671,14 @@ private fun TableRow(
             .padding(vertical = 5.dp, horizontal = 6.dp)
     ) {
         Text(
-            text = first,
+            text = first.boldMarkup(),
             modifier = Modifier.width(96.dp),
             fontSize = 11.sp,
             fontWeight = if (isHeader) FontWeight.Bold else FontWeight.Normal,
             color = Color(0xFF424242)
         )
         Text(
-            text = second,
+            text = second.boldMarkup(),
             modifier = Modifier.weight(1f),
             fontSize = 11.sp,
             fontWeight = if (isHeader) FontWeight.Bold else FontWeight.Normal,

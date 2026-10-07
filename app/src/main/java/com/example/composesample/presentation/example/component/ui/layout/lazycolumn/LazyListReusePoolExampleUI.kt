@@ -45,6 +45,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.composesample.presentation.MainHeader
+import com.example.composesample.util.boldMarkup
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.lang.ref.WeakReference
@@ -242,7 +243,7 @@ private fun ReusePoolOverviewCard() {
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-            text = "LazyColumn 은 화면 밖으로 나간 아이템의 컴포지션(슬롯)을 바로 버리지 않고 " +
+            text = ("LazyColumn 은 화면 밖으로 나간 아이템의 컴포지션(슬롯)을 바로 버리지 않고 " +
                     "재사용 풀에 넣어 뒀다가 새 아이템에 다시 씁니다. 이때 어떤 슬롯을 어떤 아이템에 " +
                     "돌려 쓸지 가르는 기준이 contentType 입니다.\n\n" +
                     "문제는 이 풀의 정리 규칙이 **타입별**이라는 점입니다. Compose 는 contentType 하나당 " +
@@ -250,7 +251,7 @@ private fun ReusePoolOverviewCard() {
                     "그래서 contentType 에 아이템마다 다른 값을 넘기면 버킷이 아이템 수만큼 생기고, " +
                     "각 버킷에는 1개씩만 들어 있어 **정리 조건에 영원히 걸리지 않습니다**.\n\n" +
                     "남은 슬롯은 자기 컴포지션이 들고 있던 데이터와 modifier 람다가 캡처한 객체까지 " +
-                    "함께 붙들고 있으므로, 스크롤할수록 회수되지 않는 메모리가 쌓입니다.",
+                    "함께 붙들고 있으므로, 스크롤할수록 회수되지 않는 메모리가 쌓입니다.").boldMarkup(),
             fontSize = 13.sp,
             color = Color(0xFF424242),
             lineHeight = 19.sp
@@ -626,11 +627,11 @@ private fun ReusePoolCodeCard() {
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-            text = "둘 다 items() 에 넘기는 람다라 헷갈리기 쉽지만 역할이 정반대입니다. " +
+            text = ("둘 다 items() 에 넘기는 람다라 헷갈리기 쉽지만 역할이 정반대입니다. " +
                     "key 는 '이 아이템이 그 아이템인가'를 가리는 **식별자**라 아이템마다 달라야 하고, " +
                     "contentType 은 '이 슬롯을 저 아이템에 돌려 써도 되는가'를 가리는 **분류**라 " +
                     "종류 수만큼만 있어야 합니다. key 를 쓰던 감각으로 contentType 에 " +
-                    "아이템 고유값을 넣는 순간 함정에 빠집니다.",
+                    "아이템 고유값을 넣는 순간 함정에 빠집니다.").boldMarkup(),
             fontSize = 12.sp,
             color = Color(0xFF424242),
             lineHeight = 18.sp
@@ -658,9 +659,9 @@ private fun ReusePoolCodeCard() {
         )
         Spacer(modifier = Modifier.height(10.dp))
         Text(
-            text = "판별 기준은 간단합니다 — contentType 으로 넘길 값의 **가짓수가 데이터 양에 따라 " +
+            text = ("판별 기준은 간단합니다 — contentType 으로 넘길 값의 **가짓수가 데이터 양에 따라 " +
                     "늘어난다면 잘못된 것**입니다. 화면에 그려지는 레이아웃 형태가 몇 가지인지 세어 보고, " +
-                    "그 수를 넘지 않는 값을 쓰면 됩니다.",
+                    "그 수를 넘지 않는 값을 쓰면 됩니다.").boldMarkup(),
             fontSize = 12.sp,
             color = Color(0xFF424242),
             lineHeight = 18.sp

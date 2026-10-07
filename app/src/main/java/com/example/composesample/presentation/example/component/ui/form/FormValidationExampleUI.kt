@@ -47,6 +47,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.composesample.presentation.MainHeader
+import com.example.composesample.util.boldMarkup
 import kotlinx.coroutines.flow.collectLatest
 
 /**
@@ -558,12 +559,12 @@ private fun FormSectionCard(
 
 @Composable
 private fun BodyText(text: String) {
-    Text(text = text, fontSize = 13.sp, color = Color(0xFF424242), lineHeight = 19.sp)
+    Text(text = text.boldMarkup(), fontSize = 13.sp, color = Color(0xFF424242), lineHeight = 19.sp)
 }
 
 @Composable
 private fun CaptionText(text: String) {
-    Text(text = text, fontSize = 11.sp, color = Color(0xFF757575), lineHeight = 16.sp)
+    Text(text = text.boldMarkup(), fontSize = 11.sp, color = Color(0xFF757575), lineHeight = 16.sp)
 }
 
 @Composable
