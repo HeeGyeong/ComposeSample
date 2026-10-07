@@ -27,11 +27,13 @@ libraryVersion = "9.4.1"
 # activity 1.13.0 — aar-metadata minCompileSdk=36 / minAGP=8.9.1. 이 버전부터 ComponentActivity 가 core 의 PictureInPictureProvider 를 구현한다(javap 확인).
 activityCompose = "1.13.0"
 # androidx.navigationevent — back/forward 양방향 내비게이션 이벤트 디스패처.
-# 1.1.2 stable, aar-metadata minCompileSdk=36 / minAGP=8.9.1(채택 당시 compileSdk 36 · AGP 8.13.2 로 충족).
+# 1.1.2 로 도입 → 2026-10-08 1.2.0 stable 로 상향(DEP-CURRENCY-06, 마이너 — 사용자 승인). aar-metadata minCompileSdk=36 / minAGP=8.9.1,
+# pom 요구(compose ui/runtime 1.11.2 · lifecycle 2.10.0 · coroutines 1.9.0)는 전부 프로젝트보다 낮다.
+# 1.2.0 의 NavigationEventInfo 에 open val title/url(실험)이 생겨, 같은 이름의 val 을 가진 하위 클래스는 override 가 필요하다.
 # navigationevent-compose 의 pom 은 compose ui/runtime 1.11.2 를 요구한다. BOM 2026.05.00(→ 1.11.1) 시절에는
 # 이 요구가 이겨 ui/runtime 만 1.11.2 로 올라가는 패치 스큐가 있었으나, BOM 2026.06.01(→ 1.11.4) 상향으로
 # 요구치가 BOM 보다 낮아져 스큐가 사라졌다. BOM 을 1.11.2 미만으로 내리면 다시 끌어올려진다.
-navigationEvent = "1.1.2"
+navigationEvent = "1.2.0"
 # androidx.navigation3 — ui 가 SceneStrategy/OverlayScene/NavDisplay, runtime 이 NavEntry/entryProvider/metadata 를 제공한다.
 # 1.1.7 로 도입(minCompileSdk=36 / minAGP=8.9.1) → 2026-10-01 1.2.0 stable 로 상향(minCompileSdk=37 / minAGP=9.1.0, 현재 37 / 9.4.1).
 # 상향 전후 해석 변화는 navigation3 4개 좌표뿐(navigationevent 요청 1.1.1 은 이미 1.1.2 로 해석). Nav3SceneStrategy 예제의

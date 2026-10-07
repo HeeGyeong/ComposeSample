@@ -36,6 +36,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigationevent.DirectNavigationEventInput
+import androidx.navigationevent.ExperimentalNavigationEventApi
 import androidx.navigationevent.NavigationEvent
 import androidx.navigationevent.NavigationEventDispatcher
 import androidx.navigationevent.NavigationEventInfo
@@ -64,7 +65,10 @@ import com.example.composesample.util.boldMarkup
  * `NavigationEventInfo` 는 인터페이스가 아니라 **추상 클래스**라 직접 상속해야 한다.
  * 라이브러리는 이 타입을 그대로 실어 나르기만 하고 내용은 앱이 정한다.
  */
-private data class DestinationInfo(val title: String) : NavigationEventInfo()
+// 1.2.0 부터 NavigationEventInfo 에 open val title(실험)이 생겨 같은 이름은 override 해야 컴파일된다.
+// Android 에서는 이 title 을 읽는 호스트가 없어(웹 탭 제목용) 동작은 1.1.2 와 같다.
+@OptIn(ExperimentalNavigationEventApi::class)
+private data class DestinationInfo(override val title: String) : NavigationEventInfo()
 
 /** 데모용 목적지 스택. 인덱스를 옮기면 back/forward 목록이 갈라진다. */
 private val DESTINATIONS = listOf("홈", "목록", "상세", "설정")
