@@ -19,6 +19,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -27,8 +28,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
@@ -39,7 +42,9 @@ import androidx.navigationevent.DirectNavigationEventInput
 import androidx.navigationevent.ExperimentalNavigationEventApi
 import androidx.navigationevent.NavigationEvent
 import androidx.navigationevent.NavigationEventDispatcher
+import androidx.navigationevent.NavigationEventDispatcherOwner
 import androidx.navigationevent.NavigationEventInfo
+import androidx.navigationevent.NavigationEventInput
 import androidx.navigationevent.NavigationEventTransitionState
 import androidx.navigationevent.compose.LocalNavigationEventDispatcherOwner
 import androidx.navigationevent.compose.NavigationEventHandler
@@ -164,6 +169,26 @@ private fun DispatcherContent(dispatcher: NavigationEventDispatcher) {
     val transition = state.transitionState
     val inProgress = transition as? NavigationEventTransitionState.InProgress
 
+    // 6번 카드(1.2.0) — 디스패처·입력원은 스크롤로 항목이 사라져도 유지되도록 LazyColumn 밖에 둔다
+    val gateDemo = remember { InputGateDemo() }
+    DisposableEffect(gateDemo) {
+        gateDemo.attach()
+        onDispose { gateDemo.dispose() }
+    }
+    var gateBackOn by remember { mutableStateOf(true) }
+    var gateForwardOn by remember { mutableStateOf(false) }
+    val gateState = rememberNavigationEventState(currentInfo = remember { DestinationInfo("데모") })
+    // 1.2.0 팩토리로 감싼 Owner 를 Local 로 넘겨, 이 핸들러가 손으로 만든 디스패처에 붙게 한다
+    CompositionLocalProvider(LocalNavigationEventDispatcherOwner provides gateDemo.owner) {
+        NavigationEventHandler(
+            state = gateState,
+            isBackEnabled = gateBackOn,
+            onBackCompleted = { gateDemo.backHandled++ },
+            isForwardEnabled = gateForwardOn,
+            onForwardCompleted = { gateDemo.forwardHandled++ }
+        )
+    }
+
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
         contentPadding = PaddingValues(16.dp),
@@ -227,6 +252,15 @@ private fun DispatcherContent(dispatcher: NavigationEventDispatcher) {
                 callbackCount = callbackCount
             )
         }
+        item {
+            InputGateCard(
+                demo = gateDemo,
+                backOn = gateBackOn,
+                forwardOn = gateForwardOn,
+                onBackOnChange = { gateBackOn = it },
+                onForwardOnChange = { gateForwardOn = it }
+            )
+        }
         item { PitfallCard() }
     }
 }
@@ -285,7 +319,9 @@ private fun OwnerCard() {
         )
         CaptionText(
             "앞의 것은 핸들러가, 뒤의 것은 rememberNavigationEventDispatcherOwner 가 던진다. " +
-                "부모를 물려받는 중첩 디스패처를 만들 때는 parent 를 넘기면 된다."
+                "부모를 물려받는 중첩 디스패처를 만들 때는 parent 를 넘기면 된다. " +
+                "1.2.0 부터는 Local 과 View 트리에 Owner 가 없을 때 LocalContext 의 ContextWrapper 사슬을 거슬러 " +
+                "액티비티 같은 Owner 를 한 번 더 찾으므로, 이 예외는 그것마저 없을 때만 난다."
         )
     }
 }
@@ -441,6 +477,162 @@ private fun GatingCard(
 
 // ==================== 6. 함정 ====================
 
+// ==================== 6. 1.2.0 — 입력원이 핸들러 상태를 안다 ====================
+
+@Composable
+private fun InputGateCard(
+    demo: InputGateDemo,
+    backOn: Boolean,
+    forwardOn: Boolean,
+    onBackOnChange: (Boolean) -> Unit,
+    onForwardOnChange: (Boolean) -> Unit
+) {
+    SectionCard(title = "6. 1.2.0 — 입력원이 \"받을 핸들러가 있는지\"를 안다") {
+        BodyText(
+            "1.2.0 부터 NavigationEventInput 이 연결된 디스패처에 켜진 핸들러가 있는지를 직접 알려 준다. " +
+                "실제 입력원(시스템 제스처 등)은 이 값이 true 일 때만 제스처 감지를 켜면 된다. " +
+                "아래 스위치는 손으로 만든 디스패처에 붙은 핸들러를 켜고 끈다."
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        CodeBlock(
+            "class GateAwareInput : NavigationEventInput() {\n" +
+                "    override fun onHasEnabledHandlersChanged(has: Boolean) { … }\n" +
+                "    override fun onHasEnabledBackHandlersChanged(has: Boolean) { … }\n" +
+                "    override fun onHasEnabledForwardHandlersChanged(has: Boolean) { … }\n" +
+                "}\n" +
+                "input.hasEnabledHandlers   // 프로퍼티로도 읽힌다(스냅샷 상태는 아니다)\n\n" +
+                "// 이미 있는 디스패처를 감싼 Owner — Local 로 넘기면 핸들러가 이 디스패처에 붙는다\n" +
+                "val owner = NavigationEventDispatcherOwner(dispatcher)"
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        ToggleRow("back 핸들러 켜기", backOn, onBackOnChange)
+        ToggleRow("forward 핸들러 켜기", forwardOn, onForwardOnChange)
+        Spacer(modifier = Modifier.height(6.dp))
+        val input = demo.gateInput
+        ResultRow("hasEnabledHandlers", input.anyEnabled.toString())
+        ResultRow("…BackHandlers", input.backEnabled.toString())
+        ResultRow("…ForwardHandlers", input.forwardEnabled.toString())
+        ResultRow("콜백", "${input.changeCount}회 (onHasEnabled*Changed)")
+
+        Spacer(modifier = Modifier.height(10.dp))
+        Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+            DemoButton("back 보내기", Color(0xFF3949AB)) { demo.sendBack() }
+            DemoButton("forward 보내기", Color(0xFF00838F)) { demo.sendForward() }
+        }
+        Spacer(modifier = Modifier.height(6.dp))
+        ResultRow("핸들러가 받음", "back ${demo.backHandled} · forward ${demo.forwardHandled}")
+        ResultRow("fallback 이 받음", "back ${demo.backFallbacks} · forward ${demo.forwardFallbacks}")
+        CaptionText(
+            "핸들러를 끄고 보내면 디스패처 생성자에 넘긴 fallback 이 받는다(5번 카드의 루트 디스패처는 fallback 이 없어서 사라졌다)."
+        )
+
+        Spacer(modifier = Modifier.height(10.dp))
+        DemoButton("입력원을 뗀 뒤 back 보내기", Color(0xFF6D4C41)) { demo.sendBackWhileDetached() }
+        ResultRow("결과", demo.detachedSendResult)
+        CaptionText(
+            "1.1.x 는 디스패처에서 뗀 입력원으로 보내면 IllegalStateException 이었고, 1.2.0 은 조용히 무시한다. " +
+                "KDoc 의 @throws 문구는 아직 예전 그대로다."
+        )
+
+        Spacer(modifier = Modifier.height(10.dp))
+        TableRow("1.2.0 신규", "용도", isHeader = true)
+        TableRow("hasEnabled*Handlers", "입력원이 받을 핸들러 유무를 질의 — 제스처 감지 켜기/끄기")
+        TableRow("Owner 팩토리", "NavigationEventDispatcherOwner(dispatcher) — 손으로 만든 디스패처를 Local 로")
+        TableRow("Info.title/url", "@ExperimentalNavigationEventApi · 웹 호스트(탭 제목·주소창)용, Android 소비자 없음")
+        TableRow("테스트 owner", "navigationEventInput · onForwardCompletedFallback(navigationevent-testing)")
+    }
+}
+
+@Composable
+private fun ToggleRow(label: String, checked: Boolean, onCheckedChange: (Boolean) -> Unit) {
+    Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+        Text(text = label, fontSize = 12.sp, color = Color(0xFF37474F), modifier = Modifier.weight(1f))
+        Switch(checked = checked, onCheckedChange = onCheckedChange)
+    }
+}
+
+/**
+ * 6번 카드 상태 — 손으로 만든 디스패처(back/forward fallback 포함), 1.2.0 Owner 팩토리, 입력원 2개, 계수.
+ * 라이브러리 콜백(fallback·onHasEnabled*Changed)이 상태를 쓰므로 컴포저블 밖 클래스에 둔다(#108 HotSwan 함정 회피).
+ */
+private class InputGateDemo {
+    var backHandled by mutableIntStateOf(0)
+    var forwardHandled by mutableIntStateOf(0)
+    var backFallbacks by mutableIntStateOf(0)
+        private set
+    var forwardFallbacks by mutableIntStateOf(0)
+        private set
+    var detachedSendResult by mutableStateOf("아직 보내지 않음")
+        private set
+
+    val dispatcher = NavigationEventDispatcher(
+        onBackCompletedFallback = { backFallbacks++ },
+        onForwardCompletedFallback = { forwardFallbacks++ }
+    )
+
+    // 1.2.0 팩토리 — 예전에는 object : NavigationEventDispatcherOwner { … } 를 직접 써야 했다
+    val owner: NavigationEventDispatcherOwner = NavigationEventDispatcherOwner(dispatcher)
+
+    val gateInput = GateAwareInput()
+    private val probeInput = DirectNavigationEventInput()
+
+    fun attach() {
+        dispatcher.addInput(gateInput)
+        dispatcher.addInput(probeInput)
+    }
+
+    fun dispose() {
+        dispatcher.removeInput(gateInput)
+        dispatcher.removeInput(probeInput)
+        dispatcher.dispose()
+    }
+
+    fun sendBack() = probeInput.backCompleted()
+
+    fun sendForward() = probeInput.forwardCompleted()
+
+    /** 입력원을 뗀 뒤 보낸다 — 받은 쪽이 있는지 계수로 확인하고 다시 붙인다 */
+    fun sendBackWhileDetached() {
+        dispatcher.removeInput(probeInput)
+        val before = backHandled + backFallbacks
+        detachedSendResult = try {
+            probeInput.backCompleted()
+            if (backHandled + backFallbacks == before) "예외 없음 · 아무도 받지 않음(무시됨)" else "누군가 받음"
+        } catch (e: IllegalStateException) {
+            "IllegalStateException: ${e.message}"
+        } finally {
+            dispatcher.addInput(probeInput)
+        }
+    }
+}
+
+/** 디스패처의 핸들러 상태 변화를 받는 입력원 — 실제 입력원이라면 여기서 제스처 감지를 켜고 끈다 */
+private class GateAwareInput : NavigationEventInput() {
+    var anyEnabled by mutableStateOf(false)
+        private set
+    var backEnabled by mutableStateOf(false)
+        private set
+    var forwardEnabled by mutableStateOf(false)
+        private set
+    var changeCount by mutableIntStateOf(0)
+        private set
+
+    override fun onHasEnabledHandlersChanged(hasEnabledHandlers: Boolean) {
+        anyEnabled = hasEnabledHandlers
+        changeCount++
+    }
+
+    override fun onHasEnabledBackHandlersChanged(hasEnabledBackHandlers: Boolean) {
+        backEnabled = hasEnabledBackHandlers
+        changeCount++
+    }
+
+    override fun onHasEnabledForwardHandlersChanged(hasEnabledForwardHandlers: Boolean) {
+        forwardEnabled = hasEnabledForwardHandlers
+        changeCount++
+    }
+}
+
 @Composable
 private fun PitfallCard() {
     SectionCard(title = "6. 걸리는 것들") {
@@ -480,7 +672,7 @@ private fun PitfallCard() {
         )
         PitfallRow(
             "이 라이브러리는 Compose 버전의 하한을 건다",
-            "navigationevent-compose 1.1.2 의 pom 은 compose ui/runtime 1.11.2 를 요구한다. BOM 이 1.11.1 을 " +
+            "navigationevent-compose 1.1.2·1.2.0 의 pom 은 compose ui/runtime 1.11.2 를 요구한다. BOM 이 1.11.1 을 " +
                 "가리키던 시절(2026.05.00)에는 높은 쪽이 이겨 그 둘만 1.11.2 로 올라가는 패치 스큐가 생겼고, " +
                 "BOM 2026.06.01(1.11.4)로 올린 지금은 BOM 쪽이 더 높아 스큐가 사라졌다. 실제로 쓰는 API(HostDefaultKey)는 " +
                 "1.11.1 에도 있어 호환 요구일 뿐이지만, BOM 을 1.11.2 미만으로 내리면 다시 끌어올려진다."

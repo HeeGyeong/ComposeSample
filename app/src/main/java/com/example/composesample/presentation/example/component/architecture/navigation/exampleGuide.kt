@@ -136,7 +136,23 @@ package com.example.composesample.presentation.example.component.architecture.na
  * - 의존성 주의: navigationevent-compose 1.1.2 의 pom 은 compose ui/runtime 1.11.2 를 요구한다.
  *   BOM 2026.05.00(1.11.1) 시절에는 높은 쪽이 이겨 ui/runtime 만 1.11.2 로 올라가는 패치 스큐가 있었고
  *   (foundation/animation/material 은 1.11.1 유지), BOM 2026.06.01(1.11.4) 상향 후에는 BOM 이 더 높아 스큐가 사라졌다.
- *   실제로 쓰는 API(androidx.compose.runtime.HostDefaultKey)는 1.11.1 에도 있으므로 호환 요구일 뿐이다
+ *   실제로 쓰는 API(androidx.compose.runtime.HostDefaultKey)는 1.11.1 에도 있으므로 호환 요구일 뿐이다(1.2.0 pom 도 1.11.2)
+ * - **1.2.0 신규(2026-10-07, 6번 카드 — 1.2.0 sources jar 기준)**:
+ *   · `NavigationEventInput.hasEnabledHandlers`·`hasEnabledBackHandlers`·`hasEnabledForwardHandlers`(public 읽기, private set — 스냅샷 상태 아님)
+ *     + protected open `onHasEnabledHandlersChanged`·`onHasEnabledBackHandlersChanged`·`onHasEnabledForwardHandlersChanged`.
+ *     KDoc 권장 패턴: 입력원은 이 값이 true 일 때만 제스처 감지를 켠다. 화면 갱신은 콜백에서 스냅샷 상태로 옮겨야 한다
+ *   · `NavigationEventDispatcherOwner(dispatcher)` 팩토리(public) — 손으로 만든 디스패처를 Local 로 넘길 때 익명 Owner 대신
+ *   · `NavigationEventDispatcher(onBackCompletedFallback, onForwardCompletedFallback)` — 받을 핸들러가 없으면 fallback 이 받는다
+ *   · `NavigationEventInfo.title`·`url` — `@ExperimentalNavigationEventApi`, 웹 호스트(브라우저 탭 제목·주소창)용으로 Android 소비자 없음.
+ *     ⚠️ 같은 이름의 `val title` 을 가진 하위 클래스는 1.2.0 에서 컴파일이 깨진다("hides member of supertype") → override + opt-in
+ *   · 테스트용 `TestNavigationEventDispatcherOwner.navigationEventInput`·`onForwardCompletedFallback`(navigationevent-testing — 프로젝트 미사용)
+ *   · 동작 변화: 디스패처에서 뗀 입력원으로 보내면 1.1.x 는 IllegalStateException, 1.2.0 은 조용히 반환(KDoc 의 @throws 는 옛 문구) ·
+ *     fallback 전파 수정 · `LocalNavigationEventDispatcherOwner` 가 Local·View 트리에 Owner 가 없으면 LocalContext 의 ContextWrapper 사슬에서
+ *     한 번 더 찾는다(예외 문구 2종은 그대로)
+ * - 6번 카드 실측(SM-A725F/Android 13, debug·release 동일): 입력원 부착 직후 콜백 5회, 이후 핸들러 토글마다 2회(any + 방향) ·
+ *   back 켬/forward 끔에서 back 보내기 → 핸들러 1, forward 보내기 → forward fallback 1 · back 끄면 any·back·forward 전부 false, back 보내기 → back fallback 1 ·
+ *   forward 켬 → any·forward true, 보내기 → 핸들러 1 · 뗀 입력원으로 back → 예외 없이 아무도 받지 않음
+ * - 1.1.2 → 1.2.0 상향(DEP-CURRENCY-06) 전후로 이 예제의 주입 시나리오 값 57줄이 debug·release 모두 같았다
 */
 
 /**

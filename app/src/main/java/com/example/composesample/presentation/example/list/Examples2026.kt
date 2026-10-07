@@ -740,9 +740,9 @@ val examples2026 = listOf(
         exampleType = ConstValue.CoroutineStackTraceExample
     ),
     ExampleObject(
-        lastUpdate = "26. 09. 10",
+        lastUpdate = "26. 10. 08",
         title = "NavigationEvent 디스패처",
-        description = "제스처 없이 back/forward 이벤트를 주입해 NavigationEvent 콜백 순서 재현",
+        description = "back/forward 이벤트 주입과 1.2.0 입력원의 핸들러 상태 질의",
         blogUrl = "",
         exampleType = ConstValue.NavigationEventDispatcherExample
     ),
