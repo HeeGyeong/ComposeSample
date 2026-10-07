@@ -183,7 +183,7 @@ Cursor IDE를 사용하는 개발자를 위한 **AI 코딩 어시스턴트 규�
 
 **text**:
 - 텍스트 스타일링, AutoSizing, 커스텀 TextMeasurer 렌더링
-- **텍스트 선택 제어**: 읽기 전용 텍스트 선택(`SelectionContainer`/`DisableSelection`)과 컨텍스트 메뉴 — Compose 1.11 이 선택 메뉴를 `text.contextmenu` 로 옮기면서 `LocalTextToolbar` 교체가 기본값에서 동작하지 않게 된 사실을 실기기 계측으로 확인(`isNewContextMenuEnabled` 기본 true → showMenu 0회, 끄면 copy·selectAll 수신) + 선택 문자열을 얻는 클립보드 우회 + 1.12 `SelectionState` 대조
+- **텍스트 선택 제어**: 읽기 전용 텍스트 선택(`SelectionContainer`/`DisableSelection`)과 컨텍스트 메뉴 — Compose 1.11 이 선택 메뉴를 `text.contextmenu` 로 옮기면서 `LocalTextToolbar` 교체가 기본값에서 동작하지 않게 된 사실을 실기기 계측으로 확인(`isNewContextMenuEnabled` 기본 true → showMenu 0회, 끄면 copy·selectAll 수신) + 1.11 시절 선택 문자열을 얻던 클립보드 우회 + Compose 1.12 `SelectionState` 실적용(`selectedTexts` 관찰, `selectAll`·`clear`·`extendSelectionByWord`·`select(TextRange)`·`getSelectableTexts`), 1~4번 카드 1.11.4 실측을 1.12.1 에서 재측정(동일), 재생성 복원은 리스트 밖에서만 온전하고 LazyColumn 항목 안에서는 0조각·반쪽 복원으로 깨지는 것을 Saver 로그로 규명
 - TextOverflow(Start/Middle Ellipsis), LocalContext 문자열 안티패턴
 - Rich Content in Text Input(contentReceiver를 통한 이미지/파일 붙여넣기 — 키보드/클립보드/드래그앤드롭 소스별 처리)
 - TextField Max Length 숨겨진 버그(프로그래밍적 변경에는 InputTransformation이 적용되지 않는 버그 + LaunchedEffect+snapshotFlow 해결책)

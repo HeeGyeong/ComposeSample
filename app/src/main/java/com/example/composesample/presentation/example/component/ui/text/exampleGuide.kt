@@ -89,7 +89,7 @@ package com.example.composesample.presentation.example.component.ui.text
  * - `Text` 는 기본적으로 선택 불가 → `SelectionContainer` 로 감싸야 선택이 열린다. 컨테이너 하나가
  *   그 안의 모든 선택 가능 텍스트를 **하나의 선택 영역**으로 묶는다
  * - `DisableSelection { }` 은 같은 컨테이너 안에서 일부만 선택에서 제외한다(숨기는 것이 아니라 선택만 막는다)
- * - **선택 내용을 읽는 공개 경로가 없다(1.11.1)**: `SelectionContainer(modifier, selection, onSelectionChange, children)`
+ * - **선택 내용을 읽는 공개 경로가 없었다(1.11.x — 1.12 의 SelectionState 로 해소)**: `SelectionContainer(modifier, selection, onSelectionChange, children)`
  *   오버로드와 `Selection`/`Selection.AnchorInfo` 가 바이트코드에는 public 으로 보이지만 Kotlin `internal` 이라
  *   앱 모듈에서 컴파일되지 않는다(`Cannot access 'data class Selection': it is internal in file.`).
  *   → **교훈: Kotlin internal 은 JVM public 으로 컴파일되므로 javap 결과만 보고 사용 가능하다고 판단하면 안 된다**
@@ -103,10 +103,24 @@ package com.example.composesample.presentation.example.component.ui.text
  *   ① 기본값(true) → showMenu **0회**, status=Hidden
  *   ② 런타임에 false 로 바꾸고 `key()` 로 서브트리를 재생성 → showMenu **2회**, status=Shown
  *   ③ 넘어오는 액션은 **copy, selectAll 뿐**(읽기 전용 선택이라 cut/paste 는 null)
- * - 선택된 문자열을 얻는 우회: 커스텀 툴바가 받은 `onCopyRequested` 를 실행한 뒤 `LocalClipboard` 로
+ * - (1.11 까지) 선택된 문자열을 얻는 우회: 커스텀 툴바가 받은 `onCopyRequested` 를 실행한 뒤 `LocalClipboard` 로
  *   `getClipEntry()?.clipData` 를 되읽는다. 단 Android 12+ 는 클립보드 읽기 시 사용자에게 토스트를 띄운다
- * - Compose 1.12.1 의 `SelectionState`(현재 프로젝트엔 없음): `rememberSelectionState()` · `selectedTexts:
- *   List<AnnotatedString>` · `selectableTexts` · `selectAll()` · `clear()` · `extendSelectionByWord()` · Saver 내장.
- *   즉 "선택된 텍스트 읽기"는 1.12 에서 공개 API 가 된다. 2026-09-29 compose-bom 2026.09.00 상향(compileSdk 37)으로
- *   이 프로젝트도 1.12.1 을 쓰게 됐다 — 예제의 1.11.4 실측(컨텍스트 메뉴 등)은 1.12 에서 다시 재지 않았다
+ * - **Compose 1.12 의 `SelectionState`(3번 카드, foundation 1.12.1 sources jar 기준)**: `rememberSelectionState()`(rememberSaveable +
+ *   `SelectionState.Saver`) → `SelectionContainer(state = state) { }`. `selectedTexts: List<AnnotatedString>`(스냅샷 상태, Text 하나당
+ *   한 조각) · `selectAll()` · `clear()` · `extendSelectionByWord()` · `select(TextRange)`(컨테이너 전체 기준) ·
+ *   `getSelectableTexts()`(함수 — 레이아웃 필요, 컴포지션 중 호출 금지, DisableSelection 제외). 같은 상태를 두 컨테이너에
+ *   넘기면 error(). `Selection` 자체는 1.12.1 에서도 internal. 기본 `SelectionContainer(modifier, content)` 도 내부에서
+ *   rememberSelectionState() 를 쓴다(1.11.4 는 `remember { mutableStateOf<Selection?>(null) }`).
+ * - 실측(SM-A725F/Android 13, 1.12.1): 전체 선택 2조각·160자(83+77, DisableSelection 2줄 제외) · getSelectableTexts 2개·160자 ·
+ *   select(0,12) "Compose 에서 화" → 단어 확장 14자 "…화면에" → 18자 "…보이는" · clear 0조각. 코드로 바꾼 선택도 하이라이트·핸들·
+ *   복사/모두 선택 메뉴가 뜬다. 1~4번 카드의 1.11.4 실측(그냥 Text 무반응·컨테이너는 단어 선택+메뉴, 플래그 true showMenu 0회 /
+ *   false 2회·copy·selectAll)은 1.12.1 에서 그대로였다.
+ * - **재생성(다크 모드 전환) 복원 — Lazy 항목 안에서는 깨진다**(debug·release 동일):
+ *   ① Column(리스트 밖) — 1조각·하이라이트·핸들 복원, 단어 확장 12→14 정상(이 화면이 Column 인 이유)
+ *   ② LazyColumn 항목 안에서 상태 생성 — 0조각. Saver 를 로그로 감싸 보니 onStop 직후 1조각 저장 → onDestroy 해체 중 선택이
+ *      풀린 0조각이 다시 저장 → 복원 0조각. SaveableStateHolderImpl.saveAll() 이 내부 savedStates 맵 객체를 그대로 돌려주고
+ *      항목 onDispose 가 같은 맵에 다시 쓰는데, 구성 변경 재생성은 Bundle 을 직렬화하지 않고 넘기므로 나중 값이 이긴다(소스 판독)
+ *   ③ 상태를 LazyColumn 밖에서 만들어 넘김 — selectedTexts 만 1조각, 하이라이트 없음·단어 확장 무반응(레지스트라는 incrementId 만
+ *      저장하고 subselections 는 조작 때만 갱신) ④ 재생성 없이 Lazy 항목을 화면 밖으로 보냈다 오면 유지(포커스 항목 고정)
+ *   ⑤ 창 포커스만 잃는 것(알림 패널 내렸다 접기)으로는 선택이 풀리지 않는다
 */

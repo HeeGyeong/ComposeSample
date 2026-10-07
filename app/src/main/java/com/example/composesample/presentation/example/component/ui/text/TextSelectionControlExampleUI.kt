@@ -4,6 +4,7 @@ import androidx.compose.foundation.ComposeFoundationFlags
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -14,11 +15,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.selection.DisableSelection
 import androidx.compose.foundation.text.selection.SelectionContainer
+import androidx.compose.foundation.text.selection.rememberSelectionState
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -42,6 +43,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalTextToolbar
 import androidx.compose.ui.platform.TextToolbar
 import androidx.compose.ui.platform.TextToolbarStatus
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -55,14 +58,14 @@ import kotlinx.coroutines.launch
  *   **읽기 전용 텍스트를 사용자가 선택하는 경로**와 그때 뜨는 플로팅 툴바를 다룬다.
  * - `SelectionContainer`(선택 허용) / `DisableSelection`(부분 예외) / `LocalTextToolbar` 교체(툴바 대체)
  *   세 축을 각각 실제로 눌러 볼 수 있게 구성한다.
- * - **선택된 텍스트를 코드로 읽는 공개 경로는 이 버전에 없다** — `Selection` 과 selection/onSelectionChange
- *   오버로드가 Kotlin `internal` 이기 때문이다(바이트코드에는 public 으로 보인다). 그래서 실질적 경로는
- *   커스텀 툴바로 복사 액션을 감싸고 클립보드를 되읽는 것이며, 4번 카드가 그것을 실제로 수행한다.
- * - **그 커스텀 툴바조차 기본값에서는 호출되지 않는다** — Compose 1.11 이 선택 컨텍스트 메뉴를
+ * - **선택된 텍스트를 코드로 읽기**: 1.12 의 `SelectionState`(`rememberSelectionState()` + `SelectionContainer(state)`)로
+ *   selectedTexts 를 관찰하고 selectAll·clear·extendSelectionByWord·select(TextRange)·getSelectableTexts 를 부른다(3번 카드).
+ *   1.11.4 까지는 `Selection` 과 selection/onSelectionChange 오버로드가 Kotlin `internal` 이라(바이트코드에는 public)
+ *   커스텀 툴바로 복사 액션을 감싸고 클립보드를 되읽는 우회로뿐이었다(4번 카드).
+ * - **그 커스텀 툴바는 기본값에서 호출되지 않는다** — Compose 1.11 이 선택 컨텍스트 메뉴를
  *   `text.contextmenu` 로 옮겼고 `ComposeFoundationFlags.isNewContextMenuEnabled` 기본값이 true 이기 때문이다.
- *   실기기 계측으로 확인했다(기본값: showMenu 0회 / 플래그를 끄면 2회, 액션은 copy·selectAll).
- * - Compose 1.12 의 `SelectionState` 가 무엇을 더 주는지는 5번 카드에서 실물 API 로 대조한다
- *   (프로젝트가 해석하는 foundation 1.11.4 에는 없다 — 1.11.1 에서도 없었다).
+ *   1.11.4·1.12.1 모두 실기기에서 같은 값(기본값: showMenu 0회 / 플래그를 끄면 2회, 액션은 copy·selectAll).
+ * - 1.11.4 → 1.12.1 에서 바뀐 것과 그대로인 것은 5번 카드에 실측으로 정리한다.
  * - 참고 자료(URL/핵심 개념)는 같은 폴더의 exampleGuide.kt 의 "Text Selection Control" 섹션 참고.
  */
 
@@ -143,17 +146,20 @@ fun TextSelectionControlExampleUI(onBackEvent: () -> Unit) {
             onBackIconClicked = onBackEvent
         )
 
-        LazyColumn(
-            modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(16.dp),
+        // LazyColumn 이 아니라 Column 인 이유: Lazy 항목 안의 SelectionContainer 는 재생성 뒤 선택을 되살리지 못한다(5번 카드 실측)
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            item { BasicsCard() }
-            item { DisableSelectionCard() }
-            item { ObserveSelectionCard() }
-            item { CustomToolbarCard() }
-            item { VersionGapCard() }
-            item { PitfallCard() }
+            BasicsCard()
+            DisableSelectionCard()
+            SelectionStateCard()
+            CustomToolbarCard()
+            VersionGapCard()
+            PitfallCard()
         }
     }
 }
@@ -236,44 +242,99 @@ private fun DisableSelectionCard() {
 // ==================== 3. 선택 내용 읽기 ====================
 
 @Composable
-private fun ObserveSelectionCard() {
-    SectionCard(title = "3. 선택된 내용을 코드로 읽을 수 있나") {
+private fun SelectionStateCard() {
+    // 같은 SelectionState 를 두 컨테이너에 넘기면 error() — 컨테이너마다 하나씩 만든다
+    val state = rememberSelectionState()
+    // getSelectableTexts() 는 레이아웃이 끝나야 읽을 수 있어 컴포지션 중에는 부르지 않고 버튼에서 읽어 둔다
+    var selectableTexts by remember { mutableStateOf<List<AnnotatedString>?>(null) }
+
+    SectionCard(title = "3. 선택된 내용을 코드로 읽기 — SelectionState (1.12)") {
         BodyText(
-            "\"사용자가 무엇을 선택했는지\"를 앱이 알고 싶은 경우가 있다. 하이라이트 저장, 인용 공유 같은 기능이다. " +
-                "현재 버전에서는 **공개 API 로 읽을 수 없다.**"
-        )
-        Spacer(modifier = Modifier.height(10.dp))
-        BodyText(
-            "foundation 1.11.4 의 바이트코드에는 선택 상태를 넘겨받는 오버로드가 분명히 들어 있다 — " +
-                "`SelectionContainer(modifier, selection, onSelectionChange, children)` 과 `Selection` 클래스가 그것이다. " +
-                "그런데 그대로 쓰면 컴파일되지 않는다."
+            "1.12 부터 SelectionContainer 에 상태 객체를 넘길 수 있다. 사용자가 무엇을 선택했는지 상태로 관찰하고, " +
+                "선택을 코드로 바꿀 수도 있다. 아래 문단을 길게 눌러 드래그하거나 버튼을 눌러 보라."
         )
         Spacer(modifier = Modifier.height(8.dp))
+        CodeBlock(
+            "val state = rememberSelectionState()   // rememberSaveable\n" +
+                "SelectionContainer(state = state) { ... }\n\n" +
+                "state.selectedTexts            // List<AnnotatedString>, 스냅샷 상태\n" +
+                "state.selectAll() / clear() / extendSelectionByWord()\n" +
+                "state.select(TextRange(0, 12))   // 컨테이너 전체 기준 범위\n" +
+                "state.getSelectableTexts()       // 컴포지션 중 호출 금지"
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+
+        LabeledBox(label = "SelectionContainer(state = state) — 회색 줄은 DisableSelection", color = Color(0xFFE0F2F1)) {
+            SelectionContainer(state = state) {
+                Column {
+                    DisableSelection {
+                        Text(text = "2026. 10. 07  ·  선택에서 제외된 메타데이터", fontSize = 10.sp, color = Color(0xFF9E9E9E))
+                    }
+                    Spacer(modifier = Modifier.height(6.dp))
+                    Text(text = SAMPLE_TEXT, fontSize = 12.sp, color = Color(0xFF004D40), lineHeight = 18.sp)
+                    Spacer(modifier = Modifier.height(6.dp))
+                    Text(text = ARTICLE_BODY, fontSize = 12.sp, color = Color(0xFF004D40), lineHeight = 18.sp)
+                    Spacer(modifier = Modifier.height(6.dp))
+                    DisableSelection {
+                        Text(text = "— 광고 문구는 선택되지 않는다", fontSize = 10.sp, color = Color(0xFF9E9E9E))
+                    }
+                }
+            }
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+        Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+            DemoButton("전체 선택", Color(0xFF00796B)) { state.selectAll() }
+            DemoButton("단어 확장", Color(0xFF00897B)) { state.extendSelectionByWord() }
+            DemoButton("앞 12자", Color(0xFF26A69A)) { state.select(TextRange(0, 12)) }
+        }
+        Spacer(modifier = Modifier.height(6.dp))
+        Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+            DemoButton("지우기", Color(0xFF546E7A)) { state.clear() }
+            DemoButton("선택 가능 텍스트 읽기", Color(0xFF37474F)) { selectableTexts = state.getSelectableTexts() }
+        }
+
+        Spacer(modifier = Modifier.height(10.dp))
+        val selected = state.selectedTexts
+        ResultRow("selectedTexts", "${selected.size}조각 · ${selected.sumOf { it.length }}자")
+        selected.forEachIndexed { index, text ->
+            ResultRow("  [$index]", "\"${text.text.ellipsize(36)}\"")
+        }
+        ResultRow(
+            "getSelectable…",
+            selectableTexts?.let { texts -> "${texts.size}개 · ${texts.sumOf { it.length }}자 (DisableSelection 제외)" }
+                ?: "버튼을 눌러 읽는다"
+        )
+
+        Spacer(modifier = Modifier.height(12.dp))
+        Text(text = "1.11.4 까지는 왜 못 읽었나", fontSize = 13.sp, fontWeight = FontWeight.Bold, color = Color(0xFF37474F))
+        Spacer(modifier = Modifier.height(6.dp))
+        BodyText(
+            "1.11.4 의 바이트코드에도 선택 상태를 넘겨받는 오버로드 `SelectionContainer(modifier, selection, onSelectionChange, children)` " +
+                "와 `Selection` 클래스가 들어 있었지만, 그대로 쓰면 컴파일되지 않았다. 이 예제를 처음 만들 때 받은 오류다."
+        )
+        Spacer(modifier = Modifier.height(6.dp))
         CodeBlock(
             "e: Cannot access 'data class Selection : Any': it is internal in file.\n" +
                 "e: Cannot access 'fun SelectionContainer(modifier: Modifier = ...,\n" +
                 "   selection: Selection?, onSelectionChange: (Selection?) -> Unit,\n" +
                 "   children: ComposableFunction0<Unit>): Unit': it is internal in file."
         )
-        CaptionText("이 예제를 만들다 실제로 받은 오류 그대로다.")
-        Spacer(modifier = Modifier.height(10.dp))
+        Spacer(modifier = Modifier.height(6.dp))
         BodyText(
-            "원인은 **Kotlin 의 `internal` 이 JVM 바이트코드에서는 public 으로 컴파일된다**는 데 있다. " +
-                "그래서 javap 로 라이브러리를 뜯어보면 쓸 수 있을 것처럼 보이지만, 컴파일러는 모듈 밖 접근을 막는다. " +
-                "라이브러리 표면을 바이트코드로 조사할 때 반드시 함께 기억해야 할 함정이다."
+            "Kotlin 의 internal 은 JVM 바이트코드에서 public 으로 컴파일되므로 javap 로는 쓸 수 있을 것처럼 보인다. " +
+                "1.12.1 에서도 Selection 은 여전히 internal 이고, 공개된 것은 그것을 감싼 SelectionState 다."
         )
-        Spacer(modifier = Modifier.height(10.dp))
+        Spacer(modifier = Modifier.height(6.dp))
         TableRow("확인", "javap 표기 / Kotlin 실제", isHeader = true)
-        TableRow("Selection", "public final class / internal")
-        TableRow("AnchorInfo", "public / internal")
+        TableRow("Selection", "public final class / internal (1.12.1 도 동일)")
         TableRow("오버로드", "public static final void / internal")
-        Spacer(modifier = Modifier.height(10.dp))
-        BodyText(
-            "그렇다면 지금 할 수 있는 것은 무엇인가 — **툴바를 가로채는 것**이다. 선택이 끝나면 툴바 요청이 오고, " +
-                "그 요청에 담긴 복사 액션을 실행한 뒤 클립보드를 되읽으면 선택된 문자열을 손에 넣을 수 있다. 4번 카드가 그것을 실제로 한다."
-        )
+        TableRow("SelectionState", "1.12 신규 — public")
     }
 }
+
+/** 결과 행이 한 줄을 넘지 않도록 자른다 */
+private fun String.ellipsize(max: Int): String = if (length <= max) this else take(max) + "…"
 
 // ==================== 4. 커스텀 툴바 ====================
 
@@ -374,7 +435,7 @@ private fun CustomToolbarCard() {
             Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                 current.onCopy?.let { action ->
                     DemoButton("복사 후 읽기", Color(0xFFEF6C00)) {
-                        // 복사 액션을 실행한 뒤 클립보드를 되읽는다 — 이 버전에서 선택된 문자열을 얻는 실질적 경로다.
+                        // 복사 액션을 실행한 뒤 클립보드를 되읽는다 — 1.11 까지 선택된 문자열을 얻던 우회로(1.12 는 3번 카드).
                         action()
                         scope.launch {
                             val clipData = clipboard.getClipEntry()?.clipData
@@ -396,15 +457,15 @@ private fun CustomToolbarCard() {
         }
 
         Spacer(modifier = Modifier.height(10.dp))
-        TableRow("실측", "실기기(SM-A725F/Android 13) 계측 결과", isHeader = true)
+        TableRow("실측", "실기기(SM-A725F/Android 13) — 1.11.4·1.12.1 동일", isHeader = true)
         TableRow("기본값", "플래그 true — showMenu 0회, status=Hidden")
         TableRow("전환 후", "플래그 false + 서브트리 재생성 — showMenu 2회, status=Shown")
         TableRow("액션", "copy, selectAll 만 온다(읽기 전용이라 cut/paste 없음)")
         Spacer(modifier = Modifier.height(8.dp))
         BodyText(
             "즉 커스텀 툴바는 **받은 것만** 그릴 수 있고, 그 이전에 **호출이 오는지부터** 확인해야 한다. " +
-                "그리고 이것이 3번 카드에서 막혔던 \"선택된 텍스트 읽기\"의 현재 버전 해법이다 — " +
-                "복사 액션을 우리가 감싸고 있으므로, 실행한 뒤 클립보드를 읽으면 그 문자열이 나온다."
+                "1.11 까지는 이것이 \"선택된 텍스트 읽기\"의 유일한 우회로였다 — 복사 액션을 우리가 감싸고 있으므로 " +
+                "실행한 뒤 클립보드를 읽으면 그 문자열이 나온다. 1.12 에서는 3번 카드의 SelectionState 가 이 일을 대신한다."
         )
         CaptionText(
             "플래그는 프로세스 전역이다. 이 카드는 화면을 떠날 때 DisposableEffect 로 기본값(true)으로 되돌린다."
@@ -412,30 +473,41 @@ private fun CustomToolbarCard() {
     }
 }
 
-// ==================== 5. 1.12 와의 차이 ====================
+// ==================== 5. 1.11.4 → 1.12.1 ====================
 
 @Composable
 private fun VersionGapCard() {
-    SectionCard(title = "5. Compose 1.12 의 SelectionState 는 무엇을 더 주나") {
+    SectionCard(title = "5. 1.11.4 → 1.12.1 에서 바뀐 것과 그대로인 것") {
         BodyText(
-            "3번 카드의 아쉬움(선택된 문자열을 직접 못 받는다)은 다음 버전에서 해소된다. " +
-                "이 예제를 작성할 때 쓰던 foundation 1.11.4 에는 없고 1.12.1 에 들어 있는 API 를 실물로 대조하면 이렇다."
+            "이 예제는 foundation 1.11.4 로 처음 만들었고, 2026-09-29 compose-bom 2026.09.00 상향으로 1.12.1 이 되었다. " +
+                "1~4번 카드를 1.12.1 에서 같은 조작으로 다시 재고 소스를 대조한 결과다."
         )
         Spacer(modifier = Modifier.height(10.dp))
-        TableRow("구분", "1.11.4(작성 당시) / 1.12.1", isHeader = true)
+        TableRow("구분", "1.11.4 / 1.12.1", isHeader = true)
         TableRow("상태 객체", "없음(Selection 이 internal) / SelectionState + rememberSelectionState()")
-        TableRow("선택 텍스트", "클립보드 우회만 가능 / selectedTexts: List<AnnotatedString>")
-        TableRow("후보 텍스트", "없음 / selectableTexts: List<AnnotatedString>")
-        TableRow("조작", "없음 / selectAll() · clear() · extendSelectionByWord()")
-        TableRow("복원", "직접 구현 / SelectionState 에 Saver 내장")
+        TableRow("선택 텍스트", "클립보드 우회만 가능 / selectedTexts — 조각 리스트, 스냅샷 상태")
+        TableRow("전체 텍스트", "없음 / getSelectableTexts() — 함수, 컴포지션 밖에서만")
+        TableRow("조작", "없음 / selectAll · clear · extendSelectionByWord · select(TextRange)")
+        TableRow("재생성", "기본 컨테이너가 remember — 선택이 사라짐 / rememberSaveable — 하이라이트·조작까지 복원(Lazy 항목 안은 예외)")
+        TableRow("1·2번", "길게 누르면 단어 선택 + 복사·모두 선택 메뉴 / 동일(실측)")
+        TableRow("4번", "플래그 true: showMenu 0회 · false: 2회, copy·selectAll / 동일(실측)")
+        Spacer(modifier = Modifier.height(10.dp))
+        TableRow("재생성 실측", "3번 카드 '앞 12자' 후 다크 모드 전환(SM-A725F)", isHeader = true)
+        TableRow("이 화면", "Column — 1조각 그대로, 하이라이트·핸들 복원, 단어 확장 12→14자 정상")
+        TableRow("Lazy 항목", "상태를 항목 안에서 만들면 0조각(debug·release 동일)")
+        TableRow("Lazy+끌어올림", "상태를 LazyColumn 밖에서 만들어 넘기면 selectedTexts 만 1조각, 하이라이트 없음·단어 확장 무반응")
+        TableRow("스크롤", "Lazy 항목을 화면 밖으로 보냈다 와도 유지(포커스 항목은 고정)")
+        Spacer(modifier = Modifier.height(6.dp))
+        CaptionText(
+            "Saver 로그를 붙여 보니 Lazy 항목 안에서는 onStop 때 1조각을 저장한 뒤, 해체 중에 선택이 풀린 0조각이 " +
+                "같은 SaveableStateHolder 맵에 다시 저장되어 복원값이 0조각이 됐다(구성 변경 재생성은 Bundle 을 직렬화하지 않고 넘긴다). " +
+                "이 화면이 LazyColumn 대신 Column 을 쓰는 이유다."
+        )
         Spacer(modifier = Modifier.height(10.dp))
         BodyText(
-            "정리하면 이 예제가 다루는 세 축 중 **SelectionContainer·DisableSelection·커스텀 툴바는 지금 버전에서 그대로 쓸 수 있고**, " +
-                "\"선택된 텍스트를 코드로 읽어 가공한다\"만 1.12 를 기다려야 한다."
-        )
-        CaptionText(
-            "2026-09-29 compose-bom 2026.09.00 상향으로 이 프로젝트도 foundation 1.12.1 을 쓴다. " +
-                "위 표를 실제 SelectionState 호출로 바꾸는 작업과 1~4번 카드의 1.11.4 실측을 1.12 에서 다시 재는 작업은 후속으로 남겼다."
+            "선택 범위를 정하는 SelectionContainer·DisableSelection 과 툴바 가로채기는 그대로이고, " +
+                "\"선택된 텍스트를 코드로 읽고 조작한다\"는 축만 1.12 에서 새로 열렸다. " +
+                "기본 SelectionContainer 도 내부에서 rememberSelectionState() 를 쓰므로 재생성 복원 여부는 상태를 넘기지 않아도 같다."
         )
     }
 }
@@ -461,8 +533,26 @@ private fun PitfallCard() {
         )
         PitfallRow(
             "클립보드 되읽기는 공짜가 아니다",
-            "Android 12+ 는 앱이 클립보드를 읽으면 사용자에게 알림 토스트를 띄운다. " +
-                "선택 내용을 얻겠다고 무턱대고 읽으면 사용자 눈에 그대로 보인다."
+            "Android 12+ 는 앱이 클립보드를 읽으면 사용자에게 알림 토스트를 띄우고, 사용자의 클립보드 내용도 덮어쓴다. " +
+                "1.12 부터는 SelectionState.selectedTexts 로 읽으면 되므로 이 우회로를 쓸 이유가 없다."
+        )
+        PitfallRow(
+            "SelectionState 하나에 컨테이너 하나",
+            "같은 상태 객체를 두 SelectionContainer 에 넘기면 error() 로 터진다. 컨테이너마다 rememberSelectionState() 를 따로 만든다."
+        )
+        PitfallRow(
+            "getSelectableTexts()·select() 는 컴포지션 중에 부르지 않는다",
+            "레이아웃이 끝나야 결과가 나오는 함수다. 버튼·효과 안에서 부르고, 결과는 상태에 담아 그린다."
+        )
+        PitfallRow(
+            "Lazy 항목 안의 선택은 재생성을 넘지 못한다",
+            "SelectionState 는 rememberSaveable 이지만, LazyColumn 항목 안에 둔 컨테이너는 다크 모드·언어 변경 같은 재생성 뒤 " +
+                "선택이 0조각으로 돌아온다. 상태만 Lazy 밖으로 끌어올리면 selectedTexts 는 남아도 화면의 선택은 끊긴다. " +
+                "선택을 살려야 하는 화면은 컨테이너를 Lazy 밖(Column)에 둔다."
+        )
+        PitfallRow(
+            "Lazy 리스트 안에서는 컴포즈된 항목만",
+            "SelectionContainer 안에 LazyColumn 을 두면 selectAll 과 복사가 화면에 컴포즈된 텍스트까지만 닿는다."
         )
         PitfallRow(
             "커스텀 툴바는 받은 액션만 그릴 수 있다",

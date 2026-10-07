@@ -747,9 +747,9 @@ val examples2026 = listOf(
         exampleType = ConstValue.NavigationEventDispatcherExample
     ),
     ExampleObject(
-        lastUpdate = "26. 09. 11",
+        lastUpdate = "26. 10. 07",
         title = "텍스트 선택 제어",
-        description = "SelectionContainer 선택 범위 제어, 선택 상태 관찰과 플로팅 툴바 가로채기",
+        description = "SelectionContainer 범위 제어와 1.12 SelectionState 선택 읽기·조작",
         blogUrl = "",
         exampleType = ConstValue.TextSelectionControlExample
     ),
