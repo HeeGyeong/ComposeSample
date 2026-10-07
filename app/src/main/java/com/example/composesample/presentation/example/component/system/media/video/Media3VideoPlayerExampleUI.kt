@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.Lifecycle
 import androidx.media3.common.MediaItem
+import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.PlayerView
@@ -47,9 +48,10 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import java.util.Locale
 
-// Google 공개 샘플 비디오(ExoPlayer 데모에서 널리 쓰이는 테스트 스트림).
+// ExoPlayer 공식 테스트 미디어 버킷의 공개 샘플 비디오.
+// 이전 주소(gtv-videos-bucket/sample/BigBuckBunny.mp4)는 2026-10 기준 HTTP 403 으로 재생이 실패했다.
 private const val SAMPLE_VIDEO_URL =
-    "https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+    "https://storage.googleapis.com/exoplayer-test-media-0/BigBuckBunny_320x180.mp4"
 
 @Composable
 fun Media3VideoPlayerExampleUI(onBackEvent: () -> Unit) {
@@ -62,6 +64,8 @@ fun Media3VideoPlayerExampleUI(onBackEvent: () -> Unit) {
     }
     var isPlaying by remember { mutableStateOf(false) }
     var playbackStateLabel by remember { mutableStateOf("IDLE") }
+    // 재생 실패는 STATE_IDLE 로만 보이므로 오류를 따로 보여준다 (없으면 실패가 "IDLE · 정지" 에 묻힌다)
+    var playerError by remember { mutableStateOf<String?>(null) }
     var positionMs by remember { mutableLongStateOf(0L) }
     var durationMs by remember { mutableLongStateOf(0L) }
 
@@ -73,6 +77,7 @@ fun Media3VideoPlayerExampleUI(onBackEvent: () -> Unit) {
             }
 
             override fun onPlaybackStateChanged(state: Int) {
+                if (state == Player.STATE_BUFFERING || state == Player.STATE_READY) playerError = null
                 playbackStateLabel = when (state) {
                     Player.STATE_IDLE -> "IDLE"
                     Player.STATE_BUFFERING -> "BUFFERING"
@@ -80,6 +85,10 @@ fun Media3VideoPlayerExampleUI(onBackEvent: () -> Unit) {
                     Player.STATE_ENDED -> "ENDED"
                     else -> "UNKNOWN"
                 }
+            }
+
+            override fun onPlayerError(error: PlaybackException) {
+                playerError = error.errorCodeName
             }
         }
         exoPlayer.addListener(listener)
@@ -119,6 +128,7 @@ fun Media3VideoPlayerExampleUI(onBackEvent: () -> Unit) {
                     exoPlayer = exoPlayer,
                     isPlaying = isPlaying,
                     playbackStateLabel = playbackStateLabel,
+                    playerError = playerError,
                     positionMs = positionMs,
                     durationMs = durationMs
                 )
@@ -195,6 +205,7 @@ private fun VideoPlayerCard(
     exoPlayer: ExoPlayer,
     isPlaying: Boolean,
     playbackStateLabel: String,
+    playerError: String?,
     positionMs: Long,
     durationMs: Long
 ) {
@@ -282,6 +293,15 @@ private fun VideoPlayerCard(
                     fontSize = 11.sp,
                     fontFamily = FontFamily.Monospace,
                     color = Color(0xFFB3E5FC)
+                )
+            }
+            if (playerError != null) {
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = "onPlayerError: $playerError",
+                    fontSize = 11.sp,
+                    fontFamily = FontFamily.Monospace,
+                    color = Color(0xFFD32F2F)
                 )
             }
         }

@@ -23,7 +23,10 @@ package com.example.composesample.presentation.example.component.system.media.vi
  * ## 본 예제 구현 메모
  * - 원문(Reddit 앱 비디오 플레이어 리팩터링 회고록)은 그대로 이식할 수 없어, Media3 Compose 통합의 핵심 패턴(AndroidView+PlayerView,
  *   상태 추적, 생명주기 관리)만 재구성해 시연
- * - 샘플 비디오는 Google 공개 테스트 스트림(BigBuckBunny.mp4)을 사용해 실제 네트워크 재생을 시연(네트워크 없으면 버퍼링 상태로 표시)
+ * - 샘플 비디오는 ExoPlayer 공식 테스트 미디어 버킷의 BigBuckBunny_320x180.mp4 로 실제 네트워크 재생을 시연.
+ *   이전 주소(gtv-videos-bucket/sample/BigBuckBunny.mp4)가 2026-10 기준 HTTP 403 이 되어 재생이 실패했는데, 실패가
+ *   STATE_IDLE 로만 보여 화면에서는 'IDLE · 정지'에 묻혔다 → onPlayerError 의 errorCodeName 을 따로 표시한다
+ *   (403 은 ERROR_CODE_IO_BAD_HTTP_STATUS)
  * - 화면 이탈 시 리스너 해제 + player.release() 는 DisposableEffect 로, PlayerView 쪽 참조 해제는 AndroidView 의 onRelease 로 분리
  *   (WebViewIssueExampleUI 의 AndroidView + onRelease 리소스 정리 관례와 동일)
  * - 앱 백그라운드 전환 시 자동 일시정지는 프로젝트 공용 유틸 `OnLifecycleEvent`(LifecycleUtil.kt)로 ON_STOP 을 구독해 실동작 시연
