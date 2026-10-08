@@ -4,7 +4,7 @@ package com.example.composesample.presentation.example.component.system.platform
  * System/Platform/Haptic 예제 참고 자료
  *
  * ## HapticFeedbackExampleUI (햅틱 피드백)
- * - 공식 문서: https://developer.android.com/develop/ui/compose/touch-input/haptics
+ * - 공식 문서(Views 가이드 — Compose 전용 햅틱 가이드는 없다): https://developer.android.com/develop/ui/views/haptics/haptic-feedback
  * - 출처: https://medium.com (Android Weekly 햅틱 비교)
  * 핵심 개념:
  * - LocalHapticFeedback.current.performHapticFeedback(HapticFeedbackType.LongPress) — Compose 표준 API

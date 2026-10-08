@@ -18,7 +18,7 @@ package com.example.composesample.presentation.example.component.architecture.de
  * - compositeOver(): 두 색상을 알파 블렌딩으로 합성
  *
  * ## LookaheadScope (자동 레이아웃 애니메이션)
- * - 공식 문서: https://developer.android.com/develop/ui/compose/animation/lookahead
+ * - API 레퍼런스(LookaheadScope 전용 가이드 페이지는 없다): https://developer.android.com/reference/kotlin/androidx/compose/ui/layout/LookaheadScope
  * 핵심 개념:
  * - LookaheadScope 내부에서 Modifier.animateBounds()로 이동/크기 변화 자동 애니메이션
  * - 별도 AnimatedVisibility 없이 레이아웃 변화를 부드럽게 처리

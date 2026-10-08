@@ -4,7 +4,7 @@ package com.example.composesample.presentation.example.component.architecture.de
  * Startup Optimization 참고 자료
  *
  * - 원문: "How I Found a 34% Startup Win in a Modern Compose App" (Android Weekly #719)
- *   https://programminghard.dev/how-i-found-a-34-startup-win-in-a-modern-compose-app/
+ *   https://levelup.gitconnected.com/how-i-found-a-34-startup-win-in-a-modern-compose-app-84953f77ae52 (James Cullimore, Level Up)
  *
  * - App Startup 공식 문서:
  *   https://developer.android.com/topic/libraries/app-startup

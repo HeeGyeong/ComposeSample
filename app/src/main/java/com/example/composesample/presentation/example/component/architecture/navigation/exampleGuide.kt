@@ -3,8 +3,8 @@ package com.example.composesample.presentation.example.component.architecture.na
 /**
  * Navigation3 Example 참고 자료
  *
- * - Navigation3 공식 문서: https://developer.android.com/guide/navigation/navigation3
- * - GitHub: https://github.com/androidx/androidx/tree/androidx-main/navigation/navigation3
+ * - Navigation3 공식 문서: https://developer.android.com/guide/navigation/navigation-3
+ * - GitHub: https://github.com/androidx/androidx/tree/androidx-main/navigation3
  *
  * 핵심 개념:
  * - Navigation3는 기존 NavController 기반 Navigation2를 대체하는 새 Compose 전용 라이브러리
@@ -77,7 +77,7 @@ package com.example.composesample.presentation.example.component.architecture.na
  * Nav3 SavedStateHandle 크래시 & 복원 Example 참고 자료
  *
  * - Why SavedStateHandle Crashes in Jetpack Navigation 3 (Ahmed Tikiwa, Android Weekly #730)
- * - Navigation3 공식 문서: https://developer.android.com/guide/navigation/navigation3
+ * - Navigation3 공식 문서: https://developer.android.com/guide/navigation/navigation-3
  * - SavedStateHandle: https://developer.android.com/topic/libraries/architecture/viewmodel/viewmodel-savedstate
  *
  * 핵심 개념 정리:

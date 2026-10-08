@@ -6,7 +6,7 @@ package com.example.composesample.presentation.example.component.ui.overlay
  * - onGloballyPositioned 공식 문서: https://developer.android.com/reference/kotlin/androidx/compose/ui/layout/package-summary#(androidx.compose.ui.Modifier).onGloballyPositioned(kotlin.Function1)
  * - Popup 공식 문서: https://developer.android.com/reference/kotlin/androidx/compose/ui/window/package-summary#Popup(androidx.compose.ui.window.PopupPositionProvider,kotlin.Function0,androidx.compose.ui.window.PopupProperties,kotlin.Function2)
  * - Path 공식 문서(op/PathOperation 포함): https://developer.android.com/reference/kotlin/androidx/compose/ui/graphics/Path
- * - 참고 라이브러리(기법 출처, 이 예제는 라이브러리 도입이 아니라 기법 자체를 stdlib+Compose API로 직접 구현): https://github.com/ShowcaseLayoutCompose (AW #739 소개)
+ * - 참고 라이브러리(기법 출처, 이 예제는 라이브러리 도입이 아니라 기법 자체를 stdlib+Compose API로 직접 구현): https://github.com/tahaak67/ShowcaseLayoutCompose (AW #739 소개)
  *
  * 핵심 개념:
  * - onGloballyPositioned로 타깃 컴포저블이 배치를 마친 뒤의 boundsInWindow()를 얻어 window 좌표계 기준 좌표를 수집한다

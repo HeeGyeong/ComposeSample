@@ -6,7 +6,7 @@ package com.example.composesample.presentation.example.component.architecture.de
  * ## kotlin.time — Clock / Instant / TimeSource / TestTimeSource
  * - What's New: https://kotlinlang.org/docs/whatsnew24.html
  * - kotlin.time 공식 문서: https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.time/
- * - Clock/Instant KEEP(원래 kotlinx-datetime 소속이던 것이 stdlib로 편입): https://github.com/Kotlin/KEEP/blob/master/proposals/stdlib/instant-clock.md
+ * - Clock/Instant KEEP(원래 kotlinx-datetime 소속이던 것이 stdlib로 편입): https://github.com/Kotlin/KEEP/blob/main/proposals/stdlib/KEEP-0395-instant.md
  * 핵심 개념:
  * - Clock.System.now() → kotlin.time.Instant: "지금 몇 시인가"를 나타내는 벽시계. NTP 동기화·시간대 변경으로 값이 앞뒤로 튈 수 있음
  * - TimeSource.Monotonic.markNow() → ComparableTimeMark, .elapsedNow() → Duration: "얼마나 흘렀는가"만 재는 단조시계. 벽시계 변경에 영향받지 않음

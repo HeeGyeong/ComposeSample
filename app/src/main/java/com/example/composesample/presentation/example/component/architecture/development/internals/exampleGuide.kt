@@ -82,7 +82,7 @@ package com.example.composesample.presentation.example.component.architecture.de
  * - CompositionObserver: https://developer.android.com/reference/kotlin/androidx/compose/runtime/tooling/CompositionObserver
  * - Snapshot: https://developer.android.com/reference/kotlin/androidx/compose/runtime/snapshots/Snapshot
  * - Compose 상태와 스냅샷 시스템: https://developer.android.com/develop/ui/compose/state
- * - 리컴포지션 디버깅(Layout Inspector): https://developer.android.com/develop/ui/compose/tooling/layout-inspector
+ * - 리컴포지션 디버깅(Layout Inspector): https://developer.android.com/develop/ui/compose/tooling/debug#recomposition-counts
  *
  * ## 핵심 개념 요약
  * 1) CompositionObserver — 컴포지션 축
@@ -158,7 +158,7 @@ package com.example.composesample.presentation.example.component.architecture.de
  * ## 공식 문서 / 권장 자료
  * - CompositionData: https://developer.android.com/reference/kotlin/androidx/compose/runtime/tooling/CompositionData
  * - CompositionGroup: https://developer.android.com/reference/kotlin/androidx/compose/runtime/tooling/CompositionGroup
- * - Layout Inspector(같은 정보를 IDE 에서 보는 도구): https://developer.android.com/develop/ui/compose/tooling/layout-inspector
+ * - Layout Inspector(같은 정보를 IDE 에서 보는 도구): https://developer.android.com/develop/ui/compose/tooling/debug#recomposition-counts
  * - Compose 컴파일러 메트릭(그룹/스킵 여부를 파일로 뽑는 축): https://developer.android.com/develop/ui/compose/performance/stability/diagnose
  *
  * ## 핵심 개념 요약

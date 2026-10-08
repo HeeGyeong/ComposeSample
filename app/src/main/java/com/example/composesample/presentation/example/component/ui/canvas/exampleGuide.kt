@@ -39,7 +39,7 @@ package com.example.composesample.presentation.example.component.ui.canvas
  *   → 시각 효과에는 부적합. 디버그/접근성/개별 입력 처리에만 의미
  *
  * ## MonthPickerDialExampleUI (Airbnb ChromaDial — Month Picker)
- * - 출처: https://www.sinasamaki.com/month-picker-dial/
+ * - 출처: https://www.sinasamaki.com/made-in-compose-airbnb-month-picker-dial/
  *
  * ### 핵심 개념
  * - 폴라 좌표: `x = cx + r·cos(θ)`, `y = cy + r·sin(θ)`로 12개 월 라벨을 원주에 등간격 배치 (30° 단위)

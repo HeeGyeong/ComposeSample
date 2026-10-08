@@ -36,7 +36,7 @@ package com.example.composesample.presentation.example.component.architecture.de
  * ## Kotlin 2.4 Language Features (Collection Literals / Context Parameters)
  * - What's New 2.4: https://kotlinlang.org/docs/whatsnew24.html
  * - Collection literals KEEP: https://github.com/Kotlin/KEEP/issues/112
- * - Context parameters KEEP: https://github.com/Kotlin/KEEP/blob/master/proposals/context-parameters.md
+ * - Context parameters KEEP: https://github.com/Kotlin/KEEP/blob/main/proposals/KEEP-0367-context-parameters.md
  * 핵심 개념:
  * - 컬렉션 리터럴: [1, 2, 3] 대괄호 문법으로 컬렉션 생성. 기대 타입에 따라 List/Set/Map 추론
  * - 커스텀 타입은 companion 의 operator fun of(vararg ...) 로 리터럴 생성을 지원할 수 있음

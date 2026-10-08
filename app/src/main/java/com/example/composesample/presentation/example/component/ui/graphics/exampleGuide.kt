@@ -19,7 +19,7 @@ package com.example.composesample.presentation.example.component.ui.graphics
  *   → 새 API 로 바꾸고 중복 카드(글로우·컬러·방향·키보드 버튼)를 흡수해 7개 카드로 정리
   *
  * ## Dialog Background Blur (다이얼로그 배경 블러)
- * - 공식 문서: https://developer.android.com/develop/ui/views/graphics/blur
+ * - 창 블러 문서(setBackgroundBlurRadius·FLAG_BLUR_BEHIND, RenderEffect 와의 차이): https://source.android.com/docs/core/display/window-blurs#app-developers
  * - API: https://developer.android.com/reference/android/view/Window#setBackgroundBlurRadius(int)
  * 핵심 개념:
  * - "블러"는 서로 다른 세 가지를 가리킨다 — ① `Modifier.blur`(그 컴포저블이 그린 내용, API 31+ 이며 하위에서는 조용히 무시)

@@ -49,7 +49,7 @@ package com.example.composesample.presentation.example.component.ui.text
  * - 한계: 컨텍스트 무지(중첩 보간/타입 인자 등 정확 분석 불가). 본격 엔진은 Shiki(TextMate Grammar) / TreeSitter
  *
  * ## RichContentTextInputExampleUI (리치 콘텐츠 수신)
- * - 공식 문서: https://developer.android.com/jetpack/compose/text/receive-content
+ * - 공식 문서(Modifier.contentReceiver): https://developer.android.com/develop/ui/compose/touch-input/copy-and-paste#paste_a_rich_content
  * 핵심 개념:
  * - `contentReceiver` modifier: TextField에 이미지/파일 붙여넣기 처리
  * - 세 가지 출처: 키보드(IME), 클립보드, 드래그&드롭

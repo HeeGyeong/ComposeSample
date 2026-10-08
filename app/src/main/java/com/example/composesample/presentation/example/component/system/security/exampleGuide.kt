@@ -4,7 +4,7 @@ package com.example.composesample.presentation.example.component.system.security
  * App Security 실무 예제 참고 자료
  *
  * - 본 예제 출처: https://technotalkative.com/android-app-security-practical-steps-every-developer-must-follow/
- * - OkHttp CertificatePinner: https://square.github.io/okhttp/features/https/#certificate-pinning
+ * - OkHttp CertificatePinner: https://lysine.dev/okhttp/features/https/#certificate-pinning-kt-java
  * - Network security config (선언형 pin-set): https://developer.android.com/privacy-and-security/security-config#CertificatePinning
  * - AndroidKeyStore 시스템: https://developer.android.com/privacy-and-security/keystore
  * - EncryptedSharedPreferences (Jetpack Security): https://developer.android.com/topic/security/data
@@ -159,7 +159,7 @@ package com.example.composesample.presentation.example.component.system.security
  * API 요청 서명(HMAC) + 재전송 방지 예제 참고 자료
  *
  * - 본 예제 출처: https://lopez-manas.com/articles/2026-09-02_securing-android-sdks-a-defense-in-depth/
- * - OkHttp Interceptor: https://square.github.io/okhttp/features/interceptors/
+ * - OkHttp Interceptor: https://lysine.dev/okhttp/features/interceptors/
  * - javax.crypto.Mac: https://developer.android.com/reference/javax/crypto/Mac
  * - MessageDigest.isEqual (상수 시간 비교): https://developer.android.com/reference/java/security/MessageDigest#isEqual(byte[],%20byte[])
  * - AWS SigV4 canonical request (같은 설계의 실제 사례): https://docs.aws.amazon.com/IAM/latest/UserGuide/create-signed-request.html

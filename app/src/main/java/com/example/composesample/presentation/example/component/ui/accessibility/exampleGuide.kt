@@ -5,7 +5,7 @@ package com.example.composesample.presentation.example.component.ui.accessibilit
  *
  * ## LargeContentViewerExampleUI (Large Content Viewer with Navigation Support)
  * - 출처: https://eevis.codes/blog/2026-02-28/adding-navigation-support-to-large-content-viewer-with-compose/
- * - 이전 글: https://eevis.codes/blog/beyond-font-scaling-large-content-viewer-with-compose/
+ * - 이전 글: https://eevis.codes/blog/2026-01-17/beyond-font-scaling-large-content-viewer-with-compose/
  * 핵심 개념:
  * - iOS의 Large Content Viewer(작은 아이콘 long-press 시 확대 프리뷰)를 Compose로 구현
  * - pointerInput(detectTapGestures.onLongPress)로 터치 프리뷰, onFocusChanged + delay(longPressTimeoutMillis)로 키보드 내비게이션 대응

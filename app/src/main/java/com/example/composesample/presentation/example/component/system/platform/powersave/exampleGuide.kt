@@ -4,7 +4,8 @@ package com.example.composesample.presentation.example.component.system.platform
  * System/Platform/PowerSave 예제 참고 자료
  *
  * ## PowerSaveModeExampleUI (절전 모드 감지 & 배터리 최적화)
- * - 공식 문서: https://developer.android.com/develop/background-work/background-tasks/power-management
+ * - 공식 문서(Doze·App Standby): https://developer.android.com/training/monitoring-device-state/doze-standby
+ * - 전원 관리 개요(배터리 세이버·App Standby 버킷, Android 9 기준): https://developer.android.com/about/versions/pie/power
  * 핵심 개념:
  * - PowerManager.isPowerSaveMode 로 현재 절전 모드 여부 조회
  * - ACTION_POWER_SAVE_MODE_CHANGED BroadcastReceiver 로 변경 실시간 감지
