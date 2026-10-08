@@ -73,8 +73,8 @@ import kotlinx.coroutines.launch
  * Compose 1.10의 retain API 개념을 시뮬레이션하여
  * ViewModel 대비 간소화된 Presenter 패턴을 보여줍니다.
  *
- * 주의: 실제 retain API는 Compose 1.10이 필요합니다.
- * 이 예제는 개념 이해를 위한 시뮬레이션입니다.
+ * 주의: 실제 retain API(androidx.compose.runtime.retain)는 Compose 1.10 이상이 필요합니다.
+ * 프로젝트는 이미 1.12.1 이지만, 이 예제는 개념 이해를 위한 시뮬레이션입니다.
  */
 
 interface Presenter {
