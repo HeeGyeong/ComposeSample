@@ -8,6 +8,9 @@ plugins {
     // 빌드 로그의 `w: [HotSwan v2] SKIPPED ...` 는 핫 리로드 불가 메서드 안내일 뿐 소스 경고가 아니다 — ComposeHotReloadGuide.md 참고
     alias(libs.plugins.hotswan.compiler)
     alias(libs.plugins.kotlin.power.assert)
+    // kotlinx-serialization 컴파일러 플러그인(#123, 2026-10-08 사용자 승인) — @Serializable 클래스의 serializer 생성.
+    // Kotlin 에 포함돼 배포되며 런타임은 아래 kotlinxSerializationCore(전이와 같은 1.11.0).
+    alias(libs.plugins.kotlin.serialization)
 
     id 'kotlin-parcelize'
 }
@@ -82,6 +85,8 @@ dependencies {
 
     // kotlinx-io — Ktor HttpCache 의 FileStorage(Path, FileSystem) 예제가 Path/SystemFileSystem 을 직접 쓴다(버전은 Ktor 전이와 동일)
     implementation(libs.kotlinxIoCore)
+    // kotlinx-serialization — RememberPatterns 예제의 rememberSerializable(@Serializable 데이터 클래스)이 직접 쓴다(버전은 전이와 동일)
+    implementation(libs.kotlinxSerializationCore)
 
     // AndroidX Core
     // lifecycleRuntimeKtx 는 아래 bundles.lifecycle 에 포함되어 있어 개별 선언하지 않는다. (DEP-DUP-01)

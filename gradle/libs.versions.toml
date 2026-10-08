@@ -104,6 +104,10 @@ ktor = "3.6.0"
 # kotlinx-io 0.9.1 — Ktor 3.6.0 이 전이로 끌어오는 버전 그대로 선언(해석 결과 변화 0). HttpCache 의 FileStorage(Path, FileSystem) 가
 # kotlinx.io.files.Path/SystemFileSystem 을 요구해 앱 코드가 직접 쓰므로 명시한다(DEP-VERSION-05: 직접 쓰는 라이브러리는 선언=해석).
 kotlinxIoCore = "0.9.1"
+# kotlinx-serialization 1.11.0 — savedstate 1.5.0 등이 전이로 끌어오는 버전 그대로 선언(해석 결과 변화 0).
+# RememberPatterns 예제(#123)의 @Serializable 데이터 클래스를 rememberSerializable 로 저장하려고 직접 쓴다.
+# 컴파일러 플러그인(org.jetbrains.kotlin.plugin.serialization)은 Kotlin 과 같은 버전으로 배포되므로 kotlinVersion 을 따른다.
+kotlinxSerialization = "1.11.0"
 
 # Test
 junit = "4.13.2"
@@ -178,6 +182,7 @@ kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "ko
 # Kotlin 과 같은 버전으로 배포되므로 kotlinVersion 을 따른다. 적용된 컴파일에는 kotlin-power-assert-runtime(같은 버전, 27KB, stdlib 만 의존)이
 # 플러그인에 의해 자동으로 추가된다(addRuntimeDependency 기본 true) — 카탈로그에 따로 선언하지 않는다.
 kotlin-power-assert = { id = "org.jetbrains.kotlin.plugin.power-assert", version.ref = "kotlinVersion" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlinVersion" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 # HotSwan(Compose Hot Reload) — 2026-09-15 2.0.0 으로 재활성화 (1.2.1 은 Kotlin 2.4.0 컴파일러 확장 API 와 충돌해 06-16~09-15 비활성).
 # Gradle 플러그인 버전은 IDE 플러그인 버전과 일치해야 한다 — Marketplace 는 최신을 설치하므로 최신 patch 를 따른다.
@@ -221,6 +226,7 @@ ktorSerializationGson = { module = "io.ktor:ktor-serialization-gson", version.re
 ktorClientAuth = { module = "io.ktor:ktor-client-auth", version.ref = "ktor" }
 ktorClientMock = { module = "io.ktor:ktor-client-mock", version.ref = "ktor" }
 kotlinxIoCore = { module = "org.jetbrains.kotlinx:kotlinx-io-core", version.ref = "kotlinxIoCore" }
+kotlinxSerializationCore = { module = "org.jetbrains.kotlinx:kotlinx-serialization-core", version.ref = "kotlinxSerialization" }
 
 junit = { module = "junit:junit", version.ref = "junit" }
 androidxTestJunit = { module = "androidx.test.ext:junit", version.ref = "androidxTestJunit" }

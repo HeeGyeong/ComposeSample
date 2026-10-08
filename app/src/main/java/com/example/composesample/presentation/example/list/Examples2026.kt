@@ -159,9 +159,9 @@ val examples2026 = listOf(
         exampleType = ConstValue.StartupOptimizationExample
     ),
     ExampleObject(
-        lastUpdate = "26. 03. 27",
+        lastUpdate = "26. 10. 08",
         title = "Remember Patterns",
-        description = "rememberSaveable·rememberUpdatedState·derivedStateOf 세 패턴 비교",
+        description = "rememberSaveable·rememberSerializable 저장 비교와 효과 패턴",
         blogUrl = "",
         exampleType = ConstValue.RememberPatternsExample
     ),

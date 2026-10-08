@@ -14,6 +14,11 @@ A human-readable collection of **intentional deferrals, version constraints, and
 - **Current**: `androidx.biometric:biometric(-compose):1.4.0-alpha07` (the line has no stable release with Compose support)
 - **Limits**: below Android 16 QPR2 only the first of several fallbacks is shown; the rest are dropped silently. The test device has no enrolled fingerprint, so the `CustomFallbackSelected` path has not been exercised on hardware.
 
+### Compose runtime 1.12.x — `SnapshotStateSet` loses elements when parcelled (fixed in 1.13.0-alpha03)
+- **Current**: Compose runtime 1.12.1 (BOM 2026.09.00). Its Android `SnapshotStateSet.writeToParcel` writes the size and then only the first element (`if` where 1.13.0-alpha03 has `while`), so `rememberSaveable { mutableStateSetOf() }` - which `canBeSaved` accepts because the set is `Parcelable` - breaks once the set holds two or more elements and the Bundle is really parcelled (restoring after process death). Measured in the Remember Patterns example (#123): release restored `[빨강, null]` and logged "consumed X bytes, but Y expected" for the entries after it; debug threw `BadParcelableException` and showed an empty screen.
+- **Workaround in use**: the example stores the set with `rememberSerializable(serializer = SnapshotStateSetSerializer(...))`; no other screen saves a `SnapshotStateSet`.
+- **Revisit**: when the BOM moves to a stable Compose 1.13.
+
 ### ffmpeg commented out
 - **Current**: the encoding/decoding example under `system/media/ffmpeg` is fully commented out
 - **Why**: version-compatibility issues with the ffmpeg-kit library. Non-working code is kept as comments rather than deleted (project policy: keep version-incompatible examples as comments instead of removing them).
