@@ -320,7 +320,7 @@ Cursor IDE를 사용하는 개발자를 위한 **AI 코딩 어시스턴트 규�
 
 ## 더 알아보기
 - **앱 설치 및 실행**: 프로젝트를 clone해서 직접 빌드/설치하면 다양한 컴포넌트와 UI 예제를 실기기에서 확인할 수 있어 더 편리합니다. 코드만으로는 파악하기 어려운 애니메이션, 제스처, 상호작용을 직접 체험해 보세요.
-- **예제 설명**: 각 예제에 대한 상세 설명은 [티스토리 블로그](https://heegs.tistory.com/category/Android/Jetpack)에서 확인할 수 있습니다.
+- **예제 설명**: 각 예제에 대한 상세 설명은 [티스토리 블로그](https://heegs.tistory.com/category/Android/Jetpack%20Compose)에서 확인할 수 있습니다.
 - **규칙 문서**: 상세 규칙은 `app/src/main/java/com/example/composesample/docs/`(사람/Claude용)와 `.cursor/rules/*.mdc`(Cursor 전용)에 나뉘어 있습니다. 두 출처는 일부만 매핑되므로 함께 참고하세요. 전체 문서 목록은 `docs/README.md`를 확인하세요.
 - **AI 코딩 어시스턴트**: Cursor IDE 사용 시 자동으로 적용되는 규칙이 일관된 코드 생성을 돕습니다.
 
