@@ -126,6 +126,7 @@ Activity 기반 예제(드묾)는 레지스트리를 건너뜁니다: `ExampleOb
 | 참고 문서 파일 | `exampleGuide.kt` | (URL과 핵심 개념 KDoc만) |
 | ViewModel | `*ViewModel.kt` | `PlayerViewModel.kt` |
 | 데이터 클래스 | `*Data.kt` / `*ListData.kt` | `UserData.kt` |
+| API 응답 모델(Gson) | `*Response.kt` — nullable 필드 + `@SerializedName` | `UserResponse.kt` |
 
 ---
 
@@ -139,12 +140,23 @@ Activity 기반 예제(드묾)는 레지스트리를 건너뜁니다: `ExampleOb
 
 ### 데이터 클래스
 
+이 프로젝트의 Retrofit·Ktor 변환기는 둘 다 Gson 인데, Gson 은 Kotlin 기본값과 널 안전성을 지키지 않습니다. 생성자 파라미터 **전부**에 기본값이 있지 않으면 생성자를 거치지 않고 객체를 만들기 때문에, 응답에 키가 빠지면 `items` 는 null(첫 사용에서 NPE), `isActive = true` 는 `false` 가 되고, JSON 에 명시적 `null` 이 오면 어느 경우든 non-null 타입에 null 이 들어갑니다(실측 — `DataRules.md` 참고). 그래서 API 응답 모델의 서버 필드는 nullable 로 받고, 앱이 쓰는 모델은 매퍼에서 만듭니다.
+
 ```kotlin
-// 서버 필드: snake_case → 클라이언트 필드: camelCase
-data class UserData(
-    @SerializedName("user_id") val userId: String,
-    @SerializedName("is_active") val isActive: Boolean = false,
-    val items: List<String> = emptyList()
+// API 응답 모델: 서버 필드 snake_case → 클라이언트 필드 camelCase, 모든 필드 nullable
+data class UserResponse(
+    @SerializedName("user_id") val userId: String?,
+    @SerializedName("is_active") val isActive: Boolean?, // null = 안 보냄(false 와 다름)
+    @SerializedName("items") val items: List<String>?
+)
+
+// 앱이 쓰는 모델: non-null. 기본값·필수값 검사는 매퍼(data 계층)에서 한 번만
+data class UserData(val userId: String, val isActive: Boolean, val items: List<String>)
+
+fun UserResponse.toUserData() = UserData(
+    userId = requireNotNull(userId) { "user_id 누락" },
+    isActive = isActive ?: false,
+    items = items.orEmpty()
 )
 ```
 

@@ -95,6 +95,15 @@ the check is suppressed on that one composable with a comment stating why. Found
 
 ---
 
+## Data models parsed by Gson
+
+### `PostData` is parsed directly (DOC-DATARULES-GSON-01, 2026-10-12)
+- **Current**: `domain/model/PostData(userId: Int, id: Int, title: String, body: String)` is the type Retrofit's `GsonConverterFactory` (and the Ktor call in the same API example) parses into. No parameter has a default, so there is no no-argument constructor and Gson creates it without one.
+- **Risk**: a missing `title`/`body` key would leave `null` in a non-null `String`, and the NPE would appear only where the text is first used. jsonplaceholder's fixed schema always sends all four keys, so nothing shows today.
+- **Rule for new code**: nullable response model + mapper, as in `DataRules.md` / `CLAUDE.md`. `PostData` is left as is because it is also the domain model shared by the existing examples; changing it means adding a response model and a mapper in the data layer.
+
+---
+
 ## Material 2 remnants (M3 migration complete — intentional remnants only)
 
 ### M3-BULK — migration complete, 4 intentional remnants kept

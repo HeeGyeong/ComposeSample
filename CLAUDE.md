@@ -162,6 +162,7 @@ val exampleUiRegistry: Map<String, @Composable (onBackEvent: () -> Unit) -> Unit
 | Reference file | `exampleGuide.kt` | (URLs and key-concept KDoc only) |
 | ViewModel | `*ViewModel.kt` | `PlayerViewModel.kt` |
 | Data class | `*Data.kt` / `*ListData.kt` | `UserData.kt` |
+| API response model (Gson) | `*Response.kt` — nullable fields + `@SerializedName` | `UserResponse.kt` |
 
 ---
 
@@ -353,19 +354,27 @@ After the work is done, **always** print the process-verification result table i
 - Understand the existing patterns first, then implement in the same way
 
 ### Data classes
+Gson (the converter behind both Retrofit and Ktor here) ignores Kotlin defaults and null-safety: unless **every** constructor parameter has a default, it creates the object without calling a constructor, so a missing key leaves `items` null (NPE on first use) and turns `isActive = true` into `false` — and an explicit JSON `null` reaches a non-null type either way (measured; see `DataRules.md`). So API response models declare server-supplied fields nullable, and the model the app uses is built by a mapper.
 ```kotlin
-// Server fields: snake_case → client fields: camelCase
-data class UserData(
-    @SerializedName("user_id") val userId: String,
-    @SerializedName("is_active") val isActive: Boolean = false,
-    val items: List<String> = emptyList()
+// API response model: server fields snake_case → client fields camelCase, every field nullable
+data class UserResponse(
+    @SerializedName("user_id") val userId: String?,
+    @SerializedName("is_active") val isActive: Boolean?, // null = not sent, not false
+    @SerializedName("items") val items: List<String>?
 )
 
-// When passing between Android components
+// Model the app uses: non-null; defaults and required checks live in the mapper (data layer)
+data class UserData(val userId: String, val isActive: Boolean, val items: List<String>)
+
+fun UserResponse.toUserData() = UserData(
+    userId = requireNotNull(userId) { "user_id missing" },
+    isActive = isActive ?: false,
+    items = items.orEmpty()
+)
+
+// When passing between Android components (the mapped model, not the response)
 @Parcelize
-data class EntityData(
-    @SerializedName("entity_id") val entityId: String
-) : Parcelable
+data class EntityData(val entityId: String) : Parcelable
 ```
 
 ### ViewModel / UI separation

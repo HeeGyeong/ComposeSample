@@ -17,29 +17,43 @@ This rule defines the implementation guidelines for data classes in the Android 
 ## Key Rules
 
 ### Naming Conventions
-- **File Pattern**: `{Domain}Data.kt` or `{Domain}ListData.kt`
+- **File Pattern**: `{Domain}Data.kt` or `{Domain}ListData.kt` (app model), `{Domain}Response.kt` (API response model)
 - **Server fields**: snake_case
 - **Client fields**: camelCase
 - **Boolean flags**: prefix with 'is' or 'has'
 - **YN flags**: String type with "Y"/"N"
 
+### Gson ignores Kotlin defaults and null-safety
+Unless every constructor parameter has a default, Gson creates the object without a constructor: a missing key leaves `null` in non-null fields and `false` in `Boolean = true`, and an explicit JSON `null` gets through either way. Response models therefore take nullable fields; defaults and required checks belong to a mapper (measured — see DataRules.md).
+
 ### Required Structure
 ```kotlin
+// API response model
+data class ExampleResponse(
+    @SerializedName("server_field")
+    val clientField: Type?
+)
+
+// App model, built by the mapper
 @Parcelize
 data class ExampleData(
-    @SerializedName("server_field")
-    val clientField: Type? = defaultValue
+    val clientField: Type
 ) : Parcelable
+
+fun ExampleResponse.toExampleData() = ExampleData(
+    clientField = clientField ?: defaultValue // or requireNotNull(clientField)
+)
 ```
 
 ### Mandatory Annotations
 - **@SerializedName**: REQUIRED for all API response fields
-- **@Parcelize**: REQUIRED for Android component data transfer
+- **@Parcelize**: REQUIRED for Android component data transfer (on the app model)
 
 ### Field Types
-- **Required fields**: Non-null types
-- **Optional fields**: Nullable types with defaults
-- **Collections**: Empty collection defaults
+- **Response models**: every server-supplied field nullable; no Kotlin default values
+- **App models — required fields**: Non-null types, checked with `requireNotNull` in the mapper
+- **App models — optional fields**: Nullable types
+- **App models — collections**: never null (`.orEmpty()` in the mapper)
 
 ### Companion Objects
 ```kotlin
@@ -50,8 +64,8 @@ companion object {
 ```
 
 ## Validation Requirements
-1. ALL fields must have @SerializedName
+1. ALL response fields must have @SerializedName
 2. Field names must match API spec exactly
-3. Default values for nullable fields
+3. Defaults applied in the mapper, not as Kotlin default values on response models
 4. Proper nullability handling
 5. Documentation for complex business logic

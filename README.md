@@ -111,7 +111,7 @@ Cursor IDE를 사용하는 개발자를 위한 **AI 코딩 어시스턴트 규�
 - **UI 프레임워크**: Jetpack Compose + Material3
 - **의존성 주입**: Koin 프레임워크
 - **코딩 스타일**: Kotlin 네이밍 컨벤션, 한글 주석
-- **데이터 클래스**: @SerializedName, @Parcelize 어노테이션 규칙
+- **데이터 클래스**: @SerializedName, @Parcelize 어노테이션 규칙 · Gson 응답 모델은 nullable 필드 + 매퍼에서 기본값·필수값 처리(Gson 은 Kotlin 기본값을 건너뜀)
 - **성능**: Compose 리컴포지션, 메모리 관리
 - **테스트**: 단위 테스트, UI 테스트 커버리지
 
