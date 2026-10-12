@@ -12,39 +12,29 @@ This module contains the domain logic of the application and is designed accordi
 
 - **Description**: Defines the data structures used in the application. UI/app-only models (e.g. `ExampleObject`, `ExampleMoveType`) live in the `app` module's `presentation.example.model` package, not here (ARCH-05).
 
-  - `MovieEntity`: A data class that holds movie information.
+  - `ArticleData` / `ArticleSource` / `ArticleResult`: Pure models for the Advanced Repository Pattern example, defined in `ArticleData.kt`. Because they are not Room `@Entity` classes, the repository interface that returns them can live in this module.
 
     ```kotlin
     package com.example.domain.model
 
-    data class MovieEntity(
-        val actor: String,
-        val director: String,
-        val image: String,
-        val link: String,
-        val pubDate: String,
-        val subtitle: String,
+    data class ArticleData(
+        val id: String,
         val title: String,
-        val userRating: String
+        val body: String
+    )
+
+    /** 데이터가 어느 계층에서 해석되었는지 (우선순위: MEMORY > DISK > NETWORK) */
+    enum class ArticleSource { MEMORY, DISK, NETWORK }
+
+    /** 조회 결과 + 출처 + 소요 시간(ms) */
+    data class ArticleResult(
+        val article: ArticleData,
+        val source: ArticleSource,
+        val latencyMs: Long
     )
     ```
 
-  - `MovieResponse`: A data class that contains a list of movies. Property names match the JSON keys, so no Gson annotation is needed (`items` maps directly to the response field).
-
-    ```kotlin
-    package com.example.domain.model
-
-    // domain 모듈은 순수 Kotlin 유지. JSON 키와 프로퍼티명을 맞춰 Gson 어노테이션 없이 역직렬화한다.
-    data class MovieResponse(
-        val display: Int,
-        val items: List<MovieEntity>,
-        val lastBuildDate: String,
-        val start: Int,
-        val total: Int
-    )
-    ```
-
-  - `PostData`: A data class that holds post information. Defined in `PostResponse.kt`. Property names match the JSON keys, so no Gson annotation is needed.
+  - `PostData`: A data class that holds post information. Defined in `PostResponse.kt`. Property names match the JSON keys, so no Gson annotation is needed. Retrofit parses straight into it, so none of its non-null fields is protected against a missing key — kept as is and recorded in `KnownLimitations.md` (see the Gson rule in `DataRules.md`).
 
     ```kotlin
     package com.example.domain.model
@@ -74,6 +64,20 @@ This module contains the domain logic of the application and is designed accordi
     }
     ```
 
+  - `ArticleRepository`: Resolves an article through memory → disk → network (Advanced Repository Pattern example).
+
+    ```kotlin
+    package com.example.domain.repository
+
+    import com.example.domain.model.ArticleResult
+
+    interface ArticleRepository {
+        suspend fun getArticle(id: String, forceRefresh: Boolean = false): ArticleResult
+        fun invalidateMemory()
+        fun invalidateDisk()
+    }
+    ```
+
   - `MVIExampleRepository`: An interface used by the MVI example to fetch a simple value.
 
     ```kotlin
@@ -99,6 +103,21 @@ This module contains the domain logic of the application and is designed accordi
         private val postRepository: PostRepository
     ) {
         suspend operator fun invoke() = postRepository.getPosts()
+    }
+    ```
+
+  - `GetArticleUseCase`: A use case for the Advanced Repository Pattern example.
+
+    ```kotlin
+    package com.example.domain.useCase
+
+    import com.example.domain.repository.ArticleRepository
+
+    class GetArticleUseCase(
+        private val articleRepository: ArticleRepository
+    ) {
+        suspend operator fun invoke(id: String, forceRefresh: Boolean = false) =
+            articleRepository.getArticle(id, forceRefresh)
     }
     ```
 
