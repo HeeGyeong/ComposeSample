@@ -58,6 +58,8 @@ import kotlinx.coroutines.launch
  * - MockEngine: 실제 네트워크를 타지 않고 요청을 코드로 받아 원하는 응답을 돌려주는 가짜 엔진.
  *   덕분에 401/503 같은 상황을 결정적으로 재현해 실제 Auth/HttpRequestRetry 플러그인 동작을 검증할 수 있다.
  * - 3가지 시나리오를 같은 패턴으로 실행하고 실시간 타임라인 로그로 비교한다.
+ * - 4번 카드는 같은 MockEngine 위에서 "다른 오리진으로 넘어가도 되는 요청인가"(오리진 페일오버)를 다룬다 —
+ *   정책·상태 기계·플러그인은 OriginFailover.kt, 원문의 검증 상황 표를 그대로 실행해 기대값과 비교한다.
  * - 참고 자료(URL/핵심 개념)는 exampleGuide.kt 의 "KtorAdvancedConfig" 섹션 참고.
  */
 @Composable
@@ -105,6 +107,7 @@ fun KtorAdvancedConfigExampleUI(onBackEvent: () -> Unit) {
                     run = ::runNoPluginScenario
                 )
             }
+            item { FailoverCard() }
             item { GuideCard() }
         }
     }
@@ -374,6 +377,121 @@ private suspend fun runNoPluginScenario(onLog: (String) -> Unit) {
     }
 }
 
+/**
+ * 4. 오리진 페일오버 — 원문(Erfan Moghaddam)의 "검증할 상황" 표를 MockEngine 위에서 실행하고 기대값과 비교한다.
+ * 시나리오 실행·판정은 OriginFailover.kt 의 runFailoverSituation(단위 테스트 OriginFailoverTest 와 같은 함수).
+ */
+@Composable
+private fun FailoverCard() {
+    val scope = rememberCoroutineScope()
+    val runs = remember { mutableStateListOf<FailoverRun>() }
+    var running by remember { mutableStateOf(false) }
+    var checkUsedOrigin by remember { mutableStateOf(true) }
+    val accent = Color(0xFF8E24AA)
+
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(12.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFFAFAFA)),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+    ) {
+        Column(modifier = Modifier.padding(14.dp)) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Box(modifier = Modifier.size(10.dp).background(accent, CircleShape))
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(text = "4. 오리진 페일오버 (다른 호스트로 넘어가도 되나)", fontWeight = FontWeight.Bold, fontSize = 14.sp)
+            }
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(
+                text = "주 오리진(primary.api.local)이 안 될 때 보조(secondary.api.local)로 넘어가는 Ktor 플러그인(on(Send)). " +
+                    "호스트를 바꾸는 것은 쉽다 — 어려운 것은 그 요청을 다시 보내도 되는지, 동시에 실패하면 어떻게 판정하는지, 언제 주 오리진으로 돌아가는지다.",
+                fontSize = 12.sp,
+                color = Color(0xFF555555)
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            TimelineBox(
+                logs = listOf(
+                    "Primary   ─ 자격 있는 실패 → Secondary (없으면 Unavailable)",
+                    "Secondary ─ 자격 있는 실패 → Unavailable",
+                    "Unavailable ─ 쿨다운 경과 + 새 요청 → Primary",
+                    "자격 = GET/HEAD/OPTIONS 의 502·503·504 또는 전송 실패"
+                ),
+                running = false
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Button(
+                    onClick = { checkUsedOrigin = !checkUsedOrigin },
+                    enabled = !running,
+                    colors = ButtonDefaults.buttonColors(containerColor = if (checkUsedOrigin) Color(0xFF43A047) else Color(0xFFE53935))
+                ) {
+                    Text(
+                        text = if (checkUsedOrigin) "실제로 쓴 오리진 확인: 켬" else "실제로 쓴 오리진 확인: 끔",
+                        color = Color.White,
+                        fontSize = 12.sp
+                    )
+                }
+            }
+            Button(
+                onClick = {
+                    running = true
+                    runs.clear()
+                    scope.launch {
+                        try {
+                            FailoverSituation.entries.forEach { situation ->
+                                runs += runFailoverSituation(situation, checkUsedOrigin)
+                            }
+                        } finally {
+                            running = false
+                        }
+                    }
+                },
+                enabled = !running,
+                colors = ButtonDefaults.buttonColors(containerColor = accent)
+            ) {
+                Text(text = if (running) "실행 중..." else "${FailoverSituation.entries.size}가지 상황 실행", color = Color.White)
+            }
+            if (runs.isNotEmpty()) {
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = "통과 ${runs.count { it.passed }} / ${runs.size}",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 13.sp,
+                    color = if (runs.all { it.passed }) Color(0xFF2E7D32) else Color(0xFFC62828)
+                )
+                runs.forEach { run -> FailoverRunRow(run) }
+            }
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = "쿨다운(5초)은 가짜 시계로 건너뛴다 — 앱에서는 SystemClock.elapsedRealtime(단조 증가, 절전 중에도 흐름)을 쓴다. " +
+                    "원문은 OkHttp 애플리케이션 인터셉터로 같은 정책을 만들며, 그때는 다시 proceed 하기 전에 이전 응답을 닫아야 한다. " +
+                    "Ktor 는 HttpRequestRetry 처럼 원본 요청의 복사본으로 다시 proceed 한다. " +
+                    "'끔'으로 두고 실행하면 동시에 실패한 주 오리진 요청의 옛 실패가 이미 넘어간 보조까지 Unavailable 로 만든다.",
+                fontSize = 11.sp,
+                color = Color(0xFF757575)
+            )
+        }
+    }
+}
+
+@Composable
+private fun FailoverRunRow(run: FailoverRun) {
+    Column(modifier = Modifier.padding(top = 8.dp)) {
+        Text(
+            text = (if (run.passed) "✓ " else "✗ ") + run.situation.situation,
+            fontWeight = FontWeight.Bold,
+            fontSize = 12.sp,
+            color = if (run.passed) Color(0xFF2E7D32) else Color(0xFFC62828)
+        )
+        Text(text = "기대: ${run.situation.expected}", fontSize = 11.sp, color = Color(0xFF555555))
+        Text(text = "실제: ${run.actual}", fontSize = 11.sp, fontFamily = FontFamily.Monospace, color = Color(0xFF37474F))
+        if (run.log.isNotEmpty()) {
+            Spacer(modifier = Modifier.height(2.dp))
+            TimelineBox(logs = run.log, running = false)
+        }
+    }
+}
+
 @Composable
 private fun IntroCard() {
     Card(
@@ -391,7 +509,8 @@ private fun IntroCard() {
             Text(
                 text = "실서버 없이 Ktor MockEngine 으로 401/503 상황을 결정적으로 재현해 고급 클라이언트 구성을 검증한다. " +
                         "MockEngine 은 요청을 코드로 받아 원하는 응답을 돌려주는 가짜 엔진이라, 실제 Auth·HttpRequestRetry 플러그인을 그대로 설치한 채로 동작을 눈으로 확인할 수 있다. " +
-                        "아래 세 시나리오를 실행해 토큰 리프레시(1)·재시도 백오프(2)가 있을 때와 없을 때(3)를 타임라인 로그로 비교해 보라.",
+                        "아래 세 시나리오를 실행해 토큰 리프레시(1)·재시도 백오프(2)가 있을 때와 없을 때(3)를 타임라인 로그로 비교해 보라. " +
+                        "4번은 같은 호스트 재시도가 아니라 다른 오리진으로 넘어가는 페일오버의 재생 정책이다.",
                 fontSize = 12.sp,
                 color = Color(0xFF333333)
             )
@@ -414,7 +533,9 @@ private fun GuideCard() {
                 "리프레시 트리거 조건: 401 응답에 WWW-Authenticate: Bearer 헤더가 있어야 BearerAuthProvider 가 작동",
                 "HttpRequestRetry: retryOnServerErrors(5xx)/retryOnException + delayMillis·exponentialDelay 로 백오프",
                 "MockEngine: 실서버·실네트워크 없이 응답을 코드로 정의 → 401/503 같은 분기를 결정적으로 재현",
-                "실서비스에선 MockEngine 을 보통 test 소스셋에 두고, 프로덕션은 OkHttp/Android 엔진을 사용(본 예제는 데모 목적상 메인에 배치)"
+                "실서비스에선 MockEngine 을 보통 test 소스셋에 두고, 프로덕션은 OkHttp/Android 엔진을 사용(본 예제는 데모 목적상 메인에 배치)",
+                "페일오버: 바꾸는 것은 scheme·host·port 뿐, 자동 재생은 GET·HEAD·OPTIONS 의 502~504·전송 실패에만 — POST 의 모호한 실패는 호출자에게(RFC 9110 §9.2.2)",
+                "페일오버 상태 기계는 잠금 안에서만 넘기고, 실패는 그 요청이 실제로 쓴 오리진으로만 판정 — 동시 실패가 새 오리진을 떨어뜨리지 않게"
             ).forEach {
                 Text(
                     text = "• $it",

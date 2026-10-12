@@ -200,7 +200,7 @@ object ConstValue {
     const val KotlinTimeApiExample = "kotlinTimeApiExample"
 
     // ==================== 네트워크 & API 예제 ====================
-    // Ktor(API 호출), SSE(실시간 통신), ApiDisconnect(연결 해제 처리), KtorAdvancedConfig(MockEngine 위에서 Auth bearer 토큰 리프레시 / HttpRequestRetry 지수 백오프 재시도 시연)
+    // Ktor(API 호출), SSE(실시간 통신), ApiDisconnect(연결 해제 처리), KtorAdvancedConfig(MockEngine 위에서 Auth bearer 토큰 리프레시 / HttpRequestRetry 지수 백오프 재시도 시연 + 오리진 페일오버 — 주/보조 오리진 상태 기계·GET 만 재생·502~504 만 전환·동시 실패는 실제로 쓴 오리진으로 판정·취소·쿨다운, 원문 검증 상황 10가지)
     const val KtorExample = "ktorExample"
     const val SSEExample = "sseExample"
     const val ApiDisconnectExample = "apiDisconnectExample"

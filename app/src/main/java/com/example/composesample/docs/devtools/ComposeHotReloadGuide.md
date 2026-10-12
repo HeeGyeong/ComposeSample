@@ -144,7 +144,9 @@ reintroduces the problem for every type-checking `when` in the project, so it sh
 The interpreter runs an ordinary (non-inline, non-suspend) Kotlin lambda as a `java.lang.reflect.Proxy`
 (`InterpreterLambda`). `FunctionN.invoke` declares no checked exceptions, so when a **checked** exception escapes the
 lambda, `Proxy` wraps it in `java.lang.reflect.UndeclaredThrowableException`. Any caller that catches the checked type
-misses it. Debug builds only — the release variant has no HotSwan transform, and a plain JVM unit test is unaffected.
+misses it. Debug builds only — the release variant has no HotSwan transform. A JVM unit test is affected too when the
+lambda lives in app code: `testDebugUnitTest` runs the debug variant's transformed classes (measured 2026-10-12 with
+`OriginFailoverTest`, see below); only lambdas written in the test sources themselves are left alone.
 
 Where it bites: `runInterruptible { Thread.sleep(…) }`. When the coroutine is cancelled, the thread is interrupted and
 `Thread.sleep` throws `InterruptedException`. `runInterruptible` is supposed to catch that and turn it into a
@@ -288,6 +290,30 @@ exclude("com.example.composesample.presentation.example.component.system.platfor
 The one late frame left in every 2-second window is not HotSwan: it is the frame that inserts a row into the result
 table, a path that runs once every 2 seconds and stays cold under JIT. It disappears in a release build after
 `adb shell cmd package compile -m speed -f com.example.composesample`.
+
+### A Ktor client plugin that throws a checked `IOException` — two more classes are excluded
+
+The origin-failover card of `KtorAdvancedConfigExampleUI` (#130) is a Ktor client plugin: its `on(Send)` lambda throws
+`OriginUnavailableException` (an `IOException`) while the cooldown is running, and the `MockEngine` handlers that stand
+in for the two servers throw `IOException("connection reset")` to imitate a broken write. Both lambdas are values, so
+under the dispatch rewrite the exception reached the caller as `UndeclaredThrowableException` and the scenario's
+`catch (e: IOException)` missed it. Measured on 2026-10-12 (HotSwan 2.1.0, Kotlin 2.4.21) in `testDebugUnitTest`:
+
+| Build | Cooldown scenario | Unit test |
+|---|---|---|
+| debug classes, HotSwan as configured | `UndeclaredThrowableException` (cause `OriginUnavailableException`) | 1 of 2 fails |
+| debug classes, file facade and `TwoOrigins` excluded (current setup) | `OriginUnavailableException` caught as `IOException` | 2 of 2 pass |
+
+On the device the debug and release builds then show the same 10 of 10 results. The excluded names:
+
+```groovy
+exclude("com.example.composesample.presentation.example.component.data.api.OriginFailoverKt")
+exclude("com.example.composesample.presentation.example.component.data.api.TwoOrigins")
+```
+
+Ordinary Ktor calls are not affected — the exception has to escape a lambda that exists as a value. A real failover
+plugin in a debug build would hit the same wrapping, which is one more reason to classify network errors by their cause
+chain (see the section on checked exceptions above).
 
 ### Side effect: the debug variant's minSdk becomes 26
 

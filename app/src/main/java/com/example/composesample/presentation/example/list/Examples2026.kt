@@ -509,9 +509,9 @@ val examples2026 = listOf(
         exampleType = ConstValue.StrictModeExample
     ),
     ExampleObject(
-        lastUpdate = "26. 06. 11",
+        lastUpdate = "26. 10. 12",
         title = "Advanced Ktor Config (Auth/Retry)",
-        description = "Ktor MockEngine으로 Auth bearer 갱신과 HttpRequestRetry 백오프 비교",
+        description = "MockEngine으로 Auth 갱신·재시도 백오프와 오리진 페일오버 정책 검증",
         blogUrl = "",
         exampleType = ConstValue.KtorAdvancedConfigExample
     ),
