@@ -2,6 +2,7 @@ package com.example.composesample.presentation.example.component.data.paging
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.delay
 
 class PagingDataSource : PagingSource<Int, String>() {
@@ -19,6 +20,9 @@ class PagingDataSource : PagingSource<Int, String>() {
                 prevKey = if (page == 0) null else page - 1, // 이전 페이지 번호
                 nextKey = if (data.isEmpty()) null else page + 1 // 다음 페이지 번호
             ) // 해당 결과로 인해 자동으로 데이터가 append 된다.
+        } catch (e: CancellationException) {
+            // 취소된 로드를 LoadResult.Error 로 바꾸면 Paging 이 실패로 받는다 — 다시 던진다
+            throw e
         } catch (e: Exception) {
             // 예외 발생 시 에러 반환
             LoadResult.Error(e)

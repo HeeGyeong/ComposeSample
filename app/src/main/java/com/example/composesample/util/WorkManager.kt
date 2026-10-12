@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -100,6 +101,9 @@ class BackGroundWorker(
 
             // withContext(Dispatchers.IO) 안에 있는 launch 와 withContext(Dispatchers.IO)는 병렬로 수행된다.
             Result.success(workDataOf("finalProgress" to totalProgress))
+        } catch (e: CancellationException) {
+            // 작업이 중지되면(cancelWorkById·제약 해제) 코루틴이 취소된다 — retry 로 바꾸지 말고 다시 던진다
+            throw e
         } catch (e: Exception) {
             Result.retry()
         }

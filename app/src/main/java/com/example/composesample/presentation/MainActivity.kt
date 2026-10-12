@@ -32,6 +32,7 @@ import com.example.composesample.presentation.example.component.system.ui.widget
 import com.example.composesample.presentation.example.component.system.ui.widget.LargeWidget
 import com.example.composesample.util.ConstValue.ExampleType
 import com.example.composesample.util.ConstValue.IntentType
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -71,6 +72,9 @@ class MainActivity : ComponentActivity() {
                 SmallWidget().updateAll(this@MainActivity)
                 MediumWidget().updateAll(this@MainActivity)
                 LargeWidget().updateAll(this@MainActivity)
+            } catch (e: CancellationException) {
+                // 취소(액티비티 종료)는 갱신 실패가 아니다 — 다시 던져 로그에 오류로 남지 않게 한다
+                throw e
             } catch (e: Exception) {
                 Log.e("MainActivity", "위젯 업데이트 실패: ${e.message}", e)
             }

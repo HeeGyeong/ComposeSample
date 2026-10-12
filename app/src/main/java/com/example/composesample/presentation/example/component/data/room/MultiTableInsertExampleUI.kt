@@ -33,6 +33,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.composesample.presentation.MainHeader
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
 
 @Composable
@@ -122,6 +123,9 @@ fun MultiTableInsertExampleUI(onBackEvent: () -> Unit) {
                         )
                         runCatching {
                             repo.publishPost(author, post, tags)
+                        }.onFailure {
+                            // 취소는 실패가 아니다 — runCatching 은 Throwable 을 잡으므로 다른 처리보다 먼저 다시 던진다
+                            if (it is CancellationException) throw it
                         }.onSuccess { result ->
                             lastResult = "✅ 성공: authorId=${result.authorId}, " +
                                 "postId=${result.postId}, tagIds=${result.tagIds}"
@@ -156,6 +160,9 @@ fun MultiTableInsertExampleUI(onBackEvent: () -> Unit) {
                                 tags = listOf(TagEntity(label = "rollback-$counter")),
                                 forceFailure = true
                             )
+                        }.onFailure {
+                            // 취소는 실패가 아니다 — runCatching 은 Throwable 을 잡으므로 다른 처리보다 먼저 다시 던진다
+                            if (it is CancellationException) throw it
                         }.onSuccess {
                             lastResult = "예상과 다름: 성공해선 안 됨"
                         }.onFailure { e ->

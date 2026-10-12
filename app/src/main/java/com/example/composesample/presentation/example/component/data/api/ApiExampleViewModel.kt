@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -55,6 +56,9 @@ class ApiExampleViewModel(
                 val result = postApiInterface.getPosts()
                 _posts.value = result
                 Log.d("NetworkLog", "Api call Comp")
+            } catch (e: CancellationException) {
+                // 취소(ViewModel 정리)는 오류가 아니다 — 다시 던진다
+                throw e
             } catch (e: Exception) {
                 Log.e("NetworkLog", "fetchPosts 실패: ${e.message}", e)
                 _errorMessage.value = "오류 발생: ${e.message}"
@@ -87,6 +91,9 @@ class ApiExampleViewModel(
             _errorMessage.value = "Network error: ${e.message}"
         } catch (e: HttpException) {
             _errorMessage.value = "HTTP error: ${e.message}"
+        } catch (e: CancellationException) {
+            // 취소는 오류가 아니다 — 다시 던진다(CancellationException 은 Exception 의 하위 클래스)
+            throw e
         } catch (e: Exception) {
             _errorMessage.value = "Unexpected error: ${e.message}"
         } finally {

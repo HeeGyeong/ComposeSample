@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.composesample.util.NetworkStatusLiveData
 import com.example.domain.model.PostData
 import com.example.domain.useCase.GetPostUseCase
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -36,6 +37,9 @@ class ApiExampleUseCaseViewModel(
                 val result = getPostUseCase.invoke()
                 _posts.value = result
                 Log.d("NetworkLog", "Api call Comp")
+            } catch (e: CancellationException) {
+                // 취소(ViewModel 정리)는 오류가 아니다 — 다시 던진다
+                throw e
             } catch (e: Exception) {
                 Log.e("NetworkLog", "fetchPosts 실패: ${e.message}", e)
             }

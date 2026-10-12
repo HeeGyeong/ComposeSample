@@ -11,6 +11,7 @@ import android.location.LocationManager
 import android.net.wifi.WifiManager
 import android.os.Build
 import android.provider.Settings
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -98,6 +99,9 @@ fun LanguageSettingExampleUI(onBackEvent: () -> Unit) {
         try {
             val info = getLocationInfo(hasLocationPermission, context, isEmulator)
             locationInfo = info
+        } catch (e: CancellationException) {
+            // 취소는 위치 조회 실패가 아니다 — 다시 던진다
+            throw e
         } catch (e: Exception) {
             locationInfo = locationInfo.copy(
                 isLoading = false,
