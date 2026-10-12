@@ -2,7 +2,6 @@ package com.example.composesample.presentation.example.component.data.room
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -216,7 +215,7 @@ private fun SectionCard(
             verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             Text(title, fontSize = 14.sp, fontWeight = FontWeight.Bold)
-            Box(modifier = Modifier.padding(top = 4.dp)) { content() }
+            Column(modifier = Modifier.padding(top = 4.dp)) { content() } // 여러 자식이 겹치지 않게 세로로 — Box 면 모두 같은 자리에 그려진다
         }
     }
 }

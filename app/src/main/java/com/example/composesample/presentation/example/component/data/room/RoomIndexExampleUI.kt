@@ -333,7 +333,7 @@ private fun SectionCardIdx(
             verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             Text(title, fontSize = 14.sp, fontWeight = FontWeight.Bold)
-            Box(modifier = Modifier.padding(top = 4.dp)) { content() }
+            Column(modifier = Modifier.padding(top = 4.dp)) { content() } // 여러 자식이 겹치지 않게 세로로 — Box 면 모두 같은 자리에 그려진다
         }
     }
 }
