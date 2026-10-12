@@ -864,5 +864,12 @@ val examples2026 = listOf(
         description = "창 단위 60/90Hz 모드 요청과 평균 FPS 가 숨기는 늦은 프레임·p99 측정",
         blogUrl = "",
         exampleType = ConstValue.DisplayRefreshRateExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 10. 13",
+        title = "Gson 누락 필드와 Kotlin 기본값",
+        description = "누락 키·명시적 null 이 Kotlin 기본값·non-null 을 건너뛰는 Gson 파싱 실측",
+        blogUrl = "",
+        exampleType = ConstValue.GsonMissingFieldExample
     )
 )

@@ -37,6 +37,7 @@ import com.example.composesample.presentation.example.component.architecture.pat
 import com.example.composesample.presentation.example.component.architecture.pattern.mvi.MVIExampleUI
 import com.example.composesample.presentation.example.component.data.api.ApiDisconnectExampleUI
 import com.example.composesample.presentation.example.component.data.api.KtorAdvancedConfigExampleUI
+import com.example.composesample.presentation.example.component.data.api.GsonMissingFieldExampleUI
 import com.example.composesample.presentation.example.component.data.api.KtorExampleUI
 import com.example.composesample.presentation.example.component.data.cache.DataCacheExampleUI
 import com.example.composesample.presentation.example.component.data.cache.KtorHttpCacheExampleUI
@@ -251,6 +252,7 @@ import com.example.composesample.util.ConstValue.InlineValueClassExample
 import com.example.composesample.util.ConstValue.KoinCompilerPluginExample
 import com.example.composesample.util.ConstValue.FeatureFlagExample
 import com.example.composesample.util.ConstValue.KtorAdvancedConfigExample
+import com.example.composesample.util.ConstValue.GsonMissingFieldExample
 import com.example.composesample.util.ConstValue.KtorExample
 import com.example.composesample.util.ConstValue.AccessibleFocusIndicatorExample
 import com.example.composesample.util.ConstValue.LargeContentViewerExample
@@ -610,4 +612,5 @@ val exampleUiRegistry: Map<String, @Composable (onBackEvent: () -> Unit) -> Unit
     MetricStyleNotificationExample to { onBackEvent -> MetricStyleNotificationExampleUI(onBackEvent) },
     LazyListCacheWindowExample to { onBackEvent -> LazyListCacheWindowExampleUI(onBackEvent) },
     DisplayRefreshRateExample to { onBackEvent -> DisplayRefreshRateExampleUI(onBackEvent) },
+    GsonMissingFieldExample to { onBackEvent -> GsonMissingFieldExampleUI(onBackEvent) },
 )

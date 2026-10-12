@@ -200,11 +200,12 @@ object ConstValue {
     const val KotlinTimeApiExample = "kotlinTimeApiExample"
 
     // ==================== 네트워크 & API 예제 ====================
-    // Ktor(API 호출), SSE(실시간 통신), ApiDisconnect(연결 해제 처리), KtorAdvancedConfig(MockEngine 위에서 Auth bearer 토큰 리프레시 / HttpRequestRetry 지수 백오프 재시도 시연 + 오리진 페일오버 — 주/보조 오리진 상태 기계·GET 만 재생·502~504 만 전환·동시 실패는 실제로 쓴 오리진으로 판정·취소·쿨다운, 원문 검증 상황 10가지)
+    // Ktor(API 호출), SSE(실시간 통신), ApiDisconnect(연결 해제 처리), KtorAdvancedConfig(MockEngine 위에서 Auth bearer 토큰 리프레시 / HttpRequestRetry 지수 백오프 재시도 시연 + 오리진 페일오버 — 주/보조 오리진 상태 기계·GET 만 재생·502~504 만 전환·동시 실패는 실제로 쓴 오리진으로 판정·취소·쿨다운, 원문 검증 상황 10가지), GsonMissingField(Gson 이 인자 없는 생성자가 없으면 Unsafe 로 생성 — 누락 키·명시적 null·모르는 enum 이 Kotlin 기본값·non-null 을 우회, 값을 쓰는 줄에서 NPE, Boolean 꺼짐/모름·"Y"→false, disableJdkUnsafe, nullable 응답 모델 + 매퍼, Retrofit·Ktor 동일)
     const val KtorExample = "ktorExample"
     const val SSEExample = "sseExample"
     const val ApiDisconnectExample = "apiDisconnectExample"
     const val KtorAdvancedConfigExample = "ktorAdvancedConfigExample"
+    const val GsonMissingFieldExample = "gsonMissingFieldExample"
 
     // ==================== 데이터 & 캐시 예제 ====================
     // DataCache(캐시 관리), Paging(무한 스크롤), RemoteMediator(네트워크+DB 이중 소스 오프라인 우선 페이징 — LoadType 분기·RemoteKeys·initialize() 캐시 게이트), MultiTableInsert(Room DAO 인터페이스 상속 + withTransaction 다중 테이블 insert), RoomFtsSearch(Room @Fts4 가상 테이블의 MATCH 검색 vs LIKE '%q%' 전체 스캔 성능 비교), RoomIndex(@Index 단일/복합 인덱스의 범위/등호+정렬 쿼리 성능 비교), AdvancedRepositoryPattern(Memory→Disk→Network 다중 소스 우선순위 해석 + cache population), KtorHttpCache(Ktor HttpCache 플러그인 — MockEngine 원 서버로 max-age/no-cache/no-store/ETag/Last-Modified 별 서버 도달·조건부 헤더·304 를 요청 단위로 대조, private 응답 × isShared, 3.6.0 clearAllCaches()·FileStorage(Path, FileSystem) 디스크 영속·acceptHeaderMergeStrategy)
