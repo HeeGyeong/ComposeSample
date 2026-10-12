@@ -2,60 +2,56 @@
 
 This document describes the `data` module.
 
-This module contains the data layer of the application and is designed according to Clean Architecture principles.
+This module contains the data layer of the application and is designed according to Clean Architecture principles. It depends on `domain` (models and repository interfaces) and never on the presentation layer.
 
 ## Structure
 
-### 1. API Interfaces
+### 1. API
 
-- **Description**: Defines interfaces for communication with external APIs.
+- **Description**: Talks to the external API (`ApiClient.NEW_BASE_URL` = jsonplaceholder). Since ARCH-01/02 the calls are `suspend` functions that return domain types — no `retrofit2.Call` reaches the domain.
 
-  - `PostApiInterface`: API interface for fetching post data.
-  
+  - `PostApiInterface`: Retrofit interface for fetching post data.
+
     ```kotlin
     package com.example.data.api
 
     import com.example.domain.model.PostData
-    import retrofit2.Call
     import retrofit2.http.GET
 
     interface PostApiInterface {
         @GET("/posts")
-        fun getPosts(): Call<List<PostData>>
+        suspend fun getPosts(): List<PostData>
     }
     ```
+
+  - `HttpClient.getPosts()` (`KtorApiExtensions.kt`): the same call through Ktor.
+
+    ```kotlin
+    suspend fun HttpClient.getPosts(): List<PostData> {
+        return this.get("/posts").body()
+    }
+    ```
+
+  Both converters are Gson, which ignores Kotlin defaults and null-safety for missing keys — see the Gson rule in `docs/data/DataRules.md` and the `PostData` entry in `docs/KnownLimitations.md`.
 
 ### 2. Data Sources
 
-- **Description**: Defines interactions with data sources. This layer is responsible for fetching data through API calls.
+- **Description**: A data-layer abstraction over the API.
 
-  - `PostDataSource`: Interface defining methods for fetching post data.
-  
+  - `PostDataSource` / `PostDataSourceImpl`
+
     ```kotlin
     package com.example.data.repository.dataSource
 
-    import com.example.domain.model.PostData
-    import retrofit2.Call
-
     interface PostDataSource {
-        fun getPosts(): Call<List<PostData>>
+        suspend fun getPosts(): List<PostData>
     }
-    ```
 
-  - `PostDataSourceImpl`: Class implementing the `PostDataSource` interface. It fetches post data through the API interface.
-  
-    ```kotlin
-    package com.example.data.repository.dataSourceImpl
-
-    import com.example.data.api.PostApiInterface
-    import com.example.data.repository.dataSource.PostDataSource
-    import com.example.domain.model.PostData
-    import retrofit2.Call
-
+    // com.example.data.repository.dataSourceImpl
     class PostDataSourceImpl(
         private val postApiInterface: PostApiInterface
     ) : PostDataSource {
-        override fun getPosts(): Call<List<PostData>> {
+        override suspend fun getPosts(): List<PostData> {
             return postApiInterface.getPosts()
         }
     }
@@ -63,82 +59,79 @@ This module contains the data layer of the application and is designed according
 
 ### 3. Repositories
 
-- **Description**: Manages interactions between data sources and the domain layer.
+- **Description**: Implementations of the domain repository interfaces, plus one data-layer interface.
 
-  - `PostRepositoryImpl`: Class implementing the `PostRepository` interface from the domain layer. It provides functionality to fetch post data from the data source.
-  
+  - `PostRepositoryImpl`: implements domain `PostRepository` through `PostDataSource`.
+
     ```kotlin
-    package com.example.data.repository
-
-    import com.example.data.repository.dataSource.PostDataSource
-    import com.example.domain.model.PostData
-    import com.example.domain.repository.PostRepository
-    import retrofit2.Call
-
     class PostRepositoryImpl(
         private val postDataSource: PostDataSource
     ) : PostRepository {
-        override fun getPosts(): Call<List<PostData>> = postDataSource.getPosts()
+        override suspend fun getPosts(): List<PostData> = postDataSource.getPosts()
+    }
+    ```
+
+  - `ArticleRepositoryImpl`: implements domain `ArticleRepository` for the Advanced Repository Pattern example — memory → disk → network resolution, with disk and network simulated by in-memory maps and `delay`, and lower-layer hits written back to the upper layers.
+
+  - `MVIExampleRepositoryImpl`: implements domain `MVIExampleRepository` with a fixed string for the MVI example.
+
+  - `UserCacheRepository` / `UserCacheRepositoryImpl`: the DataCache example's repository. Its interface lives here rather than in `domain` because `UserData` is a Room `@Entity`, which the pure-Kotlin domain module cannot reference.
+
+    ```kotlin
+    interface UserCacheRepository {
+        fun searchUserName(name: String): Flow<List<UserData>>
+        suspend fun insertUserData(item: UserData)
+        suspend fun updateUserData(item: UserData)
+        suspend fun deleteUserData(item: UserData)
+        suspend fun allDataDelete()
     }
     ```
 
 ### 4. Database (Room)
 
-- **Description**: Contains Room implementations for local database management.
+- **Description**: The DataCache example's local database.
 
-  - `ItemDTO`, `UserData`: Database table entity definitions
-  
+  - `UserData`: table entity
+
     ```kotlin
-    @Entity(tableName = "itemTable")
-    data class ItemDTO(
-        @PrimaryKey
-        var id: Long?,
-        
-        @ColumnInfo(name = "uuid")
-        var uniqueId: String,
-    )
-
     @Entity(tableName = "exampleTable")
     data class UserData(
         @PrimaryKey
         val id: Long?,
-        
+
         @ColumnInfo(name = "user_name")
         val userName: String
     )
     ```
 
-  - `ItemDao`, `ExampleDao`: DAO interfaces for database access
-  
+  - `ExampleDao`: DAO (`RoomDao.kt`)
+
     ```kotlin
     @Dao
-    interface ItemDao {
-        fun searchData(startsWith: String): Flow<List<ItemDTO>>
-        suspend fun insert(item: ItemDTO)
-        suspend fun update(item: ItemDTO)
-        suspend fun delete(item: ItemDTO)
-        suspend fun clear()
-    }
-
-    @Dao
     interface ExampleDao {
+        @Query("SELECT * FROM exampleTable WHERE user_name LIKE :searchName || '%' ORDER BY id DESC")
         fun searchData(searchName: String): Flow<List<UserData>>
+        @Insert(onConflict = OnConflictStrategy.REPLACE)
         suspend fun insertData(item: UserData)
+        @Update(onConflict = OnConflictStrategy.REPLACE)
         suspend fun updateData(item: UserData)
+        @Delete
         suspend fun deleteData(item: UserData)
+        @Query("DELETE FROM exampleTable")
         suspend fun allDataDelete()
     }
     ```
 
-  - `RoomSingleton`: Room database singleton class
-  
+  - `RoomSingleton`: Room database
+
     ```kotlin
-    @Database(entities = [ItemDTO::class, UserData::class], version = 2, exportSchema = false)
+    @Database(entities = [UserData::class], version = 3, exportSchema = false)
     abstract class RoomSingleton : RoomDatabase() {
-        abstract fun itemDao(): ItemDao
         abstract fun exampleDao(): ExampleDao
     }
     ```
+
+  The other Room examples (FTS search, indexes, multi-table insert, Paging's RemoteMediator) keep their own databases inside the `app` module next to the example screens.
 
 ## Usage
 
