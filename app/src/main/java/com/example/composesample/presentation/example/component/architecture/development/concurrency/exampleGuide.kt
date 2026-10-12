@@ -33,6 +33,15 @@ package com.example.composesample.presentation.example.component.architecture.de
  * - suspendCancellableCoroutine { cont -> } : 취소 전파 지원. cont.invokeOnCancellation { } 블록에서 리소스 정리
  * - suspendCoroutine vs suspendCancellableCoroutine: 취소 가능 여부 차이. 장기 실행 작업엔 후자 권장
  * - invokeOnCancellation: 코루틴 취소 시 콜백 해제, 연결 종료 등 정리 작업 수행 지점
+ * - (7번 섹션) 사람의 응답을 suspend 로: 출처 On-Device AI Series Part 6 "Parking the ReAct Loop"
+ *   https://oguzhanaslann.medium.com/on-device-ai-series-part-6-building-an-ai-agent-563fff9d24b7
+ *   작업 코루틴이 질문을 StateFlow 에 올리고 CompletableDeferred.await() 에서 멈춘다 → 다이얼로그가 complete(답) 으로 깨운다.
+ *   상태는 ViewModel(CoroutineBridgesViewModel)에 있어 재생성(다크 모드)에도 질문·대기가 남고, 프로세스 종료 땐 함께 사라진다
+ * - 원문에 없는 함정 ①: 기다리던 코루틴이 취소되면(시간 초과·화면 종료) 질문 상태가 남아 '유령 다이얼로그'가 된다 —
+ *   거기에 답하면 기다리는 쪽이 없어 답이 버려진다 → try { await } finally { 질문 정리 }
+ * - 함정 ②: finally 정리는 'questionDeferred === 내 deferred' 일 때만. 확인 없이 지우면 밀려난 앞 작업의 finally 가
+ *   뒤 작업의 질문까지 닫아, 뒤 작업은 영영 깨어나지 못한다(JVM 실측)
+ * - 함정 ③: 새 질문이 오면 앞 질문은 complete(null) — 사용자가 닫은 것(null)과 구분되지 않는다 → 답·닫음·밀려남을 sealed 타입으로
  *
  * ## Race Condition (공유 가변 상태 보호 전략)
  * - 공식 문서: https://kotlinlang.org/docs/shared-mutable-state-and-concurrency.html

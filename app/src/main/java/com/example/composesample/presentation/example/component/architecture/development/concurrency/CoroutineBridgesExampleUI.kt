@@ -52,6 +52,14 @@ import kotlinx.coroutines.withTimeout
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
+import android.os.SystemClock
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableLongStateOf
+import kotlinx.coroutines.delay
+import org.koin.androidx.compose.koinViewModel
+import java.util.Locale
 
 // ──────────────────────────────────────────────
 // 시뮬레이션용 콜백 인터페이스 정의
@@ -304,6 +312,7 @@ fun CoroutineBridgesExampleUI(onBackEvent: () -> Unit) {
             item { CancellationDemoSection() }
             item { CallbackFlowSection() }
             item { PrebuiltBridgesSection() }
+            item { HumanAnswerSection() }
             item { ComparisonSection() }
             item { Spacer(modifier = Modifier.height(32.dp)) }
         }
@@ -822,6 +831,135 @@ suspend fun takePhoto(imageCapture: ImageCapture): Uri {
         )
         Spacer(modifier = Modifier.height(8.dp))
         InfoText("💡 기타 기존 브릿지:\n• Room: suspend fun, Flow 직접 지원\n• Retrofit: suspend fun 직접 지원\n• WorkManager: workInfo.asFlow()\n• DataStore: preferences.data (이미 Flow)")
+    }
+}
+
+// ── 사람의 응답 섹션 ──
+@Composable
+private fun HumanAnswerSection() {
+    val viewModel: CoroutineBridgesViewModel = koinViewModel()
+    val pending by viewModel.pendingQuestion.collectAsStateWithLifecycle()
+    val mode by viewModel.mode.collectAsStateWithLifecycle()
+    val events by viewModel.events.collectAsStateWithLifecycle()
+    val running by viewModel.runningTasks.collectAsStateWithLifecycle()
+
+    // 질문이 떠 있는 동안 화면이 계속 갱신되는지 = 기다리는 동안 메인 스레드가 막히지 않았다는 증거
+    var waitedMs by remember { mutableLongStateOf(0L) }
+    LaunchedEffect(pending) {
+        waitedMs = 0L
+        if (pending != null) {
+            val start = SystemClock.elapsedRealtime()
+            while (true) {
+                waitedMs = SystemClock.elapsedRealtime() - start
+                delay(100)
+            }
+        }
+    }
+
+    SectionCard(title = "7. 사람의 응답을 suspend 로 (CompletableDeferred)") {
+        InfoText(
+            "콜백이 아니라 '사용자의 선택'을 기다려야 할 때. 작업 코루틴이 질문을 StateFlow 에 올리고 " +
+                "CompletableDeferred.await() 에서 멈춘다. 메인 스레드는 막히지 않고, 다이얼로그가 complete(답) 하는 순간 " +
+                "작업이 멈춘 자리에서 이어진다."
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        CodeBlock(
+            """
+suspend fun ask(q: String): String? {
+    // 이전 질문은 null 로 정리
+    questionDeferred?.complete(null)
+    val d = CompletableDeferred<String?>()
+    questionDeferred = d
+    // 화면이 이 값을 보고 다이얼로그를 띄운다
+    _pending.value = Question(q)
+    try {
+        return d.await()  // 여기서 멈춘다
+    } finally {
+        // ↓ 원문에는 없는 정리
+        if (questionDeferred === d) {
+            questionDeferred = null
+            _pending.value = null
+        }
+    }
+}
+
+fun onAnswered(answer: String?) {
+    // 기다리던 작업이 깨어난다
+    questionDeferred?.complete(answer)
+    questionDeferred = null
+    _pending.value = null
+}
+            """.trimIndent()
+        )
+        Spacer(modifier = Modifier.height(12.dp))
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            CoroutineBridgesViewModel.AskMode.entries.forEach { option ->
+                ActionButton(
+                    text = option.label,
+                    color = if (option == mode) Color(0xFF00897B) else Color(0xFF37474F),
+                    enabled = running.isEmpty(),
+                    modifier = Modifier.weight(1f)
+                ) { viewModel.setMode(option) }
+            }
+        }
+        Spacer(modifier = Modifier.height(8.dp))
+        ResultRow(label = "진행 중", value = running.joinToString().ifEmpty { "없음" }, isLoading = running.isNotEmpty())
+        Spacer(modifier = Modifier.height(4.dp))
+        ResultRow(
+            label = "다이얼로그",
+            value = pending?.let { "${it.taskName} 의 질문 · ${"%.1f".format(Locale.ROOT, waitedMs / 1000.0)}초째" } ?: "없음",
+            isLoading = false
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        ActionButton(
+            text = "작업 시작",
+            color = Color(0xFF9C27B0),
+            enabled = running.isEmpty(),
+            modifier = Modifier.fillMaxWidth()
+        ) { viewModel.startTask() }
+        Spacer(modifier = Modifier.height(6.dp))
+        ActionButton(
+            text = "작업 시작 — 5초 안에 답이 없으면 시간 초과",
+            color = Color(0xFFFF9800),
+            enabled = running.isEmpty(),
+            modifier = Modifier.fillMaxWidth()
+        ) { viewModel.startTask(timeoutMs = 5_000L) }
+        Spacer(modifier = Modifier.height(6.dp))
+        ActionButton(
+            text = "작업 두 개 연달아 시작",
+            color = Color(0xFF607D8B),
+            enabled = running.isEmpty(),
+            modifier = Modifier.fillMaxWidth()
+        ) { viewModel.startTwoTasks() }
+        Spacer(modifier = Modifier.height(8.dp))
+        CodeBlock(events.joinToString("\n").ifEmpty { "(작업을 시작하면 여기에 순서대로 기록된다)" })
+        Spacer(modifier = Modifier.height(8.dp))
+        InfoText(
+            "해 볼 것\n" +
+                "① 작업 시작 → 질문에 답한다. 기다리는 동안에도 위의 경과 시간이 계속 바뀐다.\n" +
+                "② '원문 그대로'로 5초 시간 초과 → 작업은 그만뒀는데 다이얼로그가 남는다(유령 다이얼로그). " +
+                "그 다이얼로그에 답하면 기다리는 쪽이 없어 답이 버려진다.\n" +
+                "③ 같은 것을 'finally 로 정리'로 → 5초에 다이얼로그가 닫힌다.\n" +
+                "④ 작업 두 개 연달아 → 앞 작업은 null 을 받고 끝난다. 사용자가 닫은 것(null)과 구분되지 않으므로, " +
+                "실제 앱에서는 '답 · 닫음 · 밀려남'을 sealed 타입으로 나누는 편이 낫다.\n" +
+                "⑤ 질문이 떠 있을 때 다크 모드를 바꿔 화면을 재생성 → 상태가 ViewModel 에 있어 같은 질문이 다시 뜨고, " +
+                "답하면 작업이 이어진다(프로세스가 종료되면 ViewModel 과 함께 작업도 사라진다)."
+        )
+    }
+
+    pending?.let { question ->
+        AlertDialog(
+            onDismissRequest = { viewModel.onQuestionAnswered(null) },
+            title = { Text(text = question.taskName) },
+            text = { Text(text = question.question) },
+            confirmButton = {
+                Row {
+                    question.options.forEach { option ->
+                        TextButton(onClick = { viewModel.onQuestionAnswered(option) }) { Text(text = option) }
+                    }
+                }
+            }
+        )
     }
 }
 

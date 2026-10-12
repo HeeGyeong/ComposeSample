@@ -264,9 +264,9 @@ val examples2026 = listOf(
         exampleType = ConstValue.PreviewOnlyAnnotationExample
     ),
     ExampleObject(
-        lastUpdate = "26. 04. 06",
+        lastUpdate = "26. 10. 12",
         title = "Coroutine Bridges (콜백 → suspend 변환)",
-        description = "suspendCancellableCoroutine으로 콜백 기반 API를 suspend 함수로 변환",
+        description = "콜백·사용자 응답을 suspend 로 기다리는 브리지와 취소 시 정리",
         blogUrl = "",
         exampleType = ConstValue.CoroutineBridgesExample
     ),

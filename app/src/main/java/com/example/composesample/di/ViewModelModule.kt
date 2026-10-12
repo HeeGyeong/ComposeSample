@@ -3,6 +3,7 @@ package com.example.composesample.di
 import com.example.composesample.presentation.example.BlogExampleViewModel
 import com.example.coordinator.CoordinatorViewModel
 import com.example.core.BaseViewModel
+import com.example.composesample.presentation.example.component.architecture.development.concurrency.CoroutineBridgesViewModel
 import com.example.composesample.presentation.example.component.architecture.development.init.InitTestViewModel
 import com.example.composesample.presentation.example.component.architecture.development.type.TypeExampleViewModel
 import com.example.composesample.presentation.example.component.architecture.development.test.PowerAssertViewModel
@@ -66,6 +67,7 @@ val viewModelModule: Module = module {
     // 서비스를 bind 해야 하므로 Application 컨텍스트를 주입한다
     viewModel { MultiProcessViewModel(androidApplication()) }
     viewModel { PowerAssertViewModel() }
+    viewModel { CoroutineBridgesViewModel() }
     viewModel { BaseViewModel(get(), get()) }
     viewModel { CoordinatorViewModel(get(), get()) }
     viewModel {
