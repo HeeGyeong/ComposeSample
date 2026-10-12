@@ -4,6 +4,7 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -29,6 +30,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
@@ -60,17 +62,25 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.onSubscription
 import kotlinx.coroutines.job
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runInterruptible
 import kotlinx.coroutines.withContext
+import java.io.IOException
 import java.util.Collections
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.atomic.AtomicLong
+import java.util.concurrent.atomic.AtomicReference
+import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.InvocationKind
+import kotlin.contracts.contract
 
 /**
  * 구조적 동시성 가드레일 예제 (kotlinx.coroutines 1.11.0)
@@ -81,6 +91,9 @@ import java.util.concurrent.atomic.AtomicLong
  * - 같은 릴리스의 신규 API 3종(StateFlow.onSubscription · SharedFlow.asFlow · CompletableDeferred.asDeferred)은
  *   모두 "무엇을 밖에 노출하느냐"의 문제라 뒤쪽 카드에서 캐스팅 시도로 대조한다.
  * - 경고가 붙은 호출은 `@Suppress("DEPRECATION")` 로 **범위를 좁혀** 의도적으로만 부른다.
+ * - 9·10번 카드는 가드레일이 **보지 못하는** 취소 경로의 버그 두 가지를 같은 방식으로 실측한다 —
+ *   catch 가 CancellationException 을 삼켜 취소된 루프가 끝까지 도는 것(runCatching · catch (e: Exception)),
+ *   함수 속에 숨은 launch 때문에 collectLatest 가 옛 검색을 끊지 못하는 것. 둘 다 구조는 멀쩡하고 경고도 없다.
  * - 참고 자료(URL/핵심 개념)는 같은 폴더의 exampleGuide.kt 의 "Structured Concurrency Guardrails" 섹션 참고.
  */
 
@@ -105,6 +118,17 @@ private const val LOAD_STEP_MS = 200L
 /** 4번 카드: 블로킹 작업 길이와 취소 시점. */
 private const val BLOCKING_MS = 1_500L
 private const val INTERRUPT_CANCEL_AT_MS = 300L
+
+/** 9번 카드: 항목 하나를 불러오는 시간, 항목 수, 화면 스코프를 취소하는 시점(2번 항목을 불러오는 도중). */
+private const val FETCH_MS = 100L
+private const val FETCH_COUNT = 10
+private const val SWALLOW_CANCEL_AT_MS = 250L
+
+/** 10번 카드: 느린 첫 검색어 · 빠른 둘째 검색어의 응답 시간, 둘째가 입력되는 시점, 결과를 지켜보는 시간. */
+private const val SLOW_SEARCH_MS = 600L
+private const val FAST_SEARCH_MS = 200L
+private const val SECOND_QUERY_AT_MS = 100L
+private const val SEARCH_OBSERVE_MS = 900L
 
 // ==================== 공용 측정 도구 ====================
 
@@ -417,6 +441,270 @@ private suspend fun measureDeferredExposure(): List<DeferredScenario> {
     )
 }
 
+// ==================== 9. 취소를 삼키는 catch ====================
+
+/**
+ * kt.academy(Marcin Moskała)의 runCatchingCancellable. stdlib runCatching 과 달리
+ * ① 취소 신호 두 가지(코루틴 CancellationException · JVM InterruptedException)는 다시 던지고 ② Error 는 잡지 않는다.
+ * 원문이 지적한 "계약(contract)이 없다"는 그대로 둔다 — 예외를 잡는 함수에 EXACTLY_ONCE 계약을 붙이면
+ * 거짓 약속이 된다([runCatchingWithFalseContract]).
+ */
+private inline fun <T> runCatchingCancellable(block: () -> T): Result<T> = try {
+    Result.success(block())
+} catch (e: CancellationException) {
+    throw e
+} catch (e: InterruptedException) {
+    throw e
+} catch (e: Exception) {
+    Result.failure(e)
+}
+
+private enum class CatchLane(
+    val label: String,
+    val callSite: String,
+    val color: Color
+) {
+    RUN_CATCHING("stdlib runCatching", "runCatching { fetch(i) }", Color(0xFFE53935)),
+    CATCH_EXCEPTION("catch (e: Exception)", "try { fetch(i) } catch (e: Exception) { … }", Color(0xFFFB8C00)),
+    CANCELLABLE("runCatchingCancellable", "runCatchingCancellable { fetch(i) }", Color(0xFF43A047)),
+    ENSURE_ACTIVE("catch + ensureActive()", "catch (e: Exception) { currentCoroutineContext().ensureActive(); … }", Color(0xFF1E88E5))
+}
+
+/** 항목 하나의 결말. 항목별 띠의 색으로 보여 준다. */
+private enum class ItemOutcome(val label: String, val color: Color) {
+    SUCCESS("성공", Color(0xFF66BB6A)),
+    REAL_FAILURE("진짜 실패(서버 오류)", Color(0xFFFFA726)),
+    CANCEL_AS_FAILURE("취소를 '실패'로 처리", Color(0xFFE53935)),
+    NOT_RUN("실행 안 됨", Color(0xFFCFD8DC))
+}
+
+private data class SwallowResult(
+    val lane: CatchLane,
+    val outcomes: List<ItemOutcome>,
+    val afterLoopRan: Boolean,
+    val endMs: Long,
+    val endReason: String
+)
+
+/** 항목 하나 불러오기. 1번 항목은 서버 오류(진짜 실패)를 낸다. */
+private suspend fun fetchItem(index: Int): String {
+    delay(FETCH_MS)
+    if (index == 1) throw IOException("서버 오류")
+    return "item$index"
+}
+
+private fun Throwable.toOutcome(): ItemOutcome =
+    if (this is CancellationException) ItemOutcome.CANCEL_AS_FAILURE else ItemOutcome.REAL_FAILURE
+
+/**
+ * "하나 실패해도 나머지는 계속" 하는 흔한 루프를 화면 스코프에서 돌리고 [SWALLOW_CANCEL_AT_MS] 에 스코프를 취소한다.
+ * 람다를 넘기지 않고 when 으로 갈라 둔 이유: 디버그 빌드(HotSwan)는 함수 타입 파라미터로 넘긴 람다 밖으로 나가는
+ * checked 예외(IOException)를 감쌀 수 있다(4번 카드 캡션). 여기서는 모든 catch 가 같은 함수 안에 있다.
+ */
+private suspend fun measureSwallow(lane: CatchLane): SwallowResult = withContext(Dispatchers.Default) {
+    val clock = Stopwatch()
+    val outcomes = Array(FETCH_COUNT) { ItemOutcome.NOT_RUN }
+    val afterLoop = AtomicBoolean(false)
+    val end = AtomicReference(-1L to "기록 없음")
+
+    val screenScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
+    val job = screenScope.launch {
+        try {
+            for (index in 0 until FETCH_COUNT) {
+                when (lane) {
+                    CatchLane.RUN_CATCHING -> runCatching { fetchItem(index) }
+                        .onSuccess { outcomes[index] = ItemOutcome.SUCCESS }
+                        .onFailure { outcomes[index] = it.toOutcome() }
+
+                    CatchLane.CATCH_EXCEPTION -> try {
+                        fetchItem(index)
+                        outcomes[index] = ItemOutcome.SUCCESS
+                    } catch (e: Exception) {
+                        // CancellationException 은 IllegalStateException 의 하위 클래스라 여기로 들어온다.
+                        outcomes[index] = e.toOutcome()
+                    }
+
+                    CatchLane.CANCELLABLE -> runCatchingCancellable { fetchItem(index) }
+                        .onSuccess { outcomes[index] = ItemOutcome.SUCCESS }
+                        .onFailure { outcomes[index] = it.toOutcome() }
+
+                    CatchLane.ENSURE_ACTIVE -> try {
+                        fetchItem(index)
+                        outcomes[index] = ItemOutcome.SUCCESS
+                    } catch (e: Exception) {
+                        // 이 코루틴이 취소된 상태면 여기서 다시 던진다 — 진짜 실패만 아래로 내려간다.
+                        currentCoroutineContext().ensureActive()
+                        outcomes[index] = e.toOutcome()
+                    }
+                }
+            }
+            // 실제 앱이라면 "결과 저장 · 화면 갱신" 이 오는 자리.
+            afterLoop.set(true)
+            end.set(clock.elapsed() to "루프를 끝까지 돌았다")
+        } catch (e: CancellationException) {
+            end.set(clock.elapsed() to "취소로 중단")
+            throw e
+        }
+    }
+
+    delay(SWALLOW_CANCEL_AT_MS)
+    screenScope.cancel()
+    job.join()
+
+    val (endMs, reason) = end.get()
+    SwallowResult(
+        lane = lane,
+        outcomes = outcomes.toList(),
+        afterLoopRan = afterLoop.get(),
+        endMs = endMs,
+        endReason = reason
+    )
+}
+
+/** 시뮬레이션용 — 실제로 메모리가 부족한 것은 아니다. */
+private fun simulateOutOfMemory(): String {
+    throw OutOfMemoryError("시뮬레이션")
+}
+
+/**
+ * 원문이 꼽은 첫 번째 문제: runCatching 은 Throwable 을 잡으므로 회복할 수 없는 Error 까지 Result 로 바꾼다.
+ * runCatchingCancellable 은 Exception 만 잡아 Error 는 밖으로 나간다 — 이 측정 함수가 그것을 받아 보여 준다.
+ */
+private fun measureErrorCatch(): List<Pair<String, String>> {
+    val stdlib = runCatching { simulateOutOfMemory() }
+    val improved = try {
+        runCatchingCancellable { simulateOutOfMemory() }
+        "Result 로 받음"
+    } catch (e: OutOfMemoryError) {
+        "밖으로 던져짐(${e.javaClass.simpleName}) — 호출자가 처리하거나 앱이 죽는다"
+    }
+    return listOf(
+        "runCatching { … }" to "Result.failure(${stdlib.exceptionOrNull()?.javaClass?.simpleName}) — 앱은 아무 일 없이 계속 돈다",
+        "runCatchingCancellable { … }" to improved
+    )
+}
+
+/**
+ * 원문이 꼽은 세 번째 문제("계약이 없다")를 계약으로 메우면 생기는 일. stdlib runCatching 에는 계약이 없어서
+ * `val x; runCatching { x = 1 }` 은 컴파일 오류다. 예외를 잡는 함수가 EXACTLY_ONCE 를 약속하면 컴파일러는
+ * 블록 안의 대입을 '반드시 일어난 일'로 믿는데, 블록이 대입 전에 던지면 그 약속은 거짓이 된다.
+ * 컴파일러도 "실제로는 AT_MOST_ONCE" 라고 경고한다(WRONG_INVOCATION_KIND) — 결과를 보이려고 이 함수에서만 끈다.
+ */
+@OptIn(ExperimentalContracts::class)
+@Suppress("WRONG_INVOCATION_KIND")
+private inline fun <T> runCatchingWithFalseContract(block: () -> T): Result<T> {
+    contract { callsInPlace(block, InvocationKind.EXACTLY_ONCE) }
+    return try {
+        Result.success(block())
+    } catch (e: CancellationException) {
+        throw e
+    } catch (e: Exception) {
+        Result.failure(e)
+    }
+}
+
+/** 컴파일러가 결과를 미리 알 수 없게 하는 조건(항상 true). */
+private fun isServerDown(): Boolean = System.nanoTime() > 0
+
+private data class FalseContractResult(
+    val result: String,
+    val nameRead: String,
+    val lengthRead: String
+)
+
+private fun measureFalseContract(): FalseContractResult {
+    val name: String
+    val result = runCatchingWithFalseContract {
+        if (isServerDown()) throw IOException("서버 오류")
+        name = "홍길동"
+    }
+    // 계약을 믿은 컴파일러는 name 이 초기화됐다고 보고 아래 읽기를 허용한다. NPE 를 보이려고 여기서만 stdlib runCatching 을 쓴다.
+    return FalseContractResult(
+        result = result.toString(),
+        nameRead = "name = $name",
+        lengthRead = runCatching { name.length.toString() }.getOrElse { it.javaClass.simpleName }
+    )
+}
+
+// ==================== 10. collectLatest 와 숨은 launch ====================
+
+private enum class SearchLane(
+    val label: String,
+    val callSite: String,
+    val color: Color
+) {
+    COLLECT_LAUNCH("collect + 숨은 launch", "queries.collect { q -> loadResults(q) }", Color(0xFFE53935)),
+    LATEST_LAUNCH("collectLatest + 숨은 launch", "queries.collectLatest { q -> loadResults(q) }", Color(0xFFFB8C00)),
+    LATEST_SUSPEND("collectLatest + suspend 함수", "queries.collectLatest { q -> loadResultsNow(q) }", Color(0xFF43A047))
+}
+
+private data class SearchRun(
+    val lane: SearchLane,
+    val events: List<String>,
+    val finalShown: String,
+    val cancelledSearches: Int
+)
+
+/** 검색 화면의 ViewModel 역할. [viewModelScope] 는 그 이름의 스코프와 같은 자리다. */
+private class SearchScreenModel(private val clock: Stopwatch) {
+    val viewModelScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
+    val events: MutableList<String> = Collections.synchronizedList(mutableListOf())
+    val cancelledSearches = AtomicInteger(0)
+
+    @Volatile
+    var shown: String = "(없음)"
+        private set
+
+    private suspend fun search(query: String, latencyMs: Long): String {
+        try {
+            delay(latencyMs)
+            return "'$query' 결과"
+        } catch (e: CancellationException) {
+            cancelledSearches.incrementAndGet()
+            events += "${clock.elapsed()}ms  '$query' 검색 취소"
+            throw e
+        }
+    }
+
+    /** 함정: 이름은 평범한 함수인데 속에서 launch 한다 — 검색이 viewModelScope 의 자식, 즉 수집 코루틴의 형제가 된다. */
+    fun loadResults(query: String, latencyMs: Long) {
+        viewModelScope.launch { loadResultsNow(query, latencyMs) }
+    }
+
+    /** 부른 코루틴 안에서 실행된다 — collectLatest 가 이 코루틴을 취소하면 검색도 함께 취소된다. */
+    suspend fun loadResultsNow(query: String, latencyMs: Long) {
+        val result = search(query, latencyMs)
+        shown = result
+        events += "${clock.elapsed()}ms  화면 ← $result"
+    }
+}
+
+/** '커피'(느린 검색)를 치고 [SECOND_QUERY_AT_MS] 뒤 '커피빈'(빠른 검색)으로 고친다. 화면에 남아야 할 것은 '커피빈' 결과다. */
+private suspend fun measureSearch(lane: SearchLane): SearchRun = withContext(Dispatchers.Default) {
+    val clock = Stopwatch()
+    val model = SearchScreenModel(clock)
+    val queries = flow {
+        emit("커피" to SLOW_SEARCH_MS)
+        delay(SECOND_QUERY_AT_MS)
+        emit("커피빈" to FAST_SEARCH_MS)
+    }
+    model.viewModelScope.launch {
+        when (lane) {
+            SearchLane.COLLECT_LAUNCH -> queries.collect { (query, latency) -> model.loadResults(query, latency) }
+            SearchLane.LATEST_LAUNCH -> queries.collectLatest { (query, latency) -> model.loadResults(query, latency) }
+            SearchLane.LATEST_SUSPEND -> queries.collectLatest { (query, latency) -> model.loadResultsNow(query, latency) }
+        }
+    }
+    delay(SEARCH_OBSERVE_MS)
+    model.viewModelScope.cancel()
+    SearchRun(
+        lane = lane,
+        events = model.events.toList(),
+        finalShown = model.shown,
+        cancelledSearches = model.cancelledSearches.get()
+    )
+}
+
 // ==================== 화면 ====================
 
 @Composable
@@ -444,6 +732,8 @@ fun StructuredConcurrencyGuardrailExampleUI(onBackEvent: () -> Unit) {
             item { OnSubscriptionCard() }
             item { SharedFlowExposureCard() }
             item { DeferredExposureCard() }
+            item { SwallowedCancellationCard() }
+            item { HiddenLaunchCard() }
             item { PitfallCard() }
         }
     }
@@ -838,11 +1128,220 @@ private fun DeferredExposureCard() {
     }
 }
 
-// ==================== 9. 함정 ====================
+// ==================== 9. 취소를 삼키는 catch ====================
+
+private data class SwallowExtras(
+    val errorRows: List<Pair<String, String>>,
+    val falseContract: FalseContractResult
+)
+
+@Composable
+private fun SwallowedCancellationCard() {
+    val scope = rememberCoroutineScope()
+    var results by remember { mutableStateOf<List<SwallowResult>>(emptyList()) }
+    var extras by remember { mutableStateOf<SwallowExtras?>(null) }
+    var running by remember { mutableStateOf(false) }
+
+    SectionCard(title = "9. 취소를 삼키는 catch — 가드레일도 모른다") {
+        BodyText(
+            "가드레일은 구조를 끊는 호출만 본다. 구조가 멀쩡해도 catch 가 취소 신호(CancellationException)를 잡아 버리면 " +
+                "취소된 코루틴이 그대로 계속 돈다 — 컴파일 경고도 크래시도 없다."
+        )
+        Spacer(modifier = Modifier.height(6.dp))
+        BodyText(
+            "항목 ${FETCH_COUNT}개를 차례로 불러오는 루프(항목당 ${FETCH_MS}ms, 1번 항목은 서버 오류). 실패한 항목은 건너뛰고 " +
+                "계속한다. ${SWALLOW_CANCEL_AT_MS}ms 에 화면 스코프를 취소한다(2번 항목을 불러오는 도중)."
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        CatchLane.entries.forEach { lane -> ResultRow(lane.label, lane.callSite) }
+        Spacer(modifier = Modifier.height(8.dp))
+        DemoButton(text = if (running) "실행 중…" else "네 방식 실행", color = Color(0xFFC62828)) {
+            if (!running) {
+                running = true
+                scope.launch {
+                    results = CatchLane.entries.map { measureSwallow(it) }
+                    extras = SwallowExtras(errorRows = measureErrorCatch(), falseContract = measureFalseContract())
+                    running = false
+                }
+            }
+        }
+
+        if (results.isNotEmpty()) {
+            Spacer(modifier = Modifier.height(12.dp))
+            results.forEach { result ->
+                Text(text = result.lane.label, fontSize = 12.sp, fontWeight = FontWeight.Bold, color = result.lane.color)
+                OutcomeStrip(result.outcomes)
+                ResultRow("취소가 실패로", "${result.outcomes.count { it == ItemOutcome.CANCEL_AS_FAILURE }}개")
+                ResultRow("루프 다음 코드", if (result.afterLoopRan) "실행됨 — 화면을 나간 뒤 저장·갱신" else "실행 안 됨")
+                ResultRow("종료", "${result.endMs}ms · ${result.endReason}")
+                Spacer(modifier = Modifier.height(8.dp))
+            }
+            OutcomeLegend()
+            Spacer(modifier = Modifier.height(8.dp))
+            BodyText(
+                "취소된 코루틴의 delay 는 기다리지 않고 곧바로 CancellationException 을 던진다. 그것을 '실패한 항목'으로 받아 " +
+                    "넘기면 남은 항목이 순식간에 전부 실패하고 루프가 끝까지 간다 — 에러 로그와 크래시 리포트에 취소가 오류로 쌓이고, " +
+                    "루프 다음의 저장·화면 갱신 코드는 화면을 나간 뒤에 실행된다. CancellationException 은 IllegalStateException 의 " +
+                    "하위 클래스라 catch (e: Exception) 도 똑같이 잡는다."
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            CodeBlock(
+                "inline fun <T> runCatchingCancellable(block: () -> T): Result<T> = try {\n" +
+                    "    Result.success(block())\n" +
+                    "} catch (e: CancellationException) {\n" +
+                    "    throw e                     // 코루틴 취소 신호\n" +
+                    "} catch (e: InterruptedException) {\n" +
+                    "    throw e                     // JVM 스레드 취소 신호\n" +
+                    "} catch (e: Exception) {       // Throwable 이 아니라 Exception — Error 는 잡지 않는다\n" +
+                    "    Result.failure(e)\n" +
+                    "}"
+            )
+            CaptionText("kt.academy 의 함수 그대로. catch 안에서 currentCoroutineContext().ensureActive() 를 먼저 부르는 방법(파란 레인)도 결과가 같다.")
+        }
+
+        extras?.let { measured ->
+            Spacer(modifier = Modifier.height(12.dp))
+            TableRow("호출", "OutOfMemoryError(시뮬레이션)", isHeader = true)
+            measured.errorRows.forEach { (callSite, outcome) -> TableRow(callSite, outcome) }
+            CaptionText("stdlib runCatching 은 Throwable 을 잡는다. Error 는 '회복할 수 없음'을 알리는 신호라 Result 로 바꿔 넘기면 안 된다.")
+
+            Spacer(modifier = Modifier.height(12.dp))
+            BodyText(
+                "원문은 runCatching 에 계약(contract)이 없다는 점도 지적하지만, 개선판에도 계약은 없다. stdlib 은 계약이 없어서 " +
+                    "val x; runCatching { x = 1 } 이 컴파일 오류다. 예외를 잡는 함수에 EXACTLY_ONCE 를 붙여 그 오류를 없애면:"
+            )
+            CodeBlock(
+                "contract { callsInPlace(block, InvocationKind.EXACTLY_ONCE) }  // 예외를 잡는 함수에\n\n" +
+                    "val name: String\n" +
+                    "runCatchingWithFalseContract {\n" +
+                    "    if (isServerDown()) throw IOException(\"서버 오류\")\n" +
+                    "    name = \"홍길동\"\n" +
+                    "}\n" +
+                    "println(name.length)  // 컴파일된다"
+            )
+            ResultRow("컴파일러", "warning: wrong invocation kind 'EXACTLY_ONCE' … the actual invocation kind is 'AT_MOST_ONCE'")
+            ResultRow("Result", measured.falseContract.result)
+            ResultRow("name 읽기", measured.falseContract.nameRead)
+            ResultRow("name.length", measured.falseContract.lengthRead)
+            CaptionText(
+                "블록이 대입 전에 던졌는데 컴파일러는 계약을 믿고 name 을 초기화된 non-null String 으로 본다 — null 이 그대로 읽히고 " +
+                    "첫 사용에서 NPE 가 난다. 예외를 잡는 함수는 '정확히 한 번 끝까지'를 약속할 수 없으므로 계약을 붙이지 않는다. " +
+                    "(경고는 이 결과를 보이려고 해당 함수에서만 @Suppress 로 껐다.)"
+            )
+        }
+    }
+}
+
+/** 항목별 결말을 한 줄 띠로. 칸 하나 = 항목 하나. */
+@Composable
+private fun OutcomeStrip(outcomes: List<ItemOutcome>) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 4.dp),
+        horizontalArrangement = Arrangement.spacedBy(3.dp)
+    ) {
+        outcomes.forEachIndexed { index, outcome ->
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .height(22.dp)
+                    .background(outcome.color, RoundedCornerShape(3.dp)),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(text = "$index", fontSize = 10.sp, color = Color(0xFF263238))
+            }
+        }
+    }
+}
+
+/** 범례 4개를 한 줄에 두면 폰 폭에서 잘린다 → 두 개씩 두 줄로. */
+@Composable
+private fun OutcomeLegend() {
+    Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+        ItemOutcome.entries.chunked(2).forEach { pair ->
+            Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                pair.forEach { outcome ->
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Box(
+                            modifier = Modifier
+                                .width(10.dp)
+                                .height(10.dp)
+                                .background(outcome.color, RoundedCornerShape(2.dp))
+                        )
+                        Spacer(modifier = Modifier.width(4.dp))
+                        CaptionText(outcome.label)
+                    }
+                }
+            }
+        }
+    }
+}
+
+// ==================== 10. collectLatest 와 숨은 launch ====================
+
+@Composable
+private fun HiddenLaunchCard() {
+    val scope = rememberCoroutineScope()
+    var results by remember { mutableStateOf<List<SearchRun>>(emptyList()) }
+    var running by remember { mutableStateOf(false) }
+
+    SectionCard(title = "10. collectLatest 가 끊지 못하는 검색") {
+        BodyText(
+            "검색어가 바뀌면 이전 검색을 버리려고 collectLatest 를 쓴다. 그런데 블록이 부르는 함수가 속에서 viewModelScope.launch 를 " +
+                "하면, 검색은 수집 코루틴의 자식이 아니라 형제가 된다. 블록은 launch 만 하고 곧바로 끝나므로 collectLatest 가 끊을 것이 없다."
+        )
+        Spacer(modifier = Modifier.height(6.dp))
+        BodyText(
+            "'커피'(응답 ${SLOW_SEARCH_MS}ms)를 치고 ${SECOND_QUERY_AT_MS}ms 뒤 '커피빈'(응답 ${FAST_SEARCH_MS}ms)으로 고친다. " +
+                "화면에 남아야 하는 것은 '커피빈' 결과다."
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        CodeBlock(
+            "// ⚠️ 호출부에서는 평범한 함수 호출로 읽힌다\n" +
+                "fun loadResults(q: String) {\n" +
+                "    viewModelScope.launch { _results.value = search(q) }\n" +
+                "}\n\n" +
+                "// 부른 코루틴 안에서 실행된다 — collectLatest 가 끊으면 검색도 끊긴다\n" +
+                "suspend fun loadResultsNow(q: String) {\n" +
+                "    _results.value = search(q)\n" +
+                "}"
+        )
+        DemoButton(text = if (running) "실행 중… (약 ${SEARCH_OBSERVE_MS * SearchLane.entries.size / 1000.0}초)" else "세 방식 실행", color = Color(0xFF00897B)) {
+            if (!running) {
+                running = true
+                scope.launch {
+                    results = SearchLane.entries.map { measureSearch(it) }
+                    running = false
+                }
+            }
+        }
+
+        if (results.isNotEmpty()) {
+            Spacer(modifier = Modifier.height(10.dp))
+            results.forEach { run ->
+                val correct = run.finalShown == "'커피빈' 결과"
+                Text(text = run.lane.label, fontSize = 12.sp, fontWeight = FontWeight.Bold, color = run.lane.color)
+                ResultRow("호출", run.lane.callSite)
+                CodeBlock(run.events.joinToString("\n").ifEmpty { "(이벤트 없음)" })
+                ResultRow("최종 화면", run.finalShown + if (correct) "  ✓" else "  ✗ 늦게 끝난 옛 검색이 덮었다")
+                ResultRow("취소된 검색", "${run.cancelledSearches}개")
+                Spacer(modifier = Modifier.height(8.dp))
+            }
+            BodyText(
+                "collect 와 collectLatest 의 결과가 같다 — 숨은 launch 앞에서 collectLatest 는 아무 일도 하지 않는다. 늦게 끝난 옛 " +
+                    "검색어의 결과가 새 결과를 덮는 경쟁 상태가 되고, 망이 느릴수록 자주 보인다. 함수를 suspend 로 바꾸고 launch 를 빼면 " +
+                    "검색이 블록 안에서 돌아 새 검색어가 오는 순간 옛 검색이 취소된다. 명시적 취소는 부모에서 자식으로만 흐른다."
+            )
+        }
+    }
+}
+
+// ==================== 11. 함정 ====================
 
 @Composable
 private fun PitfallCard() {
-    SectionCard(title = "9. 걸리는 것들") {
+    SectionCard(title = "11. 걸리는 것들") {
         PitfallRow(
             "경고가 없다고 안전한 게 아니다",
             "가드레일은 정적 타입이 Job/NonCancellable 인 호출만 잡는다. Job() + Dispatchers.IO 나 " +
@@ -872,6 +1371,16 @@ private fun PitfallCard() {
             "onSubscription 블록은 구독자마다 돈다",
             "StateFlow 한 개에 onSubscription 을 붙여도 블록은 구독이 생길 때마다 실행된다. " +
                 "'첫 구독자일 때 한 번만'이 목적이면 stateIn(WhileSubscribed) 쪽이 맞다(6번 카드에서 A·B 를 번갈아 켜 보면 보인다)."
+        )
+        PitfallRow(
+            "suspend 호출을 stdlib runCatching 으로 감싸지 않는다",
+            "Result 로 받고 싶으면 CancellationException 을 다시 던지는 판(runCatchingCancellable)을 쓰거나, catch 안에서 " +
+                "currentCoroutineContext().ensureActive() 를 먼저 부른다. 다시 던진 뒤 바깥에서 또 삼키지 않는지도 본다(9번 카드)."
+        )
+        PitfallRow(
+            "launch 하는 함수는 그렇게 보이게 만든다",
+            "Unit 을 반환하면서 속에서 launch 하는 함수는 호출부에서 평범한 호출로 읽혀, 감싼 코루틴의 취소가 닿는 줄 착각하게 만든다. " +
+                "부른 쪽 코루틴 안에서 돌아야 하면 suspend 로, 정말 떼어 놓을 거면 CoroutineScope 를 받거나 이름으로 드러낸다(10번 카드)."
         )
     }
 }

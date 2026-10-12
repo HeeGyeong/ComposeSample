@@ -85,6 +85,8 @@ package com.example.composesample.presentation.example.component.architecture.de
  * - SharedFlow.asFlow: https://github.com/Kotlin/kotlinx.coroutines/issues/4530
  * - CompletableDeferred.asDeferred: https://github.com/Kotlin/kotlinx.coroutines/issues/4408
  * - StateFlow.onSubscription: https://github.com/Kotlin/kotlinx.coroutines/issues/4275
+ * - Improved runCatching(runCatchingCancellable): https://kt.academy/article/runCatching
+ * - Coroutines Need Your Cooperation(협력적 취소 · collectLatest 와 숨은 launch): https://ricardocosteira.dev/posts/2026/coroutines-need-your-cooperation/
  * 핵심 개념:
  * - 가드레일 = 같은 이름의 @Deprecated 오버로드. 파라미터 타입을 Job/NonCancellable 로 좁혀 두면
  *   정적 타입이 Job 인 호출만 그쪽으로 해석된다. 본문은 `launch(context as CoroutineContext, …)` 위임이라 동작은 그대로다
@@ -102,4 +104,14 @@ package com.example.composesample.presentation.example.component.architecture.de
  * - SharedFlow.asFlow: flow { } 로 감싼 평범한 Flow. MutableSharedFlow 로 캐스팅 불가 + replayCache/subscriptionCount 도 숨긴다
  *   (asSharedFlow 는 쓰기만 막고 SharedFlow 타입은 드러낸다)
  * - CompletableDeferred.asDeferred: ReadonlyDeferred 래퍼 → complete 캐스팅은 막지만 cancel() 은 원본에 그대로 위임된다
+ * - (가드레일 밖) catch 가 취소를 삼킨다: stdlib runCatching 은 Throwable 을 잡고, CancellationException 은 IllegalStateException 의
+ *   하위 클래스라 catch (e: Exception) 도 잡는다. 취소된 코루틴의 delay 는 곧바로 던지므로 "실패는 건너뛰고 계속" 루프가
+ *   남은 항목을 전부 '실패'로 처리하고 끝까지 돈다 → 루프 다음 코드가 화면을 나간 뒤 실행된다
+ * - 해법: runCatchingCancellable(CancellationException·InterruptedException 재던짐 + Exception 만 포획) 또는
+ *   catch 안에서 currentCoroutineContext().ensureActive() 먼저. stdlib runCatching 은 Error(OutOfMemoryError 등)까지 Result 로 바꾼다
+ * - 계약: stdlib runCatching 에는 contract 가 없어 `val x; runCatching { x = 1 }` 이 컴파일 오류. 예외를 잡는 함수에
+ *   callsInPlace(EXACTLY_ONCE) 를 붙이면 컴파일러가 WRONG_INVOCATION_KIND 경고("실제로는 AT_MOST_ONCE")를 내고,
+ *   블록이 대입 전에 던지면 non-null val 이 null 로 읽혀 NPE(Kotlin 2.4.20, JVM·기기 실측) → 계약을 붙이지 않는다
+ * - collectLatest 는 블록(과 그 자식)만 취소한다. 블록이 부른 함수가 속에서 viewModelScope.launch 를 하면 작업은 수집 코루틴의
+ *   형제라 끊기지 않는다 → 늦게 끝난 옛 검색이 새 결과를 덮는 경쟁. 함수를 suspend 로 바꾸고 launch 를 뺀다
  */

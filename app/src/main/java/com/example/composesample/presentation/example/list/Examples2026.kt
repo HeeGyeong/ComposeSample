@@ -789,9 +789,9 @@ val examples2026 = listOf(
         exampleType = ConstValue.Nav3SceneStrategyExample
     ),
     ExampleObject(
-        lastUpdate = "26. 09. 22",
+        lastUpdate = "26. 10. 12",
         title = "구조적 동시성 가드레일",
-        description = "coroutines 1.11이 경고하는 launch(Job()) 등 구조 이탈 호출의 결과와 대안",
+        description = "1.11 가드레일이 잡는 구조 이탈과 못 잡는 취소 삼킴·숨은 launch",
         blogUrl = "",
         exampleType = ConstValue.StructuredConcurrencyGuardrailExample
     ),
