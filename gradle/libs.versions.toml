@@ -155,8 +155,10 @@ okhttpEventSource = "5.0.0"
 # paging-common 3.3.2 보다 높아 선언이 그대로 해석된다. (이전: 3.2.1 선언 ↔ 3.3.2 해석 드리프트 — DEP-VERSION-03)
 # 2026-10-08 3.5.2 패치 상향(DEP-CURRENCY-05) — Pager.append() 를 초기 refresh 전에 부르면 예외 대신 no-op(프로젝트는 append() 미사용).
 # aar minCompileSdk: runtime/common 34 · compose 35, minAGP 8.6.0 이하.
-paging = "3.5.2"
-pagingCompose = "3.5.2"
+# 2026-10-13 3.5.3 패치 상향(DEP-CURRENCY-08) — ItemSnapshotListFlow 의 터미널 구분자 예외 · maxSize 초과 시 2페이지 미만으로
+# 떨구지 않음(프로젝트는 asItemSnapshotListFlow·구분자·maxSize 미사용). aar 요구치 3.5.2 와 같다.
+paging = "3.5.3"
+pagingCompose = "3.5.3"
 
 # Glance Widget
 # 1.2.0 — aar-metadata minCompileSdk=35 / minAGP=8.6.0.
