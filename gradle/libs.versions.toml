@@ -174,7 +174,9 @@ biometric = "1.4.0-alpha07"
 # 2.0.3(2026-09-29 상향): KMP 분리(tracing → tracing-android), aar minCompileSdk 34 / minAGP 8.1.1.
 # Trace 정적 메서드 시그니처 동일 · trace{}/traceAsync 는 tracing-android 의 같은 TraceKt 로 이동(tracing-ktx 2.0.3 은 빈 껍데기)
 # → 바이너리 호환. 전이: coroutines 1.9.0 · stdlib 2.1.20 · annotation 1.10.0 — 끌어올림 0.
-tracing = "2.0.3"
+# 2026-10-13 2.0.4 패치 상향(DEP-CURRENCY-09) — trace 패킷 flush 경쟁 조건 수정(프로세스 내 기록 API, 프로젝트는 Trace 정적 메서드만).
+# aar 요구치·pom 전이 2.0.3 과 같다.
+tracing = "2.0.4"
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "applicationVersion" }
