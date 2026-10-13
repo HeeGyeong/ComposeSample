@@ -161,6 +161,7 @@ import com.example.composesample.presentation.example.component.architecture.dev
 import com.example.composesample.presentation.example.component.architecture.development.internals.SlotTreeInspectorExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.internals.RecomposerRegistryExampleUI
 import com.example.composesample.presentation.example.component.ui.media.image.Coil3ImageExampleUI
+import com.example.composesample.presentation.example.component.ui.media.image.TiledImageDeepZoomExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.language.Kotlin24FeaturesExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.language.NameBasedDestructuringExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.language.SealedClassInterfaceExampleUI
@@ -325,6 +326,7 @@ import com.example.composesample.util.ConstValue.DialogBlurExample
 import com.example.composesample.util.ConstValue.MeshGradientExample
 import com.example.composesample.util.ConstValue.SpotlightOverlayExample
 import com.example.composesample.util.ConstValue.Coil3ImageExample
+import com.example.composesample.util.ConstValue.TiledImageDeepZoomExample
 import com.example.composesample.util.ConstValue.NameBasedDestructuringExample
 import com.example.composesample.util.ConstValue.SealedClassInterfaceExample
 import com.example.composesample.util.ConstValue.SharedElementDebugToolingExample
@@ -613,4 +615,5 @@ val exampleUiRegistry: Map<String, @Composable (onBackEvent: () -> Unit) -> Unit
     LazyListCacheWindowExample to { onBackEvent -> LazyListCacheWindowExampleUI(onBackEvent) },
     DisplayRefreshRateExample to { onBackEvent -> DisplayRefreshRateExampleUI(onBackEvent) },
     GsonMissingFieldExample to { onBackEvent -> GsonMissingFieldExampleUI(onBackEvent) },
+    TiledImageDeepZoomExample to { onBackEvent -> TiledImageDeepZoomExampleUI(onBackEvent) },
 )

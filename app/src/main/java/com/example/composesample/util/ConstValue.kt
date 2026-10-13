@@ -78,8 +78,9 @@ object ConstValue {
     // FoundationStyleApi(Compose 1.11 Foundation Style API: Modifier.styleable + Style{} DSL 로 컴포넌트 상태별 스타일 선언 — pressed/hovered/focused/checked/selected/disabled 변형 + animate() 전이 + 커스텀 StyleStateKey + 조건부 Modifier 체이닝과 리컴포지션 대조, 부록으로 디자인 토큰 전파 패턴)
     const val FoundationStyleApiExample = "foundationStyleApiExample"
 
-    // Coil3Image(Coil 3 이미지 로딩: AsyncImage crossfade/placeholder/error 상태 + memoryCachePolicy ENABLED/DISABLED 토글로 dataSource(NETWORK/MEMORY_CACHE) 추적 + 커스텀 ImageLoader 메모리/디스크 캐시 구성 — coil3 네임스페이스로 기존 Coil 2와 공존)
+    // Coil3Image(Coil 3 이미지 로딩: AsyncImage crossfade/placeholder/error 상태 + memoryCachePolicy ENABLED/DISABLED 토글로 dataSource(NETWORK/MEMORY_CACHE) 추적 + 커스텀 ImageLoader 메모리/디스크 캐시 구성 — coil3 네임스페이스로 기존 Coil 2와 공존), TiledImageDeepZoom(BitmapRegionDecoder 타일 딥줌 — 보이는 512px 타일만 배율에 맞춘 inSampleSize 로 디코딩, 전용 스레드·지난 요청 취소·바이트 LRU 캐시, 개요 바닥, 한 번에 디코딩한 183MB 비트맵과 대조)
     const val Coil3ImageExample = "coil3ImageExample"
+    const val TiledImageDeepZoomExample = "tiledImageDeepZoomExample"
 
     // ==================== 스크롤 & 제스처 예제 ====================
     // PullToRefresh(당겨서 새로고침), PullScreenPager(풀스크린 페이저), FlingBehavior(스크롤 커스텀), SwipeToDismiss(스와이프 삭제), SwipeToDismissM3(M3 스와이프 삭제), DragAndDrop(드래그 앤 드롭), NestedScrolling(중첩 스크롤), CustomScrollBehavior(커스텀 TopAppBarScrollBehavior), StickerCanvas(스티커 제스처 캔버스), ImeNestedScroll(스크롤 제스처로 키보드 열고/닫기 + imeAnimationSource/Target로 애니메이션 진행률에 커스텀 UI 동기화), IndirectPointer(IndirectPointerInputModifierNode 원시 트랙패드 캡처 + PointerEventType.Pan*/Scale* 표준 파이프라인 대조 — 터치스크린 멀티터치로는 Pan*/Scale*가 켜지지 않음을 실측), CustomOverscroll(커스텀 오버스크롤 — OverscrollEffect 직접 구현으로 기본 스트레치/글로우를 고무줄로 교체 + LocalOverscrollFactory 로 하위 트리 일괄 적용/null 비활성화 + withoutVisualEffect()/withoutEventHandling() 로 이벤트와 시각 효과를 서로 다른 컴포저블에 분리)

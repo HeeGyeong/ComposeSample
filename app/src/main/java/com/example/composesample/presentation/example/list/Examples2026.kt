@@ -871,5 +871,12 @@ val examples2026 = listOf(
         description = "누락 키·명시적 null 이 Kotlin 기본값·non-null 을 건너뛰는 Gson 파싱 실측",
         blogUrl = "",
         exampleType = ConstValue.GsonMissingFieldExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 10. 13",
+        title = "대용량 이미지 타일 딥줌",
+        description = "보이는 타일만 inSampleSize 로 디코딩하는 8000×6000 딥줌과 통째 디코딩 대조",
+        blogUrl = "",
+        exampleType = ConstValue.TiledImageDeepZoomExample
     )
 )

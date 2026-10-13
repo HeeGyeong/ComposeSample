@@ -173,7 +173,7 @@ Cursor IDE를 사용하는 개발자를 위한 **AI 코딩 어시스턴트 규�
 - **insets**: 디스플레이 컷아웃 & 인셋 — `safeDrawing`/`safeGestures`/`safeContent`가 어떤 기본 인셋의 합집합인지 바이트코드로 확인해 대조(waterfall은 safeDrawing에 없음), 컷아웃이 있는 기기에서도 창이 확장하지 않으면 `displayCutout` 인셋이 0인 것을 `layoutInDisplayCutoutMode`·edge-to-edge 토글로 실측, `consumeWindowInsets`/`recalculateWindowInsets`로 인셋 패딩이 0이 되는 과정, `WindowInsets.cutoutPath`(Compose 1.11 신규)와 `displayShape` Path 렌더링
 
 **media**:
-- **image**: Coil 3 이미지 로딩(AsyncImage, GIF 디코딩, 캐싱과 placeholder/error 상태)
+- **image**: Coil 3 이미지 로딩(AsyncImage, GIF 디코딩, 캐싱과 placeholder/error 상태) / 대용량 이미지 타일 딥줌 — 8000×6000 원본을 `BitmapRegionDecoder` 로 보이는 512px 타일만, 배율에 맞춘 `inSampleSize` 로 디코딩(전용 스레드·지나간 요청 취소·바이트 기준 LruCache·한 단계 성긴 개요 바닥), 한 번에 디코딩한 183MB 비트맵은 하드웨어 가속 캔버스가 그리기를 거부하는 것과 아래쪽 타일일수록 디코딩이 길어지는 JPEG 특성을 실측
 - **lottie**: Lottie 애니메이션 구현과 제어
 - **picker**: Embedded Photo Picker, BottomSheet 연동과 URI 수명 관리
 - **shimmer**: UI Shimmer, Text Shimmer 로딩 효과, 자동 스켈레톤 로딩 감지 Modifier(`CompositionLocal`로 로딩 상태·shimmer 애니메이션을 자동 전파해 요소마다 `isLoading` 분기 없이 `Modifier.autoSkeleton()`만 붙이는 방식 — 실제 콘텐츠의 측정된 크기를 그대로 재사용, 기존 수동 스켈레톤 트리 방식과 대비)
