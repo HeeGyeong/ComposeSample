@@ -92,6 +92,7 @@ import com.example.composesample.presentation.example.component.ui.canvas.MonthP
 import com.example.composesample.presentation.example.component.ui.canvas.ParticleEmitterExampleUI
 import com.example.composesample.presentation.example.component.ui.canvas.FreehandDrawingExampleUI
 import com.example.composesample.presentation.example.component.ui.canvas.WaveformCanvasExampleUI
+import com.example.composesample.presentation.example.component.ui.canvas.RibbonModifierExampleUI
 import com.example.composesample.presentation.example.component.ui.canvas.MotionBlurExampleUI
 import com.example.composesample.presentation.example.component.ui.graphics.DialogBlurExampleUI
 import com.example.composesample.presentation.example.component.ui.graphics.MeshGradientExampleUI
@@ -274,6 +275,7 @@ import com.example.composesample.util.ConstValue.MonthPickerDialExample
 import com.example.composesample.util.ConstValue.ParticleEmitterExample
 import com.example.composesample.util.ConstValue.FreehandDrawingExample
 import com.example.composesample.util.ConstValue.WaveformCanvasExample
+import com.example.composesample.util.ConstValue.RibbonModifierExample
 import com.example.composesample.util.ConstValue.ModalDrawExample
 import com.example.composesample.util.ConstValue.ModularizationExample
 import com.example.composesample.util.ConstValue.MotionBlurExample
@@ -616,4 +618,5 @@ val exampleUiRegistry: Map<String, @Composable (onBackEvent: () -> Unit) -> Unit
     DisplayRefreshRateExample to { onBackEvent -> DisplayRefreshRateExampleUI(onBackEvent) },
     GsonMissingFieldExample to { onBackEvent -> GsonMissingFieldExampleUI(onBackEvent) },
     TiledImageDeepZoomExample to { onBackEvent -> TiledImageDeepZoomExampleUI(onBackEvent) },
+    RibbonModifierExample to { onBackEvent -> RibbonModifierExampleUI(onBackEvent) },
 )

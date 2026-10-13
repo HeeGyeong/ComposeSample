@@ -195,7 +195,7 @@ Cursor IDE를 사용하는 개발자를 위한 **AI 코딩 어시스턴트 규�
 - **accessibility**: Large Content Viewer(iOS 스타일 접근성, 키보드 & 스크린 리더 지원)
 - **autofill**: semantics API를 통한 Compose Autofill(`contentType` 힌트 + `LocalAutofillManager` commit/cancel)
 - **button**: ButtonGroup(Material 3 Expressive)
-- **canvas**: Canvas 도형과 애니메이션, Dial 컴포넌트, Motion Blur(회전하는 바퀴), Compose Loaders 수학 곡선 기반 로딩 애니메이션(Rose/Lissajous/Lemniscate/Spirograph/Cardioid/Butterfly — 6가지 곡선)
+- **canvas**: Canvas 도형과 애니메이션, Dial 컴포넌트, Motion Blur(회전하는 바퀴), Compose Loaders 수학 곡선 기반 로딩 애니메이션(Rose/Lissajous/Lemniscate/Spirograph/Cardioid/Butterfly — 6가지 곡선) / Ribbon Modifier — 원을 끌며 만든 나선 경로를 `PathMeasure.getTangent` 부호로 앞뒤 구간으로 나눠 `drawContent()` 앞뒤에 번갈아 그리고 `chainPathEffect` 로 감기는 진행률을 더하는 Modifier, 원문의 `phase = 첫 구간` 대시가 구간 길이가 모두 같을 때만 맞아 시작 각을 옮기면 앞 그리기가 최대 72% 어긋나는 것(`getSegment` 분리와 대조)·`chainPathEffect` 인자 순서·진행률을 값으로 넘기면 `drawWithCache` 캐시가 프레임마다 버려지는 것을 실측
 - **graphics**: New Shadow API(Compose 1.9), 다이얼로그 배경 블러(`blurBehindRadius`+`FLAG_BLUR_BEHIND` 크로스 윈도우 · `setBackgroundBlurRadius` 윈도우 배경 · `Modifier.blur` 컴포저블 세 가지를 구분하고, `isCrossWindowBlurEnabled` 를 리스너로 구독해 "코드는 성공하고 그림만 없는" 상태를 드러냄 + API 31 미만용 GraphicsLayer 캡처·소프트웨어 블러 폴백 비용 실측), Mesh Gradient(Compose 1.12 `MeshGradientPainter` — 꼭짓점 위치·색·베지어 제어점, bilinear/bicubic 대조, 꼭짓점 드래그 편집과 제어점 추론 규칙의 픽셀 단위 검증, OkLab 보간 실측, draw 단계 애니메이션 비용. 렌더러가 기본 검정 Paint 로 `drawVertices` 를 불러 Paint 색을 곱하는 기기(Galaxy A72/API 33 실측)에서는 전부 검게 나오는 문제를 판정하고 흰 Paint 소프트웨어 캔버스 호환 모드로 우회)
 - **navigation**: Navigation3 중첩 라우팅(NestedRoutesNav3)
 - **notification**: SnapNotify(Snackbar 간소화 라이브러리)

@@ -138,4 +138,42 @@ package com.example.composesample.presentation.example.component.ui.canvas
  * - 터치 → 각도: `atan2(dy, dx)`로 계산 후 `(degrees + 90 + 360) % 360` 보정
  * - startDegrees/sweepDegrees로 범위 제한(예: 270도 부채꼴), sweepDegrees > 360이면 멀티턴 다이얼
  * - interval 스냅: 0=스무스, N이면 가장 가까운 N배수로 반올림 스냅
+ *
+ * ## RibbonModifierExampleUI (컴포저블을 감아 도는 리본 Modifier)
+ * - 출처(텍스트판, 전체 코드 수록): https://www.sinasamaki.com/wrapping-a-fancy-ribbon-around-any-jetpack-composable/
+ * - 출처(영상, Android Weekly #747): https://youtu.be/CTA2QgIjrW0
+ * - PathMeasure: https://developer.android.com/reference/kotlin/androidx/compose/ui/graphics/PathMeasure
+ * - PathEffect(dashPathEffect / chainPathEffect): https://developer.android.com/reference/kotlin/androidx/compose/ui/graphics/PathEffect
+ * - AOSP DashPathEffect 네이티브 생성자(count & ~1): https://android.googlesource.com/platform/frameworks/base/+/refs/heads/main/libs/hwui/jni/PathEffect.cpp
+ *   (외부 라이브러리 없음. 경로 계산·Modifier 는 RibbonPath.kt, 순수 계산은 단위 테스트 RibbonPathTest)
+ *
+ * ### 경로와 구간
+ * - 원의 중심을 내용의 왼쪽 끝 가운데 → 오른쪽 끝 가운데로 등속 이동하며 둘레의 점 1001개를 lineTo — 중심 이동 + 회전 = 트로코이드
+ * - 반지름 = 높이/2 + 선 굵기: 앞뒤가 바뀌는 원의 꼭대기·바닥이 내용 밖에 있어 이음매가 안 보인다(높이 × 0.3 이면 버튼 면 위에서 끊긴다)
+ * - `PathMeasure.getTangent(거리).y` 부호가 바뀌는 곳마다 구간 길이를 모은다 — 원문은 500 등분, 경계는 표본 간격 단위(40 등분이면 최장 220 / 최단 147px 로 흔들림)
+ * - 반 바퀴끼리는 대칭이라 길이가 같다(속도² = v² + r² − 2vr·sinθ 를 반 바퀴씩 적분하면 같음). 4분의 1 바퀴는 원이 진행 방향을 거스르는 쪽이 짧다
+ * - 원문 각도 범위 [startAngle, 360·(loops − 0.5) − startAngle] 는 기본값(7, −90°)에서 −90° ~ 2430° = 7바퀴. 시작 각을 바꾸면 바퀴 수도 바뀌어 예제는 시작 각 + 바퀴 수로 나눴다
+ * - Compose `Path` 의 moveTo·lineTo 는 (x, y) 만 받는다 — 원문 전체 코드의 moveTo(Offset) 는 확장 함수가 따로 필요하다
+ *
+ * ### 깊이 — 같은 경로를 두 번
+ * - `drawWithCache { onDrawWithContent { 뒤 · drawContent() · 앞 } }` — ribbon 이 background 보다 바깥(앞)이어야 배경이 drawContent() 에 들어간다
+ *   (background → ribbon 순서면 뒤 구간이 배경 위, 글자 아래에 보인다)
+ * - 뒤 = `dashPathEffect(구간 배열)`(짝수 칸), 앞 = `dashPathEffect(구간 배열, phase = 첫 구간)` — phase 는 패턴 전체를 미는 것이라
+ *   "홀수 칸만"이 되려면 모든 구간 길이가 첫 구간과 같아야 한다. 기본 시작 각(−90°, 바닥)은 첫 구간도 반 바퀴라 맞는다
+ * - 시작 각을 옮기면 첫 구간이 짧아져 앞 그리기가 어긋난다 — 전체 길이 대비 앞 어긋남 −90° 0.8%(표본 오차) · −45° 25% · 0° 49% · 45° 72%(Pixel 4 API 30 에뮬레이터, 화면 값)
+ * - 구간이 홀수 개면 Android 네이티브가 마지막 칸을 버리고(`count & ~1`) 패턴을 처음부터 되풀이 → 뒤 그리기 꼬리도 어긋난다(45° 에서 4%)
+ * - 구간 길이가 다를 수 있으면 `PathMeasure.getSegment(start, end, dst, startWithMoveTo = true)` 로 짝수·홀수 구간을 각각 다른 Path 에 담는다 — 어긋남 0
+ * - intervals 가 2개 미만이면 `DashPathEffect` 생성자가 `ArrayIndexOutOfBoundsException`(반 바퀴 미만 = 구간 1개) — 원문 loops: Int ≥ 1 이면 안 걸리지만 0 이면 걸린다
+ *
+ * ### 진행률 — chainPathEffect
+ * - `chainPathEffect(outer, inner)` = outer(inner(path)), inner 가 먼저. 원문은 inner = `[길이 × p, 길이]` 진행률 대시, outer = 깊이 대시
+ * - 뒤집으면 깊이 대시가 구간마다 따로 된 윤곽선을 만들고 진행률 대시가 윤곽선마다 처음부터 다시 잰다 → 6% 에서 모든 구간이 동시에 조금씩, 구간 하나(5바퀴면 10%)를 넘으면 리본 전체
+ * - 진행률이 0 이면 그리지 않는다(원문 `if (progress > 0f)`)
+ *
+ * ### drawWithCache 캐시와 진행률 전달
+ * - `DrawWithCacheElement.equals` 는 블록 람다를 참조(===)로 비교하고, 바뀌면 `update` → block setter → `invalidateDrawCache()`
+ * - 원문 `ribbon(progress: Float)` 에 애니메이션 값을 넘기면 프레임마다 리컴포즈 → Modifier 재생성 → 캐시를 버리고 경로·접선을 다시 계산
+ *   (1.6초 재생, Pixel 4 API 30 에뮬레이터: release 리컴포지션 = 캐시 생성 = 그리기 88~95회 · debug 16~24회, 소프트웨어 렌더링 + HotSwan)
+ * - `progress: () -> Float` 를 onDrawWithContent 안에서 읽으면 리컴포지션 0 · 캐시 생성 0, 다시 그리기만(debug·release 동일)
+ * - 크기가 바뀌면(onMeasureResultChanged) 캐시는 어차피 다시 만든다. 호출부가 다른 이유로 리컴포즈돼도 다시 만들어진다 — 파라미터 비교까지 하려면 Modifier.Node 로 직접 구현
  */

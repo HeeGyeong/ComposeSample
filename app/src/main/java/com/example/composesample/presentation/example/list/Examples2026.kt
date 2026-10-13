@@ -878,5 +878,12 @@ val examples2026 = listOf(
         description = "보이는 타일만 inSampleSize 로 디코딩하는 8000×6000 딥줌과 통째 디코딩 대조",
         blogUrl = "",
         exampleType = ConstValue.TiledImageDeepZoomExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 10. 14",
+        title = "Ribbon Modifier",
+        description = "PathMeasure 접선으로 앞뒤를 나눠 컴포저블을 감아 도는 리본 Modifier",
+        blogUrl = "",
+        exampleType = ConstValue.RibbonModifierExample
     )
 )
