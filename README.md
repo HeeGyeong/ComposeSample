@@ -230,7 +230,7 @@ Cursor IDE를 사용하는 개발자를 위한 **AI 코딩 어시스턴트 규�
 
 ### **system** - 시스템 연동 & 플랫폼
 **platform**:
-- **display**: 디스플레이 주사율과 프레임 간격 — `Display.supportedModes`(사용자 설정에 따라 걸러지는 모드 목록)와 `preferredDisplayModeId` 창 단위 60/90Hz 요청을 `DisplayListener` 로 반영 확인(화면을 떠날 때 원복), `withFrameNanos` 2초 창으로 FPS·늦은 프레임 비율·p95/p99·최악 간격을 재고 부하(50ms 멈춤·매 프레임 13ms)로 평균 FPS 가 숨기는 끊김과 90Hz 의 줄어든 예산을 실측, Compose `preferredFrameRate` 가 API 35+ 에서만 `View.requestedFrameRate` 로 전달되는 경로(레이어가 다시 그려질 때 투표·움직이면 High 자동 투표), 지속 성능 모드
+- **display**: 디스플레이 주사율과 프레임 간격 — `Display.supportedModes`(사용자 설정에 따라 걸러지는 모드 목록)와 `preferredDisplayModeId` 창 단위 60/90Hz 요청을 `DisplayListener` 로 반영 확인(화면을 떠날 때 원복), `withFrameNanos` 2초 창으로 FPS·늦은 프레임 비율·p95/p99·최악 간격을 재고 부하(50ms 멈춤·매 프레임 13ms)로 평균 FPS 가 숨기는 끊김과 90Hz 의 줄어든 예산을 실측, Compose `preferredFrameRate` 가 API 35+ 에서만 `View.requestedFrameRate` 로 전달되는 경로(레이어가 다시 그려질 때 투표·움직이면 High 자동 투표), 지속 성능 모드, `FrameMetrics`(`Window.addOnFrameMetricsAvailableListener`) 단계별 프레임 시간 — 같은 13ms 부하를 컴포지션·`withFrameNanos`·`Modifier.layout`·`drawBehind` 에 두면 앞의 둘은 애니메이션, 뒤의 둘은 그리기 기록 단계로 잡히고 Compose 의 측정·배치는 FrameMetrics 측정·배치가 0 인 것(`dispatchDraw` 안에서 `measureAndLayout`)·`TOTAL_DURATION` 을 1/주사율이 아니라 `DEADLINE`(API 31+)과 비교해야 하는 이유를 실측
 - **file**: 파일 선택과 SAF(Storage Access Framework) 처리
 - **haptic**: Haptic Feedback(LocalHapticFeedback vs HapticFeedbackConstants 비교와 API 레벨별 지원 범위) + Compose 1.12 상호작용 사운드 — clickable·toggleable 이 탭마다 `LocalSoundEffect.playClickSound()` 를 자동 요청하는 기본값과 `SoundEffectOnInteraction(enabled = false)` 구역별 끄기를 구역별 "탭 수 · 요청 수"로 대조, pointerInput 제스처는 자동 재생이 없어 햅틱과 함께 직접 호출, 실제 재생 조건(시스템 터치음 + 무음·진동 모드 아님)을 실시간 표시
 - **intent**: Intent 처리와 앱 간 데이터 공유

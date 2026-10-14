@@ -287,6 +287,11 @@ exclude("com.example.composesample.presentation.example.component.system.platfor
 exclude("com.example.composesample.presentation.example.component.system.platform.display.FramePacingMeter")
 ```
 
+The FrameMetrics card added to the same screen later (#134) follows the same rule: its per-frame listener
+(`FrameMetricsRecorder`, called on a `HandlerThread` for every rendered frame), the aggregator it feeds (`FrameStageMeter`)
+and the file facade (`FrameStageMetricsKt`) are excluded so the card measures the same code release runs. This was done
+as a precaution under the rule above, not because a HotSwan-specific difference was measured.
+
 The one late frame left in every 2-second window is not HotSwan: it is the frame that inserts a row into the result
 table, a path that runs once every 2 seconds and stays cold under JIT. It disappears in a release build after
 `adb shell cmd package compile -m speed -f com.example.composesample`.

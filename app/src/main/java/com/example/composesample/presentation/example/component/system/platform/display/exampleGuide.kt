@@ -83,7 +83,7 @@ package com.example.composesample.presentation.example.component.system.platform
  * 측정 함정 (같은 날 실측):
  * - 결과 표를 key 없이 맨 위에 행을 넣으면 아래 행 Text 18개가 다시 레이아웃돼 그 프레임이 50ms 를 넘겼다
  *   (framestats: 애니메이션 단계 19ms + 그리기 24ms). key(sequence) 로 고정.
- * - 매 프레임 다시 그리는 그래프를 graphicsLayer 로 떼고 5번 카드의 움직이는 원을 컴포지션이 아니라 그리기 단계에서
+ * - 매 프레임 다시 그리는 그래프를 graphicsLayer 로 떼고 6번 카드의 움직이는 원을 컴포지션이 아니라 그리기 단계에서
  *   읽게 바꾸자 평상시(framestats 중앙값) 그리기 약 6ms → 1.0~1.9ms · 애니메이션 단계 3.5ms → 1.0~1.3ms(release).
  *   최종 코드 + AOT 기준선: 60Hz 59.8fps · 늦은 프레임 0 · 최악 16.8ms.
  * - 그래도 release 를 adb 로 설치한 직후(JIT, run-from-apk)에는 2초마다 도는 표 갱신 프레임이 매번 33.5ms 였다.
@@ -91,4 +91,40 @@ package com.example.composesample.presentation.example.component.system.platform
  *   JIT 가 데우지 못한다. 실제 사용자 기기에서는 Play 설치·백그라운드 dexopt·Baseline Profile 이 이 역할을 한다.
  * - debug(HotSwan)에서는 그래프 그리기가 중앙값 44.5ms 라 약 20fps 로 무너졌다 → 이 파일과 FramePacingMeter 를
  *   hotSwanCompiler exclude 에 추가(docs/devtools/ComposeHotReloadGuide.md 표 참조).
+ *
+ * ## 5번 카드 — 단계별 프레임 시간 (FrameMetrics, #134 보강)
+ * - Window.addOnFrameMetricsAvailableListener: https://developer.android.com/reference/android/view/Window#addOnFrameMetricsAvailableListener(android.view.Window.OnFrameMetricsAvailableListener,%20android.os.Handler)
+ * - FrameMetrics: https://developer.android.com/reference/android/view/FrameMetrics
+ * - Compose 측정 예약 소스: ui-android 1.12.1 sources.jar 의 androidMain/.../platform/AndroidComposeView.android.kt
+ *   (scheduleMeasureAndLayout · dispatchDraw) — URL 은 위 preferredFrameRate 항목의 sources.jar 와 같다
+ *   (수집기·집계는 FrameStageMetrics.kt, 순수 집계는 단위 테스트 FrameStageMeterTest)
+ *
+ * 핵심 개념:
+ * - 리스너는 렌더링된 프레임마다 단계별 시간을 준다. 보고 객체는 콜백 안에서만 유효하고(재사용), 콜백이 늦으면
+ *   보고를 건너뛰며 dropCountSinceLastInvocation 으로 알려 준다 → 별도 HandlerThread 에서 숫자만 꺼내 2초 창으로 모은다.
+ * - 단계: 시작 지연(UNKNOWN_DELAY) · 입력 · 애니메이션 · 측정/배치 · 그리기 기록(DisplayList 기록) · 동기화(UI→RenderThread)
+ *   · 명령 발행 · 버퍼 교체 · GPU(API 31+). 모두 API 24(= minSdk) — GPU_DURATION·DEADLINE 만 31 가드.
+ *   INTENDED_VSYNC/VSYNC 타임스탬프(26)는 쓰지 않아 debug minSdk 26 의 ObsoleteSdkInt 가드가 없다.
+ * - TOTAL_DURATION 은 의도한 vsync → 프레임 완료의 파이프라인 시간(단계가 겹쳐 합과 다를 수 있다). DEADLINE(31+)은
+ *   "이 프레임에 주어진 시간"이고 문서상 TOTAL < DEADLINE 이면 보이는 끊김이 없다. 31 미만은 1/주사율로 근사.
+ * - FIRST_DRAW_FRAME(창의 첫 프레임)은 원래 느려 판정에서 뺀다.
+ *
+ * 실측(실기기 미연결 — Pixel 4 API 30·Pixel Tablet API 35 에뮬레이터, swiftshader, 2026-10-14). 같은 13ms 를 어디 두느냐:
+ *
+ *   | 부하 위치                    | 잡힌 단계(평균)                         |
+ *   |------------------------------|-----------------------------------------|
+ *   | 컴포지션(본문에서 tick 읽기)  | 애니메이션 14.6~15.4ms                   |
+ *   | withFrameNanos 안            | 애니메이션 14.1~14.9ms                   |
+ *   | Modifier.layout 측정 블록    | 그리기 기록 13.7~14.2ms · 측정·배치 0.0  |
+ *   | drawBehind                   | 그리기 기록 13.5~14.5ms                  |
+ *
+ *   API 30 debug·release, API 35 debug 모두 같은 배치. 리컴포지션은 Recomposer 가 Choreographer 프레임 콜백 안에서 돌려
+ *   "애니메이션" 이다. Compose 의 측정·배치는 루트 크기를 바꿀 수 없는 노드라면 requestLayout 대신 invalidate 로 미뤄
+ *   dispatchDraw 첫머리의 measureAndLayout() 에서 돌기 때문에 "그리기 기록" 이다(루트 크기를 바꿀 수 있으면 requestLayout →
+ *   View 측정 단계). 그래서 Compose 화면의 "측정·배치" 0 은 레이아웃이 가볍다는 뜻이 아니다.
+ * - 에뮬레이터는 소프트웨어 렌더링이라 시간 자체는 실기기와 다르다: 부하 없이도 TOTAL 평균 50ms(API 30, 버퍼 교체·시작 지연이 큼),
+ *   API 35 태블릿은 DEADLINE 평균이 100ms 안팎이었다. 그래도 API 30 에서 1/주사율 기준 초과 100% vs withFrameNanos 늦은 프레임
+ *   25~30% 로 "TOTAL 이 1/주사율을 넘어도 화면 간격이 그만큼 늦은 건 아니다(파이프라인)" 는 드러난다.
+ * - 4번 카드의 "60프레임마다 50ms" 도 같은 창이라 이 카드에서 애니메이션 단계 최대·최악 프레임으로 잡힌다(단위 테스트로 집계 확인).
+ * - 선택 축(신규 의존성 승인 필요라 제외): androidx.metrics:metrics-performance(JankStats) — 같은 리스너 위에 상태 태그·끊김 판정을 얹은 것.
  */

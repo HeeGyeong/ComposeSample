@@ -59,11 +59,13 @@ import androidx.compose.runtime.withFrameNanos
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.FrameRateCategory
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.layout.layout
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.preferredFrameRate
@@ -85,6 +87,7 @@ import kotlin.math.roundToInt
  * - 기기가 지원하는 디스플레이 모드(해상도·주사율)를 읽고, 창(Window) 단위로 원하는 모드를 요청한 뒤
  *   DisplayListener 로 실제로 바뀌었는지 확인한다. 요청은 힌트라서 사용자 설정·절전·발열이 이긴다.
  * - withFrameNanos 로 프레임 간격을 직접 재서 평균 FPS 가 숨기는 끊김(늦은 프레임 비율·p95/p99·최악 간격)을 드러낸다.
+ * - FrameMetrics(Window.addOnFrameMetricsAvailableListener)로 늦은 프레임이 어느 단계(UI 스레드·RenderThread·GPU)에서 늦었는지 가른다(FrameStageMetrics.kt).
  * - Compose 1.12 Modifier.preferredFrameRate 는 API 35+ 에서만 View.requestedFrameRate 로 전달된다는 것을 함께 본다.
  * - 참고 URL 과 개념 정리는 같은 폴더의 exampleGuide.kt 참조
  */
@@ -474,6 +477,7 @@ private fun DisplayRefreshRateContent() {
                 onLoadChange = { load = it }
             )
         }
+        item { FrameStageCard(activity = activity, refreshRate = snapshot.refreshRate) }
         item { ComposeFrameRateCard(view = view) }
         item {
             SustainedPerformanceCard(
@@ -665,7 +669,7 @@ private fun FramePacingCard(
                 if (BuildConfig.DEBUG) {
                     "debug 빌드 — 이 화면은 HotSwan 에서 제외했지만 디버거블 오버헤드가 남는다. 비교는 release(AOT) 로."
                 } else {
-                    "release 빌드 — adb 설치 직후는 JIT 상태라 드물게 도는 경로가 느리다(7번 카드)"
+                    "release 빌드 — adb 설치 직후는 JIT 상태라 드물게 도는 경로가 느리다(8번 카드)"
                 }
             )
         }
@@ -761,7 +765,236 @@ private fun IntervalChart(
     }
 }
 
-// ==================== 5. Compose preferredFrameRate ====================
+// ==================== 5. 단계별 프레임 시간 (FrameMetrics) ====================
+
+/** 5번 카드의 부하 — 같은 13ms 를 프레임 파이프라인의 다른 자리에 둔다 */
+private enum class StageLoad(val label: String) {
+    NONE("부하 없음"),
+    COMPOSITION("컴포지션"),
+    FRAME_CALLBACK("withFrameNanos"),
+    LAYOUT("측정·배치(layout)"),
+    DRAW("그리기(drawBehind)")
+}
+
+private const val STAGE_LOAD_MS = 13
+
+/** 단계별 막대 색 — FrameStage 순서 */
+private val stageColors = listOf(
+    Color(0xFFBDBDBD), // 시작 지연
+    Color(0xFF8D6E63), // 입력
+    Color(0xFFFFB300), // 애니메이션
+    Color(0xFF43A047), // 측정·배치
+    Color(0xFF1E88E5), // 그리기 기록
+    Color(0xFF8E24AA), // 동기화
+    Color(0xFF00897B), // 명령 발행
+    Color(0xFF6D4C41), // 버퍼 교체
+    Color(0xFFE53935)  // GPU
+)
+
+@Composable
+private fun FrameStageCard(activity: Activity?, refreshRate: Float) {
+    // 창에 붙이는 수집기 — 컴포저블 밖 상태 홀더(report)로 결과를 받는다
+    val recorder = remember(activity) { activity?.window?.let { FrameMetricsRecorder(it) } }
+    var load by remember { mutableStateOf(StageLoad.NONE) }
+    val pacing = remember { FramePacingMeter() }
+    var pacingReport by remember { mutableStateOf<FramePacingReport?>(null) }
+    // 매 프레임 바뀌는 시각 — 부하를 둔 자리(컴포지션·측정·그리기)에서만 읽는다
+    val tick = remember { mutableLongStateOf(0L) }
+    val currentRate by rememberUpdatedState(refreshRate)
+
+    DisposableEffect(recorder) {
+        recorder?.start()
+        onDispose { recorder?.stop() }
+    }
+    LaunchedEffect(recorder, refreshRate) {
+        recorder?.budgetNanos = (NANOS_PER_SECOND / refreshRate).toLong()
+    }
+    // 이 카드의 프레임 루프 — 표시 막대를 매 프레임 다시 그려 FrameMetrics 보고가 계속 오게 하고, 같은 프레임을 withFrameNanos 로도 잰다
+    LaunchedEffect(load) {
+        recorder?.resetWindow()
+        pacing.restart()
+        pacingReport = null
+        while (isActive) {
+            withFrameNanos { frameNanos ->
+                pacing.record(frameNanos, currentRate)?.let { pacingReport = it }
+                if (load == StageLoad.FRAME_CALLBACK) busyWait(STAGE_LOAD_MS)
+                tick.longValue = frameNanos
+            }
+        }
+    }
+
+    SectionCard(title = "5. 어느 단계에서 늦었나 (FrameMetrics)") {
+        BodyText(
+            "4번은 앱이 받은 프레임 시각(withFrameNanos)의 간격만 본다. Window.addOnFrameMetricsAvailableListener 는 " +
+                "그려진 프레임마다 단계별 시간을 준다 — UI 스레드(시작 지연·입력·애니메이션·측정/배치·그리기 기록·동기화) → " +
+                "RenderThread(명령 발행·버퍼 교체) → GPU(API 31+). 같은 ${STAGE_LOAD_MS}ms 작업을 다른 자리에 두고 어느 단계로 잡히는지 본다."
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        ChipRow {
+            StageLoad.entries.forEach { option ->
+                FilterChip(
+                    selected = load == option,
+                    onClick = { load = option },
+                    label = { Text(if (option == StageLoad.NONE) option.label else "${option.label} ${STAGE_LOAD_MS}ms", fontSize = 11.sp) }
+                )
+            }
+        }
+        Spacer(modifier = Modifier.height(6.dp))
+        StageLoadBar(load = load, tick = tick)
+        Spacer(modifier = Modifier.height(4.dp))
+        CaptionText(
+            "실측(에뮬레이터 API 30·35, debug·release 동일): 컴포지션·withFrameNanos 는 둘 다 '애니메이션' 으로, " +
+                "layout·drawBehind 는 둘 다 '그리기 기록' 으로 잡힌다 — Compose 의 측정·배치는 '측정·배치' 가 0 이다(8번 카드)."
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+
+        val report = recorder?.report
+        when {
+            recorder == null -> CaptionText("창(Window)을 찾지 못해 FrameMetrics 를 붙이지 못했다.")
+            report == null -> CaptionText("첫 2초 창을 모으는 중…")
+            else -> FrameStageReportView(report = report, pacing = pacingReport)
+        }
+    }
+}
+
+/** 부하를 둔 자리 + 매 프레임 다시 그려지는 막대 — FrameMetrics 는 렌더링된 프레임마다 보고하므로 막대가 그릴 거리를 만든다 */
+@Composable
+private fun StageLoadBar(load: StageLoad, tick: MutableLongState) {
+    if (load == StageLoad.COMPOSITION) CompositionLoad(tick)
+    Spacer(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(18.dp)
+            .then(if (load == StageLoad.LAYOUT) Modifier.layoutLoad(tick) else Modifier)
+            // 매 프레임 다시 그리는 부분만 자기 레이어로 뗀다 — 카드의 나머지는 다시 기록하지 않는다
+            .graphicsLayer()
+            .background(Color(0xFFF5F5F5), RoundedCornerShape(6.dp))
+            .drawBehind {
+                val frameNanos = tick.longValue
+                if (load == StageLoad.DRAW) busyWait(STAGE_LOAD_MS)
+                val phase = (frameNanos / 1_000_000L % 1_500L) / 1_500f
+                drawRect(
+                    color = Color(0xFF1976D2),
+                    topLeft = Offset((size.width * 0.85f) * phase, 0f),
+                    size = Size(size.width * 0.15f, size.height)
+                )
+            }
+    )
+}
+
+/** 컴포지션에서 시각을 읽어 매 프레임 리컴포즈되게 하고, 그 본문에서 시간을 쓴다 */
+@Composable
+private fun CompositionLoad(tick: MutableLongState) {
+    tick.longValue
+    busyWait(STAGE_LOAD_MS)
+}
+
+/** 측정 단계에서 시각을 읽어 매 프레임 다시 측정되게 하고, 측정 블록에서 시간을 쓴다 */
+private fun Modifier.layoutLoad(tick: MutableLongState): Modifier = layout { measurable, constraints ->
+    tick.longValue
+    busyWait(STAGE_LOAD_MS)
+    val placeable = measurable.measure(constraints)
+    layout(placeable.width, placeable.height) { placeable.place(0, 0) }
+}
+
+@Composable
+private fun FrameStageReportView(report: FrameStageReport, pacing: FramePacingReport?) {
+    StageBars(report = report)
+    Spacer(modifier = Modifier.height(8.dp))
+    CompareRow("단계 (스레드)", "평균 ms", "최대 · 최악 프레임 ms", isHeader = true)
+    FrameStage.entries.forEach { stage ->
+        val i = stage.ordinal
+        val unsupported = stage == FrameStage.GPU && Build.VERSION.SDK_INT < Build.VERSION_CODES.S
+        CompareRow(
+            key = "${stage.label} (${stage.where})",
+            left = if (unsupported) "API 31+" else report.averageMs[i].oneDecimal(),
+            right = if (unsupported) "—" else "${report.maxMs[i].oneDecimal()} · ${report.worstFrameMs[i].oneDecimal()}",
+            bold = report.overByStage[i] > 0
+        )
+    }
+    CompareRow(
+        key = "TOTAL",
+        left = report.totalAverageMs.oneDecimal(),
+        right = report.totalWorstMs.oneDecimal(),
+        bold = true
+    )
+    Spacer(modifier = Modifier.height(6.dp))
+    val criterion = if (report.usesDeadline) "DEADLINE 평균" else "1/주사율"
+    KeyValueRow(
+        "기준 초과(#${report.sequence})",
+        "${report.overLimit} / ${report.frames} 프레임 — $criterion ${report.limitMs.oneDecimal()}ms 를 TOTAL 이 넘음"
+    )
+    val culprits = FrameStage.entries
+        .filter { report.overByStage[it.ordinal] > 0 }
+        .joinToString(" · ") { "${it.label} ${report.overByStage[it.ordinal]}" }
+    KeyValueRow("붙잡은 단계", culprits.ifEmpty { "없음" })
+    KeyValueRow(
+        "withFrameNanos",
+        pacing?.let { "${it.fps.oneDecimal()}fps · 늦은 프레임 ${it.latePercent.oneDecimal()}% · 최악 ${it.worstMs.oneDecimal()}ms" }
+            ?: "모으는 중…"
+    )
+    KeyValueRow("보고 누락 · 첫 그리기", "${report.droppedReports} · ${report.firstDrawFrames}")
+}
+
+/** 평균 프레임·최악 프레임을 단계별로 쌓은 막대 — 세로선은 판정 기준. GPU 는 RenderThread 와 겹쳐 돌아 따로 그린다 */
+@Composable
+private fun StageBars(report: FrameStageReport) {
+    val scaleMs = maxOf(report.totalWorstMs, report.limitMs) * 1.1f
+    Canvas(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(64.dp)
+            .background(Color(0xFFF5F5F5), RoundedCornerShape(6.dp))
+    ) {
+        val rowHeight = size.height / 4f
+        fun xOf(ms: Float) = size.width * (ms / scaleMs).coerceIn(0f, 1f)
+        listOf(report.averageMs, report.worstFrameMs).forEachIndexed { row, values ->
+            val top = rowHeight * (row * 2) + rowHeight * 0.35f
+            var start = 0f
+            for (i in 0 until FrameStage.GPU.ordinal) {
+                val end = start + values[i]
+                drawRect(
+                    color = stageColors[i],
+                    topLeft = Offset(xOf(start), top),
+                    size = Size(xOf(end) - xOf(start), rowHeight * 0.9f)
+                )
+                start = end
+            }
+            val gpu = values[FrameStage.GPU.ordinal]
+            if (gpu > 0f) {
+                drawRect(
+                    color = stageColors[FrameStage.GPU.ordinal],
+                    topLeft = Offset(0f, top + rowHeight),
+                    size = Size(xOf(gpu), rowHeight * 0.35f)
+                )
+            }
+        }
+        drawLine(
+            color = Color(0xFFE57373),
+            start = Offset(xOf(report.limitMs), 0f),
+            end = Offset(xOf(report.limitMs), size.height),
+            strokeWidth = 1.5.dp.toPx(),
+            pathEffect = PathEffect.dashPathEffect(floatArrayOf(6f, 4f))
+        )
+    }
+    ChipRow {
+        FrameStage.entries.forEachIndexed { i, stage ->
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Spacer(
+                    modifier = Modifier
+                        .width(8.dp)
+                        .height(8.dp)
+                        .background(stageColors[i], RoundedCornerShape(2.dp))
+                )
+                Spacer(modifier = Modifier.width(3.dp))
+                Text(stage.label, fontSize = 10.sp, color = Color(0xFF616161))
+            }
+        }
+    }
+    CaptionText("위 = 평균 프레임 · 아래 = TOTAL 이 가장 길었던 프레임(가는 빨간 막대 = GPU) · 점선 = 판정 기준 · 오른쪽 끝 = ${scaleMs.oneDecimal()}ms")
+}
+
+// ==================== 6. Compose preferredFrameRate ====================
 
 @Composable
 private fun ComposeFrameRateCard(view: View) {
@@ -786,7 +1019,7 @@ private fun ComposeFrameRateCard(view: View) {
         }
     }
 
-    SectionCard(title = "5. Compose preferredFrameRate") {
+    SectionCard(title = "6. Compose preferredFrameRate") {
         BodyText(
             "Compose 1.12 의 Modifier.preferredFrameRate(Float | FrameRateCategory) 는 자기 레이어에 값을 적어 두고, " +
                 "그 레이어가 다시 그려지는 프레임마다 투표한다. AndroidComposeView 가 한 프레임의 투표를 모아 숫자는 가장 큰 값, " +
@@ -839,7 +1072,7 @@ private fun ComposeFrameRateCard(view: View) {
     }
 }
 
-// ==================== 6. 지속 성능 모드 ====================
+// ==================== 7. 지속 성능 모드 ====================
 
 @Composable
 private fun SustainedPerformanceCard(
@@ -848,7 +1081,7 @@ private fun SustainedPerformanceCard(
     windowAvailable: Boolean,
     onToggle: (Boolean) -> Unit
 ) {
-    SectionCard(title = "6. 지속 성능 모드") {
+    SectionCard(title = "7. 지속 성능 모드") {
         BodyText(
             "Window.setSustainedPerformanceMode(true) 는 \"짧게 치솟았다 떨어지는\" 클럭 대신 오래 유지할 수 있는 " +
                 "낮은 클럭을 달라는 요청이다. 발열로 클럭이 꺾일 때마다 늦은 프레임이 생기는 게임·지도에 쓴다."
@@ -868,11 +1101,11 @@ private fun SustainedPerformanceCard(
     }
 }
 
-// ==================== 7. 함정 정리 ====================
+// ==================== 8. 함정 정리 ====================
 
 @Composable
 private fun PitfallCard() {
-    SectionCard(title = "7. 실기기에서 걸리는 것들") {
+    SectionCard(title = "8. 실기기에서 걸리는 것들") {
         PitfallRow(
             "요청은 힌트다",
             "사용자 설정이 먼저다. 삼성 '화면 움직임 부드럽게: 표준'에서는 90Hz 모드가 supportedModes 에서 아예 빠져 " +
@@ -916,6 +1149,18 @@ private fun PitfallCard() {
             "API 35+ 에서 레이아웃 위치가 바뀌는 프레임마다 Compose 가 High 를 투표한다. 원을 offset 으로 레이어째 옮기자 " +
                 "30fps 를 골라도 숫자 투표는 끝내 안 나가고 자식 View 에 High(-4)만 남았다 — Normal 을 골라도 High 가 이긴다. " +
                 "스크롤 중 고주사율로 오르는 이유이기도 하다."
+        )
+        PitfallRow(
+            "Compose 의 측정·배치는 '그리기' 로 잡힌다",
+            "5번 카드에서 Modifier.layout 안에 13ms 를 두면 FrameMetrics 측정·배치는 0.0, 그리기 기록이 13.7~14.2ms 다. " +
+                "Compose 는 루트 크기를 바꿀 수 없는 노드의 재측정을 requestLayout 대신 invalidate 로 미루고 dispatchDraw 첫머리에서 " +
+                "measureAndLayout 한다(AndroidComposeView.scheduleMeasureAndLayout). 리컴포지션은 프레임 콜백 안에서 돌아 '애니메이션' 이다."
+        )
+        PitfallRow(
+            "TOTAL 을 1/주사율과 바로 비교하지 않는다",
+            "TOTAL_DURATION 은 의도한 vsync 부터 프레임이 끝날 때까지의 파이프라인 시간이다. UI 스레드와 RenderThread 가 겹쳐 돌아, " +
+                "API 30 에뮬레이터에서는 TOTAL 평균 50ms 로 1/주사율 기준 100% 초과였지만 withFrameNanos 늦은 프레임은 25~30% 였다. " +
+                "API 31+ 는 프레임마다 DEADLINE 이 오고, 문서상 TOTAL < DEADLINE 이면 사용자에게 보이는 끊김이 없다."
         )
         PitfallRow(
             "seamless 전환",

@@ -55,6 +55,8 @@ android {
 // DisplayRefreshRateExampleUIKt · FramePacingMeter: 매 프레임 다시 그리는 프레임 간격 그래프의 그리기 단계가 debug 에서
 //   중앙값 44.5ms 라 측정 대상인 프레임 간격 자체가 약 20fps 로 무너진다(dispatchRewriteEnabled=false 의 debug 2.3ms ·
 //   release 1.0ms, 60fps). 매 프레임 불리는 측정기 클래스는 파일 facade 와 별개라 따로 뺀다.
+//   FrameMetricsRecorder · FrameStageMeter · FrameStageMetricsKt(5번 카드): 같은 이유 — 프레임마다 불리는 FrameMetrics 리스너와
+//   집계기라 release 와 같은 조건(재작성 없음)으로 잰다.
 // OriginFailoverKt · TwoOrigins: Ktor 플러그인 on(Send) 람다와 MockEngine 핸들러 람다가 던지는 checked IOException
 //   (OriginUnavailableException·연결 끊김 흉내)을 HotSwan 이 UndeclaredThrowableException 으로 감싸 호출자의
 //   catch (e: IOException) 이 받지 못한다(debug 단위 테스트에서 재현). 제외하면 release 와 같이 IOException 그대로.
@@ -64,6 +66,9 @@ hotSwanCompiler {
     exclude("com.example.composesample.presentation.example.component.ui.layout.lazycolumn.LazyListCacheWindowExampleUIKt")
     exclude("com.example.composesample.presentation.example.component.system.platform.display.DisplayRefreshRateExampleUIKt")
     exclude("com.example.composesample.presentation.example.component.system.platform.display.FramePacingMeter")
+    exclude("com.example.composesample.presentation.example.component.system.platform.display.FrameMetricsRecorder")
+    exclude("com.example.composesample.presentation.example.component.system.platform.display.FrameStageMeter")
+    exclude("com.example.composesample.presentation.example.component.system.platform.display.FrameStageMetricsKt")
     exclude("com.example.composesample.presentation.example.component.data.api.OriginFailoverKt")
     exclude("com.example.composesample.presentation.example.component.data.api.TwoOrigins")
 }

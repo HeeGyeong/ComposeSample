@@ -859,9 +859,9 @@ val examples2026 = listOf(
         exampleType = ConstValue.LazyListCacheWindowExample
     ),
     ExampleObject(
-        lastUpdate = "26. 10. 06",
+        lastUpdate = "26. 10. 14",
         title = "디스플레이 주사율과 프레임 간격",
-        description = "창 단위 60/90Hz 모드 요청과 평균 FPS 가 숨기는 늦은 프레임·p99 측정",
+        description = "60/90Hz 모드 요청·늦은 프레임 측정과 FrameMetrics 단계별 시간",
         blogUrl = "",
         exampleType = ConstValue.DisplayRefreshRateExample
     ),
