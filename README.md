@@ -277,7 +277,7 @@ Cursor IDE를 사용하는 개발자를 위한 **AI 코딩 어시스턴트 규�
 - **error**: Sealed 인터페이스 도메인 에러 처리 — 예외 던지기 대신 sealed interface를 함수 반환 타입으로 써서 실패 케이스를 시그니처에 직접 드러내고, exhaustive when으로 처리 누락을 컴파일 타임에 강제
 - **mvi**: MVI 아키텍처 패턴과 단방향 데이터 흐름
 - **remember**: rememberSaveable(재생성 생존), rememberSerializable(Compose 1.12 — @Serializable 데이터 클래스를 Saver 없이 저장, 손으로 쓴 Saver 가 새 필드를 놓치는 대조, SnapshotStateSetSerializer 로 mutableStateSetOf 저장, 다크 모드 재생성·프로세스 종료 후 복원 실측, 1.12.1 SnapshotStateSet Parcelable 버그와 LazyColumn 의 보이는 항목만 저장 규칙), rememberUpdatedState(최신 콜백), derivedStateOf(연산 최적화) 비교
-- **retain**: Compose retain API(Compose 1.10)를 통한 ViewModel 없는 상태 유지
+- **retain**: Compose retain API 실물(runtime-retain 1.12.1) — 같은 카운터를 remember·rememberSaveable·retain·ViewModel 로 보관해 `Activity.recreate()`·다크 모드·헤더 ← 로 닫고 다시 열기·프로세스 종료에서 남는 것과 진행 중 작업이 재생성을 넘는지 대조, `RetainObserver` 다섯 콜백의 실제 순서(RESUMED 에서 if 로 숨기면 곧바로 onRetired — remember 와 같음, `ManagedRetainedValuesStore` 안에서는 숨겨도 같은 객체, 키 변경, 미리 컴포즈 후 cancel 의 onUnused, 재생성에서 `DisposableEffect` 만 재시작하는 `RetainedEffect`), `RetainedValuesStoreRegistry` 로 탭별 보존과 `clearChild`, `key()` 를 빠뜨리면 다른 탭의 객체가 돌아오는 함정
 
 **development**:
 - **compose17**: Compose 1.7 신규 기능(Graphics Layer, Path Graphics, LookaheadScope 등)

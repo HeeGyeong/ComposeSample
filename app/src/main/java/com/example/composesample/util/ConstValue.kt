@@ -161,7 +161,7 @@ object ConstValue {
     const val SealedDomainErrorExample = "sealedDomainErrorExample"
 
     // ==================== Compose 상태 & Side Effect 예제 ====================
-    // SideEffect(부수 효과 함수들), CompositionLocal(암시적 전달), StaticDynamicCompositionLocal(Static vs Dynamic), CompositionLocalTree(트리 시각화), RetainApi(retain API), SnapshotFlow(Flow 변환), InitTest(초기화 케이스), LocalContextStrings(LocalContext 문자열 안티패턴), RememberPatterns(rememberSaveable/rememberUpdatedState/derivedStateOf 비교), ComposeSnapshot(Snapshot 시스템 내부 동작), PerItemViewModel(LazyColumn 아이템별 독립 ViewModelStoreOwner), ComposeLifecycleOwner(lifecycle 2.10 rememberLifecycleOwner — Pager 의 화면 밖 페이지를 STARTED 로 캡해 RESUMED 작업을 멈추고, 상한·부모 상태·컴포지션 이탈에 따른 자식 owner 이벤트를 대조)
+    // SideEffect(부수 효과 함수들), CompositionLocal(암시적 전달), StaticDynamicCompositionLocal(Static vs Dynamic), CompositionLocalTree(트리 시각화), RetainApi(retain API 실물 — 재생성 보존·RetainObserver 콜백·RetainedValuesStoreRegistry), SnapshotFlow(Flow 변환), InitTest(초기화 케이스), LocalContextStrings(LocalContext 문자열 안티패턴), RememberPatterns(rememberSaveable/rememberUpdatedState/derivedStateOf 비교), ComposeSnapshot(Snapshot 시스템 내부 동작), PerItemViewModel(LazyColumn 아이템별 독립 ViewModelStoreOwner), ComposeLifecycleOwner(lifecycle 2.10 rememberLifecycleOwner — Pager 의 화면 밖 페이지를 STARTED 로 캡해 RESUMED 작업을 멈추고, 상한·부모 상태·컴포지션 이탈에 따른 자식 owner 이벤트를 대조)
     const val SideEffectExample = "sideEffectExample"
     const val CompositionLocalExample = "compositionLocalExample"
     const val StaticDynamicCompositionLocalExample = "staticDynamicCompositionLocalExample"
