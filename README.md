@@ -244,7 +244,7 @@ Cursor IDE를 사용하는 개발자를 위한 **AI 코딩 어시스턴트 규�
 - **sensor**: 센서 퓨전 나침반(TYPE_ROTATION_VECTOR 방위각 파이프라인, remapCoordinateSystem 화면 회전 보정, 각도 랩어라운드를 견디는 저역통과 필터)
 - **shortcut**: 앱 바로가기(dynamic, static, pin)
 - **version**: Android SDK 버전 처리(targetSDK 34 권한 처리)
-- **webview**: WebView 구현과 JavaScript interface
+- **webview**: YouTube 임베드 WebView(전체 화면 커스텀 뷰) / JS ↔ 네이티브 브리지 — `addJavascriptInterface` 가 JavaBridge 스레드에서 동기로 불리는 것(JS 308ms 정지, 브리지 안 WebView 호출은 예외 → JS 오류)·인자/반환 타입 변환(`undefined`·객체 → "undefined", Int 버림, null 반환 → `undefined`, 돌려준 객체도 브리지)·`evaluateJavascript` 결과가 JSON 텍스트(예외도 null, Promise `{}`, 로드 직후엔 이전 문서)·`WebMessagePort` 대상 오리진 불일치는 조용히 미전달·dari 식 requestId 짝짓기(도착 순서 큐는 셋 다 엇갈리는데 앱 기록은 SUCCESS)·손 이스케이프 `\r` 로 응답 스크립트 SyntaxError·인터페이스가 모든 iframe·이동한 다른 오리진에 주입되고 `onPageStarted` 기반 오리진 검사는 로드 즉시 호출에 늦는 것·`removeJavascriptInterface` 는 다음 로드부터를 실측
 
 **deeplink**:
 - **Dynamic App Links**: 서버의 Digital Asset Links JSON을 통해 앱 업데이트 없이 실시간으로 딥링크 동작을 제어(Android 15+)

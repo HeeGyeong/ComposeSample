@@ -892,5 +892,12 @@ val examples2026 = listOf(
         description = "값을 그대로 둔 채 그리기 단계에서 모자이크로 가리는 Modifier와 함정",
         blogUrl = "",
         exampleType = ConstValue.PixelateExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 10. 16",
+        title = "WebView JS ↔ 네이티브 브리지",
+        description = "JS 인터페이스·evaluateJavascript·메시지 포트의 스레드·타입·보안 비교",
+        blogUrl = "",
+        exampleType = ConstValue.WebViewBridgeExample
     )
 )
