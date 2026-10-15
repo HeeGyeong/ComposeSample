@@ -526,7 +526,7 @@ private fun CostCard() {
                 "    override fun create() = PixelateNode(this)\n" +
                 "    override fun update(node: PixelateNode) = node.update(this)\n" +
                 "}\n" +
-                "// 노드: 크기가 바뀔 때만 비트맵을 새로 만들고 draw() 에서 같은 그리기"
+                "// 노드: 크기나 매개변수가 바뀔 때만 비트맵을 새로 만들고 draw() 에서 같은 그리기"
         )
         Spacer(modifier = Modifier.height(8.dp))
         NoteBox(
