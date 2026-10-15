@@ -885,5 +885,12 @@ val examples2026 = listOf(
         description = "PathMeasure 접선으로 앞뒤를 나눠 컴포저블을 감아 도는 리본 Modifier",
         blogUrl = "",
         exampleType = ConstValue.RibbonModifierExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 10. 15",
+        title = "Pixelate 모자이크 Modifier",
+        description = "값을 그대로 둔 채 그리기 단계에서 모자이크로 가리는 Modifier와 함정",
+        blogUrl = "",
+        exampleType = ConstValue.PixelateExample
     )
 )

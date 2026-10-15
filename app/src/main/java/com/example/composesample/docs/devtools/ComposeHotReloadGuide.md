@@ -296,6 +296,18 @@ The one late frame left in every 2-second window is not HotSwan: it is the frame
 table, a path that runs once every 2 seconds and stays cold under JIT. It disappears in a release build after
 `adb shell cmd package compile -m speed -f com.example.composesample`.
 
+The Pixelate example (#137) excludes its drawing code for the same reason, after measuring the difference. Each pixelated
+text draws its content into two offscreen bitmaps on every redraw; with the rewrite the measured draw took about 5.5 ms
+(plain `drawContent` 0.33 ms), with the three classes below excluded 0.8-1.0 ms (0.17 ms), and the release build after
+`compile -m speed` 0.40-0.55 ms (0.12 ms) on the same Galaxy A72. `PixelBuffers` (the bitmaps per size) and `PixelateNode`
+(the `Modifier.Node` variant) are separate classes from the file facade that holds the shared `drawPixelated` function:
+
+```groovy
+exclude("com.example.composesample.presentation.example.component.ui.graphics.PixelateModifierKt")
+exclude("com.example.composesample.presentation.example.component.ui.graphics.PixelateNode")
+exclude("com.example.composesample.presentation.example.component.ui.graphics.PixelBuffers")
+```
+
 ### A Ktor client plugin that throws a checked `IOException` — two more classes are excluded
 
 The origin-failover card of `KtorAdvancedConfigExampleUI` (#130) is a Ktor client plugin: its `on(Send)` lambda throws

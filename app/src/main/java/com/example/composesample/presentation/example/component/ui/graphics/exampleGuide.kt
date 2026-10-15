@@ -84,4 +84,41 @@ package com.example.composesample.presentation.example.component.ui.graphics
  *   debug 기본 약 29ms → 호환 약 52ms. 정적 그림에는 충분하지만 애니메이션에는 무겁다
  * - 판정은 화면이 뜰 때 소프트웨어 캔버스에 1×1 메시를 그려 가운데 픽셀이 검정인지로 한다(실측상 화면 렌더·레이어 캡처와 결과가 같았다)
  * - 픽셀 비교 검증은 **빈 그림 거짓 통과**에 주의 — 두 그림이 모두 검정이면 차이 0 이 나온다. 예제는 흰 Paint 캔버스로 그리고 색 가짓수를 함께 확인한다
-*/
+ *
+ * ## Pixelate 모자이크 Modifier (PixelateExampleUI · PixelateModifier.kt)
+ * - 원문(Joe Birch, Android Weekly #748): https://joebirch.co/android/pixelating-composables-in-compose-multiplatform/
+ * - 라이브러리(Apache 2.0 · Maven 미배포 — Pixelate.kt 파일 복사형, 채택이 아니라 같은 그리기를 직접 구현): https://github.com/hitherejoe/Pixelate
+ * - drawWithCache 요소·캐시 무효화 소스(DrawModifier.kt): https://github.com/androidx/androidx/blob/androidx-main/compose/ui/ui/src/commonMain/kotlin/androidx/compose/ui/draw/DrawModifier.kt
+ * - Modifier.Node 로 사용자 정의 모디파이어 만들기: https://developer.android.com/develop/ui/compose/custom-modifiers
+ * - Modifier.blur(API 31+): https://developer.android.com/reference/kotlin/androidx/compose/ui/draw/package-summary
+ *
+ * ### 핵심 개념 (원본과 같은 순서)
+ * - 셀 한 변 = 내용 **높이** × blockRatio(기본 0.22), 4dp~14dp 로 자름 → 같은 글꼴 크기의 "$12" 와 "$134,502.88" 이 같은 블록.
+ *   원문 예시 40×200 → 셀 8.8 · 23×5(단위 테스트 PixelateGridTest 로 대조)
+ * - drawWithCache 에서 셀 1개 = 픽셀 1개인 coarse 비트맵과 2배 fine 비트맵을 만들고, 매 프레임
+ *   ① 투명색 BlendMode.Src 로 coarse 지우기 → scale(pivot = Offset.Zero) 로 줄여 drawContent ② fine 에 FilterQuality.Low 보간
+ *   ③ 원래 크기로 FilterQuality.None 확대 ④ saveLayer + 네 변 그라데이션 BlendMode.DstIn 으로 셀 한 변 폭 페더
+ * - 그리기만 바꾸므로 레이아웃은 그대로 — 가리기/공개를 3번 오가도 onSizeChanged 는 처음 1회뿐(크기 변화 없음)
+ *
+ * ### 실측 (SM-A725F · Android 13 · debug·release 동일, 2026-10-15)
+ * - blockRatio(28sp 가격, 464×112px): 0.08 → 셀 4dp(min), 그대로 읽힘 · 0.14 → 5.6dp, 숫자 식별 가능 · 0.18 → 7.2dp · 0.22 → 8.8dp 판독 불가
+ *   (README 의 "0.14 숫자 식별 · 0.08 읽힘"과 같음 → MinimumSafeBlockRatio 0.18)
+ * - Text 마다 걸면 줄마다 셀이 다르다(28sp 줄 7.2dp · 12sp 줄 min 4dp), 부모 Column 하나에 걸면 묶음 높이로 10.2dp 한 격자
+ * - **함정 ① 지우기 생략**: 값을 3번 바꾼 뒤 평균 어둡기 지움 26.7~27.4 vs 생략 66.1~67.7 — 옛 값이 누적돼 비친다.
+ *   단, 비트맵이 재사용될 때만 생긴다 → 예제는 remember 로 요소를 고정해 재현(아래 함정 ③ 때문에 그냥 부르면 매번 새 비트맵이라 안 보인다)
+ * - **함정 ② saveLayer 없는 DstIn**: 노란 배경·카드까지 알파가 깎여 가장자리가 **투명이 아니라 검은 띠**로 보인다 — 별도 레이어가 없는
+ *   노드는 창 버퍼에 바로 그려지기 때문(A72·API 30 에뮬레이터 동일)
+ * - **함정 ③ 리컴포즈마다 비트맵 재할당**(원본에도 있음): ui 1.12.1 의 DrawWithCacheElement.equals 는 람다 동일성(!==),
+ *   update 는 block 을 바꾸며 invalidateDrawCache. Modifier.pixelate() 는 부를 때마다 새 람다라 호출부가 리컴포즈될 때마다
+ *   캐시 블록(비트맵 두 장)이 다시 돈다. onMeasureResultChanged 경로는 크기가 바뀔 때만이라 같은 크기 값 변경은 무관.
+ *   매 프레임 값 바꾸기(release AOT, 60회/초): 그냥 부름 할당 매 프레임(멈춰도 0.5초 집계 리컴포즈마다 +1) · remember 와
+ *   Modifier.Node(data class 요소) 는 글꼴 크기를 바꿀 때만 +1
+ * - 그리기 시간(release AOT · 매 프레임): drawContent 만 0.12ms · pixelate 그냥 부름 0.55ms · remember 0.43ms · Node 0.40ms.
+ *   debug 는 HotSwan 재작성 아래 pixelate 5.5ms·그대로 0.33ms → PixelateModifierKt·PixelateNode·PixelBuffers 제외 후 0.8~1.0ms·0.17ms
+ *   (app/build.gradle, ComposeHotReloadGuide.md)
+ * - 시맨틱: pixelate 만 걸면 uiautomator 덤프에 text="₩7,031,962" 노드가 그대로, clearAndSetSemantics { contentDescription } 이면
+ *   텍스트 노드 없이 content-desc 만. 어느 쪽이든 보안 경계는 아니다(README Caveats — 컴포지션·메모리·디버거)
+ * - Modifier.blur: API 30 에뮬레이터에서 4dp·12dp 모두 무시돼 값이 또렷이 보이고, A72(API 33)에서도 4dp 는 읽힌다(12dp 는 가려짐).
+ *   pixelate 는 API 30 에뮬레이터에서도 같은 모자이크
+ * - 비용 경고(README): 내용이 다시 그려질 때마다 오프스크린 두 장 + 확대 — 긴 목록의 모든 행에 걸지 않는다
+ */
