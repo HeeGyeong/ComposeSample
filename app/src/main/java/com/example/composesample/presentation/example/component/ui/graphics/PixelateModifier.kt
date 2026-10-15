@@ -213,7 +213,7 @@ internal fun Modifier.pixelate(
 
 /**
  * 같은 그리기를 Modifier.Node 로 — 요소가 data class 라 매개변수가 같으면 리컴포지션에서 같다고 판정돼 update 가 불리지 않고,
- * 노드가 비트맵을 들고 있다가 크기가 바뀔 때만 새로 만든다.
+ * 노드가 비트맵을 들고 있다가 크기나 매개변수가 바뀔 때만 새로 만든다.
  */
 internal fun Modifier.pixelateNode(
     blockRatio: Float = PixelateDefaultBlockRatio,

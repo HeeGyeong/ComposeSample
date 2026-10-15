@@ -265,7 +265,8 @@ fun DrawScope.drawRibbonPass(
 
 /**
  * 컴포저블을 감아 도는 리본 — 원문(sinasamaki)과 같은 방식이되 progress 를 그리기 단계에서 읽는 람다로 받는다.
- * 경로·PathMeasure·구간 배열은 크기가 바뀔 때만 다시 만들고, 진행률이 바뀌면 다시 그리기만 한다.
+ * 경로·PathMeasure·구간 배열은 크기가 바뀔 때와 이 함수를 부른 컴포저블이 리컴포즈될 때(새 람다 → 아래 ribbonByValue 설명과 같은 이유)
+ * 다시 만들고, 진행률이 바뀌면 다시 그리기만 한다 — 진행률을 람다로 받는 이유가 호출부를 리컴포즈시키지 않기 위해서다.
  */
 fun Modifier.ribbon(
     brush: Brush,

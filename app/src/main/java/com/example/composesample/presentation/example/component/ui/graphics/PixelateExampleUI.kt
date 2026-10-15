@@ -192,7 +192,7 @@ private fun PipelineCard() {
         Spacer(modifier = Modifier.height(8.dp))
         CodeBox(
             "drawWithCache {\n" +
-                "    // 크기가 바뀔 때만 — 비트맵 할당\n" +
+                "    // 크기가 바뀌거나 요소가 바뀔 때(함정 ③) — 비트맵 할당\n" +
                 "    val cell = (height * blockRatio).coerceIn(4.dp.toPx(), 14.dp.toPx())\n" +
                 "    val coarse = ImageBitmap(cols, rows); val fine = ImageBitmap(cols * 2, rows * 2)\n" +
                 "    onDrawWithContent {  // 매 프레임\n" +
