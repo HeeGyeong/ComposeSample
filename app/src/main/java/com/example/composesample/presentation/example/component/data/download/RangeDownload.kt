@@ -386,7 +386,7 @@ class RangeDownloader(
         return ResolveResult(
             viaHead = false,
             status = probe.status.value,
-            size = if (partial) contentRange?.second else probe.headers[HttpHeaders.ContentLength]?.toLongOrNull(),
+            size = if (partial) contentRange.second else probe.headers[HttpHeaders.ContentLength]?.toLongOrNull(),
             acceptRanges = partial,
             etag = probe.headers[HttpHeaders.ETag],
             lastModified = probe.headers[HttpHeaders.LastModified],

@@ -92,7 +92,7 @@ class RangeDownloadTest {
     }
 
     @Test
-    fun `40% 에서 멈췄다가 If-Range 로 이어받으면 나머지만 206 으로 받는다`() {
+    fun `40퍼센트에서 멈췄다가 If-Range 로 이어받으면 나머지만 206 으로 받는다`() {
         runBlocking {
             // Given
             val paused = downloader.start(RANGE_FILE_URL, ClientOptions(bytesPerSecond = 0, pauseAtFraction = 0.4f))
