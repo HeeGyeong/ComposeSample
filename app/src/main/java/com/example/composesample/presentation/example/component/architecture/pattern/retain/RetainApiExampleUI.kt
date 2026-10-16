@@ -116,12 +116,14 @@ private object RetainEventLog {
 
     val events = mutableStateListOf<RetainEvent>()
 
-    /** 종류별 인스턴스 번호 — "retain#2" 는 이 프로세스에서 두 번째로 만들어진 retain 카운터 */
-    @Synchronized
-    fun nextNumber(kind: String): Int {
+    /**
+     * 종류별 인스턴스 번호 — "retain#2" 는 이 프로세스에서 두 번째로 만들어진 retain 카운터.
+     * @Synchronized 대신 synchronized 블록 — debug(HotSwan) 재작성 아래에서는 @Synchronized 의 상호 배제가 사라진다(ComposeHotReloadGuide).
+     */
+    fun nextNumber(kind: String): Int = synchronized(issued) {
         val next = (issued[kind] ?: 0) + 1
         issued[kind] = next
-        return next
+        next
     }
 
     fun add(subject: String, event: String) {
