@@ -13,6 +13,7 @@ import com.example.composesample.presentation.example.component.architecture.sta
 import com.example.composesample.presentation.example.component.architecture.lifecycle.AutoCloseableExampleViewModel
 import com.example.composesample.presentation.example.component.architecture.lifecycle.ComposeLifecycleOwnerViewModel
 import com.example.composesample.presentation.example.component.data.cache.KtorHttpCacheViewModel
+import com.example.composesample.presentation.example.component.data.download.RangeDownloadViewModel
 import com.example.composesample.presentation.example.component.architecture.lifecycle.RealItemsService
 import com.example.composesample.presentation.example.component.architecture.lifecycle.RealCustomersService
 import com.example.composesample.presentation.example.component.architecture.lifecycle.RealNetworkService
@@ -64,6 +65,7 @@ val viewModelModule: Module = module {
     viewModel { SnapshotFlowExampleViewModel() }
     viewModel { ComposeLifecycleOwnerViewModel() }
     viewModel { KtorHttpCacheViewModel() }
+    viewModel { RangeDownloadViewModel(androidApplication()) }
     // 서비스를 bind 해야 하므로 Application 컨텍스트를 주입한다
     viewModel { MultiProcessViewModel(androidApplication()) }
     viewModel { PowerAssertViewModel() }

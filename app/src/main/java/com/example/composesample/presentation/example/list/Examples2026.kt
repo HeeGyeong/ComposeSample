@@ -899,5 +899,12 @@ val examples2026 = listOf(
         description = "JS 인터페이스·evaluateJavascript·메시지 포트의 스레드·타입·보안 비교",
         blogUrl = "",
         exampleType = ConstValue.WebViewBridgeExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 10. 16",
+        title = "이어받기·분할 다운로드 (HTTP Range)",
+        description = "Range 분할 병렬 다운로드와 If-Range 이어받기, 응답 확인 생략 시 손상 실측",
+        blogUrl = "",
+        exampleType = ConstValue.RangeDownloadExample
     )
 )

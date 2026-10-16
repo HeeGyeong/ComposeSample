@@ -308,6 +308,34 @@ exclude("com.example.composesample.presentation.example.component.ui.graphics.Pi
 exclude("com.example.composesample.presentation.example.component.ui.graphics.PixelBuffers")
 ```
 
+The Range download example (#139) excludes its download engine for the same reason. The "resume check" card runs six
+scenarios, each downloading a 2 MiB file in 16 KiB chunks and then comparing the result byte by byte with two versions;
+on the same Galaxy A72 the six took 34.4 s under the rewrite, 7.0 s with the three classes below excluded, and 3.4 s in
+the release build after `compile -m speed`:
+
+```groovy
+exclude("com.example.composesample.presentation.example.component.data.download.RangeDownloadKt")
+exclude("com.example.composesample.presentation.example.component.data.download.FakeFileServer")
+exclude("com.example.composesample.presentation.example.component.data.download.RangeDownloader")
+```
+
+### `@Synchronized` loses its mutual exclusion under the dispatch rewrite — use a `synchronized` block
+
+Found while writing the Range download example (#139). Its fake server's `handle()` was marked `@Synchronized` so that
+one request sees one file version; four connections call it at the same time. In `testDebugUnitTest` (debug classes,
+HotSwan 2.1.0, Kotlin 2.4.21) the requests overlapped: the sequence numbers assigned inside the method were printed out of
+order, and three requests read the old file while a fourth was replacing it. The same probe passed with
+`-Photswan.dispatchRewriteEnabled=false`, and also under the rewrite once the body was wrapped in a `synchronized(lock) { }`
+block instead of the annotation:
+
+| Build | `@Synchronized fun handle()` | `fun handle() = synchronized(lock) { … }` |
+|---|---|---|
+| debug classes, HotSwan as configured | ❌ overlapping calls | ✅ one at a time |
+| debug classes, `-Photswan.dispatchRewriteEnabled=false` | ✅ one at a time | ✅ |
+
+The annotation only sets the method's `ACC_SYNCHRONIZED` flag, while the block compiles to explicit monitor
+instructions in the body. In app code that runs under the rewrite, prefer the block (or a `Mutex` in coroutines).
+
 ### A Ktor client plugin that throws a checked `IOException` — two more classes are excluded
 
 The origin-failover card of `KtorAdvancedConfigExampleUI` (#130) is a Ktor client plugin: its `on(Send)` lambda throws
