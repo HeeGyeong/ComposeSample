@@ -109,6 +109,12 @@ fun DynamicAppLinksExampleUI(
                 onClick = { selectedTab = 3 },
                 text = { Text("시뮬레이터", fontSize = 12.sp) }
             )
+            // 위 네 탭은 규칙 매칭 시뮬레이션이다 — 이 탭만 매니페스트의 커스텀 스킴 액티비티로 링크를 실제로 받는다
+            Tab(
+                selected = selectedTab == 4,
+                onClick = { selectedTab = 4 },
+                text = { Text("실제 수신", fontSize = 12.sp) }
+            )
         }
 
         when (selectedTab) {
@@ -116,6 +122,7 @@ fun DynamicAppLinksExampleUI(
             1 -> LiveTestTab()
             2 -> PerformanceTab()
             3 -> SimulatorTab()
+            4 -> DeepLinkReceiveTab()
         }
     }
 }

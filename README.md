@@ -249,7 +249,7 @@ Cursor IDE를 사용하는 개발자를 위한 **AI 코딩 어시스턴트 규�
 - **webview**: YouTube 임베드 WebView(전체 화면 커스텀 뷰) / JS ↔ 네이티브 브리지 — `addJavascriptInterface` 가 JavaBridge 스레드에서 동기로 불리는 것(JS 308ms 정지, 브리지 안 WebView 호출은 예외 → JS 오류)·인자/반환 타입 변환(`undefined`·객체 → "undefined", Int 버림, null 반환 → `undefined`, 돌려준 객체도 브리지)·`evaluateJavascript` 결과가 JSON 텍스트(예외도 null, Promise `{}`, 로드 직후엔 이전 문서)·`WebMessagePort` 대상 오리진 불일치는 조용히 미전달·dari 식 requestId 짝짓기(도착 순서 큐는 셋 다 엇갈리는데 앱 기록은 SUCCESS)·손 이스케이프 `\r` 로 응답 스크립트 SyntaxError·인터페이스가 모든 iframe·이동한 다른 오리진에 주입되고 `onPageStarted` 기반 오리진 검사는 로드 즉시 호출에 늦는 것·`removeJavascriptInterface` 는 다음 로드부터를 실측
 
 **deeplink**:
-- **Dynamic App Links**: 서버의 Digital Asset Links JSON을 통해 앱 업데이트 없이 실시간으로 딥링크 동작을 제어(Android 15+)
+- **Dynamic App Links**: 서버의 Digital Asset Links JSON을 통해 앱 업데이트 없이 실시간으로 딥링크 동작을 제어(Android 15+) / 실제 수신 탭 — 매니페스트의 커스텀 스킴 액티비티 두 개(`composesample://` singleTop · `composesample-standard://` standard)로 링크를 받아, `order` 가 path 가 아니라 host 로 잡히는 함정(path 만 보면 "알 수 없는 경로: 4821"), 콜드 `onCreate` 의 링크를 첫 컴포지션 전까지 보류했다가 배출(보류 칸이 없으면 빈 화면), 재생성·프로세스 종료 복원 때 `savedInstanceState` 를 안 보면 같은 링크를 다시 처리하는데 그게 마지막 웜 링크가 아니라 처음 링크라 보던 화면이 바뀌는 것, singleTop 의 `onNewIntent` vs standard 의 인스턴스 쌓임, 백스택 합성(뒤로 = 홈 vs 앱 종료), 값 검증과 잘못된 링크 화면을 실측
 
 **media**:
 - **ffmpeg**: 비디오/오디오 인코딩/디코딩(2025.06 기준 라이브러리 호환성 문제로 주석 처리)

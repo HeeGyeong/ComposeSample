@@ -87,6 +87,37 @@
             android:name=".presentation.example.component.system.platform.language.LanguageTestActivity"
             android:theme="@style/Theme.ComposeSample"
             android:windowSoftInputMode="adjustResize" />
+        <!-- 딥링크 실제 수신(DynamicAppLinks 예제의 '실제 수신' 탭). 커스텀 스킴은 누구나 보낼 수 있으므로 화면은 받은 값을 검증한다.
+             singleTop: 이 액티비티가 맨 위에 있을 때 온 링크는 새 인스턴스 대신 onNewIntent 로 받는다.
+             configChanges 를 두지 않아 회전·다크 모드 전환에 재생성된다(재생성 때 같은 intent 를 다시 처리하는 함정을 보이려고). -->
+        <activity
+            android:name=".presentation.example.component.system.deeplink.DeepLinkDemoActivity"
+            android:exported="true"
+            android:launchMode="singleTop"
+            android:theme="@style/Theme.ComposeSample">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="composesample" />
+            </intent-filter>
+        </activity>
+        <!-- 같은 화면을 launchMode standard 로 — 떠 있는 채로 링크가 오면 인스턴스가 하나 더 쌓인다 -->
+        <activity
+            android:name=".presentation.example.component.system.deeplink.DeepLinkStandardActivity"
+            android:exported="true"
+            android:theme="@style/Theme.ComposeSample">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="composesample-standard" />
+            </intent-filter>
+        </activity>
 
         <provider
             android:name="androidx.core.content.FileProvider"

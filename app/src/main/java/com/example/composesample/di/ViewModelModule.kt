@@ -15,6 +15,7 @@ import com.example.composesample.presentation.example.component.architecture.lif
 import com.example.composesample.presentation.example.component.data.cache.KtorHttpCacheViewModel
 import com.example.composesample.presentation.example.component.data.download.RangeDownloadViewModel
 import com.example.composesample.presentation.example.component.data.outbox.OutboxViewModel
+import com.example.composesample.presentation.example.component.system.deeplink.DeepLinkReceiveViewModel
 import com.example.composesample.presentation.example.component.architecture.lifecycle.RealItemsService
 import com.example.composesample.presentation.example.component.architecture.lifecycle.RealCustomersService
 import com.example.composesample.presentation.example.component.architecture.lifecycle.RealNetworkService
@@ -69,6 +70,8 @@ val viewModelModule: Module = module {
     viewModel { RangeDownloadViewModel(androidApplication()) }
     // Room 파일 DB·WorkManager 를 써야 하므로 Application 컨텍스트를 주입한다
     viewModel { OutboxViewModel(androidApplication()) }
+    // SharedPreferences 저장소를 열어야 하므로 Application 컨텍스트를 주입한다
+    viewModel { DeepLinkReceiveViewModel(androidApplication()) }
     // 서비스를 bind 해야 하므로 Application 컨텍스트를 주입한다
     viewModel { MultiProcessViewModel(androidApplication()) }
     viewModel { PowerAssertViewModel() }

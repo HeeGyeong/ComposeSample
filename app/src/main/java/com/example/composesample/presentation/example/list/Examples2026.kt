@@ -187,9 +187,9 @@ val examples2026 = listOf(
         exampleType = ConstValue.CustomLayoutExample
     ),
     ExampleObject(
-        lastUpdate = "26. 04. 02",
+        lastUpdate = "26. 10. 19",
         title = "Dynamic App Links",
-        description = "서버의 Digital Asset Links JSON으로 딥링킹을 실시간 제어 (Android 15+)",
+        description = "동적 App Links 규칙 시뮬레이션과 커스텀 스킴 딥링크 실제 수신",
         blogUrl = "",
         exampleType = ConstValue.DynamicAppLinksExample
     ),
