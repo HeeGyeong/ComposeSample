@@ -906,5 +906,12 @@ val examples2026 = listOf(
         description = "Range 분할 병렬 다운로드와 If-Range 이어받기, 응답 확인 생략 시 손상 실측",
         blogUrl = "",
         exampleType = ConstValue.RangeDownloadExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 10. 19",
+        title = "오프라인 아웃박스 전송 (멱등 키)",
+        description = "보내기를 Room 행으로 먼저 저장하고 같은 clientId로 재시도하는 아웃박스",
+        blogUrl = "",
+        exampleType = ConstValue.OfflineOutboxExample
     )
 )
