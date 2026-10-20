@@ -1,16 +1,21 @@
 package com.example.composesample.presentation.example.component.system.background.workmanager
 
-import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
+import androidx.compose.material3.SecondaryTabRow
+import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -32,11 +37,47 @@ import com.example.composesample.util.BackGroundWorker
 import java.util.UUID
 import java.util.concurrent.TimeUnit
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun WorkManagerExampleUI(
     onBackEvent: () -> Unit
 ) {
+    var selectedTab by rememberSaveable { mutableIntStateOf(0) }
+
+    Column(modifier = Modifier.fillMaxSize()) {
+        MainHeader(
+            title = "WorkManager Example",
+            onBackIconClicked = onBackEvent
+        )
+
+        // M3 1.4.0에서 TabRow가 deprecated되어 동작이 동일한 SecondaryTabRow로 대체
+        SecondaryTabRow(
+            selectedTabIndex = selectedTab,
+            containerColor = Color(0xFF37474F),
+            contentColor = Color.White
+        ) {
+            Tab(
+                selected = selectedTab == 0,
+                onClick = { selectedTab = 0 },
+                text = { Text("기본 사용", fontSize = 12.sp) }
+            )
+            // 첫 탭은 1회성 작업 위주다 — 이 탭은 주기 작업을 같은 이름으로 다시 등록할 때의 정책 차이를 실측한다
+            Tab(
+                selected = selectedTab == 1,
+                onClick = { selectedTab = 1 },
+                text = { Text("주기 작업 재등록", fontSize = 12.sp) }
+            )
+        }
+
+        when (selectedTab) {
+            0 -> BasicUsageTab()
+            1 -> PeriodicPolicyTab()
+        }
+    }
+}
+
+/** 첫 탭 — 블로그 글의 원래 화면(1회성·고유 작업 등록과 진행률 관찰) */
+@Composable
+private fun BasicUsageTab() {
     val context = LocalContext.current
     val lifecycleContext = LocalLifecycleOwner.current
     val map = mapOf("workManagerData" to "워커에서 사용할 데이터 입니다.")
@@ -113,14 +154,9 @@ fun WorkManagerExampleUI(
         }
 
     LazyColumn(modifier = Modifier.padding(horizontal = 20.dp)) {
-        stickyHeader {
-            MainHeader(
-                title = "WorkManager Example",
-                onBackIconClicked = onBackEvent
-            )
-        }
-
         item {
+            Spacer(modifier = Modifier.height(10.dp))
+
             Button(onClick = {
                 // 매번 생성.
                 val workRequest = OneTimeWorkRequestBuilder<BackGroundWorker>()

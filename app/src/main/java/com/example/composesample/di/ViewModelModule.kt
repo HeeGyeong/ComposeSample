@@ -29,6 +29,7 @@ import com.example.composesample.presentation.example.component.data.repository.
 import com.example.composesample.presentation.example.component.data.sse.SSEViewModel
 import com.example.composesample.presentation.example.component.system.platform.file.SafFileSelectionViewModel
 import com.example.composesample.presentation.example.component.system.platform.process.MultiProcessViewModel
+import com.example.composesample.presentation.example.component.system.background.workmanager.PeriodicPolicyViewModel
 import com.example.composesample.presentation.example.component.system.background.workmanager.WorkEventListenerViewModel
 import com.example.composesample.presentation.example.component.system.security.AppSecurityViewModel
 import com.example.composesample.presentation.example.component.system.security.RequestSigningViewModel
@@ -58,6 +59,8 @@ val viewModelModule: Module = module {
     viewModel { RequestSigningViewModel() }
     // WorkManager 인스턴스를 얻어야 하므로 Application 컨텍스트를 주입한다
     viewModel { WorkEventListenerViewModel(androidApplication()) }
+    // WorkManager 인스턴스를 얻어야 하므로 Application 컨텍스트를 주입한다
+    viewModel { PeriodicPolicyViewModel(androidApplication()) }
     viewModel { CompositionLocalViewModel() }
     viewModel { InitTestViewModel() }
     viewModel { PagingViewModel() }

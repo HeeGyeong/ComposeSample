@@ -14,6 +14,36 @@ package com.example.composesample.presentation.example.component.system.backgrou
  */
 
 /**
+ * ## WorkManagerExampleUI '주기 작업 재등록' 탭 (PeriodicPolicyTab — ExistingPeriodicWorkPolicy)
+ * - 본 탭 출처: https://aditlal.dev/harness-engineering/ (AW #748 — "A periodic background job registered with KEEP
+ *   instead of UPDATE. Fine on a fresh install, but existing users never get the new schedule")
+ * - 공식 문서(정책): https://developer.android.com/reference/androidx/work/ExistingPeriodicWorkPolicy
+ * - 공식 문서(고유 작업): https://developer.android.com/develop/background-work/background-tasks/persistent/how-to/manage-work#unique-work
+ * - 공식 문서(등록된 작업 갱신): https://developer.android.com/develop/background-work/background-tasks/persistent/how-to/update-work
+ * - 공식 문서(WorkInfo — generation·periodicityInfo·nextScheduleTimeMillis): https://developer.android.com/reference/androidx/work/WorkInfo
+ * 핵심 개념(work-runtime 2.12.0 소스 대조 + Galaxy A72 debug·release 실측):
+ * - KEEP: 같은 이름의 작업이 ENQUEUED·RUNNING 이면 아무것도 하지 않고 돌아간다(EnqueueRunnable) → 주기·태그·입력이 v1 그대로
+ * - UPDATE: enqueueUniquelyNamedPeriodic → updateWorkImpl. 같은 id 에 새 사양을 쓰되 state·runAttemptCount·
+ *   lastEnqueueTime·periodCount 를 유지하고 generation 을 +1 — 사양이 같아도 매번 오른다(실측 0→2, 다음 실행 시각 불변)
+ * - UPDATE 중 실행 중이면 APPLIED_FOR_NEXT_RUN: 지금 실행은 끊기지 않고 이전 사양(WorkerParameters.generation 0)으로 끝나며,
+ *   WorkInfo 는 곧바로 gen 1·새 주기·새 태그를 보여준다
+ * - CANCEL_AND_REENQUEUE(= deprecated REPLACE): 기존 작업을 취소하고 레코드를 삭제한 뒤 새 id 로 등록 → 실행 중이면
+ *   stopReason 1(CANCELLED_BY_APP)로 끊기고, 새 작업의 첫 실행이 곧바로 돈다(주기 작업의 첫 실행은 initialDelay·flex 가 없으면 즉시)
+ * - 기존 작업이 없거나 CANCELLED 면 세 정책 모두 새로 등록한다 → 신규 설치·에뮬레이터에서는 차이가 안 보인다
+ * - 주기 작업은 실행이 끝난 시각(lastEnqueueTime)부터 다시 센다: 다음 실행 = 마지막 실행 끝 + 주기.
+ *   UPDATE 는 그 기준을 이어 가고(v1 끝 + 30분), CANCEL_AND_REENQUEUE 는 새 실행의 끝으로 바꾼다
+ * - UPDATE 로 OneTime ↔ Periodic 은 바꿀 수 없다(UnsupportedOperationException), 같은 이름에 작업이 둘 이상이면
+ *   "Can't apply UPDATE policy to the chains of work."
+ *
+ * 본 탭의 단순화 포인트
+ *  - 세 정책을 서로 다른 고유 이름에서 동시에 돌린다(같은 이름이면 앞 정책의 결과가 다음 정책의 '기존 작업'이 된다).
+ *  - 워커는 0.4초(④는 4초) 기다렸다 끝나며 받은 사양·세대를 메모리 기록(PeriodicPolicyRunLog)에 남긴다.
+ *  - 데모 주기 작업은 실제로 15·30분마다 다시 돌므로 탭을 벗어나면 모두 취소한다. 프로세스가 죽어 취소를 못 했으면
+ *    다음 진입 때 ViewModel 이 먼저 취소한다.
+ *  - 시나리오는 "다음 실행이 1분보다 멀어질 때(첫 실행 몫이 끝남)"까지 기다린 뒤 스냅샷을 찍는다.
+ */
+
+/**
  * ## WorkerExceptionHandlerExampleUI (워커 예외 핸들러 — work-runtime 2.11 신규)
  * - 공식 문서(Configuration): https://developer.android.com/reference/androidx/work/Configuration.Builder
  * - 공식 문서(WorkerExceptionInfo): https://developer.android.com/reference/androidx/work/WorkerExceptionInfo
