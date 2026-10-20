@@ -1,7 +1,10 @@
 package com.example.composesample.presentation.example.component.system.platform.language
 
+import android.content.Context
 import android.content.Intent
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -13,15 +16,20 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.Text
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.SecondaryTabRow
+import androidx.compose.material3.Tab
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -38,12 +46,6 @@ fun LocalLanguageChangeExampleUI(onBackEvent: () -> Unit) {
         mutableStateOf(LanguageManager.getLanguagePreference(context))
     }
 
-    // 언어 변경 함수
-    fun changeLanguage(useKorean: Boolean) {
-        LanguageManager.saveLanguagePreference(context, useKorean)
-        isKorean = useKorean
-    }
-
     // 현재 설정에 따른 Context 생성
     val localizedContext = remember(isKorean) {
         LanguageManager.createLocalizedContext(context)
@@ -51,6 +53,9 @@ fun LocalLanguageChangeExampleUI(onBackEvent: () -> Unit) {
 
     // 화면 전환 상태 관리
     var showOtherScreen by remember { mutableStateOf(false) }
+
+    // 시스템 앱 언어를 바꾸면 액티비티가 재생성된다 — 탭이 첫 탭으로 돌아가지 않도록 rememberSaveable
+    var selectedTab by rememberSaveable { mutableIntStateOf(0) }
 
     // 다른 화면을 보여주는 경우
     if (showOtherScreen) {
@@ -60,14 +65,66 @@ fun LocalLanguageChangeExampleUI(onBackEvent: () -> Unit) {
         return
     }
 
-    LazyColumn {
-        stickyHeader {
-            MainHeader(
-                title = localizedContext.getString(R.string.local_language_title),
-                onBackIconClicked = onBackEvent
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.White)
+    ) {
+        MainHeader(
+            // 첫 탭은 저장값으로 만든 컨텍스트, 둘째 탭은 앱 Configuration(stringResource) — 두 출처는 서로 다를 수 있다
+            title = if (selectedTab == 0) {
+                localizedContext.getString(R.string.local_language_title)
+            } else {
+                stringResource(R.string.local_language_title)
+            },
+            onBackIconClicked = onBackEvent
+        )
+
+        // M3 1.4.0에서 TabRow가 deprecated되어 동작이 동일한 SecondaryTabRow로 대체
+        SecondaryTabRow(
+            selectedTabIndex = selectedTab,
+            containerColor = Color(0xFF1976D2),
+            contentColor = Color.White
+        ) {
+            Tab(
+                selected = selectedTab == 0,
+                onClick = { selectedTab = 0 },
+                text = { Text("컨텍스트 교체", fontSize = 12.sp) }
+            )
+            // 첫 탭은 그 화면의 컨텍스트만 바꾼다 — 이 탭은 API 33 LocaleManager 로 앱 전체 언어를 시스템에 맡긴다
+            Tab(
+                selected = selectedTab == 1,
+                onClick = { selectedTab = 1 },
+                text = { Text("시스템 앱 언어", fontSize = 12.sp) }
             )
         }
 
+        when (selectedTab) {
+            0 -> ContextSwapTab(
+                isKorean = isKorean,
+                localizedContext = localizedContext,
+                onChangeLanguage = { useKorean ->
+                    LanguageManager.saveLanguagePreference(context, useKorean)
+                    isKorean = useKorean
+                },
+                onShowOtherScreen = { showOtherScreen = true }
+            )
+            1 -> AppLocaleTab()
+        }
+    }
+}
+
+/** 첫 탭 — SharedPreferences 저장값으로 컨텍스트를 만들어 그 컨텍스트로 문자열을 읽는다(블로그 글의 원래 화면) */
+@Composable
+private fun ContextSwapTab(
+    isKorean: Boolean,
+    localizedContext: Context,
+    onChangeLanguage: (Boolean) -> Unit,
+    onShowOtherScreen: () -> Unit
+) {
+    val context = LocalContext.current
+
+    LazyColumn {
         item {
             Spacer(modifier = Modifier.height(20.dp))
 
@@ -115,7 +172,7 @@ fun LocalLanguageChangeExampleUI(onBackEvent: () -> Unit) {
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Button(
-                        onClick = { changeLanguage(!isKorean) },
+                        onClick = { onChangeLanguage(!isKorean) },
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(50.dp),
@@ -166,7 +223,7 @@ fun LocalLanguageChangeExampleUI(onBackEvent: () -> Unit) {
 
                     // 다른 화면으로 이동 버튼
                     Button(
-                        onClick = { showOtherScreen = true },
+                        onClick = onShowOtherScreen,
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(45.dp),

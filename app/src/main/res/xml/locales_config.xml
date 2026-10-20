@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 시스템 설정 '앱 언어'에 보여 줄 언어 목록 (LocalLanguageChange 예제의 '시스템 앱 언어' 탭).
+     values(기본) = 한국어 · values-en = 영어라 이 두 개만 적는다. 적지 않은 언어도 LocaleManager 로는 설정된다. -->
+<locale-config xmlns:android="http://schemas.android.com/apk/res/android">
+    <locale android:name="ko" />
+    <locale android:name="en" />
+</locale-config>

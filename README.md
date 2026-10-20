@@ -236,7 +236,7 @@ Cursor IDE를 사용하는 개발자를 위한 **AI 코딩 어시스턴트 규�
 - **file**: 파일 선택과 SAF(Storage Access Framework) 처리
 - **haptic**: Haptic Feedback(LocalHapticFeedback vs HapticFeedbackConstants 비교와 API 레벨별 지원 범위) + Compose 1.12 상호작용 사운드 — clickable·toggleable 이 탭마다 `LocalSoundEffect.playClickSound()` 를 자동 요청하는 기본값과 `SoundEffectOnInteraction(enabled = false)` 구역별 끄기를 구역별 "탭 수 · 요청 수"로 대조, pointerInput 제스처는 자동 재생이 없어 햅틱과 함께 직접 호출, 실제 재생 조건(시스템 터치음 + 무음·진동 모드 아님)을 실시간 표시
 - **intent**: Intent 처리와 앱 간 데이터 공유
-- **language**: 지역화, 시스템 언어 설정, 앱 내 언어 변경
+- **language**: 지역화, 시스템 언어 설정, 앱 내 언어 변경 / 시스템 앱별 언어 탭 — API 33 `LocaleManager.setApplicationLocales` 로 앱 전체 언어를 시스템에 맡기고 컨텍스트 교체 방식과 대조: 값이 바뀌면 액티비티 재생성(ViewModel·pid 유지), configuration 이 [앱 언어, 시스템 목록] 으로 합쳐져 `Locale.getDefault`·날짜 형식까지 바뀌고 `Resources.getSystem()` 도 섞인 값을 주는 것, `ja,en` 이 영어가 아니라 기본 values(한국어)로 떨어지는 이유(APK 에 라이브러리의 values-ja), ComponentActivity 에서 `AppCompatDelegate.setApplicationLocales` 가 조용히 무시되는 것, `android:localeConfig` 선언 전후 시스템 설정 "앱 언어" 화면, 시스템이 저장(프로세스 종료·재설치 유지, `pm clear` 로 초기화), `adb shell cmd locale set-app-locales` 를 실측
 - **pip**: Picture-in-Picture compat(core 1.18.0) — `PictureInPictureParamsCompat`로 9개 필드를 버전 분기 없이 구성하고 `toPictureInPictureParams()`가 API 33/31/26으로 잘라내는 규칙을 플랫폼 getter 되읽기로 확인, 종횡비 허용 범위(0.418410~2.390000)와 `enterPictureInPictureMode`(RESUMED 필요) vs `setPictureInPictureParams`(정지 상태에서도 가능) 대조
 - **powersave**: 절전 모드 감지와 배터리 최적화
 - **predictiveback**: Predictive Back Gesture(Android 14+ Flow 기반 엣지 스와이프 진행률 실시간 애니메이션)

@@ -103,9 +103,9 @@ val examples2025 = listOf(
         exampleType = ConstValue.InitTestExample
     ),
     ExampleObject(
-        lastUpdate = "25. 07. 09",
+        lastUpdate = "26. 10. 20",
         title = "로컬 언어 변경 예제",
-        description = "OS 설정이 아닌 앱 내에서 true/false 값으로 한국어/영어를 실시간 변경하는 예제",
+        description = "앱 내 언어 변경 — 컨텍스트 교체와 시스템 앱별 언어(LocaleManager) 대조",
         blogUrl = blogUrl(188),
         exampleType = ConstValue.LocalLanguageChangeExample
     ),

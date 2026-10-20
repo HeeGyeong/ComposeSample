@@ -40,13 +40,17 @@
     <uses-permission android:name="android.permission.READ_MEDIA_VISUAL_USER_SELECTED" />
 
     <!-- PictureInPictureIssue 억제: PiP 예제가 setEnabled(자동 진입)·setSourceRectHint 를
-         화면에서 직접 토글해 보여 주는 것이 주제라, 매니페스트 차원에서 항상 켜 두지 않는다. -->
+         화면에서 직접 토글해 보여 주는 것이 주제라, 매니페스트 차원에서 항상 켜 두지 않는다.
+         localeConfig: 시스템 설정 '앱 언어'에 이 앱과 언어 목록(ko·en)을 노출한다(LocalLanguageChange 예제).
+         API 33 미만은 이 속성을 무시하는 것이 맞는 동작이라 tools:targetApi="33" 으로 UnusedAttribute 경고를 접는다. -->
     <application
         android:name=".application.BaseApplication"
         tools:ignore="PictureInPictureIssue"
+        tools:targetApi="33"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:localeConfig="@xml/locales_config"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.ComposeSample">
