@@ -194,13 +194,14 @@ object ConstValue {
     const val FlowBatchingExample = "flowBatchingExample"
 
     // ==================== Kotlin 언어 기능 예제 ====================
-    // Type(변수 타입 활용), InlineValueClass(성능 최적화), SealedClassInterface(타입 안전 계층), NameBasedDestructuring(이름 기반 구조 분해 — Kotlin 2.3.20), Kotlin24Features(Kotlin 2.4 컬렉션 리터럴 [ ] / 컨텍스트 파라미터 context(...)), KotlinTimeApi(kotlin.time stdlib — Clock.System.now()/Instant 벽시계 vs TimeSource.Monotonic.markNow()/elapsedNow() 단조시계, measureTimedValue의 Duration 정밀도, TestTimeSource로 실시간 대기 없이 결정론적 시간 전진)
+    // Type(변수 타입 활용), InlineValueClass(성능 최적화), SealedClassInterface(타입 안전 계층), NameBasedDestructuring(이름 기반 구조 분해 — Kotlin 2.3.20), Kotlin24Features(Kotlin 2.4 컬렉션 리터럴 [ ] / 컨텍스트 파라미터 context(...)), KotlinTimeApi(kotlin.time stdlib — Clock.System.now()/Instant 벽시계 vs TimeSource.Monotonic.markNow()/elapsedNow() 단조시계, measureTimedValue의 Duration 정밀도, TestTimeSource로 실시간 대기 없이 결정론적 시간 전진), SensitiveTypes(민감 값·불법 상태를 타입으로 — 가림 value class Pan·RawPan, 검증 팩토리 sealed 결과, Gson 직렬화·역직렬화가 toString·팩토리를 건너뛰고 Pan TypeAdapter 도 data class 필드엔 안 걸리는 함정, @ExposedCopyVisibility vs @ConsistentCopyVisibility copy() 우회, 타임아웃을 결과로 — 재시도 대신 조회)
     const val TypeExample = "typeExample"
     const val InlineValueClassExample = "inlineValueClassExample"
     const val SealedClassInterfaceExample = "sealedClassInterfaceExample"
     const val NameBasedDestructuringExample = "nameBasedDestructuringExample"
     const val Kotlin24FeaturesExample = "kotlin24FeaturesExample"
     const val KotlinTimeApiExample = "kotlinTimeApiExample"
+    const val SensitiveTypesExample = "sensitiveTypesExample"
 
     // ==================== 네트워크 & API 예제 ====================
     // Ktor(API 호출), SSE(실시간 통신), ApiDisconnect(연결 해제 처리), KtorAdvancedConfig(MockEngine 위에서 Auth bearer 토큰 리프레시 / HttpRequestRetry 지수 백오프 재시도 시연 + 오리진 페일오버 — 주/보조 오리진 상태 기계·GET 만 재생·502~504 만 전환·동시 실패는 실제로 쓴 오리진으로 판정·취소·쿨다운, 원문 검증 상황 10가지), GsonMissingField(Gson 이 인자 없는 생성자가 없으면 Unsafe 로 생성 — 누락 키·명시적 null·모르는 enum 이 Kotlin 기본값·non-null 을 우회, 값을 쓰는 줄에서 NPE, Boolean 꺼짐/모름·"Y"→false, disableJdkUnsafe, nullable 응답 모델 + 매퍼, Retrofit·Ktor 동일), RangeDownload(HTTP Range 이어받기·분할 다운로드 — HEAD/bytes=0-0 Resolve, 연결 N개 구간 병렬 + FileChannel 위치 쓰기, 토큰 버킷 속도 제한, .part/.state 일시정지·재개, If-Range vs 재개 전 HEAD 비교 vs 확인 없음 × 교체 시점, 200 을 206 처럼 이어 쓰기·끊긴 응답을 완료로 보는 함정)

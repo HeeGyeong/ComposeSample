@@ -913,5 +913,12 @@ val examples2026 = listOf(
         description = "보내기를 Room 행으로 먼저 저장하고 같은 clientId로 재시도하는 아웃박스",
         blogUrl = "",
         exampleType = ConstValue.OfflineOutboxExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 10. 21",
+        title = "민감 값·불법 상태를 타입으로 막기",
+        description = "카드번호 가림 value class와 Gson·copy()가 검증을 우회하는 함정",
+        blogUrl = "",
+        exampleType = ConstValue.SensitiveTypesExample
     )
 )

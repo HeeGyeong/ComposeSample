@@ -169,6 +169,7 @@ import com.example.composesample.presentation.example.component.ui.media.image.C
 import com.example.composesample.presentation.example.component.ui.media.image.TiledImageDeepZoomExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.language.Kotlin24FeaturesExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.language.NameBasedDestructuringExampleUI
+import com.example.composesample.presentation.example.component.architecture.development.language.SensitiveTypesExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.language.SealedClassInterfaceExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.time.KotlinTimeApiExampleUI
 import com.example.composesample.presentation.example.component.architecture.pattern.error.SealedDomainErrorExampleUI
@@ -335,6 +336,7 @@ import com.example.composesample.util.ConstValue.SpotlightOverlayExample
 import com.example.composesample.util.ConstValue.Coil3ImageExample
 import com.example.composesample.util.ConstValue.TiledImageDeepZoomExample
 import com.example.composesample.util.ConstValue.NameBasedDestructuringExample
+import com.example.composesample.util.ConstValue.SensitiveTypesExample
 import com.example.composesample.util.ConstValue.SealedClassInterfaceExample
 import com.example.composesample.util.ConstValue.SharedElementDebugToolingExample
 import com.example.composesample.util.ConstValue.SharedElementTransitionExample
@@ -532,6 +534,7 @@ val exampleUiRegistry: Map<String, @Composable (onBackEvent: () -> Unit) -> Unit
     NameBasedDestructuringExample to { onBackEvent -> NameBasedDestructuringExampleUI(onBackEvent) },
     Kotlin24FeaturesExample to { onBackEvent -> Kotlin24FeaturesExampleUI(onBackEvent) },
     KotlinTimeApiExample to { onBackEvent -> KotlinTimeApiExampleUI(onBackEvent) },
+    SensitiveTypesExample to { onBackEvent -> SensitiveTypesExampleUI(onBackEvent) },
     SealedDomainErrorExample to { onBackEvent -> SealedDomainErrorExampleUI(onBackEvent) },
     SpotlightOverlayExample to { onBackEvent -> SpotlightOverlayExampleUI(onBackEvent) },
     DialogBlurExample to { onBackEvent -> DialogBlurExampleUI(onBackEvent) },

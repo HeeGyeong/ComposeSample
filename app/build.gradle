@@ -65,6 +65,9 @@ android {
 // OriginFailoverKt · TwoOrigins: Ktor 플러그인 on(Send) 람다와 MockEngine 핸들러 람다가 던지는 checked IOException
 //   (OriginUnavailableException·연결 끊김 흉내)을 HotSwan 이 UndeclaredThrowableException 으로 감싸 호출자의
 //   catch (e: IOException) 이 받지 못한다(debug 단위 테스트에서 재현). 제외하면 release 와 같이 IOException 그대로.
+// CopyVisibilityProbe: data class 의 copy() 를 리플렉션(getDeclaredMethods·Method.invoke)으로 보는 카드 —
+//   인터프리터가 caller-sensitive 리플렉션을 실행하지 못해 IllegalAccessException("restricted lookup object")이 난다
+//   (debug 단위 테스트에서 재현, dispatchRewriteEnabled=false 면 통과). 리플렉션만 이 object 로 모아 그것만 뺀다.
 hotSwanCompiler {
     exclude("com.example.composesample.presentation.example.component.architecture.development.test.PowerAssertChecksKt")
     exclude("com.example.composesample.presentation.example.component.architecture.development.test.PowerAssertViewModel")
@@ -82,6 +85,7 @@ hotSwanCompiler {
     exclude("com.example.composesample.presentation.example.component.data.download.RangeDownloadKt")
     exclude("com.example.composesample.presentation.example.component.data.download.FakeFileServer")
     exclude("com.example.composesample.presentation.example.component.data.download.RangeDownloader")
+    exclude("com.example.composesample.presentation.example.component.architecture.development.language.CopyVisibilityProbe")
 }
 
 // Power-Assert(PowerAssertExample) — 단언 실패 메시지에 식의 중간값을 펼쳐 넣는 컴파일러 플러그인.

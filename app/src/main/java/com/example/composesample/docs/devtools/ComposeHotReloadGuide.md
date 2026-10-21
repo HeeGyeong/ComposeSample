@@ -360,6 +360,32 @@ Ordinary Ktor calls are not affected — the exception has to escape a lambda th
 plugin in a debug build would hit the same wrapping, which is one more reason to classify network errors by their cause
 chain (see the section on checked exceptions above).
 
+### Caller-sensitive reflection fails under the interpreter — one more class is excluded
+
+Found while writing the sensitive-types example (#144). Its copy() card reads `Class.getDeclaredMethods()` and calls
+`Method.invoke` on a data class's generated `copy`. In `testDebugUnitTest` (debug classes, HotSwan 2.1.0, Kotlin 2.4.21)
+the interpreter's reflection bridge threw before the method was even found:
+
+```
+java.lang.IllegalAccessException: Attempt to lookup caller-sensitive method using restricted lookup object
+    at java.lang.invoke.MethodHandles$Lookup.unreflect(...)
+    at com.skydoves.compose.hotswan.interpreter.runtime.ReflectionArtBridge.resolveMethodHandleReflectively(...)
+```
+
+| Build | `getDeclaredMethods` / `Method.invoke` |
+|---|---|
+| debug classes, HotSwan as configured | ❌ `IllegalAccessException` (restricted lookup object) |
+| debug classes, `-Photswan.dispatchRewriteEnabled=false` | ✅ 6 of 6 tests pass |
+| debug classes, `CopyVisibilityProbe` excluded (current setup) | ✅ 6 of 6; device debug and release show the same rows |
+
+Only the reflection calls were moved into one object so that the rest of the file still hot-reloads:
+
+```groovy
+exclude("com.example.composesample.presentation.example.component.architecture.development.language.CopyVisibilityProbe")
+```
+
+Plain `Class` lookups that are not caller-sensitive (`javaClass.simpleName`, `::class.java`) were not affected.
+
 ### Side effect: the debug variant's minSdk becomes 26
 
 `interpreter-runtime:2.0.0` declares `minSdkVersion="26"`, and the plugin adds it to debug only. The merged manifests
