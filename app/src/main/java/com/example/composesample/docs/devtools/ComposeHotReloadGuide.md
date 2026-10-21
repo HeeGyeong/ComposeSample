@@ -386,6 +386,28 @@ exclude("com.example.composesample.presentation.example.component.architecture.d
 
 Plain `Class` lookups that are not caller-sensitive (`javaClass.simpleName`, `::class.java`) were not affected.
 
+### Assignments to a `private var` in an `object` or at the top level are lost under the dispatch rewrite
+
+Found while writing the clipboard / text processing example (#146). `ProcessTextLog` (an `object`) numbered its records
+with `private var nextId = 1` and `val id = nextId++`; on the device every record came out as `#1`, and updating "record
+1" changed all of them. `testDebugUnitTest` reproduced it, and the same test passed with
+`-Photswan.dispatchRewriteEnabled=false`. A probe of the variants (HotSwan 2.1.0, Kotlin 2.4.21, two calls each):
+
+| Declaration | Under the rewrite | `dispatchRewriteEnabled=false` |
+|---|---|---|
+| `object { private var n = 1; fun next() = n++ }` | ❌ `[1, 1]` | ✅ `[1, 2]` |
+| same, written as `val id = n; n = id + 1` / `n += 1` / reassigning a `private var list` | ❌ the write never sticks | ✅ |
+| top-level `private var n` + `fun next() = n++` | ❌ `[1, 1]` | ✅ |
+| `object { var n }` (public) · `object { internal var n }` | ✅ `[1, 2]` | ✅ |
+| `companion object { private var n }` | ✅ `[1, 2]` | ✅ |
+| class instance `private var n` (also inside a `run { }` lambda) | ✅ `[1, 2]` | ✅ |
+| `object { private val n = AtomicInteger(1) }` · `MutableStateFlow` `val` | ✅ `[1, 2]` | ✅ |
+
+Only private properties declared directly in an `object` or in a file failed; a companion object's private property did
+not. There is no error and no `SKIPPED` line in the build log — the value simply stays at its initial value. In app code that runs under the rewrite, keep mutable singleton state in a `val`
+holder (`AtomicInteger`, `MutableStateFlow`, a mutable collection) or make the property non-private; `ProcessTextLog`
+now uses `AtomicInteger`.
+
 ### Side effect: the debug variant's minSdk becomes 26
 
 `interpreter-runtime:2.0.0` declares `minSdkVersion="26"`, and the plugin adds it to debug only. The merged manifests

@@ -22,6 +22,16 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />
 
+    <!-- 패키지 가시성(API 30+): 다른 앱의 PROCESS_TEXT 처리기(사전·번역·검색 등)를 queryIntentActivities 로 보려면 선언해야 한다.
+         없으면 이 앱 안 Compose·View 텍스트 선택 메뉴에 자기 앱 항목만 오른다(ClipboardProcessText 예제에서 실측). -->
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.PROCESS_TEXT" />
+
+            <data android:mimeType="text/plain" />
+        </intent>
+    </queries>
+
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false" />
@@ -120,6 +130,24 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data android:scheme="composesample-standard" />
+            </intent-filter>
+        </activity>
+
+        <!-- 텍스트 선택 메뉴 항목(ClipboardProcessText 예제). PROCESS_TEXT 를 받는 액티비티는 exported 라, 켜 두면
+             이 기기의 모든 앱 텍스트 선택 메뉴에 'ComposeSample 변환' 이 생긴다 → 기본은 enabled="false" 로 두고
+             예제 화면이 setComponentEnabledSetting 으로 켰다가 화면을 나갈 때 기본값으로 되돌린다. -->
+        <activity
+            android:name=".presentation.example.component.system.platform.clipboard.ProcessTextDemoActivity"
+            android:enabled="false"
+            android:exported="true"
+            android:label="@string/process_text_demo_label"
+            android:theme="@style/Theme.ComposeSample">
+            <intent-filter>
+                <action android:name="android.intent.action.PROCESS_TEXT" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="text/plain" />
             </intent-filter>
         </activity>
 

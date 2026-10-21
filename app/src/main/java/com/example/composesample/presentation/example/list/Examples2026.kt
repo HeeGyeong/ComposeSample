@@ -920,5 +920,12 @@ val examples2026 = listOf(
         description = "카드번호 가림 value class와 Gson·copy()가 검증을 우회하는 함정",
         blogUrl = "",
         exampleType = ConstValue.SensitiveTypesExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 10. 22",
+        title = "클립보드 제한과 텍스트 처리 메뉴",
+        description = "포커스 없는 클립보드 읽기·민감 표시와 텍스트 선택 메뉴(PROCESS_TEXT) 함정",
+        blogUrl = "",
+        exampleType = ConstValue.ClipboardProcessTextExample
     )
 )
