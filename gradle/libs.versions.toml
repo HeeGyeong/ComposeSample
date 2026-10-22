@@ -178,7 +178,9 @@ biometric = "1.4.0-alpha07"
 # → 바이너리 호환. 전이: coroutines 1.9.0 · stdlib 2.1.20 · annotation 1.10.0 — 끌어올림 0.
 # 2026-10-13 2.0.4 패치 상향(DEP-CURRENCY-09) — trace 패킷 flush 경쟁 조건 수정(프로세스 내 기록 API, 프로젝트는 Trace 정적 메서드만).
 # aar 요구치·pom 전이 2.0.3 과 같다.
-tracing = "2.0.4"
+# 2026-10-22 2.0.5 패치 상향(DEP-CURRENCY-14) — 패킷 풀에서 같은 스레드가 flush·release 를 겹쳐 하던 경쟁(교착 가능) 수정.
+# 역시 프로세스 내 기록 API 쪽 — aar 요구치(compileSdk 34 · AGP 8.1.1)·module 전이 2.0.4 와 같다.
+tracing = "2.0.5"
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "applicationVersion" }
