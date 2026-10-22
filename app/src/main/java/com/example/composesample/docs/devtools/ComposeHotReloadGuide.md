@@ -417,6 +417,18 @@ non-default initializer (or an `init` assignment) and are assigned later; on 202
 (the two hits of a broader first version, `seq = 0` in `PerItemViewModelExampleUI` and `holder = null` in `OutboxWork`,
 start at defaults and showed correct values on the device).
 
+### Side effect: the interpreter baseline needs a large heap — the debug variant sets `largeHeap`
+
+On start, HotSwan fills an interpreter baseline with the app's class bytecode on a background thread
+(`hotswan-baseline-fill`, "registered 2391 interpreter baseline class(es)" on 2026-10-22). As the examples grew, a debug
+build used about 160 MB of Java heap right after start (Galaxy A72, `dumpsys meminfo` Dalvik heap allocated), and on
+devices whose `dalvik.vm.heapgrowthlimit` is 192m — the Pixel 7 Pro API 34 and Pixel Tablet API 35 AVDs — that thread
+died with `OutOfMemoryError` every time, taking the app down before the first screen (DEBUG-HEAP-OOM-01, found while
+measuring #146). `app/src/debug/AndroidManifest.xml` now sets `android:largeHeap="true"`, which raises the limit to
+`heapsize` (512–576 MB) for the debug variant only; the merged release manifest has no `largeHeap`
+(`aapt2 dump xmltree`). With it the Pixel Tablet API 35 AVD starts the debug app, finishes the baseline fill and opens
+examples. Because debug now has far more headroom than release, measure memory behaviour in release.
+
 ### Side effect: the debug variant's minSdk becomes 26
 
 `interpreter-runtime:2.0.0` declares `minSdkVersion="26"`, and the plugin adds it to debug only. The merged manifests

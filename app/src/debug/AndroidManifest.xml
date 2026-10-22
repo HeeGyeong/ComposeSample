@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- debug 전용: HotSwan(핫 리로드)이 기동하면서 앱 클래스 바이트코드 기준선을 자바 힙에 채운다.
+         예제가 늘어 debug 앱의 기동 직후 힙이 약 160MB(Galaxy A72 실측)가 되자, 힙 한도(heapgrowthlimit) 192MB 인
+         기기·에뮬레이터(Pixel 7 Pro API 34 · Pixel Tablet API 35 AVD)에서 hotswan-baseline-fill 스레드가 OutOfMemoryError 로
+         앱을 죽였다(DEBUG-HEAP-OOM-01). largeHeap 은 한도를 heapsize(512~576MB)로 올린다 — release 매니페스트에는 들어가지 않는다.
+         debug 에서만 메모리 여유가 커지므로 메모리 관련 측정은 release 로 한다. -->
+    <application android:largeHeap="true" />
+
+</manifest>
