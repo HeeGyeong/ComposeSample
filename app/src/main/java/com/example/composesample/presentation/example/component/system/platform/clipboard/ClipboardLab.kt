@@ -134,8 +134,8 @@ object ProcessTextLog {
     private val _receipts = MutableStateFlow<List<ProcessTextReceipt>>(emptyList())
     val receipts: StateFlow<List<ProcessTextReceipt>> = _receipts.asStateFlow()
 
-    // `private var nextId` 로 두면 debug(HotSwan 재작성)에서 object 의 private 필드 대입이 사라져 번호가 늘 1 이다
-    // (ComposeHotReloadGuide 참고) — 값 보관함(AtomicInteger)은 val 이라 영향이 없다
+    // `private var nextId = 1` 로 두면 debug(HotSwan 재작성)에서 object 의 private var 가 읽을 때마다 초기값(1)으로 돌아와
+    // 번호가 늘 1 이다(ComposeHotReloadGuide 참고) — 값 보관함(AtomicInteger)은 val 이라 영향이 없다
     private val nextId = AtomicInteger(1)
 
     fun add(text: String, readonlyExtra: Boolean?, callingActivity: String?, referrer: String?): Int {

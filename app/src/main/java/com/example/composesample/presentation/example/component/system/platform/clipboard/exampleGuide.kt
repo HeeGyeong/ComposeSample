@@ -45,6 +45,6 @@ package com.example.composesample.presentation.example.component.system.platform
  * - View 필드는 id 가 있어야 항목이 뜬다(TextView.canProcessText: getId() == NO_ID 면 false). AndroidView 로 만든 EditText 는
  *   View.generateViewId() 를 줘야 한다. 읽기 전용 TextView 는 결과를 토스트("DELTA")로만 보인다.
  *   Galaxy View 메뉴는 앱 이름("ComposeSample"·"Google"·"Whale"), Compose 메뉴는 액티비티 라벨("ComposeSample 변환")
- * - 구현 메모: ProcessTextLog 번호는 AtomicInteger — object 의 private var 대입은 debug(HotSwan 재작성)에서 사라진다
+ * - 구현 메모: ProcessTextLog 번호는 AtomicInteger — object 의 `private var nextId = 1` 은 debug(HotSwan 재작성)에서 읽을 때마다 초기값으로 돌아온다
  *   (ComposeHotReloadGuide.md). 리스너는 인터페이스 구현 상태 홀더(ClipboardLab)라 ⑰ 함정과 무관
  */

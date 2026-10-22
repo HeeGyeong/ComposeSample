@@ -386,27 +386,36 @@ exclude("com.example.composesample.presentation.example.component.architecture.d
 
 Plain `Class` lookups that are not caller-sensitive (`javaClass.simpleName`, `::class.java`) were not affected.
 
-### Assignments to a `private var` in an `object` or at the top level are lost under the dispatch rewrite
+### A `private var` in an `object` or at the top level reads back its initial value under the dispatch rewrite
 
 Found while writing the clipboard / text processing example (#146). `ProcessTextLog` (an `object`) numbered its records
 with `private var nextId = 1` and `val id = nextId++`; on the device every record came out as `#1`, and updating "record
 1" changed all of them. `testDebugUnitTest` reproduced it, and the same test passed with
-`-Photswan.dispatchRewriteEnabled=false`. A probe of the variants (HotSwan 2.1.0, Kotlin 2.4.21, two calls each):
+`-Photswan.dispatchRewriteEnabled=false`. Narrowing it down took three probe rounds (HotSwan 2.1.0, Kotlin 2.4.21, debug
+unit tests); the decisive one writes 9 and reads the property back in the same function:
 
-| Declaration | Under the rewrite | `dispatchRewriteEnabled=false` |
+| Declaration | `n = 9; return n` under the rewrite | `dispatchRewriteEnabled=false` |
 |---|---|---|
-| `object { private var n = 1; fun next() = n++ }` | ❌ `[1, 1]` | ✅ `[1, 2]` |
-| same, written as `val id = n; n = id + 1` / `n += 1` / reassigning a `private var list` | ❌ the write never sticks | ✅ |
-| top-level `private var n` + `fun next() = n++` | ❌ `[1, 1]` | ✅ |
-| `object { var n }` (public) · `object { internal var n }` | ✅ `[1, 2]` | ✅ |
-| `companion object { private var n }` | ✅ `[1, 2]` | ✅ |
-| class instance `private var n` (also inside a `run { }` lambda) | ✅ `[1, 2]` | ✅ |
-| `object { private val n = AtomicInteger(1) }` · `MutableStateFlow` `val` | ✅ `[1, 2]` | ✅ |
+| `object { private var n = 5 }` | ❌ `5` | ✅ `9` |
+| `object { private var s: String? = "init" }` (`s = "new"`) | ❌ `"init"` | ✅ `"new"` |
+| `object { private var n: Int; init { n = 5 } }` | ❌ `5` | ✅ `9` |
+| top-level `private var n = 5` | ❌ `5` | ✅ `9` |
+| `object { private var n = 0 }` · top-level `private var n = 0` | ✅ `9` | ✅ `9` |
+| `object { var n = 5 }` (public) | ✅ `9` | ✅ `9` |
 
-Only private properties declared directly in an `object` or in a file failed; a companion object's private property did
-not. There is no error and no `SKIPPED` line in the build log — the value simply stays at its initial value. In app code that runs under the rewrite, keep mutable singleton state in a `val`
-holder (`AtomicInteger`, `MutableStateFlow`, a mutable collection) or make the property non-private; `ProcessTextLog`
-now uses `AtomicInteger`.
+So the write is not what goes missing — reading the property returns the value it was initialized with. Every earlier
+failure fits that: `nextId++` from 1 gives `[1, 1]`, `n += 1; return n - 1` from 1 gives `[0, 0]`, and reassigning a
+`private var list = listOf()` always reads an empty list. Properties that start at the type's default (`0`, `false`,
+`null`) behaved normally — `++seq` from 0, `@Volatile private var holder: Holder? = null` with lazy creation, and plain
+setters all gave the expected values — as did `internal`/public properties and a `companion object`'s private
+property. There is no error and no `SKIPPED` line in the build log.
+
+In app code that runs under the rewrite, keep mutable singleton state in a `val` holder (`AtomicInteger`,
+`MutableStateFlow`, a mutable collection), start a private `var` at its default value, or make it non-private.
+`ProcessTextLog` now uses `AtomicInteger`. Prework axis ㉘ looks for private `var`s in an `object` or a file that have a
+non-default initializer (or an `init` assignment) and are assigned later; on 2026-10-22 it found none besides the fixed one
+(the two hits of a broader first version, `seq = 0` in `PerItemViewModelExampleUI` and `holder = null` in `OutboxWork`,
+start at defaults and showed correct values on the device).
 
 ### Side effect: the debug variant's minSdk becomes 26
 
