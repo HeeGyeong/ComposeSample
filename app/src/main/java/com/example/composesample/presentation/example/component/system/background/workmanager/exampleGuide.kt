@@ -44,6 +44,39 @@ package com.example.composesample.presentation.example.component.system.backgrou
  */
 
 /**
+ * ## WorkManagerExampleUI '주기 작업 실행 시각' 탭 (PeriodicScheduleTab — setNextScheduleTimeOverride · flex · 백오프)
+ * - 본 탭 출처: #142 탭에서 본 "다음 실행 = 마지막 실행 끝 + 주기" 규칙의 후속 + PeriodicWorkRequest.Builder KDoc
+ *   ("a newsfeed worker run before the user wakes up every morning without drift")
+ * - API: https://developer.android.com/reference/androidx/work/PeriodicWorkRequest.Builder
+ * - 공식 문서(주기 작업·flex): https://developer.android.com/develop/background-work/background-tasks/persistent/getting-started/define-work
+ * - 공식 문서(등록된 작업 갱신): https://developer.android.com/develop/background-work/background-tasks/persistent/how-to/update-work
+ * - 릴리스 노트(2.9.0 setNextScheduleTimeOverride): https://developer.android.com/jetpack/androidx/releases/work
+ * 핵심 개념(work-runtime 2.12.0 소스 대조 — WorkSpec.calculateNextRunTime · WorkerWrapper · WorkerUpdater · WorkContinuationImpl,
+ * 실측: Pixel Tablet API 35 에뮬레이터 debug·release 동일, 기대값과의 차이 100ms 이내):
+ * - 다음 실행: 오버라이드 있음 → 첫 실행 전(periodCount 0)은 그대로, 그 뒤는 max(오버라이드, lastEnqueueTime + 15분) /
+ *   재시도 → lastEnqueueTime + 백오프(지수 30초 × 2^(시도−1)) / 첫 실행 전 → 등록 + initialDelay (+ 주기 − flex) / 그 뒤 → 실행 끝 + 주기
+ * - ① 주기만: 다음 실행 = 실행 끝 + 30분(…:46.810 처럼 실행 시각에 끌려감 = 드리프트). 워커가 실행 안에서 다음 :00/:30 슬롯을
+ *   setNextScheduleTimeOverride 로 updateWork(APPLIED_FOR_NEXT_RUN) → 다음 실행이 슬롯 정각(…:00.000), gen 0→1
+ * - 실행 안에서 지정한 값이 실행 뒤에도 남는 이유: WorkerWrapper 가 실행 끝에 resetWorkSpecNextScheduleTimeOverride(id, 실행 시작 때 세대)를
+ *   부르는데, updateWork 가 오버라이드 세대를 올려 조건이 맞지 않는다(WorkSpecDao 쿼리가 세대 일치 시에만 지운다)
+ * - ② 첫 실행 전 +1분은 그대로, 한 번 돈 뒤 +1분은 실행 끝 + 15분 — 30분 주기보다 당길 수는 있지만 15분 아래로는 안 된다
+ * - ③ +20초 지정 → +10~12ms 에 실행 → 지워져 실행 끝 + 30분 · 다시 +40분 지정 → 태그만 바꾼 updateWork 에도 남음
+ *   (새 요청의 오버라이드 세대가 0 이면 WorkerUpdater 가 이전 값을 유지) · clearNextScheduleTimeOverride → 실행 끝 + 30분. updateWork 마다 gen +1
+ * - ④ Result.retry(): 기본은 실행 끝 + 30초, 워커가 +3분을 지정하면 그 값(첫 실행의 재시도라 15분 하한 없음) — 커스텀 백오프
+ * - ⑤ flex 10분(주기 30분): 첫 실행이 등록 + 20분. flex 없는 주기 작업은 등록 즉시 첫 실행. flex 는 첫 실행에만(소스 주석)
+ * - ⑥ 오버라이드 요청을 CANCEL_AND_REENQUEUE 로 등록하면 IllegalArgumentException("Next Schedule Time Override must be used with
+ *   ExistingPeriodicWorkPolicyUPDATE (preferably) or KEEP" — 띄어쓰기 빠진 원문) — REPLACE 는 매번 새 WorkSpec 이라 최소 간격을 못 지킨다.
+ *   KEEP(기존 없음)·UPDATE 는 정상
+ *
+ * 본 탭의 단순화 포인트
+ *  - 고유 이름 두 개(A·B)에 30분 주기 작업을 두고, 워커(0.3초)가 모드에 따라 슬롯 지정·재시도한다(PeriodicScheduleWorker).
+ *  - 기대값은 PeriodicScheduleCore.expectedNextRun(소스 규칙을 옮긴 것) — 실행 끝은 워커 기록(PeriodicScheduleRunLog), 차이 3초 이내면 일치.
+ *  - updateWork 의 ListenableFuture 는 리스너로 기다린다(awaitUpdate) — concurrent-futures-ktx 는 이 앱 클래스패스에 없다.
+ *  - 데모 작업은 진짜 주기 작업이라 시나리오가 끝나면·탭을 벗어나면 취소하고, 스냅샷은 살아 있는 작업만 본다.
+ *  - 슬롯 간격 16분: 30분 주기 데모에서 슬롯이 '실행 끝 + 15분'보다 뒤여야 오버라이드가 그대로 쓰인다(하루 주기라면 늘 해당).
+ */
+
+/**
  * ## WorkerExceptionHandlerExampleUI (워커 예외 핸들러 — work-runtime 2.11 신규)
  * - 공식 문서(Configuration): https://developer.android.com/reference/androidx/work/Configuration.Builder
  * - 공식 문서(WorkerExceptionInfo): https://developer.android.com/reference/androidx/work/WorkerExceptionInfo

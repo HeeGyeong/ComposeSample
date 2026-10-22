@@ -66,11 +66,18 @@ fun WorkManagerExampleUI(
                 onClick = { selectedTab = 1 },
                 text = { Text("주기 작업 재등록", fontSize = 12.sp) }
             )
+            // 재등록 정책(같은 이름) 다음 단계 — 다음 실행 '시각'을 정하는 규칙과 setNextScheduleTimeOverride
+            Tab(
+                selected = selectedTab == 2,
+                onClick = { selectedTab = 2 },
+                text = { Text("주기 작업 실행 시각", fontSize = 12.sp) }
+            )
         }
 
         when (selectedTab) {
             0 -> BasicUsageTab()
             1 -> PeriodicPolicyTab()
+            2 -> PeriodicScheduleTab()
         }
     }
 }

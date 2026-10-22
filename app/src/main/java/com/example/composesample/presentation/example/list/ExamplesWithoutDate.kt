@@ -97,9 +97,9 @@ val examplesWithoutDate = listOf(
         exampleType = ConstValue.PowerSaveModeExample
     ),
     ExampleObject(
-        lastUpdate = "26. 10. 21",
+        lastUpdate = "26. 10. 22",
         title = "WorkManager Example",
-        description = "WorkManager 사용법과 주기 작업 재등록 정책 KEEP·UPDATE·CANCEL 비교",
+        description = "WorkManager 사용법, 주기 작업 재등록 정책과 다음 실행 시각 지정",
         blogUrl = blogUrl(166),
         exampleType = ConstValue.WorkManagerExample
     ),
