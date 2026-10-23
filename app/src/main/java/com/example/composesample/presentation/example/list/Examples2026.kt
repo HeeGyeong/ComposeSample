@@ -927,5 +927,12 @@ val examples2026 = listOf(
         description = "포커스 없는 클립보드 읽기·민감 표시와 텍스트 선택 메뉴(PROCESS_TEXT) 함정",
         blogUrl = "",
         exampleType = ConstValue.ClipboardProcessTextExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 10. 23",
+        title = "연락처 편집기 인텐트와 Contact Picker",
+        description = "WRITE_CONTACTS 직접 쓰기는 편집기 인텐트로, 읽기는 Contact Picker로",
+        blogUrl = "",
+        exampleType = ConstValue.ContactEditorPickerExample
     )
 )

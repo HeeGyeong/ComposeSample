@@ -61,6 +61,7 @@ import com.example.composesample.presentation.example.component.interaction.swip
 import com.example.composesample.presentation.example.component.system.ai.GeminiNanoExampleUI
 import com.example.composesample.presentation.example.component.system.deeplink.DynamicAppLinksExampleUI
 import com.example.composesample.presentation.example.component.system.platform.clipboard.ClipboardProcessTextExampleUI
+import com.example.composesample.presentation.example.component.system.platform.contacts.ContactEditorPickerExampleUI
 import com.example.composesample.presentation.example.component.system.platform.biometric.BiometricAuthExampleUI
 import com.example.composesample.presentation.example.component.system.security.AppSecurityExampleUI
 import com.example.composesample.presentation.example.component.system.security.RequestSigningExampleUI
@@ -374,6 +375,7 @@ import com.example.composesample.util.ConstValue.WorkEventListenerExample
 import com.example.composesample.util.ConstValue.BackgroundLocationExample
 import com.example.composesample.util.ConstValue.DynamicAppLinksExample
 import com.example.composesample.util.ConstValue.ClipboardProcessTextExample
+import com.example.composesample.util.ConstValue.ContactEditorPickerExample
 import com.example.composesample.util.ConstValue.DisplayCutoutInsetsExample
 import com.example.composesample.util.ConstValue.BiometricAuthExample
 import com.example.composesample.util.ConstValue.LiveUpdateNotificationExample
@@ -637,4 +639,5 @@ val exampleUiRegistry: Map<String, @Composable (onBackEvent: () -> Unit) -> Unit
     TiledImageDeepZoomExample to { onBackEvent -> TiledImageDeepZoomExampleUI(onBackEvent) },
     RibbonModifierExample to { onBackEvent -> RibbonModifierExampleUI(onBackEvent) },
     ClipboardProcessTextExample to { onBackEvent -> ClipboardProcessTextExampleUI(onBackEvent) },
+    ContactEditorPickerExample to { onBackEvent -> ContactEditorPickerExampleUI(onBackEvent) },
 )

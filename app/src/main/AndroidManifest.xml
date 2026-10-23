@@ -22,13 +22,46 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />
 
+    <!-- 연락처(ContactEditorPicker 예제). READ_CONTACTS 는 편집기 결과 확인용(예제 연락처만 읽고 나머지는 개수만 센다).
+         WRITE_CONTACTS 는 '직접 쓰기' 비교용이라 maxSdkVersion 으로 좁혔다 — 다음 릴리스를 타깃하면 직접 쓰기가 거부되므로
+         실제 이전이라면 그 직전 버전까지만 남기지만, 다음 릴리스 SDK 가 아직 없어 36 으로 두고 API 37 기기에서 '쓰기 권한 없음'을 미리 본다.
+         ContactsLab.WRITE_CONTACTS_MAX_SDK 와 같은 값이어야 한다. -->
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission
+        android:name="android.permission.WRITE_CONTACTS"
+        android:maxSdkVersion="36" />
+
     <!-- 패키지 가시성(API 30+): 다른 앱의 PROCESS_TEXT 처리기(사전·번역·검색 등)를 queryIntentActivities 로 보려면 선언해야 한다.
-         없으면 이 앱 안 Compose·View 텍스트 선택 메뉴에 자기 앱 항목만 오른다(ClipboardProcessText 예제에서 실측). -->
+         없으면 이 앱 안 Compose·View 텍스트 선택 메뉴에 자기 앱 항목만 오른다(ClipboardProcessText 예제에서 실측).
+         연락처 편집기·피커 인텐트는 처리 앱 이름을 화면에 보이려고 선언한다(실행 자체는 선언 없이도 된다 — ContactEditorPicker 예제). -->
     <queries>
         <intent>
             <action android:name="android.intent.action.PROCESS_TEXT" />
 
             <data android:mimeType="text/plain" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.INSERT" />
+
+            <data android:mimeType="vnd.android.cursor.dir/contact" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.EDIT" />
+
+            <data android:mimeType="vnd.android.cursor.item/contact" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.INSERT_OR_EDIT" />
+
+            <data android:mimeType="vnd.android.cursor.item/contact" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.PICK" />
+
+            <data android:mimeType="vnd.android.cursor.dir/contact" />
+        </intent>
+        <intent>
+            <action android:name="android.provider.action.PICK_CONTACTS" />
         </intent>
     </queries>
 
