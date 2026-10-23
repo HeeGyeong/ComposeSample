@@ -133,6 +133,7 @@ import com.example.composesample.presentation.example.component.ui.layout.topapp
 import com.example.composesample.presentation.example.component.ui.media.lottie.LottieExampleUI
 import com.example.composesample.presentation.example.component.ui.media.picker.EmbeddedPhotoPickerExampleUI
 import com.example.composesample.presentation.example.component.ui.media.picker.EmbeddedPickerComposeExampleUI
+import com.example.composesample.presentation.example.component.ui.media.picker.SystemPhotoPickerExampleUI
 import com.example.composesample.presentation.example.component.ui.media.shimmer.AutoSkeletonModifierExampleUI
 import com.example.composesample.presentation.example.component.ui.media.shimmer.ShimmerExampleUI
 import com.example.composesample.presentation.example.component.ui.media.shimmer.TextShimmerExampleUI
@@ -376,6 +377,7 @@ import com.example.composesample.util.ConstValue.BackgroundLocationExample
 import com.example.composesample.util.ConstValue.DynamicAppLinksExample
 import com.example.composesample.util.ConstValue.ClipboardProcessTextExample
 import com.example.composesample.util.ConstValue.ContactEditorPickerExample
+import com.example.composesample.util.ConstValue.SystemPhotoPickerExample
 import com.example.composesample.util.ConstValue.DisplayCutoutInsetsExample
 import com.example.composesample.util.ConstValue.BiometricAuthExample
 import com.example.composesample.util.ConstValue.LiveUpdateNotificationExample
@@ -640,4 +642,5 @@ val exampleUiRegistry: Map<String, @Composable (onBackEvent: () -> Unit) -> Unit
     RibbonModifierExample to { onBackEvent -> RibbonModifierExampleUI(onBackEvent) },
     ClipboardProcessTextExample to { onBackEvent -> ClipboardProcessTextExampleUI(onBackEvent) },
     ContactEditorPickerExample to { onBackEvent -> ContactEditorPickerExampleUI(onBackEvent) },
+    SystemPhotoPickerExample to { onBackEvent -> SystemPhotoPickerExampleUI(onBackEvent) },
 )

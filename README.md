@@ -175,7 +175,7 @@ Cursor IDE를 사용하는 개발자를 위한 **AI 코딩 어시스턴트 규�
 **media**:
 - **image**: Coil 3 이미지 로딩(AsyncImage, GIF 디코딩, 캐싱과 placeholder/error 상태) / 대용량 이미지 타일 딥줌 — 8000×6000 원본을 `BitmapRegionDecoder` 로 보이는 512px 타일만, 배율에 맞춘 `inSampleSize` 로 디코딩(전용 스레드·지나간 요청 취소·바이트 기준 LruCache·한 단계 성긴 개요 바닥), 한 번에 디코딩한 183MB 비트맵은 하드웨어 가속 캔버스가 그리기를 거부하는 것과 아래쪽 타일일수록 디코딩이 길어지는 JPEG 특성을 실측
 - **lottie**: Lottie 애니메이션 구현과 제어
-- **picker**: Embedded Photo Picker, BottomSheet 연동과 URI 수명 관리
+- **picker**: Embedded Photo Picker, BottomSheet 연동과 URI 수명 관리 / 시스템 Photo Picker 실물 — `PickVisualMedia`·`PickMultipleVisualMedia` 를 실제로 띄워 기기마다 고르는 단계(시스템 피커 → 시스템 앱 대체 → 문서 선택기, API 레벨이 아니라 SDK 확장 버전으로)와 실제로 뜨는 앱(`<queries>` 없으면 엉뚱한 처리 앱이 보임), 요청 옵션이 엑스트라로 가는 모양, 여러 장 최대 개수 min(생성자, 요청) 과 1·한도 초과 launch 예외(문서 선택기 기기에선 무시), 결과 플래그 READ | PERSISTABLE · 표시 이름 `<id>.jpg`, 받은 URI 권한이 받은 액티비티에 묶이는 것과 `takePersistableUriPermission`, 피커가 EXIF GPS 를 0 으로 덮는데 같은 사진을 문서 선택기로 받으면 위치가 그대로 남는 것·피커 URI `setRequireOriginal` 예외를 실측
 - **shimmer**: UI Shimmer, Text Shimmer 로딩 효과, 자동 스켈레톤 로딩 감지 Modifier(`CompositionLocal`로 로딩 상태·shimmer 애니메이션을 자동 전파해 요소마다 `isLoading` 분기 없이 `Modifier.autoSkeleton()`만 붙이는 방식 — 실제 콘텐츠의 측정된 크기를 그대로 재사용, 기존 수동 스켈레톤 트리 방식과 대비)
 
 **form**:

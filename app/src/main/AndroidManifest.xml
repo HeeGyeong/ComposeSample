@@ -63,6 +63,18 @@
         <intent>
             <action android:name="android.provider.action.PICK_CONTACTS" />
         </intent>
+        <!-- 시스템 Photo Picker 처리 앱 표시용(SystemPhotoPicker 예제). 선언이 없으면 MediaProvider 모듈만 보이고
+             실제로 뜨는 새 photopicker 앱(Galaxy A72)과 문서 선택기(DocumentsUI)는 안 보인다 — 실행은 선언 없이도 된다. -->
+        <intent>
+            <action android:name="android.provider.action.PICK_IMAGES" />
+
+            <data android:mimeType="image/*" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.OPEN_DOCUMENT" />
+
+            <data android:mimeType="image/*" />
+        </intent>
     </queries>
 
     <uses-feature

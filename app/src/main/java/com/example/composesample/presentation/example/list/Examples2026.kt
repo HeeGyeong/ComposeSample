@@ -934,5 +934,12 @@ val examples2026 = listOf(
         description = "WRITE_CONTACTS 직접 쓰기는 편집기 인텐트로, 읽기는 Contact Picker로",
         blogUrl = "",
         exampleType = ConstValue.ContactEditorPickerExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 10. 23",
+        title = "시스템 Photo Picker 실물",
+        description = "PickVisualMedia가 고르는 피커와 받은 URI의 권한 수명·위치 정보",
+        blogUrl = "",
+        exampleType = ConstValue.SystemPhotoPickerExample
     )
 )
