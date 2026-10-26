@@ -29,6 +29,7 @@ import com.example.composesample.presentation.example.component.data.repository.
 import com.example.composesample.presentation.example.component.data.sse.SSEViewModel
 import com.example.composesample.presentation.example.component.system.platform.file.SafFileSelectionViewModel
 import com.example.composesample.presentation.example.component.system.platform.process.MultiProcessViewModel
+import com.example.composesample.presentation.example.component.system.platform.powersave.BackgroundRestrictionViewModel
 import com.example.composesample.presentation.example.component.system.background.workmanager.PeriodicPolicyViewModel
 import com.example.composesample.presentation.example.component.system.background.workmanager.PeriodicScheduleViewModel
 import com.example.composesample.presentation.example.component.system.background.workmanager.WorkEventListenerViewModel
@@ -64,6 +65,8 @@ val viewModelModule: Module = module {
     viewModel { PeriodicPolicyViewModel(androidApplication()) }
     // WorkManager 인스턴스를 얻어야 하므로 Application 컨텍스트를 주입한다
     viewModel { PeriodicScheduleViewModel(androidApplication()) }
+    // PowerManager·ActivityManager·UsageStatsManager 와 브로드캐스트 등록에 Application 컨텍스트가 필요하다
+    viewModel { BackgroundRestrictionViewModel(androidApplication()) }
     viewModel { CompositionLocalViewModel() }
     viewModel { InitTestViewModel() }
     viewModel { PagingViewModel() }

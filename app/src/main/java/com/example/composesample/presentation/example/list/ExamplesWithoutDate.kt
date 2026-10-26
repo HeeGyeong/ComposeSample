@@ -91,8 +91,9 @@ val examplesWithoutDate = listOf(
         exampleType = ConstValue.ApiDisconnectExample
     ),
     ExampleObject(
+        lastUpdate = "26. 10. 26",
         title = "PowerSave Mode Example",
-        description = "절전 모드 설정과 절전 모드 시 고려해야 할 몇 가지 문제.",
+        description = "절전 모드 감지와 백그라운드 제한(버킷·Doze·강제 중지) 자가 진단",
         blogUrl = blogUrl(165),
         exampleType = ConstValue.PowerSaveModeExample
     ),

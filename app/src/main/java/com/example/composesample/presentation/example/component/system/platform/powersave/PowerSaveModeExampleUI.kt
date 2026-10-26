@@ -10,32 +10,76 @@ import android.os.PowerManager
 import android.provider.Settings
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
+import androidx.compose.material3.SecondaryTabRow
+import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkManager
 import com.example.composesample.presentation.MainHeader
 import com.example.composesample.util.BackGroundWorker
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun PowerSaveModeExampleUI(
     onBackEvent: () -> Unit
 ) {
+    var selectedTab by rememberSaveable { mutableIntStateOf(0) }
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(color = Color.White)
+    ) {
+        MainHeader(
+            title = "PowerSave Mode Example",
+            onBackIconClicked = onBackEvent
+        )
+
+        SecondaryTabRow(
+            selectedTabIndex = selectedTab,
+            containerColor = Color(0xFF37474F),
+            contentColor = Color.White
+        ) {
+            Tab(
+                selected = selectedTab == 0,
+                onClick = { selectedTab = 0 },
+                text = { Text("절전 모드", fontSize = 12.sp) }
+            )
+            // 절전 모드는 막는 층 하나일 뿐이다 — 버킷·Doze·사용자 제한·강제 중지까지 앱이 직접 읽어 판정한다
+            Tab(
+                selected = selectedTab == 1,
+                onClick = { selectedTab = 1 },
+                text = { Text("백그라운드 제한 진단", fontSize = 12.sp) }
+            )
+        }
+
+        when (selectedTab) {
+            0 -> PowerSaveModeTab()
+            1 -> BackgroundRestrictionTab()
+        }
+    }
+}
+
+@Composable
+private fun PowerSaveModeTab() {
     val context = LocalContext.current
     val isPowerSaveMode = remember { mutableStateOf(false) }
 
@@ -95,13 +139,6 @@ fun PowerSaveModeExampleUI(
             .fillMaxSize()
             .background(color = Color.White)
     ) {
-        stickyHeader {
-            MainHeader(
-                title = "PowerSave Mode Example",
-                onBackIconClicked = onBackEvent
-            )
-        }
-
         item {
             Column(
                 modifier = Modifier.padding(horizontal = 16.dp)
