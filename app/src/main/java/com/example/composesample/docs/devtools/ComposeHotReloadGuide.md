@@ -430,7 +430,8 @@ e: org.jetbrains.kotlin.fir.pipeline.IrGenerationExtensionException: B3: value c
 ```
 
 The dispatch rewrite needs to rebuild the value class to return it from the interpreter path, and it cannot reach that
-constructor. Release compiles the same code fine (it is a debug-only plugin). Looking the value up instead of returning
+constructor. A throwaway probe confirmed the scope: a plain, non-composable `internal fun probeBehavior(…): BackNavigationBehavior`
+fails `:app:compileDebugKotlin` with the same message, while `:app:compileReleaseKotlin` compiles it. Looking the value up instead of returning
 it from our own function avoids the bridge: the example keeps a `Map<BackMode, BackNavigationBehavior>` and calls
 `getValue(mode)` where it needs one, and its composables take the app's own enum instead of the library value class.
 
