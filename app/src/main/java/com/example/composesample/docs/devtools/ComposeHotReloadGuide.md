@@ -417,6 +417,22 @@ non-default initializer (or an `init` assignment) and are assigned later; on 202
 (the two hits of a broader first version, `seq = 0` in `PerItemViewModelExampleUI` and `holder = null` in `OutboxWork`,
 start at defaults and showed correct values on the device).
 
+### Stack traces from a debug build show no app frames — read crashes and ANRs from release
+
+Found while writing the process exit post-mortem example (#159). The same deliberate failures — a crash thrown from a
+click handler and an ANR from a click handler that sleeps on the main thread — were triggered in debug (HotSwan 2.1.0 as
+configured) and in release (debug-key signed) on a Galaxy A72 (API 33) and a Pixel Tablet API 35 emulator:
+
+| Trace | debug, HotSwan as configured | release |
+|---|---|---|
+| Crash stack in logcat (`AndroidRuntime: FATAL EXCEPTION`, Galaxy A72) | 71 frames, **0 app frames**, 16 `com.skydoves.compose.hotswan.interpreter.runtime.*` frames — the exception is created through `Constructor.newInstance` by the interpreter | 55 frames, 4 app frames on top (`triggerCrash`, the click lambda) |
+| ANR trace, `"main"` thread (`ApplicationExitInfo.getTraceInputStream`, both devices) | 94–95 frames, **0 app frames** — `Thread.sleep` is followed by `MethodHandle.invokeExact` / `Transformers$…` frames | 61–62 frames, 5 app frames — `blockMainThreadForAnr` at line 6–7, then `triggerAnr`, the click lambda, Compose `performClick` |
+
+The exception message and type are unchanged, so "what" still reads correctly; "where" does not. Anything that groups
+or symbolicates by the top app frame — a crash reporter, an ANR upload, a log search for a class name — sees nothing of
+the app in a debug build. When the location matters, reproduce in release (or exclude the class from the rewrite and
+compare). The example's reading card and guide state the same numbers.
+
 ### Side effect: the interpreter baseline needs a large heap — the debug variant sets `largeHeap`
 
 On start, HotSwan fills an interpreter baseline with the app's class bytecode on a background thread
