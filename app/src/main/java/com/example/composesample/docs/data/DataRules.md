@@ -16,7 +16,7 @@ Both converters in this project — Retrofit's `GsonConverterFactory` and Ktor's
 - An explicit JSON `null` is written into the field even when every parameter has a default.
 - Kotlin does not null-check a property read, so the `null` surfaces later, as an NPE at the first use (`roles.size`), far away from the parse.
 
-Measured on 2026-10-12 with Gson 2.14.0 and Kotlin 2.4.20 — on the JVM, on the test device (ART, API 33), and through Retrofit 3.0.0's `GsonConverterFactory`. Input `{"user_id":"u1"}` parsed into the example this document used to recommend:
+Measured on 2026-10-12 with Gson 2.14.0 and Kotlin 2.4.20 — on the JVM, on the test device (ART, API 33), and through Retrofit 3.0.0's `GsonConverterFactory` (re-measured on 2026-10-26 after the Gson 2.15.0 upgrade: the same results on the device, through both Retrofit and Ktor). Input `{"user_id":"u1"}` parsed into the example this document used to recommend:
 
 | Declared | Parsed |
 |----------|--------|

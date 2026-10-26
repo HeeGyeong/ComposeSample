@@ -63,6 +63,7 @@ package com.example.composesample.presentation.example.component.data.api
  *   enum 은 문자열로 받아 매퍼에서 해석(원문 보존). 비정상 응답을 단위 테스트(GsonMissingFieldTest)에 넣는다
  * - Retrofit GsonConverterFactory.create() 와 Ktor ContentNegotiation { gson() } 모두 같은 결과(화면 5번 카드)
  * - 측정: 2026-10-13 Gson 2.14.0 · Kotlin 2.4.21, JVM 단독 컴파일과 실기기(SM-A725F) debug·release
+ *   (2026-10-26 Gson 2.15.0 상향 후 실기기 debug 재측정 — 5응답 × 세 모델·매퍼·12가지 사용·플래그·disableJdkUnsafe·3경로 결과 동일)
  *
  * ## ApiDisconnectExampleUI (연결 해제 처리)
  * - 공식 문서: https://developer.android.com/training/monitoring-device-state/connectivity-status-type
