@@ -30,6 +30,7 @@ import com.example.composesample.presentation.example.component.data.sse.SSEView
 import com.example.composesample.presentation.example.component.system.platform.file.SafFileSelectionViewModel
 import com.example.composesample.presentation.example.component.system.platform.process.MultiProcessViewModel
 import com.example.composesample.presentation.example.component.system.platform.powersave.BackgroundRestrictionViewModel
+import com.example.composesample.presentation.example.component.system.platform.exitinfo.ProcessExitAnalysisViewModel
 import com.example.composesample.presentation.example.component.system.background.workmanager.PeriodicPolicyViewModel
 import com.example.composesample.presentation.example.component.system.background.workmanager.PeriodicScheduleViewModel
 import com.example.composesample.presentation.example.component.system.background.workmanager.WorkEventListenerViewModel
@@ -67,6 +68,8 @@ val viewModelModule: Module = module {
     viewModel { PeriodicScheduleViewModel(androidApplication()) }
     // PowerManager·ActivityManager·UsageStatsManager 와 브로드캐스트 등록에 Application 컨텍스트가 필요하다
     viewModel { BackgroundRestrictionViewModel(androidApplication()) }
+    // ActivityManager·SharedPreferences 에 Application 컨텍스트가 필요하다
+    viewModel { ProcessExitAnalysisViewModel(androidApplication()) }
     viewModel { CompositionLocalViewModel() }
     viewModel { InitTestViewModel() }
     viewModel { PagingViewModel() }

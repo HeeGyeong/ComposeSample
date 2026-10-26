@@ -941,5 +941,12 @@ val examples2026 = listOf(
         description = "PickVisualMedia가 고르는 피커와 받은 URI의 권한 수명·위치 정보",
         blogUrl = "",
         exampleType = ConstValue.SystemPhotoPickerExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 10. 26",
+        title = "프로세스 종료 사후 분석",
+        description = "ANR·크래시 뒤 다음 실행에서 읽는 종료 이유·트레이스·상태 요약",
+        blogUrl = "",
+        exampleType = ConstValue.ProcessExitAnalysisExample
     )
 )
