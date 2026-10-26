@@ -65,6 +65,26 @@ package com.example.composesample.presentation.example.component.data.api
  * - 측정: 2026-10-13 Gson 2.14.0 · Kotlin 2.4.21, JVM 단독 컴파일과 실기기(SM-A725F) debug·release
  *   (2026-10-26 Gson 2.15.0 상향 후 실기기 debug 재측정 — 5응답 × 세 모델·매퍼·12가지 사용·플래그·disableJdkUnsafe·3경로 결과 동일)
  *
+ * ## GsonMissingFieldExampleUI 6~8번 카드 (같은 응답을 kotlinx.serialization 으로 — #150)
+ * - kotlinx.serialization 1.12.0 릴리스 노트(#3235 역직렬화 예외 감싸기 · #3246 중첩 깊이 제한):
+ *   https://github.com/Kotlin/kotlinx.serialization/releases/tag/v1.12.0
+ * - Json 설정(ignoreUnknownKeys · coerceInputValues 등): https://kotlinlang.org/docs/serialization-json-configuration.html
+ * - value class 직렬화: https://github.com/Kotlin/kotlinx.serialization/blob/master/docs/value-classes.md
+ * 핵심 개념(1.12.0 sources jar · 단위 테스트 JsonMissingFieldTest · 실기기 SM-A725F debug·release 실측):
+ * - 플러그인이 만든 serializer 는 생성자를 부른다 → 누락 키는 Kotlin 기본값, 기본값 없는 키 누락은 MissingFieldException("… at path: $"),
+ *   non-null 의 null · 모르는 키 · "Y" 같은 타입 불일치는 JsonDecodingException(path 포함) — 전부 파싱하는 줄에서
+ * - coerceInputValues 는 '기본값이 있는' 프로퍼티의 null · 모르는 enum 값만 기본값으로 바꾼다. ignoreUnknownKeys 는 이름이 바뀐 키를 조용히 버린다
+ *   (그 뒤 필수값 누락으로 실패). DataRules 결론(응답 모델 nullable + 매퍼)은 Json 에서도 그대로 — Json 은 실패를 앞당긴다
+ * - 1.12: 생성자 안의 예외(init 의 require)를 JsonDecodingException 으로 감싼다(cause 원래 예외, 1.11 은 IllegalArgumentException 그대로).
+ *   JsonException · JsonDecodingException(shortMessage · path · offset · input · hint) 은 공개지만 @ExperimentalSerializationApi.
+ *   MissingFieldException 은 JsonException 이 아니다 → catch (e: JsonException) 는 필수 필드 누락을 놓친다. 파싱 실패는 SerializationException 으로
+ * - maxNestingDepth 기본 400(JsonPath.pushDescriptor 에서 검사). release·JVM 은 401 겹에서 too nested,
+ *   기기 debug(디버깅 가능 빌드)의 Dispatchers.Default(1MB 스택)는 230~240 겹에서 StackOverflowError 가 먼저 — Error 라 catch (e: Exception) 로 못 잡는다
+ * - value class 의 private 생성자는 serializer 가 직접 부른다 → 팩토리 검증을 건너뛴다(Gson 과 같음). init 검증은 역직렬화에도 실행.
+ *   value class 에 @Serializable(with = …) 로 붙인 serializer 는 data class 필드에도 걸린다(#144 의 Gson TypeAdapter 는 필드에서 안 걸림)
+ * - exceptionsWithDebugInfo 기본 true → e.message 끝에 "JSON input: …" 으로 입력 전체(실패와 무관한 필드의 카드번호 포함)가 붙는다.
+ *   로그에는 shortMessage + path, 또는 Json { exceptionsWithDebugInfo = false }(실험 API)
+ *
  * ## ApiDisconnectExampleUI (연결 해제 처리)
  * - 공식 문서: https://developer.android.com/training/monitoring-device-state/connectivity-status-type
  * 핵심 개념:

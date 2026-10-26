@@ -272,6 +272,8 @@ ktorClientAuth = { module = "io.ktor:ktor-client-auth", version.ref = "ktor" }
 ktorClientMock = { module = "io.ktor:ktor-client-mock", version.ref = "ktor" }
 kotlinxIoCore = { module = "org.jetbrains.kotlinx:kotlinx-io-core", version.ref = "kotlinxIoCore" }
 kotlinxSerializationCore = { module = "org.jetbrains.kotlinx:kotlinx-serialization-core", version.ref = "kotlinxSerialization" }
+# #150(2026-10-26 사용자 승인) — Gson 누락 필드 예제의 kotlinx Json 열. 런타임엔 security-state 전이로 이미 같은 버전이 있었다(컴파일 경로만 새로).
+kotlinxSerializationJson = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerialization" }
 
 junit = { module = "junit:junit", version.ref = "junit" }
 androidxTestJunit = { module = "androidx.test.ext:junit", version.ref = "androidxTestJunit" }

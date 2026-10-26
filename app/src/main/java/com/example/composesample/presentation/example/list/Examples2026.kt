@@ -866,9 +866,9 @@ val examples2026 = listOf(
         exampleType = ConstValue.DisplayRefreshRateExample
     ),
     ExampleObject(
-        lastUpdate = "26. 10. 13",
+        lastUpdate = "26. 10. 26",
         title = "Gson 누락 필드와 Kotlin 기본값",
-        description = "누락 키·명시적 null 이 Kotlin 기본값·non-null 을 건너뛰는 Gson 파싱 실측",
+        description = "누락 키·명시적 null 을 Gson 과 kotlinx Json 으로 파싱해 실패 지점 대조",
         blogUrl = "",
         exampleType = ConstValue.GsonMissingFieldExample
     ),

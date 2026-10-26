@@ -121,8 +121,10 @@ enum class MemberPayload(val label: String, val note: String, val json: String) 
 
 private val gson = Gson()
 
-fun parsePartial(payload: MemberPayload): PartialDefaultMember =
-    gson.fromJson(payload.json, PartialDefaultMember::class.java)
+fun parsePartial(payload: MemberPayload): PartialDefaultMember = parsePartial(payload.json)
+
+/** 임의 JSON — 6번 카드가 kotlinx 쪽 입력을 같은 모델로 Gson 에도 넣는다 */
+fun parsePartial(json: String): PartialDefaultMember = gson.fromJson(json, PartialDefaultMember::class.java)
 
 fun parseAllDefault(payload: MemberPayload): AllDefaultMember =
     gson.fromJson(payload.json, AllDefaultMember::class.java)
@@ -182,8 +184,10 @@ private fun row(
     return FieldRow(name, declaredText, show(value), problem, reason)
 }
 
-fun PartialDefaultMember.rows(payload: MemberPayload): List<FieldRow> {
-    val raw = JsonParser.parseString(payload.json).asJsonObject
+fun PartialDefaultMember.rows(payload: MemberPayload): List<FieldRow> = rows(payload.json)
+
+fun PartialDefaultMember.rows(json: String): List<FieldRow> {
+    val raw = JsonParser.parseString(json).asJsonObject
     // 읽기만으로는 예외가 나지 않는다 — Kotlin 은 프로퍼티를 읽을 때 null 검사를 하지 않는다
     return listOf(
         row(raw, "member_id", "memberId", "String", memberId, nonNull = true),

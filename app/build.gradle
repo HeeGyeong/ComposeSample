@@ -116,6 +116,8 @@ dependencies {
     implementation(libs.kotlinxIoCore)
     // kotlinx-serialization — RememberPatterns 예제의 rememberSerializable(@Serializable 데이터 클래스)이 직접 쓴다(1.12.0 은 전이 1.11.0 보다 앞선다)
     implementation(libs.kotlinxSerializationCore)
+    // kotlinx-serialization-json — Gson 누락 필드 예제(#150)가 같은 응답을 Json.decodeFromString 으로도 파싱한다
+    implementation(libs.kotlinxSerializationJson)
 
     // AndroidX Core
     // lifecycleRuntimeKtx 는 아래 bundles.lifecycle 에 포함되어 있어 개별 선언하지 않는다. (DEP-DUP-01)
