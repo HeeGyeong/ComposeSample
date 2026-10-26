@@ -195,6 +195,14 @@ tracing = "2.0.5"
 # → createVulnerabilityReportUrl()(https://android-api.osv.dev/v1/android_sdk_<API>.json)을 쓴다.
 securityState = "1.1.0"
 
+# Material3 Adaptive(#118, 2026-10-26 신규 — 사용자 승인) — ListDetailPaneScaffold·SupportingPaneScaffold(adaptive-layout)와
+# ThreePaneScaffoldNavigator·Navigable*Scaffold(adaptive-navigation), currentWindowAdaptiveInfo(adaptive). 셋은 같은 버전으로 움직인다.
+# 1.3.0 aar-metadata minCompileSdk=37 / minAGP=9.1.0(현재 37 / 9.4.1). API 대부분이 @ExperimentalMaterial3AdaptiveApi.
+# module 런타임 요구: compose foundation/ui/animation 1.9.0~1.10.0(BOM 1.12.1 보다 낮음) · core 1.15.0 · activity-compose 1.10.1 ·
+# androidx.window 1.5.0 · window-core 1.5.0. 추가 전후 해석 diff(app 5구성): adaptive 3종(+ -android) 추가, compile 클래스패스에
+# window·window-core 1.5.0 추가(런타임엔 이미 1.5.0), annotation-experimental 1.5.0 → 1.5.1(compile 은 1.4.1 → 1.5.1) 패치 끌어올림뿐.
+adaptive = "1.3.0"
+
 [plugins]
 android-application = { id = "com.android.application", version.ref = "applicationVersion" }
 android-library = { id = "com.android.library", version.ref = "libraryVersion" }
@@ -339,6 +347,11 @@ tracing = { module = "androidx.tracing:tracing", version.ref = "tracing" }
 
 # Security State
 securityState = { module = "androidx.security:security-state", version.ref = "securityState" }
+
+# Material3 Adaptive
+adaptive = { module = "androidx.compose.material3.adaptive:adaptive", version.ref = "adaptive" }
+adaptiveLayout = { module = "androidx.compose.material3.adaptive:adaptive-layout", version.ref = "adaptive" }
+adaptiveNavigation = { module = "androidx.compose.material3.adaptive:adaptive-navigation", version.ref = "adaptive" }
 
 [bundles]
 retrofit = [

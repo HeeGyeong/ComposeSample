@@ -65,4 +65,20 @@ package com.example.composesample.presentation.example.component.ui.layout.adapt
  * 실험 API:
  * - @OptIn(ExperimentalMediaQueryApi::class) 필요 (어노테이션은 ui-util 에 있음)
  * - 플래그 접근에는 @OptIn(ExperimentalComposeUiApi::class) 필요
+ *
+ * ## AdaptivePaneScaffoldExampleUI (Material3 Adaptive 1.3.0 — ListDetail/SupportingPaneScaffold)
+ * - 출처(Android Developers Blog, 2026-09-22): https://android-developers.googleblog.com/2026/09/adaptive-development-scale-app-googlebook.html
+ * - 목록-상세 레이아웃: https://developer.android.com/develop/ui/compose/layouts/adaptive/list-detail
+ * - 보조 페인 레이아웃: https://developer.android.com/develop/ui/compose/layouts/adaptive/build-a-supporting-pane-layout
+ * - 릴리스 노트: https://developer.android.com/jetpack/androidx/releases/compose-material3-adaptive
+ * 핵심 개념:
+ * - calculatePaneScaffoldDirective(currentWindowAdaptiveInfoV2()) 가 창 폭 클래스로 최대 분할 수를 정한다(Compact 1 · Medium/Expanded 2 · Large/XLarge 3)
+ *   V1 currentWindowAdaptiveInfo() 는 1.3.0 에서 deprecated — navigator 기본값도 V2
+ * - PaneScaffoldDirective.copy(maxHorizontalPartitions) 로 분할 수를 강제하면 한 기기에서 반대 배치를 재현한다
+ * - rememberListDetailPaneScaffoldNavigator<T>(scaffoldDirective) + NavigableListDetailPaneScaffold(defaultBackBehavior) — 뒤로가기 처리(예측 뒤로가기 포함)
+ * - BackNavigationBehavior: PopUntilScaffoldValueChange(기본, 보이는 구성이 바뀔 때까지) · PopUntilCurrentDestinationChange · PopUntilContentChange · PopLatest
+ *   → 두 페인이 모두 보이는 창에서는 기본 동작으로 돌아갈 곳이 없어 canNavigateBack=false, 시스템 뒤로가기가 화면을 닫는다
+ * - AnimatedPane 으로 페인 전환을 애니메이션, scaffoldValue[role] 이 Expanded/Hidden(/Levitated)
+ * - 대부분 @ExperimentalMaterial3AdaptiveApi. BackNavigationBehavior(생성자 private value class)를 반환하는 함수는 debug(HotSwan) 컴파일을 깨므로 표로 꺼낸다
+ * - 같은 폴더 AdaptiveLayoutExampleUI 는 WindowSizeClass 로 손수 나누는 방식(대조군)
  */

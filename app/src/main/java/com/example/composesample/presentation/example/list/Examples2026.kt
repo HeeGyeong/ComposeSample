@@ -955,5 +955,12 @@ val examples2026 = listOf(
         description = "기기 보안 패치 수준과 OSV 보고서로 계산한 아직 없는 CVE 수정",
         blogUrl = "",
         exampleType = ConstValue.SecurityStateExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 10. 26",
+        title = "Adaptive Pane Scaffold Example",
+        description = "ListDetail·SupportingPaneScaffold 배치와 뒤로가기 동작 4종 비교",
+        blogUrl = "",
+        exampleType = ConstValue.AdaptivePaneScaffoldExample
     )
 )

@@ -148,6 +148,7 @@ import com.example.composesample.presentation.example.component.ui.scroll.Nested
 import com.example.composesample.presentation.example.component.ui.shapes.CardCornersExampleUI
 import com.example.composesample.presentation.example.component.ui.tab.ResponsiveTabRowExampleUI
 import com.example.composesample.presentation.example.component.ui.layout.adaptive.AdaptiveLayoutExampleUI
+import com.example.composesample.presentation.example.component.ui.layout.adaptive.AdaptivePaneScaffoldExampleUI
 import com.example.composesample.presentation.example.component.ui.layout.adaptive.MediaQueryExampleUI
 import com.example.composesample.presentation.example.component.ui.layout.custom.CustomLayoutExampleUI
 import com.example.composesample.presentation.example.component.ui.layout.grid.GridLayoutExampleUI
@@ -382,6 +383,7 @@ import com.example.composesample.util.ConstValue.ContactEditorPickerExample
 import com.example.composesample.util.ConstValue.SystemPhotoPickerExample
 import com.example.composesample.util.ConstValue.ProcessExitAnalysisExample
 import com.example.composesample.util.ConstValue.SecurityStateExample
+import com.example.composesample.util.ConstValue.AdaptivePaneScaffoldExample
 import com.example.composesample.util.ConstValue.DisplayCutoutInsetsExample
 import com.example.composesample.util.ConstValue.BiometricAuthExample
 import com.example.composesample.util.ConstValue.LiveUpdateNotificationExample
@@ -649,4 +651,5 @@ val exampleUiRegistry: Map<String, @Composable (onBackEvent: () -> Unit) -> Unit
     SystemPhotoPickerExample to { onBackEvent -> SystemPhotoPickerExampleUI(onBackEvent) },
     ProcessExitAnalysisExample to { onBackEvent -> ProcessExitAnalysisExampleUI(onBackEvent) },
     SecurityStateExample to { onBackEvent -> SecurityStateExampleUI(onBackEvent) },
+    AdaptivePaneScaffoldExample to { onBackEvent -> AdaptivePaneScaffoldExampleUI(onBackEvent) },
 )
