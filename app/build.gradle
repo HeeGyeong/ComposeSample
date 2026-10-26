@@ -68,6 +68,9 @@ android {
 // CopyVisibilityProbe: data class 의 copy() 를 리플렉션(getDeclaredMethods·Method.invoke)으로 보는 카드 —
 //   인터프리터가 caller-sensitive 리플렉션을 실행하지 못해 IllegalAccessException("restricted lookup object")이 난다
 //   (debug 단위 테스트에서 재현, dispatchRewriteEnabled=false 면 통과). 리플렉션만 이 object 로 모아 그것만 뺀다.
+// DataStoreViewModel: 손상 파일 실험의 CorruptionException(checked IOException)이 debug 에서 UndeclaredThrowableException 으로
+//   한 겹 감싸여 왔다(release 는 그대로). 제외하면 debug 도 CorruptionException 그대로(SM-A725F). 시간은 제외해도 debug 가 느리다 —
+//   디버깅 가능 빌드 자체의 차이라 측정값은 release 로 본다.
 hotSwanCompiler {
     exclude("com.example.composesample.presentation.example.component.architecture.development.test.PowerAssertChecksKt")
     exclude("com.example.composesample.presentation.example.component.architecture.development.test.PowerAssertViewModel")
@@ -86,6 +89,7 @@ hotSwanCompiler {
     exclude("com.example.composesample.presentation.example.component.data.download.FakeFileServer")
     exclude("com.example.composesample.presentation.example.component.data.download.RangeDownloader")
     exclude("com.example.composesample.presentation.example.component.architecture.development.language.CopyVisibilityProbe")
+    exclude("com.example.composesample.presentation.example.component.data.storage.DataStoreViewModel")
 }
 
 // Power-Assert(PowerAssertExample) — 단언 실패 메시지에 식의 중간값을 펼쳐 넣는 컴파일러 플러그인.
@@ -172,6 +176,10 @@ dependencies {
     implementation(libs.adaptive)
     implementation(libs.adaptiveLayout)
     implementation(libs.adaptiveNavigation)
+
+    // DataStore (타입·Preferences DataStore 를 SharedPreferences 와 대조 — DataStore 예제)
+    implementation(libs.datastore)
+    implementation(libs.datastorePreferences)
 
     // NavigationEvent (back/forward 양방향 내비게이션 이벤트 — NavigationEventDispatcher 예제)
     implementation(libs.navigationEvent)

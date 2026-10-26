@@ -962,5 +962,12 @@ val examples2026 = listOf(
         description = "ListDetail·SupportingPaneScaffold 배치와 뒤로가기 동작 4종 비교",
         blogUrl = "",
         exampleType = ConstValue.AdaptivePaneScaffoldExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 10. 26",
+        title = "DataStore Example",
+        description = "SharedPreferences 와 대조한 동시 갱신·손상 파일·이관·인스턴스 규칙",
+        blogUrl = "",
+        exampleType = ConstValue.DataStoreExample
     )
 )

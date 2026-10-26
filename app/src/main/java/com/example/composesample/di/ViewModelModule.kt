@@ -15,6 +15,7 @@ import com.example.composesample.presentation.example.component.architecture.lif
 import com.example.composesample.presentation.example.component.data.cache.KtorHttpCacheViewModel
 import com.example.composesample.presentation.example.component.data.download.RangeDownloadViewModel
 import com.example.composesample.presentation.example.component.data.outbox.OutboxViewModel
+import com.example.composesample.presentation.example.component.data.storage.DataStoreViewModel
 import com.example.composesample.presentation.example.component.system.deeplink.DeepLinkReceiveViewModel
 import com.example.composesample.presentation.example.component.system.platform.language.AppLocaleViewModel
 import com.example.composesample.presentation.example.component.architecture.lifecycle.RealItemsService
@@ -86,6 +87,8 @@ val viewModelModule: Module = module {
     viewModel { RangeDownloadViewModel(androidApplication()) }
     // Room 파일 DB·WorkManager 를 써야 하므로 Application 컨텍스트를 주입한다
     viewModel { OutboxViewModel(androidApplication()) }
+    // filesDir 의 DataStore 파일과 SharedPreferences 를 열어야 하므로 Application 컨텍스트를 주입한다
+    viewModel { DataStoreViewModel(androidApplication()) }
     // SharedPreferences 저장소를 열어야 하므로 Application 컨텍스트를 주입한다
     viewModel { DeepLinkReceiveViewModel(androidApplication()) }
     // LocaleManager 시스템 서비스를 얻어야 하므로 Application 컨텍스트를 주입한다

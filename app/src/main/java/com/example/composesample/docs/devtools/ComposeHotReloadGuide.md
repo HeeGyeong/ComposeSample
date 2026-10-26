@@ -360,6 +360,38 @@ Ordinary Ktor calls are not affected — the exception has to escape a lambda th
 plugin in a debug build would hit the same wrapping, which is one more reason to classify network errors by their cause
 chain (see the section on checked exceptions above).
 
+### A DataStore read that fails with `CorruptionException` — one more class is excluded
+
+The corruption card of `DataStoreExampleUI` (#143) overwrites a DataStore file with junk and reads it again with the
+default `ReThrowCorruptionHandler`. `CorruptionException` extends `IOException`, so it is a checked exception. The
+read runs inside `DataStoreViewModel.withStore(file) { store -> store.data.first() }`, a private member function that
+takes a `suspend (DataStore<T>) -> R` and calls it from inside another suspend lambda. Measured on 2026-10-26
+(SM-A725F / Android 13, HotSwan 2.1.0):
+
+| Build | Result of the default-handler read |
+|---|---|
+| debug, HotSwan as configured | `UndeclaredThrowableException` ← `CorruptionException: Corruption in file …` ← `CorruptionException` (serializer). The stack shows `ReflectionArtBridge.invokeWithSpreader` → `$Proxy2.invoke` |
+| release (debug-key signed) | `CorruptionException: Corruption in file …` ← `CorruptionException` |
+| debug, `DataStoreViewModel` excluded (current setup) | same as release |
+
+The excluded name:
+
+```groovy
+exclude("com.example.composesample.presentation.example.component.data.storage.DataStoreViewModel")
+```
+
+Excluding the class does **not** make the card's timings match release. With the exclusion, debug still took
+76 ms for 200 `apply()` calls and 2652 ms for 200 separate `updateData` calls, against 23 ms and 361–381 ms in release.
+The gap comes from the debuggable build, not from HotSwan, so the card's reading notes quote release numbers.
+
+The same day, a probe file of top-level functions (deleted afterwards) did **not** reproduce the wrapping for a
+`suspend () -> R` or `suspend (String) -> R` parameter. That held whether the parameter was called directly or from
+inside another suspend lambda, whether it threw directly or through a library `Flow`, and whether it threw after a real
+suspension (`delay`, `withContext(Dispatchers.IO)`): 12 shapes, none wrapped. A plain `() -> R` parameter still wrapped
+(`UndeclaredThrowableException ← IOException`). So on 2.1.0 the "suspend function-typed parameter" row in the
+checked-exception section above does not hold for every call site, and the exact trigger was not isolated. The
+advice does not change: classify by cause chain, and confirm checked-exception handling in release.
+
 ### Caller-sensitive reflection fails under the interpreter — one more class is excluded
 
 Found while writing the sensitive-types example (#144). Its copy() card reads `Class.getDeclaredMethods()` and calls
