@@ -12,6 +12,7 @@ import androidx.glance.ButtonDefaults
 import androidx.glance.GlanceId
 import androidx.glance.GlanceModifier
 import androidx.glance.GlanceTheme
+import androidx.glance.currentState
 import androidx.glance.action.actionStartActivity
 import androidx.glance.action.clickable
 import androidx.glance.appwidget.GlanceAppWidget
@@ -32,9 +33,6 @@ import androidx.glance.text.TextStyle
 import androidx.glance.unit.ColorProvider
 import com.example.composesample.presentation.MainActivity
 import com.example.composesample.presentation.example.exampleObjectList
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 
 /**
  * 2x2 크기 전용 중간 위젯
@@ -46,18 +44,20 @@ class MediumWidget : GlanceAppWidget() {
     override suspend fun provideGlance(context: Context, id: GlanceId) {
         val exampleList = exampleObjectList()
         val lastUpdateDate = exampleList.lastOrNull()?.lastUpdate ?: "업데이트 정보 없음"
-        val currentTime = SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(Date())
+        val renderedAt = System.currentTimeMillis()
 
         val streakData = WeeklyPostingStreak(
             message = "Medium Widget",
             lastUpdate = lastUpdateDate,
-            refreshedAt = currentTime
+            refreshedAt = ""
         )
 
         provideContent {
+            // UPDATE(RefreshWidgetAction)가 상태에 남긴 시각 — 상태가 바뀌면 살아 있는 세션도 다시 그린다
+            val refreshedAt = refreshedAtText(currentState(RefreshedAtKey), renderedAt)
             GlanceTheme {
                 val clickModifier = GlanceModifier.clickable(actionStartActivity<MainActivity>())
-                MediumWidgetContent(modifier = clickModifier, content = streakData)
+                MediumWidgetContent(modifier = clickModifier, content = streakData.copy(refreshedAt = refreshedAt))
             }
         }
     }
