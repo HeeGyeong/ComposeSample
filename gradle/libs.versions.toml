@@ -110,10 +110,13 @@ ktor = "3.6.0"
 # kotlinx-io 0.9.1 — Ktor 3.6.0 이 전이로 끌어오는 버전 그대로 선언(해석 결과 변화 0). HttpCache 의 FileStorage(Path, FileSystem) 가
 # kotlinx.io.files.Path/SystemFileSystem 을 요구해 앱 코드가 직접 쓰므로 명시한다(DEP-VERSION-05: 직접 쓰는 라이브러리는 선언=해석).
 kotlinxIoCore = "0.9.1"
-# kotlinx-serialization 1.11.0 — savedstate 1.5.0 등이 전이로 끌어오는 버전 그대로 선언(해석 결과 변화 0).
-# RememberPatterns 예제(#123)의 @Serializable 데이터 클래스를 rememberSerializable 로 저장하려고 직접 쓴다.
+# kotlinx-serialization — RememberPatterns 예제(#123)의 @Serializable 데이터 클래스를 rememberSerializable 로 저장하려고 직접 쓴다.
 # 컴파일러 플러그인(org.jetbrains.kotlin.plugin.serialization)은 Kotlin 과 같은 버전으로 배포되므로 kotlinVersion 을 따른다.
-kotlinxSerialization = "1.11.0"
+# 1.12.0(2026-10-26 상향, 마이너 — DEP-CURRENCY-13 사용자 승인, #150 과 묶음). 1.11.0 은 savedstate 1.5.0 등의 전이와 같은 값이었고,
+# 이제는 선언이 전이(savedstate·lifecycle·navigation·Ktor 1.11.0, security-state 의 json 1.7.3)보다 앞선다 — bom 1.12.0 이 json 까지 정렬.
+# 변경: 역직렬화 중 예외(init 의 require 등)를 JsonDecodingException 으로 감쌈(메시지에 입력 JSON 포함)·JSON 중첩 깊이 제한·
+# Json/Core API 안정화·ChunkedDecoder deprecated(프로젝트 미사용). stdlib 요구 2.4.10(프로젝트 2.4.21). JVM 아티팩트라 aar-metadata 없음.
+kotlinxSerialization = "1.12.0"
 
 # Test
 junit = "4.13.2"

@@ -217,4 +217,8 @@ package com.example.composesample.presentation.example.component.system.security
  * - getPatchedCves(component, spl): 보고서에서 날짜 ≤ spl 인 수정의 CVE(심각도별) → 게시 SPL 기준 − 기기 SPL 기준 = 아직 없는 수정
  * - queryAllAvailableUpdates / fetchAvailableSecurityPatchLevel: UpdateInfoService 를 구현한 신뢰된 앱에 IPC(바인딩 대기 5초) — 없으면 빈 결과·기기 SPL
  * - 의존성: 런타임에 kotlinx-serialization-json · androidx.webkit · concurrent-futures-ktx 가 들어오고 concurrent-futures 를 1.1.0 → 1.3.0 으로 올린다
+ *   (json 은 security-state 가 1.7.3 을 요청하지만 serialization-bom 이 정렬한다 — 2026-10-26 DEP-CURRENCY-13 으로 1.11.0 → 1.12.0.
+ *   같은 OSV 보고서(84,335자 캐시)로 실기기 debug 전후 대조: 게시·기기 SPL, isDeviceFullyUpdated, 심각도별 CVE 수·집합,
+ *   깨진 보고서 6종의 예외가 동일 — security-state 가 IllegalArgumentException("Malformed JSON input: …")로 감싸고, 안쪽 kotlinx
+ *   메시지 끝에 "JSON input: …" 으로 입력이 붙는다(1.11 도 같음). 알 수 없는 키 아래 3만 겹 배열은 건너뛰고 필수 필드 누락으로 끝난다)
  */

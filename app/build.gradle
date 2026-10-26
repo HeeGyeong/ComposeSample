@@ -9,7 +9,7 @@ plugins {
     alias(libs.plugins.hotswan.compiler)
     alias(libs.plugins.kotlin.power.assert)
     // kotlinx-serialization 컴파일러 플러그인(#123, 2026-10-08 사용자 승인) — @Serializable 클래스의 serializer 생성.
-    // Kotlin 에 포함돼 배포되며 런타임은 아래 kotlinxSerializationCore(전이와 같은 1.11.0).
+    // Kotlin 에 포함돼 배포되며 런타임은 아래 kotlinxSerializationCore(1.12.0 — DEP-CURRENCY-13).
     alias(libs.plugins.kotlin.serialization)
 
     id 'kotlin-parcelize'
@@ -114,7 +114,7 @@ dependencies {
 
     // kotlinx-io — Ktor HttpCache 의 FileStorage(Path, FileSystem) 예제가 Path/SystemFileSystem 을 직접 쓴다(버전은 Ktor 전이와 동일)
     implementation(libs.kotlinxIoCore)
-    // kotlinx-serialization — RememberPatterns 예제의 rememberSerializable(@Serializable 데이터 클래스)이 직접 쓴다(버전은 전이와 동일)
+    // kotlinx-serialization — RememberPatterns 예제의 rememberSerializable(@Serializable 데이터 클래스)이 직접 쓴다(1.12.0 은 전이 1.11.0 보다 앞선다)
     implementation(libs.kotlinxSerializationCore)
 
     // AndroidX Core

@@ -27,7 +27,9 @@ package com.example.composesample.presentation.example.component.architecture.pa
  *   (`serializersModule.serializer<T>()`) 와 serializer 직접 전달(`serializer =` / `stateSerializer =`). 내부는
  *   serializableSaver + rememberSaveable — kotlinx-serialization 으로 SavedState(Bundle)에 인코딩하므로 Saver 를 쓰지 않는다
  * - 직접 만든 클래스는 @Serializable + 컴파일러 플러그인(org.jetbrains.kotlin.plugin.serialization = Kotlin 버전),
- *   기본 타입은 내장 serializer. 런타임 kotlinx-serialization-core 1.11.0 은 savedstate 1.5.0 전이와 같은 버전으로 명시 선언(해석 변화 0)
+ *   기본 타입은 내장 serializer. 런타임 kotlinx-serialization-core 는 1.11.0(savedstate 1.5.0 전이와 같은 값)으로 시작해
+ *   2026-10-26 1.12.0 으로 상향(DEP-CURRENCY-13) — 같은 모양의 @Serializable 클래스·SnapshotStateSetSerializer·Int 를
+ *   encodeToSavedState/decodeFromSavedState 로 실기기(SM-A725F debug)에서 전후 대조해 Bundle 키·값·복원 결과·깨진 값 예외가 동일
  * - `canBeSaved`(기본 Saver 가 받는가): @Serializable 데이터 클래스 false · `mutableStateSetOf()` true(Android 의 SnapshotStateSet 은 Parcelable)
  * - ⚠️ **Compose runtime 1.12.1 SnapshotStateSet.writeToParcel 버그** — `writeInt(size)` 뒤 `if (iterator.hasNext()) writeValue(next())`
  *   로 첫 원소만 쓴다(1.13.0-alpha03 에서 while 로 수정, SnapshotStateList 는 정상). 원소 2개 이상인 집합을 rememberSaveable 로
