@@ -24,9 +24,10 @@ package com.example.composesample.presentation.example.component.ui.layout.grid
  * - 전부 @OptIn(ExperimentalGridApi::class) 필요
  *
  * 버전 메모:
- * - Grid API 는 Compose 1.11.0-alpha04 도입 → foundation-layout 1.11.1 에서 그대로 사용 가능
- * - 이름 붙인 영역(GridConfigurationScope.area() / Modifier.gridItem(area))은 1.12.0-beta01 신규라
- *   현재 버전에는 존재하지 않는다. 1.12 승격 이후 별도로 다룰 것
+ * - Grid API 는 Compose 1.11.0-alpha04 도입(@ExperimentalGridApi) — 예제 작성 당시 foundation-layout 1.11.1
+ * - 이름 붙인 영역(GridConfigurationScope.area(areaId, row, column, rowSpan, columnSpan) / area(areaId, rows, columns) +
+ *   Modifier.gridItem(areaId))은 1.12.0-beta01 신규로, 지금 프로젝트의 foundation-layout 1.12.1 에도 있다(여전히 @ExperimentalGridApi).
+ *   이 예제는 아직 좌표와 span 으로만 배치한다
  *
  * 다른 레이아웃 예제와의 축 차이:
  * - LazyStaggeredGridExampleUI: 스크롤 격자(lazy) — 화면 밖 아이템은 컴포즈되지 않음

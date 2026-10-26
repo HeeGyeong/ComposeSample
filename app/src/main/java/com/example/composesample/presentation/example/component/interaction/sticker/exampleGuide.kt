@@ -12,5 +12,6 @@ package com.example.composesample.presentation.example.component.interaction.sti
  *   스티커를 들어올리는 느낌을 주고, 놓으면 spring(dampingRatio = DampingRatioMediumBouncy)으로 복귀
  * - Die-cut 렌더링: 흰색 배경 + RoundedCornerShape + clip으로 실제 비닐 스티커 같은 테두리 표현
  * - zIndex는 단조 증가 카운터로 관리하여 탭한 스티커가 항상 최상위에 오도록 함
- * - 스티커는 비율 좌표(0..1)로 시작해 어떤 화면 크기에도 대응하고, 드래그 후에는 픽셀 좌표로 전환(Float.NaN 체크)
+ * - 스티커 위치는 처음부터 픽셀 좌표다 — 캔버스 중앙(onSizeChanged 로 받은 크기의 절반, 측정 전이면 200·300px)에
+ *   ±60px 무작위 오프셋을 더해 놓고, 드래그는 그 값에 pan 을 더한다(화면 크기가 바뀌어도 비율로 다시 맞추지 않는다)
  */

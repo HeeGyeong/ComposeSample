@@ -530,7 +530,7 @@ private fun RealStateManagementDemoCard() {
             Spacer(modifier = Modifier.height(12.dp))
 
             Text(
-                text = "SavedStateNavEntryDecorator가 자동으로 상태를 저장/복원합니다:",
+                text = "SaveableStateHolderNavEntryDecorator가 자동으로 상태를 저장/복원합니다:",
                 fontSize = 14.sp,
                 color = Color.Gray
             )
@@ -672,7 +672,7 @@ private fun RealStateManagementDemoCard() {
                 color = Color(0xFF4CAF50).copy(alpha = 0.1f)
             ) {
                 Text(
-                    text = "💡 실제로는 rememberSavedStateNavEntryDecorator()가 자동으로 상태 저장/복원을 처리합니다!",
+                    text = "💡 실제로는 NavDisplay 기본값인 rememberSaveableStateHolderNavEntryDecorator()가 자동으로 상태 저장/복원을 처리합니다!",
                     modifier = Modifier.padding(8.dp),
                     fontSize = 11.sp,
                     color = Color(0xFF388E3C),

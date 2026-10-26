@@ -50,7 +50,7 @@ import com.example.composesample.presentation.MainHeader
  * Compose Grid API Example
  *
  * Compose 1.11 의 실험 API 인 Grid(non-lazy 2D 트랙 레이아웃)를 시연한다.
- * 이름 붙인 영역(area() / gridItem(area))은 Compose 1.12+ 신규라 이 예제 범위 밖이다.
+ * 이름 붙인 영역(area() / gridItem(areaId))은 Compose 1.12 신규 API 로, 이 예제는 아직 다루지 않는다.
  */
 @Composable
 fun GridLayoutExampleUI(onBackEvent: () -> Unit) {
@@ -567,8 +567,8 @@ private fun GridSummaryCard() {
 
         Spacer(modifier = Modifier.height(12.dp))
         Text(
-            text = "이 예제의 범위 밖: 이름 붙인 영역(area() / gridItem(area))은 Compose 1.12+ 에서 추가된 API라 " +
-                    "현재 버전(1.11.1)에는 없습니다. 지금은 좌표와 span 으로만 배치합니다.",
+            text = "이 예제의 범위 밖: 이름 붙인 영역(area() / gridItem(areaId))은 Compose 1.12 에서 추가된 API 로 " +
+                    "지금 프로젝트(1.12.1)에도 있지만, 이 예제는 좌표와 span 으로만 배치합니다.",
             fontSize = 12.sp,
             color = Color(0xFF616161),
             lineHeight = 17.sp
