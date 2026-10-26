@@ -63,6 +63,7 @@ import com.example.composesample.presentation.example.component.system.deeplink.
 import com.example.composesample.presentation.example.component.system.platform.clipboard.ClipboardProcessTextExampleUI
 import com.example.composesample.presentation.example.component.system.platform.contacts.ContactEditorPickerExampleUI
 import com.example.composesample.presentation.example.component.system.platform.exitinfo.ProcessExitAnalysisExampleUI
+import com.example.composesample.presentation.example.component.system.security.SecurityStateExampleUI
 import com.example.composesample.presentation.example.component.system.platform.biometric.BiometricAuthExampleUI
 import com.example.composesample.presentation.example.component.system.security.AppSecurityExampleUI
 import com.example.composesample.presentation.example.component.system.security.RequestSigningExampleUI
@@ -380,6 +381,7 @@ import com.example.composesample.util.ConstValue.ClipboardProcessTextExample
 import com.example.composesample.util.ConstValue.ContactEditorPickerExample
 import com.example.composesample.util.ConstValue.SystemPhotoPickerExample
 import com.example.composesample.util.ConstValue.ProcessExitAnalysisExample
+import com.example.composesample.util.ConstValue.SecurityStateExample
 import com.example.composesample.util.ConstValue.DisplayCutoutInsetsExample
 import com.example.composesample.util.ConstValue.BiometricAuthExample
 import com.example.composesample.util.ConstValue.LiveUpdateNotificationExample
@@ -646,4 +648,5 @@ val exampleUiRegistry: Map<String, @Composable (onBackEvent: () -> Unit) -> Unit
     ContactEditorPickerExample to { onBackEvent -> ContactEditorPickerExampleUI(onBackEvent) },
     SystemPhotoPickerExample to { onBackEvent -> SystemPhotoPickerExampleUI(onBackEvent) },
     ProcessExitAnalysisExample to { onBackEvent -> ProcessExitAnalysisExampleUI(onBackEvent) },
+    SecurityStateExample to { onBackEvent -> SecurityStateExampleUI(onBackEvent) },
 )

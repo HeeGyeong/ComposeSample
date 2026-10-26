@@ -31,6 +31,7 @@ import com.example.composesample.presentation.example.component.system.platform.
 import com.example.composesample.presentation.example.component.system.platform.process.MultiProcessViewModel
 import com.example.composesample.presentation.example.component.system.platform.powersave.BackgroundRestrictionViewModel
 import com.example.composesample.presentation.example.component.system.platform.exitinfo.ProcessExitAnalysisViewModel
+import com.example.composesample.presentation.example.component.system.security.SecurityStateViewModel
 import com.example.composesample.presentation.example.component.system.background.workmanager.PeriodicPolicyViewModel
 import com.example.composesample.presentation.example.component.system.background.workmanager.PeriodicScheduleViewModel
 import com.example.composesample.presentation.example.component.system.background.workmanager.WorkEventListenerViewModel
@@ -70,6 +71,8 @@ val viewModelModule: Module = module {
     viewModel { BackgroundRestrictionViewModel(androidApplication()) }
     // ActivityManager·SharedPreferences 에 Application 컨텍스트가 필요하다
     viewModel { ProcessExitAnalysisViewModel(androidApplication()) }
+    // SecurityPatchState 가 Context 로 PackageManager·시스템 서비스를 쓴다
+    viewModel { SecurityStateViewModel(androidApplication()) }
     viewModel { CompositionLocalViewModel() }
     viewModel { InitTestViewModel() }
     viewModel { PagingViewModel() }

@@ -948,5 +948,12 @@ val examples2026 = listOf(
         description = "ANR·크래시 뒤 다음 실행에서 읽는 종료 이유·트레이스·상태 요약",
         blogUrl = "",
         exampleType = ConstValue.ProcessExitAnalysisExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 10. 26",
+        title = "Security State Example",
+        description = "기기 보안 패치 수준과 OSV 보고서로 계산한 아직 없는 CVE 수정",
+        blogUrl = "",
+        exampleType = ConstValue.SecurityStateExample
     )
 )

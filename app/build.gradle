@@ -165,6 +165,9 @@ dependencies {
     // Tracing (Perfetto 커스텀 트레이스 이벤트 — PerfettoTracing 예제)
     implementation(libs.tracing)
 
+    // Security State (기기 SPL·CVE 패치 대조 — SecurityState 예제)
+    implementation(libs.securityState)
+
     // NavigationEvent (back/forward 양방향 내비게이션 이벤트 — NavigationEventDispatcher 예제)
     implementation(libs.navigationEvent)
     implementation(libs.navigationEventCompose)

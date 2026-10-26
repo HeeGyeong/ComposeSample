@@ -201,4 +201,20 @@ package com.example.composesample.presentation.example.component.system.security
  *  - **상수 시간 비교는 시간을 재지 않고 '읽은 바이트 수'를 센다** — 디버그 빌드는 인터프리터로 돌아
  *    ns 측정이 실행마다 요동치므로(프로젝트의 Room 벤치마크가 같은 이유로 배율이 튀었다),
  *    결정적인 지표로 성질 자체를 보여준다.
+ *
+ * ## SecurityStateExampleUI (androidx.security:security-state 1.1.0)
+ * - 소개 글(Android Developers Blog, 2026-09): https://android-developers.googleblog.com/2026/09/introducing-androidx-security-state-libraries.html
+ * - 릴리스 노트: https://developer.android.com/jetpack/androidx/releases/security
+ * - OSV Android 보고서(게시 SPL·CVE 데이터): https://android-api.osv.dev/v1/android_sdk_33.json
+ * - Android 보안 공지: https://source.android.com/docs/security/bulletin
+ * 핵심 개념:
+ * - SecurityStateManagerCompat.getGlobalSecurityState: 시스템 SPL·커널 버전·모듈/WebView 패키지 버전·보충 패치(Bundle) — 로컬, 네트워크 0
+ *   (API 35+ 는 시스템 서비스 SecurityStateManager 에서, 그 아래는 Build·uname·PackageManager 로 직접 모은다)
+ * - SecurityPatchState.getDeviceSecurityPatchLevel(SYSTEM · SYSTEM_MODULES · KERNEL) — VENDOR 는 1.1.0 에서 internal
+ * - 보고서는 라이브러리가 받지 않는다: createVulnerabilityReportUrl()(API 26+) → 앱이 GET → loadVulnerabilityReport(@WorkerThread)
+ *   DEFAULT_VULNERABILITY_REPORTS_URL 은 deprecated("will stop working")
+ * - getPublishedSecurityPatchLevel: SYSTEM·SYSTEM_MODULES 는 보고서 전체의 최신 날짜(Global Max), KERNEL 은 지원 LTS 버전 목록
+ * - getPatchedCves(component, spl): 보고서에서 날짜 ≤ spl 인 수정의 CVE(심각도별) → 게시 SPL 기준 − 기기 SPL 기준 = 아직 없는 수정
+ * - queryAllAvailableUpdates / fetchAvailableSecurityPatchLevel: UpdateInfoService 를 구현한 신뢰된 앱에 IPC(바인딩 대기 5초) — 없으면 빈 결과·기기 SPL
+ * - 의존성: 런타임에 kotlinx-serialization-json · androidx.webkit · concurrent-futures-ktx 가 들어오고 concurrent-futures 를 1.1.0 → 1.3.0 으로 올린다
  */

@@ -184,6 +184,17 @@ biometric = "1.4.0-alpha07"
 # 역시 프로세스 내 기록 API 쪽 — aar 요구치(compileSdk 34 · AGP 8.1.1)·module 전이 2.0.4 와 같다.
 tracing = "2.0.5"
 
+# Security State(#115, 2026-10-26 신규 — 사용자 승인) — 기기 SPL·커널·Mainline 모듈 버전을 로컬로 읽고,
+# OSV 취약점 보고서(JSON)와 대조해 게시된 SPL·패치된 CVE 를 계산한다. aar-metadata minCompileSdk=36 / minAGP=8.9.1(현재 37 / 9.4.1).
+# module 런타임 전이: kotlinx-serialization-json 1.7.3 · androidx.webkit 1.11.0 · concurrent-futures-ktx 1.3.0 · core 1.12.0 ·
+# coroutines 1.9.0 · stdlib 2.1.20 · annotation 1.8.1 · listenablefuture 1.0. 추가 전후 해석 diff(app 5구성): 새로 security-state 1.1.0 ·
+# webkit 1.11.0(런타임) · serialization-json 1.11.0(release 런타임 — 1.7.3 요청이 serialization-bom 1.11.0 으로 정렬, debug 런타임엔 이미 있음),
+# 끌어올림 concurrent-futures(-ktx) 1.1.0 → 1.3.0(런타임만 — JSpecify 널 어노테이션 추가뿐, WorkManager·profileinstaller 가 내부 사용),
+# debugCompileClasspath 는 security-state 1개만 늘고 androidTest 런타임 변화 0.
+# 1.1.0 에서 DEFAULT_VULNERABILITY_REPORTS_URL(storage.googleapis.com)은 deprecated("will stop working")
+# → createVulnerabilityReportUrl()(https://android-api.osv.dev/v1/android_sdk_<API>.json)을 쓴다.
+securityState = "1.1.0"
+
 [plugins]
 android-application = { id = "com.android.application", version.ref = "applicationVersion" }
 android-library = { id = "com.android.library", version.ref = "libraryVersion" }
@@ -325,6 +336,9 @@ biometricCompose = { module = "androidx.biometric:biometric-compose", version.re
 
 # Tracing
 tracing = { module = "androidx.tracing:tracing", version.ref = "tracing" }
+
+# Security State
+securityState = { module = "androidx.security:security-state", version.ref = "securityState" }
 
 [bundles]
 retrofit = [
