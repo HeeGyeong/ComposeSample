@@ -417,6 +417,23 @@ non-default initializer (or an `init` assignment) and are assigned later; on 202
 (the two hits of a broader first version, `seq = 0` in `PerItemViewModelExampleUI` and `holder = null` in `OutboxWork`,
 start at defaults and showed correct values on the device).
 
+### A function that returns a library value class with a private constructor breaks the debug compile
+
+Found while writing the adaptive multi-pane example (#118). A small mapper
+`private fun BackMode.toBehavior(): BackNavigationBehavior = when (this) { … }` returned
+`androidx.compose.material3.adaptive.navigation.BackNavigationBehavior`, a `value class` whose constructor is private.
+`:app:compileDebugKotlin` failed under HotSwan 2.1.0 with
+
+```
+e: org.jetbrains.kotlin.fir.pipeline.IrGenerationExtensionException: B3: value class BackNavigationBehavior has no
+   primary constructor — cannot build dispatch return bridge for toBehavior.
+```
+
+The dispatch rewrite needs to rebuild the value class to return it from the interpreter path, and it cannot reach that
+constructor. Release compiles the same code fine (it is a debug-only plugin). Looking the value up instead of returning
+it from our own function avoids the bridge: the example keeps a `Map<BackMode, BackNavigationBehavior>` and calls
+`getValue(mode)` where it needs one, and its composables take the app's own enum instead of the library value class.
+
 ### Stack traces from a debug build show no app frames — read crashes and ANRs from release
 
 Found while writing the process exit post-mortem example (#159). The same deliberate failures — a crash thrown from a
