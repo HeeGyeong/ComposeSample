@@ -936,9 +936,9 @@ val examples2026 = listOf(
         exampleType = ConstValue.ContactEditorPickerExample
     ),
     ExampleObject(
-        lastUpdate = "26. 10. 23",
+        lastUpdate = "26. 10. 28",
         title = "시스템 Photo Picker 실물",
-        description = "PickVisualMedia가 고르는 피커와 받은 URI의 권한 수명·위치 정보",
+        description = "PickVisualMedia가 고르는 피커와 받은 URI의 권한 수명·위치, 올리기 전 위치 정리",
         blogUrl = "",
         exampleType = ConstValue.SystemPhotoPickerExample
     ),

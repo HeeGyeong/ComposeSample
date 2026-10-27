@@ -346,16 +346,8 @@ class PhotoPickerLab(private val context: Context) {
     private fun readExif(uri: Uri): Triple<GpsReading, String?, String?>? = runCatching {
         context.contentResolver.openInputStream(uri)?.use { stream ->
             val exif = android.media.ExifInterface(stream)
-            val out = FloatArray(2)
-            val latLong = if (exif.getLatLong(out)) out[0].toDouble() to out[1].toDouble() else null
             Triple(
-                GpsReading(
-                    latitude = exif.getAttribute(android.media.ExifInterface.TAG_GPS_LATITUDE),
-                    latitudeRef = exif.getAttribute(android.media.ExifInterface.TAG_GPS_LATITUDE_REF),
-                    longitude = exif.getAttribute(android.media.ExifInterface.TAG_GPS_LONGITUDE),
-                    longitudeRef = exif.getAttribute(android.media.ExifInterface.TAG_GPS_LONGITUDE_REF),
-                    latLong = latLong,
-                ),
+                gpsReadingOf(exif),
                 exif.getAttribute(android.media.ExifInterface.TAG_DATETIME_ORIGINAL),
                 exif.getAttribute(android.media.ExifInterface.TAG_MODEL),
             )

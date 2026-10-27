@@ -90,6 +90,7 @@ fun SystemPhotoPickerExampleUI(onBackEvent: () -> Unit) {
             MultiplePickCard(lab)
             LifetimeCard(lab, resumeTick)
             LocationCard(lab)
+            LocationCleanupCard()
             SummaryCard()
         }
     }
@@ -401,17 +402,19 @@ private fun LocationCard(lab: PhotoPickerLab) {
     }
 }
 
-// ==================== 6. 정리 ====================
+// ==================== 7. 정리 ====================
 
 @Composable
 private fun SummaryCard() {
-    ExampleCard(title = "6. 정리 — 언제 무엇을", accent = Color(0xFF37474F)) {
+    ExampleCard(title = "7. 정리 — 언제 무엇을", accent = Color(0xFF37474F)) {
         BulletText("사진 몇 장을 받는 기능이면 READ_MEDIA_IMAGES 대신 PickVisualMedia — 권한 대화상자도, 부분 접근(READ_MEDIA_VISUAL_USER_SELECTED) 처리도 필요 없다")
         BulletText("'어떤 피커가 뜨나' 는 API 레벨이 아니라 SDK 확장 버전과 시스템 앱으로 정해진다 — 옵션이 지켜지는지도 피커마다 다르다")
         BulletText("여러 장 최대 개수는 생성자 값과 요청 값 중 작은 쪽 — 그 값이 1 이거나 getPickImagesMaxLimit() 를 넘으면 launch 순간 예외")
         BulletText("받은 URI 를 나중에도 쓰려면 takePersistableUriPermission, 아니면 바로 앱 저장소로 복사한다")
         BulletText("위치가 필요한 앱은 피커 URI 에서 GPS 가 지워져 오는 것을 전제로 — 사용자에게 묻는 요청(alpha03)은 지원 기기에서만")
-        BulletText("반대로 ③단계(문서 선택기)로 떨어진 기기에서는 위치가 그대로 온다 — 올리기 전에 위치를 떼야 하는 앱은 경로와 상관없이 직접 지운다")
+        BulletText("지워진 위치는 '없음' 이 아니라 0 이다 — getLatLong 이 true · (0, 0) 이므로 0 위치는 위치 없음으로 판정한다(Null Island)")
+        BulletText("반대로 ③단계(문서 선택기)로 떨어진 기기에서는 위치가 그대로 온다 — 올리기 전에 위치를 떼야 하는 앱은 경로와 상관없이 사본에서 직접 지운다")
+        BulletText("태그 제거(saveAttributes)는 형식·API 를 탄다(HEIC 불가 · WebP 는 API 30 불가) — 안 되면 재인코딩, 재인코딩은 방향을 픽셀에 먼저 반영한다")
         Spacer(modifier = Modifier.height(4.dp))
         CaptionText("앱 화면 안에 피커를 넣는 임베디드 피커는 이 폴더의 두 시뮬레이션 예제, 파일 전반은 SAF 예제, 권한 방식은 TargetSDK34Permission 예제가 다룬다.")
     }
@@ -426,7 +429,7 @@ private suspend fun record(lab: PhotoPickerLab, source: String, result: Activity
 }
 
 /** 피커가 없는 기기에서 ActivityNotFoundException 을 화면에 남긴다 */
-private fun launchOrError(block: () -> Unit): String? = try {
+internal fun launchOrError(block: () -> Unit): String? = try {
     block()
     null
 } catch (e: ActivityNotFoundException) {
@@ -465,7 +468,7 @@ private fun resultCodeText(code: Int): String = when (code) {
 }
 
 @Composable
-private fun ExampleCard(title: String, accent: Color, content: @Composable () -> Unit) {
+internal fun ExampleCard(title: String, accent: Color, content: @Composable () -> Unit) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(12.dp),
@@ -497,7 +500,7 @@ private fun LabeledLine(label: String, value: String, labelColor: Color) {
 }
 
 @Composable
-private fun SubTitle(text: String) {
+internal fun SubTitle(text: String) {
     Text(
         text = text,
         fontSize = 13.sp,
@@ -513,29 +516,29 @@ private fun OptionChip(label: String, selected: Boolean, onClick: () -> Unit) {
 }
 
 @Composable
-private fun ActionButton(label: String, enabled: Boolean = true, onClick: () -> Unit) {
+internal fun ActionButton(label: String, enabled: Boolean = true, onClick: () -> Unit) {
     Button(onClick = onClick, enabled = enabled, colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF37474F))) {
         Text(text = label, color = Color.White, fontSize = 13.sp)
     }
 }
 
 @Composable
-private fun SmallButton(label: String, onClick: () -> Unit) {
+internal fun SmallButton(label: String, onClick: () -> Unit) {
     OutlinedButton(onClick = onClick) { Text(text = label, fontSize = 12.sp) }
 }
 
 @Composable
-private fun BodyText(text: String) {
+internal fun BodyText(text: String) {
     Text(text = text, fontSize = 13.sp, color = Color(0xFF424242), lineHeight = 19.sp)
 }
 
 @Composable
-private fun CaptionText(text: String) {
+internal fun CaptionText(text: String) {
     Text(text = text, fontSize = 11.sp, color = Color(0xFF757575), lineHeight = 16.sp, modifier = Modifier.padding(top = 2.dp))
 }
 
 @Composable
-private fun MonoText(text: String) {
+internal fun MonoText(text: String) {
     Text(text = text, fontSize = 11.sp, fontFamily = FontFamily.Monospace, color = Color(0xFF616161), lineHeight = 16.sp)
 }
 
@@ -551,7 +554,7 @@ private fun BulletText(text: String) {
 }
 
 @Composable
-private fun CodeBlock(text: String) {
+internal fun CodeBlock(text: String) {
     Column(
         modifier = Modifier
             .fillMaxWidth()

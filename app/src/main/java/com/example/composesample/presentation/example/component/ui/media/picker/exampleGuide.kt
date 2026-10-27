@@ -56,4 +56,28 @@ package com.example.composesample.presentation.example.component.ui.media.picker
  *   붙인다(그 상수는 compileSdk 37.0 jar 에 없다). A72 는 T 22, 에뮬레이터는 13 이라 둘 다 무시되는 기기
  * - 구현 메모: EXIF 는 프레임워크 ExifInterface(InputStream) — lint ExifInterface 경고(옛 플랫폼 파서 보안 버그, androidx 판 권장)를 의존성을 늘리지 않으려 억제.
  *   결과는 StartActivityForResult + contract.createIntent/parseResult 로 받아 원래 resultCode·플래그를 함께 본다(parseResult 는 final 이라 상속으로는 못 본다)
+ *
+ * ## SystemPhotoPickerExampleUI 6번 카드 — 올리기 전 위치 정리(LocationCleanupCard · LocationCleanupLab)
+ * - API(saveAttributes · getLatLong · setAttribute(tag, null)): https://developer.android.com/reference/android/media/ExifInterface
+ * - API(방향 규칙 getRotationDegrees · isFlipped — 좌우 반전 먼저, 그다음 회전): https://developer.android.com/reference/androidx/exifinterface/media/ExifInterface
+ * - 명세(PNG eXIf 청크 · 청크 CRC): https://www.w3.org/TR/png-3/
+ * - 배경(Null Island — 위도·경도 0 이 실제 위치처럼 쓰이는 현상): https://en.wikipedia.org/wiki/Null_Island
+ * 핵심 개념(실측: Pixel Tablet API 35 에뮬레이터 debug·release / Pixel 4 API 30 에뮬레이터 debug(형식 시험은 release 도).
+ * 데모 사진 CS155_*: 1600×1200 저장 + Orientation 6 인 세로 JPEG, PNG(eXIf) · WebP · HEIC(sips 변환), 모두 GPS 서울 + 고도 38m):
+ * - 0 위치: 피커 결과는 GPS 태그 7개(VersionID · 위도·경도와 방향 글자 · 고도와 기준)의 자리를 남기고 값만 0 으로 덮는다(JPEG·WebP·HEIC, 파일 크기 그대로).
+ *   프레임워크 getLatLong 은 방향 글자가 비어도 양수로 변환해 true · (0, 0) — 'getLatLong 이 true 면 위치' 로 쓰면 Null Island 를 올린다.
+ *   usableLocation 은 GpsState.PRESENT 일 때만 값을 준다(단위 테스트)
+ * - 내보내기 4가지(받은 URI 는 캐시로 복사해 사본에서만 — 문서 선택기 결과는 WRITE 권한도 있어 그 URI 에 쓰면 원본이 바뀐다):
+ *   ① 그대로 ② GPS_TAG_NAMES(프레임워크 TAG_GPS_* 31개)를 setAttribute(null) + saveAttributes — 방향·촬영 시각·기종은 남는다(JPEG 91 B 감소)
+ *   ③ BitmapFactory 디코딩 → JPEG 90 — EXIF 전부 소실, 방향 태그가 없어 세로 사진이 1600×1200 가로로 눕는다. 태그가 없으면 프레임워크는
+ *   Orientation 0 을 채워 돌려준다(addDefaultValuesForCompatibility) ④ 방향을 Matrix 로 픽셀에 먼저 반영한 뒤 JPEG — 1200×1600 으로 바로 선다
+ * - saveAttributes 형식: 파일 경로(또는 쓰기 가능한 FD)로 연 ExifInterface 만 저장. HEIC 는 읽기만 되고 저장은 IOException
+ *   'only supports saving attributes for JPEG, PNG, and WebP formats'(API 35). API 30 은 WebP 도 거절('on JPEG or PNG formats') —
+ *   앱이 만든 JPEG·PNG·WebP 로 쓰기 → 지우기를 하는 시험 버튼이 API 35 셋 다 성공, API 30 WebP 만 실패. API 30 미만은 재지 못했다
+ *   (Pixel_3 AVD 가 adb offline). 저장이 안 되는 형식은 재인코딩만 위치를 지운다
+ * - 함정(PNG, API 35 피커): 피커가 eXIf 청크 안 GPS 값 20바이트를 0 으로 바꾸고 청크 CRC 는 고치지 않는다. 프레임워크 ExifInterface 는
+ *   'Encountered invalid CRC value for PNG-EXIF chunk' 를 로그로만 남기고 EXIF 전체를 버려 GPS·기종·촬영 시각이 모두 없는 것처럼 읽히고,
+ *   saveAttributes 도 지원하지 않는 형식으로 거절한다. 같은 PNG 를 문서 선택기로 받으면 정상. 카드는 pngExifCrcOk 로 CRC 를 직접 계산해 ⚠ 를 보인다
+ * - 표시 메모: BYTE 형식 태그(GPSVersionID)는 getAttribute 가 바이트를 글자로 돌려줘 0 으로 덮인 값이 NUL 네 글자가 된다 — 화면에 NUL 이 있으면
+ *   uiautomator dump 가 통째로 실패하므로 printable 로 \xNN 표기
  */
