@@ -339,6 +339,16 @@
             android:isolatedProcess="true"
             android:process=":isolated" />
 
+        <!-- DataStoreExample 7번: 기본 프로세스와 같은 파일을 여는 쪽. MultiProcessExample 의 원격 서비스와 같은 ":remote" 프로세스에 뜬다.
+             8번: 기본 프로세스의 시작형 서비스 — onStartCommand 직후 ActivityThread 가 부르는 QueuedWork.waitToFinish 를 잰다. -->
+        <service
+            android:name=".presentation.example.component.data.storage.DataStoreRemoteService"
+            android:exported="false"
+            android:process=":remote" />
+        <service
+            android:name=".presentation.example.component.data.storage.ApplyWaitService"
+            android:exported="false" />
+
         <!-- Memo Input Activity (for Quick Settings Tile) -->
         <activity
             android:name=".presentation.example.component.system.platform.quicksettings.MemoInputActivity"

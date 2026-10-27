@@ -964,9 +964,9 @@ val examples2026 = listOf(
         exampleType = ConstValue.AdaptivePaneScaffoldExample
     ),
     ExampleObject(
-        lastUpdate = "26. 10. 26",
+        lastUpdate = "26. 10. 27",
         title = "DataStore Example",
-        description = "SharedPreferences 와 대조한 동시 갱신·손상 파일·이관·인스턴스 규칙",
+        description = "SharedPreferences 와 대조한 동시 갱신·손상·이관·프로세스 경계·apply 대기",
         blogUrl = "",
         exampleType = ConstValue.DataStoreExample
     )

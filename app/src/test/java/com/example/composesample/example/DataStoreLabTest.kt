@@ -1,6 +1,9 @@
 package com.example.composesample.example
 
 import androidx.datastore.core.CorruptionException
+import com.example.composesample.presentation.example.component.data.storage.BoundaryMode
+import com.example.composesample.presentation.example.component.data.storage.BoundaryResult
+import com.example.composesample.presentation.example.component.data.storage.BoundarySide
 import com.example.composesample.presentation.example.component.data.storage.DemoSettings
 import com.example.composesample.presentation.example.component.data.storage.DemoSettingsSerializer
 import com.example.composesample.presentation.example.component.data.storage.RaceResult
@@ -8,6 +11,8 @@ import com.example.composesample.presentation.example.component.data.storage.des
 import com.example.composesample.presentation.example.component.data.storage.escapeControl
 import com.example.composesample.presentation.example.component.data.storage.formatSettings
 import com.example.composesample.presentation.example.component.data.storage.parseSettings
+import com.example.composesample.presentation.example.component.data.storage.readPrefsInt
+import com.example.composesample.presentation.example.component.data.storage.shortenPaths
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
@@ -17,7 +22,7 @@ import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 
 /**
- * DataStore 예제의 순수 부분 검증.
+ * DataStore 예제의 순수 부분 검증(7번 카드의 SP 파일 읽기·결과 계산·경로 줄이기 포함).
  * given : 저장 값·파일 내용
  * when : 직렬화 왕복 / 손상 내용 읽기 / 결과 계산
  * then : 같은 값이 돌아오거나 CorruptionException
@@ -59,5 +64,34 @@ class DataStoreLabTest {
         assertEquals("IllegalStateException: multiple", describeFailure(IllegalStateException("multiple")))
         assertEquals("RuntimeException: outer ← IllegalStateException: inner", describeFailure(RuntimeException("outer", IllegalStateException("inner"))))
         assertEquals("RuntimeException ← IllegalStateException: x", describeFailure(RuntimeException(IllegalStateException("x"))))
+    }
+
+    @Test
+    fun `SP 파일 XML 에서 int 를 캐시 없이 읽는다`() {
+        val xml = "<?xml version='1.0' encoding='utf-8' standalone='yes' ?>\n<map>\n    <int name=\"count\" value=\"146\" />\n</map>\n"
+        assertEquals(146, readPrefsInt(xml, "count"))
+        assertNull(readPrefsInt(xml, "other"))
+        assertNull(readPrefsInt("<map />", "count"))
+    }
+
+    @Test
+    fun `두 프로세스 결과의 기대값과 잃은 갱신 수`() {
+        val side = BoundarySide("main", lastSeen = 87, millis = 10)
+        val result = BoundaryResult(BoundaryMode.SINGLE, 100, side, side, onDisk = 146, observed = listOf(146), reread = 146, diskAfter = 151)
+        assertEquals(200, result.expected)
+        assertEquals(54, result.lost)
+        assertNull(result.copy(onDisk = null).lost)
+    }
+
+    @Test
+    fun `실패 메시지의 절대 경로는 파일 이름만 남긴다`() {
+        val message = "IOException: Unable to rename /data/data/com.example.composesample/files/datastore_demo/boundary.settings.tmp to " +
+            "/data/data/com.example.composesample/files/datastore_demo/boundary.settings. This likely means … ← NoSuchFileException: " +
+            "/data/data/com.example.composesample/files/datastore_demo/boundary.settings.tmp -> /data/data/com.example.composesample/files/datastore_demo/boundary.settings"
+        assertEquals(
+            "IOException: Unable to rename boundary.settings.tmp to boundary.settings. This likely means … ← NoSuchFileException: " +
+                "boundary.settings.tmp -> boundary.settings",
+            shortenPaths(message)
+        )
     }
 }

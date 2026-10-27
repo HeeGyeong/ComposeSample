@@ -229,7 +229,7 @@ Cursor IDE를 사용하는 개발자를 위한 **AI 코딩 어시스턴트 규�
 - **repository**: Advanced Repository Pattern — Memory → Disk → Network 다중 소스 우선순위 해석과 캐시 채우기
 - **room**: Room `@Fts4` MATCH 검색 vs `LIKE '%q%'` 전체 스캔, `@Index` 단일/복합 인덱스 쿼리 성능, DAO 인터페이스 상속 + `withTransaction`을 통한 멀티 테이블 삽입
 - **sse**: Server-Sent Events와 실시간 데이터 스트리밍(okhttp-eventsource 5.0.0 `BackgroundEventSource` — 호출자가 close() 하면 onClosed 가 오지 않는 4.0+ 동작을 반영) / Ktor 3.6.0 SSE 클라이언트로 같은 스트림을 Flow 로 받아 콜백 방식과 대조 — 전용 스레드 유무, 종료를 정한 뒤 도착하는 이벤트(콜백 0~15개 vs Flow 0개), Job 취소·화면 이탈 시 정리, Ktor 기본 재연결 0회
-- **storage**: DataStore ↔ SharedPreferences 대조 — 동시 증가 100회(SP 의 잃어버린 갱신 vs `updateData` 직렬화), 쓰기 200회 비용(apply·commit·개별/묶은 `updateData`), 손상 파일(SP 는 빈 값으로 넘어가고 DataStore 는 `CorruptionException`·`ReplaceFileCorruptionHandler` 복구), `SharedPreferencesMigration` 전체·일부 키, 같은 파일 두 인스턴스 `IllegalStateException`
+- **storage**: DataStore ↔ SharedPreferences 대조 — 동시 증가 100회(SP 의 잃어버린 갱신 vs `updateData` 직렬화), 쓰기 200회 비용(apply·commit·개별/묶은 `updateData`), 손상 파일(SP 는 빈 값으로 넘어가고 DataStore 는 `CorruptionException`·`ReplaceFileCorruptionHandler` 복구), `SharedPreferencesMigration` 전체·일부 키, 같은 파일 두 인스턴스 `IllegalStateException`, 프로세스 경계(`:remote` 와 같은 파일 동시 증가 — SP·단일용 DataStore 는 갱신을 잃고 단일용은 `.tmp` 이름 바꾸기 실패, `MultiProcessDataStoreFactory` 만 200/200·다른 프로세스 쓰기 수신) · 밀린 `apply` 를 `QueuedWork.waitToFinish` 로 메인 스레드가 치르는 시간
 
 ### **system** - 시스템 연동 & 플랫폼
 **platform**:
