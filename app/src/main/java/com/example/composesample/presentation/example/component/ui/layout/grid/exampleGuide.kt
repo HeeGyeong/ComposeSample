@@ -7,6 +7,7 @@ package com.example.composesample.presentation.example.component.ui.layout.grid
  * - 릴리스 블로그: https://android-developers.googleblog.com/2026/04/jetpack-compose-april-2026-updates.html
  * - Compose Foundation 릴리스 노트: https://developer.android.com/jetpack/androidx/releases/compose-foundation
  * - CSS Grid 개념 대조: https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_grid_layout
+ * - CSS grid-template-areas(이름 붙인 영역의 원형): https://developer.mozilla.org/en-US/docs/Web/CSS/grid-template-areas
  *
  * 핵심 개념:
  * - Grid(config = { ... }) { ... }: config 람다에서 트랙을 선언하고 content 람다에서 자식을 배치
@@ -30,8 +31,20 @@ package com.example.composesample.presentation.example.component.ui.layout.grid
  * 버전 메모:
  * - Grid API 는 Compose 1.11.0-alpha04 도입(@ExperimentalGridApi) — 예제 작성 당시 foundation-layout 1.11.1
  * - 이름 붙인 영역(GridConfigurationScope.area(areaId, row, column, rowSpan, columnSpan) / area(areaId, rows, columns) +
- *   Modifier.gridItem(areaId))은 1.12.0-beta01 신규로, 지금 프로젝트의 foundation-layout 1.12.1 에도 있다(여전히 @ExperimentalGridApi).
- *   이 예제는 아직 좌표와 span 으로만 배치한다
+ *   Modifier.gridItem(areaId, alignment))은 1.12.0-beta01 신규로, 프로젝트의 foundation-layout 1.12.1 에 있다(@ExperimentalGridApi).
+ *   GridAreaCards.kt 의 두 카드가 다룬다(#161)
+ *
+ * 이름 붙인 영역(1.12.1 Grid.kt 소스 기준):
+ * - areaId 는 equals/hashCode 가 안정적인 값(enum·String·data class·object). config 의 area 는 id → 칸(16비트씩 묶은 Long) 맵에
+ *   넣을 뿐이라 같은 id 를 두 번 정의하면 뒤의 것이 이긴다. row·column 둘 다 GridIndexUnspecified 면 IllegalArgumentException
+ * - 1차원 영역: 한 축을 비워 두면(area("Tags", row = 1)) 그 행 안에서 빈 열을 차례로 찾는다 — 선언한 열을 넘으면
+ *   다음 행으로 줄바꿈하지 않고 암시 열(Auto)을 만든다. 1차원·명시 배치는 자동 배치 커서를 움직이지 않는다
+ * - 없는 id 는 조용히 자동 배치(1×1)로 떨어진다(문서: "silently fall back"). 범위 밖 음수 인덱스도 자동 배치
+ * - 영역은 자리를 예약하지 않는다: 자식은 선언 순서대로 처리되고 명시(영역) 배치는 차 있어도 그 칸에 놓인다 —
+ *   앞서 선언된 자동 배치 자식이 그 칸을 먼저 가져가면 영역 자식이 그 위에 포개진다
+ * - 그리는 순서: 칸을 정한 뒤 자식을 (행, 열)로 안정 정렬해서 place 한다 → 시작 칸이 다르면 위치가 z 순서를 정한다.
+ *   KDoc 의 "items declared later draw on top, mirroring Box" 는 시작 칸이 같을 때만 맞는다(같은 칸은 안정 정렬이라 선언 순서)
+ * - 암시 트랙은 GridTrackSize.Auto
  *
  * 다른 레이아웃 예제와의 축 차이:
  * - LazyStaggeredGridExampleUI: 스크롤 격자(lazy) — 화면 밖 아이템은 컴포즈되지 않음

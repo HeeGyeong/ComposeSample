@@ -50,7 +50,7 @@ import com.example.composesample.presentation.MainHeader
  * Compose Grid API Example
  *
  * Compose 1.11 의 실험 API 인 Grid(non-lazy 2D 트랙 레이아웃)를 시연한다.
- * 이름 붙인 영역(area() / gridItem(areaId))은 Compose 1.12 신규 API 로, 이 예제는 아직 다루지 않는다.
+ * 이름 붙인 영역(area() / gridItem(areaId), Compose 1.12)은 GridAreaCards.kt 의 두 카드가 다룬다.
  */
 @Composable
 fun GridLayoutExampleUI(onBackEvent: () -> Unit) {
@@ -70,6 +70,8 @@ fun GridLayoutExampleUI(onBackEvent: () -> Unit) {
             item { GridTrackSizeCard() }
             item { GridFlexAndGapCard() }
             item { GridPlacementCard() }
+            item { GridNamedAreaCard() }
+            item { GridAreaTrapCard() }
             item { GridFlowCard() }
             item { GridVsLazyGridCard() }
             item { GridSummaryCard() }
@@ -548,6 +550,8 @@ private fun GridSummaryCard() {
             "gap" to "남은 공간 계산 전에 먼저 차감된다",
             "배치" to "gridItem(row, column, span) 또는 IntRange 오버로드 — 번호는 1부터(0 은 자동 배치)",
             "겹침" to "좌표 충돌은 오류가 아니라 포개짐 — 검증은 개발자 몫",
+            "영역" to "area(id, …) + gridItem(id) — 자식은 이름만, 배치는 config 가. 없는 id 는 조용히 자동 배치",
+            "순서" to "칸을 정한 뒤 행 → 열 순서로 놓는다 — 겹치면 위치가 그리는 순서를 정한다",
             "non-lazy" to "모든 자식이 컴포즈되므로 대량 데이터에는 부적합"
         )
         points.forEach { (title, desc) ->
@@ -569,14 +573,6 @@ private fun GridSummaryCard() {
             }
         }
 
-        Spacer(modifier = Modifier.height(12.dp))
-        Text(
-            text = "이 예제의 범위 밖: 이름 붙인 영역(area() / gridItem(areaId))은 Compose 1.12 에서 추가된 API 로 " +
-                    "지금 프로젝트(1.12.1)에도 있지만, 이 예제는 좌표와 span 으로만 배치합니다.",
-            fontSize = 12.sp,
-            color = Color(0xFF616161),
-            lineHeight = 17.sp
-        )
         Spacer(modifier = Modifier.height(10.dp))
         CodeBlock(
             code = """
@@ -599,7 +595,7 @@ private fun GridSummaryCard() {
 // ==================== 공용 컴포넌트 ====================
 
 @Composable
-private fun ExampleCard(
+internal fun ExampleCard(
     title: String,
     titleColor: Color,
     content: @Composable () -> Unit
@@ -727,7 +723,7 @@ private fun LabeledSlider(
 }
 
 @Composable
-private fun ToggleRow(label: String, checked: Boolean, onCheckedChange: (Boolean) -> Unit) {
+internal fun ToggleRow(label: String, checked: Boolean, onCheckedChange: (Boolean) -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -746,7 +742,7 @@ private fun ToggleRow(label: String, checked: Boolean, onCheckedChange: (Boolean
 }
 
 @Composable
-private fun CodeBlock(code: String, borderColor: Color) {
+internal fun CodeBlock(code: String, borderColor: Color) {
     Box(
         modifier = Modifier
             .fillMaxWidth()

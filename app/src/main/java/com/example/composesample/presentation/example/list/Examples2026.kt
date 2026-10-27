@@ -600,9 +600,9 @@ val examples2026 = listOf(
         exampleType = ConstValue.LazyListReusePoolExample
     ),
     ExampleObject(
-        lastUpdate = "26. 08. 05",
+        lastUpdate = "26. 10. 27",
         title = "Compose Grid API (non-lazy 2D 레이아웃)",
-        description = "Compose 1.11 Grid API로 CSS Grid 닮은 2차원 트랙 레이아웃 구성",
+        description = "Grid 2차원 트랙 레이아웃 — 좌표·이름 붙인 영역 배치와 겹침·순서 함정",
         blogUrl = blogUrl(209),
         exampleType = ConstValue.GridLayoutExample
     ),
