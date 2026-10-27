@@ -130,7 +130,8 @@ private fun GridConceptCard() {
                         gap(8.dp)
                     }
                 ) {
-                    Box(Modifier.gridItem(row = 0, column = 0))
+                    // 인덱스는 1부터 — 0 은 '지정 안 함'
+                    Box(Modifier.gridItem(row = 1, column = 1))
                 }
             """.trimIndent(),
             borderColor = Color(0xFF1976D2)
@@ -315,7 +316,8 @@ private fun GridPlacementCard() {
     ExampleCard(title = "자동 배치 vs 명시 배치(gridItem)", titleColor = Color(0xFF7B1FA2)) {
         Text(
             text = "Modifier 없이 두면 배치 커서가 순서대로 채웁니다. Modifier.gridItem 으로 좌표와 span 을 직접 " +
-                    "지정하면 대시보드처럼 특정 셀을 넓게 쓸 수 있습니다.",
+                    "지정하면 대시보드처럼 특정 셀을 넓게 쓸 수 있습니다. 행·열 번호는 1부터 셉니다 — 0 은 " +
+                    "GridIndexUnspecified('지정 안 함')라서 오류 없이 자동 배치로 바뀝니다.",
             fontSize = 13.sp,
             color = Color(0xFF424242),
             lineHeight = 19.sp
@@ -340,38 +342,40 @@ private fun GridPlacementCard() {
                 .border(1.dp, Color(0xFFE1BEE7), RoundedCornerShape(8.dp))
                 .padding(6.dp)
         ) {
-            // 헤더: 0행을 3칸 모두 차지
+            // 행·열 번호는 1부터. 2026-10-27 까지 이 카드는 0부터 썼다 — 0 은 '지정 안 함'이라 헤더는 우연히 맞고
+            // A 가 헤더를 덮고 Side 가 암시적 4번째 열로 밀려나 있었다
+            // 헤더: 1행을 3칸 모두 차지
             PlacementCell(
-                label = "Header (0행, 3칸)",
+                label = "Header (1행, 3칸)",
                 color = Color(0xFF6A1B9A),
-                modifier = Modifier.gridItem(row = 0, column = 0, columnSpan = 3)
+                modifier = Modifier.gridItem(row = 1, column = 1, columnSpan = 3)
             )
-            // 사이드바: IntRange 오버로드 — gridItem(rows = 1..2, columns = 0..0)
+            // 사이드바: IntRange 오버로드 — gridItem(rows = 2..3, columns = 1..1)
             PlacementCell(
-                label = "Side\n(1..2행)",
+                label = "Side\n(2..3행)",
                 color = Color(0xFF8E24AA),
-                modifier = Modifier.gridItem(rows = 1..2, columns = 0..0)
+                modifier = Modifier.gridItem(rows = 2..3, columns = 1..1)
             )
-            // 본문 A: 1행의 1~2열
+            // 본문 A: 2행의 2~3열
             PlacementCell(
-                label = "A (1행, 2칸)",
+                label = "A (2행, 2칸)",
                 color = Color(0xFFAB47BC),
-                modifier = Modifier.gridItem(row = 1, column = 1, columnSpan = 2)
+                modifier = Modifier.gridItem(row = 2, column = 2, columnSpan = 2)
             )
             // 본문 B: 겹침 토글에 따라 헤더 자리로 이동
             PlacementCell(
                 label = if (overlap) "B (겹침!)" else "B",
                 color = if (overlap) Color(0xFFE53935) else Color(0xFFBA68C8),
                 modifier = if (overlap) {
-                    Modifier.gridItem(row = 0, column = 0, columnSpan = 2)
+                    Modifier.gridItem(row = 1, column = 1, columnSpan = 2)
                 } else {
-                    Modifier.gridItem(row = 2, column = 1)
+                    Modifier.gridItem(row = 3, column = 2)
                 }
             )
             PlacementCell(
                 label = "C",
                 color = Color(0xFFCE93D8),
-                modifier = Modifier.gridItem(row = 2, column = 2)
+                modifier = Modifier.gridItem(row = 3, column = 3)
             )
         }
 
@@ -542,7 +546,7 @@ private fun GridSummaryCard() {
             "선언 순서" to "트랙을 먼저 선언(column/row)하고 자식을 배치한다",
             "크기 해석" to "Fixed·콘텐츠·Percentage 가 먼저, 남은 공간을 fr 이 분배",
             "gap" to "남은 공간 계산 전에 먼저 차감된다",
-            "배치" to "gridItem(row, column, span) 또는 IntRange 오버로드",
+            "배치" to "gridItem(row, column, span) 또는 IntRange 오버로드 — 번호는 1부터(0 은 자동 배치)",
             "겹침" to "좌표 충돌은 오류가 아니라 포개짐 — 검증은 개발자 몫",
             "non-lazy" to "모든 자식이 컴포즈되므로 대량 데이터에는 부적합"
         )
@@ -582,9 +586,9 @@ private fun GridSummaryCard() {
                     row(44.dp); row(56.dp); row(56.dp)
                     gap(8.dp)
                 }) {
-                    Header(Modifier.gridItem(row = 0, column = 0, columnSpan = 3))
-                    Side(Modifier.gridItem(rows = 1..2, columns = 0..0))
-                    Body(Modifier.gridItem(row = 1, column = 1, columnSpan = 2))
+                    Header(Modifier.gridItem(row = 1, column = 1, columnSpan = 3))
+                    Side(Modifier.gridItem(rows = 2..3, columns = 1..1))
+                    Body(Modifier.gridItem(row = 2, column = 2, columnSpan = 2))
                 }
             """.trimIndent(),
             borderColor = Color(0xFF37474F)

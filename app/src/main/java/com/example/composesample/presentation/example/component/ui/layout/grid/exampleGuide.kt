@@ -21,6 +21,10 @@ package com.example.composesample.presentation.example.component.ui.layout.grid
  * - GridFlow.Row / GridFlow.Column: 좌표를 지정하지 않은 자식을 채우는 커서의 진행 방향
  * - Modifier.gridItem(row, column, rowSpan, columnSpan, alignment)
  *   또는 IntRange 오버로드 Modifier.gridItem(rows, columns, alignment)
+ * - 행·열 번호는 **1부터**(1.11.0 정식부터 그대로, 1.11.0·1.11.1·1.11.4·1.12.1 sources 확인). 0 은 GridIndexUnspecified —
+ *   오류 없이 그 축만 자동 배치가 된다. 음수는 끝에서부터(-1 = 마지막 트랙, 선언한 트랙 기준)
+ *   ⚠️ 이 예제의 배치 카드는 2026-10-27 까지 0부터 썼다: 헤더(0,0,span 3)는 자동 배치로 우연히 맞았지만
+ *   Side(rows 1..2, columns 0..0)는 '1행 고정·열 자동'이 돼 암시적 4번째 열로, A(1,1)는 헤더 자리로 가 헤더를 덮었다(에뮬레이터 실측)
  * - 전부 @OptIn(ExperimentalGridApi::class) 필요
  *
  * 버전 메모:
