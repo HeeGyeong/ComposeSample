@@ -30,8 +30,8 @@ private const val PINNING_URL = "https://$PINNING_HOST/posts/1"
 /** 네트워크가 끊긴 상태에서 화면이 오래 멈추지 않도록 짧게 잡는다. */
 private const val TIMEOUT_SECONDS = 10L
 
-/** 예외 원인 사슬을 훑을 최대 깊이 — 순환 사슬에 걸려 무한 루프에 빠지지 않도록 둔다. */
-private const val MAX_CAUSE_DEPTH = 10
+/** ①-2 차단 목록 실험의 비밀 요청 대상 — 같은 호스트에서 본문을 그대로 돌려주는 POST 경로 */
+private const val BLOCKLIST_POST_URL = "https://$PINNING_HOST/posts"
 
 /**
  * App Security 예제 ① Certificate Pinning 섹션의 실제 TLS 동작을 담당한다.
@@ -43,6 +43,9 @@ private const val MAX_CAUSE_DEPTH = 10
  *                             각 인증서를 CertificatePinner.pin() 에 넣으면 그게 바로 등록할 핀 값이다.
  * 2) requestWithCorrectPin(): 1)에서 얻은 leaf 핀(+ 상위 인증서를 backup pin)으로 요청 → 정상 응답.
  * 3) requestWithWrongPin()  : 고의로 틀린 핀으로 요청 → 실제 SSLPeerUnverifiedException.
+ *
+ * ①-2 인증서 차단 목록(runBlocklistTrial · measureBlocklistReuse)은 별도 상태(blocklist)로 둔다 —
+ * 같은 화면의 하위 기능이라 ViewModel 을 나누지 않는다.
  *
  * 핀 값을 소스에 하드코딩하지 않고 매번 조회하는 이유:
  * 실제 서버 인증서는 갱신되면 핀도 같이 바뀌기 때문에, 하드코딩한 예제는 언젠가 반드시 깨진다.
@@ -209,6 +212,77 @@ class AppSecurityViewModel : ViewModel() {
         _uiState.update { it.copy(logs = emptyList()) }
     }
 
+    // ============================================================
+    // ①-2 인증서 차단 목록 — 같은 비밀 요청을 검사 자리만 바꿔 보낸다 (실험 로직은 CertBlocklistLab)
+    // ============================================================
+
+    data class BlocklistState(
+        val isRunning: Boolean = false,
+        val chain: List<ChainCert> = emptyList(),
+        /** '유출됐다'고 가정해 차단 목록에 넣은 인증서 */
+        val blockTarget: ChainCert? = null,
+        val trials: List<BlocklistTrial> = emptyList(),
+        val reuse: ReuseCheck? = null,
+        val error: String? = null
+    )
+
+    private val _blocklist = MutableStateFlow(BlocklistState())
+    val blocklist = _blocklist.asStateFlow()
+
+    val blocklistUrl: String = BLOCKLIST_POST_URL
+    private val blocklistLab = CertBlocklistLab(readUrl = PINNING_URL, postUrl = BLOCKLIST_POST_URL)
+
+    /**
+     * 체인을 한 번 읽어 중간 CA 를 차단 목록(CVE 8개 + 그 CA)에 넣고, placement 자리에서 검사한 비밀 요청을 보낸다.
+     * 자리마다 결과 한 개만 남겨(다시 누르면 교체) A·B·C 를 나란히 비교한다.
+     */
+    fun runBlocklistTrial(placement: CheckPlacement) {
+        if (_blocklist.value.isRunning) return
+        viewModelScope.launch {
+            _blocklist.update { it.copy(isRunning = true, error = null) }
+            val outcome = withContext(Dispatchers.IO) {
+                runCatching {
+                    val chain = _blocklist.value.chain.ifEmpty { blocklistLab.readChain() }
+                    val target = blockTargetIndex(chain.size)?.let { chain[it] }
+                    val trial = blocklistLab.trial(placement, CVE_2026_111943_SPKI_SHA256 + listOfNotNull(target?.spkiSha256))
+                    Triple(chain, target, trial)
+                }
+            }
+            _blocklist.update { state ->
+                outcome.fold(
+                    onSuccess = { (chain, target, trial) ->
+                        state.copy(
+                            isRunning = false,
+                            chain = chain,
+                            blockTarget = target,
+                            trials = (state.trials.filterNot { it.placement == placement } + trial).sortedBy { it.placement.ordinal }
+                        )
+                    },
+                    onFailure = { state.copy(isRunning = false, error = describeFailure(it)) }
+                )
+            }
+        }
+    }
+
+    /** 차단 목록을 비운 채 같은 클라이언트로 두 번 요청 — verify 와 네트워크 Interceptor 가 몇 번 불리는지 */
+    fun measureBlocklistReuse() {
+        if (_blocklist.value.isRunning) return
+        viewModelScope.launch {
+            _blocklist.update { it.copy(isRunning = true, error = null) }
+            val outcome = withContext(Dispatchers.IO) { runCatching { blocklistLab.reuseCheck() } }
+            _blocklist.update { state ->
+                outcome.fold(
+                    onSuccess = { state.copy(isRunning = false, reuse = it) },
+                    onFailure = { state.copy(isRunning = false, error = describeFailure(it)) }
+                )
+            }
+        }
+    }
+
+    fun clearBlocklist() {
+        _blocklist.update { BlocklistState(chain = it.chain, blockTarget = it.blockTarget) }
+    }
+
     /**
      * 단계 공통 실행부 — IO 디스패처에서 돌리고 예외를 결과로 변환한다.
      *
@@ -285,10 +359,6 @@ class AppSecurityViewModel : ViewModel() {
         }
     }
 
-    /** 자기 자신부터 시작하는 원인 사슬. 순환 사슬에 대비해 깊이를 제한한다. */
-    private fun Throwable.causeChain(): Sequence<Throwable> =
-        generateSequence(this) { it.cause }.take(MAX_CAUSE_DEPTH)
-
     private data class StepResult(
         val log: PinningLog,
         val chain: List<CertPin>? = null,
@@ -315,13 +385,5 @@ class AppSecurityViewModel : ViewModel() {
                 .digest("intentionally-wrong-pin".toByteArray())
             return "sha256/${Base64.encodeToString(digest, Base64.NO_WRAP)}"
         }
-
-        /** X500 DN("CN=a, O=b, C=c")에서 CN 만 뽑는다. CN 이 없으면 DN 을 그대로 쓴다. */
-        fun commonName(distinguishedName: String): String =
-            distinguishedName.split(",")
-                .map { it.trim() }
-                .firstOrNull { it.startsWith("CN=") }
-                ?.removePrefix("CN=")
-                ?: distinguishedName
     }
 }

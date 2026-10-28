@@ -56,6 +56,7 @@ import javax.crypto.spec.GCMParameterSpec
  *
  * 3가지 보안 패턴을 한 화면에서 데모합니다.
  * 1) Certificate Pinning  — 실제 OkHttp CertificatePinner 로 공개 호스트에 TLS 요청 (핀 조회 / 일치 / 불일치)
+ *    1-2) 인증서 차단 목록 — 같은 비밀 요청을 검사 자리(Interceptor · 네트워크 Interceptor · HostnameVerifier)만 바꿔 비교 
  * 2) Secure Storage      — AndroidKeyStore + AES-GCM 으로 평문 암호화/복호화 (EncryptedSharedPreferences 내부 동작과 동일)
  * 3) Play Integrity Mock — 토큰 디코딩 + verdict 필드 파싱 (실제 호출 없이 Mock JSON)
  */
@@ -99,6 +100,7 @@ fun AppSecurityExampleUI(onBackEvent: () -> Unit) {
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             CertificatePinningSection(viewModel)
+            CertBlocklistSection(viewModel)
             SecureStorageSection()
             PlayIntegritySection()
             Spacer(modifier = Modifier.height(24.dp))
@@ -241,6 +243,174 @@ private val NETWORK_SECURITY_CONFIG_SNIPPET = """
 
     <!-- AndroidManifest.xml -->
     <application android:networkSecurityConfig="@xml/network_security_config" />
+""".trimIndent()
+
+// ============================================================
+// 1-2) 인증서 차단 목록 — 검사 자리에 따라 차단 전에 무엇이 나가는가
+// ============================================================
+
+/**
+ * ①-2 인증서 차단 목록과 검사 시점 — 같은 비밀 요청을 검사 자리(A·B·C)만 바꿔 보내고
+ * EventListener 타임라인으로 '차단 전에 무엇이 나갔는가'를 비교한다. 네트워크 호출은 ViewModel → CertBlocklistLab.
+ */
+@Composable
+private fun CertBlocklistSection(viewModel: AppSecurityViewModel) {
+    val state = viewModel.blocklist.collectAsStateWithLifecycle().value
+
+    SectionCard(title = "①-2 인증서 차단 목록 — 어디서 검사하느냐에 따라 비밀이 먼저 나간다") {
+        BodyText(
+            "CA 개인 키가 유출되면(CVE-2026-111943) 그 CA 로 아무 호스트의 인증서나 만들 수 있고, 기기의 신뢰 루트가 패치될 때까지 " +
+                "그 인증서는 정상 검증을 통과한다. 그래서 앱이 '이 인증서는 믿지 않는다'는 차단 목록을 직접 건다. 핀(① 허용 목록)은 호스트마다 " +
+                "'이것만 믿는다'를 걸어 인증서가 바뀌면 깨지지만, 차단 목록은 모든 호스트에 한 번에 걸리고 평소엔 아무 영향이 없다."
+        )
+        Spacer(modifier = Modifier.height(6.dp))
+        BodyText(
+            "실험: 이 호스트 체인의 중간 CA 를 '유출됐다'고 가정해 차단 목록에 넣고, 가짜 Authorization 헤더와 본문을 담은 같은 POST 를 " +
+                "세 자리에서 검사한다. 대조는 검사 자리 없이 보낸다(OkHttp 5.5.1 내장 목록에는 이 호스트가 없다)."
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        MonoText("POST ${viewModel.blocklistUrl}")
+        MonoText("Authorization: Bearer demo-token-157 (가짜)")
+        state.blockTarget?.let { target ->
+            MonoText("차단 목록 = CVE 8개 + [${target.index}] CN=${target.subject}")
+            MonoText("  SPKI SHA-256 ${target.spkiSha256.take(16)}…")
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+        CodeBlock(BLOCKLIST_SNIPPET)
+
+        Spacer(modifier = Modifier.height(12.dp))
+        FlowRow(
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            CheckPlacement.entries.forEach { placement ->
+                SmallButton(placement.mark, enabled = !state.isRunning) { viewModel.runBlocklistTrial(placement) }
+            }
+            SmallButton("같은 클라이언트로 2번", enabled = !state.isRunning) { viewModel.measureBlocklistReuse() }
+            SmallButton("지우기", enabled = state.trials.isNotEmpty() || state.reuse != null) { viewModel.clearBlocklist() }
+        }
+        if (state.isRunning) {
+            Spacer(modifier = Modifier.height(8.dp))
+            MonoText("요청 중...")
+        }
+        state.error?.let {
+            Spacer(modifier = Modifier.height(8.dp))
+            CodeBlock(it)
+        }
+
+        state.trials.forEach { trial ->
+            Spacer(modifier = Modifier.height(10.dp))
+            TrialBlock(trial)
+        }
+        state.reuse?.let {
+            Spacer(modifier = Modifier.height(10.dp))
+            ReuseBlock(it)
+        }
+
+        if (state.chain.isNotEmpty()) {
+            Spacer(modifier = Modifier.height(12.dp))
+            Heading("OkHttp 5.5.1 내장 차단 목록(${CVE_2026_111943_SPKI_SHA256.size}개)과 이 체인")
+            state.chain.forEach { cert ->
+                MonoText("[${cert.index}] CN=${cert.subject} · ${cert.spkiSha256.take(16)}… · ${if (cert.inBuiltInList) "목록에 있음" else "없음"}")
+            }
+        }
+
+        Spacer(modifier = Modifier.height(12.dp))
+        Finding(
+            "실측(Pixel Tablet 에뮬레이터 API 35 debug·release · Pixel 4 에뮬레이터 API 30 debug 모두 같음 — 체인 typicode.com → WE1 → GTS Root R4, WE1 을 차단 목록에 넣음): " +
+                "대조는 201 — OkHttp 5.5.1 내장 목록 8개에 이 체인은 없다. A 는 requestHeadersEnd(헤더 7개, Authorization 포함)·requestBodyEnd(64B) 가 " +
+                "끝나고 서버가 201 과 함께 본문을 그대로 돌려준 뒤(id 101)에야 차단했다 — 비밀은 이미 서버에 있다. B 는 connectEnd(h2)·connectionAcquired " +
+                "다음, 요청 헤더를 쓰기 전에 차단해 요청 헤더·본문이 0 이었다(chain.connection() 은 null 아님). 연결은 맺었으므로 HTTP/2 서두는 나간다."
+        )
+        Finding(
+            "C 는 secureConnectStart 다음 verify 가 false 를 돌려 secureConnectEnd 없이 연결을 버렸다 — 요청 바이트 0. 그런데 OkHttp 는 이를 그 IP 의 " +
+                "연결 실패로 보고 다음 IPv4 주소로 TLS 를 다시 맺어 verify 가 2번 불렸고, 앱이 받은 예외는 첫 경로(IPv6 — 이 에뮬레이터는 연결 불가)의 " +
+                "ConnectException 이었다(어느 예외가 맨 바깥에 오는지는 경로 순서에 달렸다). 인증서 거절은 suppressed 안에 'Hostname … not verified' 와 leaf 인증서(CN=typicode.com)로만 남는다 — 막힌 것은 " +
+                "WE1 인데 호스트 이름 불일치처럼 읽힌다. 예외 타입 하나로 분기하지 말고 원인 사슬과 suppressed 를 훑고, 차단 사유는 verifier 안에서 따로 남긴다."
+        )
+        Finding(
+            "같은 클라이언트로 2번: 커넥션 1개(h2)에 verify 1번, 네트워크 Interceptor 2번 — verify 는 커넥션을 맺을 때만 불린다. 실행 중에 차단 목록을 " +
+                "바꾸면 풀에 남은 커넥션은 다시 검사되지 않으니 connectionPool.evictAll() 로 쉬는 커넥션을 비운다."
+        )
+        Finding(
+            "OkHttp 4.12.1·5.5.1 내장 목록은 C 와 같은 자리에서 검사한다 — ConnectPlan.connectTls 가 hostnameVerifier.verify 를 통과한 직후 " +
+                "CertificateBlocklist, 그다음 CertificatePinner(①) 순서이고(javap), 메시지가 'not verified (blocklisted by OkHttp)' 라 구분된다. " +
+                "같은 변경 기록에 따르면 Google Play 서비스가 있는 Android 기기는 자동 업데이트를 받았고, 내장 차단은 JVM·AOSP 기기를 위한 것이다. " +
+                "그 버전 미만의 OkHttp 에서는 C 처럼 직접 건다."
+        )
+    }
+}
+
+/** 검사 자리 하나 — 결과, 차단 전에 나간 것, 이벤트 타임라인 */
+@Composable
+private fun TrialBlock(trial: BlocklistTrial) {
+    val color = when {
+        trial.blocked -> Color(0xFFFFB74D)
+        trial.failure != null -> Color(0xFFEF9A9A)
+        else -> Color(0xFF81C784)
+    }
+    Column {
+        Text(
+            text = "${trial.placement.mark} ${trial.placement.label}",
+            color = color,
+            fontSize = 13.sp,
+            fontWeight = FontWeight.Bold,
+            fontFamily = FontFamily.Monospace
+        )
+        when {
+            trial.blocked -> MonoText("차단 · ${trial.sent.label}")
+            trial.failure != null -> MonoText("차단과 무관한 오류")
+            else -> MonoText("통과 · HTTP ${trial.httpCode}")
+        }
+        MonoText("검사 코드 호출 ${trial.checkCalls}번")
+        trial.serverReply?.let { MonoText("차단 전에 받은 응답: $it") }
+        trial.failure?.let { CodeBlock(it) }
+        CodeBlock(trial.events.joinToString("\n") { "%5dms  %-19s %s".format(it.atMs, it.name, it.detail).trimEnd() })
+    }
+}
+
+@Composable
+private fun ReuseBlock(reuse: ReuseCheck) {
+    Column {
+        Heading("같은 클라이언트로 ${reuse.requests}번 요청 (차단 목록 비움, ${reuse.protocol})")
+        MonoText("새 커넥션 ${reuse.connectionsOpened}개")
+        MonoText("HostnameVerifier.verify ${reuse.verifyCalls}번 — 커넥션을 맺을 때만")
+        MonoText("네트워크 Interceptor ${reuse.networkInterceptorCalls}번 — 요청마다")
+    }
+}
+
+@Composable
+private fun Heading(text: String) {
+    Text(
+        text = text,
+        color = Color(0xFFB0BEC5),
+        fontSize = 12.sp,
+        fontWeight = FontWeight.Bold,
+        modifier = Modifier.padding(vertical = 2.dp)
+    )
+}
+
+@Composable
+private fun Finding(text: String) {
+    Text(text = text, color = Color(0xFF90A4AE), fontSize = 11.sp, modifier = Modifier.padding(vertical = 2.dp))
+}
+
+/** gist 개정판의 핵심 — 기본 HostnameVerifier 에 위임하고 체인의 SPKI SHA-256 을 대조한다 */
+private val BLOCKLIST_SNIPPET = """
+    // ✗ A: 응답을 받은 뒤 검사 — 헤더·본문은 이미 나갔다
+    val response = chain.proceed(chain.request())
+    if (response.handshake.hasBlocked()) throw SSLPeerUnverifiedException(…)
+
+    // ✓ C: TLS 직후, 요청을 쓰기 전에 검사
+    class BlocklistVerifier(
+      private val delegate: HostnameVerifier = OkHttpClient().hostnameVerifier,
+    ) : HostnameVerifier {
+      override fun verify(host: String, session: SSLSession) =
+        delegate.verify(host, session) &&
+          session.peerCertificates.none { (it as X509Certificate).sha256Hash() in blocked }
+    }
+    client.newBuilder().hostnameVerifier(BlocklistVerifier()).build()
 """.trimIndent()
 
 private sealed interface VerifyResult {

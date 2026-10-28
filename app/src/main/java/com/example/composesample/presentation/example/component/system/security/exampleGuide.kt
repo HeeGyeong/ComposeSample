@@ -58,6 +58,40 @@ package com.example.composesample.presentation.example.component.system.security
  */
 
 /**
+ * App Security ①-2 인증서 차단 목록과 검사 시점 참고 자료
+ *
+ * - 본 예제 출처(Jesse Wilson, 2026-10-20 — 21일·22일 갱신): https://publicobject.com/2026/10/20/mitigating-bad-roots-in-okhttp/
+ * - 차단 검사 gist(첫 판 Interceptor → 개정판 HostnameVerifier): https://gist.github.com/swankjesse/de8828e357a4d3fc8ebe1ca14ec2bc9f
+ * - 유출 공지(Mozilla dev-security-policy, eMudhra 중간 인증서): https://groups.google.com/a/mozilla.org/g/dev-security-policy/c/0R3XLJL6FuE/m/0XofdebrAAAJ
+ * - OkHttp 변경 기록(5.5.1 — 8개 차단): https://lysine.dev/okhttp/changelogs/changelog/
+ * - OkHttp EventListener: https://lysine.dev/okhttp/features/events/
+ * - OkHttp Interceptors(애플리케이션 vs 네트워크): https://lysine.dev/okhttp/features/interceptors/
+ * - HostnameVerifier: https://developer.android.com/reference/javax/net/ssl/HostnameVerifier
+ *
+ * 핵심 개념 요약
+ *  - 핀(허용 목록)은 호스트마다 '이것만 믿는다' — 인증서가 바뀌면 깨진다. 차단 목록(거부 목록)은 '이것은 믿지 않는다' — 모든 호스트에 한 번에, 평소 영향 0
+ *  - 대조 값은 SPKI SHA-256(CertificatePinner.sha256Hash — 핀 "sha256/..." 은 이것의 Base64)
+ *  - 검사 자리와 차단 전에 나가는 것(EventListener 실측):
+ *      • 애플리케이션 Interceptor 가 response.handshake 를 봄 → 요청 헤더(Authorization)·본문 전송 + 서버 응답까지 받은 뒤
+ *      • 네트워크 Interceptor 가 proceed 전에 chain.connection()?.handshake() 를 봄 → 연결(TLS·HTTP/2 서두)만, 요청 0
+ *      • HostnameVerifier(기본 verifier 에 위임 + 체인 대조) → TLS 핸드셰이크 직후, secureConnectEnd 없이 연결을 버림
+ *  - OkHttp 5.5.1 ConnectPlan.connectTls 순서(javap): startHandshake → hostnameVerifier.verify → CertificateBlocklist(내장 8개,
+ *    'not verified (blocklisted by OkHttp)') → CertificatePinner. 직접 거는 verifier 는 내장 목록보다 앞, 핀은 뒤
+ *  - OkHttp 4.12.1·5.5.1 변경 기록: Google Play 서비스가 있는 Android 기기는 자동 업데이트를 받았고, 내장 차단은 JVM·AOSP 기기를 위한 것
+ *  - verifier 가 false 를 돌려주면 OkHttp 는 그 IP 의 연결 실패로 보고 다음 경로로 다시 TLS 를 맺는다 → verify 가 경로 수만큼 불린다.
+ *    앱이 받는 예외는 첫 실패 경로의 것이고 나머지는 suppressed 에 붙는다(실측: IPv6 ConnectException + suppressed 'Hostname … not verified').
+ *    거절 메시지는 leaf 인증서를 찍어 호스트 이름 불일치처럼 읽히므로 차단 사유는 verifier 안에서 따로 남긴다
+ *  - verify 는 커넥션을 맺을 때만 불린다(같은 클라이언트 2번 요청 → verify 1 · 네트워크 Interceptor 2). 실행 중에 목록을 바꾸면
+ *    connectionPool.evictAll() 로 쉬는 커넥션을 비운다
+ *
+ * 본 예제의 단순화 포인트
+ *  - 실제로 유출된 CA 의 인증서를 쓰는 서버가 없으므로, ①과 같은 호스트 체인의 중간 CA(WE1)를 '유출됐다'고 가정해 목록에 넣는다
+ *  - Authorization 은 가짜 토큰이고 본문은 공개 데모 서버(jsonplaceholder — 본문을 그대로 돌려준다)로 간다
+ *  - 실험마다 새 OkHttpClient 를 만들고 끝나면 풀을 비운다(앞 실험의 커넥션이 재사용되면 verify 가 불리지 않는다)
+ *  - 검사 코드는 람다가 아니라 클래스 — 디버그 빌드의 HotSwan 인터프리터가 람다에서 던진 checked 예외를 감싸기 때문
+ */
+
+/**
  * Hardware-Backed Keystore 검증 예제 참고 자료
  *
  * - 본 예제 출처: https://medium.com/gitconnected/verifying-hardware-backed-keystore
