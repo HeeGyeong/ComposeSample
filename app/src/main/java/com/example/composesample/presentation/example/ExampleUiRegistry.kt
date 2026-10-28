@@ -109,6 +109,7 @@ import com.example.composesample.presentation.example.component.ui.graphics.NewS
 import com.example.composesample.presentation.example.component.ui.layout.animation.AnimatedContentExampleUI
 import com.example.composesample.presentation.example.component.ui.layout.animation.AnimationsShowcaseExampleUI
 import com.example.composesample.presentation.example.component.ui.layout.animation.ArcPathAnimationExampleUI
+import com.example.composesample.presentation.example.component.ui.layout.animation.FabDialogMorphExampleUI
 import com.example.composesample.presentation.example.component.ui.layout.animation.SpringTweenSnapExampleUI
 import com.example.composesample.presentation.example.component.ui.layout.animation.AnimationExampleUI
 import com.example.composesample.presentation.example.component.ui.layout.animation.SharedElementDebugToolingExampleUI
@@ -401,6 +402,7 @@ import com.example.composesample.util.ConstValue.PredictiveBackExample
 import com.example.composesample.util.ConstValue.SpringTweenSnapExample
 import com.example.composesample.util.ConstValue.AnimationsShowcaseExample
 import com.example.composesample.util.ConstValue.ArcPathAnimationExample
+import com.example.composesample.util.ConstValue.FabDialogMorphExample
 import com.example.composesample.util.ConstValue.FlowOverflowExample
 import com.example.composesample.util.ConstValue.AdaptiveLayoutExample
 import com.example.composesample.util.ConstValue.MediaQueryExample
@@ -655,4 +657,5 @@ val exampleUiRegistry: Map<String, @Composable (onBackEvent: () -> Unit) -> Unit
     ProcessExitAnalysisExample to { onBackEvent -> ProcessExitAnalysisExampleUI(onBackEvent) },
     SecurityStateExample to { onBackEvent -> SecurityStateExampleUI(onBackEvent) },
     AdaptivePaneScaffoldExample to { onBackEvent -> AdaptivePaneScaffoldExampleUI(onBackEvent) },
+    FabDialogMorphExample to { onBackEvent -> FabDialogMorphExampleUI(onBackEvent) },
 )

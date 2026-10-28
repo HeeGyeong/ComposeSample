@@ -158,7 +158,7 @@ Cursor IDE를 사용하는 개발자를 위한 **AI 코딩 어시스턴트 규�
 
 ### **ui** - UI 컴포넌트 & 레이아웃
 **layout**:
-- **animation**: Compose 애니메이션, Shared Element Transition, AnimatedContent 심화(탭 전환, 카운터, 상태 전환, transitionSpec 갤러리), Spring/Tween/Snap/Keyframes 비교(물리 기반 바운스, 시간 기반 이징, 즉시 전환, 구간별 커스텀), 2D 경로 애니메이션(`ArcAnimationSpec`/`ArcMode` 호(arc), `keyframesWithSpline` 경유점 스무딩, 구간별 `using ArcMode`, `DeferredTargetAnimation` + `approachLayout` — 스펙 자체를 샘플링해 그린 경로)
+- **animation**: Compose 애니메이션, Shared Element Transition, AnimatedContent 심화(탭 전환, 카운터, 상태 전환, transitionSpec 갤러리), Spring/Tween/Snap/Keyframes 비교(물리 기반 바운스, 시간 기반 이징, 즉시 전환, 구간별 커스텀), 2D 경로 애니메이션(`ArcAnimationSpec`/`ArcMode` 호(arc), `keyframesWithSpline` 경유점 스무딩, 구간별 `using ArcMode`, `DeferredTargetAnimation` + `approachLayout` — 스펙 자체를 샘플링해 그린 경로), FAB → 다이얼로그 모핑(Surface 하나를 `Animatable` 진행값 하나로 — 위치·크기·모서리·색·스크림 계산, 내용은 1/3·0.55 로 창을 나눠 페이드, `requiredSize` 로 본문 한 번만 배치(끄면 10~15회 줄바꿈), 펼치는 동안만 창 원점 `Popup`(`clippingEnabled = false`)과 트리 FAB 의 같은 픽셀 넘김(보정 끄면 상태 바 높이만큼 튐), `excludeFromSystemGesture` 기본값 true 면 아래쪽 200dp 에서 가장자리 뒤로가기가 막히는 것, 비포커스 Popup 은 배경이 접근성 활성 창으로 남고 `clearAndSetSemantics` 는 아래 깔린 화면을 드러내며 포커스 Popup 이 플랫폼 Dialog 처럼 TalkBack 포커스를 다이얼로그로 옮기는 것, 시스템 '애니메이션 삭제'는 `MotionDurationScale` 로 이미 반영되는 것을 실측)
 - **bottomsheet**: BottomSheet, ModalBottomSheet, 커스텀 BottomSheet
 - **drawer**: Navigation Drawer, Modal Drawer
 - **flexbox**: FlexBox 레이아웃과 반응형 디자인, 공식 FlowRow/FlowColumn Flexbox(CSS Flexbox에서 영감을 받은 줄바꿈, maxItemsInEachRow 제한, weight 공간 분배), Flow 오버플로 제어(`maxLines`, `FlowRowOverflow.expandIndicator`/`expandOrCollapseIndicator`, `ContextualFlowRow`의 인덱스 기반 지연 컴포지션, 일반 `FlowRow`와의 컴포지션 항목 수 실측 비교)

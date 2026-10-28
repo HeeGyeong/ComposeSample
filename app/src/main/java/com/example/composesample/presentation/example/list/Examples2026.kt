@@ -969,5 +969,12 @@ val examples2026 = listOf(
         description = "SharedPreferences 와 대조한 동시 갱신·손상·이관·프로세스 경계·apply 대기",
         blogUrl = "",
         exampleType = ConstValue.DataStoreExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 10. 29",
+        title = "FAB → 다이얼로그 모핑",
+        description = "FAB 표면 하나를 진행값 하나로 키워 창을 덮는 다이얼로그 오버레이",
+        blogUrl = "",
+        exampleType = ConstValue.FabDialogMorphExample
     )
 )

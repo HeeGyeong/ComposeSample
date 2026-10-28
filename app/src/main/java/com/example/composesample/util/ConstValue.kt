@@ -113,7 +113,7 @@ object ConstValue {
     const val ModalDrawExample = "modalDrawExample"
 
     // ==================== 애니메이션 & 효과 예제 ====================
-    // Animation(다양한 애니메이션), AnimatedContent(콘텐츠 전환 심화), Lottie(Lottie/GIF), UIShimmer(로딩 효과), TextShimmer(텍스트 효과), AutoSkeletonModifier(CompositionLocal 기반 자동 스켈레톤 감지 Modifier — UIShimmer/TextShimmer의 수동 상태 분기 방식과 대비), NewShadowApi(Compose 1.9 Shadow), SharedElementTransition(공유 요소 전환), SharedElementDebugTooling(Compose 1.11 LookaheadAnimationVisualDebugging 오버레이로 matched/multipleMatches/unmatched 시각화 + test coroutine API 안내), SpringTweenSnap(spring/tween/snap/keyframes 비교), AnimationsShowcase(공통 duration/easing 슬라이더로 5가지 패턴 동시 비교 — animateXxxAsState / AnimatedVisibility+Crossfade / AnimatedContent+updateTransition / InfiniteTransition+Drag spring), ArcPathAnimation(2D 값의 "경로 모양" 축 — ArcAnimationSpec/ArcMode로 직선 대신 호, keyframesWithSpline로 경유점 부드럽게 통과, keyframes 구간별 ArcMode, DeferredTargetAnimation pendingTarget)
+    // Animation(다양한 애니메이션), AnimatedContent(콘텐츠 전환 심화), Lottie(Lottie/GIF), UIShimmer(로딩 효과), TextShimmer(텍스트 효과), AutoSkeletonModifier(CompositionLocal 기반 자동 스켈레톤 감지 Modifier — UIShimmer/TextShimmer의 수동 상태 분기 방식과 대비), NewShadowApi(Compose 1.9 Shadow), SharedElementTransition(공유 요소 전환), SharedElementDebugTooling(Compose 1.11 LookaheadAnimationVisualDebugging 오버레이로 matched/multipleMatches/unmatched 시각화 + test coroutine API 안내), SpringTweenSnap(spring/tween/snap/keyframes 비교), AnimationsShowcase(공통 duration/easing 슬라이더로 5가지 패턴 동시 비교 — animateXxxAsState / AnimatedVisibility+Crossfade / AnimatedContent+updateTransition / InfiniteTransition+Drag spring), ArcPathAnimation(2D 값의 "경로 모양" 축 — ArcAnimationSpec/ArcMode로 직선 대신 호, keyframesWithSpline로 경유점 부드럽게 통과, keyframes 구간별 ArcMode, DeferredTargetAnimation pendingTarget), FabDialogMorph(FAB 표면 하나를 진행값 하나로 다이얼로그까지 — 펼치는 동안만 창 원점 Popup 오버레이, 넘김 오차·닫기 경로·접근성 보완)
     const val AnimationExample = "animationExample"
     const val AnimatedContentExample = "animatedContentExample"
     const val LottieExample = "lottieExample"
@@ -126,6 +126,7 @@ object ConstValue {
     const val SpringTweenSnapExample = "springTweenSnapExample"
     const val AnimationsShowcaseExample = "animationsShowcaseExample"
     const val ArcPathAnimationExample = "arcPathAnimationExample"
+    const val FabDialogMorphExample = "fabDialogMorphExample"
 
     // ==================== 네비게이션 예제 ====================
     // BottomNavigation(하단 탭), Navigation3(새 Navigation), NestedRoutesNav3(중첩 라우팅), Nav3ViewModelScope(Nav3 ViewModel 스코프 변화 + 복원 패턴), Nav3SavedStateHandle(복합 객체 NavKey 역직렬화 크래시 재현 + id+Repository 복원), NavigationEventDispatcher(androidx.navigationevent 의 back/forward 양방향 디스패처 — DirectNavigationEventInput 으로 제스처 없이 주입 + transitionState/currentInfo·backInfo·forwardInfo 실측), Nav3SceneStrategy(실제 androidx.navigation3 — SceneStrategy/OverlayScene 으로 레이어드 바텀시트 스택 + overlaidEntries 재귀 씬 계산·onRemove 퇴장 타이밍·씬별 Lifecycle 상한 실측)
