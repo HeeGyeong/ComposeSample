@@ -157,7 +157,9 @@ reorderable = "0.9.6"
 # 헤더/URI 는 ConnectStrategy.http(), reconnectTime → RetryDelayStrategy. pom 이 okhttp 4.12.0 요구(프로젝트 5.4.0) → 끌어올림 0.
 # 5.0.1(2026-10-13 패치 상향, DEP-CURRENCY-10): 스트림을 멈출 때 읽기 스레드에서 응답 InputStream 을 닫아 HTTP 응답을 놓는다
 # (요청 취소만으로는 응답이 남아 HTTP/2 연결이 계속 '사용 중'). pom 의존성 5.0.0 과 동일.
-okhttpEventSource = "5.0.1"
+# 5.0.2(2026-10-29 패치 상향, DEP-CURRENCY-17): MessageEvent.getOrigin() 이 ConnectStrategy 가 origin 을 주지 않을 때도
+# EventSource.getOrigin() 과 같은 값이 된다(#112). 프로젝트는 MessageEvent.origin 을 읽지 않는다. pom 의존성 5.0.1 과 동일.
+okhttpEventSource = "5.0.2"
 
 # Paging
 # androidx.paging 은 atomic group 이라 runtime/compose/common-ktx 가 한 버전으로 움직인다.
