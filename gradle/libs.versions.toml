@@ -193,6 +193,9 @@ biometric = "1.4.0-alpha07"
 # aar 요구치·pom 전이 2.0.3 과 같다.
 # 2026-10-22 2.0.5 패치 상향(DEP-CURRENCY-14) — 패킷 풀에서 같은 스레드가 flush·release 를 겹쳐 하던 경쟁(교착 가능) 수정.
 # 역시 프로세스 내 기록 API 쪽 — aar 요구치(compileSdk 34 · AGP 8.1.1)·module 전이 2.0.4 와 같다.
+# 2026-10-30 tracing-wire 2.0.5 추가(#124, 사용자 승인 — tracing 과 같은 version.ref). aar-metadata minCompileSdk 34 / minAGP 8.1.1.
+# 해석 diff(app 5구성): tracing-wire(+android)·wire-runtime 6.4.0(+jvm) 신규, startup-runtime 은 컴파일 경로만 1.1.1 → 1.2.0(런타임은 원래 1.2.0).
+# 이 라이브러리 매니페스트의 App Startup ConnectedProfilerTracingInitializer 는 시작마다 빈 트레이스 파일을 쌓아 AndroidManifest 에서 뺐다.
 tracing = "2.0.5"
 
 # Security State(#115, 2026-10-26 신규 — 사용자 승인) — 기기 SPL·커널·Mainline 모듈 버전을 로컬로 읽고,
@@ -371,6 +374,8 @@ biometricCompose = { module = "androidx.biometric:biometric-compose", version.re
 
 # Tracing
 tracing = { module = "androidx.tracing:tracing", version.ref = "tracing" }
+# tracing-wire(#124) — 앱이 직접 Perfetto 트레이스 파일을 쓰는 TraceDriver·TraceSink. tracing 과 같은 atomic group 이라 같은 version.ref.
+tracingWire = { module = "androidx.tracing:tracing-wire", version.ref = "tracing" }
 
 # Security State
 securityState = { module = "androidx.security:security-state", version.ref = "securityState" }

@@ -144,7 +144,7 @@ object ConstValue {
     const val StartupOptimizationExample = "startupOptimizationExample"
 
     // ==================== 개발 도구 / 정책 위반 감지 예제 ====================
-    // StrictMode(메인 스레드 디스크/네트워크 I/O ThreadPolicy + leaked Closeable VmPolicy 위반을 의도적으로 재현하고 penaltyListener 로 감지 — API 28+ 분기), PerfettoTracing(androidx.tracing 의 Trace.beginSection/endSection vs beginAsyncSection/endAsyncSection 비교 — 코루틴이 멀티스레드 디스패처에서 재개될 때 스레드가 바뀌어 동기 트레이스 페어링이 깨지는 함정을 실기기 스레드명 로그로 실증, setCounter 로 Flow 활성 구독자 수 트랙)
+    // StrictMode(메인 스레드 디스크/네트워크 I/O ThreadPolicy + leaked Closeable VmPolicy 위반을 의도적으로 재현하고 penaltyListener 로 감지 — API 28+ 분기), PerfettoTracing(androidx.tracing 의 Trace.beginSection/endSection vs beginAsyncSection/endAsyncSection 비교 — 코루틴이 멀티스레드 디스패처에서 재개될 때 스레드가 바뀌어 동기 트레이스 페어링이 깨지는 함정을 실기기 스레드명 로그로 실증, setCounter 로 Flow 활성 구독자 수 트랙 + tracing 2.0 tracing-wire 로 앱이 직접 쓰는 Perfetto 파일 — traceCoroutine 구간 조각·flow 연결, 동기 beginSection 의 다른 스레드 close 예외, 토큰 전파 4가지를 파일을 다시 읽어 실측)
     const val StrictModeExample = "strictModeExample"
     const val PerfettoTracingExample = "perfettoTracingExample"
 

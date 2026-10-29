@@ -91,6 +91,7 @@ fun PerfettoTracingExampleUI(onBackEvent: () -> Unit) {
             item { ConceptCard() }
             item { SyncPitfallCard() }
             item { AsyncSafeCard() }
+            item { CoroutineTracingCard() }
             item { CounterTrackCard() }
             item { ComparisonCard() }
             item { LimitationCard() }
@@ -570,9 +571,10 @@ private fun LimitationCard() {
                     "Dispatchers.Default 는 스레드풀이라 재개 스레드가 바뀔 확률은 풀의 여유 스레드 수·타이밍에 따라 달라집니다. 위 카드에서 8개를 동시에 여러 번 실행해 대조해보세요."
                 ),
                 Triple(
-                    "beginSection/endSection 은 예외를 던지지 않는다",
+                    "Trace.beginSection/endSection 은 예외를 던지지 않는다",
                     "조용히 깨짐",
-                    "스레드가 어긋나도 즉시 크래시나 에러가 나지 않습니다 — Perfetto 캡처에서 구간이 열린 채 남거나 다른 구간과 뒤섞여 보이는 방식으로만 드러납니다."
+                    "스레드가 어긋나도 즉시 크래시나 에러가 나지 않습니다 — Perfetto 캡처에서 구간이 열린 채 남거나 다른 구간과 뒤섞여 보이는 방식으로만 드러납니다. " +
+                        "tracing 2.0 의 Tracer.beginSection 은 다릅니다: 다른 스레드에서 닫으면 IllegalArgumentException(\"Invariant violation\")을 던지고 그 구간은 파일에 열린 채 남습니다(위 tracing 2.0 카드 ② 실측, debug·release 같음). 단 라이브러리 consumer 규칙(-assumenosideeffects)이 R8 축소 빌드에서는 이 검사를 지웁니다 — 그때는 예외 없이 처음 스레드의 트랙에 END 를 씁니다(소스 기준, 이 프로젝트 release 는 축소를 꺼서 미측정)."
                 ),
                 Triple(
                     "androidx.tracing 은 컴파일 클래스패스에 없었다",
@@ -635,7 +637,9 @@ private fun SummaryCard() {
                 "Trace.setCounter 는 활성 개수처럼 시간에 따라 변하는 값을 카운터 트랙으로 남긴다",
                 "Trace.isEnabled() 로 현재 시스템 트레이싱 여부를 확인해, 라벨 계산 비용이 큰 경우 오버헤드를 가드할 수 있다",
                 "androidx.tracing 은 이 프로젝트의 런타임 클래스패스에는 이미 있었지만 컴파일 클래스패스에는 없어 명시적 의존성 선언이 필요했다",
-                "실제 트랙 시각화는 Android Studio Profiler > System Trace 또는 adb shell perfetto 캡처로 확인해야 한다"
+                "실제 트랙 시각화는 Android Studio Profiler > System Trace 또는 adb shell perfetto 캡처로 확인해야 한다",
+                "tracing 2.0(tracing-wire) 의 traceCoroutine 은 멈출 때 그 스레드에서 구간을 닫고 재개된 스레드에서 같은 이름·flow id 로 다시 열어, 스레드가 바뀌어도 트랙마다 짝이 맞는다",
+                "구조가 끊긴 작업(다른 스코프·콜백 스레드)은 tokenFromCoroutineContext() · tokenForManualPropagation() 토큰을 넘겨야 flow 로 이어진다 — 토큰 없이는 새 flow id"
             )
             bullets.forEach { bullet ->
                 Row(modifier = Modifier.padding(vertical = 3.dp)) {

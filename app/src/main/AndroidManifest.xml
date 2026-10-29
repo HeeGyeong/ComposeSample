@@ -367,6 +367,13 @@
                 android:name="androidx.work.WorkManagerInitializer"
                 android:value="androidx.startup"
                 tools:node="remove" />
+            <!-- tracing-wire 의 연결 프로파일러 초기화(androidx.startup) 제거(#124).
+                 남겨 두면 프로세스가 시작할 때마다 no_backup/perfetto_traces 에 빈 트레이스 파일이 하나씩 쌓인다
+                 (에뮬레이터 실측: 세 번 실행 → 0바이트 파일 3개). PerfettoTracing 예제는 자기 TraceDriver 를 따로 만들고,
+                 Tracer.global 은 스텁으로 남는다. -->
+            <meta-data
+                android:name="androidx.tracing.profiler.ConnectedProfilerTracingInitializer"
+                tools:node="remove" />
         </provider>
 
     </application>

@@ -649,9 +649,9 @@ val examples2026 = listOf(
         exampleType = ConstValue.RecomposerRegistryExample
     ),
     ExampleObject(
-        lastUpdate = "26. 08. 17",
+        lastUpdate = "26. 10. 30",
         title = "Perfetto 코루틴/Flow 트레이싱",
-        description = "동기 구간의 스레드 페어링 함정을 실측하고 비동기 구간·카운터로 안전하게 트레이싱",
+        description = "동기 구간의 스레드 함정을 실측하고 비동기 구간·traceCoroutine 으로 안전하게 트레이싱",
         blogUrl = "",
         exampleType = ConstValue.PerfettoTracingExample
     ),

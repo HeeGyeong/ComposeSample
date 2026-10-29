@@ -35,6 +35,37 @@ package com.example.composesample.presentation.example.component.architecture.de
  *   런타임 클래스패스에는 전이 해석돼 있었지만, 컴파일 클래스패스에는 없어 Trace 클래스를 코드에서
  *   직접 참조하려면 build.gradle 에 명시적 의존성 선언이 필요했다.
  *
+ * ## tracing 2.0 — tracing-wire 로 앱이 직접 쓰는 트레이스 (#124, 2026-10-30)
+ * - 릴리스 노트: https://developer.android.com/jetpack/androidx/releases/tracing
+ * - Perfetto TrackEvent·flow: https://perfetto.dev/docs/instrumentation/track-events
+ * - TracePacket 필드: https://perfetto.dev/docs/reference/trace-packet-proto
+ * - 파일 열기: https://ui.perfetto.dev/
+ *
+ * 구성(CoroutineTraceLab.kt · CoroutineTracingViewModel.kt · CoroutineTracingCard.kt):
+ * - TraceDriver(context, TraceSink(context, fileProvider = { file }), isCategoryEnabled = { true }) — 시스템 atrace 가 아니라
+ *   앱 프로세스가 Perfetto 프로토 파일을 직접 쓴다. 파일 이름은 File.createPerfettoFile(prefix)(같은 초면 -1, -2 …).
+ *   close() 가 큐를 비우고 파일을 닫는다. PerfettoTracer·TraceContext 생성자는 @RestrictTo 라 TraceDriver.tracer 로만 얻는다.
+ * - tracer.traceCoroutine(category, name) { } — 내부 CoroutinePropagationElement(ThreadContextElement)가 코루틴이 멈출 때
+ *   그 스레드에서 구간을 닫고, 재개된 스레드에서 같은 이름·flow id 로 다시 연다 → 트랙마다 BEGIN/END 가 맞고 조각들이 flow 로 이어진다.
+ * - 토큰: 구조가 끊긴 작업(다른 스코프·콜백 스레드)은 tokenFromCoroutineContext()(@DelicateTracingApi) 나
+ *   tokenForManualPropagation()(@ExperimentalContextPropagation) 을 양쪽 구간에 넘겨야 같은 flow id 를 쓴다. 토큰이 없으면 새 flow id.
+ * - 같은 Tracer 의 동기 beginSection(…).close() 를 다른 스레드에서 부르면 ThreadTrack.assertThreadIdWhenNotOptimized 가
+ *   IllegalArgumentException("Invariant violation…")을 던진다. tracing-android consumer 규칙(-assumenosideeffects)이 R8 축소
+ *   빌드에서 이 검사를 지운다(이 프로젝트 release 는 축소를 꺼서 debug·release 모두 던졌다).
+ * - 의존성만 넣어도 생기는 것: tracing-wire 매니페스트의 App Startup ConnectedProfilerTracingInitializer 가 프로세스 시작마다
+ *   TraceSink(context) 로 no_backup/perfetto_traces 에 빈 파일을 만들고(지우지 않음 — 쌓인다) Tracer.setGlobalTracer 를 부른다.
+ *   이 앱은 AndroidManifest 의 InitializationProvider 에서 그 meta-data 를 tools:node="remove" 로 뺐다(WorkManager 초기화와 같은 자리).
+ *   exported 리시버 ConnectedProfilerTracingReceiver(android.permission.DUMP — 셸 전용)는 남는다.
+ *
+ * 실측 (2026-10-30, Pixel 4 API 30 에뮬, debug 3회·release 2회 같음):
+ * - ① traceCoroutine 8개(Default, delay 2번): 구간마다 3조각이 스레드 2~3개 트랙에, flow id 1개 · 트랙마다 BEGIN=END · 스레드가 바뀐 코루틴 5~8/8
+ * - ② 동기 beginSection 을 delay 너머로: close() 예외 수 = 스레드가 바뀐 수(5~8/8) · 파일에 BEGIN 8, END 가 모자란 트랙 3~4
+ * - ③ 자식 코루틴·토큰 없음: 끊김(자식이 도는 동안 부모 이름 조각이 4개로 다시 열림) · 다른 스코프·토큰 없음: 끊김 ·
+ *   tokenFromCoroutineContext(): 연결 · tokenForManualPropagation()(콜백 스레드): 연결
+ * - 초기화 제거 전 새로 설치 후 세 번 실행 → 0바이트 파일 3개, 제거 후 → 0개 · Tracer.global 은 스텁
+ * - 기기 안 파서(CoroutineTraceLab.parseTraceFile)와 꺼낸 파일을 읽은 독립 파이썬 파서의 패킷·조각·연결 수가 같았다(패킷 38).
+ *   카테고리를 모두 켜면 TraceContext.flush 가 메타 구간 'flush' 하나를 남긴다.
+ *
  * 결과를 실제로 보려면:
  * - Android Studio Profiler > System Trace 로 캡처하거나 `adb shell perfetto` 로 캡처한 뒤
  *   ui.perfetto.dev 에서 열면, beginSection/endSection 은 스레드 트랙 안의 중첩 슬라이스로,

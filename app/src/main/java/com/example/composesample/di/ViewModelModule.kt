@@ -7,6 +7,7 @@ import com.example.composesample.presentation.example.component.architecture.dev
 import com.example.composesample.presentation.example.component.architecture.development.init.InitTestViewModel
 import com.example.composesample.presentation.example.component.architecture.development.type.TypeExampleViewModel
 import com.example.composesample.presentation.example.component.architecture.development.test.PowerAssertViewModel
+import com.example.composesample.presentation.example.component.architecture.development.tracing.CoroutineTracingViewModel
 import com.example.composesample.presentation.example.component.architecture.pattern.compositionLocal.CompositionLocalViewModel
 import com.example.composesample.presentation.example.component.architecture.pattern.mvi.MVIExampleViewModel
 import com.example.composesample.presentation.example.component.architecture.pattern.molecule.MoleculePresenterViewModel
@@ -97,6 +98,8 @@ val viewModelModule: Module = module {
     // 서비스를 bind 해야 하므로 Application 컨텍스트를 주입한다
     viewModel { MultiProcessViewModel(androidApplication()) }
     viewModel { PowerAssertViewModel() }
+    // TraceDriver(프로세스 이름)와 filesDir 의 트레이스 파일에 Application 컨텍스트가 필요하다
+    viewModel { CoroutineTracingViewModel(androidApplication()) }
     viewModel { CoroutineBridgesViewModel() }
     viewModel { MoleculePresenterViewModel() }
     viewModel { BaseViewModel(get(), get()) }

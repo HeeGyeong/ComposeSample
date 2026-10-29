@@ -170,6 +170,8 @@ dependencies {
 
     // Tracing (Perfetto 커스텀 트레이스 이벤트 — PerfettoTracing 예제)
     implementation(libs.tracing)
+    // tracing-wire (앱 안에서 Perfetto 트레이스 파일을 쓰는 TraceDriver + 코루틴 컨텍스트 전파 — PerfettoTracing 예제 보강 #124)
+    implementation(libs.tracingWire)
 
     // Security State (기기 SPL·CVE 패치 대조 — SecurityState 예제)
     implementation(libs.securityState)
