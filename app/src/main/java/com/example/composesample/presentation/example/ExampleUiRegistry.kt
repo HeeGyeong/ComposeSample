@@ -197,6 +197,7 @@ import com.example.composesample.presentation.example.component.architecture.dev
 import com.example.composesample.presentation.example.component.architecture.navigation.Nav3SavedStateHandleExampleUI
 import com.example.composesample.presentation.example.component.architecture.navigation.Nav3SceneStrategyExampleUI
 import com.example.composesample.presentation.example.component.architecture.navigation.Nav3DeepLinkResultExampleUI
+import com.example.composesample.presentation.example.component.architecture.pattern.molecule.MoleculePresenterExampleUI
 import com.example.composesample.presentation.example.component.architecture.navigation.Nav3ViewModelScopeExampleUI
 import com.example.composesample.presentation.example.component.architecture.navigation.NavigationEventDispatcherExampleUI
 import com.example.composesample.presentation.example.component.architecture.navigation.Navigation3ExampleUI
@@ -405,6 +406,7 @@ import com.example.composesample.util.ConstValue.AnimationsShowcaseExample
 import com.example.composesample.util.ConstValue.ArcPathAnimationExample
 import com.example.composesample.util.ConstValue.FabDialogMorphExample
 import com.example.composesample.util.ConstValue.Nav3DeepLinkResultExample
+import com.example.composesample.util.ConstValue.MoleculePresenterExample
 import com.example.composesample.util.ConstValue.FlowOverflowExample
 import com.example.composesample.util.ConstValue.AdaptiveLayoutExample
 import com.example.composesample.util.ConstValue.MediaQueryExample
@@ -661,4 +663,5 @@ val exampleUiRegistry: Map<String, @Composable (onBackEvent: () -> Unit) -> Unit
     AdaptivePaneScaffoldExample to { onBackEvent -> AdaptivePaneScaffoldExampleUI(onBackEvent) },
     FabDialogMorphExample to { onBackEvent -> FabDialogMorphExampleUI(onBackEvent) },
     Nav3DeepLinkResultExample to { onBackEvent -> Nav3DeepLinkResultExampleUI(onBackEvent) },
+    MoleculePresenterExample to { onBackEvent -> MoleculePresenterExampleUI(onBackEvent) },
 )

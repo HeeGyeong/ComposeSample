@@ -220,6 +220,11 @@ adaptive = "1.3.0"
 # MutablePreferences.toPreferences 는 1.3.0 에서 상위 Preferences 로 옮겨져 상속으로 해석).
 datastore = "1.3.0"
 
+# Molecule(#86, 2026-10-30 신규 — 사용자 승인) — Compose runtime 으로 UI 밖에서 상태(StateFlow)를 만드는 Cash App 라이브러리.
+# 2.2.0(stable, 2025-09) KMP — Android 변형 molecule-runtime-android 의 aar-metadata minCompileSdk=1 / minAGP=1.0.0.
+# module 요구: compose runtime 1.9.1 · coroutines-core 1.10.2 · stdlib 2.2.20 · (런타임) core-ktx 1.17.0 — 전부 프로젝트보다 낮다.
+moleculeRuntime = "2.2.0"
+
 [plugins]
 android-application = { id = "com.android.application", version.ref = "applicationVersion" }
 android-library = { id = "com.android.library", version.ref = "libraryVersion" }
@@ -375,6 +380,9 @@ adaptiveNavigation = { module = "androidx.compose.material3.adaptive:adaptive-na
 # DataStore
 datastore = { module = "androidx.datastore:datastore", version.ref = "datastore" }
 datastorePreferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastore" }
+
+# Molecule
+moleculeRuntime = { module = "app.cash.molecule:molecule-runtime", version.ref = "moleculeRuntime" }
 
 [bundles]
 retrofit = [

@@ -9,6 +9,7 @@ import com.example.composesample.presentation.example.component.architecture.dev
 import com.example.composesample.presentation.example.component.architecture.development.test.PowerAssertViewModel
 import com.example.composesample.presentation.example.component.architecture.pattern.compositionLocal.CompositionLocalViewModel
 import com.example.composesample.presentation.example.component.architecture.pattern.mvi.MVIExampleViewModel
+import com.example.composesample.presentation.example.component.architecture.pattern.molecule.MoleculePresenterViewModel
 import com.example.composesample.presentation.example.component.architecture.state.SnapshotFlowExampleViewModel
 import com.example.composesample.presentation.example.component.architecture.lifecycle.AutoCloseableExampleViewModel
 import com.example.composesample.presentation.example.component.architecture.lifecycle.ComposeLifecycleOwnerViewModel
@@ -97,6 +98,7 @@ val viewModelModule: Module = module {
     viewModel { MultiProcessViewModel(androidApplication()) }
     viewModel { PowerAssertViewModel() }
     viewModel { CoroutineBridgesViewModel() }
+    viewModel { MoleculePresenterViewModel() }
     viewModel { BaseViewModel(get(), get()) }
     viewModel { CoordinatorViewModel(get(), get()) }
     viewModel {

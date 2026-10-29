@@ -191,6 +191,9 @@ dependencies {
     implementation(libs.navigation3Runtime)
     implementation(libs.navigation3Ui)
 
+    // Molecule (Compose runtime 으로 UI 밖에서 StateFlow 를 만드는 프리젠터 — MoleculePresenter 예제)
+    implementation(libs.moleculeRuntime)
+
     // Unit Test
     testImplementation(libs.bundles.unitTest)
 

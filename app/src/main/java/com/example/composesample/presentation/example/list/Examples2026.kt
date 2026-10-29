@@ -983,5 +983,12 @@ val examples2026 = listOf(
         description = "딥링크 매처로 백스택을 합성하고 결과 버스로 화면 간 값 돌려받기",
         blogUrl = "",
         exampleType = ConstValue.Nav3DeepLinkResultExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 10. 30",
+        title = "Molecule 프리젠터",
+        description = "@Composable 프리젠터를 StateFlow 로 만들어 Flow 프리젠터와 대조",
+        blogUrl = "",
+        exampleType = ConstValue.MoleculePresenterExample
     )
 )
