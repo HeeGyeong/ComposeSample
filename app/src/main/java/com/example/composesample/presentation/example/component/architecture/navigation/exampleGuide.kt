@@ -218,4 +218,48 @@ package com.example.composesample.presentation.example.component.architecture.na
  *   kotlinx-serialization 컴파일러 플러그인이 추가로 필요하므로 쓰지 않았다(대가: 프로세스 종료 후 백스택 복원 없음).
  * - contentKey 를 라벨로 지정(`entry<K>(clazzContentKey = { it.label })`)해 씬 key·로그를 사람이 읽을 수 있게 했다.
  *   기본 contentKey 는 Pair("$key", "${key::class}") 다.
+ *
+ * ## Nav3DeepLinkResultExampleUI (Navigation 3 1.2.0 — Deep Link API · Result API 실물)
+ * - 출처:
+ *   - Android 블로그(2026-10-28, Android Dev Summit): https://developer.android.com/blog/posts/build-it-your-way-a-next-era-of-android-development
+ *     ('Navigation 3 1.2 is stable with deep links support')
+ *   - 릴리스 노트 1.2.0 의 Result API · Deep Link API 절: https://developer.android.com/jetpack/androidx/releases/navigation3
+ *   - deeplink 패키지: https://developer.android.com/reference/kotlin/androidx/navigation3/runtime/deeplink/package-summary
+ *   - result 패키지: https://developer.android.com/reference/kotlin/androidx/navigation3/runtime/result/package-summary
+ * - 의존성 추가 없음 — navigation3-runtime/ui 1.2.0(이미 사용) · kotlinx-serialization 플러그인(#123 에서 적용). 키는 @Serializable +
+ *   NavKey 라 rememberNavBackStack(Android 는 리플렉션 직렬화)으로 재생성·프로세스 종료 뒤 복원된다 — debug(HotSwan)에서도 동작.
+ *
+ * 핵심 개념 (navigation3-runtime-android 1.2.0 sources):
+ * - DeepLinkRequest(uri 문자열 · DeepLinkUri · Intent): Intent 판은 data → uri, type·action·extras → RequestExtras.
+ *   uri 와 extras 가 둘 다 비면 생성자 require 로 예외. DeepLinkUri 는 Android 에서 android.net.Uri 의 typealias 라 JVM 단위 테스트로는
+ *   매칭을 돌릴 수 없다(이 예제의 단위 테스트는 패턴 표·백스택 규칙만).
+ * - UriDeepLinkMatcher(DeepLinkUri(패턴), Key.serializer()): 스킴 없는 패턴은 'http[s]' 정규식, authority 는 대소문자만 무시하고 정확히 같아야
+ *   한다(커스텀 스킴 composesample://order/{no} 의 order 는 authority). 경로·쿼리·프래그먼트에서 뽑은 인자를 DeepLinkDecoder 로 키에 넣는다.
+ * - 고르기: 여러 매처 중 하나를 고르는 헬퍼는 없다. MatchResult 가 Comparable 이라 앱이 맞은 것 중 큰 것을 고른다 —
+ *   UriMatchResult 는 정확한 경로 > 경로 인자 수 > 인자 유무 > 인자 총수. withBackStack 결과(BackStackMatchResult)는 감싼 결과로 비교.
+ * - withBackStack { result -> List<K> }: 매칭될 때 합성 백스택을 만든다(lazy). 조건부도 된다(이 예제: ref=push 면 Category 생략).
+ * - StaticKeyDeepLinkMatcher(key, filters): 필터(actionFilter · mimeTypeFilter)만 보고 고정 키 — URI 없는 공유 인텐트용.
+ * - Result API: rememberResultEventBus() 를 끌어올려 rememberResultEventBusNavEntryDecorator(bus) 로 엔트리마다 LocalResultEventBus 를
+ *   준다. 보내기 sendResult<T>(값), 받기 ResultEffect<T> { }(이벤트) · conflateAsState<T>(기본값)(상태). 키는 T::class.toString() 이고
+ *   키마다 Channel(BUFFERED, SUSPEND) 하나 + receiveAsFlow — 방송이 아니라 분배다. sendResult 는 trySend.
+ *
+ * ### 실측 (Pixel 4 API 30 에뮬레이터, debug·release 같음 — 판정 표 19줄 diff 0)
+ * - products/new: Product(id="new")와 NewArrivals 가 둘 다 맞고 정확한 경로인 NewArrivals 가 선택된다.
+ * - composesample://order/4821 → Order(4821) · composesample://app/order/4821 → 맞는 매처 없음(authority app) — 수동 파싱 예제
+ *   (DynamicAppLinks '실제 수신' 탭)의 'order 가 host' 함정이 패턴에서는 처음부터 authority 로 표현된다.
+ * - orders/abc → Int 변환 실패로 null · search?q=&page= → Search(query="", page=1)(String 은 빈 문자열, Int 는 기본값) ·
+ *   q=%ED%95%9C%EA%B8%80 → "한글" · http://SHOP.example.com/promo/... → Promo(http 허용·authority 대소문자 무시·와일드카드) · ftp → 없음.
+ * - 공유 Intent(ACTION_SEND, text/plain, URI 없음) → ShareInbox · 보기 Intent(ACTION_VIEW, products/7) → Product(7).
+ * - Boolean 'True' 거부·'true' 통과(toBooleanStrict) · enum 'price' 거부·'PRICE' 통과 · 기본값 없는 Int? 는 값이 없으면 누락으로 실패.
+ * - ⚠ Map 필드가 있는 키(Bundle)는 null 이 아니라 match() 가 IllegalArgumentException("Cannot decode field [tags] ...")을 던졌다 —
+ *   UriDeepLinkMatcher.matchArguments 는 DeepLinkDecoderException 만 잡는다. 매처 루프는 try 로 감싼다.
+ * - 시스템 뒤로가기는 연 백스택을 하나씩 줄이고(NavDisplay onBack), Home 하나만 남으면 이 예제(BlogExampleActivity)를 닫는다.
+ * - 결과: Checkout 이 안 보일 때 보낸 10개는 버퍼에 쌓였다가 다시 그려질 때 먼저 붙은 ResultEffect 가 전부 가져갔다(같은 키의
+ *   conflateAsState 0). Checkout 이 보일 때 보내 두 수집기가 모두 기다리던 중이면 나뉘었다 — ResultEffect 9 · conflateAsState #2
+ *   (첫 trySend 가 첫 대기자를, 둘째가 둘째 대기자를 깨우고 나머지는 버퍼에 남아 먼저 다시 돈 ResultEffect 가 가져감). conflateAsState 는
+ *   같은 값(#2)이 다시 오면 가져가고도 State 가 바뀌지 않아 보이지 않았다.
+ * - 버퍼: 안 보일 때 70개 → 64개 도착, 65~70 은 trySend 실패로 조용히 사라졌다.
+ * - 재생성(다크 모드 전환 후 원래 값 복원)·프로세스 종료(am kill → 최근 앱, 새 pid): 백스택은 Home › Checkout › AddressPicker 그대로,
+ *   버스는 새 인스턴스(identityHashCode 이력) — AddressPicker 에서 보내 둔 3개가 돌아간 뒤 0개 도착. KDoc 의
+ *   'not saved across configuration changes or process death' 그대로.
  */

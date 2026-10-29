@@ -976,5 +976,12 @@ val examples2026 = listOf(
         description = "FAB 표면 하나를 진행값 하나로 키워 창을 덮는 다이얼로그 오버레이",
         blogUrl = "",
         exampleType = ConstValue.FabDialogMorphExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 10. 29",
+        title = "Nav3 딥링크·결과 전달",
+        description = "딥링크 매처로 백스택을 합성하고 결과 버스로 화면 간 값 돌려받기",
+        blogUrl = "",
+        exampleType = ConstValue.Nav3DeepLinkResultExample
     )
 )

@@ -129,7 +129,7 @@ object ConstValue {
     const val FabDialogMorphExample = "fabDialogMorphExample"
 
     // ==================== 네비게이션 예제 ====================
-    // BottomNavigation(하단 탭), Navigation3(새 Navigation), NestedRoutesNav3(중첩 라우팅), Nav3ViewModelScope(Nav3 ViewModel 스코프 변화 + 복원 패턴), Nav3SavedStateHandle(복합 객체 NavKey 역직렬화 크래시 재현 + id+Repository 복원), NavigationEventDispatcher(androidx.navigationevent 의 back/forward 양방향 디스패처 — DirectNavigationEventInput 으로 제스처 없이 주입 + transitionState/currentInfo·backInfo·forwardInfo 실측), Nav3SceneStrategy(실제 androidx.navigation3 — SceneStrategy/OverlayScene 으로 레이어드 바텀시트 스택 + overlaidEntries 재귀 씬 계산·onRemove 퇴장 타이밍·씬별 Lifecycle 상한 실측)
+    // BottomNavigation(하단 탭), Navigation3(새 Navigation), NestedRoutesNav3(중첩 라우팅), Nav3ViewModelScope(Nav3 ViewModel 스코프 변화 + 복원 패턴), Nav3SavedStateHandle(복합 객체 NavKey 역직렬화 크래시 재현 + id+Repository 복원), NavigationEventDispatcher(androidx.navigationevent 의 back/forward 양방향 디스패처 — DirectNavigationEventInput 으로 제스처 없이 주입 + transitionState/currentInfo·backInfo·forwardInfo 실측), Nav3SceneStrategy(실제 androidx.navigation3 — SceneStrategy/OverlayScene 으로 레이어드 바텀시트 스택 + overlaidEntries 재귀 씬 계산·onRemove 퇴장 타이밍·씬별 Lifecycle 상한 실측), Nav3DeepLinkResult(navigation3 1.2.0 Deep Link API — UriDeepLinkMatcher·withBackStack·StaticKeyDeepLinkMatcher·DeepLinkRequest(intent) 매칭과 우선순위 + Result API — ResultEventBus 의 ResultEffect/conflateAsState, 결과가 사라지는 경우)
     const val BottomNavigationExample = "bottomNavigationExample"
     const val Navigation3Example = "navigation3Example"
     const val NestedRoutesNav3Example = "nestedRoutesNav3Example"
@@ -137,6 +137,7 @@ object ConstValue {
     const val Nav3SavedStateHandleExample = "nav3SavedStateHandleExample"
     const val NavigationEventDispatcherExample = "navigationEventDispatcherExample"
     const val Nav3SceneStrategyExample = "nav3SceneStrategyExample"
+    const val Nav3DeepLinkResultExample = "nav3DeepLinkResultExample"
 
     // ==================== 앱 시작 최적화 예제 ====================
     // StartupOptimization(App Startup / Baseline Profile / Koin 지연 초기화 비교)
