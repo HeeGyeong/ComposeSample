@@ -56,4 +56,36 @@ package com.example.composesample.presentation.example.component.architecture.de
  *
  * 출처: kotlin-coroutines-recipes/onEachBatch.kt (Marcin Moskała)
  *       https://github.com/MarcinMoskala/kotlin-coroutines-recipes
+ *
+ * ## Flow 함정 — 콜드 Flow 다중 수집 · shareIn 설정 · catch 가 잡는 범위
+ * - 출처: Kaustubh Deshmukh, "Kotlin Flow: Bugs That Look Correct at First" (Android Weekly #751)
+ *   https://kt.academy/article/kaustubh_flow_bugs_that_look_correct_at_first
+ * - shareIn 공식 문서: https://kotlinlang.org/api/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.flow/share-in.html
+ * - SharingStarted.WhileSubscribed: https://kotlinlang.org/api/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.flow/-sharing-started/-companion/-while-subscribed.html
+ * - catch 공식 문서: https://kotlinlang.org/api/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.flow/catch.html
+ *
+ * 글의 네 가지 중 이 예제가 다루는 것(나머지 둘은 기존 예제로 넘긴다):
+ * - 콜드 Flow 다중 수집 → FlowPitfallsExampleUI 1·2번 카드
+ * - catch 의 범위 → 3·4번 카드
+ * - conflate 값 누락 → FlowOperatorsExampleUI 3번 카드
+ * - stateIn(WhileSubscribed) 가 구독자 없이 업스트림을 시작하지 않음 → init/InitTestExampleUI
+ *
+ * 실측(coroutines 1.11.0 — JVM 단위 테스트 FlowPitfallsLabTest 는 가상 시간, 화면은 실제 시간·Main 디스패처):
+ * - 콜드 Flow 를 두 곳에서 수집 → API 2회, 두 화면이 서로 다른 응답(v1·v2). shareIn(WhileSubscribed(), replay = 1) → 1회, 둘 다 v1
+ * - 늦게 붙은 구독자: replay = 0 → 받은 값 없음 / replay = 1 → 캐시된 v1, 업스트림 재실행 없음
+ * - 구독자 0 → 재구독: WhileSubscribed() 는 업스트림을 다시 돌리고(API 2회) 옛 값 v1 을 먼저, 새 v2 를 이어 준다
+ *   (replayExpirationMillis 기본값이 Long.MAX_VALUE 라 멈춰도 캐시가 남는다).
+ *   stopTimeoutMillis = 5_000 안에 재구독 → 재실행 없이 v1 만. replayExpirationMillis = 0 → 옛 값 없이 v2 만
+ * - catch 위치(x = 1): catch → onEach 순서면 catch 0회 · IllegalStateException(Boom!) 이 collect 밖으로 /
+ *   onEach → catch 순서면 catch 1회 · -1 수신 / collect 람다 예외는 catch 0회 · 밖으로
+ * - catch 와 취소: 수집 코루틴 취소 → catch 0회 / withTimeout 이 수집을 감쌈 → catch 0회, TimeoutCancellationException 이 밖으로 /
+ *   withTimeout 이 상류 안 → catch 1회(TimeoutCancellationException), -1 수신 /
+ *   그 핸들러에서 CancellationException 을 다시 던지면 launch 가 취소로 끝나 부모에 실패를 전하지 않는다
+ *   (catchImpl 은 '수집 코루틴의 Job 이 취소됐고 그 원인과 같은 예외'일 때만 다시 던진다 — 취소되지 않은 상태의 CancellationException 은 잡는다)
+ *
+ * 글의 예제 오류(그대로 돌려 확인):
+ * - catch 예제는 flowOf(1000) 에 if (it == 1) 이라 어느 순서에서도 예외가 나지 않는다(둘 다 1000 만 수신).
+ *   화면은 실패 값을 1 로 바꾸고, x = 1000 칩으로 원문 그대로의 결과도 보여 준다
+ * - conflate 예제의 '고친 코드'는 conflate 를 지우면서 delay(500) 도 delay(100) 으로 함께 바꿨다(설명 없음)
+ * - 맺음말은 '다섯 가지 질문'이라 하고 네 가지만 적었다
  */

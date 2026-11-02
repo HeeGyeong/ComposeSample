@@ -193,10 +193,11 @@ object ConstValue {
     const val StructuredConcurrencyGuardrailExample = "structuredConcurrencyGuardrailExample"
 
     // ==================== Flow 예제 ====================
-    // FlatMap(flatMap vs flatMapLatest 비교), FlowOperators(buffer/conflate/debounce/sample 속도 제어 비교), FlowBatching(onEachBatch 크기/시간 기준 배치 집계)
+    // FlatMap(flatMap vs flatMapLatest 비교), FlowOperators(buffer/conflate/debounce/sample 속도 제어 비교), FlowBatching(onEachBatch 크기/시간 기준 배치 집계), FlowPitfalls(콜드 Flow 다중 수집의 업스트림 중복 실행과 shareIn replay·재구독 설정 + catch 가 잡는 범위 — 연산자 순서·collect 람다·취소/시간 초과)
     const val FlatMapExample = "flatMapExample"
     const val FlowOperatorsExample = "flowOperatorsExample"
     const val FlowBatchingExample = "flowBatchingExample"
+    const val FlowPitfallsExample = "flowPitfallsExample"
 
     // ==================== Kotlin 언어 기능 예제 ====================
     // Type(변수 타입 활용), InlineValueClass(성능 최적화), SealedClassInterface(타입 안전 계층), NameBasedDestructuring(이름 기반 구조 분해 — Kotlin 2.3.20), Kotlin24Features(Kotlin 2.4 컬렉션 리터럴 [ ] / 컨텍스트 파라미터 context(...)), KotlinTimeApi(kotlin.time stdlib — Clock.System.now()/Instant 벽시계 vs TimeSource.Monotonic.markNow()/elapsedNow() 단조시계, measureTimedValue의 Duration 정밀도, TestTimeSource로 실시간 대기 없이 결정론적 시간 전진), SensitiveTypes(민감 값·불법 상태를 타입으로 — 가림 value class Pan·RawPan, 검증 팩토리 sealed 결과, Gson 직렬화·역직렬화가 toString·팩토리를 건너뛰고 Pan TypeAdapter 도 data class 필드엔 안 걸리는 함정, @ExposedCopyVisibility vs @ConsistentCopyVisibility copy() 우회, 타임아웃을 결과로 — 재시도 대신 조회)

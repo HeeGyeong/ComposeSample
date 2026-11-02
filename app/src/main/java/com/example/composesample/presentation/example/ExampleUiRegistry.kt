@@ -194,6 +194,7 @@ import com.example.composesample.presentation.example.component.architecture.dev
 import com.example.composesample.presentation.example.component.architecture.development.flow.FlatMapExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.flow.FlowBatchingExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.flow.FlowOperatorsExampleUI
+import com.example.composesample.presentation.example.component.architecture.development.flow.FlowPitfallsExampleUI
 import com.example.composesample.presentation.example.component.architecture.navigation.Nav3SavedStateHandleExampleUI
 import com.example.composesample.presentation.example.component.architecture.navigation.Nav3SceneStrategyExampleUI
 import com.example.composesample.presentation.example.component.architecture.navigation.Nav3DeepLinkResultExampleUI
@@ -258,6 +259,7 @@ import com.example.composesample.util.ConstValue.FancyTopAppBarExample
 import com.example.composesample.util.ConstValue.FlatMapExample
 import com.example.composesample.util.ConstValue.FlowBatchingExample
 import com.example.composesample.util.ConstValue.FlowOperatorsExample
+import com.example.composesample.util.ConstValue.FlowPitfallsExample
 import com.example.composesample.util.ConstValue.FlexBoxLayoutExample
 import com.example.composesample.util.ConstValue.FlingBehaviorExample
 import com.example.composesample.util.ConstValue.FocusRestorerExample
@@ -574,6 +576,7 @@ val exampleUiRegistry: Map<String, @Composable (onBackEvent: () -> Unit) -> Unit
     FlatMapExample to { onBackEvent -> FlatMapExampleUI(onBackEvent) },
     FlowOperatorsExample to { onBackEvent -> FlowOperatorsExampleUI(onBackEvent) },
     FlowBatchingExample to { onBackEvent -> FlowBatchingExampleUI(onBackEvent) },
+    FlowPitfallsExample to { onBackEvent -> FlowPitfallsExampleUI(onBackEvent) },
     Navigation3Example to { onBackEvent -> Navigation3ExampleUI(onBackEvent) },
     NavigationEventDispatcherExample to { onBackEvent -> NavigationEventDispatcherExampleUI(onBackEvent) },
     Nav3ViewModelScopeExample to { onBackEvent -> Nav3ViewModelScopeExampleUI(onBackEvent) },
