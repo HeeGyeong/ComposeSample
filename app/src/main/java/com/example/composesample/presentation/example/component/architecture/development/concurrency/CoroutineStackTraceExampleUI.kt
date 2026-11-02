@@ -48,7 +48,9 @@ import kotlinx.coroutines.withContext
  * - 복구 스위치(DEBUG)는 assertion 활성 여부를 따라가므로 **안드로이드에서는 기본적으로 꺼져 있다**.
  *   화면이 그 근거(desiredAssertionStatus·시스템 프로퍼티)를 직접 읽어 보여준다.
  * - 예외에 필드가 하나라도 있으면 반사 복사가 통째로 스킵된다는 규칙과, 그것을 되살리는
- *   CopyableThrowable 을 같은 호출 경로로 나란히 비교한다.
+ *   CopyableThrowable · stdlib StackTraceRecoverable 을 같은 호출 경로로 나란히 비교한다.
+ * - 6번 카드는 라이브러리의 복사 함수를 직접 불러, 복구가 꺼진 기기에서도 StackTraceRecoverable 의 판정을 보여준다
+ *   (예외·측정 함수는 같은 폴더의 StackTraceRecoverableLab.kt).
  * - 참고 자료(URL/핵심 개념)는 같은 폴더의 exampleGuide.kt 의 "Coroutine Stack Trace Recovery" 섹션 참고.
  */
 
@@ -69,7 +71,7 @@ private const val CALLER_MARKER = "runScenario"
 /** 4번 카드에서 같은 판단을 할 때 찾는 함수 이름(캡처를 수행하는 함수 자신). */
 private const val MANUAL_MARKER = "runManualRecovery"
 
-// ==================== 데모용 예외 3종 ====================
+// ==================== 데모용 예외 3종 (+ StackTraceRecoverableLab.kt 의 RecoverableFailure) ====================
 
 /**
  * 추가 필드가 없는 예외.
@@ -102,7 +104,8 @@ private class CopyableFailure(
 private enum class FailureKind(val label: String, val note: String) {
     PLAIN("필드 없는 예외", "추가 필드가 없어 반사 복사가 가능하다"),
     TAGGED("필드 1개 예외", "requestId 하나 때문에 반사 복사가 스킵된다"),
-    COPYABLE("CopyableThrowable", "복사 방법을 직접 제공해 필드를 유지한다")
+    COPYABLE("CopyableThrowable", "복사 방법을 직접 제공해 필드를 유지한다"),
+    RECOVERABLE("StackTraceRecoverable", "stdlib 인터페이스로 같은 일을 한다 — 예외가 코루틴을 모른다")
 }
 
 // ==================== 예외를 던지는 suspend 호출 체인 ====================
@@ -117,6 +120,7 @@ private fun failWith(kind: FailureKind, record: ThrowRecord): Nothing {
         FailureKind.PLAIN -> PlainFailure("프로필 파싱 실패")
         FailureKind.TAGGED -> TaggedFailure("프로필 파싱 실패", "req-42")
         FailureKind.COPYABLE -> CopyableFailure("프로필 파싱 실패", "req-42")
+        FailureKind.RECOVERABLE -> RecoverableFailure("프로필 파싱 실패", "req-42")
     }
     record.identity = System.identityHashCode(failure)
     throw failure
@@ -182,6 +186,7 @@ private suspend fun runScenario(kind: FailureKind): ScenarioResult {
             fieldKept = when (throwable) {
                 is TaggedFailure -> throwable.requestId
                 is CopyableFailure -> throwable.requestId
+                is RecoverableFailure -> throwable.requestId
                 else -> "-"
             },
             artificialFrames = trace.count { it.className.startsWith(ARTIFICIAL_FRAME_PACKAGE) },
@@ -296,6 +301,7 @@ fun CoroutineStackTraceExampleUI(onBackEvent: () -> Unit) {
             item { ScenarioCard() }
             item { ManualRecoveryCard() }
             item { CopyableGuideCard() }
+            item { StdlibRecoverableCard() }
             item { PitfallCard() }
         }
     }
@@ -376,7 +382,7 @@ private fun SwitchCard() {
     }
 }
 
-// ==================== 3. 예외 3종 대조 ====================
+// ==================== 3. 예외 4종 대조 ====================
 
 @Composable
 private fun ScenarioCard() {
@@ -384,17 +390,17 @@ private fun ScenarioCard() {
     var results by remember { mutableStateOf<List<ScenarioResult>>(emptyList()) }
     var running by remember { mutableStateOf(false) }
 
-    SectionCard(title = "3. 같은 경로로 세 가지 예외 던져 보기") {
+    SectionCard(title = "3. 같은 경로로 네 가지 예외 던져 보기") {
         BodyText(
             "loadProfile → fetchRemote(withContext IO) → parsePayload(withContext Default) 로 두 번 디스패치한 뒤 예외를 던진다. " +
-                "세 예외의 차이는 **필드 유무와 복사 방법 제공 여부**뿐이다."
+                "네 예외의 차이는 **필드 유무와 복사 방법 제공 여부(제공한다면 어느 인터페이스로)**뿐이다."
         )
         Spacer(modifier = Modifier.height(8.dp))
         FailureKind.entries.forEach { kind ->
             PitfallRow(kind.label, kind.note)
         }
 
-        DemoButton(text = if (running) "실행 중…" else "3종 실행", color = Color(0xFF00897B)) {
+        DemoButton(text = if (running) "실행 중…" else "4종 실행", color = Color(0xFF00897B)) {
             if (!running) {
                 running = true
                 scope.launch {
@@ -422,16 +428,18 @@ private fun ScenarioCard() {
                 Spacer(modifier = Modifier.height(10.dp))
             }
             BodyText(
-                "복구가 꺼진 런타임에서는 세 줄이 모두 같아진다 — 복사도, cause 도, 인공 프레임도 없다. " +
-                    "차이가 드러나는 것은 복구가 켜진 런타임이다."
+                "복구가 꺼진 런타임에서는 네 줄이 모두 같아진다 — 복사도, cause 도, 인공 프레임도 없다. " +
+                    "차이가 드러나는 것은 복구가 켜진 런타임이다(꺼진 기기에서 판정을 미리 보는 방법은 6번 카드)."
             )
             Spacer(modifier = Modifier.height(10.dp))
             TableRow("예외", "복구 ON(JVM, assertion 활성)에서의 결과", isHeader = true)
             TableRow("필드 없음", "복사됨 · cause 연결 · _COROUTINE 프레임 생김")
             TableRow("필드 1개", "복사 스킵 · cause 없음 · 인공 프레임 없음")
             TableRow("Copyable", "복사됨 · cause 연결 · 필드(req-42) 유지")
+            TableRow("Recoverable", "복사됨 · cause 연결 · 필드(req-42) 유지 — Copyable 과 같다")
             CaptionText(
-                "위 표는 같은 코드를 assertion 이 켜진 JVM 단위 테스트에서 돌려 확인한 결과다. " +
+                "위 표는 같은 코드를 assertion 이 켜진 JVM 단위 테스트에서 돌려 확인한 결과다" +
+                    "(Recoverable 줄은 StackTraceRecoverableLabTest). " +
                     "프레임 수는 호출 체인마다 달라지므로 적어 두지 않고 화면이 직접 센다."
             )
         }
@@ -488,8 +496,9 @@ private fun ManualRecoveryCard() {
 private fun CopyableGuideCard() {
     SectionCard(title = "5. 왜 CopyableThrowable 이 필요한가") {
         BodyText(
-            "복구는 예외를 복사해야 성립한다(원본은 cause 로 보존된다). 라이브러리는 먼저 createCopy() 를 찾고, " +
-                "없으면 생성자를 반사로 찾아 복사한다. 그런데 반사 복사에는 앞단에 조건이 하나 더 있다."
+            "복구는 예외를 복사해야 성립한다(원본은 cause 로 보존된다). 라이브러리는 먼저 createCopy() 를, " +
+                "다음으로 copyForStackTraceRecovery() 라는 이름의 메서드를 찾고(6번 카드), 둘 다 없을 때만 생성자를 반사로 찾아 복사한다. " +
+                "그런데 반사 복사에는 앞단에 조건이 하나 더 있다."
         )
         Spacer(modifier = Modifier.height(8.dp))
         CodeBlock(
@@ -500,7 +509,8 @@ private fun CopyableGuideCard() {
         Spacer(modifier = Modifier.height(8.dp))
         BodyText(
             "즉 requestId 같은 필드를 하나 붙이는 순간, 생성자 모양과 무관하게 복구 대상에서 빠진다. " +
-                "도메인 예외일수록 필드를 갖기 마련이라 **정작 필요한 예외가 복구되지 않는다**. 그 구멍을 메우는 것이 CopyableThrowable 이다."
+                "도메인 예외일수록 필드를 갖기 마련이라 **정작 필요한 예외가 복구되지 않는다**. " +
+                "그 구멍을 메우는 것이 CopyableThrowable 이다(또는 6번 카드의 stdlib StackTraceRecoverable)."
         )
         Spacer(modifier = Modifier.height(8.dp))
         CodeBlock(
@@ -515,11 +525,91 @@ private fun CopyableGuideCard() {
     }
 }
 
-// ==================== 6. 함정 ====================
+// ==================== 6. stdlib 판 — StackTraceRecoverable ====================
+
+@Composable
+private fun StdlibRecoverableCard() {
+    var results by remember { mutableStateOf<List<LibraryCopyResult>>(emptyList()) }
+
+    SectionCard(title = "6. stdlib 판 — StackTraceRecoverable") {
+        BodyText(
+            "Kotlin 2.4.20 표준 라이브러리에 같은 역할의 인터페이스가 들어왔다. " +
+                "kotlin.coroutines.debug.StackTraceRecoverable 의 copyForStackTraceRecovery() 를 구현한다. " +
+                "CopyableThrowable 과의 차이는 **예외 클래스가 kotlinx.coroutines 를 몰라도 된다**는 것 — " +
+                "코루틴 의존성이 없는 계층에 둔 도메인 예외에도 붙일 수 있다."
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        CodeBlock(
+            "@OptIn(ExperimentalStdlibCoroutineSupportApi::class)\n" +
+                "class ApiFailure(message: String, val requestId: String) :\n" +
+                "    RuntimeException(message), StackTraceRecoverable<ApiFailure> {\n" +
+                "    override fun copyForStackTraceRecovery(): ApiFailure? =\n" +
+                "        ApiFailure(message ?: \"\", requestId).also { it.initCause(this) }\n" +
+                "}"
+        )
+        CaptionText("opt-in 은 오류 수준이라 @OptIn 을 빼면 컴파일되지 않는다. 반환형이 T? 라 null 로 복사를 끌 수 있다.")
+        Spacer(modifier = Modifier.height(10.dp))
+        BodyText(
+            "그런데 kotlinx.coroutines 1.11.0 바이트코드에는 이 인터페이스 이름이 한 번도 나오지 않는다. " +
+                "라이브러리는 타입이 아니라 **공개 메서드 이름**으로 찾는다. 1.11.0 은 stdlib 2.2.20 을 기준으로 배포되는데 " +
+                "이 인터페이스는 2.4 에 생겼으니, 타입으로 참조할 수 없는 것이다."
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        CodeBlock(
+            "// 라이브러리 복사 순서(바이트코드 확인)\n" +
+                "1. e is CopyableThrowable           → e.createCopy()\n" +
+                "2. getMethod(\"copyForStackTraceRecovery\") 성공\n" +
+                "                                   → 그 결과가 답(null 이면 복사 안 함)\n" +
+                "3. 필드 수가 Throwable 과 같을 때만  → 반사 생성자"
+        )
+        Spacer(modifier = Modifier.height(10.dp))
+        BodyText(
+            "이 기기는 복구가 꺼져 있어(2번 카드) 3번 카드로는 차이가 보이지 않는다. 대신 복구가 부르는 " +
+                "**바로 그 복사 함수**를 직접 불러, 복구가 켜졌다면 catch 로 무엇이 들어올지 확인한다."
+        )
+        DemoButton(text = "라이브러리 복사 함수로 5종 확인", color = Color(0xFF5E35B1)) {
+            results = RecoverableCase.entries.map { measureLibraryCopy(it) }
+        }
+
+        if (results.isNotEmpty()) {
+            Spacer(modifier = Modifier.height(10.dp))
+            ResultRow(
+                "복사 함수",
+                if (LibraryCopyProbe.isAvailable) "tryCopyException 찾음" else "못 찾음 — 코루틴 버전이 바뀌었다"
+            )
+            Spacer(modifier = Modifier.height(6.dp))
+            results.forEach { result ->
+                Text(
+                    text = result.case.label,
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFF37474F)
+                )
+                CaptionText(result.case.note)
+                ResultRow("복사", if (result.copied) "예(사본이 들어온다)" else "아니오(원본 그대로)")
+                ResultRow("cause", if (result.causeIsOriginal) "원본이 달려 있다" else "없음")
+                ResultRow("사본", result.detail)
+                Spacer(modifier = Modifier.height(8.dp))
+            }
+            TableRow("예외", "읽는 법", isHeader = true)
+            TableRow("필드만", "복사 방법이 없어 필드 수 검사에서 포기 — 3번 카드의 '필드 1개'와 같다")
+            TableRow("Recoverable", "사본 + 원본 cause + requestId 유지 — CopyableThrowable 과 같은 결과")
+            TableRow("둘 다", "createCopy 가 이긴다(1번 단계가 먼저)")
+            TableRow("null 반환", "복사 안 함 — 같은 모양의 평범한 예외는 생성자로 복사되는데도. null 은 '다음 단계로'가 아니라 '하지 마'다")
+            TableRow("이름만", "인터페이스 없이도 복사된다 — 이름으로 찾는다는 증거일 뿐, 따라 할 패턴이 아니다")
+            CaptionText(
+                "tryCopyException 은 internal 이라 이름으로 찾아 불렀다. 이 함수 자체는 복구 스위치를 보지 않는다. " +
+                    "복구가 켜진 JVM 에서 실제 withContext 를 넘긴 결과와 같다는 것은 StackTraceRecoverableLabTest 로 확인했다."
+            )
+        }
+    }
+}
+
+// ==================== 7. 함정 ====================
 
 @Composable
 private fun PitfallCard() {
-    SectionCard(title = "6. 걸리는 것들") {
+    SectionCard(title = "7. 걸리는 것들") {
         PitfallRow(
             "안드로이드에서는 기본적으로 꺼져 있다",
             "DEBUG 는 assertion 활성 여부를 따라가는데 안드로이드 런타임은 assertion 이 꺼져 있다. " +
@@ -538,7 +628,13 @@ private fun PitfallCard() {
         PitfallRow(
             "필드를 하나만 더해도 복구에서 빠진다",
             "반사 복사는 Throwable 과 필드 수가 같을 때만 시도된다. 필드가 있는 도메인 예외는 " +
-                "CopyableThrowable 을 구현해야 복구 대상이 된다."
+                "CopyableThrowable 이나 StackTraceRecoverable 을 구현해야 복구 대상이 된다."
+        )
+        PitfallRow(
+            "StackTraceRecoverable 은 이름으로 찾힌다",
+            "라이브러리가 copyForStackTraceRecovery 를 리플렉션 이름 조회로 부르므로, 축소·난독화로 이 메서드 이름이 바뀌거나 " +
+                "지워지면 조용히 복사 대상에서 빠진다. stdlib·kotlinx.coroutines 어느 쪽 consumer 규칙에도 이 메서드를 지키는 keep 이 없다. " +
+                "복구는 보통 디버그 빌드에서만 켜므로 영향은 작다(이 프로젝트 release 는 축소가 꺼져 있어 미측정)."
         )
         PitfallRow(
             "_COROUTINE 프레임은 진짜 코드가 아니다",

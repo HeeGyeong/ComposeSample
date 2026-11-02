@@ -733,9 +733,9 @@ val examples2026 = listOf(
         exampleType = ConstValue.FormValidationExample
     ),
     ExampleObject(
-        lastUpdate = "26. 09. 09",
+        lastUpdate = "26. 11. 02",
         title = "코루틴 스택 트레이스 복구",
-        description = "suspend 경계에서 사라지는 호출자 프레임과 코루틴 스택 트레이스 복구 규칙 실측",
+        description = "잘린 코루틴 트레이스 복구 규칙 실측 + stdlib StackTraceRecoverable",
         blogUrl = "",
         exampleType = ConstValue.CoroutineStackTraceExample
     ),

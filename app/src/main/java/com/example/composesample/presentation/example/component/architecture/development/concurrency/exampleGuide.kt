@@ -69,6 +69,9 @@ package com.example.composesample.presentation.example.component.architecture.de
  * ## Coroutine Stack Trace Recovery (suspend 경계에서 잘린 트레이스 복구)
  * - 공식 문서: https://github.com/Kotlin/kotlinx.coroutines/blob/master/docs/topics/debugging.md
  * - API 문서: https://kotlinlang.org/api/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/-copyable-throwable/
+ * - StackTraceRecoverable API 문서: https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.coroutines.debug/-stack-trace-recoverable/
+ * - Kotlin 2.4.20 새 기능: https://kotlinlang.org/docs/whatsnew2420.html
+ * - 출처: https://ardakazanci.github.io/blog/posts/kotlin-coroutines-debugging-stacktrace-recoverable/
  * 핵심 개념:
  * - suspend 함수가 중단되면 호출자의 자바 프레임은 정리된다. 재개 이후 던져진 예외의 트레이스에는 호출자가 없고
  *   대신 재개시킨 스레드의 프레임(BaseContinuationImpl.resumeWith / DispatchedTask.run / CoroutineScheduler.runSafely)이 남는다
@@ -82,10 +85,20 @@ package com.example.composesample.presentation.example.component.architecture.de
  * - **안드로이드에서는 기본적으로 꺼져 있다** — 런타임이 assertion 을 켜지 않기 때문(JVM 은 -ea 로 켠다.
  *   Gradle 의 단위 테스트 태스크는 assertion 을 켜므로 JVM 테스트에서는 복구가 동작한다)
  * - 두 값 모두 클래스 최초 로드 시 한 번 계산되는 val 이라, 코루틴을 쓴 뒤 System.setProperty 를 불러도 반영되지 않는다
- * - 복사 규칙: CopyableThrowable.createCopy() 가 있으면 그것을 먼저 쓰고, 없으면 생성자를 반사로 찾는다.
- *   단 반사 복사에는 선행 조건이 있다 — 예외 클래스가 Throwable 보다 필드를 하나라도 더 선언하면 복사를 포기한다
- *   (`if (throwableFields != fieldsCountOrDefault(clazz, 0)) return nullResult`) → 필드를 가진 도메인 예외는
- *   CopyableThrowable 을 구현해야 복구 대상이 된다
+ * - 복사 규칙(1.11.0 바이트코드 — internal.ExceptionsConstructorKt): ① CopyableThrowable 이면 createCopy()
+ *   ② 아니면 `Class.getMethod("copyForStackTraceRecovery")` — 찾으면 그 결과가 답(null 이면 복사하지 않음, 생성자로 넘어가지 않음)
+ *   ③ 둘 다 없을 때만 생성자를 반사로 찾는다. 반사 복사에는 선행 조건이 있다 — 예외 클래스가 Throwable 보다 필드를 하나라도
+ *   더 선언하면 복사를 포기한다(`if (throwableFields != fieldsCountOrDefault(clazz, 0)) return nullResult`)
+ *   → 필드를 가진 도메인 예외는 CopyableThrowable 이나 StackTraceRecoverable 을 구현해야 복구 대상이 된다
+ * - stdlib `kotlin.coroutines.debug.StackTraceRecoverable<T>`(Kotlin 2.4.20, `@SinceKotlin("2.4")`): `copyForStackTraceRecovery(): T?`.
+ *   opt-in `@ExperimentalStdlibCoroutineSupportApi` 은 오류 수준. 예외 클래스가 kotlinx.coroutines 에 의존하지 않아도 된다
+ * - 코루틴 1.11.0 은 stdlib 2.2.20 기준이라 이 인터페이스를 타입으로 참조하지 않는다 → 공개 무인자 메서드 **이름**으로 찾는다.
+ *   그래서 인터페이스 없이 같은 이름의 public 메서드만 있어도 쓰이고(private 이면 못 찾음), 둘 다 구현하면 createCopy 가 이긴다
+ *   (JVM 단독 실행·StackTraceRecoverableLabTest 로 실측). 바이트코드를 인터페이스 이름으로 검색하면 0건이 나온다
+ * - 축소(R8)로 이 메서드 이름이 바뀌거나 지워지면 조용히 복사 대상에서 빠진다 — stdlib·coroutines consumer 규칙 어디에도
+ *   keep 이 없다(이 프로젝트 release 는 축소가 꺼져 있어 미측정. 복구 자체가 보통 디버그 전용이라 영향은 작다)
+ * - 라이브러리의 복사 함수 tryCopyException 자체는 DEBUG 를 보지 않는다 → 복구가 꺼진 안드로이드에서도 이것을
+ *   이름으로 찾아 부르면 "복구가 켜졌다면 catch 로 무엇이 들어오는지"를 볼 수 있다(예제 6번 카드)
  * - 비용: 예외마다 복사 + 스택 병합이 일어난다. 디버깅용 스위치이며 프로덕션 상시 활성 대상이 아니다
  *
  * ## Structured Concurrency Guardrails (coroutines 1.11.0 가드레일 + 신규 API 3종)

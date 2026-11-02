@@ -418,6 +418,18 @@ exclude("com.example.composesample.presentation.example.component.architecture.d
 
 Plain `Class` lookups that are not caller-sensitive (`javaClass.simpleName`, `::class.java`) were not affected.
 
+The stack trace example's StackTraceRecoverable card (#165) hit the same error: it calls kotlinx.coroutines' internal
+`tryCopyException` through `Method.invoke`, and 4 of its 7 debug unit tests failed with the same
+`IllegalAccessException` from `ReflectionArtBridge.resolveMethodHandleReflectively`. The call was moved into
+`LibraryCopyProbe` (an `object` holding only the reflection) and that class is excluded the same way:
+
+```groovy
+exclude("com.example.composesample.presentation.example.component.architecture.development.concurrency.LibraryCopyProbe")
+```
+
+The coroutines library's own reflective lookup (`getMethod("copyForStackTraceRecovery")` during stack trace
+recovery) was not affected - library classes are not rewritten, only the app's.
+
 ### A `private var` in an `object` or at the top level reads back its initial value under the dispatch rewrite
 
 Found while writing the clipboard / text processing example (#146). `ProcessTextLog` (an `object`) numbered its records
