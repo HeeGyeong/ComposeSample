@@ -113,9 +113,11 @@ okhttpLoggingInterceptor = "5.5.1"
 # (Unbalanced enter/exit · 메인 스레드 close 의 NetworkOnMainThreadException) · 연결 누수 · HttpStatement.execute 정지 ·
 # HttpRedirect 상대 Location 의 점 경로 정규화. 프로젝트 클라이언트는 OkHttp 엔진(DI)·MockEngine(예제)이라 Android 엔진 수정은 해당 없음.
 ktor = "3.6.1"
-# kotlinx-io 0.9.1 — Ktor 3.6.0 이 전이로 끌어오는 버전 그대로 선언(해석 결과 변화 0). HttpCache 의 FileStorage(Path, FileSystem) 가
+# kotlinx-io 0.9.2(2026-11-02, 0.9.1 에서 패치 상향 — DEP-CURRENCY-21, 2026-10-30 발행). Ktor 3.6.1 이 요구하는 0.9.1 보다 앞서므로
+# app 구성만 0.9.2 로 올라간다(core·bytestring 4좌표, data 모듈은 그대로). JVM 쪽 변경은 확장 함수 할당 감소(#517)와 Random.nextByteString 추가뿐
+# (Native FileSink/FileSource 재구현·WASI 경로는 다른 플랫폼). HttpCache 의 FileStorage(Path, FileSystem) 가
 # kotlinx.io.files.Path/SystemFileSystem 을 요구해 앱 코드가 직접 쓰므로 명시한다(DEP-VERSION-05: 직접 쓰는 라이브러리는 선언=해석).
-kotlinxIoCore = "0.9.1"
+kotlinxIoCore = "0.9.2"
 # kotlinx-serialization — RememberPatterns 예제(#123)의 @Serializable 데이터 클래스를 rememberSerializable 로 저장하려고 직접 쓴다.
 # 컴파일러 플러그인(org.jetbrains.kotlin.plugin.serialization)은 Kotlin 과 같은 버전으로 배포되므로 kotlinVersion 을 따른다.
 # 1.12.0(2026-10-26 상향, 마이너 — DEP-CURRENCY-13 사용자 승인, #150 과 묶음). 1.11.0 은 savedstate 1.5.0 등의 전이와 같은 값이었고,
