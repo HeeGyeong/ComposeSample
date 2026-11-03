@@ -124,6 +124,7 @@ import com.example.composesample.presentation.example.component.ui.layout.flexbo
 import com.example.composesample.presentation.example.component.ui.layout.flexbox.FlowRowLayoutExampleUI
 import com.example.composesample.presentation.example.component.ui.material3.Material3ExpressiveExampleUI
 import com.example.composesample.presentation.example.component.ui.shader.AgslShaderTuningExampleUI
+import com.example.composesample.presentation.example.component.ui.shader.ScratchFoilExampleUI
 import com.example.composesample.presentation.example.component.ui.style.FoundationStyleApiExampleUI
 import com.example.composesample.presentation.example.component.ui.layout.header.StickyHeaderExampleUI
 import com.example.composesample.presentation.example.component.ui.layout.lazycolumn.LazyColumnFlingBehaviorExampleUI
@@ -333,6 +334,7 @@ import com.example.composesample.util.ConstValue.ReverseLazyColumnExample
 import com.example.composesample.util.ConstValue.SSEExample
 import com.example.composesample.util.ConstValue.SafFileExample
 import com.example.composesample.util.ConstValue.ScaffoldDrawExample
+import com.example.composesample.util.ConstValue.ScratchFoilExample
 import com.example.composesample.util.ConstValue.Kotlin24FeaturesExample
 import com.example.composesample.util.ConstValue.KotlinTimeApiExample
 import com.example.composesample.util.ConstValue.CompositionObserverExample
@@ -520,6 +522,7 @@ val exampleUiRegistry: Map<String, @Composable (onBackEvent: () -> Unit) -> Unit
     TextOverflowExample to { onBackEvent -> TextOverflowExampleUI(onBackEvent) },
     GraphicsLayerExample to { onBackEvent -> GraphicsLayerExampleUI(onBackEvent) },
     AgslShaderTuningExample to { onBackEvent -> AgslShaderTuningExampleUI(onBackEvent) },
+    ScratchFoilExample to { onBackEvent -> ScratchFoilExampleUI(onBackEvent) },
     LookaheadScopeExample to { onBackEvent -> LookaheadScopeExampleUI(onBackEvent) },
     FocusRestorerExample to { onBackEvent -> FocusRestorerExampleUI(onBackEvent) },
     PathGraphicsExample to { onBackEvent -> PathGraphicsExampleUI(onBackEvent) },

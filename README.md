@@ -203,7 +203,7 @@ Cursor IDE를 사용하는 개발자를 위한 **AI 코딩 어시스턴트 규�
 - **notification**: SnapNotify(Snackbar 간소화 라이브러리)
 - **overlay**: 좌표 기반 스포트라이트 오버레이(코치마크) — `onGloballyPositioned`로 타깃 좌표 수집 → `Popup` 전체화면 오버레이(부모 클리핑에 갇히지 않음) → `Path.op(Difference)` + `clipPath`로 스크림에 구멍 뚫기 → `animateFloatAsState`로 스텝 전환 애니메이션
 - **scroll**: 커스텀 TopAppBarScrollBehavior, nested scroll, IME 인터랙티브 제어(`Modifier.imeNestedScroll()`로 스크롤 제스처를 키보드 표시/숨김 애니메이션에 연결 + `imeAnimationSource`/`imeAnimationTarget`로 실제 애니메이션 진행률을 커스텀 UI에 동기화), 커스텀 오버스크롤(`OverscrollEffect` 직접 구현으로 기본 스트레치/글로우를 고무줄로 교체 + `LocalOverscrollFactory` 로 하위 트리 일괄 적용및 null 비활성화 + `withoutVisualEffect()`/`withoutEventHandling()` 로 이벤트와 시각 효과 분리)
-- **shader**: AGSL Shader Live Tuning(API 33+ `RuntimeShader` + `graphicsLayer` renderEffect, 실시간 uniform 슬라이더와 셰이더 소스 재컴파일)
+- **shader**: AGSL Shader Live Tuning(API 33+ `RuntimeShader` + `graphicsLayer` renderEffect, 실시간 uniform 슬라이더와 셰이더 소스 재컴파일) / 스크래치 아트 — 셰이더 배경을 통째로 그리고 `saveLayer` 안의 검은 판에 획마다 `BlendMode.Clear` 로 구멍(레이어 없으면 clip 이 있어도 획 자리가 검정 · `CompositingStrategy.Offscreen` 은 같은 결과), `ShaderBrush` 의 크기별 `createShader` 캐시(remember 한 브러시는 리컴포즈 10회에 0 · 매번 새 브러시는 createShader · 셰이더 컴파일 10), 기울기 State 를 `drawBehind` 안에서만 읽어 리컴포지션 0(8자 궤적 120 프레임 — 컴포지션에서 읽으면 120), `TYPE_GAME_ROTATION_VECTOR` → 저역 통과 + 작은 변화 무시(탁자 위 200 입력 중 1 만 내보냄) · 중립 자세에 수직인 두 축으로 기울기 · onPause 해제 · 시스템 애니메이션 꺼짐이면 정지, API 33 미만 정적 그라데이션
 - **shapes**: CardCorners(모서리 스타일)
 - **style**: Foundation Style API(Compose 1.11 도입 실험적 API, 1.12 에서 스코프 인터페이스 구조로 재편) — `Modifier.styleable` + `Style { }` DSL, 상태 블록(`pressed { }` 등), `animate(spec) { }` 전환, 커스텀 `StyleStateKey`
 - **tab**: ResponsiveTabRow(SubcomposeLayout 기반 반응형 탭)

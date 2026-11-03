@@ -997,5 +997,12 @@ val examples2026 = listOf(
         description = "콜드 Flow 다중 수집의 중복 실행과 shareIn 공유, catch 가 잡는 범위",
         blogUrl = "",
         exampleType = ConstValue.FlowPitfallsExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 11. 03",
+        title = "스크래치 아트 (BlendMode.Clear · ShaderBrush)",
+        description = "검은 판에 BlendMode.Clear 로 긁는 자국과 기울기로 움직이는 셰이더 배경",
+        blogUrl = "",
+        exampleType = ConstValue.ScratchFoilExample
     )
 )

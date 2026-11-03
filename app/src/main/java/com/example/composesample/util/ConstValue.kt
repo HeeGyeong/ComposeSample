@@ -76,8 +76,9 @@ object ConstValue {
     // Autofill(Compose Foundation 자동완성 — Modifier.semantics { contentType } 로 Username/Password/Email/PostalCode 힌트 부여 + LocalAutofillManager commit/cancel 트리거, 가용성은 OS/단말 의존)
     const val AutofillExample = "autofillExample"
 
-    // AgslShaderTuning(API 33+ RuntimeShader + graphicsLayer renderEffect 로 AGSL 셰이더 실시간 튜닝: uniform 슬라이더 조절 + 셰이더 소스 라이브 편집/재컴파일, 미지원 단말 placeholder)
+    // AgslShaderTuning(API 33+ RuntimeShader + graphicsLayer renderEffect 로 AGSL 셰이더 실시간 튜닝: uniform 슬라이더 조절 + 셰이더 소스 라이브 편집/재컴파일, 미지원 단말 placeholder), ScratchFoil(스크래치 아트 — 셰이더 배경을 통째로 그리고 오프스크린 레이어의 검은 판에 획마다 BlendMode.Clear 구멍, ShaderBrush 크기별 createShader 캐시와 브러시 수명, 기울기 센서 → 저역 통과·작은 변화 무시 → drawBehind 안에서만 읽어 리컴포지션 0, API 33 미만 정적 그라데이션)
     const val AgslShaderTuningExample = "agslShaderTuningExample"
+    const val ScratchFoilExample = "scratchFoilExample"
 
     // FoundationStyleApi(Compose 1.11 Foundation Style API: Modifier.styleable + Style{} DSL 로 컴포넌트 상태별 스타일 선언 — pressed/hovered/focused/checked/selected/disabled 변형 + animate() 전이 + 커스텀 StyleStateKey + 조건부 Modifier 체이닝과 리컴포지션 대조, 부록으로 디자인 토큰 전파 패턴)
     const val FoundationStyleApiExample = "foundationStyleApiExample"
