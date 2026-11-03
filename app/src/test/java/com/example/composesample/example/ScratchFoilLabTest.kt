@@ -1,6 +1,5 @@
 package com.example.composesample.example
 
-import androidx.compose.ui.geometry.Offset
 import com.example.composesample.presentation.example.component.ui.shader.FIGURE_EIGHT_FRAMES
 import com.example.composesample.presentation.example.component.ui.shader.FILTER_SAMPLES
 import com.example.composesample.presentation.example.component.ui.shader.FilterScenario
