@@ -355,9 +355,9 @@ val examples2026 = listOf(
         exampleType = ConstValue.MonthPickerDialExample
     ),
     ExampleObject(
-        lastUpdate = "26. 04. 21",
-        title = "Koin Compiler Plugin (Annotations)",
-        description = "Koin Annotations(KSP)로 DI를 컴파일 타임에 검증하는 패턴",
+        lastUpdate = "26. 11. 05",
+        title = "Koin Compiler Plugin (컴파일 타임 DI 그래프 검사)",
+        description = "빠진 정의를 빌드에서 막는 Koin 컴파일러 플러그인과 실행 중에만 드러나는 경계",
         blogUrl = "",
         exampleType = ConstValue.KoinCompilerPluginExample
     ),

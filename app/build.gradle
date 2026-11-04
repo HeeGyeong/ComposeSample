@@ -11,6 +11,8 @@ plugins {
     // kotlinx-serialization 컴파일러 플러그인(#123, 2026-10-08 사용자 승인) — @Serializable 클래스의 serializer 생성.
     // Kotlin 에 포함돼 배포되며 런타임은 아래 kotlinxSerializationCore(1.12.0 — DEP-CURRENCY-13).
     alias(libs.plugins.kotlin.serialization)
+    // Koin Compiler Plugin(#106) — startKoin · koinApplication 진입점에서 DI 그래프를 컴파일 단계에 검증한다.
+    alias(libs.plugins.koin.compiler)
 
     id 'kotlin-parcelize'
 }
@@ -73,6 +75,8 @@ android {
 // DataStoreViewModel: 손상 파일 실험의 CorruptionException(checked IOException)이 debug 에서 UndeclaredThrowableException 으로
 //   한 겹 감싸여 왔다(release 는 그대로). 제외하면 debug 도 CorruptionException 그대로(SM-A725F). 시간은 제외해도 debug 가 느리다 —
 //   디버깅 가능 빌드 자체의 차이라 측정값은 release 로 본다.
+// KoinCompilerPluginLabKt: Koin 의 InstanceCreationException(자바 기준 checked Exception)이 debug 에서 UndeclaredThrowableException 으로
+//   한 겹 감싸여 '빌드는 통과하고 실행 중에 터지는 것' 카드의 예외 사슬이 release 와 달랐다(debug 단위 테스트에서 재현, 제외하면 같음).
 hotSwanCompiler {
     exclude("com.example.composesample.presentation.example.component.architecture.development.test.PowerAssertChecksKt")
     exclude("com.example.composesample.presentation.example.component.architecture.development.test.PowerAssertViewModel")
@@ -93,6 +97,7 @@ hotSwanCompiler {
     exclude("com.example.composesample.presentation.example.component.architecture.development.language.CopyVisibilityProbe")
     exclude("com.example.composesample.presentation.example.component.architecture.development.concurrency.LibraryCopyProbe")
     exclude("com.example.composesample.presentation.example.component.data.storage.DataStoreViewModel")
+    exclude("com.example.composesample.presentation.example.component.architecture.development.di.KoinCompilerPluginLabKt")
 }
 
 // Power-Assert(PowerAssertExample) — 단언 실패 메시지에 식의 중간값을 펼쳐 넣는 컴파일러 플러그인.

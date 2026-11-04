@@ -14,7 +14,6 @@ import com.example.composesample.presentation.example.component.system.backgroun
 import com.example.composesample.presentation.example.component.system.background.workmanager.WorkerExceptionReporter
 import com.example.composesample.util.isMainProcess
 import org.koin.android.ext.koin.androidContext
-import org.koin.core.context.loadKoinModules
 import org.koin.core.context.startKoin
 
 /**
@@ -34,10 +33,14 @@ class BaseApplication : Application(), Configuration.Provider {
         // Koin 그래프는 화면이 있는 기본 프로세스에서만 쓰므로 그 밖의 프로세스에서는 만들지 않는다.
         if (!isMainProcess()) return
 
+        // modules(...) 로 넘긴다 — Koin Compiler Plugin(#106)이 이 목록을 앱 그래프로 읽어 컴파일 단계에 검사한다.
+        // 전에는 이 블록에서 loadKoinModules(...) 를 두 번 불렀다. 동작은 같지만(둘 다 koin.loadModules(allowOverride = true,
+        // createEagerInstances = false) 뒤 startKoin 이 eager 생성 — koin-core 4.2.2 소스), 플러그인은 loadKoinModules 를
+        // 컴파일 시점에 증명할 수 없는 런타임 로딩으로 본다 — 다른 진입점(예제의 koinApplication)이 더해지자
+        // get() · koinViewModel() 63곳이 '정의 없음'(KOIN-D002)으로 막혔다.
         startKoin {
             androidContext(this@BaseApplication)
-            loadKoinModules(KoinModules)
-            loadKoinModules(CleanArchitectureAddModules)
+            modules(KoinModules + CleanArchitectureAddModules)
         }
     }
 

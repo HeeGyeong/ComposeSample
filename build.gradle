@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.android.library) apply false
     alias(libs.plugins.kotlin.jvm) apply false
     alias(libs.plugins.ksp) apply false
+    alias(libs.plugins.koin.compiler) apply false
     // hotswan-compiler 는 여기서 선언(apply false)만 하고, 실제 적용은 app/build.gradle 에서 한다.
     // (2026-06-16~09-15 Kotlin 2.4.0 비호환으로 비활성 → 2.0.0 으로 재활성화. 상세: docs/devtools/ComposeHotReloadGuide.md)
     alias(libs.plugins.hotswan.compiler) apply false

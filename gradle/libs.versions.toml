@@ -70,6 +70,12 @@ lifecycleViewmodelCompose = "2.11.0"
 koinCore = "4.2.2"
 koinAndroid = "4.2.2"
 koinAndroidxCompose = "4.2.2"
+# Koin Compiler Plugin 1.2.2(#106, 2026-11-05 사용자 승인) — DI 그래프를 Kotlin 컴파일 단계에서 검증하는 네이티브 컴파일러 플러그인(KSP 아님).
+# 공식 검증 목록은 Kotlin 2.3.20 · 2.4.0 · 2.4.10 · 2.4.20 — 2.4.21 은 목록 밖이라 컴파일마다 'w: ... newer than the newest verified
+# version (2.4.20)' 경고 한 줄을 내고 2.4.20 어댑터로 진행한다. 2.4.20 → 2.4.21 컴파일러 jar 는 클래스 26,016개 중 JS · Wasm 백엔드
+# 8개만 다르고(추가 · 삭제 0), 플러그인이 참조하는 Kotlin 클래스 278개와 겹치는 것이 없다. 저장소의 tools/abi-check 방식으로
+# 멤버 참조 476개를 2.4.21 에 대 보면 누락 0(대조: 1.2.0 ↔ 2.4.20 은 노트대로 4건 누락). Kotlin 을 올릴 때는 이 플러그인의 검증 목록부터 볼 것.
+koinCompilerPlugin = "1.2.2"
 # navigation-compose — Koin 3.2.2 의 전이로 들어오던 2.4.2 를 명시 선언해 두었다가 2.9.8 로 상향(DEP-NAV-01).
 # 2.10.2(2026-09-29 상향, minCompileSdk 37 · minAGP 9.1.0 — DEP-CURRENCY-02 A). savedstate 를 1.4.0 → 1.5.0 으로
 # 함께 끌어올린다(navigation-common 요구, 1.5.0 은 기능 추가만). handleDeepLink 가 엄격해졌지만 딥링크 미사용.
@@ -247,6 +253,7 @@ kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "ko
 kotlin-power-assert = { id = "org.jetbrains.kotlin.plugin.power-assert", version.ref = "kotlinVersion" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlinVersion" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+koin-compiler = { id = "io.insert-koin.compiler.plugin", version.ref = "koinCompilerPlugin" }
 # HotSwan(Compose Hot Reload) — 2026-09-15 2.0.0 으로 재활성화 (1.2.1 은 Kotlin 2.4.0 컴파일러 확장 API 와 충돌해 06-16~09-15 비활성).
 # Gradle 플러그인 버전은 IDE 플러그인 버전과 일치해야 한다 — Marketplace 는 최신을 설치하므로 최신 patch 를 따른다.
 # 2026-09-22 2.0.0 → 2.0.2: "Kotlin 2.4 에서 by-state 위임 프로퍼티를 가진 클래스가 첫 컴포지션에서 실패" 수정 포함.

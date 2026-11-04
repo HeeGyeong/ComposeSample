@@ -392,6 +392,29 @@ suspension (`delay`, `withContext(Dispatchers.IO)`): 12 shapes, none wrapped. A 
 checked-exception section above does not hold for every call site, and the exact trigger was not isolated. The
 advice does not change: classify by cause chain, and confirm checked-exception handling in release.
 
+### A Koin resolution failure inside a plain lambda — one more file is excluded
+
+The Koin Compiler Plugin example (#106) runs two resolutions that pass the build and fail at runtime (a mismatched
+`named()` qualifier and a missing `parametersOf`) and prints the exception chain. Koin's `InstanceCreationException`
+extends `Exception`, so on the JVM it is a checked exception, and the call is made from a `() -> Any` lambda passed to a
+top-level helper in `KoinCompilerPluginLab.kt`. Measured on 2026-11-05 (HotSwan 2.1.0, Kotlin 2.4.21):
+
+| Build | Chain of the qualifier mismatch |
+|---|---|
+| `testDebugUnitTest`, HotSwan as configured | `UndeclaredThrowableException` ← `InstanceCreationException` ← `NoDefinitionFoundException` |
+| release (debug-key signed, Pixel 4 API 30 emulator) | `InstanceCreationException` ← `NoDefinitionFoundException` |
+| debug, `KoinCompilerPluginLabKt` excluded (current setup) | same as release (unit tests, and 3 device runs identical to the release run) |
+
+The excluded name:
+
+```groovy
+exclude("com.example.composesample.presentation.example.component.architecture.development.di.KoinCompilerPluginLabKt")
+```
+
+The unit tests compare the whole chain, which is how this was caught: the first version used `contains(...)` and passed
+in debug. The plugin's own rewrite was not affected - `single<T>()` calls that the Koin plugin turned into constructor
+lambdas resolved correctly under the interpreter before the exclusion; only the outer wrapper differed.
+
 ### Caller-sensitive reflection fails under the interpreter — one more class is excluded
 
 Found while writing the sensitive-types example (#144). Its copy() card reads `Class.getDeclaredMethods()` and calls
