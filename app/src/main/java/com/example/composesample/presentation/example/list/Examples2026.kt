@@ -1004,5 +1004,12 @@ val examples2026 = listOf(
         description = "검은 판에 BlendMode.Clear 로 긁는 자국과 기울기로 움직이는 셰이더 배경",
         blogUrl = "",
         exampleType = ConstValue.ScratchFoilExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 11. 04",
+        title = "M3 날짜 · 시간 선택기 (DatePicker · TimePicker)",
+        description = "UTC 자정 millis 로 오가는 M3 날짜·시간 선택기와 하루 밀림 함정",
+        blogUrl = "",
+        exampleType = ConstValue.DateTimePickerExample
     )
 )

@@ -122,6 +122,7 @@ import com.example.composesample.presentation.example.component.ui.layout.drawer
 import com.example.composesample.presentation.example.component.ui.layout.flexbox.FlexBoxExampleUI
 import com.example.composesample.presentation.example.component.ui.layout.flexbox.FlowOverflowExampleUI
 import com.example.composesample.presentation.example.component.ui.layout.flexbox.FlowRowLayoutExampleUI
+import com.example.composesample.presentation.example.component.ui.material3.DateTimePickerExampleUI
 import com.example.composesample.presentation.example.component.ui.material3.Material3ExpressiveExampleUI
 import com.example.composesample.presentation.example.component.ui.shader.AgslShaderTuningExampleUI
 import com.example.composesample.presentation.example.component.ui.shader.ScratchFoilExampleUI
@@ -401,6 +402,7 @@ import com.example.composesample.util.ConstValue.WebViewBridgeExample
 import com.example.composesample.util.ConstValue.RangeDownloadExample
 import com.example.composesample.util.ConstValue.OfflineOutboxExample
 import com.example.composesample.util.ConstValue.DataStoreExample
+import com.example.composesample.util.ConstValue.DateTimePickerExample
 import com.example.composesample.util.ConstValue.SensorFusionCompassExample
 import com.example.composesample.util.ConstValue.HapticFeedbackExample
 import com.example.composesample.util.ConstValue.StabilityAnnotationsExample
@@ -545,6 +547,7 @@ val exampleUiRegistry: Map<String, @Composable (onBackEvent: () -> Unit) -> Unit
     DocumentEditingTextFieldExample to { onBackEvent -> DocumentEditingTextFieldExampleUI(onBackEvent) },
     TextSelectionControlExample to { onBackEvent -> TextSelectionControlExampleUI(onBackEvent) },
     Material3ExpressiveExample to { onBackEvent -> Material3ExpressiveExampleUI(onBackEvent) },
+    DateTimePickerExample to { onBackEvent -> DateTimePickerExampleUI(onBackEvent) },
     FoundationStyleApiExample to { onBackEvent -> FoundationStyleApiExampleUI(onBackEvent) },
     NestedRoutesNav3Example to { onBackEvent -> NestedRoutesNav3ExampleUI(onBackEvent) },
     NewShadowApiExample to { onBackEvent -> NewShadowApiExampleUI(onBackEvent) },

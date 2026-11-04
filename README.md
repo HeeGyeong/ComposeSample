@@ -192,6 +192,7 @@ Cursor IDE를 사용하는 개발자를 위한 **AI 코딩 어시스턴트 규�
 
 **material3**:
 - Material 3 Expressive(1.4.0 신규) — SecureTextField/OutlinedSecureTextField(비밀번호 입력 + TextObfuscationMode 4종) + foundation 1.12 `TextObfuscationMode.System`(시스템 '비밀번호 표시' 설정을 따름, API 37+ 터치·물리 키보드 분리)과 1.12 에서 설정을 무시하게 된 `RevealLastTyped` 를 설정 켬/끔으로 나란히 실측(M3 1.4.0 기본값이 RevealLastTyped 라 설정을 꺼도 노출), `LocalTextFieldContentObserverRegistrationExecutor` 로 관찰자 등록·해제를 백그라운드 스레드로
+- M3 날짜 · 시간 선택기 — DatePicker · DateRangePicker · TimePicker · TimePickerDialog(1.4.0), 날짜 값이 그날 UTC 자정 millis 라 기기 시간대로 읽으면 LA 에서 하루 전(서울에선 숨음) · 서울 로컬 자정을 넘기면 실제 DatePickerState 가 하루 전을 선택, SelectableDates 의 `utcTimeMillis >= 지금` 은 낮에 오늘을 막고 기기 시간대 요일은 LA 에서 토요일을 열고 월요일을 막음, 날짜 millis 에 시·분을 더하면 UTC 벽시계(서울 9:00 → 18:00, PM 9:00 → 다음 날 06:00), 기간 4일 · 3박 · 끝 null
 
 **others**:
 - **accessibility**: Large Content Viewer(iOS 스타일 접근성, 키보드 & 스크린 리더 지원) / Accessible Focus Indicator(키보드/D-pad 사용자를 위한 포커스 시각화 — 기본 indication · Outline(`collectIsFocusedAsState` + border) · Scale+Pulse · 커스텀 `IndicationNodeFactory` 4가지 비교)

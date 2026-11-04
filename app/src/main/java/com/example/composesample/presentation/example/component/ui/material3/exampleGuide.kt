@@ -51,3 +51,52 @@ package com.example.composesample.presentation.example.component.ui.material3
  * - 향후 Material Symbols(Google Fonts Vector Drawable XML)로 마이그레이션 권장
  * - https://fonts.google.com/icons
  */
+
+/**
+ * M3 날짜·시간 선택기 예제 참고 자료 (DateTimePickerExampleUI · DateTimePickerLab.kt)
+ *
+ * ## 개요
+ * DatePicker · DatePickerDialog · DateRangePicker · TimePicker · TimeInput · TimePickerDialog(1.4.0 신규)와,
+ * 그 값의 단위 — M3 의 날짜 값은 모두 **그날 UTC 자정의 epoch millis** 다.
+ *
+ * - DatePicker 문서: https://developer.android.com/develop/ui/compose/components/datepickers
+ * - TimePicker 문서: https://developer.android.com/develop/ui/compose/components/time-pickers
+ * - DatePickerState: https://developer.android.com/reference/kotlin/androidx/compose/material3/DatePickerState
+ * - SelectableDates: https://developer.android.com/reference/kotlin/androidx/compose/material3/SelectableDates
+ * - 후보 출처: Android Weekly #751 의 서드파티 캘린더 라이브러리(Orrery)를 대조하다 찾은 공백 — 라이브러리는 쓰지 않는다
+ *
+ * ## 근거 (material3 1.4.0 소스)
+ * - DatePickerState.selectedDateMillis KDoc: "the selected date _start_ of the day in _UTC_ milliseconds"
+ * - DatePickerState(locale, initialSelectedDateMillis) KDoc: selectedDateMillis 는 '그날의 시작' 이라 넘긴 값과 다를 수 있다.
+ *   맞추는 규칙은 CalendarModelImpl.getCanonicalDate — `Instant.ofEpochMilli(t).atZone(ZoneId.of("UTC")).toLocalDate()`
+ * - SelectableDates.isSelectableDate(utcTimeMillis) 는 칸마다 그날 UTC 자정을 받는다
+ * - 실험 여부: DatePicker · DatePickerDialog · DateRangePicker 안정, TimePicker · TimeInput · TimePickerState 는
+ *   @ExperimentalMaterial3Api, TimePickerDialog(+ TimePickerDialogDefaults.Title · DisplayModeToggle)는 안정
+ * - rememberTimePickerState 의 is24Hour 기본값 = DateFormat.is24HourFormat(LocalContext.current)
+ *
+ * ## 측정 (Pixel 4 API 30 에뮬레이터 · Asia/Seoul · en-US — 09:00 KST 전 debug 3회 · release 1회, 뒤 debug 1회 · release 1회(디버그 키 서명),
+ *   같은 시간대 안에서 PROBE 고유 20줄 동일)
+ * - 읽기: 11/10 을 고르면 millis 1794268800000 → UTC 11/10 · 기기(서울) 11/10 · LA 11/09. 서울에서는 기기 시간대로 읽어도
+ *   같은 날이라 버그가 숨는다
+ * - 쓰기: 서울 '오늘'(11/04) 자정 1793718000000 을 넘기면 실제 DatePickerState 가 11/03 을 고르고 다이얼로그도
+ *   "Current selection: Tuesday, November 3, 2026" — UTC 자정 1793750400000 은 11/04. LA 자정은 LA 의 오늘(11/03) 그대로
+ * - SelectableDates(LA, 지금 11/03 15:28 PST): 'now 비교 + 기기 시간대 요일' 은 오늘(11/03) ✕ · 토(11/07) ○ · 월(11/09) ✕,
+ *   바른 규칙은 오늘 ○ · 토 · 일 ✕ — 다이얼로그 칸의 enabled 도 같다. 서울은 09:00 KST(= 00:00 UTC) 전에는 두 규칙이 같았고
+ *   (08:52 — 오늘 칸의 UTC 자정이 아직 지금보다 늦다), 09:05 에는 잘못된 규칙만 오늘(11/04)을 막았다 — 시각에 따라 결과가
+ *   바뀌는 버그라 서울에서는 아침에 테스트하면 놓친다(단위 테스트는 03:00 · 14:00 두 시각으로 고정)
+ * - M3 의 'Today' 표시는 기기 시간대의 날짜다(서울 08:2x 에 UTC 는 11/03 이지만 11/04 에 표시)
+ * - 기간: 11/10~11/13 → 4일 · 3박, 시작만 고르고 확인 → 끝 null
+ * - 시간: 9:00 → 바름 11/10 09:00 · millis 덧셈 11/10 18:00(9시간), 12시간 입력 모드에서 PM → state.hour 21 ·
+ *   millis 덧셈 11/11 06:00(날짜까지 넘어간다)
+ * - JVM 단위 테스트 DateTimePickerLabTest(12): 기대값은 달력 사실(11/04 = 수요일 · epoch 20,761일 · LA 11/01 서머타임 종료)로 쓰고,
+ *   실제 M3 DatePickerState 도 JVM 에서 돌려(LegacyCalendarModelImpl 경로) 옮긴 규칙과 같은지 확인
+ *
+ * ## 제약
+ * - java.time 은 API 26+ — 프로젝트는 core library desugaring 을 켜지 않았다 → API 24 · 25 는 안내 카드만.
+ *   java.time 은 DateTimePickerLab.kt 한 파일에만 두고(`@file:Suppress("NewApi")` + 근거 주석), 화면에는 문자열 · millis ·
+ *   SampleZone 만 넘긴다. 실행 가드는 진입부 SDK_INT 분기 1곳(`@SuppressLint("ObsoleteSdkInt")` — debug 변형은 HotSwan 때문에
+ *   minSdk 26 이라 lintDebug 가 이 분기를 불필요하다고 보지만 release 는 24). 첫 버전은 화면 함수마다 @RequiresApi(O) 를 달아
+ *   lint 경고가 23건 늘었다(#122 와 같은 실수)
+ * - 기기 시간대를 바꾸지 않고 비교하려고 시간대(서울 · LA · UTC)를 이름으로 고정해 계산한다
+ */
+
