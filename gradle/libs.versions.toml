@@ -42,7 +42,9 @@ navigationEvent = "1.2.0"
 # 1.1.7 로 도입(minCompileSdk=36 / minAGP=8.9.1) → 2026-10-01 1.2.0 stable 로 상향(minCompileSdk=37 / minAGP=9.1.0, 현재 37 / 9.4.1).
 # 상향 전후 해석 변화는 navigation3 4개 좌표뿐(navigationevent 요청 1.1.1 은 이미 1.1.2 로 해석). Nav3SceneStrategy 예제의
 # back·수명주기·onRemove 동작을 back 핸들러 없는 같은 구조 오버레이로 실기기 대조 — 1.1.7 과 동일.
-navigation3 = "1.2.0"
+# 2026-11-05 1.2.1(패치 — DEP-CURRENCY-23, 11/04 발행): 변경은 compileSdk 37 → 36 하나뿐이라 aar 요구치가 minCompileSdk=36 /
+# minAGP=8.9.1 로 내려갔고, runtime · ui 의 클래스 75 · 47개는 1.2.0 과 바이트 동일(버전 파일만 다름) · module 의존성도 같다.
+navigation3 = "1.2.1"
 # 2026.09.00(2026-09-29 상향) = ui/runtime/foundation/animation/material 1.12.1 · material3 1.4.0 (minCompileSdk=37).
 # 1.12 변경 중 영향: foundation Style API 가 스코프 인터페이스로 재편(예제 이관) · DeferredTargetAnimation 정식화
 # (ExperimentalAnimatableApi 제거) · 클릭/포커스 이동 시 시스템 효과음 기본 재생 · ui 가 androidx.transition 의존을
