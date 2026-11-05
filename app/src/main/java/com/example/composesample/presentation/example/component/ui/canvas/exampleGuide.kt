@@ -57,12 +57,40 @@ package com.example.composesample.presentation.example.component.ui.canvas
  *   (원문은 CMP 드로잉 라이브러리 + MVI 재설계. 본 예제는 외부 라이브러리 없이 핵심 개념만 자체 구현)
  * - DrawBox 라이브러리: https://github.com/akshay2211/DrawBox
  *
+ * - (2026-11-06 보강) 프레임 사이 중간점 — `PointerInputChange.historical`
+ *   - MotionEvent 묶음(Batching): https://developer.android.com/reference/android/view/MotionEvent#batching
+ *   - HistoricalChange: https://developer.android.com/reference/kotlin/androidx/compose/ui/input/pointer/HistoricalChange
+ *   - PointerInputChange: https://developer.android.com/reference/kotlin/androidx/compose/ui/input/pointer/PointerInputChange
+ *   - 제스처 기초(awaitEachGesture · awaitPointerEvent): https://developer.android.com/develop/ui/compose/touch-input/pointer-input/understand-gestures
+ *
  * ### 핵심 개념
- * - 입력: `pointerInput { detectDragGestures(onDragStart, onDrag, onDragEnd, onDragCancel) }`
- *   → onDrag 의 `change.position` 을 점(Offset)으로 누적해 하나의 스트로크를 구성
+ * - 입력: `pointerInput { awaitEachGesture { awaitFirstDown() → awaitPointerEvent() 반복 } }`
+ *   → 손가락이 닿은 곳에서 시작하고, 이벤트마다 `change.historical`(오래된 순) + `change.position` 을 점으로 누적,
+ *     손 뗀 이벤트(`pressed == false`)의 위치까지 쌓은 뒤 확정. 순수 로직은 `FreehandInputLab.kt`(단위 테스트 `FreehandInputLabTest`)
  * - 렌더링: 점 리스트를 `Path.moveTo/lineTo` 로 잇고 `drawPath(style = Stroke(cap=Round, join=Round))`
  *   → 더 매끄럽게 하려면 인접 점의 중점으로 `quadraticBezierTo` 적용 가능
- * - 점이 1개뿐(드래그 슬롭 미달)이면 `drawCircle` 로 점 표현
+ * - 점이 1개뿐(탭)이면 `drawCircle` 로 점 표현
+ *
+ * ### 프레임 사이 중간점 (historical) — ui 1.12.1, opt-in 없음
+ * - 시스템은 한 프레임 동안 쌓인 ACTION_MOVE 샘플을 MotionEvent 하나로 묶는다. Compose 는 마지막 샘플을 `position`,
+ *   앞의 샘플을 `historical` 에 담고, historical 좌표도 HitPathTracker 에서 요소 로컬 좌표로 바꿔 준다(1.12.1 소스)
+ * - position 만 쌓으면 프레임마다 점 하나 → 빠른 곡선이 다각형. 정 n각형과 원의 최대 거리 r(1 − cos(π/n))
+ * - 원 재생: 240Hz 로 샘플링한 원 1바퀴(150ms, 샘플 37개)를 60Hz 프레임 9개로 묶어(`MotionEvent.addBatch`)
+ *   창 루트 뷰에 `dispatchTouchEvent`. 반지름 288.75px(Pixel 4 API 30 에뮬) → position 만 10점 · 17.4px,
+ *   historical 포함 37점 · 1.1px (debug 3회 · release 2회 동일)
+ * - 합성 MotionEvent 함정: Compose 는 현재 위치를 `rawX/rawY`(screenToLocal)에서, historical 은 `getHistoricalX/Y` 에서 읽는다
+ *   → 화면 좌표로 만든 뒤 `offsetLocation(-창 위치)` 로 창 좌표로 옮겨 루트 뷰에 넣어야 둘이 같은 좌표계가 된다
+ * - 시스템 입력 경로 실측(UiAutomation.injectInputEvent 비동기, 240Hz, 반지름 250px, debug): 150ms 원 이벤트 9 · historical 35 ·
+ *   주입 샘플 36개 전부 회수, position 만 33~34px vs 포함 0.97~0.98px. 프레임이 늦은 첫 실행은 한 이벤트에 18개(position 만 242px).
+ *   600ms 원 이벤트 36 · historical 143, 1.5~2.1px vs 0.1px
+ * - 입력 리샘플링(`ro.input.noresample` 미설정): position 중 150ms 원 9개 중 6~8개 · 600ms 원 36개 중 23~27개가 주입 샘플이 아닌 점 —
+ *   모두 이웃한 두 샘플 사이 선분 위(보간). 실제 샘플은 historical 쪽에 있다
+ * - `adb shell input swipe` 는 이동 이벤트가 300ms 에 5~14개로 듬성하고 historical 은 0~5 → 묶음 측정에는 쓰지 않는다
+ *
+ * ### detectDragGestures 로 그릴 때 빠지는 점 (이전 구현, API 30 에뮬 · adb tap/swipe)
+ * - 획 시작: 단순 오버로드의 onDragStart 는 `slopTriggerChange.position`(foundation 1.12.1 소스) — 닿은 곳에서 35~53px(4회, 슬롭 기본값 8dp)
+ * - 탭: 슬롭을 넘지 않아 onDragStart 가 불리지 않음 → 점이 남지 않음(3회) — 예전 문구 "점이 1개뿐이면 원" 은 탭에서 도달하지 않았다
+ * - 획 끝: onDragEnd() 에 위치가 없어 손 뗀 위치가 쌓이지 않음 — 14~120px(adb swipe 의 듬성한 이동 이벤트 기준)
  *
  * ### MVI 단방향 상태 흐름 (DrawBox 아키텍처 차용)
  * - `DrawIntent`(StartStroke/Drag/EndStroke/Undo/Redo/Clear/SetColor/SetWidth) sealed interface
