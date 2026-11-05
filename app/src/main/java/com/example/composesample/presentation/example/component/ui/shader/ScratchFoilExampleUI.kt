@@ -441,12 +441,15 @@ private fun ScratchBoard(
                     strokes.start(down.position)
                     while (true) {
                         val change = awaitPointerEvent().changes.firstOrNull { it.id == down.id } ?: break
-                        if (!change.pressed) break
-                        if (change.positionChanged()) {
+                        if (change.positionChanged() || change.historical.isNotEmpty()) {
                             // 소비해야 바깥 LazyColumn 이 스크롤로 가져가지 않는다
                             change.consume()
+                            // 한 프레임에 묶여 온 중간 샘플(오래된 순)부터 — position 만 이으면 빠른 획이 꺾인다(Freehand Drawing 2번 카드)
+                            change.historical.forEach { strokes.extend(it.position) }
                             strokes.extend(change.position)
                         }
+                        // 손 뗀 이벤트의 위치까지 이은 뒤 끝낸다
+                        if (!change.pressed) break
                     }
                 }
             }
