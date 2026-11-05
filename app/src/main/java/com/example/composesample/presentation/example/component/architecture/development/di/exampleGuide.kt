@@ -4,16 +4,17 @@ package com.example.composesample.presentation.example.component.architecture.de
  * Koin Compiler Plugin 예제 참고 자료 (KoinCompilerPluginExampleUI · KoinCompilerPluginLab.kt)
  *
  * ## 개요
- * Koin Compiler Plugin(`io.insert-koin.compiler.plugin` 1.2.2)은 KSP 가 아니라 **Kotlin 컴파일러 플러그인**이다.
+ * Koin Compiler Plugin(`io.insert-koin.compiler.plugin` 1.2.3)은 KSP 가 아니라 **Kotlin 컴파일러 플러그인**이다.
  * startKoin · koinApplication 진입점마다 DI 그래프를 맞춰 보고, 빠진 정의를 빌드 오류로 낸다. 2026-11-05(#106) 이 앱에 실제로 적용했다 —
  * 그전의 이 예제는 KSP 판(koin-annotations + koin-ksp-compiler) 애노테이션을 의존성 없이 글로만 설명하는 화면이었다.
  *
  * - 저장소 · README: https://github.com/InsertKoinIO/koin-compiler-plugin
+ * - 1.2.3 릴리스(2026-11-05 — 진단마다 file:line:column · 다른 Gradle 모듈 정의의 D001 위치 · W012~W015): https://github.com/InsertKoinIO/koin-compiler-plugin/releases/tag/1.2.3
  * - 1.2.2 릴리스(2026-11-04): https://github.com/InsertKoinIO/koin-compiler-plugin/releases/tag/1.2.2
  * - 1.2.1 릴리스(Kotlin 2.4.20 지원 · 버전 검사 엄격화): https://github.com/InsertKoinIO/koin-compiler-plugin/releases/tag/1.2.1
- * - 컴파일 안전성 규칙: https://github.com/InsertKoinIO/koin-compiler-plugin/blob/1.2.2/docs/COMPILE_TIME_SAFETY.md
- * - 지원 Kotlin 목록: https://github.com/InsertKoinIO/koin-compiler-plugin/blob/1.2.2/supported-kotlin-versions.txt
- * - KSP 판에서 옮기기: https://github.com/InsertKoinIO/koin-compiler-plugin/blob/1.2.2/docs/MIGRATION_FROM_KSP.md
+ * - 컴파일 안전성 규칙: https://github.com/InsertKoinIO/koin-compiler-plugin/blob/1.2.3/docs/COMPILE_TIME_SAFETY.md
+ * - 지원 Kotlin 목록: https://github.com/InsertKoinIO/koin-compiler-plugin/blob/1.2.3/supported-kotlin-versions.txt
+ * - KSP 판에서 옮기기: https://github.com/InsertKoinIO/koin-compiler-plugin/blob/1.2.3/docs/MIGRATION_FROM_KSP.md
  *
  * ## 적용 (gradle/libs.versions.toml · build.gradle · app/build.gradle)
  * - `koin-compiler = { id = "io.insert-koin.compiler.plugin", version.ref = "koinCompilerPlugin" }` → app 에만 적용.
@@ -35,7 +36,7 @@ package com.example.composesample.presentation.example.component.architecture.de
  * - KOIN-W001 진입점이 올리지 않는 모듈 · KOIN-W003 모듈 목록을 실행 중에 고른다(검증 불가)
  * - 오류 줄마다 "→ Fix with AI: set up Kotzilla MCP …" 광고 줄이 하나 더 붙는다(e: 로 찍힌다)
  *
- * ## 측정 — 앱 (:app, Kotlin 2.4.21 · AGP 9.4.1 내장 Kotlin · HotSwan 2.1.0)
+ * ## 측정 — 앱 (:app, 1.2.2 · Kotlin 2.4.21 · AGP 9.4.1 내장 Kotlin · HotSwan 2.1.0 — 1.2.3 재측정은 맨 아래)
  * - 기존 정의 58개를 수집(userLogs): 손으로 쓴 람다 57개는 provider-only — 생성자를 추측하지 않고 람다 안의 get() 을 호출 위치에서 검사,
  *   singleOf(::Navigation) 1개는 constructor-shorthand 로 생성자 검사. 예제 모듈의 플러그인 DSL 6개 · 람다 3개를 더해 67개
  * - 변이(:app:compileDebugKotlin): checkoutModule 에서 single<CartClock>() 삭제 → D001(required by PriceCalculator 'clock') + D002
@@ -87,4 +88,16 @@ package com.example.composesample.presentation.example.component.architecture.de
  *   KtPsiSourceElement.getPsi 1건이 풀리지 않는다 — 플러그인의 psiOrNull 이 LinkageError 를 잡아 null 로 넘기는 의도된 경로(버전 무관)
  * - 단독 JVM 프로젝트(Kotlin 2.4.20 · 2.4.21 + koin-core 4.2.2): 같은 D001 문구 · 같은 실행 결과, 차이는 2.4.21 의 버전 경고뿐
  * - Kotlin 은 .20 패치 자리에 기능 릴리스를 낸다(2.4.20 이 1.2.0 의 API 4개를 깨뜨림) → Kotlin 을 올릴 때는 이 플러그인의 검증 목록부터
+ *
+ * ## 1.2.2 → 1.2.3 상향 (2026-11-06, DEP-CURRENCY-25 — 패치)
+ * - 노트: 진단마다 file:line:column, 다른 Gradle 모듈 정의의 D001 이 그것을 싣는 modules() 를 가리킴, W003 은 읽지 못한 피연산자를,
+ *   따라가지 못하는 DSL 모양에 W012~W015 · Native/JS/wasm 회귀 수정. 검증 Kotlin 목록은 그대로(2.4.20 까지) — 2.4.21 버전 경고 한 줄도 그대로
+ * - 호환: 1.2.3 이 참조하는 Kotlin 클래스 274개(jdeps)와 2.4.20 → 2.4.21 에서 바뀐 8개(JS · Wasm, 추가 · 삭제 0)의 교집합 0 —
+ *   JVM 에서는 검증 목록의 2.4.20 과 같은 결과. pom 의존성은 버전 문자열 말고 1.2.2 와 같다
+ * - 다시 컴파일한 app debug · release · 단위 테스트 클래스 7,415개 중 바뀐 것은 org.koin.plugin.hints 22개 중 6개뿐(viewModelModule ·
+ *   예제 모듈 두 개의 힌트, debug · release 각 3) — 앱 클래스 7,409개는 바이트 동일이라 기기 대조는 하지 않았다
+ * - 같은 변이 재측정(줄을 지우지 않고 비워 줄 번호 유지): CartClock 삭제 → D001 이 이제 위치를 싣는다(KoinCompilerPluginLab.kt:21:1 —
+ *   PriceCalculator 선언 줄, 1.2.2 는 파일 이름만) · D002 55:73 · Gson 삭제 → D002 ApiModule.kt:24:34 · SSEViewModel 삭제 → 같은 3곳 ·
+ *   A ↔ B 순환(앱 안에서) → 같은 D004 문구. 실행 중에 고르는 모듈 목록 + CartClock 삭제는 1.2.3 에서도 빌드가 통과했다(W003 만,
+ *   이제 if 식 자리 KoinCompilerPluginLab.kt:46:65 를 가리킴). 이 앱 빌드에서 새 경고(W012~W015) 0
  */

@@ -191,13 +191,13 @@ class NetworkAwareComponent {
    - MUST support test configurations
    - SHOULD include unit tests
 
-4. **Compile-time Graph Check** (Koin Compiler Plugin 1.2.2 on `:app`, #106 — see `KoinCompilerPluginExampleUI`)
+4. **Compile-time Graph Check** (Koin Compiler Plugin 1.2.3 on `:app`, #106 — see `KoinCompilerPluginExampleUI`)
    - The build fails on a missing definition: `KOIN-D001` for a constructor parameter of `single<T>()` / `factory<T>()`
      (`org.koin.plugin.module.dsl`), `KOIN-D002` for a `get()` / `koinViewModel()` call site, `KOIN-D004` for a cycle
    - MUST hand modules to the entry point with `modules(...)` built from `listOf` / `+` — modules added with
      `loadKoinModules` count as runtime loading (63 call sites failed with D002 once a second entry point existed)
    - MUST NOT choose the module list at runtime (`modules(if (flag) a else b)`): one such entry point (`KOIN-W003`)
-     switched off the D001 / D002 checks of the whole compilation unit (measured on 1.2.2)
+     switched off the D001 / D002 checks of the whole compilation unit (measured on 1.2.2 and again on 1.2.3)
    - Still found only at runtime: a `named()` qualifier inside a hand-written lambda, a missing `parametersOf`
    - Before raising Kotlin, check the plugin's verified Kotlin list (2.4.21 is outside it: one warning per compile)
 

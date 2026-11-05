@@ -77,7 +77,9 @@ koinAndroidxCompose = "4.2.2"
 # version (2.4.20)' 경고 한 줄을 내고 2.4.20 어댑터로 진행한다. 2.4.20 → 2.4.21 컴파일러 jar 는 클래스 26,016개 중 JS · Wasm 백엔드
 # 8개만 다르고(추가 · 삭제 0), 플러그인이 참조하는 Kotlin 클래스 278개와 겹치는 것이 없다. 저장소의 tools/abi-check 방식으로
 # 멤버 참조 476개를 2.4.21 에 대 보면 누락 0(대조: 1.2.0 ↔ 2.4.20 은 노트대로 4건 누락). Kotlin 을 올릴 때는 이 플러그인의 검증 목록부터 볼 것.
-koinCompilerPlugin = "1.2.2"
+# 2026-11-06 1.2.3(패치 — DEP-CURRENCY-25, 11/05 발행): 진단 위치(file:line:column) · W003 이 가리키는 곳 · W012~W015 추가, 검증 목록 그대로.
+# 참조 Kotlin 클래스 274개와 2.4.21 에서 바뀐 8개의 교집합 0 · pom 동일 · 다시 컴파일한 앱 클래스 7,409개 바이트 동일(힌트 22개 중 6개만 다름).
+koinCompilerPlugin = "1.2.3"
 # navigation-compose — Koin 3.2.2 의 전이로 들어오던 2.4.2 를 명시 선언해 두었다가 2.9.8 로 상향(DEP-NAV-01).
 # 2.10.2(2026-09-29 상향, minCompileSdk 37 · minAGP 9.1.0 — DEP-CURRENCY-02 A). savedstate 를 1.4.0 → 1.5.0 으로
 # 함께 끌어올린다(navigation-common 요구, 1.5.0 은 기능 추가만). handleDeepLink 가 엄격해졌지만 딥링크 미사용.

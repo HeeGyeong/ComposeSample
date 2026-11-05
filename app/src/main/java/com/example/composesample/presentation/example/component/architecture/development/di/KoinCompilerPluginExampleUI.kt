@@ -67,7 +67,7 @@ fun KoinCompilerPluginExampleUI(onBackEvent: () -> Unit) {
 private fun OverviewCard() {
     SectionCard(title = "빌드가 DI 그래프를 검사한다") {
         BodyText(
-            "Koin Compiler Plugin 1.2.2 는 KSP 가 아니라 **Kotlin 컴파일러 플러그인**이다. app/build.gradle 에 플러그인 한 줄을 " +
+            "Koin Compiler Plugin 1.2.3 은 KSP 가 아니라 **Kotlin 컴파일러 플러그인**이다. app/build.gradle 에 플러그인 한 줄을 " +
                 "걸면 compileDebugKotlin · compileReleaseKotlin 이 startKoin · koinApplication 진입점마다 그래프를 맞춰 보고, " +
                 "빠진 정의를 **빌드 오류**로 낸다. 이 화면의 그래프는 모두 이 앱에서 실제로 컴파일 · 실행된 것이다."
         )
@@ -134,7 +134,7 @@ private fun BuildErrorCard() {
         )
         MeasuredError(
             title = "checkoutModule 에서 single<CartClock>() 삭제",
-            log = "e: KoinCompilerPluginLab.kt [Koin][KOIN-D001] Missing dependency: …di.CartClock\n" +
+            log = "e: KoinCompilerPluginLab.kt:21:1 [Koin][KOIN-D001] Missing dependency: …di.CartClock\n" +
                 "  required by: dsl:…di.PriceCalculator (parameter 'clock')\n" +
                 "  in module: …di.checkoutModule\n" +
                 "e: KoinCompilerPluginLab.kt:55:73 [Koin][KOIN-D002] Missing definition: …di.CartClock\n" +
