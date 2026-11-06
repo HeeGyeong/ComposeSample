@@ -74,6 +74,19 @@ in release builds"), which made `assembleRelease` fail with three errors in
 the check is suppressed on that one composable with a comment stating why. Found by the 2026-09-16 pre-work run —
 `assembleDebug` never surfaced it because lint-vital only runs on release.
 
+## Open bugs
+
+### RELEASE-API34-CAST-01 — Screenshot Detection crashes on close in release builds below API 34 (found 2026-11-06)
+
+- Symptom: closing `ScreenshotDetectionExampleUI` throws `NoClassDefFoundError: Failed resolution of: Landroid/app/Activity$ScreenCaptureCallback;`
+  (Pixel 4 API 30 emulator, release signed with the debug key; AGP 9.4.1 and 9.5.1 alike). Debug builds do not crash.
+- Cause: `ModernCallbackSection` keeps `var callback by remember { mutableStateOf<Activity.ScreenCaptureCallback?>(null) }`, and its
+  `onDispose` reads `callback` before checking `supported`. The delegated getter (`ModernCallbackSection$lambda$6` in the dex) ends with
+  `check-cast Landroid/app/Activity$ScreenCaptureCallback;`, which ART cannot resolve below API 34 even for a null value.
+  In debug the HotSwan interpreter runs that lambda, so the class is never resolved — debug-only render audits could not see it.
+- Fix direction (not applied yet): read the state only inside the API 34 branch, or keep it typed as `Any?` and cast inside the
+  `@RequiresApi(UPSIDE_DOWN_CAKE)` helpers.
+
 ## Planned for splitting (separate PR)
 
 ### ARCH-02 — Split core-dependencies per module

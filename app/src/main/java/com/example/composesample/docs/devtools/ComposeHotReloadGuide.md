@@ -71,6 +71,19 @@
 >
 > No HotSwan IDE plugin was installed in Android Studio on this machine at the time (2025.3.4). Install the 2.1.0 IDE plugin
 > to match the Gradle plugin before using hot reload.
+>
+> **AGP 9.4.1 → 9.5.1 (2026-11-06, DEP-CURRENCY-18).** Still inside the "AGP 9.x" matrix; HotSwan stays on 2.1.0. Checks on a
+> Pixel 4 API 30 emulator:
+> - Forced recompile of `:app` and `:coordinator`: **the same 86 `SKIPPED` declarations** before and after (list diffed). A normal
+>   build may print far fewer (12 in the gate log) because compile tasks restored from the build cache print nothing
+> - Kotlin and KSP outputs (7,556 files) are byte-identical; the debug and release APKs list the same dex classes and files
+> - D8 9.4.24 → 9.5.29 changes only code generation (register allocation, fewer moves); the debug dex `min-api` stays 26
+> - The app logs `HotSwanV2: v2 server listening on 127.0.0.1:8601` and registers 2,954 interpreter baseline classes
+> - Full render audit: all 215 registry screens render with a non-zero root size in debug and in release (release run as a
+>   temporary `testBuildType "release"` with the debug key; an empty composition reads 0x0 with the same probe). Debug had
+>   0 `FATAL EXCEPTION`; release crashed once, when the Screenshot Detection screen was closed on API 30 — a pre-existing
+>   release-only bug that AGP 9.4.1 reproduces too (see KnownLimitations / RELEASE-API34-CAST-01). The interpreter runs that
+>   lambda in debug, which is why debug-only audits never saw it
 
 ## Overview
 
@@ -548,7 +561,7 @@ Two consequences worth knowing:
 
 ## Version Requirements
 
-- **HotSwan 2.0.x–2.1.x (current: 2.1.0):** Kotlin 2.3.x–2.4.x, AGP 9.x (official), IntelliJ IDEA / Android Studio 2025.1+, device API 28+ — runs here on Kotlin 2.4.20 / AGP 9.4.1 / Gradle 9.8.0 (see "Current Status")
+- **HotSwan 2.0.x–2.1.x (current: 2.1.0):** Kotlin 2.3.x–2.4.x, AGP 9.x (official), IntelliJ IDEA / Android Studio 2025.1+, device API 28+ — runs here on Kotlin 2.4.21 / AGP 9.5.1 / Gradle 9.8.2 (see "Current Status")
 - **HotSwan 1.3.5–1.3.7:** Kotlin 2.4.0 or later (projects on Kotlin 2.2.x–2.3.x should stay on 1.3.4)
 - **HotSwan 1.2.1:** Kotlin 2.3.x — fails at compiler-extension registration on Kotlin 2.4.0
 - The Gradle plugin adds its runtime dependency and the required compiler flags itself — no extra dependency is needed. The only configuration block in this project is the `hotSwanCompiler { exclude(...) }` list for the Power-Assert example (see above)

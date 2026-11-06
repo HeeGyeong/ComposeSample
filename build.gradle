@@ -21,10 +21,15 @@ tasks.register('clean', Delete) {
 // KSP 가 쉬고 있을 때는 lint 가 백업을 읽지 않으므로(백업 읽기 권한을 막아도 lint 성공 — 실측) 겹침만 없애면 된다.
 // mustRunAfter 는 두 태스크가 같은 실행에 있을 때 순서만 정하고 할 일을 늘리지 않는다.
 // 모듈을 가리지 않는다 — 실측에서 core·data·coordinator 의 lint 도 app 의 KSP 와 겹쳤다.
+// KSP 태스크는 이름 목록(tasks.names)에서 골라 하나씩 넘긴다. 필터 컬렉션(tasks.named { … })을 통째로 넘기면 의존성을 계산할 때
+// 그 모듈의 태스크가 전부 생성되는데, AGP 9.5 가 등록만 해 두는 Android Studio 미리보기용 generate<Variant>ComposePreviewRunfiles 는
+// 생성되는 순간 unit test 가 Android 리소스를 포함하지 않으면(isIncludeAndroidResources = false) 예외를 던져 빌드가 구성 단계에서 멈췄다.
 subprojects {
     tasks.named { it ==~ /lint(Vital)?Analyze\w*/ }.configureEach { lintTask ->
         rootProject.subprojects.each { other ->
-            lintTask.mustRunAfter(other.tasks.named { it ==~ /ksp\w*Kotlin/ })
+            other.tasks.names.findAll { it ==~ /ksp\w*Kotlin/ }.each { kspTask ->
+                lintTask.mustRunAfter(other.tasks.named(kspTask))
+            }
         }
     }
 }
