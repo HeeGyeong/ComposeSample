@@ -181,7 +181,10 @@ reorderable = "0.9.6"
 # (요청 취소만으로는 응답이 남아 HTTP/2 연결이 계속 '사용 중'). pom 의존성 5.0.0 과 동일.
 # 5.0.2(2026-10-29 패치 상향, DEP-CURRENCY-17): MessageEvent.getOrigin() 이 ConnectStrategy 가 origin 을 주지 않을 때도
 # EventSource.getOrigin() 과 같은 값이 된다(#112). 프로젝트는 MessageEvent.origin 을 읽지 않는다. pom 의존성 5.0.1 과 동일.
-okhttpEventSource = "5.0.2"
+# 6.0.0(2026-11-06 메이저 상향, DEP-CURRENCY-22 — 사용자 승인): 변경은 'OkHttp 5.5.1 로' 하나. 클래스 63개는 5.0.2 와 바이트 동일
+# (MANIFEST 버전만 다름) · 공개 API 동일. pom 은 okhttp-jvm 5.5.1 을 적지만 Gradle 이 읽는 .module 은 okhttp 5.5.1 이라
+# 지금처럼 okhttp-android 로 해석된다(okhttp-jvm 좌표 0 · 중복 클래스 0 — 해석 diff 로 확인).
+okhttpEventSource = "6.0.0"
 
 # Paging
 # androidx.paging 은 atomic group 이라 runtime/compose/common-ktx 가 한 버전으로 움직인다.
