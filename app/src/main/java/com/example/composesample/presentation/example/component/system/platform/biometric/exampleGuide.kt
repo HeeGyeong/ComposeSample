@@ -3,7 +3,7 @@ package com.example.composesample.presentation.example.component.system.platform
 /**
  * Biometric Auth in Compose 참고 자료
  *
- * ## androidx.biometric:biometric-compose:1.4.0-alpha07
+ * ## androidx.biometric:biometric-compose:1.4.0-beta01
  * - 출처: https://navczydev.medium.com/biometric-auth-in-compose-made-easy-the-new-library-you-need-29814270506d
  * - 공식 릴리스 노트: https://developer.android.com/jetpack/androidx/releases/biometric
  *
@@ -11,6 +11,11 @@ package com.example.composesample.presentation.example.component.system.platform
  * - 1.4.0-alpha07 — `minCompileSdk=36` + **`minCompileMinorSdk=1`**(= 36.1) / `minAGP=8.9.1`, pom 전이 끌어올림 0
  *   (AGP 8.13 은 minor 를 검사하지 않아 compileSdk 36 에서 통과했지만 AGP 9.4 는 36.1 이상을 요구한다 — 현재 compileSdk 37)
  * - 2026-09-29 alpha05 → alpha07 상향. 상향 전후 실기기(SM-A725F/API 33) 결과 동일
+ * - 2026-11-06 alpha07 → beta01 상향(DEP-CURRENCY-24). aar 요구치 그대로, 라이브러리 minSdk 23 → 24. 공개 API(internal 제외)는 익명 클래스
+ *   2개 말고 같고, API 28 이하 지문 대화상자가 FingerprintDialogActivity → 창 안 FingerprintDialogController 로 바뀌어 매니페스트에서
+ *   그 액티비티가 빠졌다(이 경로는 API 26 AVD 가 이 Mac 에서 부팅되지 않아 실행 확인 못 함). Pixel 4 API 30 에뮬에 PIN + 지문을 등록해
+ *   7가지(기본 · Class3 · DeviceCredential 폴백을 지문/PIN 으로 · CustomOption · 폴백 여러 개 · 취소)를 두 버전에서 돌린 결과와 프롬프트 글자가
+ *   같았다(authType 2/1, CustomFallbackSelected "비밀번호로 로그인", 취소 [10]) — 미등록 상태도 코드 11 · 에러 [11] 로 같음
  * - 1.1.0(stable)은 Activity 기반 `BiometricPrompt`만 제공하며 Compose 통합 API 없음
  *
  * ### 핵심 API
@@ -29,7 +34,7 @@ package com.example.composesample.presentation.example.component.system.platform
  *   - 빌더 옵션: `setSubtitle`, `setMinStrength(Class2|Class3())`, `setIsConfirmationRequired`
  * - `AuthenticationResultLauncher.launch(request)` / `cancel()`
  *
- * ### 결과 sealed 분기 (`AuthenticationResult` — alpha07 기준)
+ * ### 결과 sealed 분기 (`AuthenticationResult` — alpha07 · beta01 동일)
  * - `Success(crypto, authType)` — 성공. `authType`은 BiometricPrompt.AUTHENTICATION_RESULT_TYPE_BIOMETRIC 등
  * - `Error(errorCode, errString)` — 기본 취소 버튼, 사용자 취소, 하드웨어 실패, 잠금 등
  *   (errorCode는 `BiometricPrompt.ERROR_*` 상수. 지문 미등록 기기에서는 다이얼로그 없이 바로 11)

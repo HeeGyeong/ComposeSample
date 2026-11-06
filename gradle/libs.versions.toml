@@ -201,9 +201,12 @@ pagingCompose = "3.5.3"
 # 1.2.0 — aar-metadata minCompileSdk=35 / minAGP=8.6.0.
 glance = "1.2.0"
 
-# Biometric (alpha — biometric-compose는 alpha 단계만 존재)
+# Biometric (beta — biometric-compose 도 1.4.0 베타부터 같은 버전)
 # alpha07: minCompileSdk 36 / minAGP 8.9.1(충족) · pom 전이 끌어올림 0 · NegativeButton→DefaultCancel, 폴백 vararg(최대 4)
-biometric = "1.4.0-alpha07"
+# beta01(2026-11-06, DEP-CURRENCY-24 — 사용자 승인): aar minCompileSdk 36.1 / minAGP 8.9.1 그대로, 라이브러리 minSdk 23 → 24(프로젝트 24).
+# API 28 이하 지문 대화상자가 별도 FingerprintDialogActivity 에서 창 안 FingerprintDialogController 로 바뀌어 매니페스트에서 그 액티비티가 빠졌다.
+# 새 API 는 ComponentActivity 기반 · 기본 인증 핸들러 선택 수정 · 폴백 목록 정리. 공개 API(internal 제외)는 익명 클래스 2개 말고 동일.
+biometric = "1.4.0-beta01"
 
 # Tracing (Perfetto 커스텀 트레이스 이벤트)
 # debugRuntimeClasspath 에는 이미 전이 해석되어 있으나 debugCompileClasspath 에는 없어(실측 확인)

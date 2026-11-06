@@ -10,9 +10,9 @@ A human-readable collection of **intentional deferrals, version constraints, and
 - Koin 3.2.2 → 4.2.2. Both concerns recorded here were real but smaller than feared: ① the `owner` parameter became `viewModelStoreOwner` — on `koinViewModel`, not `getViewModel` (7 call sites, a rename), plus `org.koin.androidx.compose.get` → `org.koin.compose.koinInject` (1) and the deprecated `org.koin.androidx.viewmodel.dsl.viewModel` import → `org.koin.core.module.dsl.viewModel` (1); ② `koin-androidx-compose` no longer brings `navigation-compose`, so it is now declared directly at the version it used to resolve to (2.4.2) — moving it forward is a separate decision.
 - Koin 4.2.2 also lifts the `androidx.lifecycle` stack to 2.10.0, which the catalog now declares (appcompat 1.7.1, which it also requires, was already declared after Coil 3.5.0).
 
-### biometric on alpha07 (upgraded 2026-09-29)
-- **Current**: `androidx.biometric:biometric(-compose):1.4.0-alpha07` (the line has no stable release with Compose support)
-- **Limits**: below Android 16 QPR2 only the first of several fallbacks is shown; the rest are dropped silently. The test device has no enrolled fingerprint, so the `CustomFallbackSelected` path has not been exercised on hardware.
+### biometric on beta01 (upgraded 2026-09-29 to alpha07, 2026-11-06 to beta01)
+- **Current**: `androidx.biometric:biometric(-compose):1.4.0-beta01` (the line has no stable release with Compose support)
+- **Limits**: below Android 16 QPR2 only the first of several fallbacks is shown; the rest are dropped silently. The test device has no enrolled fingerprint; the `CustomFallbackSelected` path was exercised on a Pixel 4 API 30 emulator with an enrolled fingerprint (2026-11-06), not on hardware. The API 28-and-below fingerprint dialog (rewritten in beta01) could not be run locally.
 
 ### Compose runtime 1.12.x — `SnapshotStateSet` loses elements when parcelled (fixed in 1.13.0-alpha03)
 - **Current**: Compose runtime 1.12.1 (BOM 2026.09.00). Its Android `SnapshotStateSet.writeToParcel` writes the size and then only the first element (`if` where 1.13.0-alpha03 has `while`), so `rememberSaveable { mutableStateSetOf() }` - which `canBeSaved` accepts because the set is `Parcelable` - breaks once the set holds two or more elements and the Bundle is really parcelled (restoring after process death). Measured in the Remember Patterns example (#123): release restored `[빨강, null]` and logged "consumed X bytes, but Y expected" for the entries after it; debug threw `BadParcelableException` and showed an empty screen.
