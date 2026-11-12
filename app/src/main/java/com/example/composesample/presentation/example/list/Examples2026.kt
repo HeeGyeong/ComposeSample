@@ -1011,5 +1011,12 @@ val examples2026 = listOf(
         description = "UTC 자정 millis 로 오가는 M3 날짜·시간 선택기와 하루 밀림 함정",
         blogUrl = "",
         exampleType = ConstValue.DateTimePickerExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 11. 12",
+        title = "ProfilingManager 프로파일링",
+        description = "앱 밖에서 기록하는 ProfilingManager 와 앱 안 메서드 추적의 대조",
+        blogUrl = "",
+        exampleType = ConstValue.ProfilingManagerExample
     )
 )

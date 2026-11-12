@@ -193,6 +193,7 @@ import com.example.composesample.presentation.example.component.architecture.dev
 import com.example.composesample.presentation.example.component.architecture.development.concurrency.StructuredConcurrencyGuardrailExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.strictmode.StrictModeExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.tracing.PerfettoTracingExampleUI
+import com.example.composesample.presentation.example.component.architecture.development.tracing.ProfilingManagerExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.flow.FlatMapExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.flow.FlowBatchingExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.flow.FlowOperatorsExampleUI
@@ -382,6 +383,7 @@ import com.example.composesample.util.ConstValue.SelectExpressionExample
 import com.example.composesample.util.ConstValue.StructuredConcurrencyGuardrailExample
 import com.example.composesample.util.ConstValue.StrictModeExample
 import com.example.composesample.util.ConstValue.PerfettoTracingExample
+import com.example.composesample.util.ConstValue.ProfilingManagerExample
 import com.example.composesample.util.ConstValue.WorkManagerExample
 import com.example.composesample.util.ConstValue.WorkerExceptionHandlerExample
 import com.example.composesample.util.ConstValue.WorkEventListenerExample
@@ -673,4 +675,5 @@ val exampleUiRegistry: Map<String, @Composable (onBackEvent: () -> Unit) -> Unit
     FabDialogMorphExample to { onBackEvent -> FabDialogMorphExampleUI(onBackEvent) },
     Nav3DeepLinkResultExample to { onBackEvent -> Nav3DeepLinkResultExampleUI(onBackEvent) },
     MoleculePresenterExample to { onBackEvent -> MoleculePresenterExampleUI(onBackEvent) },
+    ProfilingManagerExample to { onBackEvent -> ProfilingManagerExampleUI(onBackEvent) },
 )

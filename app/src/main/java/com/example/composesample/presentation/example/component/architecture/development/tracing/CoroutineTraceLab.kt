@@ -56,10 +56,10 @@ data class TraceFileContent(val packets: Int, val tracks: Map<Long, TraceFileTra
     fun trackLabel(uuid: Long): String = tracks[uuid]?.let { it.threadName ?: it.name } ?: "track#$uuid"
 }
 
-/** protobuf 필드 하나 — LEN 이면 bytes, 그 외는 value(varint · fixed64 · fixed32) */
-private class ProtoField(val number: Int, val wireType: Int, val value: Long, val bytes: ByteArray?)
+/** protobuf 필드 하나 — LEN 이면 bytes, 그 외는 value(varint · fixed64 · fixed32). ProfilingLab(스택 샘플 파일)도 같이 쓴다 */
+internal class ProtoField(val number: Int, val wireType: Int, val value: Long, val bytes: ByteArray?)
 
-private class ProtoReader(private val buf: ByteArray, private var pos: Int = 0, private val end: Int = buf.size) {
+internal class ProtoReader(private val buf: ByteArray, private var pos: Int = 0, private val end: Int = buf.size) {
     fun hasMore() = pos < end
 
     private fun varint(): Long {
