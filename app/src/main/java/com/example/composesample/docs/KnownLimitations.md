@@ -76,7 +76,11 @@ the check is suppressed on that one composable with a comment stating why. Found
 
 ## Open bugs
 
-### RELEASE-API34-CAST-01 — Screenshot Detection crashes on close in release builds below API 34 (found 2026-11-06)
+None.
+
+## Fixed bugs (kept for reference)
+
+### RELEASE-API34-CAST-01 — Screenshot Detection crashed on close in release builds below API 34 (found 2026-11-06, fixed 2026-11-12)
 
 - Symptom: closing `ScreenshotDetectionExampleUI` throws `NoClassDefFoundError: Failed resolution of: Landroid/app/Activity$ScreenCaptureCallback;`
   (Pixel 4 API 30 emulator, release signed with the debug key; AGP 9.4.1 and 9.5.1 alike). Debug builds do not crash.
@@ -84,8 +88,11 @@ the check is suppressed on that one composable with a comment stating why. Found
   `onDispose` reads `callback` before checking `supported`. The delegated getter (`ModernCallbackSection$lambda$6` in the dex) ends with
   `check-cast Landroid/app/Activity$ScreenCaptureCallback;`, which ART cannot resolve below API 34 even for a null value.
   In debug the HotSwan interpreter runs that lambda, so the class is never resolved — debug-only render audits could not see it.
-- Fix direction (not applied yet): read the state only inside the API 34 branch, or keep it typed as `Any?` and cast inside the
-  `@RequiresApi(UPSIDE_DOWN_CAKE)` helpers.
+- Fix: the state is now `mutableStateOf<Any?>`, and the cast to `Activity.ScreenCaptureCallback` happens only inside the
+  `@RequiresApi(UPSIDE_DOWN_CAKE)` unregister helper. Verified on the Pixel 4 API 30 emulator with release builds (debug-key signed):
+  the build before the fix still crashed on close, the fixed build did not. A scan of every generic type argument in the sources
+  against `api-versions.xml` (platform classes newer than the release minSdk 24) found no other place; the ProfilingManager
+  example (#172) follows the same rule from the start (API 35 types stay inside a `@RequiresApi(35)` object).
 
 ## Planned for splitting (separate PR)
 

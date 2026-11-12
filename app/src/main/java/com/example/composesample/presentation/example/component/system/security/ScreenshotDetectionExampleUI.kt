@@ -120,7 +120,9 @@ private fun ModernCallbackSection() {
 
     var isMonitoring by remember { mutableStateOf(false) }
     val events = remember { mutableStateListOf<String>() }
-    var callback by remember { mutableStateOf<Activity.ScreenCaptureCallback?>(null) }
+    // Activity.ScreenCaptureCallback(API 34)을 Any? 로 들고 API 34 헬퍼 안에서만 캐스트한다 — 상태 타입이 그 클래스면
+    // 위임 getter 의 check-cast 가 API 34 미만 release 에서 클래스 해석에 실패한다(NoClassDefFoundError, RELEASE-API34-CAST-01)
+    var callback by remember { mutableStateOf<Any?>(null) }
 
     // 화면을 벗어날 때 콜백이 계속 등록된 채로 남지 않도록 정리
     DisposableEffect(Unit) {
@@ -174,8 +176,8 @@ private fun registerModernCallback(
 }
 
 @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
-private fun unregisterModernCallback(activity: Activity, callback: Activity.ScreenCaptureCallback) {
-    runCatching { activity.unregisterScreenCaptureCallback(callback) }
+private fun unregisterModernCallback(activity: Activity, callback: Any) {
+    runCatching { activity.unregisterScreenCaptureCallback(callback as Activity.ScreenCaptureCallback) }
 }
 
 // ============================================================
