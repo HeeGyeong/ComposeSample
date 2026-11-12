@@ -148,7 +148,8 @@ espressoCore = "3.7.0"
 # 그 BOM 의 제약이 test 아티팩트까지 같은 버전으로 올린다(선언 1.7.1 ↔ 해석 1.10.1 불일치였음 — DEP-VERSION-05).
 # Ktor 3.5.2 가 coroutines 1.11.0 을 요구해 런타임·테스트 모두 1.11.0 으로 해석되므로 선언을 맞춘다(직전에는 coil 3.5.0 발 1.10.2).
 coroutineTest = "1.11.0"
-mockk = "1.14.11"
+# 1.14.12(2026-11-12 패치 상향 — DEP-CURRENCY-26): 검증 타임아웃 · 제한 목(Map 인터페이스) · value class 매처 수정 — 프로젝트 사용(relaxed · mockkStatic · anyConstructed · slot)과 겹치지 않음.
+mockk = "1.14.12"
 turbine = "1.2.1"
 runner = "1.7.0"
 rules = "1.7.0"
