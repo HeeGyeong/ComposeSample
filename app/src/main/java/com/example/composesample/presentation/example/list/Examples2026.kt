@@ -1018,5 +1018,12 @@ val examples2026 = listOf(
         description = "앱 밖에서 기록하는 ProfilingManager 와 앱 안 메서드 추적의 대조",
         blogUrl = "",
         exampleType = ConstValue.ProfilingManagerExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 11. 13",
+        title = "시스템 바 아이콘 색 선언",
+        description = "화면마다 선언한 바 아이콘 색을 전환 순서와 무관하게 되돌리는 요청 스택",
+        blogUrl = "",
+        exampleType = ConstValue.SystemBarAppearanceExample
     )
 )

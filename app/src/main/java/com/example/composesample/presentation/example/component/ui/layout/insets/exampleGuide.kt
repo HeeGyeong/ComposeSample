@@ -70,4 +70,44 @@ package com.example.composesample.presentation.example.component.ui.layout.inset
  *   상호작용 시에만 도는 것은 정상 렌더). **프로젝트 차원의 조치로 바이트코드 타깃을 17 로 고정해
  *   (config.gradle) typeSwitch 생성 자체를 막았고, 26개 전부 해소됐다.** 그래도 이 파일은
  *   `LocalActivity.current` 를 유지한다 — 타깃을 21 로 되돌려도 다시 깨지지 않는 쪽이 낫다.
+ *
+ * ## SystemBarAppearanceExampleUI (시스템 바 아이콘 색 선언)
+ * - 원문 라이브러리(채택하지 않음): https://github.com/composablehorizons/systembars (Android Weekly #752:
+ *   https://androidweekly.net/issues/issue-752)
+ * - WindowInsetsControllerCompat: https://developer.android.com/reference/androidx/core/view/WindowInsetsControllerCompat
+ * - Android 15 동작 변경(edge-to-edge 강제, setStatusBarColor 무시):
+ *   https://developer.android.com/about/versions/15/behavior-changes-15
+ * - DialogWindowProvider: https://developer.android.com/reference/kotlin/androidx/compose/ui/window/DialogWindowProvider
+ * - PixelCopy: https://developer.android.com/reference/android/view/PixelCopy
+ *
+ * 핵심 개념:
+ * - 아이콘 색은 창의 플래그 하나다 — `isAppearanceLightStatusBars = true` 면 어두운 아이콘(밝은 배경용).
+ *   창마다 따로 있고, 다이얼로그는 자기 창을 가진다.
+ * - **저장·복원**(들어올 때 지금 값을 저장 → 나갈 때 되돌림)은 나가는 화면이 먼저 정리될 때만 맞다.
+ *   요청 스택(원문 `WindowSystemBars`)은 창마다 요청을 들어온 순서로 쌓고, 바마다 가장 최근에 그 바를 지정한
+ *   요청이 이기며, 다 빠지면 첫 요청 직전에 읽어 둔 값으로 돌아간다. 이미 있는 요청은 값이 바뀌어도 자리를 지킨다.
+ *   판정 규칙은 `SystemBarAppearanceLab.kt`, 단위 테스트는 `SystemBarAppearanceLabTest`(손으로 따라간 기대값 +
+ *   변이 2건으로 실패 확인).
+ *
+ * 실측(Pixel 4 API 30 에뮬 · Pixel Tablet API 35 에뮬, debug · release 디버그 키 서명):
+ * - 순서: 한 컴포지션 안의 교체(`key(page)`)는 **나가는 화면의 onDispose 가 먼저**, `AnimatedContent`(300ms 페이드)와
+ *   `NavDisplay`(navigation3 1.2.1 기본 페이드)는 **들어오는 화면의 효과가 먼저** 돌았다(각 12/12).
+ * - 그 순서에서 저장·복원은 두 가지로 틀린다 — ① 어두운 헤더 → 밝은 사진: 밝은 사진이 어두운 아이콘을 적용한 뒤
+ *   어두운 헤더의 onDispose 가 밝은 아이콘으로 되돌려 요청을 잃는다. ② 밝은 사진 → 어두운 헤더 → 홈: 어두운 헤더가
+ *   '밝은 사진이 적용한 값'을 원래 값으로 저장해 두었다가 홈으로 나오며 어두운 아이콘을 남긴다.
+ *   36단계 결과는 두 API · debug · release 에서 한 줄도 다르지 않았고, 요청 스택은 전부 맞았다.
+ * - 앱이 되읽은 상태바 값은 창 속성(`dumpsys window` 의 `apr=LIGHT_STATUS_BARS`)과 SystemUI 판정
+ *   (`LightBarController` 의 AppearanceRegion · `StatusBarTransitionsController.mDarkIntensity` 1.0/0.0)과 일치했다.
+ * - 다이얼로그(요청 스택, 어두운 아이콘 요청): 다이얼로그 창에 걸면 dim 켬·끔 모두 상태바가 그대로다. 액티비티 창에
+ *   걸면 창 값은 바뀌고, dim 을 끄면 아이콘이 바로 바뀐다. dim 이 켜져 있으면 다이얼로그가 떠 있는 동안 SystemUI 가
+ *   밝은 아이콘으로 판정해 겉으로는 차이가 안 보인다(두 API 같음).
+ * - 바 뒤 색(PixelCopy, 스크린샷 픽셀과 같은 값): API 30 은 데코가 그린 `statusBarColor` #3700B3(테마 purple_700),
+ *   API 35 + targetSdk 35 는 `statusBarColor` 가 #00000000 으로 읽히고 바 뒤에는 BlogExampleActivity 의 노란 여백
+ *   #FFFF00 이 깔린다. 원래 아이콘은 두 API 모두 밝은 색이라 API 35 에서는 거의 안 보인다.
+ * - 다크 모드를 켜도(`cmd uimode night yes`, 액티비티 재생성) 바 뒤 색은 그대로였다 — 테마가 Material.Light 다.
+ * - 내비 바는 판정하지 않는다: API 35 태블릿 에뮬(제스처 내비)에서 앱이 읽은 `isAppearanceLightNavigationBars` 는
+ *   false 인데 창 속성에는 시스템이 붙인 `LIGHT_NAVIGATION_BARS FORCE_LIGHT_NAVIGATION_BARS` 가 있었다.
+ * - 예제를 떠나면(헤더 ←) 저장·복원이 값을 남긴 상태든 요청이 쌓인 상태든 창은 원래 값으로 돌아왔다. 화면 루트의
+ *   DisposableEffect 는 가장 먼저 등록돼 가장 나중에 정리된다 — '밝은 사진 → 어두운 헤더'에서 나가면 어두운 헤더의
+ *   onDispose 가 남의 값(어두운 아이콘)을 되돌려 놓는데, 그 뒤에 루트가 원래 값으로 덮었다(API 35 debug · release).
  */
