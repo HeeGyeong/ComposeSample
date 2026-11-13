@@ -25,11 +25,12 @@ A human-readable collection of **intentional deferrals, version constraints, and
 
 ---
 
-## Lint status (audited 2026-09-16)
+## Lint status (audited 2026-09-16, current baseline 2026-11-13)
 
 The 2026-09-16 audit ran `./gradlew :app:lintDebug` for the first time: **183 issues, 26 of them errors**. After the pass
-below it is **151 issues, 0 errors**, so `lint` can now be added to the build gate if desired (it is not part of it yet —
-the gate is `assembleDebug` + `assembleRelease` + unit tests + androidTest compile).
+below it is **151 issues, 0 errors**. Since 2026-09-22 `:app:lintDebug` is part of the build gate (0 errors required):
+the `lint-vital` check inside `assembleRelease` only looks at fatal issues, and an Error-level finding
+(`StateFlowValueCalledInComposition`) had passed it into a commit. The current baseline is at the end of this section.
 
 **Fixed (behaviour or correctness):**
 
@@ -52,7 +53,7 @@ the gate is `assembleDebug` + `assembleRelease` + unit tests + androidTest compi
 | `ViewModelConstructorInComposable` | 2 sites | `PreviewExampleUI` demonstrates preview-only ViewModel construction |
 | `DisallowLookaheadAnimationVisualDebug` | 1 site | see the section below — the debug tool is the subject of that screen |
 
-**Remaining 151 warnings (none block a build):**
+**Remaining 151 warnings after the 2026-09-16 audit (kept as the audit record):**
 
 | Category | Count | Verdict |
 |----------|-------|---------|
@@ -62,7 +63,23 @@ the gate is `assembleDebug` + `assembleRelease` + unit tests + androidTest compi
 | `Recycle` | 2 | False positive — both call sites already use `?.use { }` |
 | `UseKtx`, `UnusedAttribute`, `MonochromeLauncherIcon`, `IconLocation`, `RedundantLabel`, `ConstantLocale`, `SimpleDateFormat`, others | ~77 | Open 🟢 — cosmetic, no behavioural impact |
 
-> **Update 2026-09-29:** the "Deferred — dependency currency" row was cleared by DEP-CURRENCY-02 (AGP 9.4.1 · compose-bom 2026.09.00 · lifecycle 2.11.0 · core 1.19.1 · navigation-compose 2.10.2 · OkHttp 5.5.0 · Ktor 3.6.0 · Coil 3.6.3 · tracing 2.0.3 · okhttp-eventsource 5.0.0 · biometric alpha07). Current baseline: **0 errors / 33 warnings**.
+> **Update 2026-09-29:** the "Deferred — dependency currency" row was cleared by DEP-CURRENCY-02 (AGP 9.4.1 · compose-bom 2026.09.00 · lifecycle 2.11.0 · core 1.19.1 · navigation-compose 2.10.2 · OkHttp 5.5.0 · Ktor 3.6.0 · Coil 3.6.3 · tracing 2.0.3 · okhttp-eventsource 5.0.0 · biometric alpha07). Baseline then: **0 errors / 33 warnings**.
+> The two "Open 🟢" rows were cleared the next day by RES-UNUSED-01 (`365002dc`, 17 unused resources) and LINT-COSMETIC-01
+> (`89f30399`, 80 cosmetic issues), and LINT-AUTOBOXING-01 (`a990a367`) followed on 2026-09-18.
+
+**Current baseline (2026-11-13): 0 errors / 28 warnings + 1 hint.** Version notices come from lint's network lookups, so
+they appear and disappear without code changes; compare the issue list, not only the count.
+
+| Issue | Count | Verdict |
+|-------|-------|---------|
+| `ObsoleteSdkInt` | 23 | **Do not "fix"** — same reason as above (debug minSdk 26 from HotSwan, release minSdk 24) |
+| `NewerVersionAvailable` | 3 | kotlinx-serialization 1.13.0 (core + json, DEP-CURRENCY-27 — minor upgrade awaiting approval) · HotSwan compiler 2.2.0 (won't-do: the Gradle plugin must match the IDE plugin, see ComposeHotReloadGuide) |
+| `AndroidGradlePluginVersion` | 1 | Gradle 9.9.1 (DEP-CURRENCY-28 — minor upgrade awaiting approval) |
+| `OldTargetApi` | 1 | targetSdk 35 is the value `CLAUDE.md` fixes for this project |
+| `ReportShortcutUsage` (hint) | 1 | The shortcut example adds dynamic shortcuts but does not report their use; ranking hints are not part of that example |
+
+The last stray warnings — four `DefaultLocale` number formats (display only) and one `EmptySuperCall` — were fixed on
+2026-11-13 (LINT-DEFAULTLOCALE-01 · LINT-EMPTYSUPER-01).
 
 ## Intentional lint suppressions
 

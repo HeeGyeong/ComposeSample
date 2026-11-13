@@ -121,8 +121,9 @@ Compose Hot Reload (HotSwan) is a development tool that, when you save a `.kt` f
 
 ### What 2.0 leaves native (from this project's build log)
 
-`assembleDebug` prints `w: [HotSwan v2] SKIPPED ...` for **40 declarations — 28 methods and 12 whole classes** — that
-cannot be copied to the interpreter. They keep working, but edits to them need a full build. These `w:` lines are plugin
+When HotSwan 2.0.0 was enabled (2026-09-15), `assembleDebug` printed `w: [HotSwan v2] SKIPPED ...` for **40 declarations —
+28 methods and 12 whole classes** — that cannot be copied to the interpreter (the table below is that snapshot; the
+current count follows it). They keep working, but edits to them need a full build. These `w:` lines are plugin
 diagnostics, **not compiler warnings on the source** (the project's warning scan counts only `w: file://` lines).
 
 | Reason | Count | Skipped unit | Examples in this project |
@@ -131,6 +132,14 @@ diagnostics, **not compiler warnings on the source** (the project's warning scan
 | `FRAMEWORK_ENTRY_SUBCLASS` | 11 | whole class | `BaseApplication`, `LocationTrackingService`, the five Quick Settings `*TileService`s, the four Glance `*WidgetReceiver`s |
 | `GENERIC_DECLARATION` | 8 | method | functions declaring type parameters, e.g. `onEachBatch<T>`, `measureInline<T>` |
 | `HELPER_SUPER_CTOR_NEW_ARG` | 1 | whole class | `RubberBandOverscrollEffect` (the custom overscroll example). A field initialiser that constructs an object — here an `Animatable` plus an anonymous `Modifier.Node()` — lands in the same static `hotswanInit` helper as the super-constructor delegation, which the JVM verifier rejects (`Expected value generated with NEW`). Any class whose constructor builds objects into its fields can land here. |
+
+**Current count (HotSwan 2.1.0, forced recompile of `:app` on 2026-11-13): 87 lines.** The same four reasons have grown with
+the examples — `VIEW_RECEIVER_SUBTYPE` 29, `FRAMEWORK_ENTRY_SUBCLASS` 17, `GENERIC_DECLARATION` 14,
+`HELPER_SUPER_CTOR_NEW_ARG` 4 — and two reasons are new: `EXCLUDED_BY_CONFIG` 14 and `EXCLUDED_FILE_FACADE` 9. Those 23
+lines are not limitations but the classes this project removes from the rewrite on purpose with `exclude(...)` in
+`app/build.gradle` (each one explained in the sections below); an excluded file facade prints one line, an excluded class
+one line. The count is a baseline, not a target: a new example may add lines, and the pre-work scan compares the `app`
+lines before and after each change.
 
 ### What the interpreter cannot execute — JDK 21 `typeSwitch` (fixed by pinning jvmTarget to 17)
 

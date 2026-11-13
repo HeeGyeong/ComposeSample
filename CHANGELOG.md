@@ -1,7 +1,7 @@
 # Changelog
 
 Version and example-addition history for ComposeSample, newest first.
-(See the "Latest updates" section in `README.md` for a summary.)
+The README does not keep a separate summary any more; it links here.
 
 ---
 
@@ -30,6 +30,7 @@ Version and example-addition history for ComposeSample, newest first.
   - The four `String.format` calls that lint flagged as `DefaultLocale` now pass `Locale.US` (LINT-DEFAULTLOCALE-01, found by the 2026-11-13 improvement check): the sticker scale, the two MB rows of the lazy-list reuse pool and the AGSL slider value. All four only format numbers for display, so nothing changes in Korean or English; on a device whose default locale writes a decimal comma they now keep the dot like the rest of the app. The 48 Kotlin `"...".format(...)` calls lint does not flag were checked too - none feeds a file name, URL, JSON body, header or parser - and are left as they are.
   - `WorkEventListenerViewModel.onCleared()` no longer calls `super.onCleared()` (LINT-EMPTYSUPER-01): `ViewModel.onCleared` is empty, and the call was the last `EmptySuperCall` warning.
 - Documentation fixes
+  - Three documents that had fallen behind (found by the 2026-11-13 improvement check): `KnownLimitations.md` still described the September lint audit as current - 33 warnings and "lint is not part of the build gate" - so the section now keeps that audit as a record and adds the current baseline, 28 warnings and 1 hint, with a verdict for each (DOC-KNOWNLIMIT-LINT-01); `ComposeHotReloadGuide.md` gave the 40 `SKIPPED` declarations of HotSwan 2.0.0 as the current count, so the table is now dated and followed by today's 87, of which 23 are the classes the project excludes on purpose (DOC-HOTSWAN-SKIPPED-01); and this file's header pointed to a "Latest updates" section of the README that was removed when the README was rewritten in Korean, while the README points back here (DOC-CHANGELOG-POINTER-01).
   - `docs/di/DIRules.md` gains a "Compile-time Graph Check" rule (DOC-DI-PLUGIN-01, found in the pre-work after #106): the D001 / D002 / D004 diagnostics, `modules(...)` instead of `loadKoinModules` at the entry point, no runtime-chosen module lists (one switched off the checks of the whole compilation unit), what is still only found at runtime, and checking the plugin's verified Kotlin list before a Kotlin upgrade.
   - Backfilled 15 examples that the README "Component Examples" catalog lines never listed (DOC-README-CATALOG-01, found in the #166 pre-work: the `flow` line named only FlatMap). Earlier README drift checks compared only feat commits since August, so examples added to an existing package before that slipped through. A title/keyword pass over all 184 dated examples gave 53 candidates (Korean prose makes it noisy); each was checked against its package line, leaving 15: `flow` FlowOperators · FlowBatching, `concurrency` RaceCondition · SelectExpression, `navigation` Nav3ViewModelScope · Nav3SavedStateHandle, `canvas` MonthPickerDial · ParticleEmitter · FreehandDrawing · WaveformCanvas, `text` DocumentEditingTextField · SyntaxHighlighting, `accessibility` AccessibleFocusIndicator, `animation` AnimationsShowcase · SharedElementDebugTooling. Wording comes from each example's KDoc, ConstValue comment or list description, and the API names used were checked in the source
 - Bug fixes
