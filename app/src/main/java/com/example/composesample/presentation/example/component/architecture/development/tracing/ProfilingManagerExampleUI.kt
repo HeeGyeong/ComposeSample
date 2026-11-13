@@ -3,7 +3,9 @@ package com.example.composesample.presentation.example.component.architecture.de
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -14,10 +16,17 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.FilterChip
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.withFrameNanos
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
@@ -26,6 +35,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.composesample.presentation.MainHeader
+import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
 private val ProfilerBlue = Color(0xFF1565C0)
@@ -55,6 +65,7 @@ fun ProfilingManagerExampleUI(onBackEvent: () -> Unit) {
             item { StackSamplingCard(viewModel) }
             item { BurstCard(viewModel) }
             item { GlobalResultsCard(viewModel) }
+            item { HeapDumpCard(viewModel) }
             item { TriggerCard() }
             item { SummaryCard() }
         }
@@ -247,9 +258,164 @@ private fun GlobalResultsCard(viewModel: ProfilingManagerViewModel) {
     }
 }
 
+private const val LEAK_SCREEN_CYCLES = 5
+
+@Composable
+private fun HeapDumpCard(viewModel: ProfilingManagerViewModel) {
+    val run by viewModel.heapDump.collectAsStateWithLifecycle()
+    val hprof by viewModel.hprof.collectAsStateWithLifecycle()
+    val registry by viewModel.registryCount.collectAsStateWithLifecycle()
+    val running by viewModel.running.collectAsStateWithLifecycle()
+    var release by remember { mutableStateOf(false) }
+    var gcFirst by remember { mutableStateOf(true) }
+    var openScreen by remember { mutableStateOf<Int?>(null) }
+    var cycling by remember { mutableStateOf(false) }
+    val scope = rememberCoroutineScope()
+
+    SectionCard(title = "⑤ Java 힙 덤프 — 떠난 화면이 남긴 객체 세기", color = ProfilerBlue) {
+        Note(
+            "작은 화면이 들어올 때 앱 전체 레지스트리(정적 목록)에 리스너를 등록한다. 떠날 때 해제하지 않으면 리스너가 그대로 남는다 " +
+                "— 공식 OOM 사례(StatsReporter.registerListener)와 같은 모양. 화면을 ${LEAK_SCREEN_CYCLES}번 열고 닫은 뒤 힙 덤프를 받아, " +
+                "덤프 안의 ${LeakedScreenListener::class.java.simpleName} 인스턴스 수를 레지스트리 수와 나란히 본다."
+        )
+        Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+            FilterChip(selected = !release, onClick = { release = false }, enabled = !cycling, label = { Text("떠날 때 해제 안 함(누수)", fontSize = 11.sp) })
+            FilterChip(selected = release, onClick = { release = true }, enabled = !cycling, label = { Text("onDispose 에서 해제", fontSize = 11.sp) })
+        }
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            OutlinedButton(
+                onClick = {
+                    scope.launch {
+                        cycling = true
+                        try {
+                            repeat(LEAK_SCREEN_CYCLES) { index ->
+                                openScreen = index + 1
+                                withFrameNanos { }
+                                withFrameNanos { }
+                                openScreen = null
+                                withFrameNanos { }
+                                withFrameNanos { }
+                            }
+                        } finally {
+                            openScreen = null
+                            cycling = false
+                            viewModel.refreshRegistry()
+                        }
+                    }
+                },
+                enabled = !cycling && running == null
+            ) { Text("작은 화면 ${LEAK_SCREEN_CYCLES}번 열고 닫기", fontSize = 12.sp) }
+            OutlinedButton(onClick = { viewModel.clearRegistry() }, enabled = !cycling && running == null) {
+                Text("레지스트리 비우기", fontSize = 12.sp)
+            }
+        }
+        openScreen?.let { LeakyScreen(index = it, release = release) }
+        Note("레지스트리에 남은 리스너 ${registry}개(앱이 아는 값 · 앱 프로세스가 살아 있는 동안 화면을 나가도 남는다)")
+
+        Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+            FilterChip(selected = gcFirst, onClick = { gcFirst = true }, enabled = running == null, label = { Text("덤프 전 GC 요청", fontSize = 11.sp) })
+            FilterChip(selected = !gcFirst, onClick = { gcFirst = false }, enabled = running == null, label = { Text("GC 없이", fontSize = 11.sp) })
+        }
+        Button(
+            onClick = { viewModel.requestHeapDump(gcFirst) },
+            enabled = viewModel.supported && running == null && !cycling,
+            colors = ButtonDefaults.buttonColors(containerColor = ProfilerBlue)
+        ) {
+            Text(
+                text = when {
+                    !viewModel.supported -> "API 35 이상에서만 (이 기기 ${viewModel.apiLevel})"
+                    running == "힙 덤프" -> "덤프 · 결과 기다리는 중..."
+                    else -> "ProfilingManager 힙 덤프 요청"
+                },
+                color = Color.White,
+                fontSize = 12.sp
+            )
+        }
+        run?.let { r -> Mono(heapDumpText(r)) }
+
+        Button(
+            onClick = { viewModel.dumpHprofInApp() },
+            enabled = running == null && !cycling,
+            colors = ButtonDefaults.buttonColors(containerColor = LegacyOrange)
+        ) {
+            Text(
+                text = if (running == "hprof") "앱 안에서 덤프하는 중..." else "대조: 앱 안 Debug.dumpHprofData",
+                color = Color.White,
+                fontSize = 12.sp
+            )
+        }
+        hprof?.let { h -> Mono(hprofText(h)) }
+        Note(
+            "앱 안 hprof 는 수백 MB 를 잠깐 쓰고 크기만 잰 뒤 바로 지운다(남은 공간 2GB 미만이면 실행하지 않음). " +
+                "ProfilingManager 결과는 ④ 의 files/profiling 에 남는다."
+        )
+        Note(
+            "실측(API 35 에뮬 debug · release 같음): 누수 5 → 덤프 5 · 해제 0 → 0 · 해제했어도 GC 없이 찍으면 5(아직 수거 안 된 객체). " +
+                "logcat 에 perfetto_hprof 'forking for <앱 pid>' 뒤 다른 pid 가 덤프했고, 그동안 메인 스레드의 가장 긴 멈춤(29~48ms)은 " +
+                "요청 전 평소 값(16~60ms)과 구분되지 않았다. 파일은 release 20~27MB · debug 105~117MB(debug 힙의 대부분이 HotSwan 의 ASM 객체). " +
+                "앱 안 hprof 는 백그라운드 스레드에서 불러도 덤프 내내 메인 스레드가 멈췄다 — API 30 에뮬 release 650ms · 50MB, debug 1.8초 · 305~330MB."
+        )
+        Note(
+            "덤프 한 번 뒤 10분쯤 지난 요청이 3ms 만에 2(앱 한도)로 거절됐다 — 연달아 재려면 ③ 의 명령으로 로컬에서만 한도를 끈다. " +
+                "같은 이름의 클래스가 타입 id 둘로 나오기도 해서 개수는 이름으로 모아 센다. 앱 클래스의 정적 필드가 붙잡은 객체는 덤프의 루트에서 " +
+                "참조만 따라가면 닿지 않는 것으로 나와(앱 Class 객체가 루트가 아니다), 이 카드는 도달성 대신 GC 뒤 개수로 센다."
+        )
+    }
+}
+
+/** 열려 있는 동안만 컴포지션에 있는 작은 화면 — 들어올 때 등록, [release] 면 떠날 때 해제 */
+@Composable
+private fun LeakyScreen(index: Int, release: Boolean) {
+    DisposableEffect(index) {
+        val listener = LeakedScreenListener(index)
+        ScreenListenerRegistry.register(listener)
+        onDispose {
+            if (release) ScreenListenerRegistry.unregister(listener)
+        }
+    }
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(Color(0xFFE3F2FD), RoundedCornerShape(6.dp))
+            .padding(8.dp)
+    ) {
+        Text("작은 화면 #$index", fontSize = 11.sp, color = ProfilerBlue)
+    }
+}
+
+private fun heapDumpText(r: HeapDumpRun): String = buildString {
+    val o = r.outcome
+    appendLine("결과 ${o.errorCode} ${profilingErrorLabel(o.errorCode)} · 요청 → 콜백 ${o.elapsedMs}ms")
+    o.filePath?.let { appendLine("파일 ${it.substringAfterLast('/')} · ${mbText(o.fileBytes)}") }
+    appendLine("메인 스레드 가장 긴 멈춤 ${r.dumpStallMs}ms (요청 전 ${r.idleStallMs}ms)")
+    appendLine("덤프 전 GC ${if (r.gcFirst) "요청함" else "요청 안 함"} · 그때 레지스트리 ${r.registryCount}개")
+    val s = r.summary ?: return@buildString
+    appendLine()
+    appendLine("패킷 ${s.packets} · 힙 그래프 ${s.heapGraphPackets} · 객체 ${s.objects} · 타입 ${s.types} · 루트 ${s.roots}")
+    appendLine("파일 읽기 ${r.parseMs}ms")
+    val found = s.instancesOf[LEAKED_LISTENER_CLASS] ?: 0
+    val verdict = if (found == r.registryCount) "레지스트리와 같음" else "레지스트리 ${r.registryCount}개와 다름 — 아직 수거 안 된 객체가 섞였다"
+    appendLine("${LeakedScreenListener::class.java.simpleName} ${found}개 — $verdict")
+    appendLine("인스턴스 많은 클래스")
+    s.topClasses.forEach { (name, n) -> appendLine("  $n  $name") }
+}.trimEnd()
+
+private fun hprofText(h: HprofRun): String = buildString {
+    h.error?.let { return "실행 안 함 — $it" }
+    appendLine("Debug.dumpHprofData (백그라운드 스레드에서 호출) ${h.durationMs}ms")
+    appendLine("메인 스레드 가장 긴 멈춤 ${h.dumpStallMs}ms (호출 전 ${h.idleStallMs}ms)")
+    appendLine("파일 ${mbText(h.fileBytes)} — 크기만 재고 지웠다 · 그때 레지스트리 ${h.registryCount}개")
+}.trimEnd()
+
+/** 소수 첫째 자리 MB — String.format 의 기본 로캘을 피한다 */
+private fun mbText(bytes: Long): String {
+    val tenths = (bytes * 10 + 512 * 1024) / (1024 * 1024)
+    return "${tenths / 10}.${tenths % 10}MB"
+}
+
 @Composable
 private fun TriggerCard() {
-    SectionCard(title = "⑤ API 36 — 시스템이 알아서 기록하는 트리거", color = Color(0xFF6A1B9A)) {
+    SectionCard(title = "⑥ API 36 — 시스템이 알아서 기록하는 트리거", color = Color(0xFF6A1B9A)) {
         Note(
             "Android 16 부터는 앱이 관심 있는 사건을 등록해 두면 시스템이 상시 돌던 백그라운드 트레이스에서 그 순간을 잘라 넘겨준다 " +
                 "— API 36 은 앱 완전 표시(reportFullyDrawn) · ANR 두 가지, android-37 SDK 에는 콜드 스타트 · OOM · 강제 종료 등이 더 있다. " +
@@ -275,6 +441,8 @@ private fun SummaryCard() {
                 "• ProfilingManager 는 기록을 시스템에 맡겨 앱 스레드가 늘지 않고, 결과는 앱 몫만 걸러 files/profiling 으로 온다.\n" +
                 "• 요청은 거절될 수 있다 — 오류 코드(한도 · 이미 기록 중)를 그대로 기록하고 다시 시도는 시스템 판단에 맡긴다.\n" +
                 "• 결과의 Java 프레임 이름으로 '메인 스레드에서 Gson 파싱' 같은 문제를 앱 밖 도구 없이 찾을 수 있다.\n" +
+                "• 힙 덤프도 시스템이 앱을 fork 한 복제 프로세스에서 찍어 앱은 잠깐만 멈추고(앱 안 hprof 는 덤프 내내 멈춤), 결과는 값 없는 참조 그래프라 작다. " +
+                "아직 수거 안 된 객체도 들어가니 개수를 셀 때는 GC 를 먼저 요청한다.\n" +
                 "• API 35 타입(ProfilingResult)은 버전 분기 안에서만 다루고, 화면 상태는 앱 데이터 클래스로 옮긴다."
         )
     }

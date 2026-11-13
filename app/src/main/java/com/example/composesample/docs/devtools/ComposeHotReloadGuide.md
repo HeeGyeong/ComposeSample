@@ -332,6 +332,24 @@ exclude("com.example.composesample.presentation.example.component.data.download.
 exclude("com.example.composesample.presentation.example.component.data.download.RangeDownloader")
 ```
 
+The ProfilingManager example's heap dump card (#174) excludes its dump parser for the same reason. `parseJavaHeapDump`
+walks a `.perfetto-java-heap-dump` file once (17-117 MB, 0.3-5.6 million objects); on the same three device dumps it
+took 10.3-38.6 s in `testDebugUnitTest` under the rewrite and 47-72 ms with `-Photswan.dispatchRewriteEnabled=false`.
+With the three classes below excluded the debug unit test took 51-72 ms, the debug app on the Pixel Tablet API 35
+emulator 325-445 ms for a 105-117 MB dump, and the release build after `compile -m speed` 58-80 ms for 20-27 MB:
+
+```groovy
+exclude("com.example.composesample.presentation.example.component.architecture.development.tracing.HeapDumpLabKt")
+exclude("com.example.composesample.presentation.example.component.architecture.development.tracing.DumpCursor")
+exclude("com.example.composesample.presentation.example.component.architecture.development.tracing.TypeCounter")
+```
+
+The same card shows how much of a debug app's Java heap HotSwan itself holds. A heap dump of the running debug app had
+4.9-5.6 million objects, and the five classes with the most instances were all `org.objectweb.asm.tree.*`
+(`VarInsnNode` 718,500, `LabelNode` 540,840, `InsnNode` 436,233, `MethodInsnNode` 431,079); the release build of the same
+screen had 0.36-0.75 million objects, led by `java.lang.String`. Heap sizes and counts taken from a debug build therefore
+say little about the release app.
+
 ### `@Synchronized` loses its mutual exclusion under the dispatch rewrite — use a `synchronized` block
 
 Found while writing the Range download example (#139). Its fake server's `handle()` was marked `@Synchronized` so that

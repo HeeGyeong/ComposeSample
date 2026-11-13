@@ -1,14 +1,19 @@
 package com.example.composesample.presentation.example.component.architecture.development.tracing
 
+import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
 import android.os.Build
 import android.os.CancellationSignal
 import android.os.Debug
+import android.os.Handler
+import android.os.Looper
 import android.os.ProfilingResult
 import android.os.Process
+import android.os.SystemClock
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
+import androidx.core.os.JavaHeapDumpRequestBuilder
 import androidx.core.os.StackSamplingRequestBuilder
 import androidx.core.os.registerForAllProfilingResults
 import androidx.core.os.requestProfiling
@@ -58,6 +63,30 @@ data class ProfilingOutcome(
     val elapsedMs: Long,
 )
 
+/** ProfilingManager Java 힙 덤프 한 번 */
+data class HeapDumpRun(
+    val outcome: ProfilingOutcome,
+    val gcFirst: Boolean,
+    /** 덤프를 요청한 순간 레지스트리에 있던 리스너 수 — 앱이 아는 값 */
+    val registryCount: Int,
+    /** 요청 직전 0.3초 동안 메인 스레드의 가장 긴 간격(평소 값) */
+    val idleStallMs: Long,
+    /** 요청부터 결과까지 메인 스레드의 가장 긴 간격 */
+    val dumpStallMs: Long,
+    val summary: HeapDumpSummary?,
+    val parseMs: Long,
+)
+
+/** 앱 안 Debug.dumpHprofData 한 번 — 파일은 크기만 재고 바로 지운다 */
+data class HprofRun(
+    val registryCount: Int,
+    val durationMs: Long,
+    val idleStallMs: Long,
+    val dumpStallMs: Long,
+    val fileBytes: Long,
+    val error: String?,
+)
+
 data class StackSamplingRun(
     val outcome: ProfilingOutcome,
     val workloadMs: Long,
@@ -87,6 +116,12 @@ class ProfilingManagerViewModel(application: Application) : AndroidViewModel(app
     val burst: StateFlow<List<ProfilingOutcome>> = _burst.asStateFlow()
     private val _history = MutableStateFlow<List<ProfilingOutcome>>(emptyList())
     val history: StateFlow<List<ProfilingOutcome>> = _history.asStateFlow()
+    private val _heapDump = MutableStateFlow<HeapDumpRun?>(null)
+    val heapDump: StateFlow<HeapDumpRun?> = _heapDump.asStateFlow()
+    private val _hprof = MutableStateFlow<HprofRun?>(null)
+    val hprof: StateFlow<HprofRun?> = _hprof.asStateFlow()
+    private val _registryCount = MutableStateFlow(ScreenListenerRegistry.size)
+    val registryCount: StateFlow<Int> = _registryCount.asStateFlow()
     private val _resultFiles = MutableStateFlow(countResultFiles())
     val resultFiles: StateFlow<Pair<Int, Long>> = _resultFiles.asStateFlow()
 
@@ -176,6 +211,89 @@ class ProfilingManagerViewModel(application: Application) : AndroidViewModel(app
         _resultFiles.value = countResultFiles()
     }
 
+    /** 레지스트리는 앱 전체 객체라 화면이 바뀌어도 남는다 — 화면이 열고 닫은 뒤 다시 읽는다 */
+    fun refreshRegistry() {
+        _registryCount.value = ScreenListenerRegistry.size
+    }
+
+    fun clearRegistry() {
+        ScreenListenerRegistry.clear()
+        refreshRegistry()
+    }
+
+    fun requestHeapDump(gcFirst: Boolean) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.VANILLA_ICE_CREAM) return
+        launchExclusive("힙 덤프") { heapDump(gcFirst) }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
+    private suspend fun heapDump(gcFirst: Boolean) {
+        val app = getApplication<Application>()
+        // 덤프에는 아직 수거되지 않은 객체도 들어간다 — 버린 리스너를 세지 않으려면 먼저 GC 를 요청한다(보장은 아니다)
+        if (gcFirst) withContext(Dispatchers.Default) { Runtime.getRuntime().gc() }
+        val registry = ScreenListenerRegistry.size
+        val meter = MainThreadStallMeter()
+        meter.start()
+        delay(STALL_IDLE_WINDOW_MS)
+        val idle = meter.restart()
+        val outcome = try {
+            ProfilingApi35.requestJavaHeapDump(app, "cs174")
+        } finally {
+            meter.stop()
+        }
+        val start = SystemClock.uptimeMillis()
+        val summary = outcome.filePath?.let { path ->
+            withContext(Dispatchers.Default) { parseJavaHeapDump(File(path).readBytes(), setOf(LEAKED_LISTENER_CLASS)) }
+        }
+        _heapDump.value = HeapDumpRun(
+            outcome = outcome,
+            gcFirst = gcFirst,
+            registryCount = registry,
+            idleStallMs = idle,
+            dumpStallMs = meter.maxGapMs,
+            summary = summary,
+            parseMs = SystemClock.uptimeMillis() - start,
+        )
+        _resultFiles.value = countResultFiles()
+    }
+
+    /** 앱 안 hprof — 백그라운드 스레드에서 불러도 덤프하는 동안 앱의 모든 스레드가 멈춘다 */
+    fun dumpHprofInApp() = launchExclusive("hprof") {
+        val app = getApplication<Application>()
+        val file = File(app.cacheDir, HPROF_FILE)
+        val registry = ScreenListenerRegistry.size
+        // 수백 MB 를 쓴다 — 남은 공간이 모자라면 시도하지 않는다. 다른 앱의 지울 수 있는 캐시까지 여유로 세는 getAllocatableBytes 는
+        // 쓰지 않는다(측정 중 공간이 차자 installd 가 다른 앱 캐시를 비웠다) — 실제로 비어 있는 공간만 본다
+        @SuppressLint("UsableSpace")
+        val free = app.cacheDir.usableSpace
+        if (free < HPROF_MIN_FREE_BYTES) {
+            _hprof.value = HprofRun(registry, 0, 0, 0, 0, "남은 공간 ${free / MB}MB — ${HPROF_MIN_FREE_BYTES / MB}MB 이상일 때만 실행")
+            return@launchExclusive
+        }
+        val meter = MainThreadStallMeter()
+        meter.start()
+        delay(STALL_IDLE_WINDOW_MS)
+        val idle = meter.restart()
+        var error: String? = null
+        var duration = 0L
+        try {
+            duration = withContext(Dispatchers.IO) {
+                val t0 = SystemClock.uptimeMillis()
+                Debug.dumpHprofData(file.absolutePath)
+                SystemClock.uptimeMillis() - t0
+            }
+            // 덤프가 끝난 뒤 밀려 있던 메인 스레드 일이 처리될 시간을 둔다
+            delay(STALL_SETTLE_MS)
+        } catch (e: java.io.IOException) {
+            error = e.toString()
+        } finally {
+            meter.stop()
+        }
+        val bytes = file.length()
+        file.delete()
+        _hprof.value = HprofRun(registry, duration, idle, meter.maxGapMs, bytes, error)
+    }
+
     fun deleteResultFiles() {
         File(getApplication<Application>().filesDir, PROFILING_DIR).listFiles()?.forEach { it.delete() }
         _resultFiles.value = countResultFiles()
@@ -220,6 +338,12 @@ class ProfilingManagerViewModel(application: Application) : AndroidViewModel(app
         /** ProfilingManager 가 결과를 넘겨주는 앱 디렉터리(files/profiling) */
         const val PROFILING_DIR = "profiling"
         const val START_PADDING_MS = 300L
+        const val STALL_IDLE_WINDOW_MS = 300L
+        const val STALL_SETTLE_MS = 100L
+        const val HPROF_FILE = "cs174.hprof"
+        const val MB = 1024L * 1024
+        /** 기기 · 빌드에 따라 hprof 가 350~560MB 였다(API 35 에뮬 debug) */
+        const val HPROF_MIN_FREE_BYTES = 2_048L * MB
         const val THREAD_NAME_SETTLE_MS = 100L
     }
 }
@@ -248,6 +372,20 @@ private object ProfilingApi35 {
         cont.invokeOnCancellation { signal.cancel() }
     }
 
+    suspend fun requestJavaHeapDump(context: Context, tag: String): ProfilingOutcome =
+        suspendCancellableCoroutine { cont ->
+            val signal = CancellationSignal()
+            val request = JavaHeapDumpRequestBuilder()
+                .setTag(tag)
+                .setCancellationSignal(signal)
+                .build()
+            val start = System.nanoTime()
+            requestProfiling(context, request, ContextCompat.getMainExecutor(context)) { result ->
+                if (cont.isActive) cont.resume(result.toOutcome((System.nanoTime() - start) / 1_000_000))
+            }
+            cont.invokeOnCancellation { signal.cancel() }
+        }
+
     fun allResults(context: Context): Flow<ProfilingOutcome> =
         registerForAllProfilingResults(context).map { it.toOutcome(-1) }
 
@@ -259,4 +397,48 @@ private object ProfilingApi35 {
         fileBytes = resultFilePath?.let { File(it).length() } ?: 0,
         elapsedMs = elapsedMs,
     )
+}
+
+/**
+ * 메인 스레드가 얼마나 멈췄는지 — 5ms 마다 깨어나는 심장 박동의 가장 긴 간격.
+ * 메인 스레드에서만 쓰고 읽는다(뷰모델 코루틴은 Dispatchers.Main).
+ */
+private class MainThreadStallMeter {
+    private val handler = Handler(Looper.getMainLooper())
+    private var last = 0L
+    private var running = false
+    var maxGapMs = 0L
+        private set
+
+    private val tick = object : Runnable {
+        override fun run() {
+            val now = SystemClock.uptimeMillis()
+            if (last != 0L) maxGapMs = maxOf(maxGapMs, now - last)
+            last = now
+            if (running) handler.postDelayed(this, TICK_MS)
+        }
+    }
+
+    fun start() {
+        running = true
+        last = 0L
+        maxGapMs = 0L
+        handler.post(tick)
+    }
+
+    /** 지금까지의 가장 긴 간격을 돌려주고 새로 잰다 */
+    fun restart(): Long {
+        val gap = maxGapMs
+        maxGapMs = 0L
+        return gap
+    }
+
+    fun stop() {
+        running = false
+        handler.removeCallbacks(tick)
+    }
+
+    private companion object {
+        const val TICK_MS = 5L
+    }
 }

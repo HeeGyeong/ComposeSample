@@ -1013,9 +1013,9 @@ val examples2026 = listOf(
         exampleType = ConstValue.DateTimePickerExample
     ),
     ExampleObject(
-        lastUpdate = "26. 11. 12",
+        lastUpdate = "26. 11. 13",
         title = "ProfilingManager 프로파일링",
-        description = "앱 밖에서 기록하는 ProfilingManager 와 앱 안 메서드 추적의 대조",
+        description = "앱 밖에서 기록하는 ProfilingManager 샘플링 · 힙 덤프와 앱 안 도구의 대조",
         blogUrl = "",
         exampleType = ConstValue.ProfilingManagerExample
     ),

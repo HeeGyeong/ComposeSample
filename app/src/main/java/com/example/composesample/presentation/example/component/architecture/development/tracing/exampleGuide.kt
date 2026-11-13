@@ -131,4 +131,46 @@ package com.example.composesample.presentation.example.component.architecture.de
  *   (이 API 30 에뮬 이미지는 dex2oat32 가 없어 AOT 컴파일이 안 된다 — release 는 JIT 상태로 확인).
  * - API 36 ProfilingTrigger 는 TRIGGER_TYPE_APP_FULLY_DRAWN · ANR 두 가지, android-37 SDK 에는 COLD_START · OOM · KILL_* 등이 더 있다(javap).
  *   이 예제의 기기에는 API 36 이 없어 화면에 코드 형태만 둔다.
+ *
+ * ## Java 힙 덤프 — 떠난 화면이 남긴 객체 세기 (#174, 2026-11-13 · ⑤ 카드, HeapDumpLab.kt)
+ * - 요청 방법(JavaHeapDumpRequestBuilder · 결과 .perfetto-java-heap-dump):
+ *   https://developer.android.com/topic/performance/tracing/profiling-manager/how-to-capture
+ * - hprof 와의 차이(복제 프로세스에서 덤프 · 값 없는 참조 그래프):
+ *   https://developer.android.com/topic/performance/tracing/profiling-manager/retrieve-and-analyze
+ * - 공식 OOM 사례(정적 레지스트리에 남은 리스너): https://developer.android.com/topic/performance/tracing/profiling-manager/debugging-oom-example
+ * - 한도: https://developer.android.com/topic/performance/tracing/profiling-manager/will-my-profile-always-be-collected
+ * - 필드 정의(Perfetto): https://android.googlesource.com/platform/external/perfetto/+/refs/heads/main/protos/perfetto/trace/profiling/heap_graph.proto
+ *
+ * 구성: 작은 화면이 들어올 때 앱 전체 레지스트리(ScreenListenerRegistry, 정적 목록)에 LeakedScreenListener 를 등록하고,
+ * '떠날 때 해제 안 함'이면 onDispose 에서 빼지 않는다. 화면을 5번 열고 닫은 뒤 힙 덤프를 받아 클래스 이름으로 인스턴스를 센다.
+ * 앱 안 Debug.dumpHprofData 는 대조용 — cacheDir 에 쓰고 크기만 재고 바로 지운다(남은 공간 2GB 미만이면 실행하지 않음).
+ *
+ * 파일 읽기(parseJavaHeapDump — 기기 파일을 독립 파이썬 파서로 읽어 같은 수인지 대조, 3개 파일 모두 일치):
+ * - TracePacket.heap_graph=56 → HeapGraph.pid=1 · objects=2 · field_names=4 · continued=5 · index=6 · roots=7 · location_names=8 · types=9.
+ *   HeapGraphType.id=1 · class_name=3 · kind=7 · classloader_id=8 · HeapGraphObject.id=1 | id_delta=7 · type_id=2 ·
+ *   reference_object_id=5(packed). 덤프 하나가 힙 그래프 패킷 43~292개로 나뉘어 온다.
+ * - ⚠️ id_delta 의 기준은 패킷을 넘어 이어진다(첫 객체도 거의 id_delta) · 참조 id 에는 6번 필드(이름은 reference_field_id_base)를
+ *   더해야 한다(proto 주석 "should be named reference_object_id_base"). 이 둘을 빼먹은 첫 파서는 참조가 대부분 허공을 가리켰다.
+ * - ⚠️ 같은 클래스 이름이 타입 id 둘로 나오기도 한다(덤프에 따라 0~3,290개 이름) — 한쪽은 인스턴스 0. 그래서 이름으로 모아 센다.
+ * - 필드마다 바이트를 복사하는 ProtoReader 대신 위치만 옮긴다(17~117MB · 객체 30만~557만 개).
+ *   HotSwan 재작성 아래에서 이 파서는 debug 단위 테스트 10.3~38.6초(재작성 없이 47~72ms)라 파서 클래스 3개를 HotSwan 에서 뺐다
+ *   (app/build.gradle · ComposeHotReloadGuide.md). 뺀 뒤 기기 debug 325~445ms · release AOT 58~80ms.
+ *
+ * 실측(Pixel Tablet API 35 에뮬 debug · release AOT — 같은 결과 / 앱 안 hprof 는 Pixel 4 API 30 에뮬 debug · release 도):
+ * - 기록 방식: logcat 에 perfetto_hprof 'forking for <앱 pid>' 뒤 다른 pid 가 'dumping heap … finished'(0.3~2.4초) —
+ *   공식 문서의 '복제(copy-on-write) 프로세스에서 덤프'와 같다. 요청 → 콜백 3.0~3.2초.
+ * - 누수 5 → 덤프 5 · 해제 0 → 0 · **해제했어도 GC 요청 없이 찍으면 5** — 덤프에는 아직 수거되지 않은 객체도 들어간다
+ *   (계측 프로브: 버린 표식 50개가 GC 없이 50 · Runtime.gc() 뒤 0). 그래서 카드는 덤프 전에 GC 를 요청한다(보장은 아님).
+ * - ⚠️ 루트에서 참조만 따라가는 도달성으로는 정적 필드가 붙잡은 누수가 '닿지 않음'으로 나왔다 — 앱 클래스의 Class 객체 170개 중
+ *   루트 0(부트 · zygote 클래스 27,435개는 STICKY_CLASS 루트), 그 Class 객체를 가리키는 참조도 0(클래스 로더의 클래스 표는 네이티브).
+ *   그래서 이 예제는 도달성을 계산하지 않고 GC 뒤 인스턴스 수로 센다.
+ * - 덤프 중 메인 스레드의 가장 긴 멈춤 29~48ms 는 요청 전 평소 값(16~60ms)과 구분되지 않았다. 앱 안 hprof 는 백그라운드
+ *   스레드에서 불러도 덤프 내내 메인 스레드가 멈췄다 — API 30 release 650ms · 50MB, API 30 debug 1.8초 · 305~330MB(2회),
+ *   API 35 debug(계측 프로브) 2.0~2.9초 · 238~557MB.
+ * - 파일 크기: release 20~27MB(객체 36만~75만) · debug 105~117MB(객체 490만~557만 — 상위가 HotSwan 의 org.objectweb.asm.tree.* 객체,
+ *   VarInsnNode 718,500 등). 원시 값 · 문자열 내용 · 배열 내용이 빠지는 것은 공식 문서 설명이고 이 예제에서 따로 재지 않았다.
+ * - 한도: 힙 덤프 한 번 뒤 10분쯤 지난 요청이 3ms 만에 2(RATE_LIMIT_PROCESS)로 거절됐다. 측정은 ③ 카드의 device_config 로 한도를 끄고
+ *   했고, 끝난 뒤 false → delete 로 되돌려 같은 요청이 37ms 만에 2 로 거절되는 것으로 원복을 확인했다. 한도 이력은 시스템이 보관하고
+ *   (dumpsys profiling 서비스 없음 · device_config 에 비용 값 없음) Play 이미지라 초기화할 수 없어, '힙 덤프가 한도에 더 빨리 걸리는가'는
+ *   재현 가능한 측정이 안 돼 다루지 않는다.
  */

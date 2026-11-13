@@ -77,6 +77,9 @@ android {
 //   디버깅 가능 빌드 자체의 차이라 측정값은 release 로 본다.
 // KoinCompilerPluginLabKt: Koin 의 InstanceCreationException(자바 기준 checked Exception)이 debug 에서 UndeclaredThrowableException 으로
 //   한 겹 감싸여 '빌드는 통과하고 실행 중에 터지는 것' 카드의 예외 사슬이 release 와 달랐다(debug 단위 테스트에서 재현, 제외하면 같음).
+// HeapDumpLabKt · DumpCursor · TypeCounter: ProfilingManager Java 힙 덤프(17~40MB · 객체 30만~150만 개)를 한 번 훑는 파서가
+//   재작성 아래에서 debug 단위 테스트 10.3~38.6초(dispatchRewriteEnabled=false 47~72ms) — 같은 덤프 3개, 카드가 결과를 기다리는
+//   시간이 release 와 같도록 파서만 뺀다.
 hotSwanCompiler {
     exclude("com.example.composesample.presentation.example.component.architecture.development.test.PowerAssertChecksKt")
     exclude("com.example.composesample.presentation.example.component.architecture.development.test.PowerAssertViewModel")
@@ -98,6 +101,9 @@ hotSwanCompiler {
     exclude("com.example.composesample.presentation.example.component.architecture.development.concurrency.LibraryCopyProbe")
     exclude("com.example.composesample.presentation.example.component.data.storage.DataStoreViewModel")
     exclude("com.example.composesample.presentation.example.component.architecture.development.di.KoinCompilerPluginLabKt")
+    exclude("com.example.composesample.presentation.example.component.architecture.development.tracing.HeapDumpLabKt")
+    exclude("com.example.composesample.presentation.example.component.architecture.development.tracing.DumpCursor")
+    exclude("com.example.composesample.presentation.example.component.architecture.development.tracing.TypeCounter")
 }
 
 // Power-Assert(PowerAssertExample) — 단언 실패 메시지에 식의 중간값을 펼쳐 넣는 컴파일러 플러그인.
