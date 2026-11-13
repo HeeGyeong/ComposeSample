@@ -46,6 +46,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.composesample.presentation.MainHeader
 import com.example.composesample.util.boldMarkup
+import java.util.Locale
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.lang.ref.WeakReference
@@ -509,12 +510,12 @@ private fun ReuseMeasurementBox(
                 )
                 ReuseStatRow(
                     label = "살아있는 페이로드 크기",
-                    value = String.format("%.1f MB", measurement.retainedMb),
+                    value = String.format(Locale.US, "%.1f MB", measurement.retainedMb),
                     highlight = true
                 )
                 ReuseStatRow(
                     label = "앱 힙 사용량",
-                    value = String.format("%.1f MB", measurement.heapMb)
+                    value = String.format(Locale.US, "%.1f MB", measurement.heapMb)
                 )
             }
         }

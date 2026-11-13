@@ -46,6 +46,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.composesample.presentation.MainHeader
+import java.util.Locale
 
 /**
  * AGSL Shader Live Tuning 예제
@@ -370,7 +371,7 @@ private fun LabeledSlider(
         ) {
             Text(text = label, fontSize = 13.sp, color = Color(0xFF424242))
             Text(
-                text = String.format("%.2f", value),
+                text = String.format(Locale.US, "%.2f", value),
                 fontSize = 13.sp,
                 fontFamily = FontFamily.Monospace,
                 color = Color(0xFF1565C0)

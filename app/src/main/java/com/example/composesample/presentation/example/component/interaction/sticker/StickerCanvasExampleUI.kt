@@ -807,6 +807,7 @@ private fun PeelOffDemo() {
                     Text(
                         text = "Shadow: ${animatedElevation}  Scale: ${
                             String.format(
+                                Locale.US,
                                 "%.2f",
                                 animatedScale
                             )

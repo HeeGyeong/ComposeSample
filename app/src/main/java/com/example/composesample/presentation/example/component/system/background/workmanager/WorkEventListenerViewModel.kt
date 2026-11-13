@@ -152,7 +152,6 @@ class WorkEventListenerViewModel(application: Application) : AndroidViewModel(ap
     fun clearEvents() = WorkEventRecorder.clear()
 
     override fun onCleared() {
-        super.onCleared()
         // 화면을 벗어나면 대기 중인 데모 작업이 남지 않도록 정리한다
         workManager.cancelUniqueWork(UNIQUE_NAME)
         workManager.cancelUniqueWork(BLOCKED_UNIQUE_NAME)
