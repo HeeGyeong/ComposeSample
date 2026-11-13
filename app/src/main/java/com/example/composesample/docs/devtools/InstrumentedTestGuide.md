@@ -130,4 +130,4 @@ Also:
 ## Related
 
 - [`ComposeHotReloadGuide.md`](ComposeHotReloadGuide.md) — HotSwan behaviour. It was ruled out as a cause here.
-- [`/CLAUDE.md`](../../../../../../../../CLAUDE.md) — build/commit workflow rules.
+- [`/CLAUDE.md`](../../../../../../../../../CLAUDE.md) — build/commit workflow rules.
