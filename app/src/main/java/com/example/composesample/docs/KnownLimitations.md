@@ -9,6 +9,7 @@ A human-readable collection of **intentional deferrals, version constraints, and
 ### DI-01 — Koin upgrade (done, 2026-09-15)
 - Koin 3.2.2 → 4.2.2. Both concerns recorded here were real but smaller than feared: ① the `owner` parameter became `viewModelStoreOwner` — on `koinViewModel`, not `getViewModel` (7 call sites, a rename), plus `org.koin.androidx.compose.get` → `org.koin.compose.koinInject` (1) and the deprecated `org.koin.androidx.viewmodel.dsl.viewModel` import → `org.koin.core.module.dsl.viewModel` (1); ② `koin-androidx-compose` no longer brings `navigation-compose`, so it is now declared directly at the version it used to resolve to (2.4.2) — moving it forward is a separate decision.
 - Koin 4.2.2 also lifts the `androidx.lifecycle` stack to 2.10.0, which the catalog now declares (appcompat 1.7.1, which it also requires, was already declared after Coil 3.5.0).
+- Later raised by DEP-CURRENCY-02, so the versions above are history: appcompat 1.8.0 (`6f476c2e`, 2026-09-22), the lifecycle stack 2.11.0 (`d1404947`) and navigation-compose 2.10.2 (`52aa2b32`, both 2026-09-29).
 
 ### biometric on beta01 (upgraded 2026-09-29 to alpha07, 2026-11-06 to beta01)
 - **Current**: `androidx.biometric:biometric(-compose):1.4.0-beta01` (the line has no stable release with Compose support)
