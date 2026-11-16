@@ -7,10 +7,14 @@ import com.example.composesample.presentation.example.component.ui.layout.insets
 import com.example.composesample.presentation.example.component.ui.layout.insets.BarRequestStack
 import com.example.composesample.presentation.example.component.ui.layout.insets.BarWindow
 import com.example.composesample.presentation.example.component.ui.layout.insets.DeclarationMode
+import com.example.composesample.presentation.example.component.ui.layout.insets.EdgeStyle
+import com.example.composesample.presentation.example.component.ui.layout.insets.EdgeWindowSnapshot
 import com.example.composesample.presentation.example.component.ui.layout.insets.SaveRestoreDeclaration
 import com.example.composesample.presentation.example.component.ui.layout.insets.StagePage
 import com.example.composesample.presentation.example.component.ui.layout.insets.StageScenario
 import com.example.composesample.presentation.example.component.ui.layout.insets.SwapOrder
+import com.example.composesample.presentation.example.component.ui.layout.insets.edgeSnapshotDiff
+import com.example.composesample.presentation.example.component.ui.layout.insets.expectedEdgeIcons
 import com.example.composesample.presentation.example.component.ui.layout.insets.simulateScenario
 import org.junit.Test
 import kotlin.test.assertEquals
@@ -142,5 +146,74 @@ class SystemBarAppearanceLabTest {
         assertEquals(false, StagePage.Home.declares)
         assertEquals(true, StagePage.DarkHeader.declares)
         assertEquals(true, StagePage.LightPhoto.declares)
+    }
+    // ---- enableEdgeToEdge(#175) ----
+    // 기대값은 activity 1.13.0 EdgeToEdge.kt 의 규칙에서: setUp 이 상태바 · 내비 바 모두 isAppearanceLight* = !isDark,
+    // auto 의 isDark = detectDarkMode(기본: uiMode 다크), light = 늘 false, dark = 늘 true
+
+    @Test
+    fun `auto 는 바 뒤 색과 상관없이 다크 모드로 아이콘을 고른다`() {
+        val dark = BarFlags(lightStatus = true, lightNavigation = true)
+        val light = BarFlags(lightStatus = false, lightNavigation = false)
+        assertEquals(dark, expectedEdgeIcons(EdgeStyle.Auto, night = false, backdropIsDark = false))
+        assertEquals(light, expectedEdgeIcons(EdgeStyle.Auto, night = true, backdropIsDark = false))
+        // light · dark 는 다크 모드를 보지 않는다
+        assertEquals(dark, expectedEdgeIcons(EdgeStyle.Light, night = true, backdropIsDark = null))
+        assertEquals(light, expectedEdgeIcons(EdgeStyle.Dark, night = false, backdropIsDark = null))
+    }
+
+    @Test
+    fun `바 뒤 색 판정을 detectDarkMode 로 넘기면 다크 모드에서도 밝은 바 뒤엔 어두운 아이콘`() {
+        val dark = BarFlags(lightStatus = true, lightNavigation = true)
+        assertEquals(dark, expectedEdgeIcons(EdgeStyle.AutoByBackdrop, night = true, backdropIsDark = false))
+        assertEquals(BarFlags(false, false), expectedEdgeIcons(EdgeStyle.AutoByBackdrop, night = false, backdropIsDark = true))
+        // 바 뒤 색을 못 읽었으면 auto 와 같다
+        assertEquals(expectedEdgeIcons(EdgeStyle.Auto, night = true, backdropIsDark = null), expectedEdgeIcons(EdgeStyle.AutoByBackdrop, night = true, backdropIsDark = null))
+    }
+
+    private val base = EdgeWindowSnapshot(
+        flags = off,
+        statusBarColor = 0xFF3700B3.toInt(),
+        navigationBarColor = 0xFF000000.toInt(),
+        statusContrastEnforced = false,
+        navigationContrastEnforced = true,
+        cutoutMode = 0,
+        systemUiVisibility = 0,
+        contentTopPx = 83,
+        appearance = 512,
+        configListenerViews = 0,
+        protectionLayouts = 0
+    )
+
+    @Test
+    fun `같은 스냅숏은 차이가 없고 항목마다 이름이 따로 나온다`() {
+        assertEquals(emptyList(), edgeSnapshotDiff(base, base.copy()))
+        val changed = base.copy(
+            flags = BarFlags(lightStatus = true, lightNavigation = false),
+            statusBarColor = 0,
+            navigationContrastEnforced = false,
+            cutoutMode = 3,
+            systemUiVisibility = 256,
+            contentTopPx = 0,
+            appearance = 8,
+            configListenerViews = 1,
+            protectionLayouts = 1
+        )
+        assertEquals(
+            listOf(
+                "상태바 아이콘", "statusBarColor", "내비 바 대비 강제", "컷아웃 모드", "systemUiVisibility",
+                "콘텐츠 위치(decorFits)", "appearance 비트", "설정 변경 리스너 뷰", "ProtectionLayout"
+            ),
+            edgeSnapshotDiff(base, changed)
+        )
+        assertEquals(listOf("내비 바 아이콘", "navigationBarColor", "상태바 대비 강제"),
+            edgeSnapshotDiff(base, base.copy(flags = BarFlags(false, true), navigationBarColor = 0, statusContrastEnforced = true)))
+    }
+
+    @Test
+    fun `API 35 의 FORCE_LIGHT_NAVIGATION_BARS 는 앱 플래그가 아니라 appearance 비트로만 보인다`() {
+        // 앱이 읽는 내비 바 플래그는 그대로(false)인데 시스템 비트(1 shl 9)만 빠지는 경우 — 실측 API 35 auto 적용 뒤 되돌림 전
+        val lost = base.copy(appearance = 0)
+        assertEquals(listOf("appearance 비트"), edgeSnapshotDiff(base, lost))
     }
 }

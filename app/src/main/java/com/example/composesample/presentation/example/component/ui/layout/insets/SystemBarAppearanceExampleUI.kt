@@ -7,9 +7,14 @@ import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.view.PixelCopy
+import android.view.View
+import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
+import androidx.activity.ComponentActivity
+import androidx.activity.SystemBarStyle
 import androidx.activity.compose.LocalActivity
+import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.tween
@@ -71,6 +76,7 @@ import androidx.core.graphics.get
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.insets.ProtectionLayout
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.ui.NavDisplay
 import com.example.composesample.presentation.MainHeader
@@ -237,6 +243,11 @@ fun SystemBarAppearanceExampleUI(onBackEvent: () -> Unit) {
     DisposableEffect(state) {
         onDispose { state.restoreOriginal() }
     }
+    // enableEdgeToEdge 실험(6번 카드)이 남긴 창 상태 — 나중에 등록해 먼저 정리된다(그 뒤 위 효과가 아이콘 플래그를 원래 값으로)
+    val edge = remember(activity) { EdgeLabState(activity?.window) }
+    DisposableEffect(edge) {
+        onDispose { if (edge.dirty) edge.restore() }
+    }
 
     // LazyColumn 항목 안의 DisposableEffect 는 스크롤로 사라질 때 onDispose 가 돈다(DisplayCutout 예제 실측) —
     // 선언이 스크롤로 철회되지 않게 모든 카드를 늘 컴포지션에 두는 Column 을 쓴다
@@ -262,6 +273,7 @@ fun SystemBarAppearanceExampleUI(onBackEvent: () -> Unit) {
             AutoCompareCard(state)
             DialogWindowCard(state)
             ContrastCard(state)
+            EdgeToEdgeCard(edge)
             PitfallCard()
         }
     }
@@ -877,11 +889,285 @@ private fun BackdropRow(label: String, argb: Int?, currentLight: Boolean) {
     }
 }
 
-// ==================== 6. 함정 ====================
+// ==================== 6. enableEdgeToEdge 가 고르는 아이콘 색 ====================
+
+/** activity 1.13.0 EdgeToEdge.kt 의 DefaultLightScrim / DefaultDarkScrim 과 같은 값(라이브러리에선 internal) */
+private val EDGE_LIGHT_SCRIM = android.graphics.Color.argb(0xE6, 0xFF, 0xFF, 0xFF)
+private val EDGE_DARK_SCRIM = android.graphics.Color.argb(0x80, 0x1B, 0x1B, 0x1B)
+
+/** enableEdgeToEdge 가 decorView 에 남기는 '설정 변경 리스너' 뷰 — 태그가 라이브러리 내부 구현 객체다 */
+private fun isEdgeToEdgeListener(view: View): Boolean =
+    // 태그 타입이 private 클래스(EdgeToEdgeApi30 등)라 이름으로 가린다 — R8 로 이름을 바꾸면 이 판정은 깨진다(이 앱 release 는 minify 꺼짐)
+    view.tag?.javaClass?.name?.startsWith("androidx.activity.EdgeToEdge") == true
+
+@RequiresApi(Build.VERSION_CODES.P)
+private object EdgeApi28 {
+    fun cutoutMode(window: Window): Int = window.attributes.layoutInDisplayCutoutMode
+    fun setCutoutMode(window: Window, mode: Int) {
+        val attrs = window.attributes
+        attrs.layoutInDisplayCutoutMode = mode
+        window.attributes = attrs
+    }
+}
+
+@RequiresApi(Build.VERSION_CODES.Q)
+@Suppress("DEPRECATION") // 대비 강제 플래그는 API 35 에서 deprecated — enableEdgeToEdge 가 바꾸는 값이라 읽고 되돌리려고 쓴다
+private object EdgeApi29 {
+    fun statusContrast(window: Window): Boolean = window.isStatusBarContrastEnforced
+    fun navigationContrast(window: Window): Boolean = window.isNavigationBarContrastEnforced
+    fun setContrast(window: Window, status: Boolean, navigation: Boolean) {
+        window.isStatusBarContrastEnforced = status
+        window.isNavigationBarContrastEnforced = navigation
+    }
+}
+
+@RequiresApi(Build.VERSION_CODES.R)
+private object EdgeApi30 {
+    fun appearance(window: Window): Int? = window.insetsController?.systemBarsAppearance
+
+    /** 달라진 비트만 마스크로 — 마스크에 든 비트는 앱 제어로 표시되므로 필요한 비트만 건드린다 */
+    fun restoreAppearance(window: Window, value: Int) {
+        val controller = window.insetsController ?: return
+        val mask = controller.systemBarsAppearance xor value
+        if (mask != 0) controller.setSystemBarsAppearance(value, mask)
+    }
+}
+
+@Suppress("DEPRECATION") // statusBarColor · systemUiVisibility 는 되돌리려고 읽는다
+private fun readEdgeSnapshot(window: Window): EdgeWindowSnapshot {
+    val decor = window.decorView as ViewGroup
+    val controller = WindowCompat.getInsetsController(window, decor)
+    val children = (0 until decor.childCount).map { decor.getChildAt(it) }
+    return EdgeWindowSnapshot(
+        flags = BarFlags(controller.isAppearanceLightStatusBars, controller.isAppearanceLightNavigationBars),
+        statusBarColor = window.statusBarColor,
+        navigationBarColor = window.navigationBarColor,
+        statusContrastEnforced = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) EdgeApi29.statusContrast(window) else null,
+        navigationContrastEnforced = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) EdgeApi29.navigationContrast(window) else null,
+        cutoutMode = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) EdgeApi28.cutoutMode(window) else null,
+        systemUiVisibility = decor.systemUiVisibility,
+        contentTopPx = decor.findViewById<View>(android.R.id.content)?.let { content ->
+            IntArray(2).also { content.getLocationInWindow(it) }[1]
+        } ?: -1,
+        appearance = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) EdgeApi30.appearance(window) else null,
+        configListenerViews = children.count { isEdgeToEdgeListener(it) },
+        protectionLayouts = children.count { it is ProtectionLayout }
+    )
+}
+
+/**
+ * [readEdgeSnapshot] 로 읽어 둔 상태로 되돌린다.
+ * [keepListener] = true 면 설정 변경 리스너 뷰만 남긴다(함정 재현용) — 그 뷰는 다음 설정 변경 때 enableEdgeToEdge 를 다시 건다.
+ */
+@Suppress("DEPRECATION")
+private fun restoreEdgeSnapshot(window: Window, saved: EdgeWindowSnapshot, keepListener: Boolean = false) {
+    val decor = window.decorView as ViewGroup
+    (decor.childCount - 1 downTo 0)
+        .map { decor.getChildAt(it) }
+        .filter { it is ProtectionLayout || (!keepListener && isEdgeToEdgeListener(it)) }
+        .forEach { decor.removeView(it) }
+    // API 30~34 의 WindowCompat.setDecorFitsSystemWindows 는 LAYOUT_STABLE 도 건드리므로 systemUiVisibility 는 그 뒤에 되돌린다
+    WindowCompat.setDecorFitsSystemWindows(window, saved.contentTopPx > 0)
+    window.statusBarColor = saved.statusBarColor
+    window.navigationBarColor = saved.navigationBarColor
+    if (saved.statusContrastEnforced != null && saved.navigationContrastEnforced != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+        EdgeApi29.setContrast(window, saved.statusContrastEnforced, saved.navigationContrastEnforced)
+    }
+    if (saved.cutoutMode != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+        EdgeApi28.setCutoutMode(window, saved.cutoutMode)
+    }
+    decor.systemUiVisibility = saved.systemUiVisibility
+    PlatformBarWindow(window).flags = saved.flags
+    // API 35: enableEdgeToEdge 의 navigationBarColor 설정이 시스템의 FORCE_LIGHT_NAVIGATION_BARS 를 지운다(PhoneWindow 소스) —
+    // 공개 API 로는 그 상태를 되돌릴 수 없어 읽어 둔 appearance 정수로 비트를 되돌린다
+    if (saved.appearance != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+        EdgeApi30.restoreAppearance(window, saved.appearance)
+    }
+}
+
+/** 고른 스타일로 enableEdgeToEdge — AutoByBackdrop 은 바 뒤가 어두운지([backdropIsDark])를 detectDarkMode 로 쓴다 */
+private fun ComponentActivity.applyEdgeStyle(style: EdgeStyle, backdropIsDark: Boolean?) {
+    when (style) {
+        EdgeStyle.Auto -> enableEdgeToEdge()
+        EdgeStyle.Light -> enableEdgeToEdge(
+            statusBarStyle = SystemBarStyle.light(EDGE_LIGHT_SCRIM, EDGE_DARK_SCRIM),
+            navigationBarStyle = SystemBarStyle.light(EDGE_LIGHT_SCRIM, EDGE_DARK_SCRIM)
+        )
+        EdgeStyle.Dark -> enableEdgeToEdge(
+            statusBarStyle = SystemBarStyle.dark(EDGE_DARK_SCRIM),
+            navigationBarStyle = SystemBarStyle.dark(EDGE_DARK_SCRIM)
+        )
+        EdgeStyle.AutoByBackdrop -> {
+            val isDark = backdropIsDark ?: false
+            enableEdgeToEdge(
+                statusBarStyle = SystemBarStyle.auto(android.graphics.Color.TRANSPARENT, android.graphics.Color.TRANSPARENT) { isDark },
+                navigationBarStyle = SystemBarStyle.auto(EDGE_LIGHT_SCRIM, EDGE_DARK_SCRIM) { isDark }
+            )
+        }
+    }
+}
+
+/** LAYOUT_IN_DISPLAY_CUTOUT_MODE_* 값(28 · 30 에 추가된 상수라 minSdk 24 코드에서는 숫자로 — InlinedApi 를 피한다) */
+private fun cutoutModeName(mode: Int?): String = when (mode) {
+    null -> "API 28 미만 — 없음"
+    0 -> "DEFAULT"
+    1 -> "SHORT_EDGES"
+    2 -> "NEVER"
+    3 -> "ALWAYS"
+    else -> "$mode"
+}
+
+/** enableEdgeToEdge 실험 상태 — 화면을 열 때 읽은 창 상태로 언제든 되돌린다 */
+private class EdgeLabState(val window: Window?) {
+    val original: EdgeWindowSnapshot? = window?.let { readEdgeSnapshot(it) }
+    var snapshot by mutableStateOf(original)
+        private set
+    var applied by mutableStateOf<EdgeStyle?>(null)
+    var backdrop by mutableStateOf<BarBackdrop?>(null)
+    /** AutoByBackdrop 의 detectDarkMode 가 쓴 판정(바 뒤가 어두운가) */
+    var backdropIsDark by mutableStateOf<Boolean?>(null)
+    var listenerKept by mutableStateOf(false)
+        private set
+    var restoredDiff by mutableStateOf<List<String>?>(null)
+        private set
+
+    val dirty: Boolean get() = applied != null || listenerKept
+
+    fun refresh() {
+        snapshot = window?.let { readEdgeSnapshot(it) }
+    }
+
+    fun diff(): List<String> {
+        val o = original ?: return emptyList()
+        val s = snapshot ?: return emptyList()
+        return edgeSnapshotDiff(o, s)
+    }
+
+    /** [keepListener] = true 면 설정 변경 리스너 뷰만 남긴다 */
+    fun restore(keepListener: Boolean = false) {
+        val w = window ?: return
+        val o = original ?: return
+        restoreEdgeSnapshot(w, o, keepListener)
+        applied = null
+        backdrop = null
+        backdropIsDark = null
+        listenerKept = keepListener
+        refresh()
+        restoredDiff = diff()
+    }
+
+    /** 되돌린 뒤 레이아웃이 다시 잡힌 다음(콘텐츠 위치) 한 번 더 읽는다 */
+    fun recheck() {
+        refresh()
+        restoredDiff = diff()
+    }
+}
+
+@Composable
+private fun EdgeToEdgeCard(edge: EdgeLabState) {
+    val activity = LocalActivity.current as? ComponentActivity
+    val configuration = LocalConfiguration.current
+    val night = configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
+    val scope = rememberCoroutineScope()
+    var styleIndex by remember { mutableIntStateOf(0) }
+    var busy by remember { mutableStateOf(false) }
+
+    // 설정 변경(회전 · 화면 크기)을 이 액티비티가 직접 처리하므로 그때 창 상태를 다시 읽는다 — 남은 리스너 뷰가 다시 거는지 보인다
+    LaunchedEffect(configuration) {
+        delay(300)
+        edge.refresh()
+    }
+
+    fun applyNow() {
+        val a = activity ?: return
+        val w = edge.window ?: return
+        val style = EdgeStyle.entries[styleIndex]
+        busy = true
+        scope.launch {
+            if (style == EdgeStyle.AutoByBackdrop) {
+                // 바 뒤 색을 알려면 바가 먼저 투명해야 한다 — 기본 auto 로 걸고 읽은 뒤 그 판정으로 다시 건다
+                a.applyEdgeStyle(EdgeStyle.Auto, null)
+                delay(300)
+                val first = sampleBackdrop(w)
+                edge.backdropIsDark = first?.statusArgb?.let { !prefersDarkIcons(it) }
+            }
+            a.applyEdgeStyle(style, edge.backdropIsDark)
+            edge.applied = style
+            delay(300)
+            edge.backdrop = sampleBackdrop(w)
+            edge.refresh()
+            busy = false
+        }
+    }
+
+    SectionCard("6. enableEdgeToEdge 가 고르는 아이콘 색") {
+        BodyText(
+            "activity 1.13.0 `enableEdgeToEdge()` 기본값은 상태바 `SystemBarStyle.auto(투명, 투명)` · 내비 바 `auto(#E6FFFFFF, #801B1B1B)`. " +
+                "auto 는 아이콘 색을 바 뒤 색이 아니라 uiMode 다크 모드로 고른다(`isAppearanceLight* = !detectDarkMode(resources)`). " +
+                "스타일을 골라 이 창에 걸고 바 뒤 색 · 아이콘 · 부수 효과를 읽는다. 화면을 떠나면 모두 되돌린다."
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        ChipRow("스타일", EdgeStyle.entries.map { it.label }, styleIndex, enabled = !busy) { styleIndex = it }
+        Spacer(modifier = Modifier.height(6.dp))
+        FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            DemoButton("이 창에 적용", Color(0xFF00695C), enabled = activity != null && !busy) { applyNow() }
+            DemoButton("모두 되돌리기", Color(0xFF8D6E63), enabled = edge.dirty && !busy) {
+                edge.restore()
+                scope.launch { delay(300); edge.recheck() }
+            }
+            DemoButton("리스너 뷰만 남기고 되돌리기", Color(0xFFB71C1C), enabled = edge.applied != null && !busy) {
+                edge.restore(keepListener = true)
+                scope.launch { delay(300); edge.recheck() }
+            }
+        }
+        Spacer(modifier = Modifier.height(8.dp))
+        val applied = edge.applied
+        val snap = edge.snapshot
+        ResultRow("다크 모드", if (night) "켜짐" else "꺼짐")
+        if (applied != null && snap != null) {
+            val expected = expectedEdgeIcons(applied, night, edge.backdropIsDark)
+            ResultRow("소스 규칙 예측", "${applied.label} → ${expected.text()}")
+            ResultRow("창 플래그", snap.flags.text() + if (snap.flags == expected) " ✓" else " ✗ 예측과 다름")
+            BackdropRow("상태바 뒤", edge.backdrop?.statusArgb, snap.flags.lightStatus)
+        }
+        if (snap != null) {
+            ResultRow("바 색", "status ${snap.statusBarColor.hex()} · nav ${snap.navigationBarColor.hex()}")
+            ResultRow(
+                "대비 강제",
+                if (snap.statusContrastEnforced == null) "API 29 미만 — 없음"
+                else "상태바 ${snap.statusContrastEnforced} · 내비 바 ${snap.navigationContrastEnforced}"
+            )
+            ResultRow("컷아웃 모드", cutoutModeName(snap.cutoutMode))
+            ResultRow("콘텐츠 위치", "content y ${snap.contentTopPx}px — 0 이면 바 뒤까지 그린다(decorFits 를 읽는 API 가 없어 효과로 본다)")
+            ResultRow("appearance", snap.appearance?.let { "0x" + Integer.toHexString(it) + " (시스템이 붙인 비트 포함)" } ?: "API 30 미만 — 없음")
+            ResultRow("decor 자식", "설정 변경 리스너 뷰 ${snap.configListenerViews} · ProtectionLayout ${snap.protectionLayouts}")
+            ResultRow("원래와 다른 것", edge.diff().ifEmpty { listOf("없음 ✓") }.joinToString(" · "))
+        }
+        edge.restoredDiff?.let { ResultRow("되돌린 직후", it.ifEmpty { listOf("남은 차이 없음 ✓") }.joinToString(" · ")) }
+        if (edge.listenerKept) {
+            CaptionText("리스너 뷰가 남아 있다 — 이 액티비티가 직접 처리하는 설정 변경(회전 · 화면 크기)이 오면 그 뷰가 enableEdgeToEdge 를 다시 건다.")
+        }
+        Spacer(modifier = Modifier.height(6.dp))
+        TableRow("실측", "상태바 뒤 · 아이콘(SystemUI 판정)", isHeader = true)
+        TableRow("auto · 라이트", "#FFFF00 · 어두운 아이콘 ✓")
+        TableRow("auto · 다크", "#FFFF00 · 밝은 아이콘 ✗ — 바 뒤가 밝은데 다크 모드만 보고 골랐다")
+        TableRow("light", "scrim #FFFFE6 · 어두운 아이콘 ✓(다크 모드에서도)")
+        TableRow("dark", "scrim 위 #8D8D0E · 밝은 아이콘 — 반투명 scrim 이라 대비는 어두운 쪽이 크다(5.9 : 3.5)")
+        TableRow("auto+바 뒤 색", "#FFFF00 · 어두운 아이콘 ✓(라이트 · 다크 모두)")
+        CaptionText(
+            "Pixel 4 API 30 · Pixel Tablet API 35 에뮬, debug · release 같음. 부수 효과: 설정 변경 리스너 뷰 1개 · 컷아웃 모드 DEFAULT → ALWAYS · " +
+                "내비 바 대비 강제는 light · dark 일 때 false. API 30 은 바 색 · LAYOUT_STABLE · 콘텐츠 위치(83px → 0), " +
+                "API 35 는 light · dark 일 때 scrim 을 그리는 ProtectionLayout 1개 · 시스템이 붙인 FORCE_LIGHT_NAVIGATION_BARS 비트가 빠진다. " +
+                "'모두 되돌리기' 뒤에는 앱이 읽는 값 · dumpsys 창 속성이 모두 열기 전과 같았다(네 스타일 × 라이트 · 다크 × API 30 · 35)."
+        )
+    }
+}
+
+// ==================== 7. 함정 ====================
 
 @Composable
 private fun PitfallCard() {
-    SectionCard("6. 함정") {
+    SectionCard("7. 함정") {
         PitfallRow(
             "원래 값은 첫 요청 직전에 한 번만 읽는다",
             "저장·복원이 틀리는 이유는 화면마다 '지금 값'을 원래 값으로 저장하기 때문이다. 전환 중엔 그 지금 값이 " +
@@ -901,6 +1187,18 @@ private fun PitfallCard() {
             "dim 다이얼로그가 떠 있으면 상태바 아이콘은 밝은 색이다",
             "액티비티 창에 어두운 아이콘을 걸어도 dim 다이얼로그가 맨 위인 동안은 SystemUI 가 밝은 아이콘으로 판정했다" +
                 "(API 30·35 dumpsys). 눈으로만 확인하면 잘못 건 선언을 놓친다."
+        )
+        PitfallRow(
+            "enableEdgeToEdge 는 decorView 에 설정 변경 리스너 뷰를 남긴다",
+            "여러 화면이 함께 쓰는 액티비티에서 한 화면만 부르면, 그 뷰가 이 액티비티가 직접 처리하는 설정 변경(화면 크기 · 회전)마다 " +
+                "같은 스타일을 다시 건다 — 리스너 뷰만 남기고 되돌린 뒤 화면 크기를 바꾸자 아이콘 · 바 색 · 콘텐츠 위치가 다시 걸렸다" +
+                "(컷아웃 모드만 빼고). 떠날 때 그 뷰까지 지운다."
+        )
+        PitfallRow(
+            "API 35 에서는 enableEdgeToEdge 가 시스템이 붙인 내비 바 비트를 지운다",
+            "강제 edge-to-edge 창은 내비 바 색을 지정하지 않으면 밝은 창 배경을 보고 FORCE_LIGHT_NAVIGATION_BARS 를 붙인다(핸들이 어둡게). " +
+                "enableEdgeToEdge 가 navigationBarColor 를 쓰는 순간 '지정됨'이 되어 비트가 빠지고 공개 API 로는 되돌릴 수 없다" +
+                "(PhoneWindow 소스) — 열 때 읽어 둔 systemBarsAppearance 정수로 그 비트만 되돌렸다."
         )
         PitfallRow(
             "다이얼로그 안의 창은 LocalView 로 찾는다",

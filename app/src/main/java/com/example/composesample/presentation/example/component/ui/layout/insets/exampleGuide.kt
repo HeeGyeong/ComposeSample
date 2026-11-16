@@ -110,4 +110,31 @@ package com.example.composesample.presentation.example.component.ui.layout.inset
  * - 예제를 떠나면(헤더 ←) 저장·복원이 값을 남긴 상태든 요청이 쌓인 상태든 창은 원래 값으로 돌아왔다. 화면 루트의
  *   DisposableEffect 는 가장 먼저 등록돼 가장 나중에 정리된다 — '밝은 사진 → 어두운 헤더'에서 나가면 어두운 헤더의
  *   onDispose 가 남의 값(어두운 아이콘)을 되돌려 놓는데, 그 뒤에 루트가 원래 값으로 덮었다(API 35 debug · release).
+ *
+ * ### 6번 카드 — enableEdgeToEdge 가 고르는 아이콘 색(#175 보강)
+ * - SystemBarStyle: https://developer.android.com/reference/androidx/activity/SystemBarStyle
+ * - edge-to-edge 안내: https://developer.android.com/develop/ui/views/layout/edge-to-edge
+ * - activity 릴리스 노트: https://developer.android.com/jetpack/androidx/releases/activity
+ * - 규칙(activity 1.13.0 EdgeToEdge.kt): 기본값은 상태바 `auto(투명, 투명)` · 내비 바 `auto(#E6FFFFFF, #801B1B1B)`.
+ *   setUp 이 두 바 모두 `isAppearanceLight* = !isDark` 를 걸고, auto 의 isDark 는 `detectDarkMode(resources)`(기본 uiMode 다크).
+ *   light 는 늘 어두운 아이콘 · dark 는 늘 밝은 아이콘. 함께 바뀌는 것: decorFits false · 바 색(API 29~34 는 auto 면 투명,
+ *   light/dark 는 scrim) · 상태바 대비 강제 false(API 29~34) · 내비 바 대비 강제(auto 만 true) · 컷아웃 모드
+ *   SHORT_EDGES(28~29)/ALWAYS(30+) · API 35 는 바 색 대신 투명 아닌 scrim 을 `ProtectionLayout`(core) 로 그린다 ·
+ *   decorView 에 설정 변경을 듣는 숨은 뷰(태그 = 구현 객체)를 붙여 onConfigurationChanged 마다 setUp 을 다시 돈다.
+ * - 실측(Pixel 4 API 30 · Pixel Tablet API 35 에뮬, 라이트 · 다크 모드, debug · release 같음, SystemUI LightBarController 판정 일치):
+ *   auto 는 다크 모드에서 노란 바 뒤(#FFFF00) 위에 밝은 아이콘을 둔다(SystemUI isLight=false) · light 는 scrim #FFFFE6 위
+ *   어두운 아이콘 · dark 는 scrim 이 반투명이라 노란 바 뒤가 #8D8D0E 가 되어 대비는 오히려 어두운 아이콘 쪽이 크다(5.9 : 3.5) ·
+ *   detectDarkMode 를 PixelCopy 로 읽은 바 뒤 색 판정으로 바꾸면 라이트 · 다크 모두 어두운 아이콘.
+ * - 되돌리기(여러 예제가 함께 쓰는 BlogExampleActivity 라 떠날 때 전부): 리스너 뷰 · ProtectionLayout 제거 →
+ *   decorFits(읽는 API 가 없어 android.R.id.content 의 창 안 y 로 원래 값을 판단 — 0 이면 false) → 바 색 · 대비 강제 · 컷아웃 모드 →
+ *   systemUiVisibility(API 30~34 의 WindowCompat 가 LAYOUT_STABLE 을 건드려 decorFits 뒤에) → 아이콘 플래그 →
+ *   API 30+ `systemBarsAppearance` 정수(달라진 비트만 마스크). 네 스타일 × 두 모드 × 두 API 에서 앱이 읽는 값과
+ *   `dumpsys window` 창 속성이 열기 전과 같았다.
+ * - 함정 ①: 리스너 뷰만 남기고 되돌린 뒤 화면 크기를 바꾸면(`wm size`, 이 액티비티가 직접 처리하는 설정 변경) 그 뷰가
+ *   setUp 을 다시 돌려 아이콘 · 바 색 · LAYOUT_STABLE · 콘텐츠 위치가 다시 걸렸다. 컷아웃 모드는 setUp 밖이라 그대로.
+ * - 함정 ②(API 35): 강제 edge-to-edge 창은 내비 바 색이 '지정되지 않았으면' 밝은 창 배경을 보고 시스템이
+ *   FORCE_LIGHT_NAVIGATION_BARS(1 shl 9)를 붙인다(DecorView.setWindowBackground). enableEdgeToEdge 의
+ *   navigationBarColor 쓰기가 '지정됨'으로 바꾸며 비트를 지우고(PhoneWindow.setNavigationBarColor, SDK sources android-35)
+ *   공개 API 로는 그 상태를 되돌릴 수 없다 — appearance 정수가 512 → 0(auto 적용 중)이었고, 읽어 둔 정수로 비트만 되돌렸다.
+ *   앱이 읽는 isAppearanceLightNavigationBars 는 처음부터 false 라 이 차이는 appearance 정수 · dumpsys 로만 보인다.
  */

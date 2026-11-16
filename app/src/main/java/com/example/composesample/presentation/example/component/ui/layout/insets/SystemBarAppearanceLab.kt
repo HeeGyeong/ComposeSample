@@ -231,3 +231,70 @@ fun simulateScenario(
         Triple(next, expectedFlags(original, next), window.flags)
     }
 }
+
+// ==================== enableEdgeToEdge 와 SystemBarStyle(#175) ====================
+
+/**
+ * enableEdgeToEdge 에 넘기는 스타일 — activity 1.13.0 `SystemBarStyle`.
+ * - [Auto]: 기본값. 상태바 `auto(투명, 투명)` · 내비 바 `auto(DefaultLightScrim #E6FFFFFF, DefaultDarkScrim #801B1B1B)`.
+ *   아이콘은 uiMode 다크 모드로 고른다(`isAppearanceLight* = !detectDarkMode(resources)`).
+ * - [Light]: `light(scrim, darkScrim)` — 늘 어두운 아이콘. API 29+ 에서도 scrim 을 칠한다.
+ * - [Dark]: `dark(scrim)` — 늘 밝은 아이콘.
+ * - [AutoByBackdrop]: `auto(투명, 투명) { 바 뒤 색이 어두운가 }` — detectDarkMode 람다를 바 뒤 색 판정으로 바꾼다.
+ */
+enum class EdgeStyle(val label: String) {
+    Auto("auto"),
+    Light("light"),
+    Dark("dark"),
+    AutoByBackdrop("auto+바 뒤 색")
+}
+
+/**
+ * 스타일 · 다크 모드 · 바 뒤 판정으로 예측한 아이콘 플래그(true = 어두운 아이콘).
+ * EdgeToEdge.kt 의 setUp 이 상태바 · 내비 바 모두 `!isDark` 를 건다.
+ */
+fun expectedEdgeIcons(style: EdgeStyle, night: Boolean, backdropIsDark: Boolean?): BarFlags {
+    val isDark = when (style) {
+        EdgeStyle.Auto -> night
+        EdgeStyle.Light -> false
+        EdgeStyle.Dark -> true
+        EdgeStyle.AutoByBackdrop -> backdropIsDark ?: night
+    }
+    return BarFlags(lightStatus = !isDark, lightNavigation = !isDark)
+}
+
+/** enableEdgeToEdge 가 바꾸는 창 상태를 한 번에 — 되돌린 뒤 '남은 차이'를 셀 때 쓴다 */
+data class EdgeWindowSnapshot(
+    val flags: BarFlags,
+    val statusBarColor: Int,
+    val navigationBarColor: Int,
+    val statusContrastEnforced: Boolean?,
+    val navigationContrastEnforced: Boolean?,
+    val cutoutMode: Int?,
+    val systemUiVisibility: Int,
+    /** android.R.id.content 의 창 안 y — decorFitsSystemWindows 를 읽는 API 가 없어(API 37 에도 setter 뿐) 효과로 읽는다. 0 이면 바 뒤까지 그린다 */
+    val contentTopPx: Int,
+    /**
+     * 창 insetsFlags.appearance 정수(API 30+) — 시스템이 붙인 비트까지 담긴다. API 35 강제 edge-to-edge 창의
+     * FORCE_LIGHT_NAVIGATION_BARS(1 shl 9)는 앱 플래그로는 안 보이고 이 정수로만 보인다
+     */
+    val appearance: Int?,
+    val configListenerViews: Int,
+    val protectionLayouts: Int
+)
+
+/** 두 스냅숏에서 다른 항목 이름 — 비어 있으면 완전히 되돌린 것 */
+fun edgeSnapshotDiff(before: EdgeWindowSnapshot, after: EdgeWindowSnapshot): List<String> = buildList {
+    if (before.flags.lightStatus != after.flags.lightStatus) add("상태바 아이콘")
+    if (before.flags.lightNavigation != after.flags.lightNavigation) add("내비 바 아이콘")
+    if (before.statusBarColor != after.statusBarColor) add("statusBarColor")
+    if (before.navigationBarColor != after.navigationBarColor) add("navigationBarColor")
+    if (before.statusContrastEnforced != after.statusContrastEnforced) add("상태바 대비 강제")
+    if (before.navigationContrastEnforced != after.navigationContrastEnforced) add("내비 바 대비 강제")
+    if (before.cutoutMode != after.cutoutMode) add("컷아웃 모드")
+    if (before.systemUiVisibility != after.systemUiVisibility) add("systemUiVisibility")
+    if (before.contentTopPx != after.contentTopPx) add("콘텐츠 위치(decorFits)")
+    if (before.appearance != after.appearance) add("appearance 비트")
+    if (before.configListenerViews != after.configListenerViews) add("설정 변경 리스너 뷰")
+    if (before.protectionLayouts != after.protectionLayouts) add("ProtectionLayout")
+}

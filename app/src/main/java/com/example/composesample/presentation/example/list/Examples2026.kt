@@ -1020,9 +1020,9 @@ val examples2026 = listOf(
         exampleType = ConstValue.ProfilingManagerExample
     ),
     ExampleObject(
-        lastUpdate = "26. 11. 13",
+        lastUpdate = "26. 11. 16",
         title = "시스템 바 아이콘 색 선언",
-        description = "화면마다 선언한 바 아이콘 색을 전환 순서와 무관하게 되돌리는 요청 스택",
+        description = "화면마다 선언한 바 아이콘 색의 복원과 enableEdgeToEdge 가 고르는 색",
         blogUrl = "",
         exampleType = ConstValue.SystemBarAppearanceExample
     )
