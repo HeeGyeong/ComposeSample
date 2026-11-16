@@ -1025,5 +1025,12 @@ val examples2026 = listOf(
         description = "화면마다 선언한 바 아이콘 색의 복원과 enableEdgeToEdge 가 고르는 색",
         blogUrl = "",
         exampleType = ConstValue.SystemBarAppearanceExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 11. 16",
+        title = "derivedStateOf 의 숨은 비용",
+        description = "리컴포지션은 건너뛰어도 재계산은 한다 — 탭 하나가 부르는 계산 세기",
+        blogUrl = "",
+        exampleType = ConstValue.DerivedStateCostExample
     )
 )

@@ -54,4 +54,49 @@ package com.example.composesample.presentation.example.component.architecture.st
  *     이전 상태를 못 찾는다(rememberSaveable 도 초기화) — 실제 앱처럼 onCreate 안에서 setContent 해야 정상 측정
  * - 이 비교를 화면에서 하려고 BlogExampleActivity 의 열린 예제 상태를 rememberSaveable 로 바꿨다(EX-CONFIG-RESET-01, `25235a1e`) —
  *   그 전에는 구성 변경 때 예제가 닫히고 목록으로 돌아갔다
+ *
+ * --- derivedStateOf 의 숨은 비용 (#176) ---
+ * - 원문: Jaewoong Eum, "Recalculated, not recomposed: what does one tap cost in a Compose paywall?"(RevenueCat, Android Weekly #753)
+ *   https://www.revenuecat.com/blog/engineering/android-paywall-improve
+ * - 공식 문서(derivedStateOf): https://developer.android.com/develop/ui/compose/side-effects#derivedstateof
+ * - 소스(androidx-main): https://github.com/androidx/androidx/blob/androidx-main/compose/runtime/runtime/src/commonMain/kotlin/androidx/compose/runtime/DerivedState.kt
+ *   · https://github.com/androidx/androidx/blob/androidx-main/compose/runtime/runtime/src/commonMain/kotlin/androidx/compose/runtime/RecomposeScopeImpl.kt
+ *   — 아래 규칙은 프로젝트가 쓰는 runtime-android 1.12.1 의 sources jar 로 확인했다(줄 번호는 1.12.1 기준)
+ * - 규칙(1.12.1 소스):
+ *   · 의존성 = 계산이 실제로 읽은 상태. DerivedSnapshotState 가 계산을 Snapshot.observe 읽기 관찰자 아래에서 돌려 newDependencies 에 모은다
+ *     → 람다로 넘기고 부르지 않으면 그 람다가 읽을 상태는 의존성에 없다
+ *   · 리컴포지션 직전 RecomposeScopeImpl.checkDerivedStateChanged: `policy ?: structuralEqualityPolicy()` 로
+ *     currentRecord.currentValue(무효면 그 자리에서 재계산)와 지난 값을 비교 — 건너뛰려면 계산해야 한다
+ *   · 정책 없음: 재계산 결과가 같아도 새 레코드(DerivedState.kt 246~259행 — `policy?.equivalent(…) == true` 일 때만 기존 레코드 재사용)
+ *     → 위층 derivedStateOf 의 readableHash(의존 레코드 identityHashCode · snapshotId)가 바뀌어 위층도 재계산
+ *   · 캐시는 인스턴스마다(validSnapshotId · writeCount, 바뀌었으면 resultHash 대조) — 한 인스턴스를 여러 스코프가 읽으면 탭당 1 회
+ * - 화면 모형: 플랜 카드 2 · 연간 안내 1(선택 의존) + 선택과 무관한 텍스트 N. 칸마다 기반 1(오버라이드 해석) + 속성 4(visible · 강조 · 굵기 · fontFamily).
+ *   킬 스위치 3 — 조건 입력 미리 읽기 · 기반 structuralEqualityPolicy · 폰트 equals(AndroidFont 하위 클래스, 로더 호출을 셈).
+ *   예상식 expectedTapCost: 해석 = 3 + (미리 읽기면 N) · 속성 = 4 × (3 + 정책 없을 때 미리 읽은 N) · 리컴포지션 = 3 + (equals 없음이면 속성을 다시 계산한 N)
+ *   · 폰트 로드 = equals 없음이면 리컴포지션 수, 있으면 0
+ * - 실측(JVM 단위 테스트 — 실제 ControlledComposition 을 Recomposer 와 같은 순서로 한 단계씩): 8 구성 × 두 방향이 모두 예상식과 같다(폰트 로드는
+ *   레이아웃이라 JVM 에서 0). 한 인스턴스를 5 스코프가 읽으면 1 회 · 스코프마다 인스턴스면 5 회 · 결과가 같으면 리컴포지션 0.
+ *   정책 없는 기반 위 6 층: 위층 6 회 재계산 / structuralEqualityPolicy: 0 회
+ * - 실측(기기 — Pixel 4 API 30 에뮬레이터 debug · release, Pixel Tablet API 35 에뮬레이터 debug): 칸 20 · 100 · 300 × 킬 스위치 8 구성 ×
+ *   두 방향 = 실행마다 48 탭, 세 실행 144 탭이 모두 예상식과 같고 세 실행의 결과가 한 줄도 다르지 않다. 칸 300 기준:
+ *   · 고친 코드(람다 · 정책 없음 · equals): 해석 3 · 속성 12 · 리컴포지션 3 · 폰트 로드 0
+ *   · 미리 읽기만 되살림: 303 · 1,212 · 3 · 0 — 리컴포지션은 그대로 3 인데 계산은 칸 수에 비례(원문 '308 해석, 리컴포지션 0' 의 모양)
+ *   · 미리 읽기 + 기반 structuralEqualityPolicy: 303 · 12 · 3 · 0 — 위층 재계산만 사라진다
+ *   · 미리 읽기 + equals 없음(원문의 두 수정을 모두 끈 상태): 303 · 1,212 · 303 · 303
+ *   · 람다 + equals 없음: 3 · 12 · 3 · 3 — 고친 뒤에는 equals 결함이 탭 비용에 거의 안 보인다(원문 193 ms vs 184 ms 와 같은 결론)
+ * - 원문 주장(이 앱에서 재지 않음): 300 텍스트 페이월 탭 700 ms → 184 ms · 오버라이드 해석 308 → 0 · 텍스트 리컴포지션 0(전부 건너뜀),
+ *   89 컴포넌트 템플릿 해석 99 → 22, 폰트 equals(#4245)·람다(#4383) 둘 다 끄면 833 ms · 텍스트 리컴포지션 300 · 폰트 로드 300.
+ *   시간은 Android 15 에뮬레이터 debug 빌드 · 중앙값 — 같은 계열 빌드가 Galaxy S23 190 ms, Android 14 에뮬레이터 112 ms 로 기기 비교는 의미 없다.
+ *   waitForIdle 은 프레임 단위라 해상도 16.7 ms, 바닥 두 프레임(약 33 ms)
+ * - 함정:
+ *   · JVM 단위 테스트에서 컴포지션을 돌리려면 android.os.Trace 를 목으로 바꾼다(runtime-android 가 beginSection 을 부르고 android.jar 에는 구현이 없다)
+ *   · recompose 는 컴포지션의 읽기 · 쓰기 관찰자를 건 스냅숏 안에서 — 관찰자 없이 돌리면 다시 그린 스코프가 구독을 잃어 다음 변화를 놓친다
+ *   · recompose() 가 false 를 돌려주면 applyChanges 를 부르지 않는다 — 부르면 "calling recordModificationsOf and applyChanges concurrently" 오류
+ *   · 카운터를 스냅숏 상태로 두면 세는 일이 쓰기가 되어 리컴포지션을 만든다 → 평범한 필드 + 리컴포지션은 SideEffect 로
+ *   · equals 없는 FontFamily 를 두 텍스트가 함께 쓰면 탭당 로드가 리컴포지션 수보다 많을 수 있다: FontFamilyResolver 의 TypefaceRequestCache ·
+ *     AsyncTypefaceCache 는 LruCache(16)(ui-text 1.12.1 바이트코드)이고, 다시 측정할 노드는 DepthSortedSet 이 깊이 → LayoutNode.hashCode 순으로
+ *     꺼내 같은 깊이의 텍스트 순서가 실행마다 다르다 → 두 텍스트 사이에 다른 패밀리가 16 개 넘게 해석되면 두 번째도 미스.
+ *     첫 구현(플랜 카드 이름 · 가격이 한 패밀리)에서 한 실행은 칸 20 · 100 · 300 탭당 +1 · +1 · +2, 같은 구성만 연 실행은 +0 →
+ *     로더 스택(PROBE)으로 같은 인스턴스가 측정 단계에서 두 번 로드된 것을 확인하고 가격 텍스트를 기본 폰트로 바꿨다
+ *   · 기존 Compose Snapshot 예제의 'counter > 5 일 때만 재계산' 문구는 틀렸다(counter 가 바뀔 때마다 재계산) → 이번에 정정
  */

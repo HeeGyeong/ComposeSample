@@ -217,6 +217,7 @@ import com.example.composesample.presentation.example.component.architecture.dev
 import com.example.composesample.presentation.example.component.architecture.development.performance.StabilityAnnotationsExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.test.ComposeTestingExampleUI
 import com.example.composesample.presentation.example.component.architecture.state.ComposeSnapshotExampleUI
+import com.example.composesample.presentation.example.component.architecture.state.DerivedStateCostExampleUI
 import com.example.composesample.presentation.example.component.architecture.state.PerItemViewModelExampleUI
 import com.example.composesample.presentation.example.component.architecture.state.SnapshotFlowExampleUI
 import com.example.composesample.util.ConstValue.AgslShaderTuningExample
@@ -430,6 +431,7 @@ import com.example.composesample.util.ConstValue.DocumentEditingTextFieldExample
 import com.example.composesample.util.ConstValue.SyntaxHighlightingExample
 import com.example.composesample.util.ConstValue.ComposeSnapshotExample
 import com.example.composesample.util.ConstValue.PerItemViewModelExample
+import com.example.composesample.util.ConstValue.DerivedStateCostExample
 import com.example.composesample.util.ConstValue.ComposeTestingExample
 import com.example.composesample.util.ConstValue.CustomLayoutExample
 import com.example.composesample.util.ConstValue.GridLayoutExample
@@ -638,6 +640,7 @@ val exampleUiRegistry: Map<String, @Composable (onBackEvent: () -> Unit) -> Unit
     Compose17FeaturesExample to { onBackEvent -> Compose17FeaturesExampleUI(onBackEvent) },
     ComposeSnapshotExample to { onBackEvent -> ComposeSnapshotExampleUI(onBackEvent) },
     PerItemViewModelExample to { onBackEvent -> PerItemViewModelExampleUI(onBackEvent) },
+    DerivedStateCostExample to { onBackEvent -> DerivedStateCostExampleUI(onBackEvent) },
     ComposeTestingExample to { onBackEvent -> ComposeTestingExampleUI(onBackEvent) },
     PredictiveBackExample to { onBackEvent -> PredictiveBackExampleUI(onBackEvent) },
     SpringTweenSnapExample to { onBackEvent -> SpringTweenSnapExampleUI(onBackEvent) },

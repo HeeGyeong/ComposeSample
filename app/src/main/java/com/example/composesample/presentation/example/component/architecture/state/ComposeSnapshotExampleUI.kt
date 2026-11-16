@@ -232,7 +232,7 @@ fun ComposeSnapshotExampleUI(onBackEvent: () -> Unit) {
 @Composable
 private fun DerivedStateSection() {
     var counter by remember { mutableIntStateOf(0) }
-    // derivedStateOf: counter > 5 일 때만 재계산
+    // derivedStateOf: counter 가 바뀔 때마다 다시 계산하고, 결과(5 초과 여부)가 바뀔 때만 이 값을 읽는 쪽을 무효화한다
     val isOverThreshold by remember { derivedStateOf { counter > 5 } }
     val statusText by remember { derivedStateOf { if (counter > 5) "임계값 초과!" else "임계값 이하" } }
 
@@ -284,7 +284,7 @@ private fun DerivedStateSection() {
             }
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = "counter가 5를 넘을 때만 derivedStateOf 재계산 → Recomposition 최소화",
+                text = "derivedStateOf 는 counter 가 바뀔 때마다 다시 계산한다 — 건너뛰는 것은 결과가 같을 때 이 값을 읽는 쪽의 Recomposition (재계산 비용은 'derivedStateOf 의 숨은 비용' 예제)",
                 fontSize = 11.sp,
                 color = Color(0xFF777777),
                 lineHeight = 16.sp

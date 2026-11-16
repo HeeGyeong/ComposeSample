@@ -171,7 +171,7 @@ object ConstValue {
     const val MoleculePresenterExample = "moleculePresenterExample"
 
     // ==================== Compose 상태 & Side Effect 예제 ====================
-    // SideEffect(부수 효과 함수들), CompositionLocal(암시적 전달), StaticDynamicCompositionLocal(Static vs Dynamic), CompositionLocalTree(트리 시각화), RetainApi(retain API 실물 — 재생성 보존·RetainObserver 콜백·RetainedValuesStoreRegistry), SnapshotFlow(Flow 변환), InitTest(초기화 케이스), LocalContextStrings(LocalContext 문자열 안티패턴), RememberPatterns(rememberSaveable/rememberUpdatedState/derivedStateOf 비교), ComposeSnapshot(Snapshot 시스템 내부 동작), PerItemViewModel(LazyColumn 아이템별 독립 ViewModelStoreOwner), ComposeLifecycleOwner(lifecycle 2.10 rememberLifecycleOwner — Pager 의 화면 밖 페이지를 STARTED 로 캡해 RESUMED 작업을 멈추고, 상한·부모 상태·컴포지션 이탈에 따른 자식 owner 이벤트를 대조)
+    // SideEffect(부수 효과 함수들), CompositionLocal(암시적 전달), StaticDynamicCompositionLocal(Static vs Dynamic), CompositionLocalTree(트리 시각화), RetainApi(retain API 실물 — 재생성 보존·RetainObserver 콜백·RetainedValuesStoreRegistry), SnapshotFlow(Flow 변환), InitTest(초기화 케이스), LocalContextStrings(LocalContext 문자열 안티패턴), RememberPatterns(rememberSaveable/rememberUpdatedState/derivedStateOf 비교), ComposeSnapshot(Snapshot 시스템 내부 동작), PerItemViewModel(LazyColumn 아이템별 독립 ViewModelStoreOwner), ComposeLifecycleOwner(lifecycle 2.10 rememberLifecycleOwner — Pager 의 화면 밖 페이지를 STARTED 로 캡해 RESUMED 작업을 멈추고, 상한·부모 상태·컴포지션 이탈에 따른 자식 owner 이벤트를 대조), DerivedStateCost(derivedStateOf 는 리컴포지션을 건너뛰어도 재계산은 한다 — 탭 하나가 부르는 해석·속성 재계산·리컴포지션·폰트 로드를 킬 스위치 3개(조건 입력 미리 읽기·기반 정책·폰트 equals)로 측정과 예상 대조)
     const val SideEffectExample = "sideEffectExample"
     const val CompositionLocalExample = "compositionLocalExample"
     const val StaticDynamicCompositionLocalExample = "staticDynamicCompositionLocalExample"
@@ -184,6 +184,7 @@ object ConstValue {
     const val ComposeSnapshotExample = "composeSnapshotExample"
     const val PerItemViewModelExample = "perItemViewModelExample"
     const val ComposeLifecycleOwnerExample = "composeLifecycleOwnerExample"
+    const val DerivedStateCostExample = "derivedStateCostExample"
 
     // ==================== 코루틴 & 동시성 예제 ====================
     // Coroutine(기본 특징), CoroutinesInternals(내부 동작 원리), WithContext(withContext vs launch), CoroutineBridges(콜백→suspend 변환 패턴 + 사람의 응답을 CompletableDeferred 로 기다리기 — 대기 중 취소 시 유령 다이얼로그·identity 확인·밀려난 요청 null), RaceCondition(공유 가변 상태 보호 4전략 비교 — 비보호/Atomic/Mutex/단일스레드 confinement), SelectExpression(select{}로 여러 suspending 작업 경쟁 — onAwait 최속 미러/onTimeout 폴백/onReceiveCatching 다중 채널 멀티플렉싱), CoroutineStackTrace(suspend 경계에서 잘린 스택 트레이스와 kotlinx.coroutines 의 복구 — DEBUG 스위치 실측/반사 복사가 스킵되는 규칙/CopyableThrowable/stdlib StackTraceRecoverable — 메서드 이름 조회·라이브러리 복사 함수 직접 호출/_COROUTINE 인공 프레임), StructuredConcurrencyGuardrail(coroutines 1.11 가드레일 — launch(Job())·launch(NonCancellable)·runInterruptible(Job()) 경고 오버로드와 런타임에 끊기는 것 실측/정적 타입 빈틈 + StateFlow.onSubscription·SharedFlow.asFlow·CompletableDeferred.asDeferred 노출 대조 + 가드레일 밖 취소 경로 버그 — runCatching·catch(Exception) 이 CancellationException 을 삼켜 루프가 끝까지 도는 것/runCatchingCancellable·ensureActive 대조/예외를 잡는 함수의 EXACTLY_ONCE 계약 함정/collectLatest 와 숨은 launch 경쟁)
