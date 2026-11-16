@@ -18,7 +18,10 @@ kotlinVersion = "2.4.21"
 # (kotlinCompilerPluginClasspath*·kspPluginClasspath* 의 symbol-processing-api, 그것이 끄는 kotlin-stdlib 2.3.20 → 2.4.0)뿐이고
 # 빌드 스크립트 클래스패스의 kotlin-stdlib 도 2.3.21 → 2.4.0 으로 따라 오른다(앱 산출물과 무관).
 # lint↔KSP 경쟁 우회(루트 build.gradle 의 mustRunAfter)는 유지 — 2.3.13 변경에 lint 관련 항목은 없다.
-ksp = "2.3.13"
+# 2.3.14(2026-11-16, 패치 — DEP-CURRENCY-29, 2026-11-13 발행): 동시 실행 회귀 · 증분 빌드 건너뛰기 · KSAnnotation 인자(vararg ·
+# 배열 defaultArguments) · 타입 별칭 bound 수정. Room 생성 40개 · 다시 컴파일한 7,828개 클래스(app debug/release/unitTest · data)가
+# 상향 전과 바이트 동일, 해석 변화는 KSP 도구 구성(kotlinCompilerPluginClasspath* · kspPluginClasspath*)의 symbol-processing-api 뿐.
+ksp = "2.3.14"
 # AGP 9.4.1(2026-09-29 상향): Gradle 9.6.0+ 필요, 최대 API 37. AGP 8.x 는 Gradle 9.6+ 에서 제거된 내부 API 를 써서
 # Gradle 만 먼저 올릴 수 없다(실측) → wrapper 9.8.0 과 한 번에 올린다. 내장 Kotlin(android.builtInKotlin) 사용 —
 # Android 모듈은 org.jetbrains.kotlin.android 를 적용하지 않는다.
