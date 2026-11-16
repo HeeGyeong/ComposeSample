@@ -134,7 +134,10 @@ ktor = "3.6.1"
 # app 구성만 0.9.2 로 올라간다(core·bytestring 4좌표, data 모듈은 그대로). JVM 쪽 변경은 확장 함수 할당 감소(#517)와 Random.nextByteString 추가뿐
 # (Native FileSink/FileSource 재구현·WASI 경로는 다른 플랫폼). HttpCache 의 FileStorage(Path, FileSystem) 가
 # kotlinx.io.files.Path/SystemFileSystem 을 요구해 앱 코드가 직접 쓰므로 명시한다(DEP-VERSION-05: 직접 쓰는 라이브러리는 선언=해석).
-kotlinxIoCore = "0.9.2"
+# 0.9.3(2026-11-16, 패치 — DEP-CURRENCY-30, 2026-11-13 발행): ByteBuffer.getByteString · ByteString.substring 인자 검사, Buffer.indexOf
+# 정수 오버플로, 빈 세그먼트 moveToTail, close 뒤 Sink/Source 동작을 계약에 맞춤(#544). JVM jar 에서 core 17 · bytestring 3 클래스가 바뀌어
+# Ktor 경로 임시 계측 프로브(35줄)를 상향 전 2회 · 후 3회 돌려 정규화 결과 동일. 해석 변화는 app 의 kotlinx-io core · bytestring 4좌표뿐.
+kotlinxIoCore = "0.9.3"
 # kotlinx-serialization — RememberPatterns 예제(#123)의 @Serializable 데이터 클래스를 rememberSerializable 로 저장하려고 직접 쓴다.
 # 컴파일러 플러그인(org.jetbrains.kotlin.plugin.serialization)은 Kotlin 과 같은 버전으로 배포되므로 kotlinVersion 을 따른다.
 # 1.12.0(2026-10-26 상향, 마이너 — DEP-CURRENCY-13 사용자 승인, #150 과 묶음). 1.11.0 은 savedstate 1.5.0 등의 전이와 같은 값이었고,
