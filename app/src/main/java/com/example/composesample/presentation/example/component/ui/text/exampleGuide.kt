@@ -38,6 +38,37 @@ package com.example.composesample.presentation.example.component.ui.text
  * - AnnotatedString 미리보기: 입력은 평문 유지, snapshotFlow로 관찰하여 별도 영역에 마크다운 토큰을 SpanStyle로 렌더링
  * - 멀티 커서 시뮬레이션: 오프셋을 sortedDescending 순으로 삽입해야 인덱스 시프트로 깨지지 않음
  *
+ * ### 서식 편집(Formatted Text) — 5~9번 카드(#164 보강, foundation 1.12.1)
+ * - 참고: Arda Kazancı, Building Reliable Text Editing in Compose(Android Weekly #753):
+ *   https://ardakazanci.com/posts/building-reliable-text-editing-in-compose/
+ * - API: https://developer.android.com/reference/kotlin/androidx/compose/foundation/text/input/TextFieldBuffer
+ * - 릴리스 노트: https://developer.android.com/jetpack/androidx/releases/compose-foundation
+ *   (1.11.0-alpha01: addStyle 이 OutputTransformation 전용으로 TextFieldBuffer 에 · 1.12.0-beta01: TrackedRange 수정 항목 ·
+ *   1.13.0-alpha01: "TextFieldState now saves and restores text style information")
+ * - 1.13 이 아니라 지금 쓰는 1.12.1 에 있다: addStyle(SpanStyle|ParagraphStyle, …) · getSpanStyles · removeStyle ·
+ *   ExpandPolicy · TextFieldTextStyles 가 aar 에 있고 opt-in 이 없다(javap + 컴파일로 확인). 원문 코드의 `span.range`·`span.start`
+ *   는 1.12.1 에 없다 — TrackedRange 의 범위는 버퍼 안 확장 프로퍼티 `textRange`(그 밖에 expandPolicy · spanStyle · isValid).
+ *
+ * 핵심 개념(실측: JVM 단위 테스트 · Pixel 4 API 30 에뮬 debug · release 같은 결과):
+ * - 쓰기는 `state.edit { addStyle(style, TextRange, ExpandPolicy) }`, 읽기는 `state.textStyles`(읽기 전용).
+ *   `state.text` 는 서식 없는 String. 정책 없는 addStyle(style, start, end) 는 AtEnd. 길이 0 범위는 예외 없이 무시된다.
+ * - 조회 결과는 붙인 순서다(위치 순 아님) — 뒤에서부터 붙이면 뒤가 먼저 나온다. 화면 표시는 위치 순으로 정렬했다.
+ * - `ComposeFoundationFlags.isBasicTextFieldStyledTextEnabled` 기본 true(1.12.1) — 끄면 addStyle 은 OutputTransformation 안에서만.
+ *   전역 플래그라 예제에서는 바꾸지 않는다.
+ * - ExpandPolicy: 안쪽 입력은 늘 포함, 경계 입력만 갈린다(InsideOnly 둘 다 제외 · AtStart 앞 · AtEnd 뒤 · AtBoth 둘 다).
+ *   키 입력도 같다 — 끝 경계에 친 'Z' 가 AtEnd 밑줄은 [0,7)→[0,8) 로 늘리고 InsideOnly 굵게는 그대로 뒀다.
+ * - 범위 길이가 0 이 되면 서식이 사라진다 — 같은 자리에 다시 쳐도 서식 없음.
+ * - undo/redo 는 살아 있는 서식의 범위만 함께 되돌린다(일부 삭제 → undo 로 [0,5) 복원, 끝 경계 입력 undo/redo).
+ *   사라진 서식은 다시 만들지 못한다: 붙이기를 undo 한 뒤 redo · 전부 지운 글자를 undo(글자만 돌아옴) · 글자와 서식을
+ *   한 edit 에서 넣은 것을 redo(글자만). 툴바의 Undo → Redo 로도 그대로 보인다.
+ * - InputTransformation 안 addStyle 은 상태에 남는다(입력 중 별표 두 개 쌍 → 별표 삭제 + 굵게 InsideOnly, 정규식은 한 번만 컴파일).
+ *   OutputTransformation 안 addStyle 은 그리기만 — 노랗게 칠해져도 textStyles 는 비어 있다.
+ * - 저장: 1.12.1 `TextFieldState.Saver` 는 [텍스트, 선택, undo 이력] 만 저장한다(항목 4). 다크 모드 재생성 · am kill 뒤 복원
+ *   모두 서식만 사라지고 선택은 남는다. undo 이력도 남아 canUndo=true 지만 되돌려도 보이는 변화는 없다.
+ *   서식까지 지키려면 범위를 저장하는 Saver(FormattedTextStateSaver: 종류 · 시작 · 끝) — ExpandPolicy 는 textStyles 로 못 읽어
+ *   AtEnd 로 되살리고, 복원하며 붙인 서식이 undo 대상이 되지 않게 이력을 비운다.
+ * - FormattedTextLabTest 의 undo · Saver 테스트는 1.12.1 동작을 고정한다 — 1.13 상향 때 실패하면 7 · 9번 카드 문구를 다시 잰다.
+ *
  * ## SyntaxHighlightingExampleUI (간소화 데모)
  * - 출처: https://hossain.dev/posts/syntax-highlighting-on-android-bringing-shiki-engine-to-compose/
  *

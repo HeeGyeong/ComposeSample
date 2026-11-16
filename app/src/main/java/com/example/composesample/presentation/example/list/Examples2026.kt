@@ -397,9 +397,9 @@ val examples2026 = listOf(
         exampleType = ConstValue.AccessibleFocusIndicatorExample
     ),
     ExampleObject(
-        lastUpdate = "26. 05. 06",
+        lastUpdate = "26. 11. 16",
         title = "Document Editing TextField",
-        description = "TextFieldState 심화 — Undo/Redo, selection 조작, 마크다운 미리보기",
+        description = "TextFieldState 심화 — Undo/Redo, 선택 조작, 서식 편집(addStyle)",
         blogUrl = "",
         exampleType = ConstValue.DocumentEditingTextFieldExample
     ),

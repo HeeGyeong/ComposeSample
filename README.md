@@ -187,7 +187,7 @@ Cursor IDE를 사용하는 개발자를 위한 **AI 코딩 어시스턴트 규�
 - TextOverflow(Start/Middle Ellipsis), LocalContext 문자열 안티패턴
 - Rich Content in Text Input(contentReceiver를 통한 이미지/파일 붙여넣기 — 키보드/클립보드/드래그앤드롭 소스별 처리)
 - TextField Max Length 숨겨진 버그(프로그래밍적 변경에는 InputTransformation이 적용되지 않는 버그 + LaunchedEffect+snapshotFlow 해결책)
-- Document Editing TextField(TextFieldState 심화 — `undoState` Undo/Redo, selection 조작, AnnotatedString 마크다운 미리보기, 멀티 커서 시뮬레이션)
+- Document Editing TextField(TextFieldState 심화 — `undoState` Undo/Redo, selection 조작, AnnotatedString 마크다운 미리보기, 멀티 커서 시뮬레이션 / foundation 1.12.1 서식 편집 — `TextFieldBuffer.addStyle`·`TrackedRange`·`ExpandPolicy` 4종 경계 표·`state.textStyles` 툴바, undo/redo 는 살아 있는 서식 범위만 되돌리고 사라진 서식은 못 되살림, InputTransformation 서식은 상태에 남고 OutputTransformation 은 그리기만, 기본 `TextFieldState.Saver` 가 서식을 버리는 것을 재생성·프로세스 종료로 실측 + 서식 범위까지 저장하는 Saver)
 - Syntax Highlighting(AnnotatedString + 정규식 토크나이저로 구현한 Kotlin 코드 하이라이팅 미니 데모)
 
 **material3**:
