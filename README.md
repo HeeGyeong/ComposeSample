@@ -208,7 +208,7 @@ Cursor IDE를 사용하는 개발자를 위한 **AI 코딩 어시스턴트 규�
 - **shapes**: CardCorners(모서리 스타일)
 - **style**: Foundation Style API(Compose 1.11 도입 실험적 API, 1.12 에서 스코프 인터페이스 구조로 재편) — `Modifier.styleable` + `Style { }` DSL, 상태 블록(`pressed { }` 등), `animate(spec) { }` 전환, 커스텀 `StyleStateKey`
 - **tab**: ResponsiveTabRow(SubcomposeLayout 기반 반응형 탭)
-- **visibility**: Visibility 처리 패턴
+- **visibility**: Visibility 처리 패턴 — `alpha(0f)` 로 숨긴 indeterminate 스피너는 창이 쉬지 않고 다시 그리게 한다(프레임 콜백 · 그린 프레임 · 스피너 그리기를 5초 창으로 실측, `dumpsys gfxinfo` 대조), 배치를 빼면 그리기는 멈춰도 무한 트랜지션의 프레임 요청은 계속되고 `if`/`AnimatedVisibility` 로 컴포지션에서 빼야 모두 0
 
 ### **interaction** - 사용자 상호작용 & 제스처
 - **clickevent**: 다양한 클릭 이벤트 처리와 중복 방지

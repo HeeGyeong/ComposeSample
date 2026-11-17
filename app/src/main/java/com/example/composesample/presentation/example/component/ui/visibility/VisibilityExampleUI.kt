@@ -1,5 +1,8 @@
 package com.example.composesample.presentation.example.component.ui.visibility
 
+import android.app.Activity
+import android.content.Context
+import android.content.ContextWrapper
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
@@ -15,6 +18,7 @@ import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -29,14 +33,21 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -46,6 +57,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
@@ -54,16 +66,23 @@ import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.PathHitTester
 import androidx.compose.ui.graphics.drawscope.Fill
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.layout
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.composesample.presentation.MainHeader
+import kotlin.math.roundToInt
 
 @Composable
 fun VisibilityExampleUI(
     onBackEvent: () -> Unit
 ) {
+    // 3번 카드의 상태 — 카드가 스크롤로 빠졌다 돌아와도 결과가 남도록 화면 루트에 둔다
+    val frameLab = remember { HiddenSpinnerFrameLab() }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -75,12 +94,23 @@ fun VisibilityExampleUI(
         )
 
         LazyColumn(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize()
+                // 측정 창 안의 터치(스크롤 · 물결)는 그 자체가 프레임이라 결과를 무효로 표시한다 — 이벤트는 소비하지 않는다
+                .pointerInput(frameLab) {
+                    awaitPointerEventScope {
+                        while (true) {
+                            awaitPointerEvent(PointerEventPass.Initial)
+                            frameLab.onUserTouch()
+                        }
+                    }
+                },
             contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             item { ConditionalCompositionCard() }
             item { AlphaModifierCard() }
+            item { HiddenSpinnerFrameCard(frameLab) }
             item { AnimatedVisibilityCard() }
             item { CustomVisibilityModifierCard() }
         }
@@ -253,6 +283,295 @@ private fun AlphaModifierCard() {
             )
         }
     }
+}
+
+/**
+ * 숨긴 무한 애니메이션이 만드는 프레임(#177)
+ *
+ * indeterminate CircularProgressIndicator 를 네 가지 방법으로 숨기고 5초 동안
+ * 프레임 콜백(메인 스레드가 VSync 에 깬 횟수) · 그린 프레임(창이 보낸 프레임) · 스피너 그리기 호출을 센다.
+ */
+@Composable
+private fun HiddenSpinnerFrameCard(lab: HiddenSpinnerFrameLab) {
+    val view = LocalView.current
+    val window = remember(view) { view.context.findActivity()?.window }
+    val refreshHz = remember(view) { view.display?.refreshRate ?: 60f }
+    val meter = remember(window) { window?.let { FrameWindowMeter(it) } }
+    DisposableEffect(meter) {
+        onDispose { meter?.close() }
+    }
+    LaunchedEffect(lab.runToken) {
+        if (meter != null) lab.execute(meter, refreshHz)
+    }
+
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFE3F2FD)),
+        shape = RoundedCornerShape(12.dp)
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Text(
+                text = "⏱️ 숨긴 스피너가 만드는 프레임",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+                color = SpinnerBlue
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = "무한 애니메이션은 alpha(0f) 로 숨겨도 멈추지 않는다 — 5초 동안 세어 본다",
+                fontSize = 12.sp,
+                color = Color.Gray
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                // 자리는 고정 — 어떤 방법으로 숨겨도 카드 높이가 바뀌지 않는다
+                Box(
+                    modifier = Modifier
+                        .size(56.dp)
+                        .border(1.dp, SpinnerBlue.copy(alpha = 0.3f), RoundedCornerShape(8.dp)),
+                    contentAlignment = Alignment.Center
+                ) {
+                    HiddenSpinnerSlot(lab)
+                }
+                Spacer(modifier = Modifier.width(12.dp))
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = "보이기: ${lab.visible}",
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = SpinnerBlue
+                    )
+                    Text(
+                        text = "주사율 ${refreshHz.roundToInt()} Hz → 5초에 VSync 약 ${(refreshHz * 5).roundToInt()}번",
+                        fontSize = 11.sp,
+                        color = Color(0xFF546E7A)
+                    )
+                }
+                Switch(
+                    checked = lab.visible,
+                    onCheckedChange = { lab.visible = it },
+                    enabled = !lab.running,
+                    colors = SwitchDefaults.colors(checkedThumbColor = SpinnerBlue)
+                )
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Text(text = "숨기는 방법", fontSize = 12.sp, fontWeight = FontWeight.Bold, color = Color(0xFF212121))
+            FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                HideTechnique.entries.forEach { technique ->
+                    FilterChip(
+                        selected = lab.technique == technique,
+                        onClick = { lab.technique = technique },
+                        enabled = !lab.running,
+                        label = { Text(text = technique.label, fontSize = 11.sp) },
+                        colors = FilterChipDefaults.filterChipColors(selectedContainerColor = Color(0xFFBBDEFB))
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                Button(
+                    onClick = { lab.requestCurrent() },
+                    enabled = !lab.running && meter != null,
+                    contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp)
+                ) {
+                    Text(text = "지금 상태 재기", fontSize = 12.sp)
+                }
+                OutlinedButton(
+                    onClick = { lab.requestAll() },
+                    enabled = !lab.running && meter != null,
+                    contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp)
+                ) {
+                    Text(text = "5가지 차례로 (약 40초)", fontSize = 12.sp)
+                }
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // 세는 동안 바뀌지 않는 글자 — 카운트다운을 그리면 그 자체가 프레임이 된다
+            Text(
+                text = if (meter == null) "이 화면은 Activity 창을 찾지 못해 잴 수 없다" else lab.status,
+                fontSize = 12.sp,
+                fontWeight = FontWeight.Medium,
+                color = if (lab.running) Color(0xFFD84315) else Color(0xFF37474F)
+            )
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            HiddenSpinnerResultTable(lab)
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            SpinnerFact(
+                title = "alpha 는 보이는 것만 바꾼다",
+                body = "Modifier.alpha(0f) 는 graphicsLayer(alpha = 0f) 다. ui 1.12.1 에는 알파 0 레이어의 기록을 건너뛰는 지름길이 없고, " +
+                    "스피너의 Canvas 는 애니메이션 값을 그리기 단계에서 읽는다. 값이 바뀔 때마다 그리기가 무효화되어 창이 쉬지 않고 새 프레임을 그린다."
+            )
+            SpinnerFact(
+                title = "그리기를 멈춰도 시계는 돈다",
+                body = "layout 에서 place 를 빼면 노드가 배치되지 않아 그려지지 않고, 값을 읽는 곳이 없다 → 그린 프레임 0. " +
+                    "그래도 rememberInfiniteTransition 의 LaunchedEffect 는 컴포지션에 있는 한 매 프레임 withFrameNanos 를 다시 요청해 " +
+                    "메인 스레드는 VSync 마다 깬다(JVM 테스트: 읽는 곳이 없어도 60틱에 60번 요청)."
+            )
+            SpinnerFact(
+                title = "멈추려면 컴포지션에서 뺀다",
+                body = "if (visible) 와 AnimatedVisibility(퇴장 애니메이션이 끝나면 내용을 뺀다)는 LaunchedEffect 를 취소해 셋 다 0 이다. " +
+                    "대가는 remember 상태 — 다시 보이면 스피너는 처음부터 돈다. 자리는 고정 크기 상자로 지킨다."
+            )
+            SpinnerFact(
+                title = "원문",
+                body = "RevenueCat 페이월 버튼이 진행 표시를 알파 0 으로 숨겨 두었다 — 손대지 않은 페이월이 5초에 302~303 프레임. " +
+                    "if (animatedProgressAlpha > 0f) 로 감싸자 0 (페이드아웃 동안만 컴포지션에 남는다)."
+            )
+            SpinnerFact(
+                title = "세는 법",
+                body = "프레임 콜백 = 메인 Looper 메시지 로그의 Choreographer\$FrameDisplayEventReceiver 디스패치, " +
+                    "그린 프레임 = Window FrameMetrics(겨냥한 VSync 가 창 안인 것). 창의 시작 · 끝은 Handler 메시지로 정한다 — " +
+                    "Compose 메인 디스패처는 코루틴을 이어 갈 때마다 프레임 콜백도 요청해서, 코루틴으로 재면 측정이 프레임 하나를 만든다. " +
+                    "개발자 옵션 '애니메이터 길이 배율' 이 0 이면 무한 트랜지션이 끝 값으로 건너뛰고 멈춰 모든 줄이 0 이 된다."
+            )
+        }
+    }
+}
+
+/** 고른 방법으로 스피너를 숨긴다 — 스피너 그리기 호출은 스피너 노드 안쪽에서 센다 */
+@Composable
+private fun HiddenSpinnerSlot(lab: HiddenSpinnerFrameLab) {
+    val counted = Modifier.drawWithContent {
+        lab.onSpinnerDraw()
+        drawContent()
+    }
+    when (lab.technique) {
+        HideTechnique.Alpha -> CircularProgressIndicator(
+            modifier = Modifier
+                .alpha(if (lab.visible) 1f else 0f)
+                .then(counted),
+            color = SpinnerBlue
+        )
+
+        HideTechnique.NotPlaced -> CircularProgressIndicator(
+            modifier = Modifier
+                .placedOnlyWhen(lab.visible)
+                .then(counted),
+            color = SpinnerBlue
+        )
+
+        HideTechnique.IfVisible -> if (lab.visible) {
+            CircularProgressIndicator(modifier = counted, color = SpinnerBlue)
+        }
+
+        HideTechnique.Animated -> AnimatedVisibility(
+            visible = lab.visible,
+            enter = fadeIn(),
+            exit = fadeOut()
+        ) {
+            CircularProgressIndicator(modifier = counted, color = SpinnerBlue)
+        }
+    }
+}
+
+/**
+ * 크기는 그대로 재고 안쪽을 배치하지 않는다(흔히 쓰는 Modifier.visible() 모양).
+ * 노드는 가장 안쪽 좌표계까지 배치돼야 '배치됨' 이 되고(InnerNodeCoordinator.onAfterPlaceAt → onNodePlaced),
+ * 부모는 배치된 자식만 그린다(InnerNodeCoordinator.performDraw 의 isPlaced) — ui 1.12.1 소스 · 실측(그리기 0)
+ */
+private fun Modifier.placedOnlyWhen(placed: Boolean): Modifier = layout { measurable, constraints ->
+    val placeable = measurable.measure(constraints)
+    layout(placeable.width, placeable.height) {
+        if (placed) placeable.place(0, 0)
+    }
+}
+
+@Composable
+private fun HiddenSpinnerResultTable(lab: HiddenSpinnerFrameLab) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(Color.White, RoundedCornerShape(8.dp))
+            .padding(10.dp)
+    ) {
+        Row(modifier = Modifier.fillMaxWidth()) {
+            Text(text = "방법", modifier = Modifier.weight(1.6f), fontSize = 11.sp, fontWeight = FontWeight.Bold, color = SpinnerBlue)
+            FrameCounter.entries.forEach { counter ->
+                Text(
+                    text = counter.label,
+                    modifier = Modifier.weight(1f),
+                    fontSize = 11.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = SpinnerBlue
+                )
+            }
+        }
+        FrameCase.entries.forEach { case ->
+            val result = lab.results[case]
+            Row(modifier = Modifier.fillMaxWidth().padding(top = 6.dp)) {
+                Text(
+                    text = case.label,
+                    modifier = Modifier.weight(1.6f),
+                    fontSize = 11.sp,
+                    color = Color(0xFF212121)
+                )
+                FrameCounter.entries.forEach { counter ->
+                    val expected = expectedRate(case, counter)
+                    Text(
+                        text = when {
+                            result == null -> "— (${expected.label})"
+                            result.matches(counter) -> "${result.count(counter)}"
+                            else -> "${result.count(counter)} (예상 ${expected.label})"
+                        },
+                        modifier = Modifier.weight(1f),
+                        fontSize = 11.sp,
+                        color = when {
+                            result == null -> Color(0xFF90A4AE)
+                            result.matches(counter) -> Color(0xFF2E7D32)
+                            else -> Color(0xFFC62828)
+                        }
+                    )
+                }
+            }
+            if (result != null && (result.touched || result.droppedReports > 0)) {
+                Text(
+                    text = buildString {
+                        if (result.touched) append("세는 중 화면을 건드림 — 다시 재기 ")
+                        if (result.droppedReports > 0) append("FrameMetrics 보고 누락 ${result.droppedReports}")
+                    },
+                    fontSize = 10.sp,
+                    color = Color(0xFFC62828)
+                )
+            }
+        }
+        Spacer(modifier = Modifier.height(6.dp))
+        Text(
+            text = "괄호 안은 예상 — 계속은 창 안 VSync 수의 1/4 이상, 0 은 정확히 0",
+            fontSize = 10.sp,
+            color = Color.Gray
+        )
+    }
+}
+
+@Composable
+private fun SpinnerFact(title: String, body: String) {
+    Column(modifier = Modifier.padding(vertical = 4.dp)) {
+        Text(text = title, fontSize = 12.sp, fontWeight = FontWeight.Bold, color = Color(0xFF212121))
+        Text(text = body, fontSize = 12.sp, color = Color(0xFF424242), lineHeight = 18.sp)
+    }
+}
+
+private val SpinnerBlue = Color(0xFF1565C0)
+
+private tailrec fun Context.findActivity(): Activity? = when (this) {
+    is Activity -> this
+    is ContextWrapper -> baseContext.findActivity()
+    else -> null
 }
 
 @Composable
