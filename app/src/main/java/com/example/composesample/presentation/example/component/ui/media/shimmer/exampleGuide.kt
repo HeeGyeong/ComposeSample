@@ -20,6 +20,9 @@ package com.example.composesample.presentation.example.component.ui.media.shimme
  *
  * 핵심 개념:
  * - SkeletonContainer가 로딩 상태와 rememberInfiniteTransition 애니메이션 진행도를 한 번만 소유하고, CompositionLocalProvider로 하위에 전파한다
+ * - 무한 트랜지션은 shimmer 가 보이는 동안(로딩 중 + 걷히는 350ms 크로스페이드)만 컴포즈한다 — 로딩이 끝난 뒤에도 두면 shimmer 를 그리지 않아
+ *   그린 프레임은 0 이어도 트랜지션이 매 VSync 프레임을 요청해 메인 스레드가 계속 깬다(PERF-SKELETON-CLOCK-01, 고치기 전 atrace doFrame 5초에 약 296 →
+ *   고친 뒤 0, Pixel Tablet API 35 에뮬 debug). 원리는 Visibility 예제 3번 카드(#177)의 '배치 안 함'
  * - Modifier.autoSkeleton()은 각 요소가 LocalSkeletonScope.current에서 loading을 자동으로 읽어 그린다 — 요소마다 isLoading 파라미터를 넘기지 않는다
  * - shimmer 사각형은 별도 스켈레톤 트리를 만들지 않고, 그 요소 자신이 이미 측정된 크기(DrawScope.size)를 그대로 재사용해 그린다
  * - drawWithContent(바깥) 안에서 drawContent() 다음에 shimmer를 그리고, graphicsLayer(alpha)는 그 안쪽에 둬야 콘텐츠 알파와 shimmer 알파가 서로 독립적으로 크로스페이드된다 — 순서를 바꾸면 shimmer까지 콘텐츠와 함께 페이드된다

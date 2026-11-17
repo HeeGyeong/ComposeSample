@@ -33,6 +33,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -51,6 +52,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.composesample.presentation.MainHeader
+import kotlinx.coroutines.delay
 
 // SkeletonContainer가 한 번만 소유하는 로딩 상태 + 공유 shimmer 진행도 — 하위 Modifier.autoSkeleton()이 파라미터 전달 없이 이걸 자동으로 읽는다
 private class SkeletonScope(val loading: Boolean, val phase: State<Float>)
@@ -281,6 +283,9 @@ private fun AutoSkeletonProfileRow() {
     }
 }
 
+// 콘텐츠 · shimmer 크로스페이드 시간 — autoSkeleton() 의 알파 애니메이션과 SkeletonContainer 의 트랜지션 유지 시간이 같이 쓴다
+private const val CROSSFADE_MILLIS = 350
+
 // 로딩 상태 + 단일 rememberInfiniteTransition을 CompositionLocal로 전파 — 하위 autoSkeleton()들이 애니메이션을 각자 만들지 않고 공유
 @Composable
 private fun SkeletonContainer(
@@ -288,8 +293,30 @@ private fun SkeletonContainer(
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit
 ) {
+    // 무한 트랜지션은 shimmer 가 보이는 동안(로딩 중 + 걷히는 크로스페이드)만 컴포지션에 둔다. 로딩이 끝난 뒤에도 남겨 두면
+    // shimmer 를 그리지 않아 화면은 쉬어도 트랜지션이 매 VSync 다음 프레임을 요청해 메인 스레드가 계속 깬다
+    // (Visibility 예제 3번 카드의 '배치 안 함' 과 같은 경우 — 고치기 전 실측: 로딩을 끈 뒤 5초에 doFrame 약 296 · 그린 프레임 0)
+    var shimmering by remember { mutableStateOf(loading) }
+    LaunchedEffect(loading) {
+        if (loading) {
+            shimmering = true
+        } else {
+            delay(CROSSFADE_MILLIS.toLong())
+            shimmering = false
+        }
+    }
+    // loading 을 함께 보는 것은 로딩이 켜진 첫 프레임부터 돌게 하려고 — shimmering 은 LaunchedEffect 가 한 프레임 늦게 켠다
+    val phase = if (loading || shimmering) shimmerPhase() else remember { mutableFloatStateOf(0f) }
+
+    CompositionLocalProvider(LocalSkeletonScope provides SkeletonScope(loading, phase)) {
+        Box(modifier) { content() }
+    }
+}
+
+@Composable
+private fun shimmerPhase(): State<Float> {
     val transition = rememberInfiniteTransition(label = "autoSkeletonShimmer")
-    val phase = transition.animateFloat(
+    return transition.animateFloat(
         initialValue = 0f,
         targetValue = 1f,
         animationSpec = infiniteRepeatable(
@@ -298,10 +325,6 @@ private fun SkeletonContainer(
         ),
         label = "autoSkeletonPhase"
     )
-
-    CompositionLocalProvider(LocalSkeletonScope provides SkeletonScope(loading, phase)) {
-        Box(modifier) { content() }
-    }
 }
 
 // CompositionLocal에서 로딩 상태를 자동으로 읽어, 이 요소가 이미 측정된 크기 그대로 shimmer를 그린다 — 스코프가 없으면 아무 것도 하지 않고 원본 그대로 반환
@@ -312,7 +335,7 @@ private fun Modifier.autoSkeleton(shape: Shape = RoundedCornerShape(6.dp)): Modi
     LaunchedEffect(scope.loading) {
         contentAlpha.animateTo(
             targetValue = if (scope.loading) 0f else 1f,
-            animationSpec = tween(durationMillis = 350)
+            animationSpec = tween(durationMillis = CROSSFADE_MILLIS)
         )
     }
 

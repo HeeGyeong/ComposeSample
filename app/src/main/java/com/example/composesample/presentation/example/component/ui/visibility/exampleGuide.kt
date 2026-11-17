@@ -59,7 +59,11 @@ package com.example.composesample.presentation.example.component.ui.visibility
  *     스피너가 아닌 다른 것(아래 함정의 커서)이 그린다
  * - 함정:
  *   · 이 앱의 실물 사례 — BlogExampleActivity 는 예제 화면 아래에 목록을 계속 컴포즈한다. 검색으로 예제를 열면 검색창이 포커스를 쥔 채
- *     커서가 0.5초마다 깜빡여, 예제 화면에 가려진 채 5초에 그린 프레임 10 · 프레임 콜백 20 — 이 카드의 if 줄이 0 이 아니게 나온 원인
+ *     커서가 0.5초마다 깜빡여, 예제 화면에 가려진 채 5초에 그린 프레임 10 · 프레임 콜백 20 — 이 카드의 if 줄이 0 이 아니게 나온 원인.
+ *     PERF-HIDDEN-CURSOR-01(`657c5151`)에서 예제를 열 때 포커스를 지우게 고쳤다(검색 경로로 다시 재면 숨김 줄 0 / 0 / 0)
+ *   · 같은 앱의 '시계만 도는' 사례 — Auto Skeleton 예제의 SkeletonContainer 가 로딩이 끝난 뒤에도 무한 트랜지션을 컴포즈해
+ *     그린 프레임 0 인데 doFrame 이 5초에 약 296(atrace). PERF-SKELETON-CLOCK-01 에서 shimmer 가 보이는 동안만 컴포즈하게 고쳤다(0 / 0)
+ *   · 프레임 콜백 집계는 atrace(gfx view)의 Choreographer#doFrame 과 같다 — 배치 안 함 300 · if 0 · 보임 246(API 35 debug, 앱 코드 변경 없이 교차 확인)
  *   · 측정 스크립트: 검색 뒤 TAB 으로 포커스를 옮기면 예제 위에 키보드가 다시 떴다 → 다크 모드를 켰다 원래대로(액티비티 재생성 2회,
  *     열린 예제는 rememberSaveable 로 남고 포커스는 복원되지 않는다)로 포커스를 지우고 쟀다. 설정은 원래 값(no)으로 되돌렸다
  *   · 측정 스크립트: 한 번에 1,400px 넘게 끌면 LazyColumn 이 플링으로 카드를 지나친다 → 600px 이하 · 1.5초 드래그로 맞춘다
