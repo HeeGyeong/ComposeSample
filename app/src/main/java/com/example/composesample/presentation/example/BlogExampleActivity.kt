@@ -44,6 +44,7 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -138,6 +139,13 @@ fun BlogExampleScreen(
 
     LaunchedEffect(Unit) {
         blogExampleViewModel.reverseExampleList()
+    }
+
+    // 예제를 열면 목록의 검색창 포커스를 지운다 — 목록은 예제 화면 아래에 계속 컴포즈되어 있어, 포커스를 쥔 채 두면
+    // 가려진 커서가 0.5초마다 깜빡이며 예제가 열려 있는 내내 프레임을 만든다(#177 실측: 5초에 그린 프레임 10 · 프레임 콜백 20)
+    val focusManager = LocalFocusManager.current
+    LaunchedEffect(exampleType.value) {
+        if (exampleType.value.isNotEmpty()) focusManager.clearFocus()
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
