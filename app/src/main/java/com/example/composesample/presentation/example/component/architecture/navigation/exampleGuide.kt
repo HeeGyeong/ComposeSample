@@ -253,7 +253,8 @@ package com.example.composesample.presentation.example.component.architecture.na
  * - Boolean 'True' 거부·'true' 통과(toBooleanStrict) · enum 'price' 거부·'PRICE' 통과 · 기본값 없는 Int? 는 값이 없으면 누락으로 실패.
  * - ⚠ Map 필드가 있는 키(Bundle)는 null 이 아니라 match() 가 IllegalArgumentException("Cannot decode field [tags] ...")을 던졌다 —
  *   UriDeepLinkMatcher.matchArguments 는 DeepLinkDecoderException 만 잡는다. 매처 루프는 try 로 감싼다.
- * - 시스템 뒤로가기는 연 백스택을 하나씩 줄이고(NavDisplay onBack), Home 하나만 남으면 이 예제(BlogExampleActivity)를 닫는다.
+ * - 시스템 뒤로가기는 연 백스택을 하나씩 줄이고(NavDisplay onBack), Home 하나만 남으면 예제를 닫고 목록으로 돌아간다
+ *   (BlogExampleScreen 의 호스트 BackHandler — 2026-11-18 UX-SYSBACK-01 전에는 BlogExampleActivity 가 끝났다).
  * - 결과: Checkout 이 안 보일 때 보낸 10개는 버퍼에 쌓였다가 다시 그려질 때 먼저 붙은 ResultEffect 가 전부 가져갔다(같은 키의
  *   conflateAsState 0). Checkout 이 보일 때 보내 두 수집기가 모두 기다리던 중이면 나뉘었다 — ResultEffect 9 · conflateAsState #2
  *   (첫 trySend 가 첫 대기자를, 둘째가 둘째 대기자를 깨우고 나머지는 버퍼에 남아 먼저 다시 돈 ResultEffect 가 가져감). conflateAsState 는

@@ -547,7 +547,7 @@ private fun ResultMatrixCard() {
         SectionTitle("실측 결과")
         Spacer(modifier = Modifier.height(8.dp))
         val rows = listOf(
-            listOf("보관", "recreate()\n다크 모드", "헤더 ← 로 닫고\n다시 열기", "프로세스\n종료"),
+            listOf("보관", "recreate()\n다크 모드", "← · 뒤로가기로\n닫고 다시 열기", "프로세스\n종료"),
             listOf("remember", "새 객체 · 0\n작업 취소", "새 객체 · 0", "새 객체 · 0"),
             listOf("rememberSaveable", "값 복원", "0", "값 복원"),
             listOf("retain", "같은 객체 · 값\n작업 이어짐", "새 객체 · 0\n(닫을 때 onRetired)", "새 객체 · 0"),
@@ -585,10 +585,9 @@ private fun ResultMatrixCard() {
         }
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-            text = "헤더 ← 는 같은 액티비티 안에서 컴포지션만 빠지는 것이라, RESUMED 상태의 기본 저장소가 나간 retain 값을 " +
-                    "곧바로 onRetired 하고 ViewModel 은 BlogExampleActivity 의 ViewModelStore 에 남습니다. 시스템 뒤로가기는 " +
-                    "BlogExampleActivity 자체를 끝내므로 retain 은 onExitedComposition → onRetired, ViewModel 은 onCleared 까지 " +
-                    "한 번에 옵니다.",
+            text = "헤더 ← 와 시스템 뒤로가기는 둘 다 같은 액티비티 안에서 컴포지션만 빠지는 것이라, RESUMED 상태의 기본 저장소가 " +
+                    "나간 retain 값을 곧바로 onRetired 하고 ViewModel 은 BlogExampleActivity 의 ViewModelStore 에 남습니다. " +
+                    "ViewModel 의 onCleared 는 목록에서 한 번 더 뒤로가기로 BlogExampleActivity 를 끝낼 때 옵니다.",
             fontSize = 12.sp,
             color = Color(0xFF616161),
             lineHeight = 18.sp
@@ -980,7 +979,7 @@ private fun ComparisonTableCard() {
             Triple("묶이는 곳", "ViewModelStoreOwner\n(이 앱: BlogExampleActivity)", "컴포지션 위치 +\nRetainedValuesStore"),
             Triple("정리 콜백", "onCleared()", "onRetired()\nonUnused()"),
             Triple("재생성(다크 모드)", "같은 객체", "같은 객체"),
-            Triple("헤더 ← 로 닫으면", "남음(액티비티 종료 때 onCleared)", "곧바로 onRetired"),
+            Triple("← · 뒤로가기로 닫으면", "남음(액티비티 종료 때 onCleared)", "곧바로 onRetired"),
             Triple("프로세스 종료", "사라짐 → SavedStateHandle", "사라짐 → rememberSaveable"),
             Triple("직렬화", "불필요", "불필요"),
         )

@@ -320,7 +320,7 @@ private fun DeepLinkCard(
         }
         DeepLinkMono(report?.lines()?.joinToString("\n") ?: "프리셋을 고르세요")
         DeepLinkNote(
-            "연 백스택은 시스템 뒤로가기로 하나씩 줄고(NavDisplay 의 onBack), Home 하나만 남으면 뒤로가기는 이 예제(액티비티)를 닫는다."
+            "연 백스택은 시스템 뒤로가기로 하나씩 줄고(NavDisplay 의 onBack), Home 하나만 남으면 뒤로가기는 이 예제를 닫고 목록으로 돌아간다."
         )
     }
 }

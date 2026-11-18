@@ -27,7 +27,9 @@ package com.example.composesample.presentation.example.component.architecture.pa
  *   진행 중 2초 작업은 retain/ViewModel 에서 이어져 완료되고 remember 는 onForgotten 에서 취소
  * - 헤더 ← 로 예제를 닫고 다시 열기: retain 은 닫을 때 onExitedComposition → onRetired, 다시 열면 새 객체 /
  *   ViewModel 은 같은 객체·값 (예제 화면의 ViewModelStoreOwner 는 BlogExampleActivity)
- * - 시스템 뒤로가기(BlogExampleActivity 종료): onExitedComposition → onForgotten(remember) → onRetired → onCleared
+ * - 시스템 뒤로가기: 2026-11-18(UX-SYSBACK-01)부터 헤더 ← 와 같은 경로 — 닫을 때 retain onExitedComposition → onRetired ·
+ *   remember onForgotten, ViewModel 은 남고 목록에서 뒤로가기로 BlogExampleActivity 가 끝날 때 onCleared(Pixel 4 API 30 에뮬 debug ·
+ *   release 재측정). 그 전에는 시스템 뒤로가기가 액티비티를 바로 끝내 onExitedComposition → onForgotten → onRetired → onCleared 가 한 번에 왔다
  * - 프로세스 종료(am kill): rememberSaveable 값만 복원, 나머지는 #1·0
  * - retain 으로 보관한 객체가 RememberObserver 도 구현해도 onRemembered/onForgotten 은 오지 않는다(KDoc 과 일치)
  * - if 로 숨김(기본 저장소): onExitedComposition → onRetired, 다시 보이면 onRetained → onEnteredComposition(새 객체)

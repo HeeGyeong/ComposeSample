@@ -151,6 +151,14 @@ fun NewFeatureExampleUI(onBackEvent: () -> Unit) {
 }
 ```
 
+**System back does what the header ← does.** `BlogExampleScreen` registers a host `BackHandler`: it closes the open
+example and, in a sub-category list, returns to the parent list (on the top-level list it is disabled, so back finishes
+`BlogExampleActivity` as before). It is composed before the example, and the navigationevent dispatcher gives an event to
+the most recently registered enabled handler, so a `BackHandler`, `NavDisplay` or adaptive scaffold inside the example
+receives back first while it is enabled; the example closes only when none is. An example should therefore enable its
+own handler only while there is something to undo (an expanded overlay, a back stack) and must not expect system back to
+finish `BlogExampleActivity`.
+
 If the screen's back row lives inside a `LazyColumn`'s `stickyHeader { }`, put `MainHeader` inside that `stickyHeader` rather than restructuring the list.
 
 A hand-made header is allowed only in these cases (CONV-09, decided 2026-09-15):

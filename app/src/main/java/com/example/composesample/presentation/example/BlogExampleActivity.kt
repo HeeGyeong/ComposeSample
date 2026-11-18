@@ -5,6 +5,7 @@ import android.app.Activity
 import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -146,6 +147,16 @@ fun BlogExampleScreen(
     val focusManager = LocalFocusManager.current
     LaunchedEffect(exampleType.value) {
         if (exampleType.value.isNotEmpty()) focusManager.clearFocus()
+    }
+
+    // 시스템 뒤로 가기를 화면의 ← 와 같게 — 열린 예제를 닫고, 하위 목록이면 상위 목록으로 돌아간다(그 밖엔 액티비티 종료 그대로).
+    // 예제보다 먼저 컴포즈해 디스패처에 가장 먼저 등록한다 — 같은 우선순위에서는 나중에 등록된 핸들러가 먼저 받으므로(LIFO,
+    // navigationevent 1.2.0) 예제 안의 BackHandler · NavDisplay · 적응형 스캐폴드가 켜져 있으면 그쪽이 먼저 받고, 모두 꺼졌을 때만 여기로 온다.
+    // 액티비티형 예제(BottomNavigation)는 실행 뒤 moveType 이 EMPTY 로 바뀌고 exampleType 이 남는다 → 열린 예제로 보지 않는다
+    // (보면 돌아온 목록에서 첫 뒤로 가기가 아무것도 안 바꾸고 상태만 지운다)
+    val exampleOpen = exampleMoveType.value == ExampleMoveType.UI && exampleType.value.isNotEmpty()
+    BackHandler(enabled = exampleOpen || subCategoryList.isNotEmpty()) {
+        if (exampleOpen) exampleType.value = "" else blogExampleViewModel.setSubCategoryList("")
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
