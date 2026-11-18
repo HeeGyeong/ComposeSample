@@ -83,6 +83,8 @@ android {
 // InkAnalysis: Gooey 텍스트 모핑 예제가 PixelCopy 로 읽은 캡처(한 장 약 48만 픽셀)를 훑어 잉크 · 덩어리를 세는 루프가
 //   재작성 아래 debug 단위 테스트 829ms(dispatchRewriteEnabled=false 2.1ms, 2400×200) — 기기에서는 간격 훑기 한 단계에
 //   약 30초가 걸려 41단계 측정이 끝나지 않았다. 분석 객체만 뺀다(그리기 · 프레임 루프는 그대로 재작성 대상).
+// SoftwareBlur: 다이얼로그 배경 블러 예제의 하위 폴백(캡처 → 축소 → 박스 블러 2패스)이 재는 비용이 debug 에서 약 250배
+//   (API 30 에뮬, 축소 1: release 16~36ms vs debug 약 9초) — 픽셀 계산 object 만 뺀다.
 hotSwanCompiler {
     exclude("com.example.composesample.presentation.example.component.architecture.development.test.PowerAssertChecksKt")
     exclude("com.example.composesample.presentation.example.component.architecture.development.test.PowerAssertViewModel")
@@ -98,6 +100,7 @@ hotSwanCompiler {
     exclude("com.example.composesample.presentation.example.component.ui.graphics.PixelateNode")
     exclude("com.example.composesample.presentation.example.component.ui.graphics.PixelBuffers")
     exclude("com.example.composesample.presentation.example.component.ui.graphics.InkAnalysis")
+    exclude("com.example.composesample.presentation.example.component.ui.graphics.SoftwareBlur")
     exclude("com.example.composesample.presentation.example.component.data.download.RangeDownloadKt")
     exclude("com.example.composesample.presentation.example.component.data.download.FakeFileServer")
     exclude("com.example.composesample.presentation.example.component.data.download.RangeDownloader")

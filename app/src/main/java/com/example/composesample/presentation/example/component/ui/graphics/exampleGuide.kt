@@ -43,6 +43,14 @@ package com.example.composesample.presentation.example.component.ui.graphics
  *   으로 터진다. 계측 테스트(잠금 화면 뒤라 draw 패스가 없는 상태)에서 이 예외를 그대로 확인했다 → 캡처 전에 size 확인 필요
  * - 캡처 폴백의 본질적 한계: **정지 화면**이다(뒤 콘텐츠가 움직여도 갱신되지 않고, 다른 앱의 창은 애초에 캡처 불가).
  *   크로스 윈도우 블러가 플랫폼 API 로 제공되는 이유가 여기에 있다
+ * - ⚠️ **(2026-11-18 수정) 폴백의 '캡처 + 블러' 는 API 28 이상에서 앱을 끝냈다**(API 30 에뮬 debug · release 재현, 언제부터인지는 확인 안 함):
+ *   ① API 28+ 의 `toImageBitmap()` 은 ui-graphics 1.12.1 `LayerSnapshotV28` = `Bitmap.createBitmap(Picture)` 라 **HARDWARE 비트맵**이고,
+ *   `scale()` 사본도 HARDWARE 로 남아(플랫폼 createBitmap 이 끝에 `copy(HARDWARE)`) `getPixels` 가 IllegalStateException
+ *   ② 축소 배율 1 이면 `scale()` 이 불변 원본을 그대로 돌려줘(같은 크기 · 불변이면 source 반환) `setPixels` 도 IllegalStateException.
+ *   → ARGB_8888 사본을 만들고 결과는 새 가변 비트맵에 쓴다. 9/14 추가 때 계측 테스트는 '그려지지 않은 레이어' 실패 경로만 확인했다(위 항목)
+ * - 비용(API 30 에뮬, 904×303 캡처, 반지름 6, 총 시간): release(JIT) 축소 8 7~21ms · 축소 1 16~36ms. 픽셀 루프는
+ *   `Dispatchers.Default` 에서 돌리고, 계산 object(SoftwareBlur)는 HotSwan 에서 뺐다 — 재작성 아래 debug 는 축소 8 약 170ms ·
+ *   축소 1 약 9초였고 제외 뒤 16~82ms · 20~29ms. 이 크기에선 캡처 · 사본 비용이 커서 축소 배율의 효과가 총 시간에 작게 보인다
  *
  * ## Mesh Gradient (MeshGradientPainter — Compose 1.12 신규)
  * - 공식 문서(Mesh gradients): https://developer.android.com/develop/ui/compose/graphics/draw/mesh-gradient

@@ -57,11 +57,15 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.window.DialogWindowProvider
+import androidx.core.graphics.createBitmap
 import androidx.core.graphics.drawable.toDrawable
 import androidx.core.graphics.scale
 import com.example.composesample.presentation.MainHeader
 import com.example.composesample.util.boldMarkup
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.util.Locale
 
 /**
  * 다이얼로그 배경 블러 예제
@@ -80,63 +84,69 @@ private const val BLUR_MAX_RADIUS = 80
 // ==================== 소프트웨어 블러(하위 폴백) ====================
 
 /**
- * 다운스케일 + 박스 블러 2패스.
- *
- * RenderScript 는 API 31 에서 폐기됐고 `Modifier.blur` 도 31+ 라, 그 아래에서 쓸 수 있는 것은
- * 결국 직접 계산하는 방법뿐이다. 반지름을 키우는 대신 **먼저 줄이는 것**이 비용을 좌우한다.
+ * 하위 폴백의 픽셀 계산. 매 픽셀 루프라 HotSwan(debug) 재작성 아래에서 약 250배 느려져(API 30 에뮬: 축소 1 기준
+ * release 16~36ms vs debug 약 9초) 화면이 재는 비용이 틀린다 → 이 object 만 app/build.gradle 에서 제외한다.
  */
-private fun softwareBlur(source: Bitmap, downscale: Int, radius: Int): Bitmap {
-    val w = (source.width / downscale).coerceAtLeast(1)
-    val h = (source.height / downscale).coerceAtLeast(1)
-    val small = source.scale(w, h)
-    val pixels = IntArray(w * h)
-    small.getPixels(pixels, 0, w, 0, 0, w, h)
+private object SoftwareBlur {
+    /**
+     * 다운스케일 + 박스 블러 2패스.
+     *
+     * RenderScript 는 API 31 에서 폐기됐고 `Modifier.blur` 도 31+ 라, 그 아래에서 쓸 수 있는 것은
+     * 결국 직접 계산하는 방법뿐이다. 반지름을 키우는 대신 **먼저 줄이는 것**이 비용을 좌우한다.
+     */
+    fun blur(source: Bitmap, downscale: Int, radius: Int): Bitmap {
+        val w = (source.width / downscale).coerceAtLeast(1)
+        val h = (source.height / downscale).coerceAtLeast(1)
+        val small = source.scale(w, h)
+        val pixels = IntArray(w * h)
+        small.getPixels(pixels, 0, w, 0, 0, w, h)
 
-    val r = radius.coerceIn(1, 25)
-    val buffer = IntArray(w * h)
+        val r = radius.coerceIn(1, 25)
+        val buffer = IntArray(w * h)
 
-    // 가로 패스 → 세로 패스. 박스 블러를 두 번 지나가면 가우시안에 가까워진다.
-    boxBlurPass(pixels, buffer, w, h, r, horizontal = true)
-    boxBlurPass(buffer, pixels, w, h, r, horizontal = false)
+        // 가로 패스 → 세로 패스. 박스 블러를 두 번 지나가면 가우시안에 가까워진다.
+        boxBlurPass(pixels, buffer, w, h, r, horizontal = true)
+        boxBlurPass(buffer, pixels, w, h, r, horizontal = false)
 
-    small.setPixels(pixels, 0, w, 0, 0, w, h)
-    return small
-}
+        // 축소 배율 1 이면 scale() 이 불변인 원본을 그대로 돌려줘 setPixels 가 IllegalStateException — 결과는 새 가변 비트맵에 쓴다
+        return createBitmap(w, h).apply { setPixels(pixels, 0, w, 0, 0, w, h) }
+    }
 
-private fun boxBlurPass(
-    input: IntArray,
-    output: IntArray,
-    width: Int,
-    height: Int,
-    radius: Int,
-    horizontal: Boolean
-) {
-    val outer = if (horizontal) height else width
-    val inner = if (horizontal) width else height
+    private fun boxBlurPass(
+        input: IntArray,
+        output: IntArray,
+        width: Int,
+        height: Int,
+        radius: Int,
+        horizontal: Boolean
+    ) {
+        val outer = if (horizontal) height else width
+        val inner = if (horizontal) width else height
 
-    for (o in 0 until outer) {
-        for (i in 0 until inner) {
-            var a = 0
-            var red = 0
-            var green = 0
-            var blue = 0
-            var count = 0
-            for (k in -radius..radius) {
-                val p = i + k
-                if (p < 0 || p >= inner) continue
-                val index = if (horizontal) o * width + p else p * width + o
-                val color = input[index]
-                a += (color ushr 24) and 0xFF
-                red += (color ushr 16) and 0xFF
-                green += (color ushr 8) and 0xFF
-                blue += color and 0xFF
-                count++
+        for (o in 0 until outer) {
+            for (i in 0 until inner) {
+                var a = 0
+                var red = 0
+                var green = 0
+                var blue = 0
+                var count = 0
+                for (k in -radius..radius) {
+                    val p = i + k
+                    if (p < 0 || p >= inner) continue
+                    val index = if (horizontal) o * width + p else p * width + o
+                    val color = input[index]
+                    a += (color ushr 24) and 0xFF
+                    red += (color ushr 16) and 0xFF
+                    green += (color ushr 8) and 0xFF
+                    blue += color and 0xFF
+                    count++
+                }
+                val index = if (horizontal) o * width + i else i * width + o
+                output[index] = ((a / count) shl 24) or
+                    ((red / count) shl 16) or
+                    ((green / count) shl 8) or
+                    (blue / count)
             }
-            val index = if (horizontal) o * width + i else i * width + o
-            output[index] = ((a / count) shl 24) or
-                ((red / count) shl 16) or
-                ((green / count) shl 8) or
-                (blue / count)
         }
     }
 }
@@ -462,10 +472,16 @@ private fun FallbackCard() {
             scope.launch {
                 val started = System.nanoTime()
                 val captured = layer.toImageBitmap()
-                val android = captured.asAndroidBitmap()
+                // API 28+ 의 toImageBitmap() 은 Bitmap.createBitmap(Picture) — HARDWARE 비트맵이라 getPixels 가
+                // IllegalStateException 을 던진다(scale() 사본도 HARDWARE 로 남는다). 픽셀을 읽을 소프트웨어 사본으로 바꾼다
+                val android = captured.asAndroidBitmap().let {
+                    if (it.config == Bitmap.Config.ARGB_8888) it else it.copy(Bitmap.Config.ARGB_8888, false)
+                }
                 sourceSize = "${android.width}x${android.height}"
-                val result = softwareBlur(android, downscale.coerceAtLeast(1), radius = 6)
-                elapsedMs = "%.1f".format((System.nanoTime() - started) / 1_000_000.0)
+                val scale = downscale.coerceAtLeast(1)
+                // 픽셀 루프는 메인 스레드 밖에서 — 축소 배율 1 이면 수십만 픽셀 × 13칸 × 2패스다
+                val result = withContext(Dispatchers.Default) { SoftwareBlur.blur(android, scale, radius = 6) }
+                elapsedMs = String.format(Locale.US, "%.1f", (System.nanoTime() - started) / 1_000_000.0)
                 blurred = result.asImageBitmap()
             }
         }
@@ -494,8 +510,9 @@ private fun FallbackCard() {
             )
             Spacer(modifier = Modifier.height(6.dp))
             CaptionText(
-                "축소 배율을 키우면 시간이 급격히 줄어든다 — 블러 비용은 픽셀 수에 비례하므로 " +
-                    "반지름을 키우기 전에 먼저 줄이는 것이 정석이다."
+                "블러 계산은 픽셀 수에 비례해 축소 배율의 제곱으로 준다 — 반지름을 키우기 전에 먼저 줄이는 것이 정석이다. " +
+                    "다만 이 작은 캡처(약 900×300)에서는 캡처 · 소프트웨어 사본 비용이 커서 전체 시간 차이는 작다" +
+                    "(API 30 에뮬 release: 축소 1 16~36ms · 8 7~21ms)."
             )
         }
 
