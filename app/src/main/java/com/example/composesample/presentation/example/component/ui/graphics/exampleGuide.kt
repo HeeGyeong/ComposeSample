@@ -168,4 +168,42 @@ package com.example.composesample.presentation.example.component.ui.graphics
  * - 측정 비용: 캡처 한 장(약 48만 픽셀)을 훑는 InkAnalysis 는 HotSwan 재작성 아래 debug 단위 테스트 829ms · 재작성 끔 2.1ms(2400×200) →
  *   app/build.gradle 에서 이 객체만 제외(ComposeHotReloadGuide.md). 제외 뒤 간격 41단계 훑기가 약 6초
  * - 측정은 에뮬레이터(swiftshader)뿐 — 실기기 GPU 블러의 띠 모양 · 수치는 확인하지 않았다
+ *
+ * ## Canvas.drawMesh 리본 (MeshRibbonExampleUI · MeshRibbonLab.kt · MeshRibbonApi34.kt · MeshRibbonDrawing.kt)
+ * - 원문(Arda Kazancı, Android Weekly #753 — ADS 'Elevate your apps with the latest graphics features' 정리):
+ *   https://ardakazanci.com/posts/new-graphics-features-in-jetpack-compose-and-android/
+ * - Canvas.drawMesh(blendMode 의미 · 안티에일리어싱 없음): https://developer.android.com/reference/android/graphics/Canvas#drawMesh(android.graphics.Mesh,%20android.graphics.BlendMode,%20android.graphics.Paint)
+ * - Mesh · MeshSpecification(API 34): https://developer.android.com/reference/android/graphics/Mesh
+ *   https://developer.android.com/reference/android/graphics/MeshSpecification
+ *
+ * ### 핵심 개념 (원문 코드와 같은 구조 · android-35 sources)
+ * - `MeshSpecification.make(attributes = [corner: float2 @0], stride 8, varyings = [stroke: float3], VERTEX, FRAGMENT)` —
+ *   기본 sRGB · premultiplied, 속성 최대 8 · varying 최대 6(position 은 따로). 셰이더 문자열은 한 번만 파싱(지연 싱글턴)
+ * - 정점 162개 = 진행 0~1 × 좌우 ±1 의 TRIANGLE_STRIP. 버퍼에는 corner 두 숫자만, 위치 · 굵기 · 파도 · 펄스는 정점 셰이더가
+ *   uniform(uStart · uEnd · uHalfWidth · uTime)으로 계산. 프래그먼트는 가운데서 떨어진 거리로 가장자리를 smoothstep(안티에일리어싱이
+ *   지원되지 않으므로 직접) · 진행 거리로 색을 섞는다(`layout(color)` uniform 은 setColorUniform)
+ * - Mesh 는 drawWithCache(크기가 바뀔 때만)에서 만들고 프레임마다 `setFloatUniform("uTime")` + `nativeCanvas.drawMesh` 한 번.
+ *   Compose Canvas 는 drawMesh 를 감싸지 않는다(1.12.1). API 34 타입은 @RequiresApi 객체 안에만, 컴포저블엔 앱 인터페이스(RibbonRenderer)
+ * - `drawMesh(mesh, blendMode, paint)`: 메시 색 = dst, Paint 색 = src, null = MODULATE. 하드웨어 가속이 아닌 캔버스는 RuntimeException
+ * - Mesh 생성자는 정점 버퍼를 CPU 쪽으로 복사한다(문서 'CPU backed buffer') → 모양을 바꾸려면 다시 만든다, 프레임마다는 uniform 만
+ *
+ * ### 실측 (Pixel Tablet API 35 에뮬 debug · release 같은 값, Pixel 4 API 30 에뮬은 대체 화면 — 실기기 A72 는 API 33 이라 쓰지 않음)
+ * - API 35 swiftshader 에서 drawMesh 가 그려진다. 정점 셰이더와 같은 식의 CPU 거울(노란 점 · 모서리)이 메시 가장자리와 겹친다
+ * - 그리기 호출: drawLine 반복 80회 vs drawMesh 1회. CPU 기록 시간(release, 1초 창 6개씩 세 번의 중앙값): 굵기 하나 35~57µs ·
+ *   조각마다 굵기 36~63µs · drawMesh 6~8µs(약 5~10배). 창 하나는 GC · 에뮬 스케줄링으로 수백 µs~1.2ms 튀는 표본이 섞인다
+ *   (API 30 release drawLine 35 · 94µs). GPU 래스터화 시간은 재지 않았다
+ * - 원문 '굵기는 하나뿐'은 drawPath 기준 — drawLine 조각마다 strokeWidth 를 바꾸면 굵기는 달라지지만 Butt 끝이라 꺾이는 곳마다 틈 ·
+ *   겹침이 생긴다(폭이 좁은 폰 화면에서는 빗살처럼 갈라진다)
+ * - BlendMode(가운데 4px 평균): DST 검정 · 흰 Paint = #81608C(메시 색) · MODULATE 검정 #000000 · 흰 #81608C · SRC 검정 #000000 · 흰 #FFFFFF
+ *   → 기본 Paint()(검정)에 null 을 넘기면 리본이 검다(#107 MeshGradient 의 drawVertices 와 같은 축). 원문의 DST 는 Paint 를 버린다
+ * - 함정 ① 원문 스니펫은 uTime 만 넣는다 — 그려진 픽셀 0(나머지 uniform 까지 131,074): 방향 0 → normalize NaN, 색 0 = 투명
+ * - 함정 ② uniform 이름 오타(`setFloatUniform("uTme")`): release 는 IllegalArgumentException 이지만 메시지의 이름이 깨져 나오고
+ *   ('unable to find uniform named P瘱'), debug(디버깅 가능 → CheckJNI)는 `JNI DETECTED ERROR IN APPLICATION: input is not valid
+ *   Modified UTF-8: illegal start byte 0x90 … string: 'unable to find uniform named…'` 로 **네이티브 abort — catch 로 못 막고 앱이 죽는다**.
+ *   예외 메시지를 만드는 플랫폼 JNI 가 잘못된 문자열을 넘기는 것으로 보인다(API 35 에뮬만 확인). 예제는 그 버튼을 두지 않고 이름을 상수 하나로
+ * - 함정 ③ 비트맵 캔버스: `RuntimeException: software rendering doesn't support meshes`(자바 쪽에서 던져 catch 가능)
+ * - 함정 ④ 만든 뒤 버퍼를 고쳐도(굵기 0) 그려진 픽셀 131,074 그대로 → 다시 만들면 0
+ * - 리본 칸 리컴포지션: 재생 6초 1 → 1(debug · release) — 시간은 그리기 단계에서만 읽는다
+ * - HotSwan: 프레임마다 도는 CPU 계산(RibbonMath)과 drawLine 루프(MeshRibbonDrawingKt)가 debug 에서 16~19ms/프레임(화면 27fps) →
+ *   둘만 제외(debug 단위 테스트 한 프레임 분량 2,080µs vs 재작성 끔 57µs). 제외 뒤 debug 272 · 418 · 29µs, 34fps
  */

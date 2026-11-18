@@ -133,9 +133,9 @@ diagnostics, **not compiler warnings on the source** (the project's warning scan
 | `GENERIC_DECLARATION` | 8 | method | functions declaring type parameters, e.g. `onEachBatch<T>`, `measureInline<T>` |
 | `HELPER_SUPER_CTOR_NEW_ARG` | 1 | whole class | `RubberBandOverscrollEffect` (the custom overscroll example). A field initialiser that constructs an object — here an `Animatable` plus an anonymous `Modifier.Node()` — lands in the same static `hotswanInit` helper as the super-constructor delegation, which the JVM verifier rejects (`Expected value generated with NEW`). Any class whose constructor builds objects into its fields can land here. |
 
-**Current count (HotSwan 2.1.0, `:app` build on 2026-11-18): 89 lines.** The same four reasons have grown with
+**Current count (HotSwan 2.1.0, `:app` build on 2026-11-18): 91 lines.** The same four reasons have grown with
 the examples — `VIEW_RECEIVER_SUBTYPE` 29, `FRAMEWORK_ENTRY_SUBCLASS` 17, `GENERIC_DECLARATION` 14,
-`HELPER_SUPER_CTOR_NEW_ARG` 4 — and two reasons are new: `EXCLUDED_BY_CONFIG` 16 and `EXCLUDED_FILE_FACADE` 9. Those 25
+`HELPER_SUPER_CTOR_NEW_ARG` 4 — and two reasons are new: `EXCLUDED_BY_CONFIG` 17 and `EXCLUDED_FILE_FACADE` 10. Those 27
 lines are not limitations but the classes this project removes from the rewrite on purpose with `exclude(...)` in
 `app/build.gradle` (each one explained in the sections below); an excluded file facade prints one line, an excluded class
 one line. The count is a baseline, not a target: a new example may add lines, and the pre-work scan compares the `app`
@@ -378,6 +378,18 @@ the release build took 7-21 ms at downscale 8 and 16-36 ms at downscale 1, the d
 
 ```groovy
 exclude("com.example.composesample.presentation.example.component.ui.graphics.SoftwareBlur")
+```
+
+The Canvas.drawMesh ribbon example (#179) excludes its per-frame CPU work for the same reason. Its comparison card draws the
+ribbon as 80 `drawLine` calls every frame from 81 centreline points computed on the CPU; under the rewrite the recorded
+CPU time was 16-19 ms per frame and the screen fell to 27 fps on the Pixel Tablet API 35 emulator (release 35-56 µs). One
+frame's worth of the math took 2,080 µs in `testDebugUnitTest` under the rewrite and 57 µs with
+`-Photswan.dispatchRewriteEnabled=false`. With the math object and the drawing-helper file below excluded the debug build
+recorded 272-418 µs (the remaining gap is the debuggable runtime) at 34 fps:
+
+```groovy
+exclude("com.example.composesample.presentation.example.component.ui.graphics.RibbonMath")
+exclude("com.example.composesample.presentation.example.component.ui.graphics.MeshRibbonDrawingKt")
 ```
 
 ### `@Synchronized` loses its mutual exclusion under the dispatch rewrite — use a `synchronized` block

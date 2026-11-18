@@ -1039,5 +1039,12 @@ val examples2026 = listOf(
         description = "흐린 두 단어를 알파 임계 ColorMatrix 로 녹여 붙이는 모핑",
         blogUrl = "",
         exampleType = ConstValue.GooeyTextMorphExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 11. 18",
+        title = "Canvas.drawMesh 리본 (정점 셰이더 · API 34)",
+        description = "정점 셰이더가 정점마다 굵기를 정하는 drawMesh 리본과 BlendMode 함정",
+        blogUrl = "",
+        exampleType = ConstValue.MeshRibbonExample
     )
 )

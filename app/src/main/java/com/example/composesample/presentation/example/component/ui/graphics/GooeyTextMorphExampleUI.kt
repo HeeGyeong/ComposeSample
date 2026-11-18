@@ -1,13 +1,7 @@
 package com.example.composesample.presentation.example.component.ui.graphics
 
-import android.annotation.SuppressLint
 import android.os.Build
-import android.os.Handler
-import android.os.Looper
-import android.view.PixelCopy
-import android.view.Window
 import androidx.activity.compose.LocalActivity
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -65,24 +59,16 @@ import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.layout.boundsInWindow
-import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.graphics.createBitmap
 import androidx.core.graphics.get
 import com.example.composesample.presentation.MainHeader
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.suspendCancellableCoroutine
-import kotlinx.coroutines.withContext
 import java.util.Locale
-import kotlin.coroutines.resume
 import kotlin.math.roundToInt
 
 /**
@@ -127,6 +113,7 @@ fun GooeyTextMorphExampleUI(
 
 private val MorphWords = listOf("Compose", "Gooey", "Morph", "Android")
 private val InkColor = Color(0xFF1A237E)
+private val InkArgb = InkColor.toArgb()
 private val DefaultConfig = GooeyMorphConfig()
 
 // 블러 · 진행은 코드 기본값 그대로 두고 임계만 데모 페이지 값 — 임계 하나의 차이만 비교한다
@@ -139,10 +126,6 @@ private val LiveThresholdConfig = DefaultConfig.copy(
 private enum class Threshold { Parent, PerWord, None }
 
 private fun blurSupported(): Boolean = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
-
-// debug 는 HotSwan 때문에 minSdk 26 이라 ObsoleteSdkInt 로 보이지만 release(minSdk 24)에는 필요한 검사다
-@SuppressLint("ObsoleteSdkInt")
-private fun pixelCopyAvailable(): Boolean = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
 
 private fun thresholdFilter(gain: Float, bias: Float): ColorFilter =
     ColorFilter.colorMatrix(ColorMatrix(GooeyMorph.thresholdMatrix(gain, bias)))
@@ -521,21 +504,6 @@ private const val GapStepDp = 2
 // 블러 12dp(시그마 약 7.4dp)의 꼬리가 임계 뒤 0 이 되는 거리보다 넉넉하게 — 가장자리 잉크로 확인
 private const val DotPadDp = 32
 
-/** 한 레이어에서 잰 결과 */
-private class MeasuredBounds {
-    var bounds: Rect = Rect.Zero
-    var size: IntSize = IntSize.Zero
-
-    /** LazyColumn 뷰포트에 잘리지 않고 다 보이는가 */
-    val fullyVisible: Boolean
-        get() = size.width > 0 && bounds.width >= size.width - 1 && bounds.height >= size.height - 1
-}
-
-private fun Modifier.measured(target: MeasuredBounds): Modifier = this.onGloballyPositioned {
-    target.bounds = it.boundsInWindow()
-    target.size = it.size
-}
-
 /** 간격 하나에서 두 줄의 덩어리 수와 가운데 세로줄 잉크(목 굵기) */
 private data class GapSample(
     val gapDp: Int,
@@ -611,8 +579,8 @@ private fun ParentLayerCard() {
                 for (gap in 0..GapMaxDp step GapStepDp) {
                     gapDp = gap
                     awaitFrames()
-                    val parent = WindowCapture.analyze(window, parentDots.bounds)
-                    val separate = WindowCapture.analyze(window, separateDots.bounds)
+                    val parent = WindowCapture.analyze(window, parentDots.bounds, InkArgb)
+                    val separate = WindowCapture.analyze(window, separateDots.bounds, InkArgb)
                     if (parent == null || separate == null) {
                         message = "PixelCopy 실패(간격 ${gap}dp)"
                         break
@@ -677,8 +645,8 @@ private fun ParentLayerCard() {
             }
             scope.launch {
                 message = ""
-                val parentWord = WindowCapture.analyze(window, parentWords.bounds)
-                val separateWord = WindowCapture.analyze(window, separateWords.bounds)
+                val parentWord = WindowCapture.analyze(window, parentWords.bounds, InkArgb)
+                val separateWord = WindowCapture.analyze(window, separateWords.bounds, InkArgb)
                 words = if (parentWord != null && separateWord != null) parentWord to separateWord else null
                 GooeyProbe.log(
                     "words gain=${config.thresholdGain} parent=${parentWord?.summary()} separate=${separateWord?.summary()}"
@@ -890,8 +858,8 @@ private fun OffsetScaleCard() {
                     val inner = Rect(r.left + r.width / 4, r.top + r.height / 4, r.right - r.width / 4, r.bottom - r.height / 4)
                     WindowCapture.read(window, inner)?.let { InkAnalysis.blackAlphaOnWhite(it.pixels) } ?: Float.NaN
                 }
-                val a = if (rowsVisible) WindowCapture.analyze(window, liveBounds.bounds) else null
-                val b = if (rowsVisible) WindowCapture.analyze(window, portedBounds.bounds) else null
+                val a = if (rowsVisible) WindowCapture.analyze(window, liveBounds.bounds, InkArgb) else null
+                val b = if (rowsVisible) WindowCapture.analyze(window, portedBounds.bounds, InkArgb) else null
                 if (a != null && b != null) haze = a to b
                 GooeyProbe.log(
                     "offset software=$software screen=${screen?.map { it.fmt(1) }} " +
@@ -969,8 +937,8 @@ private fun PaddingCard() {
                 for (s in 0..20) {
                     fraction = s / 20f
                     awaitFrames()
-                    val padded = WindowCapture.analyze(window, paddedBounds.bounds)
-                    val bare = WindowCapture.analyze(window, bareBounds.bounds)
+                    val padded = WindowCapture.analyze(window, paddedBounds.bounds, InkArgb)
+                    val bare = WindowCapture.analyze(window, bareBounds.bounds, InkArgb)
                     if (padded == null || bare == null) {
                         message = "PixelCopy 실패(f ${fraction.fmt()})"
                         break
@@ -1012,54 +980,7 @@ private fun BoundsOutline(content: @Composable () -> Unit) {
     }
 }
 
-// ==================== 화면 캡처 ====================
-
-private class CapturedPixels(val width: Int, val height: Int, val pixels: IntArray)
-
-/**
- * PixelCopy(API 26+)로 창에 그려진 사각형(창 좌표)을 그대로 읽는다 — 블러 · 임계 · 합성이 모두 끝난 최종 픽셀.
- * boundsInWindow 는 창 기준이라 액티비티 창의 PixelCopy 좌표와 같다.
- */
-@SuppressLint("ObsoleteSdkInt") // debug 는 HotSwan 때문에 minSdk 26 — release(minSdk 24)에는 필요한 표시
-@RequiresApi(Build.VERSION_CODES.O)
-private object WindowCapture {
-    suspend fun read(window: Window, bounds: Rect): CapturedPixels? {
-        val rect = android.graphics.Rect(
-            bounds.left.roundToInt(),
-            bounds.top.roundToInt(),
-            bounds.right.roundToInt(),
-            bounds.bottom.roundToInt()
-        )
-        if (rect.width() <= 0 || rect.height() <= 0) return null
-        return suspendCancellableCoroutine { continuation ->
-            val bitmap = createBitmap(rect.width(), rect.height())
-            PixelCopy.request(
-                window, rect, bitmap,
-                { result ->
-                    if (result != PixelCopy.SUCCESS) {
-                        bitmap.recycle()
-                        continuation.resume(null)
-                        return@request
-                    }
-                    val pixels = IntArray(bitmap.width * bitmap.height)
-                    bitmap.getPixels(pixels, 0, bitmap.width, 0, 0, bitmap.width, bitmap.height)
-                    val captured = CapturedPixels(bitmap.width, bitmap.height, pixels)
-                    bitmap.recycle()
-                    continuation.resume(captured)
-                },
-                Handler(Looper.getMainLooper())
-            )
-        }
-    }
-
-    /** 읽은 사각형을 잉크 색 기준으로 분석(픽셀 수가 많아 기본 디스패처에서) */
-    suspend fun analyze(window: Window, bounds: Rect): InkStats? {
-        val captured = read(window, bounds) ?: return null
-        return withContext(Dispatchers.Default) {
-            InkAnalysis.analyze(captured.pixels, captured.width, captured.height, InkColor.toArgb())
-        }
-    }
-}
+// 화면 픽셀 읽기(WindowCapture · MeasuredBounds)는 같은 패키지 WindowPixelCapture.kt — drawMesh 리본 예제와 함께 쓴다
 
 /** 측정 결과를 logcat 에도 남긴다(adb 로 대조할 때 — 화면 글자 긁기보다 정확하다) */
 private object GooeyProbe {

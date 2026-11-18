@@ -85,6 +85,9 @@ android {
 //   약 30초가 걸려 41단계 측정이 끝나지 않았다. 분석 객체만 뺀다(그리기 · 프레임 루프는 그대로 재작성 대상).
 // SoftwareBlur: 다이얼로그 배경 블러 예제의 하위 폴백(캡처 → 축소 → 박스 블러 2패스)이 재는 비용이 debug 에서 약 250배
 //   (API 30 에뮬, 축소 1: release 16~36ms vs debug 약 9초) — 픽셀 계산 object 만 뺀다.
+// RibbonMath · MeshRibbonDrawingKt: drawMesh 리본 예제의 비교 카드가 프레임마다 CPU 로 계산 · 기록하는 drawLine 반복(가운데 선 81점 ·
+//   조각 굵기 80)이 debug 에서 16~19ms/프레임(release 35~56µs, Pixel Tablet API 35 에뮬) — 화면이 27fps 로 떨어지고 카드의 CPU 시간이
+//   틀린다. 계산 object 와 그리기 헬퍼 파일만 뺀다(debug 단위 테스트 한 프레임 분량 2,080µs vs 재작성 끔 57µs).
 hotSwanCompiler {
     exclude("com.example.composesample.presentation.example.component.architecture.development.test.PowerAssertChecksKt")
     exclude("com.example.composesample.presentation.example.component.architecture.development.test.PowerAssertViewModel")
@@ -101,6 +104,8 @@ hotSwanCompiler {
     exclude("com.example.composesample.presentation.example.component.ui.graphics.PixelBuffers")
     exclude("com.example.composesample.presentation.example.component.ui.graphics.InkAnalysis")
     exclude("com.example.composesample.presentation.example.component.ui.graphics.SoftwareBlur")
+    exclude("com.example.composesample.presentation.example.component.ui.graphics.RibbonMath")
+    exclude("com.example.composesample.presentation.example.component.ui.graphics.MeshRibbonDrawingKt")
     exclude("com.example.composesample.presentation.example.component.data.download.RangeDownloadKt")
     exclude("com.example.composesample.presentation.example.component.data.download.FakeFileServer")
     exclude("com.example.composesample.presentation.example.component.data.download.RangeDownloader")
