@@ -50,7 +50,7 @@ import kotlinx.coroutines.withContext
 /**
  * 응답 필드 누락과 Gson — 같은 JSON 을 모양이 다른 데이터 클래스로 파싱해, Gson 이 Kotlin 기본값과 non-null 선언을
  * 건너뛰는 지점과 그 값이 나중에 어디서 터지는지를 보여준다.
- * 6~8번 카드는 같은 응답을 kotlinx.serialization(1.12.0) Json 으로 파싱해 '파싱하는 줄에서 실패하는' 쪽과 대조한다.
+ * 6~8번 카드는 같은 응답을 kotlinx.serialization(1.13.0) Json 으로 파싱해 '파싱하는 줄에서 실패하는' 쪽과 대조한다.
  * - 파싱·판정 로직은 GsonMissingField.kt(단위 테스트 GsonMissingFieldTest 와 같은 함수)
  * - kotlinx 쪽 로직은 JsonMissingField.kt(단위 테스트 JsonMissingFieldTest)
  * - 참고 자료(URL/핵심 개념)는 exampleGuide.kt 의 "GsonMissingField" 섹션 참고.
@@ -550,7 +550,7 @@ private fun OutcomeBlock(label: String, outcome: DecodeOutcome, isGson: Boolean)
 }
 
 // ──────────────────────────────────────────────────────────────────────────
-// 7. 무엇으로 잡나 — 1.12 의 실패 모양
+// 7. 무엇으로 잡나 — 1.13 의 실패 모양
 // ──────────────────────────────────────────────────────────────────────────
 
 @Composable
@@ -562,8 +562,8 @@ private fun FailureShapeCard() {
     val accent = Color(0xFF5E35B1)
 
     ExampleCard(
-        title = "7. 무엇으로 잡나 — 1.12 의 실패 모양",
-        description = "다섯 가지 실패를 일으켜 예외 타입·원인과, catch 절 셋(SerializationException · JsonException · Exception) 중 어디에 잡히는지 본다. 1.11.0 줄은 같은 코드를 JVM 에서 잰 값이다.",
+        title = "7. 무엇으로 잡나 — 1.13 의 실패 모양",
+        description = "다섯 가지 실패를 일으켜 예외 타입·원인과, catch 절 셋(SerializationException · JsonException · Exception) 중 어디에 잡히는지 본다. 회색 줄은 같은 코드를 1.11.0 · 1.12.0 에서 잰 값이다.",
         accent = accent
     ) {
         Button(
@@ -597,7 +597,7 @@ private fun FailureShapeCard() {
                     fontSize = 11.sp,
                     color = if (row.byException) ValueColor else BrokenColor
                 )
-                Text(text = "1.11.0: ${row.before111}", fontSize = 10.sp, color = Color(0xFF757575))
+                Text(text = "이전: ${row.history}", fontSize = 10.sp, color = Color(0xFF757575))
             }
         }
         depth?.let { limit ->
@@ -613,8 +613,8 @@ private fun FailureShapeCard() {
         Spacer(modifier = Modifier.height(8.dp))
         Text(
             text = "MissingFieldException 은 JsonException 이 아니라서 catch (e: JsonException) 를 빠져나간다 — 파싱 실패는 SerializationException 으로 잡는다. " +
-                "1.11 에서는 init 검증 실패가 IllegalArgumentException 그대로 나와 그 catch 도 빠져나갔고, 깊은 중첩은 StackOverflowError(Error)였다. " +
-                "1.12 의 한도 400 은 '스택이 넘치기 전에 멈춘다'는 가정이다 — Galaxy A72 실측(Dispatchers.Default, 1MB 스택): release 는 400 겹까지 읽고 401 겹에서 too nested(JIT·AOT 같음), " +
+                "init 검증 실패는 IllegalArgumentException 그대로 나와 그 catch 도 빠져나간다 — 1.12.0 은 역직렬화 중 예외를 JsonDecodingException 으로 감쌌지만 " +
+                "영향이 커서 1.13.0 에서 되돌렸다(1.11 과 같아짐). 검증을 init 에 두면 경계에서 IllegalArgumentException 도 잡는다. 깊은 중첩 한도 400(1.12 부터 — 1.11 은 StackOverflowError)은 '스택이 넘치기 전에 멈춘다'는 가정이다 — Galaxy A72 실측(Dispatchers.Default, 1MB 스택): release 는 400 겹까지 읽고 401 겹에서 too nested(JIT·AOT 같음), " +
                 "debug(디버깅 가능 빌드 — HotSwan 재작성을 꺼도 같음)는 230~240 겹에서 StackOverflowError 가 먼저 난다. 한도를 풀면 release 도 StackOverflowError — 예제만 Throwable 로 잡아 보인다.",
             fontSize = 11.sp,
             color = Color(0xFF757575)
@@ -705,7 +705,7 @@ private fun GuideCard() {
                 "비정상 응답(누락·null·이름 변경·낯선 값)을 단위 테스트에 넣는다 — GsonMissingFieldTest · JsonMissingFieldTest",
                 "kotlinx.serialization 은 생성자를 거친다 — 누락 키는 기본값, 기본값 없는 키 누락·non-null 의 null·모르는 키·타입 불일치는 파싱하는 줄에서 경로와 함께 실패",
                 "coerceInputValues 는 '기본값이 있는' 프로퍼티의 null·모르는 enum 만 바꾼다 — 필수값 누락과 \"Y\" 같은 타입 불일치는 그대로 실패",
-                "1.12: init 검증 실패·400 겹 넘는 중첩도 JsonDecodingException(기기 debug 빌드의 백그라운드 스레드는 그 전에 StackOverflowError). 단 MissingFieldException 은 JsonException 이 아니다 → catch 는 SerializationException 으로",
+                "400 겹 넘는 중첩은 JsonDecodingException(기기 debug 빌드의 백그라운드 스레드는 그 전에 StackOverflowError), init 검증 실패는 IllegalArgumentException 그대로(1.12.0 만 감쌌고 1.13.0 에서 되돌림). MissingFieldException 은 JsonException 이 아니다 → catch 는 SerializationException(+ init 검증이면 IllegalArgumentException)으로",
                 "value class 의 private 생성자는 팩토리를 못 지킨다(init 검증은 지킨다). value class 에 붙인 serializer 는 data class 필드에도 걸린다",
                 "예외 메시지에는 입력 JSON 전체가 들어간다(다른 필드의 실패라도) — 로그엔 shortMessage + path, 또는 exceptionsWithDebugInfo = false"
             ).forEach {

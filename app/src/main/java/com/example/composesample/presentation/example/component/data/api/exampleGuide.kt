@@ -68,14 +68,17 @@ package com.example.composesample.presentation.example.component.data.api
  * ## GsonMissingFieldExampleUI 6~8번 카드 (같은 응답을 kotlinx.serialization 으로 — #150)
  * - kotlinx.serialization 1.12.0 릴리스 노트(#3235 역직렬화 예외 감싸기 · #3246 중첩 깊이 제한):
  *   https://github.com/Kotlin/kotlinx.serialization/releases/tag/v1.12.0
+ * - 1.13.0 릴리스 노트(#3235 감싸기 되돌림 · JsonElement.toString 성능): https://github.com/Kotlin/kotlinx.serialization/releases/tag/v1.13.0
  * - Json 설정(ignoreUnknownKeys · coerceInputValues 등): https://kotlinlang.org/docs/serialization-json-configuration.html
  * - value class 직렬화: https://github.com/Kotlin/kotlinx.serialization/blob/master/docs/value-classes.md
- * 핵심 개념(1.12.0 sources jar · 단위 테스트 JsonMissingFieldTest · 실기기 SM-A725F debug·release 실측):
+ * 핵심 개념(1.12.0 sources jar · 단위 테스트 JsonMissingFieldTest · 실기기 SM-A725F debug·release 실측, 2026-11-18 1.13.0 으로 상향 — 아래 init 줄):
  * - 플러그인이 만든 serializer 는 생성자를 부른다 → 누락 키는 Kotlin 기본값, 기본값 없는 키 누락은 MissingFieldException("… at path: $"),
  *   non-null 의 null · 모르는 키 · "Y" 같은 타입 불일치는 JsonDecodingException(path 포함) — 전부 파싱하는 줄에서
  * - coerceInputValues 는 '기본값이 있는' 프로퍼티의 null · 모르는 enum 값만 기본값으로 바꾼다. ignoreUnknownKeys 는 이름이 바뀐 키를 조용히 버린다
  *   (그 뒤 필수값 누락으로 실패). DataRules 결론(응답 모델 nullable + 매퍼)은 Json 에서도 그대로 — Json 은 실패를 앞당긴다
- * - 1.12: 생성자 안의 예외(init 의 require)를 JsonDecodingException 으로 감싼다(cause 원래 예외, 1.11 은 IllegalArgumentException 그대로).
+ * - 생성자 안의 예외(init 의 require)는 IllegalArgumentException 그대로 나온다(1.11 · 1.13). 1.12.0 만 JsonDecodingException 으로 감쌌고
+ *   (cause 원래 예외) 1.13.0 이 되돌렸다 — 같은 JVM 프로브로 1.12.0 → 1.13.0 대조, 바뀐 것은 이 줄과 8번 카드 CheckedPanCard 뿐(그대로 두면
+ *   SerializationException 만 잡던 8번 카드가 IllegalArgumentException 으로 화면을 죽였다 → 그 예외도 결과로 보이게 고침).
  *   JsonException · JsonDecodingException(shortMessage · path · offset · input · hint) 은 공개지만 @ExperimentalSerializationApi.
  *   MissingFieldException 은 JsonException 이 아니다 → catch (e: JsonException) 는 필수 필드 누락을 놓친다. 파싱 실패는 SerializationException 으로
  * - maxNestingDepth 기본 400(JsonPath.pushDescriptor 에서 검사). release·JVM 은 401 겹에서 too nested,

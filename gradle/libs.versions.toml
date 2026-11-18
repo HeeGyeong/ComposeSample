@@ -144,7 +144,9 @@ kotlinxIoCore = "0.9.3"
 # 이제는 선언이 전이(savedstate·lifecycle·navigation·Ktor 1.11.0, security-state 의 json 1.7.3)보다 앞선다 — bom 1.12.0 이 json 까지 정렬.
 # 변경: 역직렬화 중 예외(init 의 require 등)를 JsonDecodingException 으로 감쌈(메시지에 입력 JSON 포함)·JSON 중첩 깊이 제한·
 # Json/Core API 안정화·ChunkedDecoder deprecated(프로젝트 미사용). stdlib 요구 2.4.10(프로젝트 2.4.21). JVM 아티팩트라 aar-metadata 없음.
-kotlinxSerialization = "1.12.0"
+# 1.13.0(2026-11-18 상향, 마이너 — DEP-CURRENCY-27 사용자 승인): 1.12.0 의 역직렬화 예외 감싸기(#3235)를 되돌림 — init 검증 실패가 다시
+# IllegalArgumentException 그대로(#150 7 · 8번 카드 갱신). JsonElement.toString 성능 개선. 해석 diff 는 serialization core · json · bom 뿐.
+kotlinxSerialization = "1.13.0"
 
 # Test
 junit = "4.13.2"

@@ -68,13 +68,13 @@ the `lint-vital` check inside `assembleRelease` only looks at fatal issues, and 
 > The two "Open 🟢" rows were cleared the next day by RES-UNUSED-01 (`365002dc`, 17 unused resources) and LINT-COSMETIC-01
 > (`89f30399`, 80 cosmetic issues), and LINT-AUTOBOXING-01 (`a990a367`) followed on 2026-09-18.
 
-**Current baseline (2026-11-13): 0 errors / 28 warnings + 1 hint.** Version notices come from lint's network lookups, so
+**Current baseline (2026-11-18): 0 errors / 26 warnings + 1 hint.** Version notices come from lint's network lookups, so
 they appear and disappear without code changes; compare the issue list, not only the count.
 
 | Issue | Count | Verdict |
 |-------|-------|---------|
 | `ObsoleteSdkInt` | 23 | **Do not "fix"** — same reason as above (debug minSdk 26 from HotSwan, release minSdk 24) |
-| `NewerVersionAvailable` | 3 | kotlinx-serialization 1.13.0 (core + json, DEP-CURRENCY-27 — minor upgrade awaiting approval) · HotSwan compiler 2.2.0 (won't-do: the Gradle plugin must match the IDE plugin, see ComposeHotReloadGuide) |
+| `NewerVersionAvailable` | 1 | HotSwan compiler 2.2.0 (won't-do: the Gradle plugin must match the IDE plugin, see ComposeHotReloadGuide). kotlinx-serialization 1.13.0 (2 notices) went away with DEP-CURRENCY-27 on 2026-11-18 |
 | `AndroidGradlePluginVersion` | 1 | Gradle 9.9.1 (DEP-CURRENCY-28 — minor upgrade awaiting approval) |
 | `OldTargetApi` | 1 | targetSdk 35 is the value `CLAUDE.md` fixes for this project |
 | `ReportShortcutUsage` (hint) | 1 | The shortcut example adds dynamic shortcuts but does not report their use; ranking hints are not part of that example |

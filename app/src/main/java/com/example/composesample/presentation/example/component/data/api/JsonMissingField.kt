@@ -98,7 +98,7 @@ fun gsonOutcome(input: String): DecodeOutcome = try {
 // 7번 카드 — 실패의 모양: 어떤 예외가 나고, 무엇으로 잡히나
 // ──────────────────────────────────────────────────────────────────────────
 
-/** init 검증 — 1.12 는 생성자 안에서 난 예외를 JsonDecodingException 으로 감싼다(1.11 은 IllegalArgumentException 그대로) */
+/** init 검증 — 생성자 안에서 난 예외는 IllegalArgumentException 그대로 나온다(1.11 · 1.13). 1.12.0 만 JsonDecodingException 으로 감쌌고 1.13.0 에서 되돌렸다 */
 @Serializable
 data class JsonAgedMember(val name: String, val age: Int) {
     init {
@@ -121,7 +121,7 @@ const val DEEP_DEPTH = 20_000
 
 /**
  * 표의 한 줄. caughtBy 는 이 실패를 잡는 catch 절 — SerializationException · JsonException · Exception 순.
- * before111 은 2026-10-20 JVM 단독 실측(json 1.11.0, 같은 바이트코드)의 결과다.
+ * history 는 이전 버전 실측 — 1.11.0 은 2026-10-20 JVM 단독(같은 바이트코드), 1.12.0 은 2026-10-26 ~ 11-18 이 앱(JsonMissingFieldTest).
  */
 data class FailureRow(
     val label: String,
@@ -130,26 +130,29 @@ data class FailureRow(
     val bySerialization: Boolean,
     val byJson: Boolean,
     val byException: Boolean,
-    val before111: String
+    val history: String
 )
 
-private class FailureCase(val label: String, val before111: String, val block: () -> Any)
+private class FailureCase(val label: String, val history: String, val block: () -> Any)
 
 @OptIn(ExperimentalSerializationApi::class)
 fun failureRows(depth: Int = DEEP_DEPTH): List<FailureRow> = listOf(
-    FailureCase("필수 필드 누락('키 누락' 응답)", "MissingFieldException — 같음") {
+    FailureCase("필수 필드 누락('키 누락' 응답)", "1.11 · 1.12 MissingFieldException — 같음") {
         strictJson.decodeFromString(JsonMember.serializer(), MemberPayload.MISSING.json)
     },
-    FailureCase("타입 불일치('낯선 값' 응답)", "JsonDecodingException — 같음") {
+    FailureCase("타입 불일치('낯선 값' 응답)", "1.11 · 1.12 JsonDecodingException — 같음") {
         strictJson.decodeFromString(JsonMember.serializer(), MemberPayload.NEW_VALUES.json)
     },
-    FailureCase("init { require(age >= 0) } 실패", "IllegalArgumentException 그대로 — catch(SerializationException) 를 빠져나간다") {
+    FailureCase(
+        "init { require(age >= 0) } 실패",
+        "1.11 같음 · 1.12.0 은 JsonDecodingException(cause IllegalArgumentException)으로 감쌌다 — 1.13.0 에서 되돌림"
+    ) {
         strictJson.decodeFromString(JsonAgedMember.serializer(), """{"name":"kim","age":-1}""")
     },
-    FailureCase("${"%,d".format(Locale.ROOT, depth)} 겹 중첩(기본 한도)", "StackOverflowError — Error 라 catch(Exception) 도 못 잡는다") {
+    FailureCase("${"%,d".format(Locale.ROOT, depth)} 겹 중첩(기본 한도)", "1.11 StackOverflowError(한도는 1.12 부터) — Error 라 catch(Exception) 도 못 잡는다") {
         strictJson.decodeFromString(JsonNode.serializer(), nestedNodeJson(depth))
     },
-    FailureCase("같은 입력, maxNestingDepth 해제", "(1.11 의 기본 동작과 같다)") {
+    FailureCase("같은 입력, maxNestingDepth 해제", "1.11 의 기본 동작과 같다") {
         unlimitedJson.decodeFromString(JsonNode.serializer(), nestedNodeJson(depth))
     }
 ).map { case ->
@@ -172,7 +175,7 @@ fun failureRows(depth: Int = DEEP_DEPTH): List<FailureRow> = listOf(
         bySerialization = thrown is SerializationException,
         byJson = thrown is JsonException,
         byException = thrown is Exception,
-        before111 = case.before111
+        history = case.history
     )
 }
 
@@ -268,6 +271,9 @@ private fun attempt(block: () -> Any?): Pair<String, Throwable?> = try {
     block().toString() to null
 } catch (e: SerializationException) {
     "${e::class.java.simpleName}: ${e.shortText()}" to e
+} catch (e: IllegalArgumentException) {
+    // init 검증 실패는 감싸지 않은 채 나온다(1.13 — 1.12.0 만 JsonDecodingException 이었다) → SerializationException 만 잡는 경계를 빠져나간다
+    "IllegalArgumentException: ${e.message} — catch (SerializationException) 를 빠져나간다" to e
 }
 
 fun valueClassRows(): List<PanRow> {

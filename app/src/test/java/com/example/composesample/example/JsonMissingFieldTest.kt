@@ -17,7 +17,7 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 /**
- * GsonMissingFieldExample 6~8번 카드(kotlinx.serialization 1.12.0) 검증 — 같은 응답을 플러그인 serializer + Json 으로 파싱한다.
+ * GsonMissingFieldExample 6~8번 카드(kotlinx.serialization 1.13.0) 검증 — 같은 응답을 플러그인 serializer + Json 으로 파싱한다.
  * given : #141 의 다섯 응답 + '필수만' · 'null·새 플랜'
  * when : 기본 Json · 관대한 Json(ignoreUnknownKeys + coerceInputValues) · Gson ① 로 파싱한다
  * then : kotlinx 는 기본값을 넣거나 파싱하는 줄에서 경로와 함께 실패하고, Gson 은 성공한 채 계약을 어긴다
@@ -76,7 +76,7 @@ class JsonMissingFieldTest {
     }
 
     @Test
-    fun `1_12 는 init 검증과 깊은 중첩을 JsonDecodingException 으로 바꾸지만 필수 필드 누락은 JsonException 이 아니다`() {
+    fun `깊은 중첩은 JsonDecodingException 이지만 init 검증 실패는 IllegalArgumentException 그대로이고 필수 필드 누락은 JsonException 이 아니다`() {
         // Given / When
         val rows = failureRows().associateBy { it.label.substringBefore('(').trim() }
         val missing = rows.getValue("필수 필드 누락")
@@ -87,8 +87,11 @@ class JsonMissingFieldTest {
         // Then
         assertTrue(missing.bySerialization)
         assertFalse("catch (e: JsonException) 는 MissingFieldException 을 놓친다", missing.byJson)
-        assertTrue(init.thrown, init.thrown.startsWith("JsonDecodingException: Deserialization failed because of 'age < 0'"))
-        assertEquals("IllegalArgumentException: age < 0", init.cause)
+        // 1.13.0 이 1.12.0 의 감싸기(#3235)를 되돌렸다 — catch (SerializationException) 를 빠져나간다
+        assertEquals("IllegalArgumentException", init.thrown)
+        assertEquals(null, init.cause)
+        assertFalse(init.bySerialization)
+        assertTrue(init.byException)
         assertTrue(deep.thrown, deep.thrown.contains("too nested"))
         assertTrue(deep.byJson)
         // 한도를 풀면 1.11 처럼 Error — catch (e: Exception) 로도 못 잡는다
@@ -116,7 +119,8 @@ class JsonMissingFieldTest {
         // Then: 팩토리는 거부, Json 은 같은 값으로 객체를 만든다
         assertEquals("null", rows[0].result)
         assertEquals("FactoryPanCard(pan=FactoryPan(digits=41111111111111ab))", rows[1].result)
-        assertTrue(rows[2].result, rows[2].result.contains("'PAN 형식 아님'") && rows[2].result.contains("(path $.pan)"))
+        // init 검증은 실행되고, 실패는 IllegalArgumentException 그대로(1.12.0 은 JsonDecodingException · path $.pan 이었다)
+        assertTrue(rows[2].result, rows[2].result.startsWith("IllegalArgumentException: PAN 형식 아님"))
         assertEquals("""{"pan":"PAN[****1111]","amount_minor":1200}""", rows[3].result)
         assertTrue(rows[4].result, rows[4].result.startsWith("SerializationException"))
     }
