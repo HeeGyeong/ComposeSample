@@ -14,7 +14,10 @@ package com.example.composesample.presentation.example.component.ui.shader
  * ## 핵심 API (모두 API 33+ / Android 13 TIRAMISU)
  * - `android.graphics.RuntimeShader(source)` — AGSL 소스를 컴파일. 잘못된 소스는 생성자에서 예외
  * - `RuntimeShader.setFloatUniform(name, ...)` — uniform float/float2 값 주입.
- *   소스에 없는 uniform 이름을 set 하면 IllegalArgumentException
+ *   소스에 없는 uniform 이름을 set 하면 IllegalArgumentException — 이라고 문서에 있지만, 플랫폼이 그 메시지를 만들다 깨진 문자열을
+ *   JNI(NewStringUTF)에 넘겨 **디버깅 가능 앱은 CheckJNI 네이티브 abort**(catch 불가). release 는 이름이 깨진 IAE.
+ *   `createRuntimeShaderEffect(shader, 없는 이름)`도 같다. 타입만 다르면(float2 에 값 하나) abort 없이 IAE, 선언만 하고 안 쓴 uniform 은
+ *   예외 없음, 주석 안 선언은 없는 이름(Pixel Tablet API 35 에뮬 debug 계측 프로브, 2026-11-18)
  * - `RenderEffect.createRuntimeShaderEffect(shader, "contents")` — 셰이더를 RenderEffect 로 래핑.
  *   두 번째 인자는 하위 콘텐츠를 받을 `uniform shader` 의 이름
  * - `android.graphics.RenderEffect.asComposeRenderEffect()` — Compose 의 renderEffect 로 변환
@@ -25,8 +28,10 @@ package com.example.composesample.presentation.example.component.ui.shader
  * - uniform 실시간 반영: `graphicsLayer { }` 람다에서 상태(time/슬라이더)를 읽고 매 프레임 set →
  *   상태 변화 시 draw 람다가 다시 실행됨. size(graphicsLayer scope) 로 resolution 전달
  * - 애니메이션 시간: `withFrameNanos` 누적 dt(초) × speed 배속
- * - 방어 코드: uniform 이름 불일치로 setFloatUniform 이 던질 수 있으므로 graphicsLayer 내부를
- *   runCatching 으로 감싸고 실패 시 renderEffect = null (원본 콘텐츠 표시)
+ * - 방어 코드: 편집한 소스의 선언을 읽어(AgslSourceNames.kt — 주석 제외) 이 화면이 넘기는 이름(resolution · time · noiseScale ·
+ *   colorShift · contents)이 하나라도 없으면 셰이더를 넘기지 않고 경고를 띄운다. 타입 불일치는 graphicsLayer 안 runCatching 이
+ *   받아 renderEffect = null (원본 콘텐츠 표시). 2026-11-18 전에는 runCatching 만 있어, 이름을 일관되게 바꾸면(noiseScale → scale,
+ *   컴파일 성공) debug 앱이 `RuntimeShader.nativeUpdateUniforms` 에서 abort 로 죽었다(AGSL-NAME-ABORT-01)
  *
  * ## 제약 / 분기
  * - minSdk 24 환경이므로 `Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU` 분기 후

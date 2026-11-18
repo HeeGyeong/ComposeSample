@@ -83,6 +83,9 @@ fun AgslShaderTuningExampleUI(onBackEvent: () -> Unit) {
     }
 }
 
+/** 이 화면이 셰이더에 넘기는 이름 — 편집한 소스에 하나라도 없으면 넘기지 않는다 */
+private val RequiredShaderNames = listOf("resolution", "time", "noiseScale", "colorShift", "contents")
+
 /** 기본 셰이더 소스 — uniform 4종(resolution/time/noiseScale/colorShift) + 하위 콘텐츠 샘플링 */
 private const val DEFAULT_SHADER = """uniform float2 resolution;
 uniform float time;
@@ -139,6 +142,11 @@ private fun AgslSupportedContent() {
     }
     val shader = compileResult.getOrNull()
     val compileError = compileResult.exceptionOrNull()?.message
+    // 편집한 소스에 없는 이름은 set 하지 않는다 — 없는 이름을 넘기면 debug 빌드는 catch 로 못 막는 네이티브 abort(AgslSourceNames.kt)
+    val missingNames = remember(shaderSource) {
+        val declared = declaredAgslUniforms(shaderSource)
+        RequiredShaderNames.filterNot { it in declared }
+    }
 
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
@@ -150,7 +158,8 @@ private fun AgslSupportedContent() {
         // 셰이더 미리보기 — graphicsLayer renderEffect 에 RuntimeShader 연결
         item {
             ShaderPreview(
-                shader = shader,
+                // 편집한 소스에 없는 이름이 있으면 셰이더를 넘기지 않는다(효과 없이 원본) — 아래 경고 문구
+                shader = shader.takeIf { missingNames.isEmpty() },
                 time = time,
                 noiseScale = noiseScale,
                 colorShift = colorShift
@@ -215,6 +224,14 @@ private fun AgslSupportedContent() {
                         fontSize = 12.sp,
                         color = Color(0xFFD32F2F)
                     )
+                } else if (missingNames.isNotEmpty()) {
+                    Text(
+                        text = "⚠️ 컴파일은 됐지만 소스에 없는 이름: ${missingNames.joinToString()} — 효과를 끄고 원본을 보여 준다. " +
+                            "없는 이름을 setFloatUniform 에 넘기면 플랫폼이 깨진 예외 메시지를 만들어, 디버깅 가능 빌드는 catch 로 못 막는 " +
+                            "네이티브 abort 로 앱이 죽는다(release 는 이름이 깨진 IllegalArgumentException).",
+                        fontSize = 12.sp,
+                        color = Color(0xFFEF6C00)
+                    )
                 } else {
                     Text(
                         text = "✅ 컴파일 성공 — 미리보기에 즉시 반영됨",
@@ -257,7 +274,7 @@ private fun ShaderPreview(
                 )
                 .graphicsLayer {
                     val rs = shader ?: return@graphicsLayer
-                    // uniform 설정 — 소스에 없는 uniform 을 set 하면 예외가 나므로 runCatching 으로 방어
+                    // uniform 설정 — 이름은 위에서 확인했고, 타입이 다르면(float2 에 값 하나 등) IllegalArgumentException 이라 runCatching 으로 방어
                     runCatching {
                         rs.setFloatUniform("resolution", size.width, size.height)
                         rs.setFloatUniform("time", time)
