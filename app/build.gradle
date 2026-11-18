@@ -88,6 +88,9 @@ android {
 // RibbonMath · MeshRibbonDrawingKt: drawMesh 리본 예제의 비교 카드가 프레임마다 CPU 로 계산 · 기록하는 drawLine 반복(가운데 선 81점 ·
 //   조각 굵기 80)이 debug 에서 16~19ms/프레임(release 35~56µs, Pixel Tablet API 35 에뮬) — 화면이 27fps 로 떨어지고 카드의 CPU 시간이
 //   틀린다. 계산 object 와 그리기 헬퍼 파일만 뺀다(debug 단위 테스트 한 프레임 분량 2,080µs vs 재작성 끔 57µs).
+// RecordScopeDrawingKt: Waveform 4번 카드(다시 기록하는 범위)의 이웃 타일 루프(400개). 같은 레이어에서 매 프레임 다시 기록될 때
+//   debug 그리기 중앙값 9.33ms/프레임 vs 이 파일만 빼면 0.54ms(release 0.38ms, Pixel 4 API 30 에뮬) — 카드가 재는 '다시 기록 비용'이
+//   HotSwan 비용으로 바뀐다. 타일 그리기 함수 파일만 뺀다(카운터를 올리는 드로우 람다는 화면 파일에 그대로).
 hotSwanCompiler {
     exclude("com.example.composesample.presentation.example.component.architecture.development.test.PowerAssertChecksKt")
     exclude("com.example.composesample.presentation.example.component.architecture.development.test.PowerAssertViewModel")
@@ -106,6 +109,7 @@ hotSwanCompiler {
     exclude("com.example.composesample.presentation.example.component.ui.graphics.SoftwareBlur")
     exclude("com.example.composesample.presentation.example.component.ui.graphics.RibbonMath")
     exclude("com.example.composesample.presentation.example.component.ui.graphics.MeshRibbonDrawingKt")
+    exclude("com.example.composesample.presentation.example.component.ui.canvas.RecordScopeDrawingKt")
     exclude("com.example.composesample.presentation.example.component.data.download.RangeDownloadKt")
     exclude("com.example.composesample.presentation.example.component.data.download.FakeFileServer")
     exclude("com.example.composesample.presentation.example.component.data.download.RangeDownloader")

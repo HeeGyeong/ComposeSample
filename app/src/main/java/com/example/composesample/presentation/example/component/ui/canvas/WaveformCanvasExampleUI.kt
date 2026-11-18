@@ -1,5 +1,9 @@
 package com.example.composesample.presentation.example.component.ui.canvas
 
+import android.app.Activity
+import android.content.Context
+import android.content.ContextWrapper
+import android.util.Log
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -7,6 +11,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -14,26 +19,32 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.IntState
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.withFrameNanos
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
@@ -42,12 +53,18 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.input.pointer.PointerEventPass
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.composesample.presentation.MainHeader
+import java.util.Locale
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlin.math.PI
 import kotlin.math.exp
 import kotlin.math.roundToInt
@@ -209,6 +226,8 @@ private class WaveformController {
 @Composable
 fun WaveformCanvasExampleUI(onBackEvent: () -> Unit) {
     val controller = remember { WaveformController() }
+    // 4번 카드의 측정 결과도 화면 최상위에 — 카드가 스크롤로 폐기돼도(LazyColumn 아이템) 표가 남는다
+    val recordScopeResults = remember { mutableStateOf<Map<NeighborLoad, List<RecordWindowResult>>>(emptyMap()) }
 
     // 신호 생성 루프는 리스트 아이템이 아니라 화면 최상위에 둔다(스크롤로 카드가 폐기돼도 파형 유지)
     LaunchedEffect(Unit) {
@@ -234,6 +253,7 @@ fun WaveformCanvasExampleUI(onBackEvent: () -> Unit) {
             item { WaveformRendererCard(controller) }
             item { WaveformRingBufferCard() }
             item { WaveformDrawPhaseCard() }
+            item { WaveformRecordScopeCard(recordScopeResults) }
             item { WaveformSignalModelCard() }
             item { WaveformSummaryCard() }
         }
@@ -610,13 +630,252 @@ private fun WaveformPhaseSurface(
     }
 }
 
-// ==================== 5. 신호 합성 ====================
+// ==================== 5. 다시 기록하는 범위 ====================
+
+/**
+ * 드로우 단계에서만 읽어도 '무엇이 다시 기록되느냐'는 레이어가 정한다(#182).
+ * 글로우의 그리기 무효화는 가장 가까운 레이어까지 올라가 그 안의 레이어 없는 노드를 모두 다시 기록한다 —
+ * 같은 내용을 그리는 이웃 둘(레이어 없음 · 자기 레이어)의 그리기 횟수와 프레임마다의 DRAW_DURATION 을 변형 넷에서 잰다.
+ * 횟수 · 판정 · 측정기는 RecordScopeLab.kt, 이웃 타일 루프는 RecordScopeDrawing.kt(HotSwan 제외).
+ */
+@Composable
+private fun WaveformRecordScopeCard(resultsState: MutableState<Map<NeighborLoad, List<RecordWindowResult>>>) {
+    val view = LocalView.current
+    val window = remember(view) { view.context.findActivity()?.window }
+    val meter = remember(window) { window?.let { RecordScopeMeter(it) } }
+    DisposableEffect(meter) {
+        onDispose { meter?.close() }
+    }
+    val counters = remember { RecordScopeCounters() }
+    val tick = remember { mutableIntStateOf(0) }
+    var glowLayer by remember { mutableStateOf(GlowLayer.NONE) }
+    var load by remember { mutableStateOf(NeighborLoad.LIGHT) }
+    var measuring by remember { mutableStateOf(false) }
+    var progress by remember { mutableStateOf("") }
+    var results by resultsState
+    val scope = rememberCoroutineScope()
+
+    // 글로우를 움직이는 프레임 카운터 — 드로우 람다 안에서만 읽는다(3번 카드의 ✅ 방식)
+    LaunchedEffect(Unit) {
+        while (true) {
+            withFrameNanos { tick.intValue++ }
+        }
+    }
+
+    WaveformCard {
+        Column(
+            modifier = Modifier.pointerInput(Unit) {
+                // 재는 동안 카드를 건드리면(탭 · 스크롤) 그 자체가 카드를 다시 기록시킨다 → 그 창은 판정하지 않는다
+                awaitPointerEventScope {
+                    while (true) {
+                        awaitPointerEvent(PointerEventPass.Initial)
+                        counters.touched = true
+                    }
+                }
+            }
+        ) {
+            Text(
+                text = "4. 다시 기록하는 범위 — graphicsLayer() 가 경계",
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color(0xFF388E3C)
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = "드로우 람다에서만 읽어도 끝이 아닙니다. 그리기 무효화는 노드 트리를 거슬러 올라가 가장 가까운 레이어(RenderNode)를 " +
+                    "다시 기록하고, 그 레이어에 함께 담긴 '레이어 없는' 이웃의 그리기까지 다시 돕니다. 왼쪽 글로우는 매 프레임 움직이고, " +
+                    "가운데 · 오른쪽 이웃은 같은 타일을 그리되 오른쪽만 자기 graphicsLayer() 가 있습니다.",
+                fontSize = 12.sp,
+                color = Color(0xFF424242),
+                lineHeight = 18.sp
+            )
+            Spacer(modifier = Modifier.height(12.dp))
+
+            RecordScopeStage(glowLayer = glowLayer, load = load, tick = tick, counters = counters)
+
+            Spacer(modifier = Modifier.height(10.dp))
+            Text(text = "글로우의 레이어", fontSize = 11.sp, color = Color(0xFF757575))
+            Spacer(modifier = Modifier.height(4.dp))
+            FlowRow(
+                horizontalArrangement = Arrangement.spacedBy(6.dp),
+                verticalArrangement = Arrangement.spacedBy(6.dp)
+            ) {
+                GlowLayer.entries.forEach { option ->
+                    WaveformChip(label = option.label, selected = glowLayer == option, onClick = { if (!measuring) glowLayer = option })
+                }
+            }
+            Spacer(modifier = Modifier.height(6.dp))
+            Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                NeighborLoad.entries.forEach { option ->
+                    WaveformChip(label = option.label, selected = load == option, onClick = { if (!measuring) load = option })
+                }
+            }
+            Spacer(modifier = Modifier.height(8.dp))
+            WaveformCodeBlock(code = "Box(Modifier${glowLayer.code})")
+
+            Spacer(modifier = Modifier.height(10.dp))
+            WaveformChip(
+                label = when {
+                    meter == null -> "창을 찾지 못해 잴 수 없음"
+                    measuring -> progress
+                    else -> "${load.label} — 네 가지 차례로 재기(약 12초)"
+                },
+                selected = measuring,
+                onClick = {
+                    val activeMeter = meter ?: return@WaveformChip
+                    if (measuring) return@WaveformChip
+                    measuring = true
+                    val chosen = glowLayer
+                    val measuredLoad = load
+                    scope.launch {
+                        try {
+                            val rows = mutableListOf<RecordWindowResult>()
+                            GlowLayer.entries.forEachIndexed { index, option ->
+                                glowLayer = option
+                                progress = "재는 중 ${index + 1}/${GlowLayer.entries.size} — ${option.label} (화면을 건드리지 마세요)"
+                                val result = activeMeter.measure(option, measuredLoad, counters)
+                                Log.i(RECORD_SCOPE_TAG, result.probeLine())
+                                rows += result
+                            }
+                            // 결과는 네 창이 모두 끝난 뒤 한 번에 — 창 사이에 표가 자라면 뒤 변형일수록 다시 기록할 내용이 많아진다
+                            results = results + (measuredLoad to rows.toList())
+                        } finally {
+                            glowLayer = chosen
+                            measuring = false
+                        }
+                    }
+                }
+            )
+
+            NeighborLoad.entries.forEach { measuredLoad ->
+                results[measuredLoad]?.let { rows -> RecordScopeResults(load = measuredLoad, rows = rows) }
+            }
+
+            Spacer(modifier = Modifier.height(10.dp))
+            Text(
+                text = "이 화면에서는 다시 기록이 카드 안에서 멈춥니다 — 카드(Surface)의 clip · 그림자와 LazyColumn 아이템이 이미 레이어라서입니다" +
+                    "(clip(shape) 은 graphicsLayer(shape, clip = true) 와 같다). 원문의 '화면 루트까지'는 이런 경계가 하나도 없을 때 화면 콘텐츠 전체 레이어까지 " +
+                    "올라간다는 뜻이고, 레이어가 여기저기 이미 있어서 문제가 잘 드러나지 않습니다. graphicsLayer() 는 자기 '뒤' 노드들을 레이어에 담으므로 " +
+                    "drawBehind 보다 앞에 둬야 경계가 됩니다. release 실측(Pixel 4 API 30 · Pixel Tablet API 35 에뮬): 그리기 중앙값 타일 1개 0.24~0.30 → 0.05~0.06ms, " +
+                    "400개 0.38~0.42 → 0.06ms(원문 '~0.2ms' 와 같은 크기). 타일 1개로도 차이가 큰 것은 같은 카드의 글 · 칩까지 함께 다시 기록되기 때문입니다 — 아끼는 양은 '같은 레이어에 무엇이 있느냐'가 정합니다.",
+                fontSize = 11.sp,
+                color = Color(0xFF757575),
+                lineHeight = 15.sp
+            )
+        }
+    }
+}
+
+private const val RECORD_SCOPE_TAG = "RecordScope"
+
+@Composable
+private fun RecordScopeStage(glowLayer: GlowLayer, load: NeighborLoad, tick: IntState, counters: RecordScopeCounters) {
+    Row(horizontalArrangement = Arrangement.spacedBy(20.dp)) {
+        RecordScopeSlot(label = "글로우\n(매 프레임)") {
+            Box(
+                modifier = Modifier.glow(glowLayer) {
+                    counters.glow++
+                    drawGlow(tick.intValue)
+                }
+            )
+        }
+        RecordScopeSlot(label = "이웃\n레이어 없음") {
+            Box(
+                modifier = Modifier
+                    .size(48.dp)
+                    .drawBehind {
+                        counters.plain++
+                        drawNeighborTiles(load.tiles, Color(0xFF90A4AE))
+                    }
+            )
+        }
+        RecordScopeSlot(label = "이웃\n자기 레이어") {
+            Box(
+                modifier = Modifier
+                    .size(48.dp)
+                    .graphicsLayer()
+                    .drawBehind {
+                        counters.layered++
+                        drawNeighborTiles(load.tiles, Color(0xFF80CBC4))
+                    }
+            )
+        }
+    }
+}
+
+@Composable
+private fun RecordScopeSlot(label: String, content: @Composable () -> Unit) {
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        content()
+        Spacer(modifier = Modifier.height(4.dp))
+        Text(text = label, fontSize = 10.sp, color = Color(0xFF616161), lineHeight = 13.sp)
+    }
+}
+
+/** 변형마다 다른 수식어 순서 — 같은 drawBehind 를 레이어 앞 · 뒤 · 없이 둔다 */
+private fun Modifier.glow(layer: GlowLayer, onDraw: DrawScope.() -> Unit): Modifier {
+    val sized = size(48.dp)
+    return when (layer) {
+        GlowLayer.NONE -> sized.drawBehind(onDraw)
+        GlowLayer.LAYER_BEFORE -> sized.graphicsLayer().drawBehind(onDraw)
+        GlowLayer.LAYER_AFTER -> sized.drawBehind(onDraw).graphicsLayer()
+        GlowLayer.CLIP_BEFORE -> sized.clip(CircleShape).drawBehind(onDraw)
+    }
+}
+
+private fun DrawScope.drawGlow(frame: Int) {
+    val phase = (frame % 90) / 90f
+    val pulse = 0.5f + 0.5f * sin(phase * 2f * PI.toFloat())
+    val radius = size.minDimension / 2f
+    drawCircle(color = Color(0xFFFFD740).copy(alpha = 0.25f + 0.35f * pulse), radius = radius * (0.6f + 0.4f * pulse))
+    drawCircle(color = Color(0xFFFFAB00), radius = radius * 0.35f)
+}
+
+@Composable
+private fun RecordScopeResults(load: NeighborLoad, rows: List<RecordWindowResult>) {
+    Spacer(modifier = Modifier.height(10.dp))
+    Text(text = "${load.label} — 2초 창마다", fontWeight = FontWeight.Bold, fontSize = 12.sp, color = Color(0xFF424242))
+    rows.forEach { row ->
+        val plain = row.verdict(RecordTarget.PLAIN_NEIGHBOR)
+        Text(
+            text = "${if (row.matchesExpectation) "✓" else "✗"} ${row.layer.label}: 프레임 ${row.frames} · 글로우 ${row.glowDraws} · " +
+                "이웃 ${row.plainDraws} · 이웃(레이어) ${row.layeredDraws} · 그리기 중앙값 " +
+                (row.drawMillisMedian?.let { "%.3f".format(Locale.ROOT, it) + "ms" } ?: "—") +
+                (if (row.touched) " · 건드림(판정 안 함)" else ""),
+            fontSize = 11.sp,
+            color = when (plain) {
+                RecordVerdict.EVERY_FRAME -> Color(0xFFD32F2F)
+                RecordVerdict.REUSED -> Color(0xFF2E7D32)
+                null -> Color(0xFF757575)
+            },
+            lineHeight = 15.sp,
+            modifier = Modifier.padding(top = 3.dp)
+        )
+    }
+    savedMillis(rows, load)?.let { saved ->
+        Text(
+            text = "레이어 없음 → graphicsLayer() 앞: 프레임당 그리기 " + "%.3f".format(Locale.ROOT, saved) + "ms 차이",
+            fontSize = 11.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color(0xFF1976D2),
+            modifier = Modifier.padding(top = 4.dp)
+        )
+    }
+}
+
+private tailrec fun Context.findActivity(): Activity? = when (this) {
+    is Activity -> this
+    is ContextWrapper -> baseContext.findActivity()
+    else -> null
+}
+
+// ==================== 6. 신호 합성 ====================
 
 @Composable
 private fun WaveformSignalModelCard() {
     WaveformCard {
         Text(
-            text = "4. 신호 합성 방식",
+            text = "5. 신호 합성 방식",
             fontSize = 16.sp,
             fontWeight = FontWeight.Bold,
             color = Color(0xFF388E3C)
@@ -649,7 +908,7 @@ private fun WaveformSignalModelCard() {
     }
 }
 
-// ==================== 6. 정리 ====================
+// ==================== 7. 정리 ====================
 
 @Composable
 private fun WaveformSummaryCard() {
@@ -665,6 +924,8 @@ private fun WaveformSummaryCard() {
             text = "• 시간축은 프레임이 아니라 dt 로 계산한다 — 주사율이 다른 기기에서도 같은 속도로 흐른다.\n" +
                     "• 고빈도 데이터는 스냅샷 상태로 만들지 않는다 — 배열에 담고, 갱신 신호 하나만 상태로 둔다.\n" +
                     "• 그 갱신 신호는 드로우 람다 안에서 읽는다 — 컴포지션을 건너뛰고 그리기만 다시 한다.\n" +
+                    "• 매 프레임 그리는 노드는 graphicsLayer() 를 drawBehind 앞에 — 같은 레이어의 이웃까지 다시 기록되지 않는다" +
+                    "(카드 · clip · Lazy 아이템이 이미 경계라서 빠뜨려도 잘 안 보인다).\n" +
                     "• 화면에 숫자를 띄워야 한다면 주기를 낮춘다 — 매 프레임 갱신하는 텍스트 한 줄이 " +
                     "캔버스보다 비쌀 수 있다.\n" +
                     "• Sweep/Scroll 은 같은 버퍼를 인덱스로 읽느냐 나이(age)로 읽느냐의 차이일 뿐이다.",

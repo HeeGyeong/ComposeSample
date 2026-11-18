@@ -579,9 +579,9 @@ val examples2026 = listOf(
         exampleType = ConstValue.Media3VideoPlayerExample
     ),
     ExampleObject(
-        lastUpdate = "26. 07. 30",
+        lastUpdate = "26. 11. 19",
         title = "Realtime Waveform Canvas (ECG/PPG)",
-        description = "생체신호 파형(ECG/PPG)을 Canvas로 렌더링하는 링 버퍼 기반 구현",
+        description = "생체신호 파형(ECG/PPG) 링 버퍼 렌더링과 graphicsLayer 로 좁히는 다시 기록 범위",
         blogUrl = "",
         exampleType = ConstValue.WaveformCanvasExample
     ),

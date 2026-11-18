@@ -133,9 +133,9 @@ diagnostics, **not compiler warnings on the source** (the project's warning scan
 | `GENERIC_DECLARATION` | 8 | method | functions declaring type parameters, e.g. `onEachBatch<T>`, `measureInline<T>` |
 | `HELPER_SUPER_CTOR_NEW_ARG` | 1 | whole class | `RubberBandOverscrollEffect` (the custom overscroll example). A field initialiser that constructs an object — here an `Animatable` plus an anonymous `Modifier.Node()` — lands in the same static `hotswanInit` helper as the super-constructor delegation, which the JVM verifier rejects (`Expected value generated with NEW`). Any class whose constructor builds objects into its fields can land here. |
 
-**Current count (HotSwan 2.1.0, `:app` build on 2026-11-18): 91 lines.** The same four reasons have grown with
+**Current count (HotSwan 2.1.0, `:app` build on 2026-11-19): 92 lines.** The same four reasons have grown with
 the examples — `VIEW_RECEIVER_SUBTYPE` 29, `FRAMEWORK_ENTRY_SUBCLASS` 17, `GENERIC_DECLARATION` 14,
-`HELPER_SUPER_CTOR_NEW_ARG` 4 — and two reasons are new: `EXCLUDED_BY_CONFIG` 17 and `EXCLUDED_FILE_FACADE` 10. Those 27
+`HELPER_SUPER_CTOR_NEW_ARG` 4 — and two reasons are new: `EXCLUDED_BY_CONFIG` 17 and `EXCLUDED_FILE_FACADE` 11. Those 28
 lines are not limitations but the classes this project removes from the rewrite on purpose with `exclude(...)` in
 `app/build.gradle` (each one explained in the sections below); an excluded file facade prints one line, an excluded class
 one line. The count is a baseline, not a target: a new example may add lines, and the pre-work scan compares the `app`
@@ -390,6 +390,17 @@ recorded 272-418 µs (the remaining gap is the debuggable runtime) at 34 fps:
 ```groovy
 exclude("com.example.composesample.presentation.example.component.ui.graphics.RibbonMath")
 exclude("com.example.composesample.presentation.example.component.ui.graphics.MeshRibbonDrawingKt")
+```
+
+The Waveform canvas example's re-record card (#182) excludes the tile loop that its neighbour boxes draw, for the same
+reason. The card measures how much main-thread draw time a per-frame animation costs when it shares a layer with its
+neighbours (`FrameMetrics.DRAW_DURATION`), so the neighbours' own drawing must cost what it costs in release. With 400
+tiles re-recorded every frame, the debug build under the rewrite recorded a median of 9.33 ms per frame on the Pixel 4
+API 30 emulator; with the file below excluded it recorded 0.54 ms (release 0.38 ms). The draw lambdas that bump the
+counters stay in the screen file and are still rewritten:
+
+```groovy
+exclude("com.example.composesample.presentation.example.component.ui.canvas.RecordScopeDrawingKt")
 ```
 
 ### `@Synchronized` loses its mutual exclusion under the dispatch rewrite — use a `synchronized` block

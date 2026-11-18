@@ -146,6 +146,28 @@ package com.example.composesample.presentation.example.component.ui.canvas
  * - 화면에 띄우는 지표 텍스트는 0.5초 주기로만 갱신(매 프레임 갱신 시 텍스트 한 줄이 캔버스보다 비쌀 수 있음)
  * - 상태 소유자(WaveformController)를 LazyColumn 아이템이 아닌 최상위 컴포저블에 두어, 스크롤로 카드가 폐기돼도 신호 연속성 유지
  *
+ * ### 다시 기록하는 범위 — graphicsLayer() 가 경계 (4번 카드, #182)
+ * - 원문(Arda Kazancı, Android Weekly #753 — ADS 'Elevate your apps with the latest graphics features' 정리)의
+ *   'Three graphics performance rules from Perfetto traces' 3번 "Wrap per-frame draw animations in Modifier.graphicsLayer()":
+ *   https://ardakazanci.com/posts/new-graphics-features-in-jetpack-compose-and-android/
+ *   세션: https://developer.android.com/events/dev-summit/talks/elevate-your-apps-with-the-latest-graphics-features-in-jetpack-compose-and-android
+ *   (원문의 '~0.2 ms' 는 기기 · 측정 방법이 적혀 있지 않다 → 카드가 FrameMetrics DRAW_DURATION 으로 직접 잰다)
+ * - 근거(ui 1.12.1 소스): DrawModifierNode.invalidateDraw → requireCoordinator(Nodes.Any).invalidateLayer() —
+ *   레이어가 없으면 wrappedBy 로 올라가 처음 만나는 레이어를 invalidate, 끝까지 없으면 owner.invalidateRootLayer()
+ *   (RootMeasurePolicy 가 루트 자식을 placeRelativeWithLayer 로 놓아 화면 콘텐츠 전체가 레이어 하나)
+ * - 레이어를 만드는 것: graphicsLayer · clip(shape)(= graphicsLayer(shape, clip = true)) · 그림자 있는 Surface/Card ·
+ *   verticalScroll 콘텐츠 · LazyColumn 아이템(LazyListMeasuredItem 이 항상 placeWithLayer) → 이 화면은 카드에서 멈춘다
+ * - 다시 기록되는 레이어 안의 자식 레이어는 더럽지 않으면 기록을 재사용(GraphicsLayerOwnerLayer.updateDisplayList 는 isDirty 일 때만)
+ * - graphicsLayer 는 LayoutModifierNode — 자기 '뒤' 노드들을 레이어에 담는다 → drawBehind 앞에 둬야 경계(뒤에 두면 레이어 없음과 같다)
+ * - 실측(2초 창 × 변형 4 × 이웃 타일 1 · 400개, 판정 8/8 기대와 같음 — 레이어 없음 · 뒤: 레이어 없는 이웃이 프레임마다 다시 기록,
+ *   graphicsLayer() 앞 · clip() 앞: 0회, 자기 레이어가 있는 이웃: 늘 0회):
+ *   Pixel 4 API 30 에뮬 release 그리기 중앙값 타일 1개 0.235~0.297 → 0.051~0.052ms · 400개 0.375 → 0.063ms,
+ *   debug 0.423 → 0.152ms · 0.536 → 0.151ms / Pixel Tablet API 35 에뮬(약 30fps) release 0.287 → 0.064ms · 0.421 → 0.061ms.
+ *   타일 1개로도 차이가 큰 것은 같은 카드의 글 · 칩까지 다시 기록되기 때문
+ * - 측정 설계: 이웃 횟수는 그리기 람다가 올리는 평범한 필드(상태 쓰기는 다시 무효화를 부른다), 결과는 네 창이 끝난 뒤 한 번에
+ *   (창 사이에 표가 자라면 뒤 변형일수록 다시 기록할 내용이 늘어난다), 창 시작 · 끝은 메인 Handler 메시지(#177 과 같은 이유),
+ *   창 동안 카드를 건드리면 그 창은 판정하지 않는다. 결과는 화면 최상위 상태(카드가 스크롤로 폐기돼도 남는다)
+ *
  * ### 렌더 모드
  * - Sweep(환자 모니터): 버퍼 인덱스 = 화면 x 좌표. 커서 앞 GAP 구간만 비워 '지우개' 표현 → 이동 비용 0
  * - Scroll(오실로스코프): 나이(age) 순으로 이어 최신 샘플을 오른쪽 끝에 배치 → 시간 순서가 직관적
