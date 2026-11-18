@@ -1032,5 +1032,12 @@ val examples2026 = listOf(
         description = "리컴포지션은 건너뛰어도 재계산은 한다 — 탭 하나가 부르는 계산 세기",
         blogUrl = "",
         exampleType = ConstValue.DerivedStateCostExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 11. 18",
+        title = "Gooey 텍스트 모핑 (블러 + 알파 임계)",
+        description = "흐린 두 단어를 알파 임계 ColorMatrix 로 녹여 붙이는 모핑",
+        blogUrl = "",
+        exampleType = ConstValue.GooeyTextMorphExample
     )
 )

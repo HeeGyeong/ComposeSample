@@ -133,9 +133,9 @@ diagnostics, **not compiler warnings on the source** (the project's warning scan
 | `GENERIC_DECLARATION` | 8 | method | functions declaring type parameters, e.g. `onEachBatch<T>`, `measureInline<T>` |
 | `HELPER_SUPER_CTOR_NEW_ARG` | 1 | whole class | `RubberBandOverscrollEffect` (the custom overscroll example). A field initialiser that constructs an object — here an `Animatable` plus an anonymous `Modifier.Node()` — lands in the same static `hotswanInit` helper as the super-constructor delegation, which the JVM verifier rejects (`Expected value generated with NEW`). Any class whose constructor builds objects into its fields can land here. |
 
-**Current count (HotSwan 2.1.0, forced recompile of `:app` on 2026-11-13): 87 lines.** The same four reasons have grown with
+**Current count (HotSwan 2.1.0, `:app` build on 2026-11-18): 88 lines.** The same four reasons have grown with
 the examples — `VIEW_RECEIVER_SUBTYPE` 29, `FRAMEWORK_ENTRY_SUBCLASS` 17, `GENERIC_DECLARATION` 14,
-`HELPER_SUPER_CTOR_NEW_ARG` 4 — and two reasons are new: `EXCLUDED_BY_CONFIG` 14 and `EXCLUDED_FILE_FACADE` 9. Those 23
+`HELPER_SUPER_CTOR_NEW_ARG` 4 — and two reasons are new: `EXCLUDED_BY_CONFIG` 15 and `EXCLUDED_FILE_FACADE` 9. Those 24
 lines are not limitations but the classes this project removes from the rewrite on purpose with `exclude(...)` in
 `app/build.gradle` (each one explained in the sections below); an excluded file facade prints one line, an excluded class
 one line. The count is a baseline, not a target: a new example may add lines, and the pre-work scan compares the `app`
@@ -358,6 +358,17 @@ The same card shows how much of a debug app's Java heap HotSwan itself holds. A 
 (`VarInsnNode` 718,500, `LabelNode` 540,840, `InsnNode` 436,233, `MethodInsnNode` 431,079); the release build of the same
 screen had 0.36-0.75 million objects, led by `java.lang.String`. Heap sizes and counts taken from a debug build therefore
 say little about the release app.
+
+The Gooey text morph example (#178) excludes its pixel analysis for the same reason. Its measurement cards read the screen
+with `PixelCopy` and walk every pixel of each capture (about 480,000 on the Pixel Tablet API 35 emulator) to count ink
+pixels and connected blobs; on a 2400 x 200 test image `InkAnalysis.analyze` took 829 ms in `testDebugUnitTest` under the
+rewrite and 2.1 ms with `-Photswan.dispatchRewriteEnabled=false`. On the emulator the 41-step gap sweep (two captures per
+step) needed about 30 s per step and did not finish; with the object below excluded the whole sweep took about 6 s, and
+the debug and release builds produced the same counts:
+
+```groovy
+exclude("com.example.composesample.presentation.example.component.ui.graphics.InkAnalysis")
+```
 
 ### `@Synchronized` loses its mutual exclusion under the dispatch rewrite — use a `synchronized` block
 

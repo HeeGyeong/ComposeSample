@@ -103,6 +103,7 @@ import com.example.composesample.presentation.example.component.ui.canvas.Wavefo
 import com.example.composesample.presentation.example.component.ui.canvas.RibbonModifierExampleUI
 import com.example.composesample.presentation.example.component.ui.canvas.MotionBlurExampleUI
 import com.example.composesample.presentation.example.component.ui.graphics.DialogBlurExampleUI
+import com.example.composesample.presentation.example.component.ui.graphics.GooeyTextMorphExampleUI
 import com.example.composesample.presentation.example.component.ui.graphics.MeshGradientExampleUI
 import com.example.composesample.presentation.example.component.ui.graphics.PixelateExampleUI
 import com.example.composesample.presentation.example.component.ui.graphics.NewShadowApiExampleUI
@@ -348,6 +349,7 @@ import com.example.composesample.util.ConstValue.SlotTreeInspectorExample
 import com.example.composesample.util.ConstValue.RecomposerRegistryExample
 import com.example.composesample.util.ConstValue.SealedDomainErrorExample
 import com.example.composesample.util.ConstValue.DialogBlurExample
+import com.example.composesample.util.ConstValue.GooeyTextMorphExample
 import com.example.composesample.util.ConstValue.MeshGradientExample
 import com.example.composesample.util.ConstValue.PixelateExample
 import com.example.composesample.util.ConstValue.SpotlightOverlayExample
@@ -574,6 +576,7 @@ val exampleUiRegistry: Map<String, @Composable (onBackEvent: () -> Unit) -> Unit
     DialogBlurExample to { onBackEvent -> DialogBlurExampleUI(onBackEvent) },
     MeshGradientExample to { onBackEvent -> MeshGradientExampleUI(onBackEvent) },
     PixelateExample to { onBackEvent -> PixelateExampleUI(onBackEvent) },
+    GooeyTextMorphExample to { onBackEvent -> GooeyTextMorphExampleUI(onBackEvent) },
     WebViewBridgeExample to { onBackEvent -> WebViewBridgeExampleUI(onBackEvent) },
     RangeDownloadExample to { onBackEvent -> RangeDownloadExampleUI(onBackEvent) },
     OfflineOutboxExample to { onBackEvent -> OfflineOutboxExampleUI(onBackEvent) },

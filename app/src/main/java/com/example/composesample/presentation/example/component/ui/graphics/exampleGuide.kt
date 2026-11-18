@@ -121,4 +121,43 @@ package com.example.composesample.presentation.example.component.ui.graphics
  * - Modifier.blur: API 30 에뮬레이터에서 4dp·12dp 모두 무시돼 값이 또렷이 보이고, A72(API 33)에서도 4dp 는 읽힌다(12dp 는 가려짐).
  *   pixelate 는 API 30 에뮬레이터에서도 같은 모자이크
  * - 비용 경고(README): 내용이 다시 그려질 때마다 오프스크린 두 장 + 확대 — 긴 목록의 모든 행에 걸지 않는다
+ *
+ * ## Gooey 텍스트 모핑 (GooeyTextMorphExampleUI · GooeyMorphLab.kt)
+ * - 원문(Juan Silva, Android Weekly #753): https://dev.to/lightscout/how-morph-text-dissolves-one-word-into-the-next-47cl
+ * - 원작(Victor Welander 'Gooey Text Morphing' — React · SVG 필터)을 Compose 로 옮긴 글. 라이브러리는 쓰지 않고 같은 그리기를 직접 구현
+ * - ColorMatrix 계산식 · 0~255 범위(Android 문서): https://developer.android.com/reference/android/graphics/ColorMatrix
+ * - 원문이 든 Compose Multiplatform 오프셋 척도 이슈: https://github.com/JetBrains/compose-multiplatform/issues/3461
+ * - RenderEffect(API 31+): https://developer.android.com/reference/android/graphics/RenderEffect
+ *
+ * ### 핵심 개념 (원문 코드와 같은 순서 · ui 1.12.1 javap)
+ * - 두 단어를 한 Box 에 겹치고 Text 마다 `graphicsLayer { alpha; renderEffect = BlurEffect(r, r, TileMode.Decal); clip = false }`,
+ *   그 둘을 감싼 부모 하나에 `graphicsLayer { colorFilter = ColorFilter.colorMatrix(알파 행 0,0,0,gain,bias) }`.
+ *   `GraphicsLayerScope.colorFilter` 는 인터페이스 기본 메서드지만 ReusableGraphicsLayerScope 가 덮어쓰고, 레이어 세 구현
+ *   (GraphicsLayerOwnerLayer · RenderNodeLayer · ViewLayer) 모두 GraphicsLayer 로 넘긴다 — 색 필터가 있는 레이어는 오프스크린에 합성된다
+ * - 진행 f 를 떠남 t1 = (1 − f) / (1 − p) · 옴 t2 = (f − p) / (1 − p) 로 나눈다(p = morphSequence / 2, 0.499 상한 — 앞 p 동안 옛 단어 그대로).
+ *   알파 t^0.4, 블러 min(blurBase / t − blurBase, blurMax) — t 0.5 → 8dp · 0.25 → 24dp · 1/6 에서 상한 40dp(GooeyMorphLabTest)
+ * - 프레임 루프는 `withFrameMillis` 의 dt 로 진행 → 쉼 → 다음 단어. 예제는 진행을 graphicsLayer 블록 안에서만 읽어 무대가 단어가 바뀔 때만
+ *   리컴포즈된다(원문은 컴포지션에서 읽음) — API 35 에뮬 12초 +5(데모 페이지 값 주기 2.15초) · 멈춘 채 슬라이더 5번 +0
+ * - 조절값: 코드 기본 1s · 0.25s · 8/40dp · 18 · −7 · 0.5 / 데모 페이지 1.36s · 0.79s · 12.19/20.76dp · 3.9 · −38.25 · 7.24(p 0.499)
+ *
+ * ### 원문 주장 실측 (PixelCopy 로 읽은 화면 픽셀 — Pixel Tablet API 35 에뮬 debug · release 같은 값, Pixel 4 API 30 에뮬 debug)
+ * - **② 오프셋 열은 0~255 척도 — 맞다.** 검정 견본(입력 α · gain · bias) 128·1·0 / 128·1·−64 / 128·1·−0.25 / 10·18·−7 / 20·18·−7 의 출력이
+ *   소프트웨어 캔버스와 화면 모두 128 · 64 · 128 · 173 · 255(API 30 · 35) = 0~255 예상, −1~1 로 읽었다면 128 · 0 · 64 · 0 · 0.
+ *   그래서 18 · −7 은 입력 α ≤ 0.39 → 0 · ≥ 14.6(약 6%) → 255, 3.9 · −38.25 는 9.8 ~ 75.2(약 4~29%) 사이를 편다.
+ *   −1~1 척도로 계산한 bias(−38.25 / 255 = −0.15)를 그대로 옮기면 문턱이 사라져 옅은 띠가 남는다 — f 0.40 옅은 픽셀 13,766 → 46,725(3.4배, debug)
+ * - **③ 블러는 임계 레이어 경계에서 잘린다 — 맞다.** 안쪽 패딩 48dp(상한 40 + 8)는 f 0~1 21장 모두 레이어 경계 1px 테두리의 잉크 0,
+ *   패딩 0 은 f 0.30~0.95 에서 255~450px(위아래가 평평하게 잘림). API 30 은 블러가 없어 둘 다 0
+ * - **① '단어마다 따로 임계하면 끝내 붙지 않는다' — 부풀린 주장.** 따로 걸어도 굳은 모양이 맞닿으면 픽셀은 이어진다. 지름 40dp · 블러 12dp
+ *   두 점을 0 → 80dp 로 훑으면 한 덩어리 최대 간격이 부모 28 vs 따로 26dp(18 · −7), 16 vs 14dp(3.9 · −38.25) — 부모가 더하는 것은 닿기 전
+ *   2dp 의 다리와 6~14px 굵은 목뿐이고, 다리가 끊길 때 가운데 방울이 따로 남는다(18 · −7, 30dp 덩어리 3). 두 단어가 같은 자리에 겹치는
+ *   이 모핑에서는 f 0.55 잉크 차 0.2%(18 · −7) · 8%(3.9 · −38.25). API 30 은 블러가 없어 맞닿은 0dp 에서만 이어지고 부모 = 따로
+ *
+ * ### 함께 본 것
+ * - 코드 기본값 18 · −7 은 문턱이 낮아 떠나는 단어의 블러가 거의 끝까지 덩어리로 남아 오는 단어를 덮고, 덩어리 바깥에 블러의 8비트 알파
+ *   1~14 단계가 그대로 계단 띠로 보인다(gain 18 이면 한 단계가 출력 18). 데모 페이지 값은 글자가 일찍 드러나고 띠가 얇다 — 원문 페이지가
+ *   기본값과 다른 값을 쓰는 이유로 보인다
+ * - API 31 미만은 BlurEffect 를 레이어가 무시한다 — 두 단어가 임계를 지나며 툭 바뀌는 크로스페이드(세 겹 카드 ②=①, ③=④)
+ * - 측정 비용: 캡처 한 장(약 48만 픽셀)을 훑는 InkAnalysis 는 HotSwan 재작성 아래 debug 단위 테스트 829ms · 재작성 끔 2.1ms(2400×200) →
+ *   app/build.gradle 에서 이 객체만 제외(ComposeHotReloadGuide.md). 제외 뒤 간격 41단계 훑기가 약 6초
+ * - 측정은 에뮬레이터(swiftshader)뿐 — 실기기 GPU 블러의 띠 모양 · 수치는 확인하지 않았다
  */
