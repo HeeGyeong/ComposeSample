@@ -8,6 +8,7 @@ import kotlin.math.cos
 import kotlin.math.max
 import kotlin.math.roundToLong
 import kotlin.math.sin
+import kotlin.math.sqrt
 
 /**
  * Freehand Drawing 예제의 입력 기록 로직 — 화면(FreehandDrawingExampleUI)과 JVM 단위 테스트(FreehandInputLabTest)가 함께 쓴다.
@@ -101,6 +102,39 @@ fun replayFrames(
 }
 
 /**
+ * 직선(start → end)을 일정한 속도로 [durationMs] 동안 그리는 재생 곡선 — 묶음 규칙은 [replayFrames] 와 같다.
+ */
+fun replayLineFrames(
+    start: Offset,
+    end: Offset,
+    durationMs: Int,
+    sampleHz: Int = REPLAY_SAMPLE_HZ,
+    frameHz: Int = REPLAY_FRAME_HZ,
+): List<List<TimedSample>> {
+    val sampleCount = durationMs * sampleHz / 1000
+    val samples = (0..sampleCount).map { k ->
+        val fraction = k.toFloat() / sampleCount
+        TimedSample((k * 1000.0 / sampleHz).roundToLong(), start + (end - start) * fraction)
+    }
+    val frameCount = ceil(durationMs * frameHz / 1000.0).toInt()
+    val frames = mutableListOf(listOf(samples.first()))
+    var next = 1
+    for (j in 1..frameCount) {
+        val batch = mutableListOf<TimedSample>()
+        while (next <= sampleCount && next.toLong() * frameHz <= j.toLong() * sampleHz) {
+            batch += samples[next]
+            next++
+        }
+        if (batch.isNotEmpty()) frames += batch
+    }
+    return frames
+}
+
+/** 직선 재생 위의 위치 — 끝을 넘으면 같은 속도로 이어 간다 */
+fun linePositionAt(start: Offset, end: Offset, timeMillis: Double, durationMs: Int): Offset =
+    start + (end - start) * (timeMillis / durationMs).toFloat()
+
+/**
  * 선(점을 직선으로 이은 것)이 원에서 가장 멀리 벗어난 거리(px).
  * 각 선분을 [subdivisions] 등분한 점들에서 |중심까지 거리 − 반지름| 의 최댓값을 잰다 — 짝수 등분이면 선분 가운데가 들어간다.
  */
@@ -116,4 +150,82 @@ fun maxCircleDeviation(points: List<Offset>, center: Offset, radius: Float, subd
         }
     }
     return worst
+}
+
+// ==================== 다음 위치 예측(#171 ②) ====================
+
+/** 재생 원 위의 위치 — 획 시작부터 [timeMillis] 뒤. 끝(durationMs)을 넘으면 같은 각속도로 이어 간다 */
+fun circlePositionAt(center: Offset, radius: Float, timeMillis: Double, durationMs: Int = REPLAY_DURATION_MS): Offset {
+    val angle = 2 * PI * timeMillis / durationMs
+    return Offset((center.x + radius * cos(angle)).toFloat(), (center.y + radius * sin(angle)).toFloat())
+}
+
+/**
+ * 이벤트 하나에서 예측기가 내놓은 것 — 시각은 모두 획 시작(downTime) 기준 ms.
+ * @param current 이 이벤트의 마지막 위치(지금 그려지는 끝)
+ * @param predicted 예측 경로의 가장 먼 점(예측이 없으면 null)
+ * @param predictedTimeMillis 그 점의 시각(예측 MotionEvent 의 eventTime)
+ */
+data class PredictionSample(
+    val eventTimeMillis: Long,
+    val current: Offset,
+    val predicted: Offset?,
+    val predictedTimeMillis: Long?,
+)
+
+/**
+ * 재생 원에 대한 예측 성적. '예측 없음'은 그 시각에 펜 끝이 아직 [PredictionSample.current] 에 머무는 것 —
+ * 같은 목표 시각의 실제 위치(원 위)와의 거리를 둘 다 잰다.
+ */
+data class PredictionReport(
+    val events: Int,
+    val predictions: Int,
+    val meanLookaheadMs: Double,
+    val meanPredictedError: Float,
+    val meanStaleError: Float,
+    val maxPredictedError: Float,
+)
+
+fun predictionReport(
+    samples: List<PredictionSample>,
+    center: Offset,
+    radius: Float,
+    durationMs: Int = REPLAY_DURATION_MS,
+): PredictionReport = predictionReport(samples, durationMs) { t -> circlePositionAt(center, radius, t, durationMs) }
+
+/** 정답 위치를 시각(ms)의 함수로 받는 일반형 — 원 · 직선 재생이 함께 쓴다 */
+fun predictionReport(
+    samples: List<PredictionSample>,
+    durationMs: Int,
+    truthAt: (Double) -> Offset,
+): PredictionReport {
+    // 목표 시각이 원 안(재생 시간 안)인 예측만 — 넘어선 것은 손을 뗀 뒤라 정답이 없다
+    val scored = samples.filter { it.predicted != null && it.predictedTimeMillis != null && it.predictedTimeMillis <= durationMs }
+    var lookahead = 0.0
+    var predictedSum = 0.0
+    var staleSum = 0.0
+    var predictedMax = 0f
+    for (s in scored) {
+        val truth = truthAt(s.predictedTimeMillis!!.toDouble())
+        val predictedError = distance(s.predicted!!, truth)
+        lookahead += s.predictedTimeMillis - s.eventTimeMillis
+        predictedSum += predictedError
+        staleSum += distance(s.current, truth)
+        predictedMax = max(predictedMax, predictedError)
+    }
+    val n = scored.size
+    return PredictionReport(
+        events = samples.size,
+        predictions = samples.count { it.predicted != null },
+        meanLookaheadMs = if (n == 0) 0.0 else lookahead / n,
+        meanPredictedError = if (n == 0) 0f else (predictedSum / n).toFloat(),
+        meanStaleError = if (n == 0) 0f else (staleSum / n).toFloat(),
+        maxPredictedError = predictedMax,
+    )
+}
+
+private fun distance(a: Offset, b: Offset): Float {
+    val dx = (a.x - b.x).toDouble()
+    val dy = (a.y - b.y).toDouble()
+    return sqrt(dx * dx + dy * dy).toFloat()
 }

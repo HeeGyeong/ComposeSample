@@ -1,9 +1,13 @@
 package com.example.composesample.presentation.example.component.ui.canvas
 
+import android.content.Context
+import android.os.Build
 import android.os.SystemClock
 import android.view.InputDevice
 import android.view.MotionEvent
+import android.view.MotionPredictor
 import android.view.View
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -34,6 +38,8 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableDoubleStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -45,6 +51,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.drawscope.DrawScope
@@ -61,8 +68,10 @@ import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.toSize
+import androidx.input.motionprediction.MotionEventPredictor
 import com.example.composesample.presentation.MainHeader
 import kotlinx.coroutines.launch
+import java.util.Locale
 import kotlin.math.min
 
 // ============================================================================
@@ -167,14 +176,17 @@ fun FreehandDrawingExampleUI(onBackEvent: () -> Unit) {
             onBackIconClicked = onBackEvent
         )
 
+        // 캔버스 카드(그리기 · 원 재생)와 예측 카드가 함께 보는 값
+        val prediction = remember { PredictionInfo() }
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
             contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             item { OverviewCard() }
-            item { DrawingCanvasCard() }
+            item { DrawingCanvasCard(prediction) }
             item { HistoricalCard() }
+            item { PredictionCard(prediction) }
             item { MviPatternCard() }
             item { ImplementationCard() }
         }
@@ -221,14 +233,16 @@ private class CanvasGeometry {
 
 /** 원 재생 결과 — 캔버스가 실제로 받은 점으로 잰다. */
 private data class ReplayResult(
+    val shape: ReplayShape,
     val radius: Float,
     val input: StrokeInput,
-    val frameDeviation: Float,
-    val allDeviation: Float,
+    val frameDeviation: Float?,
+    val allDeviation: Float?,
+    val prediction: PredictionReport? = null
 )
 
 @Composable
-private fun DrawingCanvasCard() {
+private fun DrawingCanvasCard(prediction: PredictionInfo) {
     // MVI 상태 보관 — 모든 변경은 dispatch(intent) → reduce() 단방향으로만
     val stateHolder = remember { mutableStateOf(DrawBoxState()) }
     val state = stateHolder.value
@@ -243,6 +257,11 @@ private fun DrawingCanvasCard() {
     var replaying by remember { mutableStateOf(false) }
     var replayResult by remember { mutableStateOf<ReplayResult?>(null) }
     var replayError by remember { mutableStateOf<String?>(null) }
+    var replayShape by remember { mutableStateOf(ReplayShape.FastCircle) }
+    // 다음 위치 예측 — 뷰마다 하나. 모든 MotionEvent(DOWN · MOVE · UP)를 record 하고, 이벤트마다 predict 한 경로는 그 프레임에만 그린다
+    val predictor = remember(view) { MotionEventPredictor.newInstance(view) }
+    var predictedPath by remember { mutableStateOf<List<Offset>>(emptyList()) }
+    val predictionLog = remember { mutableListOf<PredictionSample>() }
 
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -290,12 +309,27 @@ private fun DrawingCanvasCard() {
                                 val down = awaitFirstDown()
                                 // 소비해야 바깥 LazyColumn 이 스크롤로 가져가지 않는다
                                 down.consume()
+                                predictionLog.clear()
+                                // PointerEvent.motionEvent 는 이 디스패치 동안만 유효하다 → 받자마자 기록
+                                currentEvent.motionEvent?.let { me ->
+                                    prediction.predictorKind = predictorKind(view.context, me)
+                                    predictedPath = recordAndPredict(predictor, me, down.position, predictionLog)
+                                }
                                 // 터치 슬롭을 기다리지 않고 손가락이 닿은 곳에서 시작(탭도 점 하나로 남는다)
                                 dispatch(DrawIntent.StartStroke(down.position))
                                 try {
                                     while (true) {
-                                        val change = awaitPointerEvent().changes
-                                            .firstOrNull { it.id == down.id } ?: break
+                                        val event = awaitPointerEvent()
+                                        val change = event.changes.firstOrNull { it.id == down.id } ?: break
+                                        event.motionEvent?.let { me ->
+                                            predictedPath = if (change.pressed) {
+                                                recordAndPredict(predictor, me, change.position, predictionLog)
+                                            } else {
+                                                // 손 뗀 이벤트도 기록해 다음 획의 흐름이 끊기지 않게 하고, 예측은 지운다
+                                                recordOnly(predictor, me)
+                                                emptyList()
+                                            }
+                                        }
                                         if (change.positionChanged() || change.historical.isNotEmpty()) {
                                             dispatch(
                                                 DrawIntent.Drag(
@@ -310,6 +344,8 @@ private fun DrawingCanvasCard() {
                                         if (!change.pressed) break
                                     }
                                 } finally {
+                                    predictedPath = emptyList()
+                                    prediction.recordStroke(predictionLog)
                                     dispatch(DrawIntent.EndStroke)
                                 }
                             }
@@ -318,6 +354,10 @@ private fun DrawingCanvasCard() {
                     // 완료된 스트로크 + 그리는 중인 스트로크를 함께 렌더
                     state.strokes.forEach { drawStroke(it, state.showFrameLine) }
                     state.liveStroke?.let { drawStroke(it, state.showFrameLine) }
+                    // 예측 경로 — 획에는 넣지 않고 이 프레임에만 덧그린다(다음 이벤트가 오면 실제 점으로 바뀐다)
+                    if (prediction.showPrediction && predictedPath.size >= 2) {
+                        drawPredictedPath(predictedPath, state.width)
+                    }
                 }
 
                 if (state.strokes.isEmpty() && state.liveStroke == null) {
@@ -356,10 +396,22 @@ private fun DrawingCanvasCard() {
                     color = Color(0xFF616161)
                 )
             }
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Switch(
+                    checked = prediction.showPrediction,
+                    onCheckedChange = { prediction.showPrediction = it }
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = "예측 선분(주황 점선) 보기 — 3번 카드",
+                    fontSize = 12.sp,
+                    color = Color(0xFF616161)
+                )
+            }
             Spacer(modifier = Modifier.height(4.dp))
             Row(verticalAlignment = Alignment.CenterVertically) {
                 ActionButton(
-                    label = if (replaying) "재생 중…" else "원 재생",
+                    label = if (replaying) "재생 중…" else "${replayShape.label} 재생",
                     enabled = !replaying && canvasFullyVisible && state.liveStroke == null,
                     container = Color(0xFF6A1B9A)
                 ) {
@@ -367,7 +419,7 @@ private fun DrawingCanvasCard() {
                     replayError = null
                     scope.launch {
                         try {
-                            val circle = replayCircle(view, geometry)
+                            val circle = replayCircle(view, geometry, replayShape)
                             // 손 뗀 이벤트까지 처리된 뒤의 상태를 읽는다
                             withFrameNanos { }
                             val stroke = stateHolder.value.strokes.lastOrNull()
@@ -377,12 +429,18 @@ private fun DrawingCanvasCard() {
                                 replayResult = null
                                 replayError = "재생한 획을 찾지 못했습니다(시작점 불일치)"
                             } else {
+                                val report = predictionReport(predictionLog.toList(), circle.shape.durationMs, circle.truthAt)
+                                prediction.replays = prediction.replays + (circle.shape to report)
+                                val isCircle = circle.shape != ReplayShape.Line
                                 replayResult = ReplayResult(
+                                    shape = circle.shape,
                                     radius = circle.radius,
                                     input = stroke.input,
-                                    frameDeviation = maxCircleDeviation(stroke.input.framePoints, circle.center, circle.radius),
-                                    allDeviation = maxCircleDeviation(stroke.input.points, circle.center, circle.radius)
+                                    frameDeviation = if (isCircle) maxCircleDeviation(stroke.input.framePoints, circle.center, circle.radius) else null,
+                                    allDeviation = if (isCircle) maxCircleDeviation(stroke.input.points, circle.center, circle.radius) else null,
+                                    prediction = report
                                 )
+                                PredictionProbe.log(circle.shape, report)
                             }
                         } finally {
                             replaying = false
@@ -392,7 +450,7 @@ private fun DrawingCanvasCard() {
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
                     text = if (canvasFullyVisible) {
-                        "${REPLAY_SAMPLE_HZ}Hz 로 샘플링한 원 1바퀴(${REPLAY_DURATION_MS}ms)를 " +
+                        "${REPLAY_SAMPLE_HZ}Hz 로 샘플링한 곡선을 " +
                                 "${REPLAY_FRAME_HZ}Hz 프레임으로 묶어 캔버스에 보냅니다"
                     } else {
                         "캔버스 전체가 화면에 보일 때 재생할 수 있습니다"
@@ -401,6 +459,16 @@ private fun DrawingCanvasCard() {
                     color = Color(0xFF757575),
                     lineHeight = 15.sp
                 )
+            }
+            Spacer(modifier = Modifier.height(4.dp))
+            Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                ReplayShape.entries.forEach { shape ->
+                    ActionButton(
+                        label = shape.label,
+                        enabled = !replaying,
+                        container = if (shape == replayShape) Color(0xFF4A148C) else Color(0xFFB39DDB)
+                    ) { replayShape = shape }
+                }
             }
             replayError?.let {
                 Spacer(modifier = Modifier.height(6.dp))
@@ -484,9 +552,14 @@ private fun StrokeStatsText(stroke: DrawStroke?) {
 private fun ReplayResultText(result: ReplayResult) {
     Spacer(modifier = Modifier.height(6.dp))
     Text(
-        text = "재생 결과 (반지름 ${"%.0f".format(result.radius)}px)\n" +
+        text = if (result.frameDeviation != null && result.allDeviation != null) {
+            "재생 결과 — ${result.shape.label} (반지름 ${"%.0f".format(result.radius)}px)\n" +
                 "position 만: ${result.input.framePoints.size}점 · 원에서 최대 ${"%.1f".format(result.frameDeviation)}px\n" +
-                "historical 포함: ${result.input.points.size}점 · 원에서 최대 ${"%.1f".format(result.allDeviation)}px",
+                "historical 포함: ${result.input.points.size}점 · 원에서 최대 ${"%.1f".format(result.allDeviation)}px"
+        } else {
+            "재생 결과 — ${result.shape.label}\n" +
+                "position 만: ${result.input.framePoints.size}점 · historical 포함 ${result.input.points.size}점"
+        } + (result.prediction?.let { "\n" + predictionSummary(it) } ?: ""),
         fontSize = 12.sp,
         fontFamily = FontFamily.Monospace,
         color = Color(0xFF4A148C),
@@ -499,19 +572,37 @@ private fun ReplayResultText(result: ReplayResult) {
     )
 }
 
-/** 재생한 원 — 캔버스 좌표 기준. */
-private class ReplayCircle(val center: Offset, val radius: Float, val start: Offset)
+/** 재생 모양 — 원 150ms 는 2번 카드의 historical 측정, 나머지는 3번 카드의 예측 비교용 */
+private enum class ReplayShape(val label: String, val durationMs: Int) {
+    FastCircle("원 150ms", REPLAY_DURATION_MS),
+    SlowCircle("원 600ms", 600),
+    Line("직선 300ms", 300)
+}
+
+/** 재생한 곡선 — 캔버스 좌표 기준. 정답 위치는 [truthAt](획 시작부터 ms). */
+private class ReplayCircle(
+    val shape: ReplayShape,
+    val center: Offset,
+    val radius: Float,
+    val start: Offset,
+    val truthAt: (Double) -> Offset
+)
 
 /**
  * 원 1바퀴를 프레임마다 MotionEvent 하나로 묶어 창의 루트 뷰에 보낸다.
  * 시스템이 한 프레임 동안 쌓인 MOVE 를 하나로 묶어(batching) 보내는 것과 같은 모양 —
  * 앞의 샘플은 addBatch 로 history 에, 마지막 샘플이 현재 위치가 된다.
  */
-private suspend fun replayCircle(view: View, geometry: CanvasGeometry): ReplayCircle {
+private suspend fun replayCircle(view: View, geometry: CanvasGeometry, shape: ReplayShape): ReplayCircle {
     val size = geometry.size
     val center = Offset(size.width / 2f, size.height / 2f)
     val radius = min(size.width, size.height) * 0.35f
-    val frames = replayFrames(center, radius)
+    val lineStart = Offset(size.width * 0.1f, size.height * 0.7f)
+    val lineEnd = Offset(size.width * 0.9f, size.height * 0.3f)
+    val frames = when (shape) {
+        ReplayShape.Line -> replayLineFrames(lineStart, lineEnd, shape.durationMs)
+        else -> replayFrames(center, radius, shape.durationMs)
+    }
     val root = view.rootView
     val rootOnScreen = IntArray(2).also { root.getLocationOnScreen(it) }
     val origin = geometry.onScreen
@@ -526,7 +617,11 @@ private suspend fun replayCircle(view: View, geometry: CanvasGeometry): ReplayCi
     withFrameNanos { }
     val last = frames.last().last()
     sendBatch(root, rootOnScreen, origin, downTime, MotionEvent.ACTION_UP, listOf(last))
-    return ReplayCircle(center, radius, frames.first().first().position)
+    val truth: (Double) -> Offset = when (shape) {
+        ReplayShape.Line -> { t -> linePositionAt(lineStart, lineEnd, t, shape.durationMs) }
+        else -> { t -> circlePositionAt(center, radius, t, shape.durationMs) }
+    }
+    return ReplayCircle(shape, center, radius, frames.first().first().position, truth)
 }
 
 private fun sendBatch(
@@ -566,6 +661,219 @@ private fun sendBatch(
         root.dispatchTouchEvent(event)
     } finally {
         event.recycle()
+    }
+}
+
+// ==================== 다음 위치 예측(#171 ②) ====================
+
+/** 예측 선분 색 */
+private val PredictionColor = Color(0xFFFF6D00)
+
+/** 캔버스 카드와 3번 카드가 함께 보는 예측 정보 */
+private class PredictionInfo {
+    var showPrediction by mutableStateOf(true)
+    var predictorKind by mutableStateOf("아직 그리지 않음")
+    var strokeEvents by mutableIntStateOf(0)
+    var strokePredictions by mutableIntStateOf(0)
+    var strokeLookaheadMs by mutableDoubleStateOf(0.0)
+    var replays by mutableStateOf<Map<ReplayShape, PredictionReport>>(emptyMap())
+
+    /** 손으로 그린 획 — 정답 위치를 모르니 예측 수와 앞서 본 시간만 */
+    fun recordStroke(log: List<PredictionSample>) {
+        val predicted = log.filter { it.predicted != null && it.predictedTimeMillis != null }
+        strokeEvents = log.size
+        strokePredictions = predicted.size
+        strokeLookaheadMs = if (predicted.isEmpty()) 0.0 else predicted.map { it.predictedTimeMillis!! - it.eventTimeMillis }.average()
+    }
+}
+
+/**
+ * 이벤트를 예측기에 넣고 예측 경로(캔버스 좌표, 지금 위치부터)를 돌려준다.
+ * 예측 MotionEvent 는 기록한 이벤트와 같은 좌표계(getX)라, 이 이벤트의 getX ↔ change.position 차이로 캔버스 좌표로 옮긴다.
+ */
+private fun recordAndPredict(
+    predictor: MotionEventPredictor,
+    event: MotionEvent,
+    local: Offset,
+    log: MutableList<PredictionSample>
+): List<Offset> {
+    // 흐름이 어긋나면(DOWN 없이 MOVE 등) IllegalArgumentException — 그 이벤트는 예측 없이 넘어간다
+    if (!recordOnly(predictor, event) || event.pointerCount != 1) return emptyList()
+    val dx = local.x - event.getX(0)
+    val dy = local.y - event.getY(0)
+    val time = event.eventTime - event.downTime
+    val predicted = predictor.predict()
+    if (predicted == null) {
+        log += PredictionSample(time, local, null, null)
+        return emptyList()
+    }
+    return try {
+        val path = ArrayList<Offset>(predicted.historySize + 2)
+        path += local
+        for (h in 0 until predicted.historySize) {
+            path += Offset(predicted.getHistoricalX(0, h) + dx, predicted.getHistoricalY(0, h) + dy)
+        }
+        path += Offset(predicted.getX(0) + dx, predicted.getY(0) + dy)
+        log += PredictionSample(time, local, path.last(), predicted.eventTime - event.downTime)
+        path
+    } finally {
+        predicted.recycle()
+    }
+}
+
+private fun recordOnly(predictor: MotionEventPredictor, event: MotionEvent): Boolean = try {
+    predictor.record(event)
+    true
+} catch (e: IllegalArgumentException) {
+    false
+}
+
+/** 이 획을 누가 예측하는가 — API 34+ 는 시스템이 이 기기 · 입력 소스를 지원할 때만 시스템 예측기 */
+private fun predictorKind(context: Context, event: MotionEvent): String =
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+        if (SystemPrediction.available(context, event)) {
+            "시스템 MotionPredictor (API ${Build.VERSION.SDK_INT})"
+        } else {
+            "칼만 필터 — API ${Build.VERSION.SDK_INT} 이지만 이 기기 · 입력(${toolLabel(event)})은 시스템 예측 미지원"
+        }
+    } else {
+        "칼만 필터 — API ${Build.VERSION.SDK_INT}(34 미만은 늘 라이브러리)"
+    }
+
+private fun toolLabel(event: MotionEvent): String = when (event.getToolType(0)) {
+    MotionEvent.TOOL_TYPE_STYLUS -> "스타일러스"
+    MotionEvent.TOOL_TYPE_FINGER -> "손가락"
+    MotionEvent.TOOL_TYPE_MOUSE -> "마우스"
+    else -> "도구 ${event.getToolType(0)}"
+}
+
+/** android.view.MotionPredictor(API 34)는 이 객체 안에만 */
+@RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
+private object SystemPrediction {
+    fun available(context: Context, event: MotionEvent): Boolean =
+        MotionPredictor(context).isPredictionAvailable(event.deviceId, event.source)
+}
+
+private fun DrawScope.drawPredictedPath(path: List<Offset>, width: Float) {
+    val p = Path().apply {
+        moveTo(path.first().x, path.first().y)
+        for (i in 1 until path.size) lineTo(path[i].x, path[i].y)
+    }
+    drawPath(
+        p,
+        PredictionColor,
+        style = Stroke(
+            width = width,
+            cap = StrokeCap.Round,
+            join = StrokeJoin.Round,
+            pathEffect = PathEffect.dashPathEffect(floatArrayOf(width * 1.2f, width * 1.2f))
+        )
+    )
+}
+
+private fun predictionSummary(r: PredictionReport): String =
+    String.format(
+        Locale.US,
+        "다음 위치 예측: 이벤트 %d · 예측 %d · 평균 %.1fms 앞\n" +
+            "  그 시각 실제 위치와 — 예측 %.1fpx(최대 %.1f) · 예측 없음 %.1fpx",
+        r.events, r.predictions, r.meanLookaheadMs, r.meanPredictedError, r.maxPredictedError, r.meanStaleError
+    )
+
+/** 원 재생의 예측 결과를 logcat 에도(adb 로 대조할 때) */
+private object PredictionProbe {
+    fun log(shape: ReplayShape, r: PredictionReport) {
+        android.util.Log.i("FreehandPredict", shape.name + " " + predictionSummary(r).replace("\n", " |"))
+    }
+}
+
+@Composable
+private fun PredictionCard(prediction: PredictionInfo) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        shape = RoundedCornerShape(12.dp)
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Text(
+                text = "3. 다음 위치 예측 — MotionEventPredictor",
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color(0xFFE65100)
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(
+                text = "손가락이 움직인 뒤 그 위치가 화면에 보이기까지 한 프레임 넘게 걸려, 선 끝은 늘 손가락보다 뒤처진다. " +
+                    "androidx.input:input-motionprediction 의 MotionEventPredictor 에 모든 MotionEvent(DOWN · MOVE · UP)를 " +
+                    "record 하고 프레임마다 predict() 하면 '이 프레임이 화면에 뜰 때 손가락이 있을 곳'까지의 경로를 받는다. 그 경로는 " +
+                    "획에 넣지 않고 그 프레임에만 덧그린다(1번 카드의 주황 점선) — 다음 이벤트가 오면 실제 점으로 바뀐다.",
+                fontSize = 12.sp,
+                color = Color(0xFF757575),
+                lineHeight = 16.sp
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            PredictionInfoLine("이 획의 예측기", prediction.predictorKind)
+            PredictionInfoLine(
+                "마지막 손 획",
+                if (prediction.strokeEvents == 0) {
+                    "없음"
+                } else {
+                    String.format(
+                        Locale.US, "이벤트 %d · 예측 %d · 평균 %.1fms 앞",
+                        prediction.strokeEvents, prediction.strokePredictions, prediction.strokeLookaheadMs
+                    )
+                }
+            )
+            ReplayShape.entries.forEach { shape ->
+                prediction.replays[shape]?.let { PredictionInfoLine(shape.label, predictionSummary(it)) }
+            }
+            if (prediction.replays.isEmpty()) {
+                PredictionInfoLine("재생", "1번 카드에서 모양을 골라 재생하면 여기에 모인다")
+            }
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = "MotionEventPredictor.newInstance(view)\n" +
+                    "pointerInput {\n" +
+                    "  awaitEachGesture {\n" +
+                    "    awaitFirstDown(); predictor.record(currentEvent.motionEvent!!)\n" +
+                    "    val e = awaitPointerEvent()\n" +
+                    "    predictor.record(e.motionEvent!!)      // 디스패치 동안만 유효 — 바로\n" +
+                    "    predictor.predict()?.let { p ->          // 이 프레임에만 그리고 recycle()\n" +
+                    "      drawUntil(p.getX(0), p.getY(0)); p.recycle()\n" +
+                    "    }\n" +
+                    "  }\n" +
+                    "}",
+                fontSize = 10.sp,
+                fontFamily = FontFamily.Monospace,
+                color = Color(0xFFE0E0E0),
+                lineHeight = 14.sp,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(8.dp))
+                    .background(Color(0xFF263238))
+                    .padding(10.dp)
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = "• 누가 예측하나: API 34+ 는 MotionPredictor.isPredictionAvailable(기기, 소스)이 true 일 때 시스템 예측기 — " +
+                    "보통 스타일러스만이라 손가락은 라이브러리 칼만 필터로 넘어간다. 34 미만은 늘 칼만.\n" +
+                    "• 얼마나 앞을 보나: min(32ms, 지금 − 마지막 이벤트 + 프레임 시간). 칼만은 속도가 느리거나 흔들리면 그보다 짧게 " +
+                    "보고(신뢰도), 예측할 샘플이 0 이면 null.\n" +
+                    "• 재생은 정답이 식으로 있다 — 예측한 시각의 곡선 위 위치와 예측점 · '예측 없음(지금 점에 머묾)'의 거리를 잰다.\n" +
+                    "• 빠르게 휘는 곡선은 포기한다 — 150ms 원은 흔들림(가속도 변화)이 상한을 넘어 예측 0. 간격이 고르지 않은 입력" +
+                    "(adb input swipe 등)도 이벤트 대부분이 null 이다. 예측이 없으면 그 프레임은 실제 점까지만 그린다.",
+                fontSize = 12.sp,
+                color = Color(0xFF424242),
+                lineHeight = 17.sp
+            )
+        }
+    }
+}
+
+@Composable
+private fun PredictionInfoLine(label: String, value: String) {
+    Row(modifier = Modifier.fillMaxWidth()) {
+        Text("$label: ", fontSize = 12.sp, fontWeight = FontWeight.Bold, color = Color(0xFF455A64))
+        Text(value, fontSize = 12.sp, color = Color(0xFF424242), fontFamily = FontFamily.Monospace, lineHeight = 16.sp)
     }
 }
 
@@ -726,7 +1034,7 @@ private fun MviPatternCard() {
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(
-                text = "3. MVI 단방향 상태 흐름",
+                text = "4. MVI 단방향 상태 흐름",
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color(0xFF388E3C)
@@ -797,7 +1105,7 @@ private fun ImplementationCard() {
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(
-                text = "4. 제스처 → Path 렌더링 & 내보내기",
+                text = "5. 제스처 → Path 렌더링 & 내보내기",
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color(0xFF388E3C)

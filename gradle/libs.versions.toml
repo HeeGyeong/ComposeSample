@@ -214,6 +214,10 @@ glance = "1.2.0"
 # API 28 이하 지문 대화상자가 별도 FingerprintDialogActivity 에서 창 안 FingerprintDialogController 로 바뀌어 매니페스트에서 그 액티비티가 빠졌다.
 # 새 API 는 ComponentActivity 기반 · 기본 인증 핸들러 선택 수정 · 폴백 목록 정리. 공개 API(internal 제외)는 익명 클래스 2개 말고 동일.
 biometric = "1.4.0-beta01"
+# androidx.input:input-motionprediction(#171 ② — 사용자 승인 2026-11-18): MotionEventPredictor. stable 1.0.1(2026-11-04),
+# aar minCompileSdk 34 / minAGP 8.1.1 / minSdk 23. 런타임 의존은 annotation 1.8.1 · core 1.10.1 뿐(프로젝트가 더 높음 → 끌어올림 0).
+# API 34+ 는 MotionPredictor.isPredictionAvailable(기기, 소스)이 true 일 때 시스템 예측기, 아니면(손가락 등) 라이브러리 칼만 필터.
+inputMotionPrediction = "1.0.1"
 
 # Tracing (Perfetto 커스텀 트레이스 이벤트)
 # debugRuntimeClasspath 에는 이미 전이 해석되어 있으나 debugCompileClasspath 에는 없어(실측 확인)
@@ -409,6 +413,9 @@ biometricCompose = { module = "androidx.biometric:biometric-compose", version.re
 tracing = { module = "androidx.tracing:tracing", version.ref = "tracing" }
 # tracing-wire(#124) — 앱이 직접 Perfetto 트레이스 파일을 쓰는 TraceDriver·TraceSink. tracing 과 같은 atomic group 이라 같은 version.ref.
 tracingWire = { module = "androidx.tracing:tracing-wire", version.ref = "tracing" }
+
+# Input — 터치 다음 위치 예측(#171 ②)
+inputMotionPrediction = { module = "androidx.input:input-motionprediction", version.ref = "inputMotionPrediction" }
 
 # Security State
 securityState = { module = "androidx.security:security-state", version.ref = "securityState" }

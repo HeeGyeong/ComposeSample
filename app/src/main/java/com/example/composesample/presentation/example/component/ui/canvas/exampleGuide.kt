@@ -92,6 +92,25 @@ package com.example.composesample.presentation.example.component.ui.canvas
  * - 탭: 슬롭을 넘지 않아 onDragStart 가 불리지 않음 → 점이 남지 않음(3회) — 예전 문구 "점이 1개뿐이면 원" 은 탭에서 도달하지 않았다
  * - 획 끝: onDragEnd() 에 위치가 없어 손 뗀 위치가 쌓이지 않음 — 14~120px(adb swipe 의 듬성한 이동 이벤트 기준)
  *
+ * ### 다음 위치 예측 — androidx.input:input-motionprediction 1.0.1 (2026-11-18 보강, #171 ②)
+ * - 라이브러리: https://developer.android.com/jetpack/androidx/releases/input
+ * - MotionEventPredictor: https://developer.android.com/reference/androidx/input/motionprediction/MotionEventPredictor
+ * - 시스템 MotionPredictor(API 34): https://developer.android.com/reference/android/view/MotionPredictor
+ * - 쓰는 법: `MotionEventPredictor.newInstance(view)` 하나를 두고 모든 MotionEvent(DOWN · MOVE · UP)를 `record` —
+ *   Compose 에서는 `PointerEvent.motionEvent`(ui 1.12.1 공개, opt-in 없음, 디스패치 동안만 유효) / DOWN 은 awaitFirstDown 뒤 `currentEvent`.
+ *   이벤트마다 `predict()` 한 MotionEvent(가장 먼 점 = 마지막 샘플, 앞은 history)를 획에 넣지 않고 그 프레임에만 덧그린 뒤 `recycle()`.
+ *   예측 좌표는 기록한 이벤트와 같은 좌표계(getX)라 이 이벤트의 getX ↔ change.position 차이로 캔버스 좌표로 옮긴다
+ * - 누가 예측하나(1.0.1 소스): API 34+ 는 이벤트의 (deviceId, source)로 `MotionPredictor.isPredictionAvailable` 이 true 일 때만
+ *   시스템 예측기, 아니면 라이브러리 칼만 필터 — Pixel Tablet API 35 에뮬의 손가락(터치스크린)은 미지원 → 칼만. 34 미만은 늘 칼만
+ * - 얼마나 앞을 보나: `min(32ms, 지금 − 마지막 이벤트 + 가장 빠른 프레임 시간)`. 칼만은 보고 주기 단위로 샘플을 만들되
+ *   신뢰도 = 속도 계수 × (1 − 흔들림 계수)만큼만 — 흔들림(가속도 변화)이 상한 0.2 를 넘으면 0 → `predict()` 가 null
+ * - 실측(재생 곡선 — 예측한 시각의 곡선 위 위치를 식으로 계산해 예측점 · '예측 없음(지금 점)'과의 거리, 3회씩 같은 값, debug = release):
+ *   Pixel Tablet API 35 에뮬 — 원 150ms 이벤트 10 중 예측 0(흔들림) · 원 600ms 37 중 34 · 평균 32.8ms 앞 · 5.5px(최대 11.0) vs 71.7px ·
+ *   직선 300ms 19 중 15 · 31.3ms · 3.0px(최대 12.4) vs 204.7px / Pixel 4 API 30 에뮬 — 원 600ms 34 · 32.6ms · 7.5px vs 98.1px ·
+ *   직선 16 · 32.1ms · 1.4px vs 85.0px(폰이라 곡선 크기가 다름). 원 600ms 재생 중 캡처에서 주황 점선이 획 끝에서 원을 따라 앞으로 뻗는다
+ * - `adb shell input swipe` 는 간격이 고르지 않아 55 이벤트 중 13 만 예측(나머지 null) — 실제 손 입력의 예측률은 기기에서 볼 것
+ * - 원 150ms 재생의 historical 측정은 그대로: 반지름 210px(태블릿) position 만 10점 12.7px · 포함 37점 0.8px = r(1 − cos(π/n))
+ *
  * ### MVI 단방향 상태 흐름 (DrawBox 아키텍처 차용)
  * - `DrawIntent`(StartStroke/Drag/EndStroke/Undo/Redo/Clear/SetColor/SetWidth) sealed interface
  * - 순수 `reduce(state, intent): DrawBoxState` 리듀서 — 부수효과 없이 다음 상태만 계산

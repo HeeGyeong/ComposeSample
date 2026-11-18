@@ -558,9 +558,9 @@ val examples2026 = listOf(
         exampleType = ConstValue.PreviewDrivenScreenshotExample
     ),
     ExampleObject(
-        lastUpdate = "26. 11. 06",
+        lastUpdate = "26. 11. 18",
         title = "Freehand Drawing (Signature Canvas)",
-        description = "프레임 사이 중간점(historical)까지 그리는 자유 곡선 캔버스와 MVI Undo/Redo",
+        description = "중간점(historical) · 다음 위치 예측까지 그리는 자유 곡선과 MVI Undo/Redo",
         blogUrl = "",
         exampleType = ConstValue.FreehandDrawingExample
     ),

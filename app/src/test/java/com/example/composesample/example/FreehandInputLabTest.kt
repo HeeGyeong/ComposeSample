@@ -1,8 +1,11 @@
 package com.example.composesample.example
 
 import androidx.compose.ui.geometry.Offset
+import com.example.composesample.presentation.example.component.ui.canvas.PredictionSample
 import com.example.composesample.presentation.example.component.ui.canvas.append
+import com.example.composesample.presentation.example.component.ui.canvas.circlePositionAt
 import com.example.composesample.presentation.example.component.ui.canvas.maxCircleDeviation
+import com.example.composesample.presentation.example.component.ui.canvas.predictionReport
 import com.example.composesample.presentation.example.component.ui.canvas.replayFrames
 import com.example.composesample.presentation.example.component.ui.canvas.startStroke
 import org.junit.Assert.assertEquals
@@ -112,5 +115,53 @@ class FreehandInputLabTest {
         val onCircle = Offset(center.x + radius, center.y)
         assertEquals(0f, maxCircleDeviation(listOf(onCircle), center, radius), 1e-3f)
         assertEquals(0f, maxCircleDeviation(emptyList(), center, radius), 0f)
+    }
+
+    // ---- 다음 위치 예측(#171 ②) ----
+
+    @Test
+    fun `원 위치 — 0ms 는 오른쪽 끝, 1_4 지나면 아래(화면 좌표 시계 방향), 끝을 넘으면 이어 간다`() {
+        val c = Offset(100f, 100f)
+        val start = circlePositionAt(c, 50f, 0.0)
+        assertEquals(150f, start.x, 1e-4f)
+        assertEquals(100f, start.y, 1e-4f)
+        val quarter = circlePositionAt(c, 50f, 37.5)
+        assertEquals(100f, quarter.x, 1e-3f)
+        assertEquals(150f, quarter.y, 1e-3f)
+        val beyond = circlePositionAt(c, 50f, 150.0 + 37.5)
+        assertEquals(quarter.x, beyond.x, 1e-3f)
+        assertEquals(quarter.y, beyond.y, 1e-3f)
+    }
+
+    @Test
+    fun `완벽한 예측은 오차 0, 예측 없음은 그만큼 뒤처진다`() {
+        val c = Offset(0f, 0f)
+        val r = 100f
+        val current = circlePositionAt(c, r, 50.0)
+        val target = circlePositionAt(c, r, 70.0)
+        val report = predictionReport(
+            listOf(PredictionSample(50, current, target, 70)),
+            c, r
+        )
+        assertEquals(1, report.predictions)
+        assertEquals(20.0, report.meanLookaheadMs, 1e-9)
+        assertEquals(0f, report.meanPredictedError, 1e-3f)
+        // 20ms = 원의 2/15 바퀴 → 현을 잇는 거리 2r·sin(π·20/150)
+        val chord = (2 * r * sin(PI * 20 / 150)).toFloat()
+        assertEquals(chord, report.meanStaleError, 1e-2f)
+    }
+
+    @Test
+    fun `예측 없는 이벤트는 세되 점수에서 빼고, 손 뗀 뒤를 겨냥한 예측도 뺀다`() {
+        val c = Offset(0f, 0f)
+        val samples = listOf(
+            PredictionSample(0, Offset(100f, 0f), null, null),
+            PredictionSample(140, Offset(0f, 0f), Offset(0f, 0f), 170), // 150ms 넘음
+        )
+        val report = predictionReport(samples, c, 100f)
+        assertEquals(2, report.events)
+        assertEquals(1, report.predictions)
+        assertEquals(0.0, report.meanLookaheadMs, 0.0)
+        assertEquals(0f, report.meanPredictedError, 0f)
     }
 }
