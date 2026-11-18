@@ -17,7 +17,7 @@ import java.util.Locale
 
 /**
  * GsonMissingFieldExample 6~8번 카드 — 같은 응답을 kotlinx.serialization(컴파일러 플러그인이 만든 serializer) + Json 으로 파싱한다.
- * 화면(GsonMissingFieldExampleUI)과 단위 테스트(JsonMissingFieldTest)가 함께 쓴다. 측정 버전: kotlinx-serialization 1.12.0.
+ * 화면(GsonMissingFieldExampleUI)과 단위 테스트(JsonMissingFieldTest)가 함께 쓴다. 측정 버전: kotlinx-serialization 1.13.0(2026-11-18, 1.12.0 에서 상향 — 바뀐 것은 init 검증 실패 줄).
  *
  * 플러그인이 만든 serializer 는 생성자를 부른다 — 누락 키에는 Kotlin 기본값이 들어가고, 기본값 없는 키가 빠지거나
  * non-null 에 null 이 오면 '파싱하는 줄'에서 경로와 함께 실패한다. Gson 처럼 성공한 뒤 값을 쓰는 줄에서 NPE 가 나지 않는다.
