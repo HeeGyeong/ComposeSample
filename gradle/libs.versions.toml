@@ -75,6 +75,10 @@ lifecycleRuntimeKtx = "2.11.1"
 lifecycleLivedataKtx = "2.11.1"
 lifecycleViewmodelKtx = "2.11.1"
 lifecycleViewmodelCompose = "2.11.1"
+# lifecycle-viewmodel-navigation3(#117, 2026-11-20 사용자 승인) — Nav3 엔트리마다 ViewModelStore 를 주는 rememberViewModelStoreNavEntryDecorator.
+# lifecycle 과 같은 버전으로 움직인다. aar minCompileSdk 37 · minAGP 9.1.0(충족), module 의존(activity-compose 1.12.0 · compose runtime 1.10.4 ·
+# navigation3-runtime 1.0.1 · savedstate 1.3.2)은 전부 프로젝트보다 낮아 끌어올림 0.
+lifecycleViewmodelNavigation3 = "2.11.1"
 
 # Koin 4.2.2 (DI-01 해소, 2026-09-15). 3.x 대비 코드 영향:
 # ① koinViewModel 의 owner 파라미터 이름이 viewModelStoreOwner 로 바뀜 ② org.koin.androidx.compose.get 제거 → org.koin.compose.koinInject
@@ -374,6 +378,7 @@ lifecycleViewmodelKtx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx",
 lifecycleViewmodelCompose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycleViewmodelCompose" }
 lifecycleRuntimeKtx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
 lifecycleLivedataKtx = { module = "androidx.lifecycle:lifecycle-livedata-ktx", version.ref = "lifecycleLivedataKtx" }
+lifecycleViewmodelNavigation3 = { module = "androidx.lifecycle:lifecycle-viewmodel-navigation3", version.ref = "lifecycleViewmodelNavigation3" }
 
 # Dependency Injection - Koin
 koinCore = { module = "io.insert-koin:koin-core", version.ref = "koinCore" }

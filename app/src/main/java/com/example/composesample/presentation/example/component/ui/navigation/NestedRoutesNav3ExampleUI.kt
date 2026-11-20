@@ -61,6 +61,8 @@ fun NestedRoutesNav3ExampleUI(
     onBackEvent: () -> Unit
 ) {
     var currentTab by remember { mutableStateOf<AppRoute>(AppRoute.Home) }
+    // 실물 카드(#117) — 탭마다 백스택 · 장식된 엔트리를 화면 최상위에서 만든다
+    val tabsDemo = rememberTabsRealDemo()
 
     Column(
         modifier = Modifier
@@ -82,6 +84,7 @@ fun NestedRoutesNav3ExampleUI(
             item { RealNavBackStackDemoCard() }
             item { RealStateManagementDemoCard() }
             item { RealRouteComponentDemoCard() }
+            item { NestedRoutesRealCard(tabsDemo) }
         }
     }
 }
@@ -97,7 +100,8 @@ private fun SimulationNoticeCard() {
         Text(
             text = "⚠️ 이 화면의 백스택/상태 저장/컴포넌트 생명주기 동작은 실제 Nav3 API 호출이 아니라, " +
                 "개념 이해를 돕기 위해 직접 구현한 시뮬레이터(NavBackStackSimulator 등)입니다. " +
-                "메모리 사용량 등 수치는 예시를 위한 임의값이며, 실제 API는 각 섹션 하단 안내를 참고하세요.",
+                "메모리 사용량 등 수치는 예시를 위한 임의값이며, 실제 API는 각 섹션 하단 안내를 참고하세요. " +
+                "맨 아래 '✅ 실물' 카드만 실제 Nav3 API(rememberNavBackStack · rememberDecoratedNavEntries · NavDisplay)로 탭마다 백스택을 둡니다.",
             fontSize = 12.sp,
             color = Color(0xFFE65100),
             modifier = Modifier.padding(12.dp)
@@ -486,7 +490,7 @@ private fun RealNavBackStackDemoCard() {
                 color = Color(0xFF4CAF50).copy(alpha = 0.1f)
             ) {
                 Text(
-                    text = "💡 실제로는 rememberNavBackStack<RouteType>()으로 생성되며, 각 RouteComponent가 독립적인 백스택을 유지합니다!",
+                    text = "💡 실제로는 rememberNavBackStack(루트 키)을 탭(RouteComponent)마다 하나씩 두어 독립적인 백스택을 유지합니다 — 맨 아래 실물 카드",
                     modifier = Modifier.padding(8.dp),
                     fontSize = 11.sp,
                     color = Color(0xFF388E3C),

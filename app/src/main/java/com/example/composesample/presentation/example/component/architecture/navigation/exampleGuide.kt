@@ -10,7 +10,7 @@ package com.example.composesample.presentation.example.component.architecture.na
  * - Navigation3는 기존 NavController 기반 Navigation2를 대체하는 새 Compose 전용 라이브러리
  * - NavEntry<T>: 화면을 나타내는 타입 안전 엔트리 (sealed class 활용 권장)
  * - NavDisplay: 현재 NavEntry를 렌더링하는 Composable
- * - BackStack: NavEntry 목록을 State로 직접 관리 (remember { mutableStateListOf() })
+ * - BackStack: NavKey 목록을 State로 직접 관리 (rememberNavBackStack — 키를 직렬화해 재생성 · 프로세스 종료 뒤 복원)
  *
  * Navigation2 vs Navigation3 비교:
  * - Navigation2: NavController.navigate(route: String), XML/DSL 정의, 내부 백스택 관리
@@ -165,7 +165,8 @@ package com.example.composesample.presentation.example.component.architecture.na
  *
  * 의존성:
  * - 이 예제가 프로젝트 최초의 실제 navigation3 사용이다(navigation3-ui / navigation3-runtime, 도입 1.1.7 → 2026-10-01 1.2.0).
- *   위의 Navigation3 / Nav3ViewModelScope / Nav3SavedStateHandle 은 여전히 의존성 없는 시뮬레이션이다.
+ *   위의 Navigation3 / Nav3ViewModelScope / Nav3SavedStateHandle 은 의존성 없는 시뮬레이션이었다 — 2026-11-20 #117 에서
+ *   세 예제와 NestedRoutesNav3 에 실물 카드를 더했다(시뮬레이션 카드는 Nav2 대비 개념 대조용으로 남김, 아래 #117 절).
  * - 1.1.7 aar-metadata = minCompileSdk 36 / minAGP 8.9.1. ui pom 의 요구(activity-compose 1.12.0 · lifecycle 2.10.0 ·
  *   compose 1.11.2 · navigationevent 1.1.2 · savedstate 1.4.0)가 전부 현재 해석 버전 이하라 전이 끌어올림이 없다.
  *   1.2.0 라인(minCompileSdk=37)은 2026-09-29 compileSdk 37 상향으로 채택 가능해졌다.
@@ -263,4 +264,57 @@ package com.example.composesample.presentation.example.component.architecture.na
  * - 재생성(다크 모드 전환 후 원래 값 복원)·프로세스 종료(am kill → 최근 앱, 새 pid): 백스택은 Home › Checkout › AddressPicker 그대로,
  *   버스는 새 인스턴스(identityHashCode 이력) — AddressPicker 에서 보내 둔 3개가 돌아간 뒤 0개 도착. KDoc 의
  *   'not saved across configuration changes or process death' 그대로.
+ *
+ * ## #117 실물 카드 — Navigation3 · Nav3ViewModelScope · Nav3SavedStateHandle · NestedRoutesNav3
+ * - 범위: 시뮬레이션 4종(약 2,735줄)을 지우지 않고 화면마다 '✅ 실물' 카드 하나를 더했다(사용자 승인 2026-11-20 — "제약은 다 승인,
+ *   크래시 · 사이드 이펙트 없이"). 시뮬레이션 코드는 그대로, 사실과 달라진 안내 문구 3곳만 고쳤다
+ *   (Nav3 의 엔트리 ViewModel 은 rememberSaveableStateHolder + DisposableEffect 가 아니라 rememberViewModelStoreNavEntryDecorator,
+ *   rememberNavBackStack<RouteType>() 이라는 제네릭 함수는 없다).
+ * - 새 의존성: androidx.lifecycle:lifecycle-viewmodel-navigation3 2.11.1 — aar minCompileSdk 37 · minAGP 9.1.0(충족),
+ *   module 의존(activity-compose 1.12.0 · compose runtime 1.10.4 · navigation3-runtime 1.0.1 · savedstate 1.3.2)이 전부 프로젝트보다
+ *   낮아 해석 diff 는 이 아티팩트 2좌표 추가뿐(app 5구성 + data · Core · Coordinator)
+ * - 공식 문서: https://developer.android.com/guide/navigation/navigation-3/basics
+ *   · 상태 저장: https://developer.android.com/guide/navigation/navigation-3/save-state
+ *   · navigation3 runtime(rememberDecoratedNavEntries · rememberSaveableStateHolderNavEntryDecorator):
+ *     https://developer.android.com/reference/kotlin/androidx/navigation3/runtime/package-summary
+ *   · lifecycle-viewmodel-navigation3: https://developer.android.com/reference/kotlin/androidx/lifecycle/viewmodel/navigation3/package-summary
+ *   · rememberViewModelStoreOwner · rememberViewModelStoreProvider: https://developer.android.com/reference/kotlin/androidx/lifecycle/viewmodel/compose/package-summary
+ *   · lifecycle 2.11 릴리스 노트(범위 ViewModel · Navigation3 연동): https://developer.android.com/jetpack/androidx/releases/lifecycle
+ *   · 여러 백스택 레시피: https://github.com/android/nav3-recipes
+ * - 소스(androidx-main): https://github.com/androidx/androidx/blob/androidx-main/lifecycle/lifecycle-viewmodel-navigation3/src/commonMain/kotlin/androidx/lifecycle/viewmodel/navigation3/ViewModelStoreNavEntryDecorator.kt
+ *   · https://github.com/androidx/androidx/blob/androidx-main/navigation3/navigation3-runtime/src/commonMain/kotlin/androidx/navigation3/runtime/DecoratedNavEntries.kt
+ *   — 아래 규칙은 프로젝트 해석 버전 navigation3 1.2.2 · lifecycle-viewmodel-navigation3 · lifecycle-viewmodel-compose 2.11.1 의
+ *     sources jar 로 확인했다
+ * - 규칙:
+ *   · ViewModelStoreNavEntryDecorator: 엔트리마다 rememberViewModelStoreOwner(entry.contentKey, provider) 를 LocalViewModelStoreOwner 로 준다.
+ *     onPop(contentKey) 에서 provider.clearKey → 그 엔트리 저장소의 ViewModel 이 onCleared. SavedStateHandle 을 쓰려면
+ *     rememberSaveableStateHolderNavEntryDecorator 와 함께 쓴다(KDoc). removeViewModelStoreOnPop 매개변수는 2.11 에서 무시 · deprecated
+ *   · 키로 만든 owner 의 저장소는 '컴포지션을 떠난다고' 비워지지 않는다 — clearKey 나 provider 가 사라질 때만. provider 는
+ *     rememberViewModelStoreProvider 를 부른 자리가 컴포지션을 떠날 때 정리(부모가 회전을 넘기면 회전은 넘긴다)
+ *   · onPop 은 PrepareBackStack 의 DisposableEffect onDispose 에서 불린다(적용 단계 — 여기서 스냅숏 상태를 써도 된다)
+ *   · rememberDecoratedNavEntries 는 백스택 하나당 하나. 여러 백스택이면 탭마다 따로 부르고 NavDisplay(entries = …) 에 지금 탭 것만 준다 —
+ *     다른 탭의 엔트리는 NavDisplay 밖으로 빠져도 onPop 이 오지 않아 저장 상태 · ViewModel 이 남는다
+ *   · NavDisplay(backStack, entryDecorators, entryProvider) 는 안에서 rememberDecoratedNavEntries 를 부른다 — 이것을 화면 최상위로 올리면
+ *     LazyColumn 카드가 스크롤로 폐기돼도 장식 상태가 남는다(이 화면들의 실물 카드 셋이 이렇게 한다)
+ *   · Android 의 rememberNavBackStack(vararg NavKey) 는 SavedStateConfiguration 없이 리플렉션으로 직렬화기를 찾는다 — 키는 @Serializable + NavKey
+ *   · @Serializable 키에 () -> Unit 필드를 넣어도 컴파일된다 — 플러그인이 Function0 에 PolymorphicSerializer 를 붙인다(javap). 저장할 때
+ *     'Serializer for subclass … is not found in the polymorphic scope of Function0' SerializationException. 시뮬레이션 카드의 '복원 때 크래시' 가
+ *     실물에서는 '저장 때 크래시' 다
+ *   · rememberSaveable 은 호출 위치로 저장 키를 정한다 — 탭 넷의 rememberNavBackStack · 데코레이터를 반복문 한 자리에서 부르지 않고 따로 부른다
+ * - 설계: ViewModel 은 액티비티 저장소에 만들지 않는다 — ViewModel 스코프 카드는 방식마다 rememberViewModelStoreOwner() 를 부모로 쓰고
+ *   (방식을 바꾸면 key(mode) 아래가 떠나며 그 방식의 ViewModel 이 정리된다. 처음엔 손으로 viewModelStore.clear() 를 불렀는데,
+ *   데코레이터 provider 가 부모 저장소에 둔 보관 객체까지 지울 수 있어 바꿨다). SavedStateHandle · 탭 카드는 데코레이터 기본 부모(액티비티)를 쓰되
+ *   provider 가 예제 화면 컴포지션에 묶여 예제를 닫으면 정리된다
+ * - 실측(헤드리스 에뮬, 실기기는 쓰지 않았다 — Pixel 4 API 30 debug · release 디버그 키 서명, 화면 글자를 단계마다 덤프):
+ *   · Navigation3: Profile(user_123) → Detail #7 → #8, 시스템 뒤로 가기 1번 = 이 백스택 하나 줄임 · 다크 모드 왕복 뒤 그대로 ·
+ *     am kill(pid 없음) → 최근 앱 복귀 뒤 Home › Profile(user_123) › Detail(#7) 그대로 · '처음으로' 뒤 시스템 뒤로 가기 = 예제 닫힘
+ *   · ViewModel 스코프: 데코레이터 있음 Home #1 · Detail 1 #2 · Detail 2 #3, Pop → '#3 onCleared'. 없음으로 바꾸면 #1 · #2 정리,
+ *     Home #4 를 Detail 1 도 '#4 (처음 만든 화면: Home)' 로 함께 쓰고 count 공유, Pop 해도 기록 없음. 다시 바꾸면 #4 정리
+ *   · SavedStateHandle: Alice 읽음 2 → 다크 모드 왕복 2 · am kill → 최근 앱 2. 뒤로 → 다시 Alice 0. u-999 '찾을 수 없음'.
+ *     임시 프로브(커밋 안 함)로 람다 키를 백스택에 넣으면 넣을 때는 멀쩡하고 HOME(상태 저장)에서 FATAL SerializationException
+ *   · 탭: Home/1 · Home/2(#3) → Plans/1(#5) → Home 으로 돌아오면 Home/2 #3 그대로, 탭 전환만으로 onCleared 0. Pop → '#3 onCleared',
+ *     Home/1 #2 · rememberSaveable 1 그대로. 카드를 위로 멀리 스크롤했다 돌아와도 같음
+ * - 함정:
+ *   · 기기 스크립트의 앵커 '✅ 실물' 이 NestedRoutes 안내 카드 문구에도 들어 있어 엉뚱한 카드로 갔다 → 카드 제목 앞부분까지 앵커로
+ *   · 프로세스 종료 확인: am kill 뒤 pidof 는 종료 코드 1(정상), 최근 앱 화면은 앱 포커스가 아니라 안전 탭 헬퍼가 거부 → input tap 직접
  */

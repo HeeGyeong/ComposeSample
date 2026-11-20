@@ -135,9 +135,9 @@ val examples2025 = listOf(
         exampleType = ConstValue.NestedScrollingExample
     ),
     ExampleObject(
-        lastUpdate = "25. 09. 01",
+        lastUpdate = "26. 11. 20",
         title = "Nested Routes with Navigation 3",
-        description = "Navigation 3의 중첩 라우팅과 RouteComponent를 활용한 네비게이션 예제",
+        description = "Navigation 3의 중첩 라우팅 — 시뮬레이터와 탭마다 백스택을 둔 실물",
         exampleType = ConstValue.NestedRoutesNav3Example
     ),
     ExampleObject(
@@ -195,9 +195,9 @@ val examples2025 = listOf(
         exampleType = ConstValue.FlatMapExample
     ),
     ExampleObject(
-        lastUpdate = "25. 11. 27",
+        lastUpdate = "26. 11. 20",
         title = "Jetpack Navigation 3",
-        description = "새로운 Navigation 라이브러리: Compose State 기반 네비게이션",
+        description = "Compose State 기반 네비게이션 — 개념 시뮬레이션과 NavDisplay 실물",
         exampleType = ConstValue.Navigation3Example
     ),
     ExampleObject(

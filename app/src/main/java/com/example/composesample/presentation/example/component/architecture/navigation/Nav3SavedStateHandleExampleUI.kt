@@ -50,6 +50,9 @@ import com.example.composesample.presentation.MainHeader
 fun Nav3SavedStateHandleExampleUI(
     onBackEvent: () -> Unit
 ) {
+    // 실물 카드(#117) — 백스택 · 엔트리 저장 상태 · 엔트리 ViewModel 을 화면 최상위에서 만든다
+    val sshDemo = rememberSshRealDemo()
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -68,6 +71,7 @@ fun Nav3SavedStateHandleExampleUI(
             item { IntroCard() }
             item { CrashCard() }
             item { SafeRestoreCard() }
+            item { Nav3SavedStateHandleRealCard(sshDemo) }
         }
     }
 }
@@ -156,7 +160,8 @@ private fun IntroCard() {
                 "Nav3 백스택은 State<List<NavKey>> 입니다. 프로세스가 종료되었다 복원될 때 " +
                         "각 NavKey 는 SavedState(Bundle)로 직렬화/역직렬화됩니다. " +
                         "이때 키에 람다·런타임 객체 같은 직렬화 불가능한 필드를 담으면 복원 단계에서 크래시가 납니다. " +
-                        "아래에서 크래시를 재현하고, id + Repository 패턴으로 안전하게 복원합니다.",
+                        "아래에서 크래시를 재현하고, id + Repository 패턴으로 안전하게 복원합니다. " +
+                        "두 카드의 직렬화는 문자열로 흉내 낸 것이고, 마지막 실물 카드는 rememberNavBackStack · SavedStateHandle 로 실제로 저장 · 복원합니다.",
                 fontSize = 12.sp,
                 color = Color(0xFF4527A0),
                 lineHeight = 16.sp

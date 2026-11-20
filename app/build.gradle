@@ -223,6 +223,8 @@ dependencies {
     // Navigation3 (SceneStrategy/OverlayScene 로 레이어드 바텀시트 스택 — Nav3SceneStrategy 예제)
     implementation(libs.navigation3Runtime)
     implementation(libs.navigation3Ui)
+    // Nav3 엔트리 범위 ViewModel(rememberViewModelStoreNavEntryDecorator) — #117 실물 카드(ViewModel 스코프 · SavedStateHandle · 탭별 백스택)
+    implementation(libs.lifecycleViewmodelNavigation3)
 
     // Molecule (Compose runtime 으로 UI 밖에서 StateFlow 를 만드는 프리젠터 — MoleculePresenter 예제)
     implementation(libs.moleculeRuntime)

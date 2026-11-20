@@ -49,6 +49,9 @@ import com.example.composesample.presentation.MainHeader
 fun Nav3ViewModelScopeExampleUI(
     onBackEvent: () -> Unit
 ) {
+    // 실물 카드(#117) — 백스택 · 장식된 엔트리 · ViewModel 저장소를 화면 최상위에서 만든다
+    val scopeDemo = rememberScopeRealDemo()
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -68,6 +71,7 @@ fun Nav3ViewModelScopeExampleUI(
             item { Nav2AutoScopeCard() }
             item { Nav3DefaultCard() }
             item { Nav3RestoreScopeCard() }
+            item { Nav3ViewModelScopeRealCard(scopeDemo) }
         }
     }
 }
@@ -91,7 +95,8 @@ private fun IntroCard() {
             Text(
                 "Nav2는 NavBackStackEntry 자체가 ViewModelStoreOwner 였습니다. " +
                         "Nav3는 백스택이 List<NavKey> 라는 순수 상태 — 기본적으로는 자동 스코프가 없습니다. " +
-                        "아래 3가지 시나리오로 차이를 확인합니다.",
+                        "아래 3가지 시나리오(개념 시뮬레이션)로 차이를 보고, 마지막 실물 카드에서 " +
+                        "lifecycle-viewmodel-navigation3 로 실제 동작을 확인합니다.",
                 fontSize = 12.sp,
                 color = Color(0xFF4527A0),
                 lineHeight = 16.sp
@@ -367,7 +372,7 @@ private fun Nav3RestoreScopeCard() {
             Spacer(Modifier.height(8.dp))
 
             HintBox(
-                "💡 실제 Nav3 에서는 rememberSaveableStateHolder + DisposableEffect 로 동일 로직을 구현합니다",
+                "💡 실제 Nav3 에서는 lifecycle-viewmodel-navigation3 의 rememberViewModelStoreNavEntryDecorator 가 이 일을 한다 — 맨 아래 실물 카드",
                 Color(0xFF1565C0)
             )
         }

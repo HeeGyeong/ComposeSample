@@ -425,16 +425,16 @@ val examples2026 = listOf(
         exampleType = ConstValue.AppSecurityExample
     ),
     ExampleObject(
-        lastUpdate = "26. 04. 20",
+        lastUpdate = "26. 11. 20",
         title = "Nav3 ViewModel Scope",
-        description = "Navigation 3의 ViewModel 스코프 변화(Nav2 vs Nav3 vs NavKey) 비교",
+        description = "Navigation 3의 ViewModel 스코프 변화 비교 + 엔트리 데코레이터 실물",
         blogUrl = "",
         exampleType = ConstValue.Nav3ViewModelScopeExample
     ),
     ExampleObject(
-        lastUpdate = "26. 06. 10",
+        lastUpdate = "26. 11. 20",
         title = "Nav3 SavedStateHandle 크래시 & 복원",
-        description = "NavKey에 복합 객체를 담으면 발생하는 역직렬화 크래시와 안전한 대안",
+        description = "NavKey에 복합 객체를 담을 때의 크래시와 안전한 대안 + 실물 저장 · 복원",
         blogUrl = "",
         exampleType = ConstValue.Nav3SavedStateHandleExample
     ),
