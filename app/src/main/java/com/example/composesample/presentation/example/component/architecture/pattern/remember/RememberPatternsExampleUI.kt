@@ -177,8 +177,9 @@ private fun RememberSerializableSection() {
 
     // mutableStateSetOf 는 SnapshotStateSetSerializer(savedstate 1.5)로 kotlinx-serialization 인코딩해 저장한다.
     // ⚠️ rememberSaveable { mutableStateSetOf() } 는 canBeSaved=true(Android 의 SnapshotStateSet 은 Parcelable)라 받아 주지만,
-    //    Compose runtime 1.12.1 의 SnapshotStateSet.writeToParcel 이 원소를 첫 번째 하나만 쓴다(if/while 버그, 1.13.0-alpha03 에서 수정).
-    //    원소가 2개 이상이면 프로세스 종료 후 복원에서 Bundle 이 어긋난다 — 그래서 이 화면은 그 경로로 저장하지 않는다.
+    //    Compose runtime 1.12.1 의 SnapshotStateSet.writeToParcel 이 원소를 첫 번째 하나만 쓴다(if/while 버그, 1.13.0-alpha03 에서 수정 —
+    //    프로젝트는 2026-11-20 부터 1.13.0, sources 에서 while 확인). 원소가 2개 이상이면 프로세스 종료 후 복원에서 Bundle 이 어긋났다 —
+    //    이 화면은 처음부터 그 경로로 저장하지 않는다(rememberSerializable 은 버전과 무관하게 맞다).
     val colorsSerial = rememberSerializable(serializer = SnapshotStateSetSerializer(String.serializer())) {
         mutableStateSetOf<String>()
     }
@@ -249,8 +250,8 @@ private fun RememberSerializableSection() {
         )
         Spacer(modifier = Modifier.height(6.dp))
         WarningBox(
-            text = "rememberSaveable { mutableStateSetOf() } 는 받아 주지만(canBeSaved=$setSavable) 1.12.1 에서는 쓰지 말 것.\n" +
-                "SnapshotStateSet.writeToParcel 이 개수는 N 으로 쓰고 원소는 첫 번째 하나만 쓴다(1.13.0-alpha03 에서 수정).\n" +
+            text = "rememberSaveable { mutableStateSetOf() } 는 받아 주지만(canBeSaved=$setSavable) Compose 1.12.x 까지는 쓰면 안 됐다.\n" +
+                "SnapshotStateSet.writeToParcel 이 개수는 N 으로 쓰고 원소는 첫 번째 하나만 썼다(1.13.0-alpha03 에서 수정 — 이 앱은 지금 1.13.0).\n" +
                 "실측(원소 2개 → 홈 → 프로세스 종료 → 복귀): release 는 [빨강, null] 로 파랑 유실 + 뒤 항목까지 Parcel 경고, " +
                 "debug 는 BadParcelableException 으로 화면이 비었다. 원소 1개·다크 모드 재생성(직렬화 없음)은 멀쩡하다."
         )

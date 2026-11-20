@@ -4,6 +4,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.text.input.ExpandPolicy
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.SaverScope
 import androidx.compose.ui.text.TextRange
 import com.example.composesample.presentation.example.component.ui.text.FormatKind
@@ -118,12 +119,14 @@ class FormattedTextLabTest {
     }
 
     @Test
-    fun `1_12_1 실측 — 기본 Saver 는 서식을 버리고 직접 만든 Saver 는 지킨다`() {
+    fun `1_13_0 실측 — 기본 Saver 도 서식을 지킨다(1_12_1 은 버렸다) · 직접 만든 Saver 도 지킨다`() {
         val (builtin, custom) = saverReports()
         assertEquals("hello world", builtin.restoredText)
         assertEquals("3,7", builtin.restoredSelection)
-        assertEquals("없음", builtin.restoredStyles)
-        // 기본 Saver 는 undo 이력은 저장해서 복원 뒤에도 되돌릴 것이 남아 있다
+        // 1.12.1 은 "없음" 이었다 — 1.13.0 의 Saver 는 [텍스트, 선택 시작, 선택 끝, undo, 서식] 5항목
+        assertEquals("굵게[0,5)", builtin.restoredStyles)
+        assertEquals(5, builtin.savedItems)
+        // 기본 Saver 는 undo 이력도 저장해서 복원 뒤에도 되돌릴 것이 남아 있다
         assertTrue(builtin.canUndoAfterRestore)
 
         assertEquals("hello world", custom.restoredText)
@@ -132,6 +135,21 @@ class FormattedTextLabTest {
         assertFalse(custom.canUndoAfterRestore)
         // 텍스트 · 선택 2 + (종류, 시작, 끝) 1개
         assertEquals(6, custom.savedItems)
+    }
+
+    @Test
+    fun `1_13_0 기본 Saver 는 ExpandPolicy 까지 되살리고 직접 만든 Saver 는 AtEnd 로 되살린다`() {
+        fun roundTripInsideOnly(saver: Saver<TextFieldState, Any>): String {
+            val state = TextFieldState("hello world")
+            state.edit { addStyle(FormatKind.Bold.style, TextRange(0, 5), ExpandPolicy.InsideOnly) }
+            val saved = with(saver) { SaverScope { true }.save(state) }!!
+            val restored = saver.restore(saved)!!
+            // 굵게 끝 경계에 한 글자 — InsideOnly 면 늘지 않고 AtEnd 면 는다
+            restored.edit { replace(5, 5, "Z") }
+            return styles(restored)
+        }
+        assertEquals("굵게[0,5)", roundTripInsideOnly(TextFieldState.Saver))
+        assertEquals("굵게[0,6)", roundTripInsideOnly(FormattedTextStateSaver))
     }
 
     @Test

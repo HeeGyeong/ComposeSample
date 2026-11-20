@@ -45,6 +45,13 @@ package com.example.composesample.presentation.example.component.ui.layout.lazyc
  *   behindFraction) 두 가지. ahead = 스크롤 방향 앞쪽을 미리 컴포즈(prefetch), behind = 지나간 쪽을 버리지 않고 유지.
  * - 1.12.1 에서는 rememberLazyListState(cacheWindow) / rememberLazyGridState(cacheWindow) 로 건다.
  *   LazyColumn(cacheWindow = …) 파라미터는 1.13.0-alpha03 신규라 없다. rememberSaveable 이 윈도우를 키로 쓴다.
+ * - **Compose 1.13.0(2026-11-20 BOM 2026.11.01 상향 — DEP-CURRENCY-35)**: 캐시 창은 LazyColumn · LazyRow(cacheWindow = …) 매개변수로 주고,
+ *   LazyListState 로 주는 방식 · LazyListPrefetchStrategy 는 deprecated. 매개변수를 안 주면 기본값 LazyListDefaults.cacheWindow(state) —
+ *   스크롤하는 동안만, 앞쪽을 보이는 아이템 평균 크기(뷰포트의 10~50%)만큼, 지나간 쪽 0(foundation 1.13.0 sources).
+ *   이 예제의 데모를 매개변수로 옮겼고, 1번 카드 대조(같은 adb 조작, Pixel 4 API 30 debug)에서 기본 모드는 1.12.1 과 같은 수
+ *   (살아 있는 컴포지션 8 · 7 · 8, 앞쪽 1 · 지나간 쪽 0), Dp · 비율 모드는 스크롤이 멈춘 위치 차로 ±1 이었다.
+ *   임시 플래그 ComposeFoundationFlags.isPausableCompositionInPrefetchEnabled 는 1.13 에서 없어져 prefetch 는 늘 Pausable composition 이다
+ *   (3번 카드의 '끈 빌드' 실측은 1.12 기록)
  * - 미리 컴포즈는 prefetch 단계에서 compose + apply 까지 끝난다(LazyLayoutPrefetchState.performApply) →
  *   LaunchedEffect·DisposableEffect 가 화면에 나오기 전에 실행된다 → 이것으로 노출을 세면 가짜 노출.
  * - Modifier.onVisibilityChanged(minDurationMs = 0, minFractionVisible = 1f, viewportBounds = null, callback):

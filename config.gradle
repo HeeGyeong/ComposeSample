@@ -1,5 +1,7 @@
 android {
     compileSdk libs.versions.compileSdk.get().toInteger()
+    // 37.1 — Compose 1.13 aar 의 minCompileMinorSdk 1 (DEP-CURRENCY-35)
+    compileSdkMinor libs.versions.compileSdkMinor.get().toInteger()
 
     defaultConfig {
         minSdk libs.versions.minSdk.get().toInteger()

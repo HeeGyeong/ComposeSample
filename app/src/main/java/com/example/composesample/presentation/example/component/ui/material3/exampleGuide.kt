@@ -22,6 +22,8 @@ package com.example.composesample.presentation.example.component.ui.material3
  *     RevealLastTyped(internal Default) → System 으로 바뀌었다
  *   · **Material3 1.4.0 SecureTextField/OutlinedSecureTextField 기본값은 여전히 RevealLastTyped** → foundation 1.12 와 함께
  *     쓰면 사용자가 비밀번호 표시를 꺼도 마지막 글자가 보인다. 설정을 따르려면 `textObfuscationMode = System` 을 명시
+ *     → **Material3 1.5.0(2026-11-20 BOM 2026.11.01 상향 — DEP-CURRENCY-35)부터 기본값이 System** 으로 바뀌었다(I76c7e).
+ *     이 예제는 두 카드 모두 모드를 칩으로 명시해 넘기므로 화면 동작은 그대로다
  *   · `LocalTextFieldContentObserverRegistrationExecutor`(1.12 신규, Executor?) — 비밀번호 필드마다 하는 ContentObserver
  *     등록·해제(IPC)를 넘긴 Executor 에서 실행. null(기본)이면 메인 스레드. 거부되면 호출 스레드에서 바로 실행
  *   · `PasswordVisibilitySetting`·`SplitVisibilitySettings`·팩토리는 **internal** — 앱이 표시 정책을 주입할 수 없다

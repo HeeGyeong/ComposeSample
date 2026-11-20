@@ -203,7 +203,8 @@ internal class SearchHighlightOutput(private val query: State<String>) : OutputT
 // ==================== 저장 · 복원 ====================
 
 /**
- * 서식까지 저장하는 Saver — 기본 TextFieldState.Saver(1.12.1)는 텍스트 · 선택 · undo 이력만 저장한다.
+ * 서식까지 저장하는 Saver — 기본 TextFieldState.Saver 는 1.12.1 까지 텍스트 · 선택 · undo 이력만 저장했다.
+ * Compose 1.13.0 부터 기본 Saver 가 서식(TextStyleBuffer — ExpandPolicy 포함)까지 저장해, 이것은 1.12 대조용으로 남긴다.
  * 저장 형식: [텍스트, 선택 시작, 선택 끝, (종류 번호, 시작, 끝) 반복]. ExpandPolicy 는 textStyles 로
  * 읽을 수 없어 AtEnd 로 되살리고, 복원하며 붙인 서식이 undo 이력에 남지 않게 이력을 비운다.
  */

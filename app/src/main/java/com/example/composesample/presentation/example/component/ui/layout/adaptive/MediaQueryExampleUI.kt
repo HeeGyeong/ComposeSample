@@ -36,6 +36,8 @@ import androidx.compose.ui.ExperimentalMediaQueryApi
 import androidx.compose.ui.LocalUiMediaScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.UiMediaScope
+import androidx.compose.ui.UiMediaScope.FoldOrientation
+import androidx.compose.ui.UiMediaScope.FoldState
 import androidx.compose.ui.derivedMediaQuery
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.mediaQuery
@@ -136,7 +138,7 @@ private fun MediaQueryConceptCard() {
             code = """
                 // 조건을 "값"이 아니라 "질의"로 적는다
                 val isWide = mediaQuery { windowWidth >= 600.dp }
-                val isTabletop = mediaQuery { windowPosture == Posture.Tabletop }
+                val isTabletop = mediaQuery { windowPosture.isTabletop }
                 val needsBigTargets = mediaQuery { pointerPrecision == PointerPrecision.Coarse }
             """.trimIndent(),
             borderColor = Color(0xFF1976D2)
@@ -371,7 +373,7 @@ private fun MediaQueryBranchCard(integrationEnabled: Boolean) {
         }
 
         val isWide = mediaQuery { windowWidth >= BREAKPOINT }
-        val isTabletop = mediaQuery { windowPosture == UiMediaScope.Posture.Tabletop }
+        val isTabletop = mediaQuery { windowPosture.isTabletop }
         val isCoarsePointer = mediaQuery { pointerPrecision == UiMediaScope.PointerPrecision.Coarse }
 
         Text(
@@ -466,7 +468,10 @@ private fun MediaQuerySummaryCard() {
             code = """
                 // 테스트/프리뷰에서 환경을 갈아끼우는 법
                 class FakeScope(override val windowWidth: Dp) : UiMediaScope {
-                    override val windowPosture = UiMediaScope.Posture.Tabletop
+                    // 1.13: 힌지 목록(WindowPosture) — 가로 힌지가 반 접힘이면 isTabletop
+                    override val windowPosture = UiMediaScope.WindowPosture(
+                        listOf(UiMediaScope.WindowFold(FoldState.HalfOpened, FoldOrientation.Horizontal))
+                    )
                     /* 나머지 6개 속성 ... */
                 }
 
@@ -492,7 +497,8 @@ private fun MediaQuerySummaryCard() {
 private class SimulatedUiMediaScope(private val widthProvider: () -> Dp) : UiMediaScope {
     override val windowWidth: Dp get() = widthProvider()
     override val windowHeight: Dp = 800.dp
-    override val windowPosture: UiMediaScope.Posture = UiMediaScope.Posture.Flat
+    // 힌지 없음 = 평평(isFlat)
+    override val windowPosture: UiMediaScope.WindowPosture = UiMediaScope.WindowPosture(emptyList())
     override val pointerPrecision: UiMediaScope.PointerPrecision =
         UiMediaScope.PointerPrecision.Coarse
     override val keyboardKind: UiMediaScope.KeyboardKind = UiMediaScope.KeyboardKind.Virtual
@@ -522,10 +528,12 @@ private class CompositionCounter {
 }
 
 @OptIn(ExperimentalMediaQueryApi::class)
-private fun postureLabel(posture: UiMediaScope.Posture): String = when (posture) {
-    UiMediaScope.Posture.Flat -> "Flat (평평 — 접히지 않은 상태)"
-    UiMediaScope.Posture.Tabletop -> "Tabletop (가로 힌지로 반 접힘)"
-    UiMediaScope.Posture.Book -> "Book (세로 힌지로 반 접힘)"
+private fun postureLabel(posture: UiMediaScope.WindowPosture): String = when {
+    // 1.13 에서 Flat/Tabletop/Book 열거가 힌지 목록(WindowPosture.folds)으로 바뀌었다 — Book 은 세로 힌지 반 접힘으로 판정
+    posture.isTabletop -> "Tabletop (가로 힌지로 반 접힘)"
+    posture.folds.any { it.state == FoldState.HalfOpened && it.orientation == FoldOrientation.Vertical } ->
+        "Book (세로 힌지로 반 접힘)"
+    posture.isFlat -> "Flat (평평 — 반 접힌 힌지 없음)"
     else -> posture.toString()
 }
 

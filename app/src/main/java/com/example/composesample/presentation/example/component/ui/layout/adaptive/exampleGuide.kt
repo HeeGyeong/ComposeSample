@@ -33,7 +33,9 @@ package com.example.composesample.presentation.example.component.ui.layout.adapt
  * 핵심 개념:
  * - UiMediaScope: 환경 질의의 대상이 되는 인터페이스. 8개 속성으로 구성된다.
  *   - windowWidth / windowHeight : Dp
- *   - windowPosture : Flat / Tabletop / Book (androidx.window 힌지 상태 기반)
+ *   - windowPosture : androidx.window 힌지 상태 기반. 1.12 는 Posture 열거(Flat / Tabletop / Book), 1.13 부터는
+ *     WindowPosture(folds: List<WindowFold>) — isFlat(반 접힌 힌지 없음) · isTabletop(가로 힌지 반 접힘) 헬퍼, Book 은
+ *     세로 힌지 HalfOpened 를 folds 에서 직접 본다(2026-11-20 Compose 1.13 상향 — DEP-CURRENCY-35)
  *   - pointerPrecision : Fine(마우스·스타일러스) / Coarse(터치) / Blunt(리모컨) / None
  *   - keyboardKind : Physical / Virtual / None
  *   - viewingDistance : Near(폰·태블릿) / Medium(자동차) / Far(TV)

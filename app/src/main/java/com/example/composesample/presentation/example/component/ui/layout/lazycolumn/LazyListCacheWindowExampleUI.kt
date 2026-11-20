@@ -3,7 +3,6 @@ package com.example.composesample.presentation.example.component.ui.layout.lazyc
 import android.os.Handler
 import android.os.Looper
 import android.view.Choreographer
-import androidx.compose.foundation.ComposeFoundationFlags
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
@@ -24,6 +23,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListDefaults
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.layout.LazyLayoutCacheWindow
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -99,17 +99,18 @@ private enum class CacheWindowMode(
 ) {
     DEFAULT(
         label = "기본 prefetch",
-        code = "rememberLazyListState()",
-        description = "스크롤 방향으로 다음 아이템 1개만 미리 준비한다. 화면을 벗어난 아이템은 바로 내려놓는다(재사용 풀로)."
+        code = "LazyColumn(state) — cacheWindow 기본값 LazyListDefaults.cacheWindow(state)",
+        description = "Compose 1.13 기본 캐시 창 — 스크롤하는 동안 보이는 아이템 평균 크기만큼 앞쪽(뷰포트의 10~50%)을 미리 준비하고, " +
+            "지나간 아이템은 바로 내려놓는다(재사용 풀로). 1.12 까지의 기본은 LazyListPrefetchStrategy — 다음 아이템 1개."
     ),
     DP(
         label = "Dp 150 / 100",
-        code = "rememberLazyListState(cacheWindow = LazyLayoutCacheWindow(ahead = 150.dp, behind = 100.dp))",
+        code = "LazyColumn(cacheWindow = LazyLayoutCacheWindow(ahead = 150.dp, behind = 100.dp))",
         description = "스크롤 방향 앞쪽 150dp 를 미리 컴포즈하고, 지나간 쪽 100dp 안의 아이템은 버리지 않고 유지한다."
     ),
     FRACTION(
         label = "뷰포트 1.0 / 1.0",
-        code = "rememberLazyListState(cacheWindow = LazyLayoutCacheWindow(aheadFraction = 1f, behindFraction = 1f))",
+        code = "LazyColumn(cacheWindow = LazyLayoutCacheWindow(aheadFraction = 1f, behindFraction = 1f))",
         description = "뷰포트 높이에 비례 — 앞쪽 한 화면을 미리 컴포즈하고 지나간 한 화면을 유지한다."
     ),
 }
@@ -349,7 +350,7 @@ private fun CacheWindowOverviewCard() {
         StatTable(
             listOf(
                 "LazyLayoutCacheWindow" to "ahead(앞쪽 미리 컴포즈) · behind(지나간 쪽 유지) 크기 — Dp 또는 뷰포트 비율",
-                "rememberLazyListState(cacheWindow)" to "1.12 에서 캐시 윈도우를 거는 곳(@ExperimentalFoundationApi)",
+                "LazyColumn(cacheWindow)" to "1.13 에서 캐시 윈도우를 거는 곳(1.12 의 rememberLazyListState(cacheWindow) 는 deprecated)",
                 "Modifier.onVisibilityChanged" to "배치된 노드가 viewport 안에 들어오고 나갈 때(안정 API)",
                 "Modifier.onFirstVisible" to "1.11.0 부터 deprecated — 다시 부착될 때마다 또 온다(아래에서 실측)",
                 "Modifier.layoutBounds(holder)" to "viewport 로 쓸 경계를 잡아 두는 곳(기본은 앱 윈도우)",
@@ -357,8 +358,9 @@ private fun CacheWindowOverviewCard() {
         )
         Spacer(modifier = Modifier.height(10.dp))
         CaptionText(
-            "LazyColumn(cacheWindow = …) 파라미터는 foundation 1.13.0-alpha03 에서 생겼다. 이 프로젝트의 1.12.1 에는 " +
-                "없어서 리스트 상태를 만들 때 넘긴다. 같은 윈도우를 받는 rememberLazyGridState 도 있고, " +
+            "LazyColumn(cacheWindow = …) 파라미터는 foundation 1.13.0-alpha03 에서 생겼고 1.13.0 정식부터 이 프로젝트가 쓴다" +
+                "(2026-11-20 상향). 1.12 까지는 리스트 상태를 만들 때 넘겼다 — rememberLazyListState(cacheWindow) 는 이제 deprecated. " +
+                "매개변수를 주지 않아도 LazyColumn · LazyRow 는 기본 캐시 창(LazyListDefaults.cacheWindow)을 쓰고, " +
                 "Pager 는 공개 파라미터 없이 기본으로 켜져 있다."
         )
     }
@@ -397,15 +399,13 @@ private fun CacheWindowDemoCard() {
         // key(mode): 모드가 바뀌면 리스트 상태·기록을 통째로 새로 만든다(rememberSaveable 이 윈도우를 키로 쓰기도 한다)
         key(mode) {
             val tracker = remember { ImpressionTracker() }
-            val cacheWindow = remember { mode.cacheWindow() }
-            val listState = if (cacheWindow == null) {
-                rememberLazyListState()
-            } else {
-                rememberLazyListState(cacheWindow = cacheWindow)
-            }
+            val listState = rememberLazyListState()
+            // 1.13: 캐시 창은 LazyColumn 매개변수 — 기본 모드는 LazyListDefaults.cacheWindow(state)
+            val custom = remember { mode.cacheWindow() }
+            val cacheWindow = custom ?: LazyListDefaults.cacheWindow(listState)
             val listBounds = remember { LayoutBoundsHolder() }
 
-            CacheDemoList(listState = listState, tracker = tracker, listBounds = listBounds)
+            CacheDemoList(listState = listState, cacheWindow = cacheWindow, tracker = tracker, listBounds = listBounds)
             Spacer(modifier = Modifier.height(10.dp))
             CacheScrollButtons(listState = listState, tracker = tracker)
             Spacer(modifier = Modifier.height(10.dp))
@@ -417,11 +417,13 @@ private fun CacheWindowDemoCard() {
 @Composable
 private fun CacheDemoList(
     listState: LazyListState,
+    cacheWindow: LazyLayoutCacheWindow,
     tracker: ImpressionTracker,
     listBounds: LayoutBoundsHolder,
 ) {
     LazyColumn(
         state = listState,
+        cacheWindow = cacheWindow,
         modifier = Modifier
             .fillMaxWidth()
             .height(CACHE_LIST_HEIGHT)
@@ -629,8 +631,6 @@ private fun ImpressionGuideCard() {
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun PausableCompositionCard() {
-    // 화면에서는 바꾸지 않는다 — 읽기만 한다(아래 설명 참조)
-    val pausableEnabled = remember { ComposeFoundationFlags.isPausableCompositionInPrefetchEnabled }
     var generation by remember { mutableIntStateOf(0) }
 
     CacheCard {
@@ -656,8 +656,8 @@ private fun PausableCompositionCard() {
         Spacer(modifier = Modifier.height(8.dp))
         ReadoutBox {
             ReadoutRow(
-                "isPausableCompositionInPrefetchEnabled",
-                pausableEnabled.toString(),
+                "prefetch 의 Pausable composition",
+                "항상 켜짐 — 1.13.0 에서 임시 플래그 isPausableCompositionInPrefetchEnabled 가 없어졌다",
                 highlight = true
             )
             ReadoutRow(
@@ -688,10 +688,9 @@ private fun PausableCompositionCard() {
         )
         Spacer(modifier = Modifier.height(6.dp))
         CaptionText(
-            "이 플래그는 화면에서 바꾸지 않는다. 공식 문서는 라이브러리가 로드된 뒤의 변경을 정의되지 않은 동작으로 보고 " +
-                "Application.onCreate 에서 설정하라고 한다. prefetch 가 실행될 때마다 값을 읽기 때문에, " +
-                "멈춰 있는 컴포지션이 남은 채로 끄면 같은 아이템을 다른 경로로 다시 컴포즈하게 된다 — " +
-                "이 화면을 담고 있는 바깥 LazyColumn 도 같은 플래그를 쓴다."
+            "1.12 까지는 ComposeFoundationFlags.isPausableCompositionInPrefetchEnabled 로 끌 수 있었다(공식 문서: 라이브러리가 " +
+                "로드된 뒤의 변경은 정의되지 않은 동작이라 Application.onCreate 에서만). 위 '끈 빌드' 실측은 그때 것이다. " +
+                "Compose 1.13.0 에서 이 임시 플래그가 없어져 prefetch 는 늘 Pausable composition 으로 컴포즈한다(LazyLayoutPrefetchState)."
         )
     }
 }

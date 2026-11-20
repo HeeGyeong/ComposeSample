@@ -26,7 +26,8 @@ package com.example.composesample.presentation.example.component.ui.layout.grid
  *   오류 없이 그 축만 자동 배치가 된다. 음수는 끝에서부터(-1 = 마지막 트랙, 선언한 트랙 기준)
  *   ⚠️ 이 예제의 배치 카드는 2026-10-27 까지 0부터 썼다: 헤더(0,0,span 3)는 자동 배치로 우연히 맞았지만
  *   Side(rows 1..2, columns 0..0)는 '1행 고정·열 자동'이 돼 암시적 4번째 열로, A(1,1)는 헤더 자리로 가 헤더를 덮었다(에뮬레이터 실측)
- * - 전부 @OptIn(ExperimentalGridApi::class) 필요
+ * - 1.11 ~ 1.12 는 전부 @OptIn(ExperimentalGridApi::class) 필요 — 1.13.0 에서 정식이 되어 ExperimentalGridApi 자체가 없어졌다
+ *   (2026-11-20 Compose 1.13 상향 — DEP-CURRENCY-35, opt-in 줄을 지움)
  *
  * 버전 메모:
  * - Grid API 는 Compose 1.11.0-alpha04 도입(@ExperimentalGridApi) — 예제 작성 당시 foundation-layout 1.11.1

@@ -106,7 +106,8 @@ internal fun casesOf(group: CaseGroup): List<FrameCase> =
  *   → 덮개(같은 창 · 다른 창) · 창 밖 offset · 크기 0 은 배치된 채라 보임과 같다
  * - (#183) Lazy 화면 밖 칸은 배치되지 않는다 → 그리기 0. 컴포지션에 남으면 시계는 돈다 — 마지막 측정이 컴포즈해 보고 버린 칸
  *   (LazyListMeasure 'offscreen and will not be visible' — 그 측정에서 쓴 칸이라 SubcomposeLayout 이 활성으로 둔다),
- *   기본 미리 가져오기(스크롤 방향 다음 칸), 캐시 창 keepAroundItems. 측정이 더 돌면 재사용 풀로 가며 비활성화(effect 취소)
+ *   기본 캐시 창의 앞쪽(Compose 1.13 — 보이는 아이템 평균 크기, 뷰포트의 10~50%), 직접 준 캐시 창의 keepAroundItems.
+ *   측정이 더 돌면 재사용 풀로 가며 비활성화(effect 취소)
  */
 internal fun expectedRate(case: FrameCase, counter: FrameCounter): FrameRate = when (case) {
     FrameCase.Shown, FrameCase.AlphaZero -> FrameRate.Continuous

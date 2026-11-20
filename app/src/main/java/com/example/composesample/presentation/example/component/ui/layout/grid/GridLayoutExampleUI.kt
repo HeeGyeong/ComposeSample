@@ -5,7 +5,6 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalGridApi
 import androidx.compose.foundation.layout.Grid
 import androidx.compose.foundation.layout.GridFlow
 import androidx.compose.foundation.layout.GridTrackSize
@@ -49,7 +48,7 @@ import com.example.composesample.presentation.MainHeader
 /**
  * Compose Grid API Example
  *
- * Compose 1.11 의 실험 API 인 Grid(non-lazy 2D 트랙 레이아웃)를 시연한다.
+ * Compose 1.11 에 실험 API 로 들어와 1.13 에서 정식이 된 Grid(non-lazy 2D 트랙 레이아웃)를 시연한다.
  * 이름 붙인 영역(area() / gridItem(areaId), Compose 1.12)은 GridAreaCards.kt 의 두 카드가 다룬다.
  */
 @Composable
@@ -123,7 +122,7 @@ private fun GridConceptCard() {
         Spacer(modifier = Modifier.height(12.dp))
         CodeBlock(
             code = """
-                @OptIn(ExperimentalGridApi::class)
+                // 1.11 ~ 1.12 는 @OptIn(ExperimentalGridApi::class) 필요, 1.13 정식부터 불필요
                 Grid(
                     config = {
                         column(72.dp)      // 고정
@@ -143,7 +142,6 @@ private fun GridConceptCard() {
 
 // ==================== 2. 트랙 크기 6종 ====================
 
-@OptIn(ExperimentalGridApi::class)
 @Composable
 private fun GridTrackSizeCard() {
     // 컨테이너 폭을 줄여 가며 각 트랙이 어떻게 반응하는지 관측하기 위한 비율
@@ -233,7 +231,6 @@ private fun GridTrackSizeCard() {
 
 // ==================== 3. fr 비율 & gap ====================
 
-@OptIn(ExperimentalGridApi::class)
 @Composable
 private fun GridFlexAndGapCard() {
     var firstWeight by remember { mutableIntStateOf(1) }
@@ -310,7 +307,6 @@ private fun GridFlexAndGapCard() {
 
 // ==================== 4. 배치(gridItem) ====================
 
-@OptIn(ExperimentalGridApi::class)
 @Composable
 private fun GridPlacementCard() {
     var overlap by remember { mutableStateOf(false) }
@@ -400,7 +396,6 @@ private fun GridPlacementCard() {
 
 // ==================== 5. GridFlow ====================
 
-@OptIn(ExperimentalGridApi::class)
 @Composable
 private fun GridFlowCard() {
     var rowFlow by remember { mutableStateOf(true) }
@@ -451,7 +446,6 @@ private fun GridFlowCard() {
 
 private const val CELL_COUNT = 60
 
-@OptIn(ExperimentalGridApi::class)
 @Composable
 private fun GridVsLazyGridCard() {
     // 살아있는 자식 컴포지션 수 — DisposableEffect 진입 시 +1, 폐기 시 -1

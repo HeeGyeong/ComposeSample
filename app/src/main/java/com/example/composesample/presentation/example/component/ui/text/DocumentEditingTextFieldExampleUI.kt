@@ -592,10 +592,11 @@ private fun SaveRestoreStylesCard() {
     val reports = remember { saverReports() }
 
     FormattedCard(
-        title = "9. 저장 · 복원 — 기본 Saver 는 서식을 버린다",
+        title = "9. 저장 · 복원 — 기본 Saver 가 서식까지 저장한다(1.13)",
         color = Color(0xFF37474F),
-        description = "rememberTextFieldState 의 TextFieldState.Saver(1.12.1)는 텍스트 · 선택 · undo 이력만 저장합니다. 두 칸에 굵게를 붙인 뒤 " +
-            "다크 모드를 바꾸거나(같은 프로세스 재생성) 프로세스가 죽었다 살아나면(Bundle 직렬화) 왼쪽 서식만 사라집니다. 오른쪽은 서식 범위까지 저장하는 Saver."
+        description = "rememberTextFieldState 의 TextFieldState.Saver 는 1.12.1 까지 텍스트 · 선택 · undo 이력만 저장해, 재생성 · 프로세스 종료 뒤 " +
+            "왼쪽 서식만 사라졌습니다. Compose 1.13.0 부터는 서식까지 저장합니다(5항목, ExpandPolicy 포함). 두 칸에 굵게를 붙인 뒤 다크 모드를 " +
+            "바꾸거나(같은 프로세스 재생성) 프로세스가 죽었다 살아나도 이제 두 칸 모두 남습니다. 오른쪽은 1.12 에서 쓰던 직접 만든 Saver(정책은 AtEnd 로 되살림)."
     ) {
         Text(text = "기본 rememberTextFieldState", fontSize = 11.sp, color = Color(0xFF616161))
         StyledTextField(state = defaultState)
@@ -726,7 +727,7 @@ private fun SummaryCard() {
                 "서식은 edit{ addStyle(style, range, ExpandPolicy) } 로 상태 안에 붙고, 읽기는 state.textStyles(읽기 전용). state.text 는 서식 없는 평문",
                 "범위는 입력 · 삭제에 맞춰 저절로 움직이고 길이가 0 이 되면 사라진다. 경계에 친 글자를 넣을지는 ExpandPolicy 가 정한다",
                 "undo/redo 는 살아 있는 서식의 범위만 함께 되돌린다 — 사라진 서식(붙이기를 되돌린 것 · 전부 지운 것)은 다시 만들지 못한다(1.12.1 실측)",
-                "기본 TextFieldState.Saver(1.12.1)는 텍스트 · 선택 · undo 이력만 저장 → 재생성 뒤 서식이 사라진다. 필요하면 서식 범위까지 저장하는 Saver 를 직접 둔다"
+                "기본 TextFieldState.Saver 는 1.12.1 까지 텍스트 · 선택 · undo 이력만 저장했다(재생성 뒤 서식 사라짐). 1.13.0 부터 서식 · ExpandPolicy 까지 저장한다 — 1.12 를 지원해야 할 때만 직접 만든 Saver"
             )
             bullets.forEach { bullet ->
                 Row(modifier = Modifier.padding(vertical = 4.dp)) {

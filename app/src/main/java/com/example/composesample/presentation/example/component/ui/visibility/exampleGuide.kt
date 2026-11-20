@@ -91,12 +91,16 @@ package com.example.composesample.presentation.example.component.ui.visibility
  *       배치만 하는 지름길(copyWithScrollDeltaWithoutRemeasure)을 못 타게 할 뿐, 멈춘 목록을 다시 측정하지는 않는다
  *   · 재사용 풀로 간 칸은 비활성화된다 — Android 는 OutOfFrameExecutor(메인 Handler 큐 맨 앞)로 미뤄 ReusableComposition.deactivate()
  *     → remember 된 값이 잊혀 LaunchedEffect(무한 트랜지션 루프)가 취소된다(JVM 테스트: 비활성화 뒤 60틱 요청 0)
- *   · 기본 LazyListPrefetchStrategy 는 스크롤 방향의 다음 한 칸을 미리 가져온다(compose + apply 까지 — 효과가 돈다, 배치는 안 함)
+ *   · (1.12.1) 기본 LazyListPrefetchStrategy 는 스크롤 방향의 다음 한 칸을 미리 가져온다(compose + apply 까지 — 효과가 돈다, 배치는 안 함).
+ *     **Compose 1.13(2026-11-20 상향)부터 LazyRow · LazyColumn 의 기본은 캐시 창**(LazyListDefaults.cacheWindow) — 스크롤하는 동안
+ *     앞쪽만, 보이는 아이템 평균 크기를 뷰포트의 10~50% 로 묶은 만큼. 이 한 칸 목록(아이템 = 뷰포트)에서는 반 칸이라, 1.12 처럼
+ *     1.5칸 끌어 첫 칸이 반쯤 걸친 채 멈추면 스피너가 창 밖이 되어 미리 가져오지 않았다(1.13 실측 0/0/0) → 칸 경계에 맞춰 한 칸만
+ *     끌어 오게 바꿨다. 캐시 창은 LazyListState 가 아니라 LazyRow(cacheWindow = …) 로 준다(1.13 에서 state 쪽 deprecated)
  *   · 캐시 창(rememberLazyListState(cacheWindow = …), @ExperimentalFoundationApi)은 지나간 쪽을 behind 크기만큼 keepAroundItems 로
  *     매 측정 subcompose 한다 → 그 안의 칸은 재사용 풀로 가지 않는다
  * - 측정 설계: 한 칸 LazyRow(칸 너비 = 뷰포트, 스피너는 3번 칸, 사용자 스크롤 끔). 숨길 때는 scrollToItem(3) 으로 맞춘 뒤
  *   · 지나간 칸 = 칸의 1/8 씩 프레임마다 1.5칸 끌기(칸을 넘은 뒤 측정이 몇 번 더 돈다) · 캐시 창 안 칸 = 같은 끌기 + 캐시 창 앞 · 뒤 56dp(한 칸)
- *   · 한 번에 넘긴 칸 = scrollBy(뷰포트 너비) 한 번 · 미리 가져온 칸 = scrollToItem(6) 으로 건너뛴 뒤 스피너 쪽으로 1.5칸 끌기
+ *   · 한 번에 넘긴 칸 = scrollBy(뷰포트 너비) 한 번 · 미리 가져온 칸 = scrollToItem(5) 로 건너뛴 뒤 스피너 쪽으로 1칸 끌기(1.12 판은 6 → 1.5칸)
  *     (건너뛴 측정은 사이 칸을 컴포즈하지 않는다 → 스피너는 끄는 방향의 다음 칸으로만 다시 컴포즈된다)
  *   · 칸 수명은 임시 DisposableEffect 로그로 먼저 확인했다 — 한 칸을 1번에 넘기면 dispose 없음, 1칸씩 2번이면 두 번째 측정에서 dispose,
  *     캐시 창(한 칸)에서 2칸을 1번에 넘기면 dispose 없음 · 3번이면 dispose

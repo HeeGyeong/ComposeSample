@@ -1,6 +1,9 @@
 [versions]
 # Android
 compileSdk = "37"
+# compileSdk 마이너 — Compose 1.13(BOM 2026.11.01)의 ui · foundation aar 가 minCompileSdk 37 · minCompileMinorSdk 1 을 요구한다
+# (DEP-CURRENCY-35, 2026-11-20 사용자 승인 — #120 A2UI 가 Compose 1.13 을 요구해 선행). config.gradle 의 compileSdkMinor.
+compileSdkMinor = "1"
 minSdk = "24"
 targetSdk = "35"
 versionCode = "1"
@@ -58,7 +61,10 @@ navigation3 = "1.2.2"
 # 1.12 변경 중 영향: foundation Style API 가 스코프 인터페이스로 재편(예제 이관) · DeferredTargetAnimation 정식화
 # (ExperimentalAnimatableApi 제거) · 클릭/포커스 이동 시 시스템 효과음 기본 재생 · ui 가 androidx.transition 의존을
 # 끊어 transition·dynamicanimation·legacy-support-core-utils 등 레거시 6종이 런타임에서 빠진다.
-composeBom = "2026.09.00"
+# 2026.11.01(2026-11-20 상향 — DEP-CURRENCY-35) = ui/runtime/foundation/animation/material 1.13.0 · material3 1.5.0
+# (ui · foundation minCompileSdk 37.1 · minAGP 9.1.0). 1.13 변경 중 영향 확인: 기본 프리페치가 창(window) 기반으로 · Modifier.border 새 구현 ·
+# 값 기반 BasicTextField · M2 TextField · M3 상태 없는 Slider deprecated · SecureTextField 기본 가림 System · EnterTransition.with 제거.
+composeBom = "2026.11.01"
 
 # Lifecycle
 # androidx.lifecycle 은 atomic group 이라 runtime/livedata/viewmodel 스택 전체가 한 버전으로 움직인다.
@@ -115,9 +121,9 @@ coreKtx = "1.19.1"
 appcompat = "1.8.0"
 # Compose material 은 BOM 이 관리하는 아티팩트지만 core-dependencies.gradle 을 쓰는 모듈 일부가 BOM 플랫폼 없이 받으므로 버전을 명시한다.
 # → BOM 을 올릴 때 함께 올린다(2026-09-29 BOM 2026.09.00 상향 때 누락돼 1.11.4 선언 · 1.12.1 해석 드리프트가 남았다 — 2026-09-30 해소).
-material = "1.12.1"
-material3 = "1.4.0"
-material3WindowSizeClass = "1.4.0"
+material = "1.13.0"
+material3 = "1.5.0"
+material3WindowSizeClass = "1.5.0"
 room = "2.8.5"
 # Retrofit 3.0.0 — okhttp 4.12.0 · (converter-gson) gson 2.13.1 을 요구하지만 둘 다 logging-interceptor(okhttp 5.4.0)·Ktor(gson 2.14.0) 쪽 요구보다 낮아 해석은 그대로다.
 retrofit = "3.0.0"

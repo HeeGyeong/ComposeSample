@@ -32,6 +32,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListDefaults
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.layout.LazyLayoutCacheWindow
@@ -464,7 +465,8 @@ private fun HiddenSpinnerFrameCard(lab: HiddenSpinnerFrameLab) {
                 body = "화면 밖 칸은 배치되지 않아 그리기는 0 이다. 그래도 칸이 컴포지션에 남아 있으면 무한 트랜지션이 매 프레임 프레임을 요청한다. 남는 경우는 셋. " +
                     "① 멈추기 직전 마지막 측정에서 화면 밖으로 나간 칸 — LazyListMeasure 는 스크롤 delta 만큼 앞 칸을 컴포즈 · 측정해 보고 화면 밖이면 버린다. " +
                     "이번 측정에서 쓴 칸이라 재사용 풀로 가지 않고, 목록이 다시 측정할 때(다음 스크롤 등)까지 남는다. " +
-                    "② 스크롤 방향의 다음 칸(기본 미리 가져오기는 compose 까지 끝낸다) ③ 캐시 창(LazyLayoutCacheWindow) 안. " +
+                    "② 스크롤 방향 앞쪽 기본 캐시 창 안(compose 까지 끝낸다 — 1.13 은 보이는 아이템 평균 크기만큼, 뷰포트의 10~50%) " +
+                    "③ 직접 준 캐시 창(LazyLayoutCacheWindow)의 지나간 쪽 안. " +
                     "같은 1.5칸을 끌어도 캐시 창이 없으면 다음 측정에서 재사용 풀로 가며 비활성화되어 셋 다 0. " +
                     "그린 프레임이 0 이라 GPU 렌더링 막대 · gfxinfo 에는 안 보이고 프레임 콜백(doFrame)에만 보인다."
             )
@@ -588,12 +590,15 @@ private fun CoverDialog(lab: HiddenSpinnerFrameLab) {
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun LazySpinnerStrip(lab: HiddenSpinnerFrameLab, technique: HideTechnique) {
-    val state = if (technique == HideTechnique.LazyKept) {
+    val state = rememberLazyListState(initialFirstVisibleItemIndex = LAZY_SPINNER_INDEX)
+    // 캐시 창은 Compose 1.13 부터 LazyRow 매개변수로 준다(LazyListState 로 주는 방식은 deprecated).
+    // key(technique) 안이라 이 분기는 바뀌지 않는다 — 분기 안 remember 가 안전하다
+    val cacheWindow = if (technique == HideTechnique.LazyKept) {
         // 뒤 · 앞 모두 한 칸 — 지나간 칸을 한 칸 너비만큼 컴포지션에 남긴다
-        val cacheWindow = remember { LazyLayoutCacheWindow(ahead = SpinnerSlotSize, behind = SpinnerSlotSize) }
-        rememberLazyListState(cacheWindow = cacheWindow, initialFirstVisibleItemIndex = LAZY_SPINNER_INDEX)
+        remember { LazyLayoutCacheWindow(ahead = SpinnerSlotSize, behind = SpinnerSlotSize) }
     } else {
-        rememberLazyListState(initialFirstVisibleItemIndex = LAZY_SPINNER_INDEX)
+        // 1.13 기본: 보이는 아이템 평균 크기로 앞쪽만(뷰포트의 10~50%), 지나간 쪽은 0
+        LazyListDefaults.cacheWindow(state)
     }
     LaunchedEffect(lab.visible) {
         // 보이기 = 스피너 칸으로 건너뛰기. 건너뛴 측정은 그 사이 칸을 컴포즈하지 않는다
@@ -602,10 +607,12 @@ private fun LazySpinnerStrip(lab: HiddenSpinnerFrameLab, technique: HideTechniqu
         when (technique) {
             // 한 번의 scrollBy = 한 번의 측정 — 그 측정이 스피너 칸을 컴포즈 · 측정한 뒤 화면 밖이라 버린다
             HideTechnique.LazyLastPass -> state.scrollBy(state.layoutInfo.viewportSize.width.toFloat())
-            // 멀리 건너뛴 뒤 스피너 쪽으로 끌어 온다 — 끄는 방향의 다음 칸(스피너)을 미리 가져온다
+            // 두 칸 건너뛴 뒤 스피너 쪽으로 한 칸 끌어 온다 — 첫 칸이 칸 경계에 맞아 스피너가 끄는 방향 바로 앞 칸이 된다.
+            // 1.13 기본 캐시 창은 앞쪽을 보이는 아이템 평균 크기(뷰포트의 10~50%)만큼만 본다 — 이 한 칸 목록에서는 반 칸이라,
+            // 첫 칸이 반쯤 걸친 채 멈추면(1.5칸 끌기) 스피너가 창 밖이 되어 미리 가져오지 않는다(1.12 는 다음 칸을 늘 가져왔다)
             HideTechnique.LazyAhead -> {
-                state.scrollToItem(LAZY_SPINNER_INDEX + 3)
-                state.dragSlots(-1.5f)
+                state.scrollToItem(LAZY_SPINNER_INDEX + 2)
+                state.dragSlots(-1f)
             }
             // 지나간 칸 · 캐시 창 안 칸 — 같은 거리(1.5칸)를 끌고, 캐시 창이 있느냐만 다르다
             else -> state.dragSlots(1.5f)
@@ -614,7 +621,8 @@ private fun LazySpinnerStrip(lab: HiddenSpinnerFrameLab, technique: HideTechniqu
     LazyRow(
         state = state,
         modifier = Modifier.fillMaxSize(),
-        userScrollEnabled = false
+        userScrollEnabled = false,
+        cacheWindow = cacheWindow
     ) {
         items(LAZY_ITEM_COUNT, contentType = { if (it == LAZY_SPINNER_INDEX) "spinner" else "empty" }) { index ->
             Box(modifier = Modifier.fillParentMaxSize(), contentAlignment = Alignment.Center) {

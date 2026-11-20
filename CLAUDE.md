@@ -14,7 +14,7 @@ A guide that helps Claude Code write consistent code in this project.
 - **Local DB**: Room
 - **Async**: Coroutine + Flow
 - **Target SDK**: 35 / Min SDK: 24
-- **Kotlin**: 2.4.21 / **ComposeBom**: 2026.09.00 (Compose 1.12.1)
+- **Kotlin**: 2.4.21 / **ComposeBom**: 2026.11.01 (Compose 1.13.0, Material3 1.5.0)
 
 ---
 
@@ -170,7 +170,7 @@ val exampleUiRegistry: Map<String, @Composable (onBackEvent: () -> Unit) -> Unit
 
 - Both `gradlew` (Unix) and `gradlew.bat` (Windows) exist
 - Uses the Java 21 toolchain (`javaVersion = "21"` in `gradle/libs.versions.toml`)
-- AGP 9.5.1 + Gradle 9.9.2 with **built-in Kotlin**: Android modules do not apply `org.jetbrains.kotlin.android` (applying it fails under AGP 9). compileSdk 37 / targetSdk 35
+- AGP 9.5.1 + Gradle 9.9.2 with **built-in Kotlin**: Android modules do not apply `org.jetbrains.kotlin.android` (applying it fails under AGP 9). compileSdk 37.1 (`compileSdk` 37 + `compileSdkMinor` 1 in `config.gradle` — Compose 1.13 requires it) / targetSdk 35
 - **Bytecode target is pinned to 17** in `config.gradle` (`kotlin { compilerOptions { jvmTarget } }` + `compileOptions` 17; `config.gradle` is an `apply from` script, so it cannot import KGP's `JvmTarget` and uses `jvmTarget.get().valueOf('JVM_17')`). Do not raise it back to 21: at target 21 Kotlin lowers type-checking `when` to a JDK 21 `SwitchBootstraps.typeSwitch` invokedynamic that the debug-build HotSwan interpreter cannot execute, and the affected screens render blank with no crash (see `docs/devtools/ComposeHotReloadGuide.md`)
 - Android SDK path: see `sdk.dir` in `local.properties`
 - CLI build command: `./gradlew assembleDebug`

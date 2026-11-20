@@ -68,6 +68,12 @@ package com.example.composesample.presentation.example.component.ui.text
  *   서식까지 지키려면 범위를 저장하는 Saver(FormattedTextStateSaver: 종류 · 시작 · 끝) — ExpandPolicy 는 textStyles 로 못 읽어
  *   AtEnd 로 되살리고, 복원하며 붙인 서식이 undo 대상이 되지 않게 이력을 비운다.
  * - FormattedTextLabTest 의 undo · Saver 테스트는 1.12.1 동작을 고정한다 — 1.13 상향 때 실패하면 7 · 9번 카드 문구를 다시 잰다.
+ * - **Compose 1.13.0 상향(2026-11-20, BOM 2026.11.01 — DEP-CURRENCY-35)**: 예고대로 Saver 테스트 하나만 실패했다 —
+ *   기본 TextFieldState.Saver 가 [텍스트, 선택 시작, 선택 끝, undo, 서식(TextStyleBuffer)] 5항목을 저장해 서식이 남는다.
+ *   JVM 프로브: InsideOnly 굵게 · AtEnd 빨강을 붙여 저장 → 복원하면 둘 다 남고, 경계에 친 글자는 정책대로(InsideOnly 그대로 ·
+ *   AtEnd 늘어남) — ExpandPolicy 까지 되살린다(직접 만든 Saver 는 AtEnd 로만). 같은 프로브에서 복원 뒤 친 글자를 undo 하면
+ *   글자는 돌아오고 서식은 둘 다 사라졌다(복원 전 상태에서의 undo 는 살아 있는 서식을 지킨다 — 7번 카드). 9번 카드 제목 · 설명 ·
+ *   요약을 1.13 동작으로 고치고 테스트를 1.13 기대값 + ExpandPolicy 테스트로 바꿨다. undo 시나리오(7번 카드) 테스트는 그대로 통과
  *
  * ## SyntaxHighlightingExampleUI (간소화 데모)
  * - 출처: https://hossain.dev/posts/syntax-highlighting-on-android-bringing-shiki-engine-to-compose/

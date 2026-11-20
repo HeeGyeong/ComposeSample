@@ -5,7 +5,6 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalGridApi
 import androidx.compose.foundation.layout.Grid
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -180,7 +179,6 @@ private fun TrapNote(on: Boolean, text: String) {
 }
 
 /** 1D 영역 — 열을 비워 둔 area 에 열보다 많은 자식을 넣으면 다음 행이 아니라 암시 열로 늘어난다 */
-@OptIn(ExperimentalGridApi::class)
 @Composable
 private fun OneDimensionalAreaDemo() {
     var chips by remember { mutableIntStateOf(3) }
@@ -236,7 +234,6 @@ private fun OneDimensionalAreaDemo() {
 // ==================== 공용 ====================
 
 /** 영역 Grid + 자식마다 기대 칸·실측 칸 표 */
-@OptIn(ExperimentalGridApi::class)
 @Composable
 private fun AreaGrid(layout: DashLayout, children: List<AreaChild>, extraAreas: Map<Any, GridCell> = emptyMap()) {
     val density = LocalDensity.current

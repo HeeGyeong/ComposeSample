@@ -19,6 +19,7 @@ A human-readable collection of **intentional deferrals, version constraints, and
 - **Current**: Compose runtime 1.12.1 (BOM 2026.09.00). Its Android `SnapshotStateSet.writeToParcel` writes the size and then only the first element (`if` where 1.13.0-alpha03 has `while`), so `rememberSaveable { mutableStateSetOf() }` - which `canBeSaved` accepts because the set is `Parcelable` - breaks once the set holds two or more elements and the Bundle is really parcelled (restoring after process death). Measured in the Remember Patterns example (#123): release restored `[빨강, null]` and logged "consumed X bytes, but Y expected" for the entries after it; debug threw `BadParcelableException` and showed an empty screen.
 - **Workaround in use**: the example stores the set with `rememberSerializable(serializer = SnapshotStateSetSerializer(...))`; no other screen saves a `SnapshotStateSet`.
 - **Revisit**: when the BOM moves to a stable Compose 1.13.
+- **Resolved upstream (2026-11-20)**: the BOM is now 2026.11.01 (Compose 1.13.0, DEP-CURRENCY-35); the 1.13.0 `SnapshotStateSet.android.kt` writes every element (`while`). The example keeps `rememberSerializable` (correct on any version) and its warning text now describes the bug as a 1.12.x issue.
 
 ### ffmpeg commented out
 - **Current**: the encoding/decoding example under `system/media/ffmpeg` is fully commented out
@@ -68,14 +69,14 @@ the `lint-vital` check inside `assembleRelease` only looks at fatal issues, and 
 > The two "Open 🟢" rows were cleared the next day by RES-UNUSED-01 (`365002dc`, 17 unused resources) and LINT-COSMETIC-01
 > (`89f30399`, 80 cosmetic issues), and LINT-AUTOBOXING-01 (`a990a367`) followed on 2026-09-18.
 
-**Current baseline (2026-11-20): 0 errors / 31 warnings + 1 hint.** Version notices come from lint's network lookups, so
+**Current baseline (2026-11-20, after the Compose 1.13 upgrade): 0 errors / 27 warnings + 1 hint.** Version notices come from lint's network lookups, so
 they appear and disappear without code changes; compare the issue list, not only the count.
 
 | Issue | Count | Verdict |
 |-------|-------|---------|
 | `ObsoleteSdkInt` | 23 | **Do not "fix"** — same reason as above (debug minSdk 26 from HotSwan, release minSdk 24) |
 | `NewerVersionAvailable` | 1 | HotSwan compiler 2.2.0 (won't-do: the Gradle plugin must match the IDE plugin, see ComposeHotReloadGuide). kotlinx-serialization 1.13.0 (2 notices, DEP-CURRENCY-27) and `AndroidGradlePluginVersion` for Gradle 9.9.1 (1 notice, DEP-CURRENCY-28) went away on 2026-11-18 |
-| `GradleDependency` | 6 | Deferred — approval needed: compose-bom 2026.11.01 with material 1.13.0 and material3 1.5.0 ×2 (4 notices, DEP-CURRENCY-35 — Compose 1.13.0 needs compileSdk 37.1), biometric / biometric-compose 1.4.0-rc01 (2 notices, DEP-CURRENCY-31). Lifecycle 2.11.1 (4) and navigation3 1.2.2 (2) appeared on 2026-11-20 and went away the same day (DEP-CURRENCY-32 · 33) |
+| `GradleDependency` | 2 | Deferred — approval needed: biometric / biometric-compose 1.4.0-rc01 (DEP-CURRENCY-31). The compose-bom / material / material3 notices (4) went away with DEP-CURRENCY-35 (BOM 2026.11.01, compileSdk 37.1); lifecycle 2.11.1 (4) and navigation3 1.2.2 (2) appeared on 2026-11-20 and went away the same day (DEP-CURRENCY-32 · 33) |
 | `OldTargetApi` | 1 | targetSdk 35 is the value `CLAUDE.md` fixes for this project |
 | `ReportShortcutUsage` (hint) | 1 | The shortcut example adds dynamic shortcuts but does not report their use; ranking hints are not part of that example |
 
