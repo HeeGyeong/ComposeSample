@@ -66,10 +66,13 @@ composeBom = "2026.09.00"
 # (이전) koin-android 4.2.2 가 lifecycle-viewmodel-ktx 2.10.0 을 요구해 스택 전체가 2.10.0 으로 해석되므로 선언을 그에 맞췄다
 # (aar-metadata minCompileSdk: viewmodel/runtime 34, runtime-compose 35). 이전 값 2.9.4 는 compose-bom 의
 # runtime-saveable 이 요구하던 하한이었다(1.11.4 도 2.9.4 요구 — 지금은 Koin 쪽 요구가 더 높다). (DEP-VERSION-03 과 동일 유형)
-lifecycleRuntimeKtx = "2.11.0"
-lifecycleLivedataKtx = "2.11.0"
-lifecycleViewmodelKtx = "2.11.0"
-lifecycleViewmodelCompose = "2.11.0"
+# 2026-11-20 2.11.1(패치 — DEP-CURRENCY-32, 11/18 발행): 수정은 LifecycleRegistry.currentStateFlow 가 호출마다 새 asStateFlow()
+# 대신 같은 인스턴스를 돌려주는 것 하나(바뀐 클래스는 lifecycle-runtime 의 LifecycleRegistry 1개, 나머지 aar 바이트 동일).
+# aar 요구치 · module 의존성은 2.11.0 과 같다. currentStateAsState() 를 쓰는 두 예제(ComposeLifecycleOwner · Nav3SceneStrategy)를 기기 대조.
+lifecycleRuntimeKtx = "2.11.1"
+lifecycleLivedataKtx = "2.11.1"
+lifecycleViewmodelKtx = "2.11.1"
+lifecycleViewmodelCompose = "2.11.1"
 
 # Koin 4.2.2 (DI-01 해소, 2026-09-15). 3.x 대비 코드 영향:
 # ① koinViewModel 의 owner 파라미터 이름이 viewModelStoreOwner 로 바뀜 ② org.koin.androidx.compose.get 제거 → org.koin.compose.koinInject
