@@ -11,8 +11,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ControlledComposition
 import androidx.compose.runtime.MonotonicFrameClock
 import androidx.compose.runtime.Recomposer
+import androidx.compose.runtime.ReusableComposition
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.Snapshot
+import com.example.composesample.presentation.example.component.ui.visibility.CaseGroup
 import com.example.composesample.presentation.example.component.ui.visibility.FrameCase
 import com.example.composesample.presentation.example.component.ui.visibility.FrameCounter
 import com.example.composesample.presentation.example.component.ui.visibility.FrameRate
@@ -20,6 +22,8 @@ import com.example.composesample.presentation.example.component.ui.visibility.Fr
 import com.example.composesample.presentation.example.component.ui.visibility.HiddenSpinnerFrameLab
 import com.example.composesample.presentation.example.component.ui.visibility.HideTechnique
 import com.example.composesample.presentation.example.component.ui.visibility.caseOf
+import com.example.composesample.presentation.example.component.ui.visibility.casesOf
+import com.example.composesample.presentation.example.component.ui.visibility.estimatedSeconds
 import com.example.composesample.presentation.example.component.ui.visibility.classifyRate
 import com.example.composesample.presentation.example.component.ui.visibility.expectedRate
 import com.example.composesample.presentation.example.component.ui.visibility.inWindow
@@ -37,8 +41,8 @@ import org.junit.Before
 import org.junit.Test
 
 /**
- * 숨긴 스피너 프레임 Lab(#177) — 기대 표 · 판정 · 로그 줄 판별과, 무한 트랜지션이 프레임을 요청하는 조건.
- * 그리기 무효화 · 창이 그린 프레임은 UI 노드가 있어야 해서 기기 실측으로만 확인한다.
+ * 숨긴 스피너 프레임 Lab(#177 · #183) — 기대 표 · 판정 · 로그 줄 판별과, 무한 트랜지션이 프레임을 요청하는 조건.
+ * 그리기 무효화 · 창이 그린 프레임 · Lazy 목록의 칸 수명은 UI 노드가 있어야 해서 기기 실측으로만 확인한다.
  */
 class HiddenSpinnerFrameLabTest {
 
@@ -58,16 +62,30 @@ class HiddenSpinnerFrameLabTest {
     // ==================== 기대 표 ====================
 
     @Test
-    fun `기대 — 보임과 alpha(0f) 는 셋 다 계속, 배치 안 함은 콜백만, 컴포지션에서 뺀 둘은 셋 다 0`() {
+    fun `기대 — 배치된 채 숨기면 셋 다 계속, 배치되지 않고 컴포지션에 남으면 콜백만, 컴포지션에서 빠지면 셋 다 0`() {
         val every = FrameRate.Continuous
         val none = FrameRate.None
+        val drawn = listOf(every, every, every)
+        val clockOnly = listOf(every, none, none)
+        val gone = listOf(none, none, none)
         val table = mapOf(
-            FrameCase.Shown to listOf(every, every, every),
-            FrameCase.AlphaZero to listOf(every, every, every),
-            FrameCase.NotPlaced to listOf(every, none, none),
-            FrameCase.IfRemoved to listOf(none, none, none),
-            FrameCase.AnimatedHidden to listOf(none, none, none)
+            FrameCase.Shown to drawn,
+            FrameCase.AlphaZero to drawn,
+            FrameCase.NotPlaced to clockOnly,
+            FrameCase.IfRemoved to gone,
+            FrameCase.AnimatedHidden to gone,
+            // #183 — 가림 · 화면 밖 · 크기 0 을 거르는 그리기 검사는 없다
+            FrameCase.Covered to drawn,
+            FrameCase.DialogCovered to drawn,
+            FrameCase.OffWindow to drawn,
+            FrameCase.ZeroSize to drawn,
+            // #183 — Lazy 화면 밖 칸은 배치되지 않는다. 컴포지션에 남는 셋만 시계가 돈다
+            FrameCase.LazyReleased to gone,
+            FrameCase.LazyLastPass to clockOnly,
+            FrameCase.LazyAhead to clockOnly,
+            FrameCase.LazyKept to clockOnly
         )
+        assertEquals(FrameCase.entries.toSet(), table.keys)
         FrameCase.entries.forEach { case ->
             assertEquals(case.label, table.getValue(case), FrameCounter.entries.map { expectedRate(case, it) })
         }
@@ -80,8 +98,35 @@ class HiddenSpinnerFrameLabTest {
         assertEquals(FrameCase.NotPlaced, caseOf(HideTechnique.NotPlaced, visible = false))
         assertEquals(FrameCase.IfRemoved, caseOf(HideTechnique.IfVisible, visible = false))
         assertEquals(FrameCase.AnimatedHidden, caseOf(HideTechnique.Animated, visible = false))
-        // 숨김 줄은 제 방법을 기억한다 — '차례로 재기' 가 이 값으로 방법을 고른다
-        FrameCase.entries.filter { !it.visible }.forEach { assertEquals(it, caseOf(it.technique, visible = false)) }
+        assertEquals(FrameCase.LazyLastPass, caseOf(HideTechnique.LazyLastPass, visible = false))
+        // 방법마다 숨김 줄이 정확히 하나 — 숨김 줄은 제 방법을 기억하고, '차례로 재기' 가 이 값으로 방법을 고른다
+        HideTechnique.entries.forEach { technique ->
+            assertEquals(technique.label, 1, FrameCase.entries.count { !it.visible && it.technique == technique })
+        }
+        FrameCase.entries.filter { !it.visible }.forEach {
+            assertEquals(it, caseOf(it.technique, visible = false))
+            assertEquals(it.technique.label, it.label)
+        }
+    }
+
+    @Test
+    fun `묶음 — 기준 줄을 앞에 두고 그 묶음의 숨김 줄만 표 순서대로, 시간은 10초 단위`() {
+        val remove = casesOf(CaseGroup.Remove)
+        val elsewhere = casesOf(CaseGroup.Elsewhere)
+        assertEquals(
+            listOf(FrameCase.Shown, FrameCase.AlphaZero, FrameCase.NotPlaced, FrameCase.IfRemoved, FrameCase.AnimatedHidden),
+            remove
+        )
+        assertEquals(FrameCase.Shown, elsewhere.first())
+        assertEquals(9, elsewhere.size)
+        assertTrue(elsewhere.drop(1).all { it.technique.group == CaseGroup.Elsewhere })
+        // 두 묶음을 합치면 표 전체 — 기준 줄만 겹친다
+        assertEquals(FrameCase.entries.toSet(), (remove + elsewhere).toSet())
+        // 보임 6.8초 + 숨김 7.6초씩(0.8초 먼저 보이기) → 37.2 · 67.6초
+        assertEquals(40, estimatedSeconds(remove))
+        assertEquals(70, estimatedSeconds(elsewhere))
+        // 한 줄만 잴 때는 먼저 보이기가 없다
+        assertEquals(10, estimatedSeconds(listOf(FrameCase.LazyKept)))
     }
 
     // ==================== 판정 ====================
@@ -124,6 +169,20 @@ class HiddenSpinnerFrameLabTest {
         assertTrue(notPlaced.copy(rendered = 0).allMatch)
     }
 
+    @Test
+    fun `로그 한 줄 — 측정 스크립트가 읽는 모양`() {
+        val lastPass = FrameWindowResult(
+            case = FrameCase.LazyLastPass, callbacks = 300, rendered = 0, droppedReports = 0,
+            spinnerDraws = 0, windowMillis = 5_000, refreshHz = 60f, touched = false
+        )
+        assertEquals(
+            "case=LazyLastPass callbacks=300 rendered=0 draws=0 dropped=0 window=5000 hz=60 touched=false ok=true",
+            lastPass.probeLine()
+        )
+        // 같은 수라도 지나간 칸(기대 0)이면 틀린다
+        assertFalse(lastPass.copy(case = FrameCase.LazyReleased).allMatch)
+    }
+
     // ==================== 로그 줄 ====================
 
     @Test
@@ -135,16 +194,19 @@ class HiddenSpinnerFrameLabTest {
     // ==================== 상태 홀더 ====================
 
     @Test
-    fun `요청 — 지금 상태는 한 줄, 차례로는 다섯 줄을 표 순서대로`() {
+    fun `요청 — 지금 상태는 한 줄, 묶음은 그 묶음의 줄을 표 순서대로`() {
         val lab = HiddenSpinnerFrameLab()
         lab.technique = HideTechnique.NotPlaced
         lab.visible = false
         lab.requestCurrent()
         assertEquals(1, lab.runToken)
         assertEquals(listOf(FrameCase.NotPlaced), lab.plan)
-        lab.requestAll()
+        lab.requestGroup(CaseGroup.Remove)
         assertEquals(2, lab.runToken)
-        assertEquals(FrameCase.entries, lab.plan)
+        assertEquals(casesOf(CaseGroup.Remove), lab.plan)
+        lab.requestGroup(CaseGroup.Elsewhere)
+        assertEquals(3, lab.runToken)
+        assertEquals(casesOf(CaseGroup.Elsewhere), lab.plan)
         // 측정 창 밖의 터치는 표시하지 않는다
         lab.onUserTouch()
         assertFalse(lab.touchedInWindow)
@@ -180,6 +242,24 @@ class HiddenSpinnerFrameLabTest {
         }
     }
 
+    @Test
+    fun `재사용 풀로 간 칸 — 컴포지션을 비활성화하면 무한 트랜지션의 프레임 요청이 멈춘다`() {
+        // Lazy 칸이 재사용 풀로 갈 때 SubcomposeLayout 이 부르는 것과 같은 ReusableComposition.deactivate()
+        val harness = FrameClockComposition(reusable = true) {
+            val transition = rememberInfiniteTransition(label = "spinner")
+            transition.animateFloat(0f, 360f, infiniteRepeatable(tween(1_000)), label = "rotation")
+        }
+        try {
+            assertEquals(60, harness.tick(60).requests)
+            harness.deactivate()
+            val deactivated = harness.tick(60)
+            assertEquals(0, deactivated.requests)
+            assertEquals(0, deactivated.framesWithWrites)
+        } finally {
+            harness.dispose()
+        }
+    }
+
     private data class TickReport(val requests: Int, val framesWithWrites: Int)
 
     /**
@@ -187,7 +267,7 @@ class HiddenSpinnerFrameLabTest {
      * 효과 컨텍스트에 Unconfined 를 주면 sendFrame 이 기다리던 코루틴을 그 자리에서 이어 가 다음 요청까지 등록한다 — 틱마다 결정적.
      * (Recomposer.effectCoroutineContext 의 프레임 시계는 Recomposer 가 붙인 BroadcastFrameClock)
      */
-    private class FrameClockComposition(content: @Composable () -> Unit) {
+    private class FrameClockComposition(reusable: Boolean = false, content: @Composable () -> Unit) {
         private val recomposer = Recomposer(Dispatchers.Unconfined)
         private val clock = recomposer.effectCoroutineContext[MonotonicFrameClock] as BroadcastFrameClock
         private val modified = mutableSetOf<Any>()
@@ -196,7 +276,11 @@ class HiddenSpinnerFrameLabTest {
             modified.addAll(changed)
             writesThisFrame += changed.size
         }
-        private val composition = ControlledComposition(UnitApplier(), recomposer).apply { setContent(content) }
+        // ReusableComposition(…) 도 같은 구현(CompositionImpl)을 돌려준다 — 비활성화(deactivate)를 부를 수 있다
+        private val composition = (
+            if (reusable) ReusableComposition(UnitApplier(), recomposer) as ControlledComposition
+            else ControlledComposition(UnitApplier(), recomposer)
+            ).apply { setContent(content) }
         private var frameTimeNanos = 0L
 
         init {
@@ -242,6 +326,10 @@ class HiddenSpinnerFrameLabTest {
                 composition.applyLateChanges()
                 composition.changesApplied()
             }
+        }
+
+        fun deactivate() {
+            (composition as ReusableComposition).deactivate()
         }
 
         fun dispose() {

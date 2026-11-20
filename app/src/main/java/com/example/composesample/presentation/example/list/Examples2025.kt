@@ -219,9 +219,9 @@ val examples2025 = listOf(
         exampleType = ConstValue.ButtonGroupExample
     ),
     ExampleObject(
-        lastUpdate = "26. 11. 17",
+        lastUpdate = "26. 11. 20",
         title = "Visibility in Compose",
-        description = "가시성 처리 패턴 + alpha(0f) 로 숨긴 스피너가 계속 만드는 프레임",
+        description = "가시성 처리 패턴 + 숨기거나 가리거나 화면 밖에 둔 스피너가 만드는 프레임",
         exampleType = ConstValue.VisibilityExample
     ),
     ExampleObject(

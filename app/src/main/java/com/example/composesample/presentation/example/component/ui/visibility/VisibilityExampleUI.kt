@@ -11,10 +11,12 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.gestures.scrollBy
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -25,10 +27,15 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.layout.LazyLayoutCacheWindow
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
@@ -49,10 +56,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.withFrameNanos
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -71,10 +80,15 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.layout
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import com.example.composesample.presentation.MainHeader
+import kotlin.math.abs
 import kotlin.math.roundToInt
+import kotlin.math.sign
 
 @Composable
 fun VisibilityExampleUI(
@@ -286,9 +300,10 @@ private fun AlphaModifierCard() {
 }
 
 /**
- * 숨긴 무한 애니메이션이 만드는 프레임(#177)
+ * 숨긴 무한 애니메이션이 만드는 프레임(#177) · 안 보이는 곳에 둔 스피너(#183)
  *
- * indeterminate CircularProgressIndicator 를 네 가지 방법으로 숨기고 5초 동안
+ * indeterminate CircularProgressIndicator 를 1번 묶음 네 가지(컴포지션 · 배치를 바꾸는 방법)와
+ * 2번 묶음 여덟 가지(덮개 · 창 밖 · 크기 0 · Lazy 목록 위치)로 숨기고 5초 동안
  * 프레임 콜백(메인 스레드가 VSync 에 깬 횟수) · 그린 프레임(창이 보낸 프레임) · 스피너 그리기 호출을 센다.
  */
 @Composable
@@ -319,7 +334,7 @@ private fun HiddenSpinnerFrameCard(lab: HiddenSpinnerFrameLab) {
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = "무한 애니메이션은 alpha(0f) 로 숨겨도 멈추지 않는다 — 5초 동안 세어 본다",
+                text = "무한 애니메이션은 alpha(0f) 로 숨겨도, 가리거나 화면 밖에 둬도 멈추지 않는다 — 5초 동안 세어 본다",
                 fontSize = 12.sp,
                 color = Color.Gray
             )
@@ -333,7 +348,7 @@ private fun HiddenSpinnerFrameCard(lab: HiddenSpinnerFrameLab) {
                 // 자리는 고정 — 어떤 방법으로 숨겨도 카드 높이가 바뀌지 않는다
                 Box(
                     modifier = Modifier
-                        .size(56.dp)
+                        .size(SpinnerSlotSize)
                         .border(1.dp, SpinnerBlue.copy(alpha = 0.3f), RoundedCornerShape(8.dp)),
                     contentAlignment = Alignment.Center
                 ) {
@@ -363,22 +378,29 @@ private fun HiddenSpinnerFrameCard(lab: HiddenSpinnerFrameLab) {
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            Text(text = "숨기는 방법", fontSize = 12.sp, fontWeight = FontWeight.Bold, color = Color(0xFF212121))
-            FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                HideTechnique.entries.forEach { technique ->
-                    FilterChip(
-                        selected = lab.technique == technique,
-                        onClick = { lab.technique = technique },
-                        enabled = !lab.running,
-                        label = { Text(text = technique.label, fontSize = 11.sp) },
-                        colors = FilterChipDefaults.filterChipColors(selectedContainerColor = Color(0xFFBBDEFB))
-                    )
+            CaseGroup.entries.forEachIndexed { groupIndex, group ->
+                Text(
+                    text = "${groupIndex + 1}. ${group.label}",
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFF212121)
+                )
+                FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                    HideTechnique.entries.filter { it.group == group }.forEach { technique ->
+                        FilterChip(
+                            selected = lab.technique == technique,
+                            onClick = { lab.technique = technique },
+                            enabled = !lab.running,
+                            label = { Text(text = technique.label, fontSize = 11.sp) },
+                            colors = FilterChipDefaults.filterChipColors(selectedContainerColor = Color(0xFFBBDEFB))
+                        )
+                    }
                 }
             }
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 Button(
                     onClick = { lab.requestCurrent() },
                     enabled = !lab.running && meter != null,
@@ -386,12 +408,15 @@ private fun HiddenSpinnerFrameCard(lab: HiddenSpinnerFrameLab) {
                 ) {
                     Text(text = "지금 상태 재기", fontSize = 12.sp)
                 }
-                OutlinedButton(
-                    onClick = { lab.requestAll() },
-                    enabled = !lab.running && meter != null,
-                    contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp)
-                ) {
-                    Text(text = "5가지 차례로 (약 40초)", fontSize = 12.sp)
+                CaseGroup.entries.forEachIndexed { groupIndex, group ->
+                    val cases = casesOf(group)
+                    OutlinedButton(
+                        onClick = { lab.requestGroup(group) },
+                        enabled = !lab.running && meter != null,
+                        contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp)
+                    ) {
+                        Text(text = "${groupIndex + 1}번 ${cases.size}줄 차례로 (약 ${estimatedSeconds(cases)}초)", fontSize = 12.sp)
+                    }
                 }
             }
 
@@ -428,6 +453,22 @@ private fun HiddenSpinnerFrameCard(lab: HiddenSpinnerFrameLab) {
                     "대가는 remember 상태 — 다시 보이면 스피너는 처음부터 돈다. 자리는 고정 크기 상자로 지킨다."
             )
             SpinnerFact(
+                title = "가려도 · 창 밖이어도 · 크기 0 이어도 그린다",
+                body = "Compose 의 그리기 경로(NodeCoordinator.draw → 그리기 Modifier → 레이어 기록)에는 가림 · 화면 밖 · 크기 0 을 거르는 검사가 없다(ui 1.12.1). " +
+                    "배치된 노드라면 불투명 형제로 덮든, 다른 창(Dialog)으로 앱 창 전체를 덮든, 100,000px 밖으로 밀든, size(0.dp) 로 줄이든 " +
+                    "Canvas 는 매 프레임 다시 불리고 창도 매 프레임 새로 그린다 — 셋 다 계속. " +
+                    "이 앱의 실물: 예제 화면에 덮인 목록의 검색창 커서가 5초에 그린 프레임 10 을 만들었다(#177 측정 중 발견, 지금은 고침)."
+            )
+            SpinnerFact(
+                title = "Lazy 목록 — 컴포지션에 남은 칸은 시계를 돌린다",
+                body = "화면 밖 칸은 배치되지 않아 그리기는 0 이다. 그래도 칸이 컴포지션에 남아 있으면 무한 트랜지션이 매 프레임 프레임을 요청한다. 남는 경우는 셋. " +
+                    "① 멈추기 직전 마지막 측정에서 화면 밖으로 나간 칸 — LazyListMeasure 는 스크롤 delta 만큼 앞 칸을 컴포즈 · 측정해 보고 화면 밖이면 버린다. " +
+                    "이번 측정에서 쓴 칸이라 재사용 풀로 가지 않고, 목록이 다시 측정할 때(다음 스크롤 등)까지 남는다. " +
+                    "② 스크롤 방향의 다음 칸(기본 미리 가져오기는 compose 까지 끝낸다) ③ 캐시 창(LazyLayoutCacheWindow) 안. " +
+                    "같은 1.5칸을 끌어도 캐시 창이 없으면 다음 측정에서 재사용 풀로 가며 비활성화되어 셋 다 0. " +
+                    "그린 프레임이 0 이라 GPU 렌더링 막대 · gfxinfo 에는 안 보이고 프레임 콜백(doFrame)에만 보인다."
+            )
+            SpinnerFact(
                 title = "원문",
                 body = "RevenueCat 페이월 버튼이 진행 표시를 알파 0 으로 숨겨 두었다 — 손대지 않은 페이월이 5초에 302~303 프레임. " +
                     "if (animatedProgressAlpha > 0f) 로 감싸자 0 (페이드아웃 동안만 컴포지션에 남는다)."
@@ -446,10 +487,7 @@ private fun HiddenSpinnerFrameCard(lab: HiddenSpinnerFrameLab) {
 /** 고른 방법으로 스피너를 숨긴다 — 스피너 그리기 호출은 스피너 노드 안쪽에서 센다 */
 @Composable
 private fun HiddenSpinnerSlot(lab: HiddenSpinnerFrameLab) {
-    val counted = Modifier.drawWithContent {
-        lab.onSpinnerDraw()
-        drawContent()
-    }
+    val counted = Modifier.countSpinnerDraws(lab)
     when (lab.technique) {
         HideTechnique.Alpha -> CircularProgressIndicator(
             modifier = Modifier
@@ -476,6 +514,126 @@ private fun HiddenSpinnerSlot(lab: HiddenSpinnerFrameLab) {
         ) {
             CircularProgressIndicator(modifier = counted, color = SpinnerBlue)
         }
+
+        // 같은 창 · 같은 부모 안의 불투명 형제 — 나중에 그려 스피너를 완전히 덮는다
+        HideTechnique.Covered -> Box {
+            CircularProgressIndicator(modifier = counted, color = SpinnerBlue)
+            if (!lab.visible) {
+                Box(modifier = Modifier.matchParentSize().background(CoverGray))
+            }
+        }
+
+        // 다른 창(Dialog)이 앱 창 전체를 덮는다 — 스피너는 아래 창에 그대로 있다
+        HideTechnique.DialogCovered -> {
+            CircularProgressIndicator(modifier = counted, color = SpinnerBlue)
+            if (!lab.visible) CoverDialog(lab)
+        }
+
+        // 배치는 하되 창 밖 좌표로 — offset 람다는 배치 단계에서 읽어 리컴포지션 없이 옮긴다
+        HideTechnique.OffWindow -> CircularProgressIndicator(
+            modifier = Modifier
+                .offset { IntOffset(if (lab.visible) 0 else OFF_WINDOW_PX, 0) }
+                .then(counted),
+            color = SpinnerBlue
+        )
+
+        // 배치는 하되 크기를 0 으로
+        HideTechnique.ZeroSize -> CircularProgressIndicator(
+            modifier = Modifier
+                .then(if (lab.visible) Modifier else Modifier.size(0.dp))
+                .then(counted),
+            color = SpinnerBlue
+        )
+
+        HideTechnique.LazyReleased,
+        HideTechnique.LazyLastPass,
+        HideTechnique.LazyAhead,
+        HideTechnique.LazyKept -> key(lab.technique) { LazySpinnerStrip(lab, lab.technique) }
+    }
+}
+
+/** 스피너 노드 안쪽에서 그리기 호출을 센다 — 평범한 필드라 쓰기가 프레임을 부르지 않는다 */
+private fun Modifier.countSpinnerDraws(lab: HiddenSpinnerFrameLab): Modifier = drawWithContent {
+    lab.onSpinnerDraw()
+    drawContent()
+}
+
+/** 덮개 창 — 세는 동안에는 닫히지 않는다(닫히면 보임 상태로 바뀌어 줄이 틀린다) */
+@Composable
+private fun CoverDialog(lab: HiddenSpinnerFrameLab) {
+    Dialog(
+        onDismissRequest = { if (!lab.running) lab.visible = true },
+        properties = DialogProperties(usePlatformDefaultWidth = false)
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color(0xFF263238)),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = "다른 창(Dialog)이 앱 창을 덮고 있다\n세는 동안에는 닫히지 않는다 — 끝나면 뒤로 가기로 닫는다",
+                color = Color.White,
+                fontSize = 14.sp,
+                lineHeight = 20.sp
+            )
+        }
+    }
+}
+
+/**
+ * 한 칸짜리 LazyRow — 칸 너비 = 뷰포트 너비라 한 번에 한 아이템만 보인다. 스피너는 LAZY_SPINNER_INDEX 번 칸.
+ * 숨길 때는 손가락 스크롤처럼 delta 가 있는 scrollBy 로 민다(미리 가져오기 · 캐시 창은 delta 로 움직인다).
+ */
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+private fun LazySpinnerStrip(lab: HiddenSpinnerFrameLab, technique: HideTechnique) {
+    val state = if (technique == HideTechnique.LazyKept) {
+        // 뒤 · 앞 모두 한 칸 — 지나간 칸을 한 칸 너비만큼 컴포지션에 남긴다
+        val cacheWindow = remember { LazyLayoutCacheWindow(ahead = SpinnerSlotSize, behind = SpinnerSlotSize) }
+        rememberLazyListState(cacheWindow = cacheWindow, initialFirstVisibleItemIndex = LAZY_SPINNER_INDEX)
+    } else {
+        rememberLazyListState(initialFirstVisibleItemIndex = LAZY_SPINNER_INDEX)
+    }
+    LaunchedEffect(lab.visible) {
+        // 보이기 = 스피너 칸으로 건너뛰기. 건너뛴 측정은 그 사이 칸을 컴포즈하지 않는다
+        state.scrollToItem(LAZY_SPINNER_INDEX)
+        if (lab.visible) return@LaunchedEffect
+        when (technique) {
+            // 한 번의 scrollBy = 한 번의 측정 — 그 측정이 스피너 칸을 컴포즈 · 측정한 뒤 화면 밖이라 버린다
+            HideTechnique.LazyLastPass -> state.scrollBy(state.layoutInfo.viewportSize.width.toFloat())
+            // 멀리 건너뛴 뒤 스피너 쪽으로 끌어 온다 — 끄는 방향의 다음 칸(스피너)을 미리 가져온다
+            HideTechnique.LazyAhead -> {
+                state.scrollToItem(LAZY_SPINNER_INDEX + 3)
+                state.dragSlots(-1.5f)
+            }
+            // 지나간 칸 · 캐시 창 안 칸 — 같은 거리(1.5칸)를 끌고, 캐시 창이 있느냐만 다르다
+            else -> state.dragSlots(1.5f)
+        }
+    }
+    LazyRow(
+        state = state,
+        modifier = Modifier.fillMaxSize(),
+        userScrollEnabled = false
+    ) {
+        items(LAZY_ITEM_COUNT, contentType = { if (it == LAZY_SPINNER_INDEX) "spinner" else "empty" }) { index ->
+            Box(modifier = Modifier.fillParentMaxSize(), contentAlignment = Alignment.Center) {
+                if (index == LAZY_SPINNER_INDEX) {
+                    CircularProgressIndicator(modifier = Modifier.countSpinnerDraws(lab), color = SpinnerBlue)
+                } else {
+                    Text(text = "$index", fontSize = 11.sp, color = Color(0xFF90A4AE))
+                }
+            }
+        }
+    }
+}
+
+/** 손가락으로 끌듯 칸의 1/8 씩 프레임마다 민다 — 칸을 넘은 뒤에도 측정이 몇 번 더 돌아 지나간 칸을 내보낸다 */
+private suspend fun LazyListState.dragSlots(slots: Float) {
+    val stepPx = layoutInfo.viewportSize.width / DRAG_STEPS_PER_SLOT.toFloat() * sign(slots)
+    repeat((abs(slots) * DRAG_STEPS_PER_SLOT).roundToInt()) {
+        scrollBy(stepPx)
+        withFrameNanos { }
     }
 }
 
@@ -513,6 +671,15 @@ private fun HiddenSpinnerResultTable(lab: HiddenSpinnerFrameLab) {
         }
         FrameCase.entries.forEach { case ->
             val result = lab.results[case]
+            if (!case.visible && case == FrameCase.entries.first { !it.visible && it.technique.group == case.technique.group }) {
+                Text(
+                    text = "${case.technique.group.ordinal + 1}. ${case.technique.group.label}",
+                    modifier = Modifier.padding(top = 8.dp),
+                    fontSize = 10.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFF546E7A)
+                )
+            }
             Row(modifier = Modifier.fillMaxWidth().padding(top = 6.dp)) {
                 Text(
                     text = case.label,
@@ -567,6 +734,16 @@ private fun SpinnerFact(title: String, body: String) {
 }
 
 private val SpinnerBlue = Color(0xFF1565C0)
+private val CoverGray = Color(0xFFCFD8DC)
+private val SpinnerSlotSize = 56.dp
+
+/** 창 밖 좌표(px) — 어떤 화면 폭보다도 멀다 */
+private const val OFF_WINDOW_PX = 100_000
+
+/** 한 칸 LazyRow 의 아이템 수와 스피너 칸 */
+private const val LAZY_ITEM_COUNT = 8
+private const val LAZY_SPINNER_INDEX = 3
+private const val DRAG_STEPS_PER_SLOT = 8
 
 private tailrec fun Context.findActivity(): Activity? = when (this) {
     is Activity -> this
