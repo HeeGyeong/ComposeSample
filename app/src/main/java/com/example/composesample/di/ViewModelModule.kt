@@ -1,6 +1,7 @@
 package com.example.composesample.di
 
 import com.example.composesample.presentation.example.BlogExampleViewModel
+import com.example.composesample.presentation.example.component.ui.dynamic.A2uiDemoViewModel
 import com.example.coordinator.CoordinatorViewModel
 import com.example.core.BaseViewModel
 import com.example.composesample.presentation.example.component.architecture.development.concurrency.CoroutineBridgesViewModel
@@ -103,6 +104,8 @@ val viewModelModule: Module = module {
     viewModel { CoroutineTracingViewModel(androidApplication()) }
     // filesDir(결과 파일)와 ProfilingManager 시스템 서비스 조회에 Application 컨텍스트가 필요하다
     viewModel { ProfilingManagerViewModel(androidApplication()) }
+    // A2UI 기본 카탈로그의 함수(openUrl)가 Application 컨텍스트를 쥔다
+    viewModel { A2uiDemoViewModel(androidApplication()) }
     viewModel { CoroutineBridgesViewModel() }
     viewModel { MoleculePresenterViewModel() }
     viewModel { BaseViewModel(get(), get()) }

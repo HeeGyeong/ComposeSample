@@ -85,6 +85,11 @@ lifecycleViewmodelCompose = "2.11.1"
 # lifecycle 과 같은 버전으로 움직인다. aar minCompileSdk 37 · minAGP 9.1.0(충족), module 의존(activity-compose 1.12.0 · compose runtime 1.10.4 ·
 # navigation3-runtime 1.0.1 · savedstate 1.3.2)은 전부 프로젝트보다 낮아 끌어올림 0.
 lifecycleViewmodelNavigation3 = "2.11.1"
+# A2UI(#120, 2026-11-20 사용자 승인 — alpha) — 에이전트가 보낸 UI 트리 JSON(v0.9)을 Compose 로 그린다.
+# a2ui-model · a2ui-engine(전이) · compose-runtime · compose-ui · material3-a2ui 가 같은 버전으로 움직인다.
+# aar minCompileSdk 37 · compose 계열 minCompileMinorSdk 1 · minAGP 9.1.0 — module 이 compose 1.13.0-alpha03 · material3 1.5.0-alpha28 을
+# 요구해서 BOM 2026.11.01(1.13.0 · 1.5.0) 상향(DEP-CURRENCY-35)을 먼저 했다. 그대로 넣으면 앱 전체가 알파 Compose 로 끌려 올라간다.
+a2ui = "1.0.0-alpha02"
 
 # Koin 4.2.2 (DI-01 해소, 2026-09-15). 3.x 대비 코드 영향:
 # ① koinViewModel 의 owner 파라미터 이름이 viewModelStoreOwner 로 바뀜 ② org.koin.androidx.compose.get 제거 → org.koin.compose.koinInject
@@ -385,6 +390,10 @@ lifecycleViewmodelCompose = { module = "androidx.lifecycle:lifecycle-viewmodel-c
 lifecycleRuntimeKtx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
 lifecycleLivedataKtx = { module = "androidx.lifecycle:lifecycle-livedata-ktx", version.ref = "lifecycleLivedataKtx" }
 lifecycleViewmodelNavigation3 = { module = "androidx.lifecycle:lifecycle-viewmodel-navigation3", version.ref = "lifecycleViewmodelNavigation3" }
+a2uiModel = { module = "androidx.a2ui:a2ui-model", version.ref = "a2ui" }
+a2uiComposeRuntime = { module = "androidx.a2ui.compose:compose-runtime", version.ref = "a2ui" }
+a2uiComposeUi = { module = "androidx.a2ui.compose:compose-ui", version.ref = "a2ui" }
+material3A2ui = { module = "androidx.compose.material3:material3-a2ui", version.ref = "a2ui" }
 
 # Dependency Injection - Koin
 koinCore = { module = "io.insert-koin:koin-core", version.ref = "koinCore" }

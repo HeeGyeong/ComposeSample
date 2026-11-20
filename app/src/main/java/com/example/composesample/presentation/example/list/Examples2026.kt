@@ -1046,5 +1046,12 @@ val examples2026 = listOf(
         description = "정점 셰이더가 정점마다 굵기를 정하는 drawMesh 리본과 BlendMode 함정",
         blogUrl = "",
         exampleType = ConstValue.MeshRibbonExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 11. 20",
+        title = "A2UI 컴포넌트 트리 렌더링",
+        description = "에이전트가 보낸 UI 트리 JSON 을 androidx.a2ui 로 Material 3 화면에",
+        blogUrl = "",
+        exampleType = ConstValue.A2uiRenderingExample
     )
 )

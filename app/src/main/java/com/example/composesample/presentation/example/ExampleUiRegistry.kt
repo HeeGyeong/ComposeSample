@@ -60,6 +60,7 @@ import com.example.composesample.presentation.example.component.interaction.stic
 import com.example.composesample.presentation.example.component.interaction.swipe.SwipeToDismissM3ExampleUI
 import com.example.composesample.presentation.example.component.interaction.swipe.SwipeToDismissExampleUI
 import com.example.composesample.presentation.example.component.system.ai.GeminiNanoExampleUI
+import com.example.composesample.presentation.example.component.ui.dynamic.A2uiRenderingExampleUI
 import com.example.composesample.presentation.example.component.system.deeplink.DynamicAppLinksExampleUI
 import com.example.composesample.presentation.example.component.system.platform.clipboard.ClipboardProcessTextExampleUI
 import com.example.composesample.presentation.example.component.system.platform.contacts.ContactEditorPickerExampleUI
@@ -271,6 +272,7 @@ import com.example.composesample.util.ConstValue.FlexBoxLayoutExample
 import com.example.composesample.util.ConstValue.FlingBehaviorExample
 import com.example.composesample.util.ConstValue.FocusRestorerExample
 import com.example.composesample.util.ConstValue.GeminiNanoExample
+import com.example.composesample.util.ConstValue.A2uiRenderingExample
 import com.example.composesample.util.ConstValue.GlanceWidgetExample
 import com.example.composesample.util.ConstValue.GraphicsLayerExample
 import com.example.composesample.util.ConstValue.InitTestExample
@@ -636,6 +638,7 @@ val exampleUiRegistry: Map<String, @Composable (onBackEvent: () -> Unit) -> Unit
     CustomTextRenderingExample to { onBackEvent -> CustomTextRenderingExampleUI(onBackEvent) },
     DynamicAppLinksExample to { onBackEvent -> DynamicAppLinksExampleUI(onBackEvent) },
     GeminiNanoExample to { onBackEvent -> GeminiNanoExampleUI(onBackEvent) },
+    A2uiRenderingExample to { onBackEvent -> A2uiRenderingExampleUI(onBackEvent) },
     AdaptiveLayoutExample to { onBackEvent -> AdaptiveLayoutExampleUI(onBackEvent) },
     MediaQueryExample to { onBackEvent -> MediaQueryExampleUI(onBackEvent) },
     CustomLayoutExample to { onBackEvent -> CustomLayoutExampleUI(onBackEvent) },
