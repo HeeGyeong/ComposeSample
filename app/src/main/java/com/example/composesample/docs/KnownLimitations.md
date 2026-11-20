@@ -68,13 +68,14 @@ the `lint-vital` check inside `assembleRelease` only looks at fatal issues, and 
 > The two "Open 🟢" rows were cleared the next day by RES-UNUSED-01 (`365002dc`, 17 unused resources) and LINT-COSMETIC-01
 > (`89f30399`, 80 cosmetic issues), and LINT-AUTOBOXING-01 (`a990a367`) followed on 2026-09-18.
 
-**Current baseline (2026-11-18): 0 errors / 25 warnings + 1 hint.** Version notices come from lint's network lookups, so
+**Current baseline (2026-11-20): 0 errors / 31 warnings + 1 hint.** Version notices come from lint's network lookups, so
 they appear and disappear without code changes; compare the issue list, not only the count.
 
 | Issue | Count | Verdict |
 |-------|-------|---------|
 | `ObsoleteSdkInt` | 23 | **Do not "fix"** — same reason as above (debug minSdk 26 from HotSwan, release minSdk 24) |
 | `NewerVersionAvailable` | 1 | HotSwan compiler 2.2.0 (won't-do: the Gradle plugin must match the IDE plugin, see ComposeHotReloadGuide). kotlinx-serialization 1.13.0 (2 notices, DEP-CURRENCY-27) and `AndroidGradlePluginVersion` for Gradle 9.9.1 (1 notice, DEP-CURRENCY-28) went away on 2026-11-18 |
+| `GradleDependency` | 6 | Deferred — approval needed: compose-bom 2026.11.01 with material 1.13.0 and material3 1.5.0 ×2 (4 notices, DEP-CURRENCY-35 — Compose 1.13.0 needs compileSdk 37.1), biometric / biometric-compose 1.4.0-rc01 (2 notices, DEP-CURRENCY-31). Lifecycle 2.11.1 (4) and navigation3 1.2.2 (2) appeared on 2026-11-20 and went away the same day (DEP-CURRENCY-32 · 33) |
 | `OldTargetApi` | 1 | targetSdk 35 is the value `CLAUDE.md` fixes for this project |
 | `ReportShortcutUsage` (hint) | 1 | The shortcut example adds dynamic shortcuts but does not report their use; ranking hints are not part of that example |
 
