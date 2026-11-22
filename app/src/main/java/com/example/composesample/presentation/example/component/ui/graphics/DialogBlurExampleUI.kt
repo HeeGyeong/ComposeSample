@@ -28,7 +28,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -62,6 +61,7 @@ import androidx.core.graphics.drawable.toDrawable
 import androidx.core.graphics.scale
 import com.example.composesample.presentation.MainHeader
 import com.example.composesample.util.boldMarkup
+import com.example.composesample.util.component.ValueSlider
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -324,7 +324,7 @@ private fun WindowBlurCard() {
                 fontWeight = FontWeight.Bold,
                 color = Color(0xFF37474F)
             )
-            Slider(
+            ValueSlider(
                 value = dim,
                 onValueChange = { dim = it },
                 valueRange = 0f..1f,
@@ -605,7 +605,7 @@ private fun SliderRow(
             fontWeight = FontWeight.Bold,
             color = Color(0xFF37474F)
         )
-        Slider(
+        ValueSlider(
             value = value.toFloat(),
             onValueChange = { onChange(it.toInt()) },
             valueRange = min.toFloat()..max.toFloat(),

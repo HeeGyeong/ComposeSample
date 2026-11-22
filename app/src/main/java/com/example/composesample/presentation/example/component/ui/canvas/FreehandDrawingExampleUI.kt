@@ -33,7 +33,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Slider
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -70,6 +69,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.toSize
 import androidx.input.motionprediction.MotionEventPredictor
 import com.example.composesample.presentation.MainHeader
+import com.example.composesample.util.component.ValueSlider
 import kotlinx.coroutines.launch
 import java.util.Locale
 import kotlin.math.min
@@ -499,7 +499,7 @@ private fun DrawingCanvasCard(prediction: PredictionInfo) {
                 fontSize = 12.sp,
                 color = Color(0xFF616161)
             )
-            Slider(
+            ValueSlider(
                 value = state.width,
                 onValueChange = { dispatch(DrawIntent.SetWidth(it)) },
                 valueRange = 2f..40f

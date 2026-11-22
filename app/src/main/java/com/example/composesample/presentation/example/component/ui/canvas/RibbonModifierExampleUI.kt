@@ -30,7 +30,6 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -69,6 +68,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.toSize
 import com.example.composesample.presentation.MainHeader
+import com.example.composesample.util.component.ValueSlider
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
@@ -307,7 +307,7 @@ private fun SpiralPathCard() {
                     }
                 }
         )
-        Slider(value = t, onValueChange = { t = it })
+        ValueSlider(value = t, onValueChange = { t = it })
         RibbonChoiceRow(
             label = "바퀴 수",
             options = listOf(1f to "1바퀴", 3f to "3바퀴", 7f to "7바퀴 (원문)"),
@@ -574,7 +574,7 @@ private fun ChainOrderColumn(label: String, order: ChainOrder, progress: () -> F
 /** 슬라이더만 진행률을 컴포지션에서 읽는다 — 카드가 리컴포즈되지 않아 리본 캐시가 유지된다 */
 @Composable
 private fun ProgressSlider(progress: MutableFloatState) {
-    Slider(value = progress.floatValue, onValueChange = { progress.floatValue = it })
+    ValueSlider(value = progress.floatValue, onValueChange = { progress.floatValue = it })
     RibbonStat("진행률 ${(progress.floatValue * 100).roundToInt()}% · 5바퀴 = 반 바퀴 구간 10개, 구간 하나가 전체 길이의 10%")
 }
 

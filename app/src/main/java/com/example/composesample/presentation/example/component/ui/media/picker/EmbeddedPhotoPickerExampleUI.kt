@@ -45,7 +45,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberBottomSheetScaffoldState
-import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
@@ -70,6 +69,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.composesample.util.component.ValueSlider
 import kotlinx.coroutines.launch
 import kotlin.random.Random
 
@@ -775,7 +775,7 @@ private fun ConfigurationPlaygroundDemo() {
                         )
                     }
                     val minAllowed = maxOf(1, selectedPhotos.size)
-                    Slider(
+                    ValueSlider(
                         value = maxCount.toFloat(),
                         onValueChange = { maxCount = maxOf(it.toInt(), minAllowed) },
                         valueRange = minAllowed.toFloat()..10f,

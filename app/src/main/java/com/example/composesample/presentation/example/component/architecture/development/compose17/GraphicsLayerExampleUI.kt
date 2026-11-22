@@ -18,7 +18,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
-import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.Composable
@@ -39,6 +38,7 @@ import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.unit.dp
 import com.example.composesample.presentation.MainHeader
 import com.example.composesample.presentation.getTextStyle
+import com.example.composesample.util.component.ValueSlider
 
 /**
  * GraphicsLayer Example
@@ -250,7 +250,7 @@ private fun ColorFilterExample() {
                 style = getTextStyle(14)
             )
             
-            Slider(
+            ValueSlider(
                 value = tintStrength,
                 onValueChange = { tintStrength = it },
                 valueRange = 0f..1f

@@ -35,7 +35,6 @@ import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.Slider
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -91,6 +90,7 @@ import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupPositionProvider
 import androidx.compose.ui.window.PopupProperties
 import com.example.composesample.presentation.MainHeader
+import com.example.composesample.util.component.ValueSlider
 import java.util.Locale
 import kotlin.math.roundToInt
 
@@ -600,7 +600,7 @@ private fun ProgressPreviewCard(state: MorphDemoState) {
                 )
             }
         }
-        Slider(
+        ValueSlider(
             value = p,
             onValueChange = { p = it },
             // 놓을 때 센 값을 화면에 옮긴다(배치 중 상태 쓰기를 피한다)

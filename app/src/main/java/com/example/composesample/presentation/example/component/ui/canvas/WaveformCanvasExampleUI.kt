@@ -25,7 +25,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -62,6 +61,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.composesample.presentation.MainHeader
+import com.example.composesample.util.component.ValueSlider
 import java.util.Locale
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -380,7 +380,7 @@ private fun WaveformControls(controller: WaveformController) {
         fontSize = 12.sp,
         color = Color(0xFF424242)
     )
-    Slider(
+    ValueSlider(
         value = controller.bpm,
         onValueChange = { controller.bpm = it },
         valueRange = 30f..180f
@@ -390,7 +390,7 @@ private fun WaveformControls(controller: WaveformController) {
         fontSize = 12.sp,
         color = Color(0xFF424242)
     )
-    Slider(
+    ValueSlider(
         value = controller.noise,
         onValueChange = { controller.noise = it },
         valueRange = 0f..0.3f

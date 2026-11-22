@@ -50,7 +50,6 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -76,6 +75,7 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.composesample.presentation.MainHeader
+import com.example.composesample.util.component.ValueSlider
 import kotlinx.coroutines.launch
 
 /**
@@ -203,7 +203,7 @@ private fun ShowcaseControls(
             verticalArrangement = Arrangement.spacedBy(6.dp)
         ) {
             Text("공통 duration: ${durationMs.toInt()}ms", fontWeight = FontWeight.Bold, fontSize = 13.sp)
-            Slider(
+            ValueSlider(
                 value = durationMs,
                 onValueChange = onDurationChange,
                 valueRange = 100f..2000f,

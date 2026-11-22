@@ -34,7 +34,6 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -63,6 +62,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.composesample.util.component.ValueSlider
 import kotlin.math.min
 
 /**
@@ -1239,7 +1239,7 @@ private fun ControlRow(
             fontSize = 12.sp,
             color = Color(0xFF616161)
         )
-        Slider(
+        ValueSlider(
             value = value,
             onValueChange = onValueChange,
             valueRange = range,

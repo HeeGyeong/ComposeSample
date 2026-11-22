@@ -29,7 +29,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -66,6 +65,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.graphics.get
 import com.example.composesample.presentation.MainHeader
+import com.example.composesample.util.component.ValueSlider
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.Locale
@@ -283,7 +283,7 @@ private fun OverviewCard() {
         if (player.playing) {
             SmallLabel("멈추면 진행(fraction)을 끌어 한 장면씩 볼 수 있다")
         } else {
-            Slider(
+            ValueSlider(
                 value = player.fraction,
                 onValueChange = {
                     player.clock.seek(it)
@@ -372,7 +372,7 @@ private fun LayersCard() {
             "(그 기기에서는 ②가 ①과, ③이 ④와 같다).",
         containerColor = Color(0xFFE3F2FD)
     ) {
-        Slider(value = fraction, onValueChange = { fraction = it })
+        ValueSlider(value = fraction, onValueChange = { fraction = it })
         FractionValues(fraction)
         Spacer(modifier = Modifier.height(8.dp))
         val f = { fraction }
@@ -549,7 +549,7 @@ private fun ParentLayerCard() {
             "점 간격 ${gapDp}dp · 지름 ${DotSizeDp}dp · 블러 ${DotBlurDp.roundToInt()}dp · " +
                 "gain ${config.thresholdGain.fmt(1)} · bias ${config.thresholdBias.fmt()}"
         )
-        Slider(
+        ValueSlider(
             value = gapDp.toFloat(),
             onValueChange = { gapDp = (it / GapStepDp).roundToInt() * GapStepDp },
             valueRange = 0f..GapMaxDp.toFloat(),
@@ -898,7 +898,7 @@ private fun PaddingCard() {
             "원문처럼 블러 상한 + 8dp 를 안쪽 패딩으로 두면 꼬리가 레이어 안에 들어온다. 빨간 테두리가 레이어 경계다.",
         containerColor = Color(0xFFFFF3E0)
     ) {
-        Slider(value = fraction, onValueChange = { fraction = it }, enabled = !running)
+        ValueSlider(value = fraction, onValueChange = { fraction = it }, enabled = !running)
         FractionValues(fraction)
         Spacer(modifier = Modifier.height(8.dp))
         val f = { fraction }

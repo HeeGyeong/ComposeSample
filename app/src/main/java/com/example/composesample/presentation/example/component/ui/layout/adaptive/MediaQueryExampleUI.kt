@@ -18,7 +18,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -47,6 +46,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.composesample.presentation.MainHeader
+import com.example.composesample.util.component.ValueSlider
 import kotlin.math.roundToInt
 
 /**
@@ -273,7 +273,7 @@ private fun MediaQueryVsDerivedCard() {
                 color = Color(0xFF424242),
                 modifier = Modifier.width(48.dp)
             )
-            Slider(
+            ValueSlider(
                 value = simulatedWidth,
                 onValueChange = { simulatedWidth = it },
                 valueRange = 320f..900f,

@@ -18,7 +18,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -44,6 +43,7 @@ import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.PlayerView
 import com.example.composesample.presentation.MainHeader
 import com.example.composesample.util.OnLifecycleEvent
+import com.example.composesample.util.component.ValueSlider
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import java.util.Locale
@@ -265,7 +265,7 @@ private fun VideoPlayerCard(
             }
             Spacer(modifier = Modifier.height(8.dp))
 
-            Slider(
+            ValueSlider(
                 value = positionMs.toFloat(),
                 onValueChange = { exoPlayer.seekTo(it.toLong()) },
                 valueRange = 0f..durationMs.toFloat().coerceAtLeast(1f),

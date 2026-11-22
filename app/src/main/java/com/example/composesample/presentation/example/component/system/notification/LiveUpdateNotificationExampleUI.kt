@@ -26,7 +26,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Slider
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
@@ -54,6 +53,7 @@ import androidx.core.graphics.drawable.IconCompat
 import androidx.core.os.BundleCompat
 import com.example.composesample.R
 import com.example.composesample.presentation.MainHeader
+import com.example.composesample.util.component.ValueSlider
 import kotlinx.coroutines.delay
 import android.annotation.SuppressLint
 
@@ -337,7 +337,7 @@ private fun LiveUpdateDemoCard(
     NotificationSectionCard(title = "2. 알림을 직접 발행해 보기") {
         BodyText("진행률 ${options.progress} / $progressMax")
         Spacer(modifier = Modifier.height(4.dp))
-        Slider(
+        ValueSlider(
             value = options.progress.toFloat(),
             onValueChange = { onOptionsChange(options.copy(progress = it.toInt())) },
             valueRange = 0f..progressMax.toFloat()

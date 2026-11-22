@@ -25,7 +25,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -56,6 +55,7 @@ import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.composesample.presentation.MainHeader
+import com.example.composesample.util.component.ValueSlider
 
 /**
  * New Shadow API — Modifier.dropShadow / Modifier.innerShadow (Compose 1.9+)
@@ -616,7 +616,7 @@ private fun LabeledSlider(
             fontSize = 12.sp,
             color = Color(0xFF424242)
         )
-        Slider(
+        ValueSlider(
             value = value,
             onValueChange = onValueChange,
             valueRange = valueRange,

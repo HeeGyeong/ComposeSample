@@ -24,7 +24,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -52,6 +51,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.composesample.presentation.MainHeader
+import com.example.composesample.util.component.ValueSlider
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.Locale
@@ -242,7 +242,7 @@ private fun OverviewCard() {
             DemoButton(if (clock.playing) "멈춤" else "재생", Color(0xFF3949AB)) { clock.playing = !clock.playing }
         }
         if (!clock.playing) {
-            Slider(value = RibbonMath.fract(clock.time), onValueChange = { clock.time = it })
+            ValueSlider(value = RibbonMath.fract(clock.time), onValueChange = { clock.time = it })
         }
         InfoLine("이 기기", "API ${Build.VERSION.SDK_INT} · " + if (meshSupported()) "drawMesh" else "drawMesh 없음(API 34+) → CPU Path 대체")
         InfoLine("정점 · 프레임마다", "${RibbonMath.vertexCount()}개 · uTime 1개(setFloatUniform) + drawMesh 1회")
@@ -314,7 +314,7 @@ private fun ComparisonCard() {
             DemoButton(if (clock.playing) "멈춤" else "재생", Color(0xFF1565C0)) { clock.playing = !clock.playing }
         }
         if (!clock.playing) {
-            Slider(value = RibbonMath.fract(clock.time), onValueChange = { clock.time = it })
+            ValueSlider(value = RibbonMath.fract(clock.time), onValueChange = { clock.time = it })
         }
         Spacer(modifier = Modifier.height(8.dp))
         NoteBox(
@@ -347,7 +347,7 @@ private fun WireframeCard() {
             }
         }
         Spacer(modifier = Modifier.height(4.dp))
-        Slider(value = RibbonMath.fract(clock.time), onValueChange = { clock.time = it; clock.playing = false })
+        ValueSlider(value = RibbonMath.fract(clock.time), onValueChange = { clock.time = it; clock.playing = false })
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             DemoButton(if (clock.playing) "멈춤" else "재생", Color(0xFFF57F17)) { clock.playing = !clock.playing }
             DemoButton(if (showMesh) "정점만" else "메시와 함께", Color(0xFF6D4C41)) { showMesh = !showMesh }
