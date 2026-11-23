@@ -1053,5 +1053,12 @@ val examples2026 = listOf(
         description = "에이전트가 보낸 UI 트리 JSON 을 androidx.a2ui 로 Material 3 화면에",
         blogUrl = "",
         exampleType = ConstValue.A2uiRenderingExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 11. 23",
+        title = "CapturedAnimatedVisibility (Compose 1.13)",
+        description = "닫으며 선택을 바로 null 로 지워도 마지막 그림이 나가는 퇴장 애니메이션",
+        blogUrl = "",
+        exampleType = ConstValue.CapturedAnimatedVisibilityExample
     )
 )

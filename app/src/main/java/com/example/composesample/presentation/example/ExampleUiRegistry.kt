@@ -172,6 +172,7 @@ import com.example.composesample.presentation.example.component.ui.text.Document
 import com.example.composesample.presentation.example.component.ui.text.SyntaxHighlightingExampleUI
 import com.example.composesample.presentation.example.component.ui.text.TextSelectionControlExampleUI
 import com.example.composesample.presentation.example.component.ui.text.TextStyleExampleUI
+import com.example.composesample.presentation.example.component.ui.visibility.CapturedAnimatedVisibilityExampleUI
 import com.example.composesample.presentation.example.component.ui.visibility.VisibilityExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.performance.InlineValueClassExampleUI
 import com.example.composesample.presentation.example.component.architecture.development.internals.CompositionObserverExampleUI
@@ -382,6 +383,7 @@ import com.example.composesample.util.ConstValue.TextStyleExample
 import com.example.composesample.util.ConstValue.TypeExample
 import com.example.composesample.util.ConstValue.UIShimmerExample
 import com.example.composesample.util.ConstValue.VisibilityExample
+import com.example.composesample.util.ConstValue.CapturedAnimatedVisibilityExample
 import com.example.composesample.util.ConstValue.WebViewIssueExample
 import com.example.composesample.util.ConstValue.WithContextExample
 import com.example.composesample.util.ConstValue.CoroutineBridgesExample
@@ -613,6 +615,7 @@ val exampleUiRegistry: Map<String, @Composable (onBackEvent: () -> Unit) -> Unit
     PerfettoTracingExample to { onBackEvent -> PerfettoTracingExampleUI(onBackEvent) },
     ButtonGroupExample to { onBackEvent -> ButtonGroupExampleUI(onBackEvent) },
     VisibilityExample to { onBackEvent -> VisibilityExampleUI(onBackEvent) },
+    CapturedAnimatedVisibilityExample to { onBackEvent -> CapturedAnimatedVisibilityExampleUI(onBackEvent) },
     RecompositionTestExample to { onBackEvent -> RecompositionTestExampleUI(onBackEvent) },
     ReboundExample to { onBackEvent -> ReboundExampleUI(onBackEvent) },
     TurbineFlowTestExample to { onBackEvent -> TurbineFlowTestExampleUI(onBackEvent) },

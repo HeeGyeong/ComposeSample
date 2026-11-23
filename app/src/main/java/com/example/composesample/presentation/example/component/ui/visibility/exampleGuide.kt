@@ -124,4 +124,56 @@ package com.example.composesample.presentation.example.component.ui.visibility
  * 핵심 개념:
  * - PathHitTester는 임의의 Path 내부에 특정 좌표가 포함되는지 확인하는 API
  * - 별 모양 Path를 탭하면 PathHitTester로 hit test 후 색상 변경
+ *
+ * ## CapturedAnimatedVisibilityExampleUI (#184 — 상태를 바로 지워도 나가는 애니메이션, Compose 1.13)
+ * - 원문: Compose November '26 release 블로그(2026-11-18)의 'CapturedAnimatedVisibility' 절
+ *   https://developer.android.com/blog/posts/jetpack-compose-november-2026-release
+ * - 공식 문서: https://developer.android.com/reference/kotlin/androidx/compose/animation/package-summary#CapturedAnimatedVisibility(kotlin.Boolean,androidx.compose.ui.Modifier,androidx.compose.animation.EnterTransition,androidx.compose.animation.ExitTransition,kotlin.String,kotlin.Function0)
+ * - 소스(androidx-main): https://github.com/androidx/androidx/blob/androidx-main/compose/animation/animation/src/commonMain/kotlin/androidx/compose/animation/CapturedAnimatedVisibility.kt
+ *   — 아래 규칙은 프로젝트가 쓰는 animation 1.13.0 sources jar 로 확인했다(opt-in 없음)
+ * - 규칙(소스):
+ *   · 부모 Transition 의 target 이 바뀐 그 컴포지션에서 자식 전환(EnterExit)의 target 도 PostExit 가 되고, 그때 Layout 의 content 를
+ *     빈 람다로 바꾼다 → 내용 람다는 나갈 때 한 번도 불리지 않는다(원문 예시의 `if (track != null)` 은 들어올 때를 위한 것)
+ *   · 나가지 않는 동안 자식은 placeWithLayer(0, 0, layer) 로 배치된다 — 그 GraphicsLayer 가 마지막 그림. 나가는 동안은
+ *     drawWithContent 에서 drawLayer(layer) 만 그린다 → 그림은 'visible 이 false 가 되기 직전 프레임' 에 기록된 것
+ *   · 나가는 동안 크기는 마지막으로 잰 크기(MeasurePolicy 가 lookahead · approach 크기를 따로 기억). LookaheadScope 안에서는
+ *     lookahead 크기를 0 으로 보고 → 이웃이 곧바로 최종 자리를 향한다
+ *   · 내용은 @Composable () -> Unit — AnimatedVisibilityScope 가 없어 animateEnterExit · transition 을 못 쓴다
+ *   · 스코프 판(ColumnScope · RowScope)이 없다 — 기본값이 어디서나 fadeIn + expandIn / shrinkOut + fadeOut(BottomEnd 쪽).
+ *     Column 안의 AnimatedVisibility(ColumnScope 판: expandVertically · shrinkVertically)를 이름만 바꾸면 접히는 모양이 바뀐다
+ *   · MutableTransitionState 오버로드가 있다(currentState · isIdle 관찰)
+ * - 화면:
+ *   · 1번 — 같은 선택 · visible 을 읽는 세 패널(① AnimatedVisibility + 선택을 바로 null · ② 마지막 값 붙들기(상태가 아닌 필드) ·
+ *     ③ Captured). 결과는 바깥 Box 의 onSizeChanged(높이가 처음 0 이 된 시각 · 높이가 바뀐 레이아웃 수)와 내용 람다의
+ *     DisposableEffect(풀린 시각)로 잰다. '늦은 visible'(선택을 먼저 비우고 150ms 뒤 visible) 대조 포함
+ *   · 2번 — 무한 스피너(각도를 그리기 단계에서 읽음) · 버튼 · remember 한 내용 번호. 나가는 동안 그리기 횟수 · 다시 연 뒤 번호.
+ *     퇴장은 선형 페이드만 — 기본 FastOutSlowIn 은 1초에 80% 넘게 진행해 '나가는 동안' 을 눈으로 볼 틈이 없었다(첫 구현의 스크린숏)
+ *   · 3번 — 원문 '나가는 동안 프레임 시간 7~8% 빠름' 재측정. 두 방법을 8번씩 번갈아 닫고(800ms), 앱 창 FrameMetrics 를
+ *     전용 HandlerThread 에서 받아 겨냥한 VSync 가 닫은 뒤 800ms 안인 프레임만 쓴다. 메인 스레드 = 입력 + 애니메이션 + 측정 · 배치 +
+ *     그리기(Compose 리컴포지션은 Choreographer 애니메이션 콜백에서 돈다). 첫 프레임(Captured 가 내용 컴포지션을 버리는 프레임)은 따로
+ * - 실측(Pixel 4 API 30 에뮬레이터 · swiftshader, 실기기는 쓰지 않았다):
+ *   · 1번 — debug 4 구성(같은 프레임 · 늦은 visible × 800 · 2000ms) 12줄 모두 예상과 같음. 같은 프레임 800ms: ① 보임 11ms · 해제 839ms,
+ *     ② 보임 784ms(줄어든 프레임 39) · 해제 839ms, ③ 보임 783ms(39) · 해제 10ms. 늦은 visible 800ms: ③ 보임 21ms · 해제 12ms(빈 칸),
+ *     ② 만 915ms
+ *   · 2번 — debug: 닫기(2초 창) AnimatedVisibility 스피너 그리기 117회 · Captured 0회, 닫고 800ms 뒤 다시 열기 48회 · 0회,
+ *     내용 번호 #2 → #2(이어짐) · #2 → #3(처음부터)
+ *   · 3번 — release(디버그 키 서명) 2회, 두 방법 각 8번 × 내용 2종(프레임 중앙값, 첫 프레임 제외):
+ *     정적 카드 — 전체 AnimatedVisibility 39.96 · 41.16ms vs Captured 18.50 · 21.02ms(49~54% 빠름),
+ *       메인 스레드 0.66 · 0.66 vs 0.72 · 0.75ms(10~13% 느림)
+ *     스피너 있는 카드 — 전체 27.31 · 36.09 vs 19.48 · 19.28ms(29~47% 빠름), 메인 0.93 · 0.88 vs 0.80 · 0.78ms(11~14% 빠름)
+ *     → 전체의 차이는 거의 모두 메인 스레드 밖(렌더 스레드 · GPU — 이 에뮬레이터는 소프트웨어 GPU)이다. 메인 스레드만 보면 내용이
+ *       멈춰 있을 때 Captured 가 0.06~0.09ms 느리고, 내용이 움직이면(스피너를 계속 그리는 AnimatedVisibility) Captured 가 빠르다.
+ *       원문과 방향(전체)은 같고 크기는 다르다 — 원문은 벤치마크 기기 · 내용을 밝히지 않았다
+ *     debug 2회: 정적 카드 전체 +34.3% · −24.6%(실행마다 뒤집힘), 메인 +5.0% · −5.1%, 스피너 카드 전체 +4.5% · +41.9%, 메인 +29.2% · +18.1%
+ *     — debug 의 전체 프레임 시간은 이 차이를 가리지 못한다. 수치는 release 로 본다
+ *   · release 에서도 1번 12줄(같은 프레임 800ms: ① 11 · 824ms, ② 782 · 824ms, ③ 782 · 9ms) · 2번 4줄(111회 · 0회,
+ *     다시 열기 49회 · 0회, #7 → #7 · #7 → #8) 모두 예상과 같음. FATAL 0 · ANR 0(debug · release)
+ * - 계측 테스트(CapturedAnimatedVisibilityTest, 시계를 멈추고 프레임 단위): 같은 프레임에 닫은 첫 프레임에 ① 높이 0 · ② · ③ 높이 그대로,
+ *   제목 노드는 ② 만 · ③ 의 패널 캡처에 표지 색이 열렸을 때의 80% 이상, 400ms 에 ② · ③ 높이 같음, 끝에 모두 0 /
+ *   늦은 visible 이면 ③ 도 높이 0 / 나가는 도중 다시 열면 AnimatedVisibility 는 번호 · 누른 횟수 이어짐, Captured 는 새 번호 · 0
+ * - 함정:
+ *   · 선택과 visible 은 같은 프레임에 바꾼다 — 선택을 지우는 곳과 visible 을 내리는 곳이 다르면(ViewModel 두 흐름 ·
+ *     LaunchedEffect 로 따라 내리기) 그 사이 프레임의 빈 내용을 들고 나간다
+ *   · 나가는 동안 그림은 멈춰 있고(무한 애니메이션의 시계째 사라짐) 터치를 받지 않는다. 다시 열면 내용 remember 는 처음 값
+ *   · 측정은 debug(HotSwan 재작성 · 디버깅 가능 런타임)와 release 가 다를 수 있다 — 수치는 release 로 적는다
  */
