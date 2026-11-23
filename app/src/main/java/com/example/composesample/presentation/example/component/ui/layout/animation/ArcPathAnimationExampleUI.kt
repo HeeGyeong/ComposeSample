@@ -175,7 +175,7 @@ fun ArcPathAnimationExampleUI(onBackEvent: () -> Unit) {
             item { HorizontalDivider() }
             item {
                 InfoCard(
-                    title = "opt-in 요구 정리 (Compose 1.12.1 기준)",
+                    title = "opt-in 요구 정리 (Compose 1.12.1 · 1.13.0 같음)",
                     description = "@OptIn 이 필요한 것:\n" +
                             "• ArcAnimationSpec → ExperimentalAnimationSpecApi\n\n" +
                             "opt-in 없이 쓸 수 있는 것:\n" +

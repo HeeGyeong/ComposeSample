@@ -86,7 +86,7 @@ import java.util.concurrent.atomic.AtomicInteger
 /**
  * Retain API Example UI
  *
- * runtime-retain 1.12.1(Compose BOM 2026.09.00 의 전이 의존성)의 실제 retain API 를 쓴다. 탭 4개:
+ * runtime-retain 1.13.0(Compose BOM 2026.11.01 의 전이 의존성 — 1.12.1 에서 쓰던 API 그대로, 1.13 은 withLocalRetainedValuesStore 추가뿐)의 실제 retain API 를 쓴다. 탭 4개:
  * - 재생성: 같은 카운터를 remember / rememberSaveable / retain / ViewModel 로 보관하고 Activity.recreate()(다크 모드와 같은
  *   구성 변경 경로)·예제 목록 왕복·프로세스 종료에서 무엇이 남는지, 진행 중인 2초 작업이 재생성을 넘는지 본다
  * - 콜백: RetainObserver 다섯 콜백의 실제 순서 — 기본 저장소에서 숨기기 / ManagedRetainedValuesStore / 키 변경 /
@@ -373,7 +373,7 @@ private fun HeaderCard(onBackEvent: () -> Unit) {
                     color = Color(0xFF212121)
                 )
                 Text(
-                    text = "retain { } 실물 — runtime-retain 1.12.1",
+                    text = "retain { } 실물 — runtime-retain 1.13.0",
                     fontSize = 13.sp,
                     color = Color(0xFF757575)
                 )

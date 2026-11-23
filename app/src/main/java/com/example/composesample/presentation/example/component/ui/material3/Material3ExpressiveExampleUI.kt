@@ -110,7 +110,7 @@ private fun OverviewCard() {
             val components = listOf(
                 Triple("SecureTextField", "Filled 스타일 비밀번호 필드", "stable"),
                 Triple("OutlinedSecureTextField", "Outlined 스타일 비밀번호 필드", "stable"),
-                Triple("FloatingToolbar", "플로팅 액션 바", "alpha (1.5.0+)"),
+                Triple("FloatingToolbar", "플로팅 액션 바", "stable (1.5.0)"),
                 Triple("VerticalDragHandle", "BottomSheet 드래그 핸들", "stable")
             )
             components.forEach { (name, desc, status) ->
@@ -377,11 +377,11 @@ private fun CodeExampleCard() {
                             "SecureTextField(\n" +
                             "    state = state,\n" +
                             "    label = { Text(\"비밀번호\") },\n" +
-                            "    // M3 1.4.0 기본값은 RevealLastTyped — 사용자 설정을 따르려면 System 을 명시\n" +
+                            "    // M3 1.5.0 부터 기본값이 System(사용자 설정을 따름) — 1.4.0 은 RevealLastTyped 라 명시가 필요했다\n" +
                             "    textObfuscationMode =\n" +
                             "        TextObfuscationMode.System,\n" +
                             "    // 커스텀 난독화 문자 (기본값 '•')\n" +
-                            "    obfuscationCharacter = '●'\n" +
+                            "    textObfuscationCharacter = '●'\n" +
                             ")\n\n" +
                             "// Outlined 스타일\n" +
                             "OutlinedSecureTextField(\n" +
@@ -418,10 +418,10 @@ private fun SummaryCard() {
             val bullets = listOf(
                 "SecureTextField는 TextFieldState 기반 — 기존 onValueChange가 아닌 상태 객체로 관리",
                 "사용자의 '비밀번호 표시' 설정을 따르려면 TextObfuscationMode.System(foundation 1.12) — RevealLastTyped 는 1.12 부터 설정과 무관하게 노출",
-                "M3 1.4.0 SecureTextField 의 기본값은 여전히 RevealLastTyped 라 foundation 1.12 와 함께 쓰면 설정을 꺼도 마지막 글자가 보인다",
-                "obfuscationCharacter 파라미터로 난독화 문자를 커스터마이징 가능 (기본 '•')",
+                "M3 1.5.0(이 앱)부터 SecureTextField 기본값이 System — 1.4.0 은 RevealLastTyped 여서 foundation 1.12 와 함께 쓰면 설정을 꺼도 마지막 글자가 보였다",
+                "textObfuscationCharacter 파라미터로 난독화 문자를 커스터마이징 가능 (기본 '•')",
                 "Filled(SecureTextField)와 Outlined(OutlinedSecureTextField) 두 가지 스타일 제공",
-                "FloatingToolbar, HorizontalCenteredHeroCarousel 등은 alpha(1.5.0+)에서 사용 가능"
+                "FloatingToolbar · HorizontalCenteredHeroCarousel 은 M3 1.5.0 에서 정식(opt-in 없음)"
             )
             bullets.forEach { bullet ->
                 Row(modifier = Modifier.padding(vertical = 3.dp)) {
@@ -514,7 +514,7 @@ private fun ShowPasswordSettingCard() {
             SettingTableRow("RevealLastTyped", "설정을 따름(꺼지면 Hidden) / 설정 무시 — 항상 마지막 글자 표시")
             SettingTableRow("System", "없음 / 설정을 따름 — API 37+ 는 터치·물리 키보드 따로(ShowSecretsSetting)")
             SettingTableRow("Basic 기본값", "RevealLastTyped / System")
-            SettingTableRow("M3 기본값", "SecureTextField 1.4.0 은 RevealLastTyped 그대로 → 1.12 와 쓰면 항상 노출")
+            SettingTableRow("M3 기본값", "1.5.0 부터 System(1.4.0 은 RevealLastTyped → 1.12 와 쓰면 항상 노출)")
 
             Spacer(modifier = Modifier.height(12.dp))
             ObserverExecutorDemo()
