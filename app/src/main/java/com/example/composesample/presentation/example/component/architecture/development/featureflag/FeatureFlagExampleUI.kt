@@ -21,9 +21,10 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.material3.rememberBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -197,7 +198,11 @@ fun FeatureFlagExampleUI(onBackEvent: () -> Unit) {
 
     var showDebugSheet by remember { mutableStateOf(false) }
     var fetching by remember { mutableStateOf(false) }
-    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    // 1.5 에서 rememberModalBottomSheetState 가 deprecated — 같은 값(Hidden · Expanded 만, 반만 펼침 없음)을 rememberBottomSheetState 로
+    val sheetState = rememberBottomSheetState(
+        initialValue = SheetValue.Hidden,
+        enabledValues = setOf(SheetValue.Hidden, SheetValue.Expanded)
+    )
 
     Column(
         modifier = Modifier

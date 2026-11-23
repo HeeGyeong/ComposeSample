@@ -41,6 +41,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.example.composesample.util.component.M2LegacyNotice
 import kotlinx.coroutines.launch
 
 // M2 BottomSheetScaffoldState.progress 는 Compose 1.11에서 deprecated 되었지만,
@@ -80,7 +81,7 @@ fun BottomSheetExampleUI(
                     .background(color = Color.DarkGray)
                     .padding(top = 10.dp, bottom = 10.dp)
             ) {
-                Row(modifier = Modifier.fillMaxWidth()) {
+                Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                     IconButton(
                         onClick = {
                             onBackEvent.invoke()
@@ -88,6 +89,7 @@ fun BottomSheetExampleUI(
                     ) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "")
                     }
+                    M2LegacyNotice(modifier = Modifier.padding(end = 12.dp), color = Color.White)
                 }
             }
         },

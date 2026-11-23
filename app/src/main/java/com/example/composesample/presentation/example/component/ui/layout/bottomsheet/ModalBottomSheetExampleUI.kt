@@ -33,6 +33,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
+import com.example.composesample.util.component.M2LegacyNotice
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -117,6 +118,7 @@ fun BackgroundScreen(
                 ) {
                     Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "")
                 }
+                M2LegacyNotice(modifier = Modifier.align(Alignment.CenterVertically).padding(end = 12.dp))
             }
 
             Column(

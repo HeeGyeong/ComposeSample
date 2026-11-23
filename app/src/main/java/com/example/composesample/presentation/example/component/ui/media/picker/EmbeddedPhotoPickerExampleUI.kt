@@ -48,7 +48,7 @@ import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
-import androidx.compose.material3.rememberStandardBottomSheetState
+import androidx.compose.material3.rememberBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -211,8 +211,10 @@ private fun BottomSheetPickerDemo() {
     val coroutineScope = rememberCoroutineScope()
 
     val scaffoldState = rememberBottomSheetScaffoldState(
-        bottomSheetState = rememberStandardBottomSheetState(
-            initialValue = SheetValue.PartiallyExpanded
+        // 1.5 에서 rememberStandardBottomSheetState 가 deprecated — 같은 값(숨김 없음)을 rememberBottomSheetState 로
+        bottomSheetState = rememberBottomSheetState(
+            initialValue = SheetValue.PartiallyExpanded,
+            enabledValues = setOf(SheetValue.PartiallyExpanded, SheetValue.Expanded)
         )
     )
 

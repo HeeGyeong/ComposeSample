@@ -43,6 +43,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalLocale
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -954,8 +955,9 @@ private fun StatusIndicator(label: String, color: Color, emoji: String) {
 
 @Composable
 private fun SealedVsEnumDemoCard() {
-    // 시스템 언어 변경을 컴포지션이 관찰하도록 Locale.current 를 쓴다(NonObservableLocale)
-    val timeLocale = java.util.Locale.forLanguageTag(androidx.compose.ui.text.intl.Locale.current.toLanguageTag())
+    // 시스템 언어 변경을 컴포지션이 관찰하도록 LocalLocale 을 쓴다 — 1.13 에서 Locale.current 는 스냅숏 상태가 아니라
+    // 바뀌어도 읽는 쪽에 알리지 않는다며 deprecated(NonObservableLocale 이 권하던 것을 대체)
+    val timeLocale = java.util.Locale.forLanguageTag(LocalLocale.current.toLanguageTag())
     var useEnum by remember { mutableStateOf(true) }
     var enumStatus by remember { mutableStateOf(StatusEnum.SUCCESS) }
     var sealedStatus by remember { mutableStateOf<StatusSealed>(StatusSealed.Loading) }

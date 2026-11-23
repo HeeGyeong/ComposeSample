@@ -59,6 +59,7 @@ import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.unit.dp
 import com.example.composesample.presentation.MainHeader
+import com.example.composesample.util.component.M2LegacyNotice
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -120,6 +121,8 @@ fun SimpleSwipeToDismissUI(
                 onBackIconClicked = onBackEvent
             )
         }
+
+        item { M2LegacyNotice(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp), color = Color(0xFFE0E0E0)) }
 
         itemsIndexed(items) { index, data ->
             var isDismissItem by remember { mutableStateOf(false) }
