@@ -13,11 +13,14 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.input.TextFieldState
+import androidx.compose.foundation.text.input.clearText
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedSecureTextField
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -33,7 +36,6 @@ import androidx.compose.ui.semantics.contentType
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.composesample.presentation.MainHeader
@@ -134,7 +136,8 @@ private fun LoginFormCard() {
     val autofillManager = LocalAutofillManager.current
 
     var username by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
+    // 비밀번호는 SecureTextField 의 TextFieldState — 저장 상태(Bundle)에 남지 않도록 remember
+    val password = remember { TextFieldState() }
     var lastAction by remember { mutableStateOf("대기 중") }
 
     Card(
@@ -170,12 +173,10 @@ private fun LoginFormCard() {
                     .semantics { contentType = ContentType.Username }
             )
             Spacer(modifier = Modifier.height(8.dp))
-            OutlinedTextField(
-                value = password,
-                onValueChange = { password = it },
+            // 1.13 에서 VisualTransformation 이 deprecated — 비밀번호는 SecureTextField(한 줄 · 복사/잘라내기 막힘 · 가림은 시스템 설정)
+            OutlinedSecureTextField(
+                state = password,
                 label = { Text("비밀번호") },
-                singleLine = true,
-                visualTransformation = PasswordVisualTransformation(),
                 // 자동완성 힌트: 기존 비밀번호
                 modifier = Modifier
                     .fillMaxWidth()
@@ -197,7 +198,7 @@ private fun LoginFormCard() {
                 OutlinedButton(
                     onClick = {
                         username = ""
-                        password = ""
+                        password.clearText()
                         // 진행 중인 자동완성 세션 취소
                         autofillManager?.cancel()
                         lastAction = "cancel() 호출 — 세션 취소"
@@ -226,7 +227,7 @@ private fun RegistrationFormCard() {
     val autofillManager = LocalAutofillManager.current
 
     var newId by remember { mutableStateOf("") }
-    var newPw by remember { mutableStateOf("") }
+    val newPw = remember { TextFieldState() }
     var email by remember { mutableStateOf("") }
     var postal by remember { mutableStateOf("") }
 
@@ -262,12 +263,9 @@ private fun RegistrationFormCard() {
                     .semantics { contentType = ContentType.NewUsername }
             )
             Spacer(modifier = Modifier.height(8.dp))
-            OutlinedTextField(
-                value = newPw,
-                onValueChange = { newPw = it },
+            OutlinedSecureTextField(
+                state = newPw,
                 label = { Text("새 비밀번호") },
-                singleLine = true,
-                visualTransformation = PasswordVisualTransformation(),
                 modifier = Modifier
                     .fillMaxWidth()
                     .semantics { contentType = ContentType.NewPassword }

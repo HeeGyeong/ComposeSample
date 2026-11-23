@@ -13,6 +13,15 @@ package com.example.composesample.presentation.example.component.ui.text
  * - 결과적으로 API 응답을 state에 주입하거나, 뷰모델에서 상태를 세팅할 때
  *   길이 제한 불변식이 깨짐
  *
+ * ### 1.13: maxLength → maxLengthReject / maxLengthTrim (DEPRECATION-113-01)
+ * - `maxLength(N)` 은 deprecated(ReplaceWith `maxLengthReject(N)`) — foundation 1.13.0 소스에서 둘 다 같은
+ *   `MaxLengthFilterReject`(넘치면 `revertAllChanges()` — 그 입력 전체를 되돌림)라 동작은 같다
+ * - 새 `maxLengthTrim(N)` 은 `MaxLengthFilterTrim` — 바뀐 구간을 뒤에서부터 넘친 만큼만 지운다. 8자에 "12345" 를 붙여 넣으면
+ *   Reject 는 8자 그대로, Trim 은 "12" 만 들어가 10자. 한 글자씩 칠 때는 둘 다 10자에서 멈춘다
+ * - 둘 다 InputTransformation 이라 `state.edit {}` 우회는 그대로 — 화면의 '1.13: maxLengthReject vs maxLengthTrim' 카드,
+ *   계측 테스트 `TextFieldMaxLengthClaimsTest` 가 이 세 가지를 확인한다
+ * - 출처: foundation 1.13.0 릴리스 · sources jar(InputTransformation.kt)
+ *
  * ### 올바른 해결 패턴
  * ```
  * LaunchedEffect(state) {

@@ -1,5 +1,6 @@
 package com.example.composesample.presentation.example.component.ui.text
 
+import android.content.ClipData
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -18,7 +19,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.input.InputTransformation
 import androidx.compose.foundation.text.input.TextFieldState
-import androidx.compose.foundation.text.input.maxLength
+import androidx.compose.foundation.text.input.maxLengthReject
+import androidx.compose.foundation.text.input.maxLengthTrim
+import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -27,10 +30,13 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalClipboard
+import androidx.compose.ui.platform.toClipEntry
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -38,6 +44,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.composesample.presentation.MainHeader
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 private const val MAX_LENGTH = 10
 
@@ -58,6 +65,7 @@ fun TextFieldMaxLengthExampleUI(onBackEvent: () -> Unit) {
             item { ProblemConceptCard() }
             item { BuggyExampleCard() }
             item { CorrectExampleCard() }
+            item { RejectVsTrimCard() }
             item { CodeComparisonCard() }
             item { SummaryCard() }
         }
@@ -81,7 +89,8 @@ private fun ProblemConceptCard() {
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = "Compose의 새로운 BasicTextField(TextFieldState API)에서 " +
-                        "`InputTransformation.maxLength(N)`을 적용하면 사용자 키보드 입력은 제한되지만, " +
+                        "`InputTransformation.maxLengthReject(N)`(1.12 까지 이름은 `maxLength(N)` — 1.13 에서 이름만 바뀌고 동작은 같다)을 " +
+                        "적용하면 사용자 키보드 입력은 제한되지만, " +
                         "코드에서 `state.edit { append(...) }` 같은 방식으로 직접 상태를 변경하면 " +
                         "해당 제한이 전혀 적용되지 않습니다.",
                 fontSize = 13.sp,
@@ -141,7 +150,7 @@ private fun BuggyExampleCard() {
             )
             Spacer(modifier = Modifier.height(12.dp))
 
-            TextFieldBox(state = state, inputTransformation = InputTransformation.maxLength(MAX_LENGTH))
+            TextFieldBox(state = state, inputTransformation = InputTransformation.maxLengthReject(MAX_LENGTH))
 
             Spacer(modifier = Modifier.height(8.dp))
             LengthIndicator(current = state.text.length, isOver = state.text.length > MAX_LENGTH)
@@ -236,6 +245,85 @@ private fun CorrectExampleCard() {
     }
 }
 
+/**
+ * 1.13 에서 maxLength 가 둘로 나뉜 것 — Reject(넘치면 그 입력 전체를 되돌림, 옛 maxLength 와 같은 클래스) /
+ * Trim(넘치는 만큼만 잘라 넣음). 한 글자씩 칠 때는 둘 다 MAX_LENGTH 에서 멈추고, 여러 글자가 한 번에 들어오는 붙여넣기에서 갈린다.
+ */
+@Composable
+private fun RejectVsTrimCard() {
+    val rejectState = rememberTextFieldState()
+    val trimState = rememberTextFieldState()
+    val clipboard = LocalClipboard.current
+    val scope = rememberCoroutineScope()
+
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        shape = RoundedCornerShape(12.dp)
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Text(
+                text = "1.13: maxLengthReject vs maxLengthTrim",
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color(0xFF1976D2)
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(
+                text = "한 글자씩 칠 때는 둘 다 $MAX_LENGTH 자에서 멈춘다. 갈리는 곳은 여러 글자가 한 번에 들어오는 붙여넣기 — " +
+                        "'8자 채우기' → '12345' 복사 → 각 칸을 길게 눌러 붙여넣기: Reject 는 붙여넣기 전체를 되돌려 8자 그대로, " +
+                        "Trim 은 앞의 2자만 넣어 $MAX_LENGTH 자.",
+                fontSize = 12.sp,
+                color = Color(0xFF757575),
+                lineHeight = 16.sp
+            )
+            Spacer(modifier = Modifier.height(12.dp))
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                Button(
+                    onClick = {
+                        // 준비용 프로그래매틱 입력(8 < 10 이라 우회 여부와 무관)
+                        rejectState.setTextAndPlaceCursorAtEnd("abcdefgh")
+                        trimState.setTextAndPlaceCursorAtEnd("abcdefgh")
+                    },
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1976D2))
+                ) {
+                    Text(text = "8자 채우기", color = Color.White, fontSize = 12.sp)
+                }
+                Button(
+                    onClick = {
+                        scope.launch {
+                            clipboard.setClipEntry(ClipData.newPlainText("maxLength", "12345").toClipEntry())
+                        }
+                    },
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF757575))
+                ) {
+                    Text(text = "'12345' 복사", color = Color.White, fontSize = 12.sp)
+                }
+            }
+            Spacer(modifier = Modifier.height(12.dp))
+            Text(text = "maxLengthReject($MAX_LENGTH)", fontSize = 12.sp, fontWeight = FontWeight.Bold, color = Color(0xFF424242))
+            Spacer(modifier = Modifier.height(4.dp))
+            TextFieldBox(state = rejectState, inputTransformation = InputTransformation.maxLengthReject(MAX_LENGTH))
+            Spacer(modifier = Modifier.height(4.dp))
+            LengthIndicator(current = rejectState.text.length, isOver = rejectState.text.length > MAX_LENGTH)
+            Spacer(modifier = Modifier.height(12.dp))
+            Text(text = "maxLengthTrim($MAX_LENGTH)", fontSize = 12.sp, fontWeight = FontWeight.Bold, color = Color(0xFF424242))
+            Spacer(modifier = Modifier.height(4.dp))
+            TextFieldBox(state = trimState, inputTransformation = InputTransformation.maxLengthTrim(MAX_LENGTH))
+            Spacer(modifier = Modifier.height(4.dp))
+            LengthIndicator(current = trimState.text.length, isOver = trimState.text.length > MAX_LENGTH)
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = "둘 다 InputTransformation 이라 위 '긴 텍스트 주입'처럼 state.edit {} 로 바꾸면 그대로 넘친다 — " +
+                        "프로그래매틱 수정까지 막으려면 여전히 snapshotFlow 방식.",
+                fontSize = 11.sp,
+                color = Color(0xFF757575),
+                lineHeight = 15.sp
+            )
+        }
+    }
+}
+
 @Composable
 private fun TextFieldBox(
     state: TextFieldState,
@@ -305,7 +393,8 @@ private fun CodeComparisonCard() {
                         "BasicTextField(\n" +
                         "    state = state,\n" +
                         "    inputTransformation =\n" +
-                        "        InputTransformation.maxLength(10)\n" +
+                        "        InputTransformation.maxLengthReject(10)\n" +
+                        "        // 1.12 까지: maxLength(10)\n" +
                         ")\n" +
                         "\n" +
                         "// 프로그래매틱 수정은 제한 우회!\n" +
@@ -378,6 +467,7 @@ private fun SummaryCard() {
             Spacer(modifier = Modifier.height(8.dp))
             val bullets = listOf(
                 "InputTransformation은 IME/키보드 경로에만 호출됨 — state.edit {} 같은 프로그래매틱 수정은 통과되지 않음",
+                "1.13: maxLength(N) 은 deprecated — 같은 동작은 maxLengthReject(N)(넘치면 그 입력 전체를 되돌림), 새로 생긴 maxLengthTrim(N) 은 넘치는 만큼만 잘라 넣음. 둘 다 InputTransformation 이라 위 우회는 그대로",
                 "단일 진실 원천(TextFieldState)을 스냅샷으로 관찰(snapshotFlow)하면 입력 경로와 무관하게 불변식(invariant)을 강제할 수 있음",
                 "collectLatest로 빠른 연속 변경 시 이전 작업을 취소 — 불필요한 재진입 방지",
                 "외부 제약(길이, 패턴, 포맷 등) 강제 로직은 UI Transformation이 아닌 상태 관찰 레이어에 두는 것이 안전함"

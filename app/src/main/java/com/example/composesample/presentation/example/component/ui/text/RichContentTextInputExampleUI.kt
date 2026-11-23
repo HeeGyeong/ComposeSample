@@ -25,6 +25,7 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -147,7 +148,7 @@ private fun RichContentConceptCard() {
 private fun ReceiveContentTextFieldCard(
     onContentReceived: (Uri, String) -> Unit
 ) {
-    var text by remember { mutableStateOf("") }
+    val textState = remember { TextFieldState() }
 
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -205,16 +206,15 @@ private fun ReceiveContentTextFieldCard(
                     .padding(12.dp)
             ) {
                 BasicTextField(
-                    value = text,
-                    onValueChange = { text = it },
+                    state = textState,
                     modifier = Modifier
                         .fillMaxWidth()
                         // contentReceiver: TextField에 리치 콘텐츠(이미지, 파일 등) 수신 기능 추가
                         .contentReceiver(receiveContentListener),
                     textStyle = TextStyle(fontSize = 14.sp, color = Color(0xFF212121)),
-                    decorationBox = { innerTextField ->
+                    decorator = { innerTextField ->
                         Box {
-                            if (text.isEmpty()) {
+                            if (textState.text.isEmpty()) {
                                 Text(
                                     text = "텍스트 입력 또는 이미지 붙여넣기...",
                                     fontSize = 14.sp,

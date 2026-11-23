@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -428,7 +429,8 @@ private const val GCM_TAG_LENGTH_BITS = 128
 
 @Composable
 private fun SecureStorageSection() {
-    var plaintext by remember { mutableStateOf("내 카드 번호 1234-5678-9012-3456") }
+    // 평문은 rememberTextFieldState(저장 상태 Bundle 에 남음) 대신 remember — 카드 번호를 화면 밖으로 내보내지 않는다
+    val plaintext = remember { TextFieldState("내 카드 번호 1234-5678-9012-3456") }
     var cipherBase64 by remember { mutableStateOf("") }
     var ivBase64 by remember { mutableStateOf("") }
     var decrypted by remember { mutableStateOf("") }
@@ -446,8 +448,7 @@ private fun SecureStorageSection() {
                 .padding(8.dp)
         ) {
             BasicTextField(
-                value = plaintext,
-                onValueChange = { plaintext = it },
+                state = plaintext,
                 textStyle = TextStyle(
                     color = Color.White,
                     fontSize = 13.sp,
@@ -461,7 +462,7 @@ private fun SecureStorageSection() {
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             SmallButton("암호화") {
                 runCatching {
-                    val (iv, cipher) = encryptAesGcm(plaintext.toByteArray())
+                    val (iv, cipher) = encryptAesGcm(plaintext.text.toString().toByteArray())
                     ivBase64 = Base64.encodeToString(iv, Base64.NO_WRAP)
                     cipherBase64 = Base64.encodeToString(cipher, Base64.NO_WRAP)
                     decrypted = ""

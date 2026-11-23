@@ -19,6 +19,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.input.TextFieldState
+import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -28,7 +30,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.withFrameNanos
@@ -119,8 +120,9 @@ private fun AgslSupportedContent() {
     var colorShift by remember { mutableFloatStateOf(0f) }
     var speed by remember { mutableFloatStateOf(1f) }
 
-    // 라이브 편집 중인 셰이더 소스 (재컴파일 트리거)
-    var shaderSource by remember { mutableStateOf(DEFAULT_SHADER) }
+    // 라이브 편집 중인 셰이더 소스 (재컴파일 트리거) — 편집기는 TextFieldState, 컴파일 키는 그 문자열
+    val sourceState = remember { TextFieldState(DEFAULT_SHADER) }
+    val shaderSource = sourceState.text.toString()
 
     // 애니메이션용 누적 시간(초)
     var time by remember { mutableFloatStateOf(0f) }
@@ -207,8 +209,7 @@ private fun AgslSupportedContent() {
                         .padding(12.dp)
                 ) {
                     BasicTextField(
-                        value = shaderSource,
-                        onValueChange = { shaderSource = it },
+                        state = sourceState,
                         textStyle = TextStyle(
                             color = Color(0xFFD4D4D4),
                             fontFamily = FontFamily.Monospace,
@@ -241,7 +242,7 @@ private fun AgslSupportedContent() {
                 }
                 Spacer(modifier = Modifier.height(8.dp))
                 Button(
-                    onClick = { shaderSource = DEFAULT_SHADER },
+                    onClick = { sourceState.setTextAndPlaceCursorAtEnd(DEFAULT_SHADER) },
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF455A64))
                 ) {
                     Text("기본 셰이더로 초기화")
