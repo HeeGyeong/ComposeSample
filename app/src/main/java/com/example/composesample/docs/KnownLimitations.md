@@ -11,8 +11,8 @@ A human-readable collection of **intentional deferrals, version constraints, and
 - Koin 4.2.2 also lifts the `androidx.lifecycle` stack to 2.10.0, which the catalog now declares (appcompat 1.7.1, which it also requires, was already declared after Coil 3.5.0).
 - Later raised by DEP-CURRENCY-02, so the versions above are history: appcompat 1.8.0 (`6f476c2e`, 2026-09-22), the lifecycle stack 2.11.0 (`d1404947`) and navigation-compose 2.10.2 (`52aa2b32`, both 2026-09-29).
 
-### biometric on beta01 (upgraded 2026-09-29 to alpha07, 2026-11-06 to beta01)
-- **Current**: `androidx.biometric:biometric(-compose):1.4.0-beta01` (the line has no stable release with Compose support)
+### biometric on rc01 (upgraded 2026-09-29 to alpha07, 2026-11-06 to beta01, 2026-11-23 to rc01)
+- **Current**: `androidx.biometric:biometric(-compose):1.4.0-rc01` (the line has no stable release with Compose support; rc01 fixes a finished or disposed `rememberAuthenticationLauncher` re-subscribing on `ON_START` and the R8 stripping of API < 28 `FingerprintManager` callbacks under compileSdk 37 - this app's release build does not minify)
 - **Limits**: below Android 16 QPR2 only the first of several fallbacks is shown; the rest are dropped silently. The test device has no enrolled fingerprint; the `CustomFallbackSelected` path was exercised on a Pixel 4 API 30 emulator with an enrolled fingerprint (2026-11-06), not on hardware. The API 28-and-below fingerprint dialog (rewritten in beta01) could not be run locally.
 
 ### Compose runtime 1.12.x — `SnapshotStateSet` loses elements when parcelled (fixed in 1.13.0-alpha03)
@@ -69,14 +69,14 @@ the `lint-vital` check inside `assembleRelease` only looks at fatal issues, and 
 > The two "Open 🟢" rows were cleared the next day by RES-UNUSED-01 (`365002dc`, 17 unused resources) and LINT-COSMETIC-01
 > (`89f30399`, 80 cosmetic issues), and LINT-AUTOBOXING-01 (`a990a367`) followed on 2026-09-18.
 
-**Current baseline (2026-11-20, after the Compose 1.13 upgrade): 0 errors / 27 warnings + 1 hint.** Version notices come from lint's network lookups, so
+**Current baseline (2026-11-23, after DEP-CURRENCY-36 · 31): 0 errors / 25 warnings + 1 hint.** Version notices come from lint's network lookups, so
 they appear and disappear without code changes; compare the issue list, not only the count.
 
 | Issue | Count | Verdict |
 |-------|-------|---------|
 | `ObsoleteSdkInt` | 23 | **Do not "fix"** — same reason as above (debug minSdk 26 from HotSwan, release minSdk 24) |
 | `NewerVersionAvailable` | 1 | HotSwan compiler 2.2.0 (won't-do: the Gradle plugin must match the IDE plugin, see ComposeHotReloadGuide). kotlinx-serialization 1.13.0 (2 notices, DEP-CURRENCY-27) and `AndroidGradlePluginVersion` for Gradle 9.9.1 (1 notice, DEP-CURRENCY-28) went away on 2026-11-18 |
-| `GradleDependency` | 2 | Deferred — approval needed: biometric / biometric-compose 1.4.0-rc01 (DEP-CURRENCY-31). The compose-bom / material / material3 notices (4) went away with DEP-CURRENCY-35 (BOM 2026.11.01, compileSdk 37.1); lifecycle 2.11.1 (4) and navigation3 1.2.2 (2) appeared on 2026-11-20 and went away the same day (DEP-CURRENCY-32 · 33) |
+| `GradleDependency` | 0 | biometric / biometric-compose 1.4.0-rc01 (2 notices) went away with DEP-CURRENCY-31 on 2026-11-23, and `AndroidGradlePluginVersion` for AGP 9.5.2 (2 notices, seen in the 2026-11-23 gate) with DEP-CURRENCY-36. The compose-bom / material / material3 notices (4) went away with DEP-CURRENCY-35 (BOM 2026.11.01, compileSdk 37.1); lifecycle 2.11.1 (4) and navigation3 1.2.2 (2) appeared on 2026-11-20 and went away the same day (DEP-CURRENCY-32 · 33) |
 | `OldTargetApi` | 1 | targetSdk 35 is the value `CLAUDE.md` fixes for this project |
 | `ReportShortcutUsage` (hint) | 1 | The shortcut example adds dynamic shortcuts but does not report their use; ranking hints are not part of that example |
 

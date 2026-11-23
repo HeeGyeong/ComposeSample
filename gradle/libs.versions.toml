@@ -233,12 +233,16 @@ pagingCompose = "3.5.3"
 # 1.2.0 — aar-metadata minCompileSdk=35 / minAGP=8.6.0.
 glance = "1.2.0"
 
-# Biometric (beta — biometric-compose 도 1.4.0 베타부터 같은 버전)
+# Biometric (rc — biometric-compose 도 1.4.0 베타부터 같은 버전)
 # alpha07: minCompileSdk 36 / minAGP 8.9.1(충족) · pom 전이 끌어올림 0 · NegativeButton→DefaultCancel, 폴백 vararg(최대 4)
 # beta01(2026-11-06, DEP-CURRENCY-24 — 사용자 승인): aar minCompileSdk 36.1 / minAGP 8.9.1 그대로, 라이브러리 minSdk 23 → 24(프로젝트 24).
 # API 28 이하 지문 대화상자가 별도 FingerprintDialogActivity 에서 창 안 FingerprintDialogController 로 바뀌어 매니페스트에서 그 액티비티가 빠졌다.
 # 새 API 는 ComponentActivity 기반 · 기본 인증 핸들러 선택 수정 · 폴백 목록 정리. 공개 API(internal 제외)는 익명 클래스 2개 말고 동일.
-biometric = "1.4.0-beta01"
+# rc01(2026-11-18, DEP-CURRENCY-31 — 사용자 승인 2026-11-23): aar 요구치 · module 의존성(자기 버전 말고) 그대로. 고친 것 2 —
+# 끝났거나 버려진 rememberAuthenticationLauncher 가 ON_START 에 다시 구독해 다음 요청의 결과를 가로채던 문제(b/555875039),
+# compileSdk 37 앱에서 R8 이 API 28 미만 FingerprintManager 콜백을 지우던 문제(b/516212633 — 이 앱 release 는 minify 꺼짐).
+# 바뀐 클래스: biometric 31(+1 −1) · biometric-compose 1(+5, launcher 보관 객체).
+biometric = "1.4.0-rc01"
 # androidx.input:input-motionprediction(#171 ② — 사용자 승인 2026-11-18): MotionEventPredictor. stable 1.0.1(2026-11-04),
 # aar minCompileSdk 34 / minAGP 8.1.1 / minSdk 23. 런타임 의존은 annotation 1.8.1 · core 1.10.1 뿐(프로젝트가 더 높음 → 끌어올림 0).
 # API 34+ 는 MotionPredictor.isPredictionAvailable(기기, 소스)이 true 일 때 시스템 예측기, 아니면(손가락 등) 라이브러리 칼만 필터.
