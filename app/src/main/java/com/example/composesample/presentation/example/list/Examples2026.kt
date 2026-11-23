@@ -1027,9 +1027,9 @@ val examples2026 = listOf(
         exampleType = ConstValue.SystemBarAppearanceExample
     ),
     ExampleObject(
-        lastUpdate = "26. 11. 16",
+        lastUpdate = "26. 11. 23",
         title = "derivedStateOf 의 숨은 비용",
-        description = "리컴포지션은 건너뛰어도 재계산은 한다 — 탭 하나가 부르는 계산 세기",
+        description = "리컴포지션은 건너뛰어도 재계산은 한다 — 탭 하나가 부르는 계산 세기 + computedStateOf 와 대조",
         blogUrl = "",
         exampleType = ConstValue.DerivedStateCostExample
     ),

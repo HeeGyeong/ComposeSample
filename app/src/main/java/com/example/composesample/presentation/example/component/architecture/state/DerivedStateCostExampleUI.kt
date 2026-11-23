@@ -53,6 +53,7 @@ private val Mismatch = Color(0xFFC62828)
 fun DerivedStateCostExampleUI(onBackEvent: () -> Unit) {
     // 기록이 LazyColumn 항목 재생성에도 남도록 화면 루트에 둔다
     val lab = remember { DerivedCostLabState() }
+    val computeLab = remember { ComputeLabState() }
 
     Column(
         modifier = Modifier
@@ -89,6 +90,7 @@ fun DerivedStateCostExampleUI(onBackEvent: () -> Unit) {
             item { PolicyChainCard() }
             item { EqualsCard() }
             item { MeasurementCard() }
+            item { ComputedStateCard(computeLab) }
             item { SummaryCard() }
         }
     }
@@ -137,7 +139,8 @@ private fun TapCostLabCard(lab: DerivedCostLabState) {
         title = "1. 탭 하나의 비용",
         color = Indigo,
         description = "월간 · 연간 카드를 눌러 선택을 바꾼다. 칸마다 기반 derivedStateOf 1 개(오버라이드 해석)와 그 위 속성 " +
-            "4 개(visible · 강조 · 굵기 · fontFamily)가 있다. 스위치는 '고친 코드'를 기준으로 하나씩 옛 동작을 되살리는 킬 스위치다."
+            "4 개(visible · 강조 · 굵기 · fontFamily)가 있다. 스위치는 '고친 코드'를 기준으로 하나씩 옛 동작을 되살리는 킬 스위치다. " +
+            "'상태 API' 를 computedStateOf 로 바꾸면 같은 다섯 상태를 Compose 1.13 의 computedStateOf 로 만든다(6번 카드)."
     ) {
         ConfigControls(lab)
         Spacer(modifier = Modifier.height(12.dp))
@@ -167,6 +170,11 @@ private fun ConfigControls(lab: DerivedCostLabState) {
     ControlRow("폰트 equals") {
         LabChip("있음", config.fontEquals) { lab.config = config.copy(fontEquals = true) }
         LabChip("없음(옛)", !config.fontEquals) { lab.config = config.copy(fontEquals = false) }
+    }
+    ControlRow("상태 API" + if (config.stateApi == StateApi.Computed) " — 정책 스위치는 효과 없음" else "") {
+        StateApi.entries.forEach { api ->
+            LabChip(api.label, config.stateApi == api) { lab.config = config.copy(stateApi = api) }
+        }
     }
 }
 
@@ -284,17 +292,27 @@ private fun TapResult(lab: DerivedCostLabState) {
     )
     Text(text = last.config.shortLabel(), fontSize = 11.sp, color = Muted)
     Spacer(modifier = Modifier.height(6.dp))
+    val atLeast = last.config.stateApi == StateApi.Computed
     TableRow(listOf("항목", "측정", "예상"), header = true)
-    CostRow("오버라이드 해석(기반)", last.measured.resolutions, last.expected.resolutions)
-    CostRow("속성 재계산(위층)", last.measured.propertyCalcs, last.expected.propertyCalcs)
+    CostRow("오버라이드 해석(기반)", last.measured.resolutions, last.expected.resolutions, atLeast)
+    CostRow("속성 재계산(위층)", last.measured.propertyCalcs, last.expected.propertyCalcs, atLeast)
     CostRow("칸 리컴포지션", last.measured.recompositions, last.expected.recompositions)
     CostRow("폰트 로드(캐시 미스)", last.measured.fontLoads, last.expected.fontLoads)
+    if (atLeast) {
+        Text(
+            text = "computedStateOf 의 계산은 하한(≥)으로 본다 — 다시 그릴 칸이 바뀐 속성 넷 중 무엇을 먼저 검사하느냐(해시 순)에 따라 " +
+                "몇 회씩 달라진다. 기반 = 속성이어야 한다(위층이 읽을 때마다 기반을 다시 계산): " + if (last.matches) "맞음" else "다름",
+            fontSize = 11.sp,
+            color = if (last.matches) Muted else Mismatch,
+            lineHeight = 16.sp
+        )
+    }
 
     if (lab.reports.size > 1) {
         Spacer(modifier = Modifier.height(10.dp))
         Text("최근 탭(측정 해석 · 속성 · 리컴포지션 · 로드)", fontSize = 12.sp, fontWeight = FontWeight.Bold, color = Indigo)
         lab.reports.forEach { report ->
-            val matches = report.measured == report.expected
+            val matches = report.matches
             // 구성 한 줄 + 숫자 한 줄
             Text(
                 text = "#${report.seq} ${report.config.shortLabel()}\n    →  " +
@@ -320,11 +338,13 @@ private fun TapResult(lab: DerivedCostLabState) {
 
 private fun packageName(packageId: String) = if (packageId == PaywallPackages.Annual) "연간" else "월간"
 
+/** atLeast = 예상이 하한(computedStateOf 의 계산 횟수) */
 @Composable
-private fun CostRow(label: String, measured: Int, expected: Int) {
+private fun CostRow(label: String, measured: Int, expected: Int, atLeast: Boolean = false) {
+    val ok = if (atLeast) measured >= expected else measured == expected
     TableRow(
-        cells = listOf(label, "$measured", "$expected"),
-        color = if (measured == expected) Color(0xFF212121) else Mismatch
+        cells = listOf(label, "$measured", if (atLeast) "≥$expected" else "$expected"),
+        color = if (ok) Color(0xFF212121) else Mismatch
     )
 }
 
@@ -462,6 +482,122 @@ private fun MeasurementCard() {
     }
 }
 
+// ==================== 6. computedStateOf (#185) ====================
+
+@Composable
+private fun ComputedStateCard(lab: ComputeLabState) {
+    LaunchedEffect(lab.runToken) {
+        if (lab.runToken > 0) lab.execute { withFrameNanos { } }
+    }
+    LabCard(
+        title = "6. computedStateOf — 캐시 없는 대안 (Compose 1.13)",
+        color = Color(0xFF00838F),
+        description = "원문(Compose November '26 블로그): 'computedStateOf 는 결과를 캐시하지 않아 derivedStateOf 보다 오버헤드가 적다 — 특히 " +
+            "참조한 상태가 바뀌어 다시 계산할 때. 일반적으로 computedStateOf 를, 무거운 계산이나 캐시가 필요할 때만 derivedStateOf 를.' " +
+            "둘 다 입력이 아니라 결과가 바뀔 때 컴포지션을 무효화한다."
+    ) {
+        CodeBlock(
+            "// 스크롤 위치처럼 자주 바뀌는 입력 → 드물게 바뀌는 조건\n" +
+                "val showTop by remember {\n" +
+                "  computedStateOf {\n" +
+                "    listState.firstVisibleItemIndex > 0\n" +
+                "  }\n" +
+                "}"
+        )
+        Spacer(modifier = Modifier.height(10.dp))
+        Text("같은 쓰기를 두 API 로 — 이 기기의 실제 컴포지션", fontSize = 13.sp, fontWeight = FontWeight.Bold, color = Indigo)
+        Text(
+            text = "입력을 ${COMPUTE_WRITES}번 1 씩 바꾸고(쓰기마다 두 프레임) 계산 · 리컴포지션을 센다. 리더 스코프는 화면에 보이지 않는다.",
+            fontSize = 12.sp,
+            color = Muted,
+            lineHeight = 17.sp
+        )
+        ControlRow("모양") {
+            ComputeScenario.entries.forEach { scenario ->
+                LabChip(scenario.label, lab.scenario == scenario) { if (!lab.running) lab.scenario = scenario }
+            }
+        }
+        Spacer(modifier = Modifier.height(6.dp))
+        Text(
+            text = if (lab.running) "재는 중…" else "▶ 두 API 로 재기",
+            modifier = Modifier
+                .clip(RoundedCornerShape(8.dp))
+                .background(if (lab.running) Color(0xFFB0BEC5) else Color(0xFF00838F))
+                .clickable(enabled = !lab.running) { lab.request() }
+                .padding(horizontal = 14.dp, vertical = 8.dp),
+            fontSize = 13.sp,
+            color = Color.White,
+            fontWeight = FontWeight.Bold
+        )
+        lab.setup?.let { ComputeReaders(it) }
+        Spacer(modifier = Modifier.height(8.dp))
+        ComputeResults(lab)
+        Spacer(modifier = Modifier.height(10.dp))
+        FactRow(
+            "왜 computedStateOf 가 더 많이 계산하나",
+            "캐시가 없어 읽을 때마다 계산한다. 입력이 바뀌면 읽은 스코프마다 isInvalidFor 로 다시 계산해 지난 값과 비교하고, 같아서 " +
+                "건너뛴 스코프는 구독을 다시 걸려고 한 번 더 읽는다(RecomposeScopeImpl.rereadTrackedInstances — 호출 스택으로 확인). " +
+                "derivedStateOf 는 인스턴스마다 한 번 계산해 레코드에 담고 검사 · 다시 읽기 · 다른 스코프가 그것을 쓴다."
+        )
+        FactRow(
+            "그래도 '가볍다' 는 무엇인가",
+            "한 번의 계산에 붙는 일이 적다 — 레코드 · 의존성 맵(중첩 단계 포함)을 만들고 비교하지 않는다. 계산이 싸고(비교 · 문턱) 읽는 스코프가 " +
+                "하나면 계산이 두 번이어도 덜 든다. JVM 하네스 참고치(워밍업 뒤, 쓰기 한 번): 스코프 50 · 결과 같음 derivedStateOf 44.7µs vs " +
+                "computedStateOf 29.3µs, 스코프 1 · 결과 같음 11.9 vs 9.8µs, 결과가 바뀜 10.3 vs 11.6µs(computed 가 느림)."
+        )
+        FactRow(
+            "쌓으면 기반이 곱해진다",
+            "computedStateOf 위에 computedStateOf 를 쌓으면 위층이 계산될 때마다 기반도 계산한다(스코프에는 바깥 것만 기록). 1번 카드의 페이월 " +
+                "(기반 1 + 속성 4)을 computedStateOf 로 바꾸면 칸 20 탭 하나에 기반 해석이 15~20 회(derivedStateOf 3 회), 미리 읽기면 175~180 회(23 회)다. " +
+                "여러 곳이 읽는 무거운 기반은 derivedStateOf 로 둔다."
+        )
+        FactRow(
+            "계산 안에서 쓰기",
+            "computedStateOf 는 계산을 읽기 전용 스냅숏에서 돌린다 — 상태를 쓰면 IllegalStateException. derivedStateOf 는 막지 않는다. " +
+                "neverEqualPolicy 는 건너뛰기를 모두 없애므로 문서가 오류로 본다."
+        )
+        Spacer(modifier = Modifier.height(4.dp))
+        Text(
+            text = "▶ 계산 안에서 쓰기 해 보기",
+            modifier = Modifier
+                .clip(RoundedCornerShape(8.dp))
+                .border(1.dp, Color(0xFF00838F), RoundedCornerShape(8.dp))
+                .clickable { lab.tryWrites() }
+                .padding(horizontal = 12.dp, vertical = 6.dp),
+            fontSize = 12.sp,
+            color = Color(0xFF00838F)
+        )
+        lab.writeResults.forEach { (api, message) ->
+            Text("${api.label}: $message", fontSize = 11.sp, color = Color(0xFF424242), lineHeight = 16.sp)
+        }
+    }
+}
+
+@Composable
+private fun ComputeResults(lab: ComputeLabState) {
+    val results = lab.results
+    if (results.isEmpty()) {
+        Text("버튼을 누르면 두 API 의 쓰기당 계산 · 리컴포지션을 예상과 함께 적는다.", fontSize = 12.sp, color = Muted)
+        return
+    }
+    Text(results.first().scenario.label + " · 쓰기 ${results.first().writes}번", fontSize = 12.sp, fontWeight = FontWeight.Bold, color = Indigo)
+    TableRow(listOf("API", "계산", "기반", "리컴포지션"), header = true)
+    results.forEach { result ->
+        val m = result.measured
+        val e = result.expected
+        TableRow(
+            cells = listOf(result.api.label, "${m.calcs} (${e.calcs})", "${m.baseCalcs} (${e.baseCalcs})", "${m.recompositions} (${e.recompositions})"),
+            color = if (result.matches) Color(0xFF212121) else Mismatch
+        )
+    }
+    val matched = results.count { it.matches }
+    Text(
+        text = "괄호는 예상 — ${results.size}줄 가운데 같음 $matched",
+        fontSize = 11.sp,
+        color = if (matched == results.size) Color(0xFF2E7D32) else Mismatch
+    )
+}
+
 @Composable
 private fun SummaryCard() {
     LabCard(title = "정리", color = Indigo, description = "여러 칸이 함께 읽는 상태마다 물을 것: 누가 읽고, 모두 읽어야 하는가?") {
@@ -471,7 +607,8 @@ private fun SummaryCard() {
             "조건 입력은 람다로 넘기고 그 조건을 검사하는 분기에서만 부른다",
             "derivedStateOf 위에 derivedStateOf 를 쌓으면 아래층에 structuralEqualityPolicy 를 고려한다",
             "상태에 담기는 값은 equals 를 갖춘다 — 없으면 매번 '바뀜'으로 보여 리컴포지션과 캐시 미스가 따라온다",
-            "고친 것은 스위치로 되돌릴 수 있게 두고 같은 기기에서 A/B 로 잰다"
+            "고친 것은 스위치로 되돌릴 수 있게 두고 같은 기기에서 A/B 로 잰다",
+            "Compose 1.13 의 computedStateOf 는 캐시가 없다 — 싼 조건 · 읽는 곳 하나면 가볍고, 여러 곳이 읽거나 쌓는 무거운 기반은 derivedStateOf"
         ).forEach { line ->
             Row(modifier = Modifier.padding(vertical = 2.dp)) {
                 Text("•", fontSize = 12.sp, color = Indigo)

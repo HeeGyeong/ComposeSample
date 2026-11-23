@@ -99,4 +99,46 @@ package com.example.composesample.presentation.example.component.architecture.st
  *     첫 구현(플랜 카드 이름 · 가격이 한 패밀리)에서 한 실행은 칸 20 · 100 · 300 탭당 +1 · +1 · +2, 같은 구성만 연 실행은 +0 →
  *     로더 스택(PROBE)으로 같은 인스턴스가 측정 단계에서 두 번 로드된 것을 확인하고 가격 텍스트를 기본 폰트로 바꿨다
  *   · 기존 Compose Snapshot 예제의 'counter > 5 일 때만 재계산' 문구는 틀렸다(counter 가 바뀔 때마다 재계산) → 이번에 정정
+ *
+ * --- computedStateOf — 캐시 없는 대안 (#185, Compose 1.13 — DerivedStateCostExampleUI 6번 카드 · 1번 카드 '상태 API') ---
+ * - 원문: Compose November '26 release 블로그(2026-11-18)의 'computedStateOf' 절
+ *   https://developer.android.com/blog/posts/jetpack-compose-november-2026-release
+ *   — '결과를 캐시하지 않아 derivedStateOf 보다 오버헤드가 적다(특히 참조한 상태가 바뀌어 다시 계산할 때). 무거운 계산이나 캐시가 필요할 때만
+ *     derivedStateOf, 일반적으로는 computedStateOf'
+ * - 소스(androidx-main): https://github.com/androidx/androidx/blob/androidx-main/compose/runtime/runtime/src/commonMain/kotlin/androidx/compose/runtime/ComputedState.kt
+ *   · https://github.com/androidx/androidx/blob/androidx-main/compose/runtime/runtime/src/commonMain/kotlin/androidx/compose/runtime/snapshots/IndirectState.kt
+ *   — 아래 규칙은 runtime-android 1.13.0 sources jar 로 확인했다(opt-in 없음, @StateFactoryMarker)
+ * - 규칙(1.13.0 소스 + 호출 스택):
+ *   · value 는 읽을 때마다 calculation 을 Snapshot.readOnly 안에서 돈다 — 캐시 없음, 계산 안에서 상태를 쓰면 IllegalStateException
+ *     ("Cannot modify a state object in a read-only snapshot"). derivedStateOf 는 계산 안의 쓰기를 막지 않는다(그대로 반영 — 단위 테스트)
+ *   · 컴포지션은 읽은 computedStateOf 와 그때의 값을 스코프마다 기록하고(recordDerivedStateValue), 계산이 읽은 상태를 그 인스턴스에 묶는다.
+ *     중첩은 바깥 것만 스코프에 기록 — 안쪽은 바깥 계산이 돌 때마다 다시 계산된다
+ *   · 입력이 바뀌면 GapComposer.recomposeToGroupEnd → Invalidation.isInvalid → ComputedSnapshotState.isInvalidFor 가 계산을 다시 돌려 지난 값과
+ *     비교(policy, 기본 structuralEqualityPolicy). 같아서 건너뛴 스코프는 RecomposeScopeImpl.rereadTrackedInstances 로 읽은 상태를 다시 읽어
+ *     구독을 다시 건다 → computedStateOf 는 여기서 한 번 더 계산(derivedStateOf 는 레코드 캐시라 0) — 두 번째 계산의 위치는 계산 람다에 찍은
+ *     호출 스택으로 확인했다(소스만 읽어서는 검사 1 번으로 보였다)
+ *   · neverEqualPolicy 는 건너뛰기를 모두 없애 문서가 오류로 본다
+ * - 쓰기 한 번의 계산(JVM 하네스 = 단위 테스트, 기기 실제 컴포지션 = 6번 카드):
+ *   · 한 인스턴스를 스코프 5 가 읽음 · 결과 같음: derivedStateOf 1 / computedStateOf 10(스코프마다 검사 1 + 재읽기 1)
+ *   · 스코프마다 인스턴스 5 · 결과 같음: 5 / 10
+ *   · 기반 1 + 위층 4 · 스코프 1 · 결과 같음: 기반 1 · 위층 4(정책 없는 기반 — 3번 카드) / 기반 8 · 위층 8
+ *   · 스코프 1 이 두 번 읽음 · 결과 바뀜: 1 · 리컴포지션 1 / 3(검사 1 + 다시 그리며 두 번 읽기) · 리컴포지션 1
+ * - 1번 카드의 페이월(기반 1 + 속성 4)을 computedStateOf 로: 탭 하나에 기반 해석 = 속성 계산(위층이 읽을 때마다 기반) · 리컴포지션은
+ *   derivedStateOf 와 같다. 계산은 하한(computedTapLowerBound = 다시 그린 칸 × (검사 1 + 다시 읽기 4) + 건너뛴 칸 × 4 × 2)으로 본다 —
+ *   다시 그릴 칸이 바뀐 속성 넷 중 무엇을 먼저 검사하느냐(스코프에 기록된 순서, 해시 순)에 따라 몇 회씩 달라진다.
+ *   JVM(칸 20): 람다 15~20(derivedStateOf 3) · 미리 읽기 175~178(23) · 미리 읽기 + equals 없음 149~155(23). 정책 스위치는 효과 없음
+ * - 시간 — JVM 하네스 참고치(HotSpot, 워밍업 3회째, 쓰기 한 번에 상태 쓰기 + 스냅숏 적용 + recompose 까지): 스코프 50 · 결과 같음
+ *   derivedStateOf 44.7µs vs computedStateOf 29.3µs(약 34% 적음), 스코프 1 · 결과 같음 11.9 vs 9.8µs, 결과가 바뀜 10.3 vs 11.6µs(computed 가 느림).
+ *   1 · 2회째는 워밍업으로 흔들렸다(스코프 50: 63.3 / 47.2 · 60.2 / 49.0µs). 기기 시간은 재지 않았다 — 하네스의 ControlledComposition(...) 생성 함수가
+ *   @TestOnly 라 앱 코드에 넣지 않았고, 실제 Recomposer 에서는 쓰기 한 번의 비용만 떼어 잴 방법이 없다
+ * - 기기 실측(Pixel 4 API 30 에뮬레이터 debug · release(디버그 키 서명), 실기기는 쓰지 않았다):
+ *   · 6번 카드 — 두 빌드 모두 4 모양 × 2 API = 8줄이 예상과 같음(실제 Recomposer = JVM 하네스): 쓰기 20번에 공유 20 vs 200,
+ *     스코프마다 100 vs 200, 층 기반 20 · 위층 80 vs 160 · 160, 결과 바뀜 20 vs 60(리컴포지션 20 · 20). 계산 안 쓰기: derivedStateOf 는
+ *     target = 1, computedStateOf 는 IllegalStateException
+ *   · 1번 카드 computedStateOf 6 구성 × 두 방향 — 두 빌드 24탭 모두 규칙 안(리컴포지션 · 폰트 로드 정확, 기반 = 속성, 하한 이상):
+ *     칸 20 · 100 · 300 람다 16~20(하한 15, derivedStateOf 3), 칸 20 미리 읽기 177 · 180(하한 175, derivedStateOf 23),
+ *     미리 읽기 + equals 없음 152 · 153(하한 115) · 리컴포지션 23 · 폰트 로드 23, 칸 100 미리 읽기 817 · 819(하한 815, derivedStateOf 103)
+ *   · FATAL 0 · ANR 0
+ * - 정리: 싼 조건(문턱 · 비교)을 읽는 곳이 하나면 computedStateOf 가 가볍다. 여러 스코프가 읽거나, 그 위에 다른 상태를 쌓거나, 계산이 무거우면
+ *   캐시가 있는 derivedStateOf. 결과가 자주 바뀌면(읽을 때마다 다시 계산) computedStateOf 의 이점이 없다
  */

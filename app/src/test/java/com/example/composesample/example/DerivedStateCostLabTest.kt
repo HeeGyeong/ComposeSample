@@ -11,6 +11,10 @@ import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.Snapshot
 import androidx.compose.runtime.structuralEqualityPolicy
+import com.example.composesample.presentation.example.component.architecture.state.COMPUTE_WRITES
+import com.example.composesample.presentation.example.component.architecture.state.ComputeReaders
+import com.example.composesample.presentation.example.component.architecture.state.ComputeScenario
+import com.example.composesample.presentation.example.component.architecture.state.ComputeSetup
 import com.example.composesample.presentation.example.component.architecture.state.CountingTypefaceLoader
 import com.example.composesample.presentation.example.component.architecture.state.DERIVED_PROPERTIES_PER_PART
 import com.example.composesample.presentation.example.component.architecture.state.DerivedCostConfig
@@ -19,8 +23,14 @@ import com.example.composesample.presentation.example.component.architecture.sta
 import com.example.composesample.presentation.example.component.architecture.state.LabFontSpec
 import com.example.composesample.presentation.example.component.architecture.state.PaywallPackages
 import com.example.composesample.presentation.example.component.architecture.state.PaywallPartState
+import com.example.composesample.presentation.example.component.architecture.state.StateApi
 import com.example.composesample.presentation.example.component.architecture.state.TapCost
+import com.example.composesample.presentation.example.component.architecture.state.computedTapLowerBound
+import com.example.composesample.presentation.example.component.architecture.state.expectedFor
+import com.example.composesample.presentation.example.component.architecture.state.expectedPerWrite
 import com.example.composesample.presentation.example.component.architecture.state.expectedTapCost
+import com.example.composesample.presentation.example.component.architecture.state.tapMatches
+import com.example.composesample.presentation.example.component.architecture.state.writeInsideCalculation
 import com.example.composesample.presentation.example.component.architecture.state.paywallParts
 import com.example.composesample.presentation.example.component.architecture.state.readPart
 import com.example.composesample.presentation.example.component.architecture.state.resolve
@@ -101,6 +111,65 @@ class DerivedStateCostLabTest {
         // 둘 다 false → false — 다시 계산했지만 아무도 다시 그리지 않는다
         assertEquals(0, recompositions)
         composition.dispose()
+    }
+
+    @Test
+    fun `실제 컴포지션 — computedStateOf 8 구성 — 리컴포지션은 같고 기반 = 속성 ≥ 하한`() {
+        for (eager in listOf(false, true)) for (policy in listOf(false, true)) for (equals in listOf(false, true)) {
+            val derived = DerivedCostConfig(plainCount = 20, eagerReads = eager, basePolicy = policy, fontEquals = equals)
+            val config = derived.copy(stateApi = StateApi.Computed)
+            val paywall = ComposedPaywall(config)
+            for (target in listOf(PaywallPackages.Annual, PaywallPackages.Monthly)) {
+                val measured = paywall.tap(target)
+                val expected = expectedFor(config, true)
+                assertTrue("$config $measured ≥ $expected", tapMatches(config, measured, expected, ignoreFontLoads = true))
+                // 캐시가 없어 기반 해석은 derivedStateOf 보다 많다(기반을 속성 넷이 나눠 쓰지 못한다)
+                assertTrue("$config", measured.resolutions > expectedTapCost(derived, true).resolutions)
+            }
+            assertEquals(TapCost(0, 0, 0, 0), paywall.tap(PaywallPackages.Monthly))
+            paywall.dispose()
+        }
+    }
+
+    @Test
+    fun `실제 컴포지션 — 같은 쓰기를 두 API 로, 4 모양 모두 예상과 같다`() {
+        for (scenario in ComputeScenario.entries) for (api in StateApi.entries) {
+            val setup = ComputeSetup(scenario, api)
+            val composition = StepComposition { ComputeReaders(setup) }
+            val before = setup.counters.snapshot()
+            repeat(COMPUTE_WRITES) {
+                Snapshot.withMutableSnapshot { setup.write() }
+                composition.step()
+            }
+            assertEquals("$scenario $api", expectedPerWrite(scenario, api) * COMPUTE_WRITES, setup.counters.snapshot() - before)
+            composition.dispose()
+        }
+    }
+
+    @Test
+    fun `계산 안에서 쓰기 — computedStateOf 는 IllegalStateException, derivedStateOf 는 그대로 쓴다`() {
+        assertTrue(writeInsideCalculation(StateApi.Computed).startsWith("IllegalStateException"))
+        assertEquals("예외 없음 — 계산 안의 쓰기가 반영됐다(target = 1)", writeInsideCalculation(StateApi.Derived))
+    }
+
+    @Test
+    fun `computedStateOf 하한 — 다시 그린 칸 × 5 + 건너뛴 칸 × 8, 정책 스위치는 효과 없음`() {
+        val base = DerivedCostConfig(plainCount = 20, stateApi = StateApi.Computed)
+        assertEquals(TapCost(15, 15, 3, 0), computedTapLowerBound(base, true))
+        assertEquals(TapCost(175, 175, 3, 0), computedTapLowerBound(base.copy(eagerReads = true), true))
+        assertEquals(TapCost(115, 115, 23, 23), computedTapLowerBound(base.copy(eagerReads = true, fontEquals = false), true))
+        assertEquals(computedTapLowerBound(base, true), computedTapLowerBound(base.copy(basePolicy = true), true))
+        assertEquals(TapCost(0, 0, 0, 0), computedTapLowerBound(base, false))
+        // 판정: 리컴포지션 · 폰트 로드는 같아야 하고, 기반 = 속성이며 하한 이상
+        val expected = computedTapLowerBound(base, true)
+        assertTrue(tapMatches(base, TapCost(18, 18, 3, 0), expected))
+        assertFalse(tapMatches(base, TapCost(18, 17, 3, 0), expected))
+        assertFalse(tapMatches(base, TapCost(14, 14, 3, 0), expected))
+        assertFalse(tapMatches(base, TapCost(18, 18, 4, 0), expected))
+        // derivedStateOf 는 정확히 같아야 한다
+        val derived = base.copy(stateApi = StateApi.Derived)
+        assertTrue(tapMatches(derived, TapCost(3, 12, 3, 0), expectedFor(derived, true)))
+        assertFalse(tapMatches(derived, TapCost(4, 12, 3, 0), expectedFor(derived, true)))
     }
 
     @Composable

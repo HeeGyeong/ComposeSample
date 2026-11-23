@@ -4,7 +4,9 @@ import android.content.Context
 import android.graphics.Typeface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.SnapshotMutationPolicy
 import androidx.compose.runtime.State
+import androidx.compose.runtime.computedStateOf
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -96,17 +98,26 @@ fun resolveLook(
     return PresentedLook(visible = true, emphasized = emphasized, bold = bold, font = font)
 }
 
+/** 칸 상태를 만드는 API — Compose 1.13 의 computedStateOf 는 결과를 캐시하지 않는다(#185) */
+enum class StateApi(val label: String) {
+    Derived("derivedStateOf"),
+    Computed("computedStateOf")
+}
+
 /**
  * 킬 스위치 — 원문처럼 '고친 코드'를 기준으로 두고 스위치 하나씩 옛 동작을 되살린다.
  * @param eagerReads true = 옛 코드: 해석 전에 조건 입력을 전부 읽는다(조건 없는 칸도 선택에 의존)
- * @param basePolicy true = 기반 derivedStateOf 에 structuralEqualityPolicy(원문 SDK 는 정책 없음)
+ * @param basePolicy true = 기반 derivedStateOf 에 structuralEqualityPolicy(원문 SDK 는 정책 없음).
+ *   computedStateOf 에는 '정책 없음' 이 없다(기본 structuralEqualityPolicy) — Computed 에서는 효과가 없다
  * @param fontEquals false = 옛 코드: equals 없는 폰트(원문 #4245 이전 LocalFileFont)
+ * @param stateApi 기반 · 속성 다섯 개를 만드는 API
  */
 data class DerivedCostConfig(
     val plainCount: Int = 100,
     val eagerReads: Boolean = false,
     val basePolicy: Boolean = false,
-    val fontEquals: Boolean = true
+    val fontEquals: Boolean = true,
+    val stateApi: StateApi = StateApi.Derived
 )
 
 /** 탭 하나가 만든 일 */
@@ -164,6 +175,46 @@ fun expectedTapCost(config: DerivedCostConfig, selectionChanged: Boolean): TapCo
     )
 }
 
+/**
+ * computedStateOf 로 만든 칸의 탭 비용 — 기반 해석 · 속성 계산은 하한이다(#185, runtime 1.13.0).
+ * 정확한 수는 다시 그릴 칸이 바뀐 속성 넷 가운데 무엇을 먼저 검사하느냐(스코프에 기록된 순서 — 해시 순)에 따라 달라진다.
+ * - 기반 = 속성: 속성 계산이 기반을 읽을 때마다 기반도 다시 계산한다(캐시 없음 — 스코프에는 바깥 속성만 기록)
+ * - 결과가 바뀐 칸: '다르다' 가 처음 나올 때까지 검사(≥ 1) + 다시 그리며 속성 4 개를 읽는다
+ * - 결과가 같은 칸(미리 읽기): 속성마다 검사 1 + 건너뛴 스코프의 재읽기 1 = 8
+ * - 정책 스위치는 효과가 없다(computedStateOf 에는 '정책 없음' 이 없다). equals 없는 폰트는 계산마다 새 값이라
+ *   검사하면 늘 '다르다' → 미리 읽기면 선택을 읽은 칸이 모두 다시 그려진다
+ */
+fun computedTapLowerBound(config: DerivedCostConfig, selectionChanged: Boolean): TapCost {
+    if (!selectionChanged) return TapCost(0, 0, 0, 0)
+    val unchangedReaders = if (config.eagerReads) config.plainCount else 0
+    val recompositions = SELECTION_DEPENDENT_PARTS + if (config.fontEquals) 0 else unchangedReaders
+    val skipped = if (config.fontEquals) unchangedReaders else 0
+    val calcs = recompositions * (1 + DERIVED_PROPERTIES_PER_PART) + skipped * DERIVED_PROPERTIES_PER_PART * 2
+    return TapCost(
+        resolutions = calcs,
+        propertyCalcs = calcs,
+        recompositions = recompositions,
+        fontLoads = if (config.fontEquals) 0 else recompositions
+    )
+}
+
+/** 구성에 맞는 예상 — derivedStateOf 는 정확한 수, computedStateOf 는 하한 */
+fun expectedFor(config: DerivedCostConfig, selectionChanged: Boolean): TapCost =
+    if (config.stateApi == StateApi.Computed) computedTapLowerBound(config, selectionChanged) else expectedTapCost(config, selectionChanged)
+
+/**
+ * 측정이 예상과 맞나 — computedStateOf 는 리컴포지션 · 폰트 로드가 같고, 기반 = 속성이며, 둘 다 하한 이상이어야 한다.
+ * [ignoreFontLoads] 는 레이아웃이 없는 JVM 컴포지션용(폰트 로드는 레이아웃에서 일어난다)
+ */
+fun tapMatches(config: DerivedCostConfig, measured: TapCost, expected: TapCost, ignoreFontLoads: Boolean = false): Boolean {
+    val fonts = ignoreFontLoads || measured.fontLoads == expected.fontLoads
+    if (config.stateApi == StateApi.Derived) return fonts && measured.copy(fontLoads = 0) == expected.copy(fontLoads = 0)
+    return fonts &&
+        measured.recompositions == expected.recompositions &&
+        measured.resolutions == measured.propertyCalcs &&
+        measured.propertyCalcs >= expected.propertyCalcs
+}
+
 // ==================== 폰트: equals 유무 ====================
 
 /** 세는 TypefaceLoader — 호출 1 회 = FontFamilyResolver 캐시 미스 1 회. 파일 대신 시스템 serif 를 돌려준다 */
@@ -217,6 +268,15 @@ class PaywallPartState(
     loader: AndroidFont.TypefaceLoader,
     font: LabFontSpec = LabFontSpec("lab-serif")
 ) {
+    /** 설정한 API 로 상태를 만든다 — policy 가 null 이면 derivedStateOf 는 정책 없음, computedStateOf 는 기본 정책 */
+    private fun <T> derive(config: DerivedCostConfig, policy: SnapshotMutationPolicy<T>?, calculation: () -> T): State<T> =
+        when {
+            config.stateApi == StateApi.Computed ->
+                if (policy != null) computedStateOf(policy, calculation) else computedStateOf(calculation = calculation)
+            policy != null -> derivedStateOf(policy, calculation)
+            else -> derivedStateOf(calculation)
+        }
+
     private val presented: State<PresentedLook> = run {
         val calculation: () -> PresentedLook = {
             counters.resolutions++
@@ -229,13 +289,13 @@ class PaywallPartState(
             }
             resolveLook(part, font, isSelected, annualSelected)
         }
-        if (config.basePolicy) derivedStateOf(structuralEqualityPolicy(), calculation) else derivedStateOf(calculation)
+        derive(config, if (config.basePolicy) structuralEqualityPolicy() else null, calculation)
     }
 
-    val visible: State<Boolean> = derivedStateOf { counters.propertyCalcs++; presented.value.visible }
-    val emphasized: State<Boolean> = derivedStateOf { counters.propertyCalcs++; presented.value.emphasized }
-    val bold: State<Boolean> = derivedStateOf { counters.propertyCalcs++; presented.value.bold }
-    val fontFamily: State<FontFamily> = derivedStateOf {
+    val visible: State<Boolean> = derive(config, null) { counters.propertyCalcs++; presented.value.visible }
+    val emphasized: State<Boolean> = derive(config, null) { counters.propertyCalcs++; presented.value.emphasized }
+    val bold: State<Boolean> = derive(config, null) { counters.propertyCalcs++; presented.value.bold }
+    val fontFamily: State<FontFamily> = derive(config, null) {
         counters.propertyCalcs++
         presented.value.font.resolve(config.fontEquals, loader)
     }
@@ -274,10 +334,13 @@ data class TapReport(
     val to: String,
     val measured: TapCost,
     val expected: TapCost
-)
+) {
+    val matches: Boolean get() = tapMatches(config, measured, expected)
+}
 
 /** 구성 짧은 이름 — 기록 표의 한 칸 */
 fun DerivedCostConfig.shortLabel(): String = buildString {
+    if (stateApi == StateApi.Computed) append("computed · ")
     append("N=").append(plainCount)
     append(if (eagerReads) " · 미리 읽기" else " · 람다")
     append(if (basePolicy) " · 정책" else " · 정책 없음")
@@ -310,7 +373,7 @@ class DerivedCostLabState {
             from = from,
             to = packageId,
             measured = TapCost(0, 0, 0, 0),
-            expected = expectedTapCost(config, from != packageId)
+            expected = expectedFor(config, from != packageId)
         )
         selected.value = packageId
         tapSeq++
