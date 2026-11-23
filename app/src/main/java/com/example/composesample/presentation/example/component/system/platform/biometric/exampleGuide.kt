@@ -3,7 +3,7 @@ package com.example.composesample.presentation.example.component.system.platform
 /**
  * Biometric Auth in Compose 참고 자료
  *
- * ## androidx.biometric:biometric-compose:1.4.0-beta01
+ * ## androidx.biometric:biometric-compose:1.4.0-rc01
  * - 출처: https://navczydev.medium.com/biometric-auth-in-compose-made-easy-the-new-library-you-need-29814270506d
  * - 공식 릴리스 노트: https://developer.android.com/jetpack/androidx/releases/biometric
  *
@@ -16,6 +16,11 @@ package com.example.composesample.presentation.example.component.system.platform
  *   그 액티비티가 빠졌다(이 경로는 API 26 AVD 가 이 Mac 에서 부팅되지 않아 실행 확인 못 함). Pixel 4 API 30 에뮬에 PIN + 지문을 등록해
  *   7가지(기본 · Class3 · DeviceCredential 폴백을 지문/PIN 으로 · CustomOption · 폴백 여러 개 · 취소)를 두 버전에서 돌린 결과와 프롬프트 글자가
  *   같았다(authType 2/1, CustomFallbackSelected "비밀번호로 로그인", 취소 [10]) — 미등록 상태도 코드 11 · 에러 [11] 로 같음
+ * - 2026-11-23 beta01 → rc01 상향(DEP-CURRENCY-31). aar 요구치 · module 의존성 그대로. 고친 것: 끝났거나 버려진
+ *   rememberAuthenticationLauncher 가 ON_START 에 다시 구독해 다음 요청 결과를 가로채던 문제(b/555875039 — compose 쪽이 launcher 를
+ *   보관 객체로 감쌈), compileSdk 37 에서 R8 이 API 28 미만 FingerprintManager 콜백을 지우던 문제(이 앱 release 는 minify 꺼짐).
+ *   Pixel 4 API 30 에뮬(임시 PIN + 지문 1개)에서 전후 같음 — 지문 성공 · 뒤로 취소 · HOME 왕복 뒤 성공/취소 · 다크 모드 재생성 뒤 성공 ·
+ *   재생성 + 왕복 뒤 성공 모두 결과 1건씩(가로챔 0), rc01 에서 PIN 폴백 authType=1 · 사용자 지정 폴백 CustomFallbackSelected
  * - 1.1.0(stable)은 Activity 기반 `BiometricPrompt`만 제공하며 Compose 통합 API 없음
  *
  * ### 핵심 API
