@@ -32,8 +32,11 @@ ksp = "2.3.14"
 # 다시 컴파일한 클래스 · KSP 산출 7,556개 바이트 동일, APK 의 dex 클래스 목록 · 파일 목록 · 병합 매니페스트 동일, D8 9.4.24 → 9.5.29 로
 # 코드 생성만 달라짐(release 56,840 클래스 중 6,359). 9.5 가 등록하는 generate<Variant>ComposePreviewRunfiles 때문에 루트 build.gradle 의
 # lint↔KSP 순서 지정을 이름 기반으로 바꿨다(그 주석 참고). Gradle 9.8 의 Configuration.setVisible() 사용 중단 경고가 사라졌다.
-applicationVersion = "9.5.1"
-libraryVersion = "9.5.1"
+# 2026-11-23 9.5.2(패치 — DEP-CURRENCY-36, Android Studio Rabbit 2 Patch 2 와 함께 11/20): 고친 것 2 — 중첩 jar 가 여럿인 fat aar 의
+# Java 리소스 병합 실패(9.5 회귀) · Isolated Projects 에서 implementation(project(...)) 실패. 이 프로젝트는 둘 다 해당 없음
+# (fat aar 소비 0 · isolated-projects 끔). pom 의존성은 자기 버전(9.5.2 · 32.5.2) 말고 같다.
+applicationVersion = "9.5.2"
+libraryVersion = "9.5.2"
 
 # Compose
 # Compose BOM이 ui/animation/runtime/foundation/material 등의 개별 버전을 통합 관리한다.

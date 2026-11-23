@@ -22,7 +22,7 @@ Clean Architecture 기반으로 구성되어 있으며, 원하는 예제를 쉽�
 ## 개발 환경
 - Kotlin 2.4.21
 - Android Studio
-- AGP 9.5.1(내장 Kotlin) / Gradle 9.9.2
+- AGP 9.5.2(내장 Kotlin) / Gradle 9.9.2
 - ComposeBom 2026.11.01 (Compose 1.13.0 · Material3 1.5.0) · compileSdk 37.1
 - Compile SDK 37
 - Target SDK 35

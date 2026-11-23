@@ -72,6 +72,9 @@
 > No HotSwan IDE plugin was installed in Android Studio on this machine at the time (2025.3.4). Install the 2.1.0 IDE plugin
 > to match the Gradle plugin before using hot reload.
 >
+> **AGP 9.5.1 → 9.5.2 (2026-11-23, DEP-CURRENCY-36, patch).** Forced recompile of `:app`: the same 92 `SKIPPED` declarations (list diffed);
+> forced rebuild: debug/release dex and KSP output byte-identical, and every APK entry except `app-metadata.properties` has the same CRC.
+
 > **AGP 9.4.1 → 9.5.1 (2026-11-06, DEP-CURRENCY-18).** Still inside the "AGP 9.x" matrix; HotSwan stays on 2.1.0. Checks on a
 > Pixel 4 API 30 emulator:
 > - Forced recompile of `:app` and `:coordinator`: **the same 86 `SKIPPED` declarations** before and after (list diffed). A normal
