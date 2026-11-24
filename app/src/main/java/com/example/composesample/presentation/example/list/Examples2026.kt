@@ -1067,5 +1067,12 @@ val examples2026 = listOf(
         description = "다각형 도형 · 모핑과 transform 제자리 변경 · 크기 0 함정을 기기에서 잰다",
         blogUrl = "",
         exampleType = ConstValue.PolygonShapeExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 11. 24",
+        title = "Modifier.blur { } 점진 블러 (Compose 1.13)",
+        description = "자리마다 반경이 다른 블러와 satin glass 헤더 · 공유 요소 함정",
+        blogUrl = "",
+        exampleType = ConstValue.ProgressiveBlurExample
     )
 )

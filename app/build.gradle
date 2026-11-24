@@ -95,6 +95,9 @@ android {
 //   껍데기, 캐시 카드의 프레임 반복문. 재작성 아래 debug 에서 ③ 외곽선 1회 299µs · copy() 캐시 적중 216µs/프레임이었고, 셋을 빼고 반복문을
 //   일반 함수로 옮기자 27µs · 1.56µs(dispatchRewriteEnabled=false 40µs · 1.54µs, release 13~16µs · 0.09µs, Pixel Tablet API 35 에뮬).
 //   withContext { } 같은 suspend 람다는 별도 클래스로 컴파일되어 facade 제외에 안 든다 — 재는 반복문은 일반 함수에 둔다.
+// BlurPixelMath: 점진 블러 예제(#149)가 PixelCopy 로 읽은 캡처(수십만 픽셀)의 선명도 · 가장자리 번짐을 세는 루프. 재작성 아래 debug 단위
+//   테스트 2400×300 한 장 1,201ms(dispatchRewriteEnabled=false 1.38ms, 제외 뒤 1.37ms) — 기기에서는 메인 스레드가 수 초 막혀 ANR(입력
+//   5초 대기) 28건이 났다. 계산은 Dispatchers.Default 에서 하고, 계산 object 만 뺀다.
 hotSwanCompiler {
     exclude("com.example.composesample.presentation.example.component.architecture.development.test.PowerAssertChecksKt")
     exclude("com.example.composesample.presentation.example.component.architecture.development.test.PowerAssertViewModel")
@@ -127,6 +130,7 @@ hotSwanCompiler {
     exclude("com.example.composesample.presentation.example.component.ui.shapes.PolygonShapeLabKt")
     exclude("com.example.composesample.presentation.example.component.ui.shapes.CountingShape")
     exclude("com.example.composesample.presentation.example.component.ui.shapes.MorphLabState")
+    exclude("com.example.composesample.presentation.example.component.ui.graphics.BlurPixelMath")
 }
 
 // Power-Assert(PowerAssertExample) — 단언 실패 메시지에 식의 중간값을 펼쳐 넣는 컴파일러 플러그인.

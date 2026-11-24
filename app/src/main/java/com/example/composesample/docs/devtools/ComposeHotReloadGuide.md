@@ -421,6 +421,17 @@ exclude("com.example.composesample.presentation.example.component.ui.shapes.Coun
 exclude("com.example.composesample.presentation.example.component.ui.shapes.MorphLabState")
 ```
 
+The progressive blur example (#149) excludes its pixel math for the same reason as `InkAnalysis`. Its cards read the
+screen with `PixelCopy` and walk every pixel of each capture to measure sharpness (neighbour luminance difference) and
+edge spill. On a 2400 x 300 test image `BlurPixelMath.sharpness` took 1,201 ms in `testDebugUnitTest` under the rewrite,
+1.38 ms with `-Photswan.dispatchRewriteEnabled=false` and 1.37 ms with the object below excluded. On the Pixel Tablet
+API 35 emulator the first version, which also ran the math on the main thread, blocked it for seconds and logged 28
+"Input dispatching timed out" ANRs; the math now runs on `Dispatchers.Default` and the object is excluded:
+
+```groovy
+exclude("com.example.composesample.presentation.example.component.ui.graphics.BlurPixelMath")
+```
+
 ### `@Synchronized` loses its mutual exclusion under the dispatch rewrite — use a `synchronized` block
 
 Found while writing the Range download example (#139). Its fake server's `handle()` was marked `@Synchronized` so that

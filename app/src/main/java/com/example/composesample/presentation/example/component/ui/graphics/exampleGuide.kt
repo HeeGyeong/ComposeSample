@@ -206,4 +206,28 @@ package com.example.composesample.presentation.example.component.ui.graphics
  * - 리본 칸 리컴포지션: 재생 6초 1 → 1(debug · release) — 시간은 그리기 단계에서만 읽는다
  * - HotSwan: 프레임마다 도는 CPU 계산(RibbonMath)과 drawLine 루프(MeshRibbonDrawingKt)가 debug 에서 16~19ms/프레임(화면 27fps) →
  *   둘만 제외(debug 단위 테스트 한 프레임 분량 2,080µs vs 재작성 끔 57µs). 제외 뒤 debug 272 · 418 · 29µs, 34fps
+ *
+ * ## ProgressiveBlurExampleUI (#149, Compose 1.13 Modifier.blur { } — 점진 블러)
+ * - Compose November '26 릴리스 블로그(첫 항목): https://developer.android.com/blog/posts/jetpack-compose-november-2026-release
+ * - ui 릴리스 노트(1.13.0-alpha03 도입 · beta01 매개변수 이름 radius → blurRadiusSpec): https://developer.android.com/jetpack/androidx/releases/compose-ui
+ * - TJ Dahunsi "Material is the metaphor"(Android Weekly #749 — satin glass 헤더 · 공유 요소 함정):
+ *   https://www.tunjid.com/articles/material-is-the-metaphor-pushing-the-limits-of-building-with-material-design-cross-platform-with-jetpack-compose-6acf75b3c23999c5f99f8d5b
+ * ### 핵심 개념(ui 1.13.0 · ui-graphics 1.13.0 sources, opt-in 없음)
+ * - `Modifier.blur { }` 의 BlurScope: size(DpSize) · blurRadiusSpec · edgeTreatment · alpha. 블록은 실행마다 reset(반경 0 · Rectangle · 1) 뒤 돈다.
+ * - BlurRadiusSpec: uniform · vertical/horizontal/linear/radialGradient(두 반경 또는 BlurStop 2~16개) · shader(maxRadius){ 셰이더 알파 = 세기 }.
+ *   shader 스펙은 같은지 비교할 수 없어(identity) 블록이 돌 때마다 새 효과 — 셰이더는 한 번 만들어 재사용(KDoc).
+ * - API: uniform 은 RenderEffect.createBlurEffect(API 31+). 나머지는 RuntimeShader 패스(API 33+) — API 31~32 는 identity 효과(선명),
+ *   31 미만은 Modifier 무시. 뒤를 흐리는 배경 블러가 아니다 — 자기 그림만 흐린다(헤더 밑 유리는 목록에 단다).
+ * - BlurNode 는 placeWithLayer 의 레이어 블록으로 돈다: 블록 안 상태 읽기가 바뀌면 renderEffect 만 바꾸고 내용은 다시 기록하지 않는다.
+ * - edgeTreatment: Rectangle(기본) = clip + Clamp, Unbounded = 자르지 않음 + Decal(칸 밖으로 번지고 가장자리가 비침), Shape = 그 모양으로 clip + Clamp.
+ * - 공유 요소(sharedElement)는 전환 동안 SharedTransitionLayout 오버레이에 그려져 목록의 blur · 헤더 스크림 밖이다.
+ *   renderInOverlayDuringTransition = false 면 제자리(목록 안)에 그려 blur 를 받지만 들어오는 목록의 fadeIn 도 함께 받아 초반엔 보이지 않는다.
+ * ### 실측(Pixel Tablet API 35 에뮬 debug · release 같은 값, Pixel 4 API 30 에뮬)
+ * - 일곱 스펙 r=12dp 블러 전 대비 선명도(PixelCopy): 균일 0.03 · 세로 0.32 · stop 3개 0.33 · 가로 0.31 · 대각선 0.31 · 방사형 0.08 · 셰이더 0.51 → API 30 은 모두 1.00.
+ * - 가장자리(16dp): 칸 밖 24dp 띠 번짐 Rectangle 0 · Unbounded 29,872px · Shape 0, 안쪽 3px 띠 밝아짐 Unbounded +97.2 → API 30 은 모두 0.
+ * - satin glass(420dp 스크롤 900ms): ① 컴포지션에서 읽기 리컴포지션 11/12 프레임(API 30 54/55) · ② 블록에서 읽기 0, 블러 블록 11(54).
+ *   API 35 에뮬은 블러 때문에 13fps(swiftshader).
+ * - 헤더 밑으로 돌아오는 5번 칸(블러 끔 · 스크림만 = 1): ① 오버레이 전환 85% 1.14 → 끝난 첫 프레임 0.04(한 번에 1.10), ② 오버레이 안 씀 0.04 내내,
+ *   ③ 원문 해법 1.36 → 1.00 → +150ms 0.19 → +800ms 0.04. API 30 은 블러가 없어 ① · ③ 스크림 차(0.47~0.50)만 남는다.
+ * - HotSwan: 픽셀 계산(BlurPixelMath)을 메인에서 돌리던 첫 판이 debug 에서 ANR 28건 → Dispatchers.Default + 제외(ComposeHotReloadGuide.md).
  */

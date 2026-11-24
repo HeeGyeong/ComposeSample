@@ -107,6 +107,7 @@ import com.example.composesample.presentation.example.component.ui.graphics.Dial
 import com.example.composesample.presentation.example.component.ui.graphics.GooeyTextMorphExampleUI
 import com.example.composesample.presentation.example.component.ui.graphics.MeshGradientExampleUI
 import com.example.composesample.presentation.example.component.ui.graphics.MeshRibbonExampleUI
+import com.example.composesample.presentation.example.component.ui.graphics.ProgressiveBlurExampleUI
 import com.example.composesample.presentation.example.component.ui.graphics.PixelateExampleUI
 import com.example.composesample.presentation.example.component.ui.graphics.NewShadowApiExampleUI
 import com.example.composesample.presentation.example.component.ui.layout.animation.AnimatedContentExampleUI
@@ -386,6 +387,7 @@ import com.example.composesample.util.ConstValue.UIShimmerExample
 import com.example.composesample.util.ConstValue.VisibilityExample
 import com.example.composesample.util.ConstValue.CapturedAnimatedVisibilityExample
 import com.example.composesample.util.ConstValue.PolygonShapeExample
+import com.example.composesample.util.ConstValue.ProgressiveBlurExample
 import com.example.composesample.util.ConstValue.WebViewIssueExample
 import com.example.composesample.util.ConstValue.WithContextExample
 import com.example.composesample.util.ConstValue.CoroutineBridgesExample
@@ -619,6 +621,7 @@ val exampleUiRegistry: Map<String, @Composable (onBackEvent: () -> Unit) -> Unit
     VisibilityExample to { onBackEvent -> VisibilityExampleUI(onBackEvent) },
     CapturedAnimatedVisibilityExample to { onBackEvent -> CapturedAnimatedVisibilityExampleUI(onBackEvent) },
     PolygonShapeExample to { onBackEvent -> PolygonShapeExampleUI(onBackEvent) },
+    ProgressiveBlurExample to { onBackEvent -> ProgressiveBlurExampleUI(onBackEvent) },
     RecompositionTestExample to { onBackEvent -> RecompositionTestExampleUI(onBackEvent) },
     ReboundExample to { onBackEvent -> ReboundExampleUI(onBackEvent) },
     TurbineFlowTestExample to { onBackEvent -> TurbineFlowTestExampleUI(onBackEvent) },
