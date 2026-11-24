@@ -406,6 +406,21 @@ counters stay in the screen file and are still rewritten:
 exclude("com.example.composesample.presentation.example.component.ui.canvas.RecordScopeDrawingKt")
 ```
 
+The PolygonShape example (#148) excludes the code its timing cards run inside the measured region. The morph card times
+each `createOutline` that `Modifier.clip` makes through a counting wrapper (`CountingShape`), and the progress lambda it
+passes to `MorphPolygonShape` is called inside that call; the cache card runs 1,000 frames of `createOutline` calls in a
+loop. Under the rewrite the debug build recorded 299 µs per outline for the cheapest variant and 216 µs per frame for
+two cache hits on the Pixel Tablet API 35 emulator. With the three classes below excluded and the loop moved out of the
+`withContext { }` block, it recorded 27 µs and 1.56 µs (`-Photswan.dispatchRewriteEnabled=false`: 40 µs and 1.54 µs;
+release: 13-16 µs and 0.09 µs). Excluding the file facade alone did not cover the loop: a suspend lambda is always
+compiled to its own class, so the measuring loop lives in a plain function of the facade:
+
+```groovy
+exclude("com.example.composesample.presentation.example.component.ui.shapes.PolygonShapeLabKt")
+exclude("com.example.composesample.presentation.example.component.ui.shapes.CountingShape")
+exclude("com.example.composesample.presentation.example.component.ui.shapes.MorphLabState")
+```
+
 ### `@Synchronized` loses its mutual exclusion under the dispatch rewrite — use a `synchronized` block
 
 Found while writing the Range download example (#139). Its fake server's `handle()` was marked `@Synchronized` so that

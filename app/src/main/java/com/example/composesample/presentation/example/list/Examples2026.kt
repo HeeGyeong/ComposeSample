@@ -1060,5 +1060,12 @@ val examples2026 = listOf(
         description = "닫으며 선택을 바로 null 로 지워도 마지막 그림이 나가는 퇴장 애니메이션",
         blogUrl = "",
         exampleType = ConstValue.CapturedAnimatedVisibilityExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 11. 24",
+        title = "PolygonShape · MorphPolygonShape (Compose 1.13)",
+        description = "다각형 도형 · 모핑과 transform 제자리 변경 · 크기 0 함정을 기기에서 잰다",
+        blogUrl = "",
+        exampleType = ConstValue.PolygonShapeExample
     )
 )

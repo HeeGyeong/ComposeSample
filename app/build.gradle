@@ -91,6 +91,10 @@ android {
 // RecordScopeDrawingKt: Waveform 4번 카드(다시 기록하는 범위)의 이웃 타일 루프(400개). 같은 레이어에서 매 프레임 다시 기록될 때
 //   debug 그리기 중앙값 9.33ms/프레임 vs 이 파일만 빼면 0.54ms(release 0.38ms, Pixel 4 API 30 에뮬) — 카드가 재는 '다시 기록 비용'이
 //   HotSwan 비용으로 바뀐다. 타일 그리기 함수 파일만 뺀다(카운터를 올리는 드로우 람다는 화면 파일에 그대로).
+// PolygonShapeLabKt · CountingShape · MorphLabState: PolygonShape 예제(#148)가 재는 외곽선 시간 — 모핑 카드의 진행률 람다와 외곽선을 세는
+//   껍데기, 캐시 카드의 프레임 반복문. 재작성 아래 debug 에서 ③ 외곽선 1회 299µs · copy() 캐시 적중 216µs/프레임이었고, 셋을 빼고 반복문을
+//   일반 함수로 옮기자 27µs · 1.56µs(dispatchRewriteEnabled=false 40µs · 1.54µs, release 13~16µs · 0.09µs, Pixel Tablet API 35 에뮬).
+//   withContext { } 같은 suspend 람다는 별도 클래스로 컴파일되어 facade 제외에 안 든다 — 재는 반복문은 일반 함수에 둔다.
 hotSwanCompiler {
     exclude("com.example.composesample.presentation.example.component.architecture.development.test.PowerAssertChecksKt")
     exclude("com.example.composesample.presentation.example.component.architecture.development.test.PowerAssertViewModel")
@@ -120,6 +124,9 @@ hotSwanCompiler {
     exclude("com.example.composesample.presentation.example.component.architecture.development.tracing.HeapDumpLabKt")
     exclude("com.example.composesample.presentation.example.component.architecture.development.tracing.DumpCursor")
     exclude("com.example.composesample.presentation.example.component.architecture.development.tracing.TypeCounter")
+    exclude("com.example.composesample.presentation.example.component.ui.shapes.PolygonShapeLabKt")
+    exclude("com.example.composesample.presentation.example.component.ui.shapes.CountingShape")
+    exclude("com.example.composesample.presentation.example.component.ui.shapes.MorphLabState")
 }
 
 // Power-Assert(PowerAssertExample) — 단언 실패 메시지에 식의 중간값을 펼쳐 넣는 컴파일러 플러그인.
