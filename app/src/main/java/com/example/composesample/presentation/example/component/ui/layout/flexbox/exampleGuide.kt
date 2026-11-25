@@ -12,9 +12,30 @@ package com.example.composesample.presentation.example.component.ui.layout.flexb
  * - horizontalArrangement/verticalArrangement + itemSpacing 으로 간격 제어
  * - Modifier.weight(): FlowRowScope 내에서 남은 공간 비율 분배
  *
+ * ### Compose FlexBox(foundation-layout 1.13 정식)와 나란히 — 같은 화면 아래쪽 카드(#187)
+ * - 출처: Compose November '26 블로그(2026-11-18) https://developer.android.com/blog/posts/jetpack-compose-november-2026-release
+ *   ('FlexBox 가 FlowRow/FlowColumn 을 대체 — 새 코드엔 FlexBox')
+ * - API: https://developer.android.com/reference/kotlin/androidx/compose/foundation/layout/package-summary#FlexBox
+ * - foundation-layout 1.13.0 sources(FlexBox.kt): `FlexBox(modifier, config: FlexBoxConfig, content: FlexBoxScope.() -> Unit)`, opt-in 없음.
+ *   FlexBoxConfig 는 fun interface(`FlexBoxConfigScope.configure()`) — direction · wrap · justifyContent · alignItems · alignContent ·
+ *   maxItemsInEachLine · rowGap/columnGap/gap, 측정 단계에서 실행(안에서 읽은 State 는 다시 측정만). 칸은 `Modifier.flex { }`
+ *   (grow 기본 0 · shrink 기본 1 · basis 기본 Auto = 최대 고유 폭 · alignSelf · order). 기본 config = 한 줄(NoWrap) · Start · 간격 0.
+ *   grow 를 주지 않은 칸은 주축 fill 비율(fillMaxWidth 등)을 grow 로 쓴다(createFlexItem). 줄 나누기 = 현재 줄 + 칸의 가설 크기 > 최대
+ *   또는 줄의 칸 수 ≥ maxItemsInEachLine
+ * - 이름 함정: 같은 목록의 'FlexBox Layout Example'(FlexBoxExampleUI)은 util 의 직접 만든 FlexBoxLayout — Compose FlexBox 와 무관
+ * - 실측(Pixel Tablet API 35 에뮬, 무대 280dp, onPlaced 로 읽은 칸 자리):
+ *   ① 두 단어 칩 8개 — FlowRow 3줄 / FlexBox 기본 1줄 · 8칸 모두 좁아짐(한국어는 글자 사이 줄바꿈이라 '무/료/배/송'처럼 세로로) ·
+ *      1칸 무대 밖 / FlexBox + wrap(Wrap) + gap(6.dp) 은 FlowRow(spacedBy 6) 와 8칸 모두 같은 자리 · 크기(±1px)
+ *   ② maxItemsInEachRow = n 과 maxItemsInEachLine(n) 은 n = 1 · 2 · 4 · 5 · 8 모두 같은 자리. n 한 번 바꿀 때 FlowRow 호스트
+ *      리컴포지션 1 · 측정 1, FlexBox 호스트(State 를 config 에서 읽음) 리컴포지션 0 · 측정 1
+ *   ③ 간격 0 세 칸: grow(basis 60, grow 0·1·2) 60 · 93.5 · 126.5dp(식 60 · 93.3 · 126.7) / FlowRow weight(고정 60, 1·2) 60 · 73.5 · 146.5
+ *      (식 60 · 73.3 · 146.7 — 기본 크기 무시) / shrink(basis 140 ×3, shrink 1·1·2) 105 · 105 · 70(넘친 140dp 를 shrink × basis 비율로)
+ *   ④ 가운데 칩만 fillMaxWidth — FlowRow 는 280dp 로 한 줄을 혼자(3줄), FlexBox 는 111dp 로 다른 4칸과 한 줄(2줄)
+ *
  * ## FlexBoxExampleUI (반응형 디자인)
  * 핵심 개념:
  * - 화면 크기에 따라 아이템 배치가 줄바꿈되는 CSS Flexbox 유사 패턴
+ * - ⚠ util 의 직접 만든 FlexBoxLayout 을 쓴다 — Compose 1.13 의 FlexBox 와 이름만 같다(Compose FlexBox 는 FlowRowLayoutExampleUI 아래쪽 카드)
  *
  * ## FlowOverflowExampleUI (Flow 레이아웃 오버플로 제어)
  * - 공식 문서: https://developer.android.com/develop/ui/compose/layouts/flow

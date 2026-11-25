@@ -250,9 +250,9 @@ val examples2026 = listOf(
         exampleType = ConstValue.RichContentTextInputExample
     ),
     ExampleObject(
-        lastUpdate = "26. 04. 03",
+        lastUpdate = "26. 11. 25",
         title = "FlowRow / FlowColumn (Compose Flexbox)",
-        description = "FlowRow 줄바꿈 배치와 FlowColumn 세로 흐름을 비교하는 공식 레이아웃",
+        description = "FlowRow 줄바꿈 배치와 FlowColumn 세로 흐름 + Compose 1.13 FlexBox 와 나란히(기본값 · maxItemsInEachLine · grow/shrink · fill)",
         blogUrl = "",
         exampleType = ConstValue.FlowRowLayoutExample
     ),
