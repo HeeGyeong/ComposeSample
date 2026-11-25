@@ -182,7 +182,7 @@ Cursor IDE를 사용하는 개발자를 위한 **AI 코딩 어시스턴트 규�
 - **폼 상태와 검증**: 다중 필드 폼 — 검증 시점 3종(입력 즉시/포커스 이탈/제출)을 같은 규칙으로 대조하고 에러 표시 전환 횟수를 화면에서 실측, `isError`/`supportingText`와 IME 액션 기반 포커스 이동(`FocusRequester`), `derivedStateOf` 제출 게이팅의 리컴포지션 차이, 에러 문구가 필드 높이를 늘려 아래를 밀어내는 레이아웃 점프
 
 **text**:
-- 텍스트 스타일링, AutoSizing, 커스텀 TextMeasurer 렌더링
+- 텍스트 스타일링, AutoSizing, 커스텀 TextMeasurer 렌더링 / 줄마다 다른 줄 높이(Compose 1.13 `LineHeightStyle.Mode.PerLine`) — 같은 문단을 Fixed · Minimum · Tight · PerLine 으로 배치하고 줄마다 따로 오프스크린에 그려 상자 밖 잉크 · 이웃 줄 잉크 간격 · 겹친 픽셀 실측(Fixed 는 큰 줄을 요청 높이로 눌러 잉크가 윗줄과 겹침, PerLine 은 큰 줄만 늘림, 첫 줄이 크면 Minimum 은 모든 줄을 그 높이로), PerLine 은 잉크가 아니라 폴백 글꼴 메트릭을 따라 키 큰 문자 줄을 늘림, **자동 줄바꿈 문단에서는 큰 줄 다음 줄들이 그 높이를 물려받는** StaticLayout 동작(줄이 스타일 구간 안에서 끝나면 바뀐 메트릭을 이어받음 — 글자마다 span 대조군으로 원인 확인, 그 대신 배치가 느려지고 복합 문자 셰이핑이 깨짐)
 - **텍스트 선택 제어**: 읽기 전용 텍스트 선택(`SelectionContainer`/`DisableSelection`)과 컨텍스트 메뉴 — Compose 1.11 이 선택 메뉴를 `text.contextmenu` 로 옮기면서 `LocalTextToolbar` 교체가 기본값에서 동작하지 않게 된 사실을 실기기 계측으로 확인(`isNewContextMenuEnabled` 기본 true → showMenu 0회, 끄면 copy·selectAll 수신) + 1.11 시절 선택 문자열을 얻던 클립보드 우회 + Compose 1.12 `SelectionState` 실적용(`selectedTexts` 관찰, `selectAll`·`clear`·`extendSelectionByWord`·`select(TextRange)`·`getSelectableTexts`), 1~4번 카드 1.11.4 실측을 1.12.1 에서 재측정(동일), 재생성 복원은 리스트 밖에서만 온전하고 LazyColumn 항목 안에서는 0조각·반쪽 복원으로 깨지는 것을 Saver 로그로 규명
 - TextOverflow(Start/Middle Ellipsis), LocalContext 문자열 안티패턴
 - Rich Content in Text Input(contentReceiver를 통한 이미지/파일 붙여넣기 — 키보드/클립보드/드래그앤드롭 소스별 처리)

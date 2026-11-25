@@ -98,6 +98,8 @@ android {
 // BlurPixelMath: 점진 블러 예제(#149)가 PixelCopy 로 읽은 캡처(수십만 픽셀)의 선명도 · 가장자리 번짐을 세는 루프. 재작성 아래 debug 단위
 //   테스트 2400×300 한 장 1,201ms(dispatchRewriteEnabled=false 1.38ms, 제외 뒤 1.37ms) — 기기에서는 메인 스레드가 수 초 막혀 ANR(입력
 //   5초 대기) 28건이 났다. 계산은 Dispatchers.Default 에서 하고, 계산 object 만 뺀다.
+// LineInkMath: 줄 높이 모드 예제(#186)가 줄마다 오프스크린에 그린 문단(한 줄 약 17만 픽셀, 문단 하나에 20~30줄 분량)의 잉크 행 ·
+//   겹친 픽셀을 세는 루프. 재작성 아래 debug 단위 테스트 한 줄 11,493µs(dispatchRewriteEnabled=false 218µs, 제외 뒤 79µs) — 계산 object 만 뺀다.
 hotSwanCompiler {
     exclude("com.example.composesample.presentation.example.component.architecture.development.test.PowerAssertChecksKt")
     exclude("com.example.composesample.presentation.example.component.architecture.development.test.PowerAssertViewModel")
@@ -131,6 +133,7 @@ hotSwanCompiler {
     exclude("com.example.composesample.presentation.example.component.ui.shapes.CountingShape")
     exclude("com.example.composesample.presentation.example.component.ui.shapes.MorphLabState")
     exclude("com.example.composesample.presentation.example.component.ui.graphics.BlurPixelMath")
+    exclude("com.example.composesample.presentation.example.component.ui.text.LineInkMath")
 }
 
 // Power-Assert(PowerAssertExample) — 단언 실패 메시지에 식의 중간값을 펼쳐 넣는 컴파일러 플러그인.

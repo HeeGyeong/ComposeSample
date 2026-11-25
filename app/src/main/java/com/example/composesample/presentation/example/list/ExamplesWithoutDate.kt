@@ -24,8 +24,9 @@ val examplesWithoutDate = listOf(
         exampleType = ConstValue.WebViewIssueExample
     ),
     ExampleObject(
+        lastUpdate = "26. 11. 25",
         title = "Text Style Example",
-        description = "Text Style을 적용하기 위한 예제",
+        description = "Text Style을 적용하기 위한 예제 + 줄마다 다른 줄 높이(LineHeightStyle.Mode.PerLine)와 물려받는 줄",
         blogUrl = blogUrl(147),
         exampleType = ConstValue.TextStyleExample
     ),

@@ -432,6 +432,17 @@ API 35 emulator the first version, which also ran the math on the main thread, b
 exclude("com.example.composesample.presentation.example.component.ui.graphics.BlurPixelMath")
 ```
 
+The line-height mode example (#186) excludes its pixel loop for the same reason. For every mode it draws each line of the
+paragraph alone into an offscreen bitmap (the other characters are hidden with a transparent span) and walks the pixels to
+find the line's ink rows and the pixels it shares with the next line - about twenty to thirty lines of 170,000 pixels per
+paragraph. One line took 11,493 µs in `testDebugUnitTest` under the rewrite, 218 µs with
+`-Photswan.dispatchRewriteEnabled=false` and 79 µs with the object below excluded. The measuring runs on
+`Dispatchers.Default`:
+
+```groovy
+exclude("com.example.composesample.presentation.example.component.ui.text.LineInkMath")
+```
+
 ### `@Synchronized` loses its mutual exclusion under the dispatch rewrite — use a `synchronized` block
 
 Found while writing the Range download example (#139). Its fake server's `handle()` was marked `@Synchronized` so that

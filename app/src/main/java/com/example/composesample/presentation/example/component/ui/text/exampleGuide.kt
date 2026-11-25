@@ -126,7 +126,41 @@ package com.example.composesample.presentation.example.component.ui.text
  * - 반드시 명확한 크기 제약이 있는 컨테이너에서만 동작(width/height 무제한이면 미작동)
  *
  * ## TextStyleExampleUI
- * - 각 예제 파일 내 주석 참고
+ * - 폰트 크기 · 글자 간격 · 줄 높이 기본 비교는 각 예제 파일 내 주석 참고
+ *
+ * ### 줄마다 다른 줄 높이 — LineHeightStyle.Mode (Compose 1.13, #186)
+ * - 출처: Compose November '26 블로그(2026-11-18) https://developer.android.com/blog/posts/jetpack-compose-november-2026-release
+ * - API: https://developer.android.com/reference/kotlin/androidx/compose/ui/text/style/LineHeightStyle.Mode
+ * - ui-text 1.13.0 sources: lineHeight 를 주면 문단 전체에 LineHeightStyleSpan 하나. Fixed · Minimum · Tight 는 첫 줄
+ *   fontMetrics 로 한 번 계산(calculateTargetMetrics)해 모든 줄에 같은 ascent · descent 를 쓰고, PerLine(chooseHeightPerLine)은
+ *   줄마다 '자연 높이 ≥ 요청'이면 그대로, 작으면 요청 높이로. opt-in 없음. lineHeight 가 없으면 어떤 모드도 적용 안 됨.
+ *   폴백 글꼴 줄 간격은 AndroidParagraph fallbackLineSpacing = true → StaticLayout.Builder.setUseLineSpacingFromFallbacks(API 28+).
+ * - 측정 방법(LineHeightModeLab): 14sp · lineHeight 21sp · 큰 글씨 30sp 굵게 · 폭 260dp · Trim.None. 같은 문단을 모드마다
+ *   배치하고 줄마다 나머지 글자를 투명 span 으로 가린 배치를 오프스크린(ImageBitmap)에 그려 그 줄의 잉크 행 → 상자 밖 잉크 ·
+ *   이웃 줄 잉크 간격 · 겹친 픽셀. 색 span 은 MetricAffectingSpan 이 아니라 줄 상자가 같다(매번 확인). 오프스크린 잉크는
+ *   화면 BasicText 캡처와 2px 안에서 같았다(계측 테스트). 픽셀 루프 LineInkMath 는 HotSwan 제외 — 재작성 아래 한 줄
+ *   11,493µs(재작성 끔 218µs, 제외 뒤 79µs, debug 단위 테스트).
+ * - 실측(Pixel Tablet API 35 에뮬, 밀도 2.0 — 요청 21dp):
+ *   ① 큰 글씨가 둘째 줄(\n): Fixed · Minimum · Tight 모든 줄 21dp, 큰 줄 잉크가 상자 위로 5.5dp · 윗줄 잉크와 간격 -2.5dp ·
+ *      겹친 픽셀 56. PerLine 21 · 35.5 · 21 · 21 — 상자 밖 0. 큰 글씨가 첫 줄: Minimum 은 모든 줄 35.5dp(전체 142dp vs PerLine
+ *      98.5dp), Fixed 는 첫 줄 비율로 기준선을 정해 24.5 · 21 · 21 · 32dp · 작은 줄 아래 글자도 2dp 밖(상자 밖 최대 9dp)
+ *   ② 키 큰 문자(\n): 자연 높이 미얀마어 30.5 · 티베트어 39.5dp, 크메르어 · 태국어 · 한국어 20dp. PerLine 은 그 두 줄만 늘린다
+ *      — 미얀마어 줄 상자 30.5dp 인데 잉크 15.5dp(글꼴 메트릭을 따른다). Fixed 는 티베트어 잉크만 2dp 밖
+ *   ③ 자동 줄바꿈(한 문단): PerLine 에서 큰 줄 다음 줄들이 큰 줄 높이를 물려받는다 — 둘째 줄 큰 글씨 21 · 35.5 · 35.5 · 35.5
+ *      (기대 21 · 35.5 · 21 · 21), 첫 줄 큰 글씨는 모든 줄 35.5 로 Minimum 과 같다, 티베트어 다음 줄들 39.5
+ *   API 28 에뮬(Pixel 3, AVD 이름 Pixel_3_API_26): ① · ③ 같은 결론(Fixed 간격 -6px · 겹침 102), ② 는 티베트어만 늘고 미얀마어는
+ *   그대로(56px = 한국어 줄)
+ * - 원인(SDK android-35 StaticLayout.generate): 줄을 out() 한 뒤 그 줄이 스타일 구간(MetricAffectingSpan 경계) 안에서 끝나면
+ *   `fmAscent = min(defaultAscent, fm.ascent)` 로 다음 줄 시작 메트릭을 fm 에서 이어받는다. LineHeightSpan 이 있으면 out() 이
+ *   fm 을 그 줄의 above/below 로 채워 chooseHeight 에 넘기므로 큰 줄의 메트릭이 넘어가고, PerLine 은 넘어온 높이 ≥ 요청이면
+ *   그대로 둔다. Compose 의 chooseHeightPerLine 주석도 이 재사용을 경고한다. lineHeight 가 없으면 span 이 없어 자연 배치는
+ *   물려받지 않고, \n 은 문단을 새로 시작해 초기화.
+ * - 원인 확인(대조군): 글자마다 같은 크기 fontSize span 을 씌우면 줄이 늘 구간 끝에서 끝나 물려받은 줄 0(세 예문 모두,
+ *   API 28 · 35). 그러나 쓰면 안 된다 — span 없음 · 글자마다를 번갈아 잰 배치 1회 중앙값(debug)이 큰 글씨 예문 2.3배(API 28 폰
+ *   1,211 → 2,731µs) · 3.3배(API 35 태블릿 467 → 1,537µs), 키 큰 문자 예문 5.6배(API 35 263 → 1,464µs) 느려지고, 티베트어 · 미얀마어
+ *   결합 기호가 구간마다 따로 셰이핑되어 점선 원(◌)으로 그려지며 줄바꿈 위치도 바뀌었다. 줄 높이가 달라야 하는 줄은 \n 으로
+ *   문단을 나눈다.
+ * - 다루지 않음: FontVariation.Settings.merge(같은 1.13) — 앱에 가변 폰트 파일이 없다(res/font 0)
   *
  * ## Text Selection Control (읽기 전용 텍스트 선택 + 컨텍스트 메뉴)
  * - 공식 문서: https://developer.android.com/develop/ui/compose/text/user-interactions
