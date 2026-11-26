@@ -18,9 +18,9 @@ val examples2025 = listOf(
         exampleType = ConstValue.ReverseLazyColumnExample
     ),
     ExampleObject(
-        lastUpdate = "25. 01. 13",
+        lastUpdate = "26. 11. 26",
         title = "UI Test Example",
-        description = "간단한 UI Test를 작성하여 TDD 구현 방식을 확인해보는 예제",
+        description = "간단한 UI Test 로 TDD 를 확인하고, ui-test 1.13 TestFailurePolicy 로 실패 순간 스크린샷 · UI 트리를 남기는 예제",
         exampleType = ConstValue.TestExample
     ),
     ExampleObject(

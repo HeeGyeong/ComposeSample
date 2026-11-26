@@ -3,6 +3,35 @@ package com.example.composesample.presentation.example.component.architecture.de
 /**
  * Test Examples 참고 자료
  *
+ * --- 실패 순간 자동 저장 — TestFailurePolicy (ui-test 1.13, 2026-11-26 보강 #191 — TestFailurePolicyCard.kt · UITestFailurePolicyTest) ---
+ * - 후보 출처: Compose November '26 블로그(2026-11-18) https://developer.android.com/blog/posts/jetpack-compose-november-2026-release
+ * - 릴리스 노트: https://developer.android.com/jetpack/androidx/releases/compose-ui
+ * - 근거(ui-test-android 1.13.0 sources): ComposeUiTestConfig(failurePolicy) · TestFailurePolicy(screenshotCaptureMode,
+ *   uiHierarchyCaptureMode, failureHandlers) · CaptureMode(Unspecified/Enabled/Disabled) · FailureArtifact(type, fileName) ·
+ *   FailureContext(error, artifacts) · fun interface TestFailureHandler — opt-in 없음. androidx.compose.ui.test.v2.runComposeUiTest(config) 도
+ *   실험 표시 없음(옛 패키지 androidx.compose.ui.test 의 runComposeUiTest(effectContext, …) 는 @ExperimentalTestApi + deprecated).
+ *   createComposeRule(config) · runComposeUiTest(config) 모두 실패 시
+ *   FailurePipelineRunner.runPipeline 을 탄다: Unspecified 면 러너 인자 androidx.compose.ui.test.failure.isScreenshotCaptureEnabled /
+ *   isUiHierarchyCaptureEnabled(없으면 false) → 스크린샷 `${nanoTime}_screenshot.png`(UiAutomation.takeScreenshot, PNG) ·
+ *   트리 `${nanoTime}_ui.txt`(View 계층 HumanReadables + 시맨틱 printToString) 를 PlatformTestStorageRegistry 에 쓰고,
+ *   핸들러를 차례로 부른 뒤 원래 실패를 다시 던진다. 저장 · 핸들러에서 난 예외는 로그 + 원래 실패에 addSuppressed
+ * - 저장소(androidx.test monitor 1.8.0): 기본은 FileTestStorage(러너 useTestStorageService 를 켜야 TestStorage). 폴더는
+ *   TestDirCalculator — 러너 인자 additionalTestOutputDir, 없으면 API 29+ externalMediaDirs[0]/additionalTestOutputDir,
+ *   그 아래는 externalCacheDir/additionalTestOutputDir. androidTest 클래스패스의 androidx.test.services:storage 1.6.0 은
+ *   espresso · runner 를 따라 들어오지만 러너 인자 없이 등록되지 않는다
+ * - 측정(Pixel Tablet API 35 · Pixel 4 API 30 에뮬, am instrument): 실패 실행은 정상 테스트 안에서 runCatching 으로 잡았다(스위트에 실패 테스트 없음)
+ *   · 기본값 · 인자 없음 → 산출물 0, 핸들러 1회, 받은 error 는 던져진 그 AssertionError
+ *   · 기본값 + 러너 인자 두 개 true → 2개 · Enabled/Enabled → 2개(같은 nanoTime 앞머리) · Disabled/Disabled + 러너 인자 → 0
+ *   · 저장 위치 /storage/emulated/0/Android/media/com.example.composesample/additionalTestOutputDir(두 기기),
+ *     -e additionalTestOutputDir 로 준 폴더도 그대로 따름(API 35)
+ *   · 스크린샷 = 기기 화면 전체(2560×1600 · 1080×2280, 69~150KB) — 막 부팅한 에뮬의 'System UI isn't responding' 창까지 찍혔다
+ *   · ui.txt = 머리글 '--- View and Compose Hierarchy ---' 아래 DecorView 부터 View 줄, AndroidComposeView 밑에 시맨틱 노드 —
+ *     실패한 노드가 "Tag: 'resultText'" · "Text = '[결과: 30]'" 로 남는다(카드를 넣은 뒤 약 21KB · 210줄)
+ *   · 예외를 던지는 핸들러 → 원래 AssertionError 그대로, 핸들러 예외는 suppressed, 뒤 핸들러도 불림
+ * - Pixel_3_API_26 AVD(실제 API 28)는 이번에 '보안 시작 — 패턴' 화면에서 멈춰(adb offline) 쓰지 않았다 → API 29 미만 경로는 소스 기준
+ * - AGP 9.5.3 의 DeviceProviderInstrumentTestTask · 관리 기기 테스트 태스크에 additionalTestOutputDir 처리 문자열이 있다 — 실기기가
+ *   연결된 환경이라 connected 태스크는 돌리지 않았다
+ *
  * --- Compose UI Testing ---
  * - 공식 문서: https://developer.android.com/develop/ui/compose/testing
  * - createComposeRule: 단일 Activity 없이 Composable을 직접 테스트
