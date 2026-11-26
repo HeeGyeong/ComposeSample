@@ -1,7 +1,6 @@
 package com.example.composesample.presentation.example.component.ui.media.picker
 
 import android.net.Uri
-import android.os.Build
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
@@ -72,14 +71,14 @@ import androidx.core.net.toUri
 /**
  * Embedded Photo Picker (Compose 통합) - Example UI
  *
- * 블로그의 핵심 패턴을 시뮬레이션합니다:
+ * 블로그의 핵심 패턴을 시뮬레이션합니다(앞 네 탭 — 어느 기기에서나 같은 흐름):
  * 1. 가용성 체크 (API 34 + SDK Extensions 15)
- * 2. BottomSheet 통합 아키텍처 + setCurrentExpanded
- * 3. 선택 동기화 오너십 모델 (deselectUri 함정)
+ * 2. BottomSheet 통합 아키텍처 + 펼침 상태 동기화(alpha03: state.isExpanded)
+ * 3. 선택 동기화 오너십 모델 (앱 목록만 지우는 함정)
  * 4. URI 수명 관리 + 5,000 그랜트 제한
  *
- * 실제 구현에는 androidx.photopicker:photopicker-compose:1.0.0-alpha01 라이브러리와
- * minSdk 34이 필요합니다.
+ * 다섯째 '실물' 탭(#154)은 photopicker-embedded-compose 1.0.0-alpha03 의 EmbeddedPhotoPicker 를 실제로 띄운다
+ * (EmbeddedPickerRealCards.kt). 라이브러리 minSdk 는 24 — API 34 + U 확장 15 는 런타임에 SdkExtensions 로 가른다.
  */
 
 private data class FakeMedia(
@@ -159,7 +158,7 @@ fun EmbeddedPickerComposeExampleUI(
                 .horizontalScroll(rememberScrollState()),
             horizontalArrangement = Arrangement.spacedBy(6.dp)
         ) {
-            listOf("BottomSheet\n통합", "선택\n동기화", "URI\n수명", "아키텍처").forEachIndexed { i, label ->
+            listOf("BottomSheet\n통합", "선택\n동기화", "URI\n수명", "아키텍처", "실물\nalpha03").forEachIndexed { i, label ->
                 PickerTab(
                     text = label,
                     isSelected = selectedTab == i,
@@ -175,13 +174,16 @@ fun EmbeddedPickerComposeExampleUI(
             1 -> SelectionSyncDemo()
             2 -> UriLifetimeDemo()
             3 -> ArchitectureOverviewDemo()
+            4 -> EmbeddedPickerComposeRealTab()
         }
     }
 }
 
 @Composable
 private fun AvailabilityBadge() {
-    val isAvailable = Build.VERSION.SDK_INT >= 34
+    // API 만 보면 확장 13 인 API 35 기기도 '가용' 으로 나온다 — U 확장까지 본다
+    val support = remember { currentEmbeddedPickerSupport() }
+    val isAvailable = support.available
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -208,7 +210,7 @@ private fun AvailabilityBadge() {
                     color = if (isAvailable) Color(0xFF1B5E20) else Color(0xFFB71C1C)
                 )
                 Text(
-                    text = "현재 API ${Build.VERSION.SDK_INT} | 필요: API 34 + SDK Extensions 15",
+                    text = "현재 API ${support.sdkInt} · U 확장 ${support.extensionU} | 필요: API 34 + 확장 15",
                     fontSize = 11.sp,
                     color = Color(0xFF757575)
                 )
@@ -423,7 +425,7 @@ private fun BottomSheetIntegrationDemo() {
                         }
 
                         Text(
-                            text = "setCurrentExpanded(${pickerExpandedState}) ← SideEffect로 동기화",
+                            text = "state.isExpanded = ${pickerExpandedState} ← SideEffect로 동기화",
                             fontSize = 10.sp,
                             color = Color(0xFF80CBC4),
                             fontFamily = FontFamily.Monospace
@@ -492,15 +494,16 @@ private fun SelectionSyncDemo() {
             ) {
                 Column(modifier = Modifier.padding(14.dp)) {
                     Text(
-                        text = "⚠️ 선택 동기화 함정: deselectUri",
+                        text = "⚠️ 선택 동기화 함정: 앱 목록만 지우기",
                         fontSize = 15.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color(0xFFB71C1C)
                     )
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
-                        text = "deselectUri()는 onUriPermissionRevoked를 자동으로 트리거하지 않습니다.\n" +
-                                "앱 state를 직접 업데이트해야 합니다!",
+                        text = "앱 목록에서만 지우면 피커에는 선택과 권한이 남습니다.\n" +
+                                "해제는 deselectUri 로 피커에 요청하고, 앱 목록은 onUriPermissionRevoked 에서 지웁니다.\n" +
+                                "(원문은 'deselectUri 가 회수 콜백을 부르지 않는다' 고 했지만 alpha03 실물에서는 0.5초 뒤 콜백이 왔다 — '실물' 탭)",
                         fontSize = 13.sp,
                         color = Color(0xFF757575),
                         lineHeight = 18.sp
@@ -699,7 +702,7 @@ private fun SelectionSyncDemo() {
                                         onClick = {
                                             pickerSelections.remove(media)
                                             appAttachments.remove(media)
-                                            syncLog += "✅ deselectUri + 앱 state 모두 업데이트: ${media.label}\n"
+                                            syncLog += "✅ deselectUri → onUriPermissionRevoked 에서 앱 state 갱신: ${media.label}\n"
                                         },
                                         contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp),
                                         modifier = Modifier.height(30.dp),
@@ -765,8 +768,8 @@ private fun SelectionSyncDemo() {
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     val points = listOf(
-                        "deselectUri()만 호출하면 onUriPermissionRevoked가 자동 호출되지 않습니다.",
-                        "해제 시 피커에 알림(deselectUri)과 앱 state 업데이트를 반드시 함께 해야 합니다.",
+                        "deselectUri() 를 부르면 onUriPermissionRevoked 가 온다 — alpha03 · API 36(U 확장 17) 실측 약 0.5초 뒤, state.selectedMedia 에서도 빠지고 피커 체크도 풀린다.",
+                        "그래서 앱 목록은 회수 콜백 한 곳에서 지운다. 버튼에서도 바로 지우면 같은 항목을 두 번 처리하니 제거를 멱등하게 둔다.",
                         "피커는 선택 가능한 항목을 소유하고, 앱은 선택의 표현과 영속화를 소유합니다.",
                     )
                     points.forEach { point ->
@@ -1051,7 +1054,7 @@ private fun ArchitectureOverviewDemo() {
                             Row {
                                 Spacer(modifier = Modifier.width(16.dp))
                                 Column(verticalArrangement = Arrangement.spacedBy(3.dp)) {
-                                    ArchFlowItem("항목 제거: deselectUri + attachments 직접 업데이트 필수", Color(0xFFBBDEFB), Color(0xFF0D47A1))
+                                    ArchFlowItem("항목 제거: deselectUri → 회수 콜백에서 attachments 제거", Color(0xFFBBDEFB), Color(0xFF0D47A1))
                                 }
                             }
                         }
@@ -1083,8 +1086,8 @@ private fun ArchitectureOverviewDemo() {
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     val points = listOf(
-                        "androidx.photopicker:photopicker-testing 라이브러리로 테스트 환경을 구성합니다.",
-                        "TestEmbeddedPhotoPickerProvider.createRule()로 실제 시스템 피커 없이 가짜 피커를 주입할 수 있습니다.",
+                        "androidx.photopicker:photopicker-embedded-testing(alpha03 — alpha02 까지는 photopicker-testing)으로 테스트 환경을 구성합니다.",
+                        "TestEmbeddedPhotoPickerProvider.get() 을 EmbeddedPhotoPicker(provider = …) 에 넘기면 실제 서비스 없이 세션 · 권한 콜백을 흉내 냅니다(createRule 같은 규칙은 없다). 플랫폼 인터페이스를 구현하므로 기기 조건(API 34 + 확장 15)은 실물과 같습니다.",
                         "피커 로직을 격리된 컴포저블로 분리하면 나머지 화면 로직을 독립적으로 테스트할 수 있습니다.",
                     )
                     points.forEach { point ->

@@ -100,6 +100,9 @@ android {
 //   5초 대기) 28건이 났다. 계산은 Dispatchers.Default 에서 하고, 계산 object 만 뺀다.
 // LineInkMath: 줄 높이 모드 예제(#186)가 줄마다 오프스크린에 그린 문단(한 줄 약 17만 픽셀, 문단 하나에 20~30줄 분량)의 잉크 행 ·
 //   겹친 픽셀을 세는 루프. 재작성 아래 debug 단위 테스트 한 줄 11,493µs(dispatchRewriteEnabled=false 218µs, 제외 뒤 79µs) — 계산 object 만 뺀다.
+// PickerLabState: 임베디드 포토 피커 실물 탭(#154)의 기록 상태. 기본 인자 now = SystemClock::uptimeMillis 를 인터프리터가 만든 객체로 넣으려다
+//   'field PickerLabState.now has type Function0, got com.skydoves.compose.hotswan…' IllegalArgumentException — Compose 가 live edit 오류로
+//   삼켜 그 뒤 화면이 갱신되지 않았다(View 판 실물 탭을 누르면 탭 줄 · 뒤로 가기 무반응, Pixel 8 API 36 에뮬 debug). 이 클래스만 빼면 정상.
 hotSwanCompiler {
     exclude("com.example.composesample.presentation.example.component.architecture.development.test.PowerAssertChecksKt")
     exclude("com.example.composesample.presentation.example.component.architecture.development.test.PowerAssertViewModel")
@@ -134,6 +137,7 @@ hotSwanCompiler {
     exclude("com.example.composesample.presentation.example.component.ui.shapes.MorphLabState")
     exclude("com.example.composesample.presentation.example.component.ui.graphics.BlurPixelMath")
     exclude("com.example.composesample.presentation.example.component.ui.text.LineInkMath")
+    exclude("com.example.composesample.presentation.example.component.ui.media.picker.PickerLabState")
 }
 
 // Power-Assert(PowerAssertExample) — 단언 실패 메시지에 식의 중간값을 펼쳐 넣는 컴파일러 플러그인.
@@ -249,6 +253,10 @@ dependencies {
     // Molecule (Compose runtime 으로 UI 밖에서 StateFlow 를 만드는 프리젠터 — MoleculePresenter 예제)
     implementation(libs.moleculeRuntime)
 
+    // Photo Picker 임베디드(alpha) — 시스템 피커를 앱 창 안에 띄우는 View · Compose 진입점(#154 EmbeddedPhotoPicker 두 예제의 실물 탭)
+    implementation(libs.photopickerEmbedded)
+    implementation(libs.photopickerEmbeddedCompose)
+
     // Unit Test
     testImplementation(libs.bundles.unitTest)
 
@@ -257,5 +265,7 @@ dependencies {
     androidTestImplementation(libs.workTesting)
     androidTestImplementation platform(libs.composeBom)
     androidTestImplementation(libs.bundles.uiTest)
+    // 가짜 EmbeddedPhotoPickerProvider — 실제 피커 서비스 없이 세션 · 콜백을 흉내(#154, 기기 조건은 실물과 같다: API 34 + 확장 15)
+    androidTestImplementation(libs.photopickerEmbeddedTesting)
     debugImplementation(libs.testManifest)
 }

@@ -443,6 +443,22 @@ paragraph. One line took 11,493 µs in `testDebugUnitTest` under the rewrite, 21
 exclude("com.example.composesample.presentation.example.component.ui.text.LineInkMath")
 ```
 
+### A function-reference default argument fails inside the interpreter — one state class is excluded
+
+Found while writing the Embedded Photo Picker real tabs (#154). `PickerLabState(resolver, scope, now = SystemClock::uptimeMillis)`
+is created in a `remember` block. On the Pixel 8 API 36 emulator (debug build) the View screen's tab threw
+`IllegalArgumentException: field ...PickerLabState.now has type kotlin.jvm.functions.Function0, got com.skydoves.compose.hotswan...`
+from `ReflectionArtBridge.putInstanceField`. Compose logged it as "Error was captured in composition while live edit was
+enabled" and kept the last frame, so nothing crashed but the screen stopped updating - the tab row and the back button
+stopped responding while the bottom sheet still dragged. With the class excluded the constructor and its default argument
+run natively and the tab works (0 captured errors):
+
+```groovy
+exclude("com.example.composesample.presentation.example.component.ui.media.picker.PickerLabState")
+```
+
+If a screen freezes in debug only, search logcat for "Error was captured in composition" before suspecting the code.
+
 ### `@Synchronized` loses its mutual exclusion under the dispatch rewrite — use a `synchronized` block
 
 Found while writing the Range download example (#139). Its fake server's `handle()` was marked `@Synchronized` so that

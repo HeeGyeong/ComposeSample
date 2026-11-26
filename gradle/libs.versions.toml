@@ -301,6 +301,15 @@ datastore = "1.3.0"
 # module 요구: compose runtime 1.9.1 · coroutines-core 1.10.2 · stdlib 2.2.20 · (런타임) core-ktx 1.17.0 — 전부 프로젝트보다 낮다.
 moleculeRuntime = "2.2.0"
 
+# Photo Picker 임베디드(#154, 2026-11-27 신규 — 사용자 승인) — 시스템 포토 피커를 앱 창 안 SurfaceView 에 띄운다.
+# photopicker-embedded(View EmbeddedPhotoPickerView) · photopicker-embedded-compose(EmbeddedPhotoPicker · EmbeddedPhotoPickerState) ·
+# photopicker-embedded-testing(androidTest — 가짜 Provider). alpha03 에서 photopicker · photopicker-compose · photopicker-testing(alpha02 까지)이 이 이름으로 바뀌었다.
+# aar-metadata minCompileSdk 37 · minAGP 9.1.0, compose 판만 minCompileMinorSdk 1(충족 — compileSdk 37.1). 라이브러리 minSdk 24, API 는
+# @RequiresApi(34) + @RequiresExtension(UPSIDE_DOWN_CAKE, 15) — 기기 조건은 런타임에 SdkExtensions 로 가른다.
+# module 런타임 요구: annotation 1.9.1 · compose runtime/ui 1.8.1 · coroutines 1.9.0 · stdlib 2.2.20 · (testing) androidx.test:core 1.7.0 — 전부 프로젝트 이하.
+# 같은 그룹의 photopicker-activity(PickVisualMedia 이관)는 activity 1.14.0-alpha03 을 요구해 넣지 않았다(앱 전체 activity 를 알파로 끌어올림).
+photopicker = "1.0.0-alpha03"
+
 [plugins]
 android-application = { id = "com.android.application", version.ref = "applicationVersion" }
 android-library = { id = "com.android.library", version.ref = "libraryVersion" }
@@ -470,6 +479,11 @@ datastorePreferences = { module = "androidx.datastore:datastore-preferences", ve
 
 # Molecule
 moleculeRuntime = { module = "app.cash.molecule:molecule-runtime", version.ref = "moleculeRuntime" }
+
+# Photo Picker 임베디드(#154)
+photopickerEmbedded = { module = "androidx.photopicker:photopicker-embedded", version.ref = "photopicker" }
+photopickerEmbeddedCompose = { module = "androidx.photopicker:photopicker-embedded-compose", version.ref = "photopicker" }
+photopickerEmbeddedTesting = { module = "androidx.photopicker:photopicker-embedded-testing", version.ref = "photopicker" }
 
 [bundles]
 retrofit = [

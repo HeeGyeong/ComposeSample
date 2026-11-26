@@ -61,9 +61,9 @@ val examples2026 = listOf(
         exampleType = ConstValue.DialComponentExample
     ),
     ExampleObject(
-        lastUpdate = "26. 02. 13",
+        lastUpdate = "26. 11. 27",
         title = "Embedded Photo Picker",
-        description = "앱 내에서 직접 포토 피커를 임베드하여 사진/영상을 선택하는 방법",
+        description = "앱 내에서 직접 포토 피커를 임베드하여 사진/영상을 선택하는 방법 + 실물 탭(photopicker-embedded alpha03 EmbeddedPhotoPickerView) — 열린 세션은 새 설정을 무시하고 setProvider 로 다시 열기, 다시 연 세션은 선택이 비어도 앞 권한은 남음, visibility 자동 전달",
         blogUrl = blogUrl(190),
         exampleType = ConstValue.EmbeddedPhotoPickerExample
     ),
@@ -117,9 +117,9 @@ val examples2026 = listOf(
         exampleType = ConstValue.LocalContextStringsExample
     ),
     ExampleObject(
-        lastUpdate = "26. 03. 17",
+        lastUpdate = "26. 11. 27",
         title = "Embedded Photo Picker (Compose 통합)",
-        description = "BottomSheet 포토 피커 통합 아키텍처와 선택 동기화·URI 수명 관리 패턴",
+        description = "BottomSheet 포토 피커 통합 아키텍처와 선택 동기화·URI 수명 관리 패턴 + 실물 탭(EmbeddedPhotoPicker alpha03) — deselectUri 뒤 0.5초에 회수 콜백, 같은 state 로 피커를 새로 만들면 API 36 크래시와 치우고 다시 놓기, 닫을 때 오는 onError, 스크롤 밖까지 그려지는 SurfaceView",
         blogUrl = "",
         exampleType = ConstValue.EmbeddedPickerComposeExample
     ),

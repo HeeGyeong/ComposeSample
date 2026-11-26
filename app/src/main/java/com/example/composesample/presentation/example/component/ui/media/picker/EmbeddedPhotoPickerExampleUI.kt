@@ -76,9 +76,9 @@ import kotlin.random.Random
 /**
  * Embedded Photo Picker Example UI
  *
- * Android의 Embedded Photo Picker 패턴을 시뮬레이션하여 보여주는 예제입니다.
- * 실제 구현에는 androidx.photopicker:photopicker-compose 라이브러리가 필요하지만,
- * 여기서는 동일한 UX 패턴을 직접 구현하여 개념을 시연합니다.
+ * Android의 Embedded Photo Picker 패턴을 시뮬레이션하여 보여주는 예제입니다(Sheet · Ordered · Filter · Config — 어느 기기에서나).
+ * 다섯째 '실물' 탭(#154)은 photopicker-embedded 1.0.0-alpha03 의 View EmbeddedPhotoPickerView 를 AndroidView 로 감싸 실제로 띄운다
+ * (EmbeddedPickerRealCards.kt — API 34 + U 확장 15 기기에서만, 아니면 조건 카드).
  */
 @Composable
 fun EmbeddedPhotoPickerExampleUI(
@@ -123,6 +123,12 @@ fun EmbeddedPhotoPickerExampleUI(
                 onClick = { selectedExample = 3 },
                 modifier = Modifier.weight(1f)
             )
+            ExampleTab(
+                text = "실물",
+                isSelected = selectedExample == 4,
+                onClick = { selectedExample = 4 },
+                modifier = Modifier.weight(1f)
+            )
         }
 
         Spacer(modifier = Modifier.height(8.dp))
@@ -132,6 +138,7 @@ fun EmbeddedPhotoPickerExampleUI(
             1 -> OrderedSelectionDemo()
             2 -> MimeTypeFilterDemo()
             3 -> ConfigurationPlaygroundDemo()
+            4 -> EmbeddedPhotoPickerViewRealTab()
         }
     }
 }
@@ -764,7 +771,7 @@ private fun ConfigurationPlaygroundDemo() {
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = "setMaxCount",
+                            text = "setMaxSelectionLimit",
                             fontSize = 14.sp,
                             fontWeight = FontWeight.Medium,
                             color = Color(0xFF424242)

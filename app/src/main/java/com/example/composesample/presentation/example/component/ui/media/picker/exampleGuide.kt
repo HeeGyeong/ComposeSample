@@ -14,8 +14,47 @@ package com.example.composesample.presentation.example.component.ui.media.picker
  * - 출처: https://victorbrandalise.com/embedded-android-photo-picker-in-jetpack-compose/
  * 핵심 개념:
  * - SurfaceView.setChildSurfacePackage로 시스템이 직접 렌더링(기존 Photo Picker와 동일한 보안 속성 유지), Activity가 resumed 상태 유지되어 선택 변경에 실시간 반응 가능
- * - BottomSheetScaffold + SideEffect로 피커의 setCurrentExpanded와 바텀시트 확장 상태 동기화
- * - deselectUri() 호출만으로는 onUriPermissionRevoked가 자동 트리거되지 않음 → 앱 state를 직접 갱신해야 함(피커=선택 가능 항목 소유, 앱=선택 결과 표현·영속화 소유라는 오너십 분리 함정 주의)
+ * - BottomSheetScaffold + SideEffect로 피커의 펼침 상태(alpha01 setCurrentExpanded → alpha03 state.isExpanded)와 바텀시트 확장 상태 동기화
+ * - (원문 주장 · alpha01 시절) deselectUri() 호출만으로는 onUriPermissionRevoked가 자동 트리거되지 않음 → 앱 state를 직접 갱신해야 함.
+ *   alpha03 실물(아래 #154 절)에서는 deselectUri 뒤 약 0.5초에 회수 콜백이 왔다 — 앱 목록은 회수 콜백 한 곳에서 지우고,
+ *   앱 목록만 지우면 피커에 선택 · 권한이 남는다는 오너십 분리(피커=선택 가능 항목, 앱=선택 결과 표현·영속화)는 그대로
+ *
+ * ## #154 두 예제의 '실물' 탭 — photopicker-embedded(-compose) 1.0.0-alpha03 (EmbeddedPickerRealCards · EmbeddedPickerRealLab)
+ * - 공식 문서(임베디드 포토 피커): https://developer.android.com/training/data-storage/shared/photo-picker/embedded
+ * - 릴리스 노트(alpha03 — photopicker · photopicker-compose · photopicker-testing 이 -embedded · -embedded-compose · -embedded-testing 으로,
+ *   rememberEmbeddedPhotoPickerState 의 inputs 제거 → key 블록, onError · surfacePackage · notifyVisibilityChanged): https://developer.android.com/jetpack/androidx/releases/photopicker
+ * - API(FeatureInfo.Builder — 메서드별 U 확장 요구치): https://developer.android.com/reference/android/widget/photopicker/EmbeddedPhotoPickerFeatureInfo.Builder
+ * - 플랫폼 소스(SurfaceView.clearChildSurfacePackage · onDetachedFromWindow → releaseSurfaces(true)):
+ *   https://android.googlesource.com/platform/frameworks/base/+/refs/heads/android16-release/core/java/android/view/SurfaceView.java
+ * - 라이브러리 소스(EmbeddedPhotoPicker 의 update 블록 — androidx-main 도 같은 코드):
+ *   https://android.googlesource.com/platform/frameworks/support/+/refs/heads/androidx-main/photopicker/photopicker-embedded-compose/
+ * 핵심 개념(실측: Pixel 8 API 36 에뮬레이터 — 이 작업에서 만든 AVD, Google Play 이미지 r07 · U 확장 17 · 피커 서비스 com.google.android.photopicker,
+ * debug. 데모 사진 CS154_01~08.jpg 8장을 adb 로 넣고 scan_volume. Pixel Tablet API 35 는 U 확장 13 이라 조건 카드만):
+ * - 조건: @RequiresApi(34) + @RequiresExtension(UPSIDE_DOWN_CAKE, 15), 라이브러리 minSdk 24. 분기는 SDK_INT >= 34 && SdkExtensions.getExtensionVersion(U) >= 15
+ *   를 직접 써야 lint 가 가드로 본다. FeatureInfo 메서드별 요구 확장: 기본 15 · 하이라이트 19 · 펼친 채 시작 21 · 선택 파라미터 22 · 시작 탭 23.
+ *   기존 가용성 배지는 SDK_INT >= 34 만 봐서 확장 13 인 API 35 기기도 '가용' 이었다 → 확장까지 보도록 고침
+ * - 권한 콜백: 누를 때마다 onUriPermissionGranted 1회, URI content://media/picker/0/com.android.providers.media.photopicker/media/<id>, 받자마자 원본 바이트 그대로 읽힘.
+ *   deselectUri → 약 0.5초 뒤 onUriPermissionRevoked · state.selectedMedia 에서 빠짐 · 피커 체크 해제와 순서 번호 재정렬, 회수 뒤 읽기 SecurityException
+ * - 설정은 세션을 열 때 한 번: EmbeddedPhotoPicker 의 LaunchedEffect 키가 state · provider 뿐이라 바뀐 featureInfo 는 열린 세션에 안 간다(max 3 → 1 로 바꿔도
+ *   세 번째 선택 OK · 네 번째 'Select up to 3 items'). View 판 setEmbeddedPhotoPickerFeatureInfo 도 세션이 없을 때만 연다 → setProvider 로 닫고 다시 연다
+ * - 크래시(라이브러리 함정, API 36+): 같은 state 로 옛 세션이 살아 있는 동안 새 EmbeddedPhotoPicker 를 만들면(key · if 분기 · 부모 이동) 새 SurfaceView 의
+ *   update 가 옛 surfacePackage 를 붙이고, 옛 SurfaceView 가 떨어지며 그 패키지를 release 하고, 세션 종료로 값이 null 이 되면 update 의
+ *   clearChildSurfacePackage()(BAKLAVA+ 분기)가 풀린 패키지의 SurfaceControl(null)을 reparent → NullPointerException 으로 앱 종료.
+ *   API 34 · 35 는 그 분기가 없어 죽지 않는다(소스). 우회: 피커를 치우고 surfacePackage == null 을 기다린 뒤 다시 놓는다(0.5~1.1초) — 또는 state 도 key 안에서 새로
+ * - 다시 연 세션: Compose 판은 state.selectedMedia 를 미리 선택으로 넘겨 콜백 한 번에 다시 받고, 순서 번호는 고른 순서가 아니라 id 순. View 판은 선택이 비어
+ *   있고(setPreSelectedUris 는 앱 몫) 회수 콜백 없이 앞 URI 가 계속 읽힌다
+ * - max 1 은 체크 표시를 그리지 않는다(누르면 권한 · 다시 누르면 회수 · 다른 것은 'Select up to 1 items') — 미리 선택 3개로 max 1 세션을 열어도 표시 0
+ * - 닫을 때 오류: 서비스가 메시지 없는 IllegalStateException(ParcelableException 으로 감싸 옴)을 onError · onSessionError 로 보낼 때가 있다
+ *   (Compose 9번 중 4번 · View 2번 중 2번, 닫기 요청 뒤 20~600ms). 콜백이 state · 뷰 하나에 묶여 세션을 가리지 않으므로 '오류 → 대체 UI' 만 하면
+ *   정상 재개에서도 넘어간다 — 탭은 닫기 요청 1초 안 오류를 닫은 세션 것으로 본다
+ * - 오류 뒤: runSession 은 끝나지만 LaunchedEffect 키가 그대로라 새 세션을 열지 않는다(가짜 Provider 계측 — 0.5초 뒤에도 세션 1개 · surfacePackage null)
+ * - 가시성: Compose 판은 스스로 notifyVisibilityChanged 를 안 부른다(소스 — 앱이 수명 주기로, 서비스 로그로 확인). View 판은 setVisibility ·
+ *   onWindowVisibilityChanged 훅이 자동 전달(GONE → VISIBLE 에서 피커 그대로 복귀)
+ * - 스크롤 안 배치: setZOrderOnTop SurfaceView 라 스크롤 영역 밖 헤더 · 탭 위에 그대로 그려진다(Compose clip 이 다른 서피스에 안 걸림) — 피커는 고정 영역 · 시트에
+ * - 펼침: isExpanded = true 면 Photos · Albums 탭과 '선택한 사진에만 접근' 안내. 확장 21 미만은 라이브러리가 세션을 연 뒤 notifyPhotoPickerExpanded 로 보냄
+ * - photopicker-activity(PickVisualMedia 이관)는 activity 1.14.0-alpha03 을 요구해 넣지 않았다
+ * - HotSwan: PickerLabState 의 기본 인자 now = SystemClock::uptimeMillis 를 인터프리터가 Function0 필드에 넣지 못해 IllegalArgumentException →
+ *   Compose 가 live edit 오류로 삼켜 화면이 멈췄다(탭 · 뒤로 가기 무반응). build.gradle 에서 PickerLabState 만 제외
  *
  * ## SystemPhotoPickerExampleUI (시스템 Photo Picker 실물 — PickVisualMedia / PickMultipleVisualMedia)
  * - 공식 문서(Photo picker — 기기 조건 · Google Play 서비스 백포트 · 영구 접근): https://developer.android.com/training/data-storage/shared/photopicker
