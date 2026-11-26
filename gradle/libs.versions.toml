@@ -35,8 +35,10 @@ ksp = "2.3.14"
 # 2026-11-23 9.5.2(패치 — DEP-CURRENCY-36, Android Studio Rabbit 2 Patch 2 와 함께 11/20): 고친 것 2 — 중첩 jar 가 여럿인 fat aar 의
 # Java 리소스 병합 실패(9.5 회귀) · Isolated Projects 에서 implementation(project(...)) 실패. 이 프로젝트는 둘 다 해당 없음
 # (fat aar 소비 0 · isolated-projects 끔). pom 의존성은 자기 버전(9.5.2 · 32.5.2) 말고 같다.
-applicationVersion = "9.5.2"
-libraryVersion = "9.5.2"
+# 2026-11-26 9.5.3(패치 — DEP-CURRENCY-37, Android Studio Rabbit 2 Patch 3 와 함께 11/25): 글에 고친 항목 목록이 없다(이슈 트래커 링크뿐).
+# pom · .module 의존성은 자기 버전 말고 같고, 판단은 산출물 대조로 했다(CHANGELOG 2026.11 참고).
+applicationVersion = "9.5.3"
+libraryVersion = "9.5.3"
 
 # Compose
 # Compose BOM이 ui/animation/runtime/foundation/material 등의 개별 버전을 통합 관리한다.
