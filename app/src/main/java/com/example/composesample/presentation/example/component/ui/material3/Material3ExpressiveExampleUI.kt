@@ -22,6 +22,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.LocalTextFieldContentObserverRegistrationExecutor
@@ -41,11 +42,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -56,28 +59,47 @@ import java.util.concurrent.Executors
 
 @Composable
 fun Material3ExpressiveExampleUI(onBackEvent: () -> Unit) {
+    // Wavy 측정은 목록을 컴포지션에서 빼고 무대만 둔다 — 상태 · 스크롤 위치 · 측정 코루틴은 화면 수준에 둔다
+    val wavyLab = remember { WavyLabState() }
+    val listState = rememberLazyListState()
+    val scope = rememberCoroutineScope()
+    val view = LocalView.current
+
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White)
     ) {
         MainHeader(
-            title = "Material 3 Expressive (1.4.0)",
+            title = "Material 3 Expressive (1.4 · 1.5)",
             onBackIconClicked = onBackEvent
         )
 
-        LazyColumn(
-            modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            item { OverviewCard() }
-            item { SecureTextFieldDemoCard() }
-            item { OutlinedSecureTextFieldDemoCard() }
-            item { ShowPasswordSettingCard() }
-            item { ObfuscationModeComparisonCard() }
-            item { CodeExampleCard() }
-            item { SummaryCard() }
+        val stage = wavyLab.stage
+        if (stage != null) {
+            WavyMeasureStage(stage, onStop = { wavyLab.stop() })
+        } else {
+            LazyColumn(
+                state = listState,
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = PaddingValues(16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                item { OverviewCard() }
+                item { SectionTitle("M3 1.5.0 에서 정식이 된 Expressive 컴포넌트", top = 4.dp) }
+                item { WavyProgressCard(wavyLab, onMeasure = { wavyLab.start(scope, view) }) }
+                item { LoadingIndicatorCard() }
+                item { SplitButtonCard() }
+                item { FloatingToolbarCard() }
+                item { HeroCarouselCard() }
+                item { SectionTitle("SecureTextField (1.4.0) 와 foundation 1.12 비밀번호 표시 설정") }
+                item { SecureTextFieldDemoCard() }
+                item { OutlinedSecureTextFieldDemoCard() }
+                item { ShowPasswordSettingCard() }
+                item { ObfuscationModeComparisonCard() }
+                item { CodeExampleCard() }
+                item { SummaryCard() }
+            }
         }
     }
 }
@@ -91,16 +113,16 @@ private fun OverviewCard() {
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(
-                text = "Material3 1.4.0 신규 컴포넌트",
+                text = "Material3 Expressive — 무엇이 정식인가 (이 앱 M3 1.5.0)",
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color(0xFF6750A4)
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = "Material Design 3의 Expressive 업데이트에서 비밀번호 입력을 위한 " +
-                        "SecureTextField가 stable API로 추가되었습니다. " +
-                        "TextFieldState 기반으로 동작하며 난독화 모드를 고를 수 있습니다(foundation 1.12 에서 System 추가).",
+                text = "1.4.0 에서 비밀번호 입력용 SecureTextField 가 정식이 됐고, 1.5.0 에서 Wavy 진행 표시 · SplitButtonLayout · " +
+                        "HorizontalFloatingToolbar · HorizontalCenteredHeroCarousel 이 opt-in 없이 쓸 수 있게 됐다. " +
+                        "LoadingIndicator · MaterialShapes 는 1.5.0 에서도 실험이다(1.5.0 sources jar 의 표시 기준).",
                 fontSize = 13.sp,
                 color = Color(0xFF424242),
                 lineHeight = 19.sp
@@ -108,9 +130,12 @@ private fun OverviewCard() {
             Spacer(modifier = Modifier.height(12.dp))
 
             val components = listOf(
-                Triple("SecureTextField", "Filled 스타일 비밀번호 필드", "stable"),
-                Triple("OutlinedSecureTextField", "Outlined 스타일 비밀번호 필드", "stable"),
-                Triple("FloatingToolbar", "플로팅 액션 바", "stable (1.5.0)"),
+                Triple("SecureTextField", "비밀번호 필드 (Filled · Outlined)", "stable"),
+                Triple("Wavy 진행 표시", "Linear/CircularWavyProgressIndicator", "stable"),
+                Triple("SplitButtonLayout", "주 동작 + 관련 동작 두 버튼", "stable"),
+                Triple("FloatingToolbar", "Horizontal/VerticalFloatingToolbar", "stable"),
+                Triple("Hero 캐러셀", "HorizontalCenteredHeroCarousel", "stable"),
+                Triple("LoadingIndicator", "MaterialShapes 다각형 morph", "실험"),
                 Triple("VerticalDragHandle", "BottomSheet 드래그 핸들", "stable")
             )
             components.forEach { (name, desc, status) ->
@@ -421,7 +446,12 @@ private fun SummaryCard() {
                 "M3 1.5.0(이 앱)부터 SecureTextField 기본값이 System — 1.4.0 은 RevealLastTyped 여서 foundation 1.12 와 함께 쓰면 설정을 꺼도 마지막 글자가 보였다",
                 "textObfuscationCharacter 파라미터로 난독화 문자를 커스터마이징 가능 (기본 '•')",
                 "Filled(SecureTextField)와 Outlined(OutlinedSecureTextField) 두 가지 스타일 제공",
-                "FloatingToolbar · HorizontalCenteredHeroCarousel 은 M3 1.5.0 에서 정식(opt-in 없음)"
+                "Wavy 진행 표시는 진행값을 람다로 받아 그리기 캐시 단계에서 읽는다 — 값이 바뀌어도 부르는 쪽은 리컴포즈되지 않는다",
+                "선형 Wavy 는 0% · 100% 근처(파도 높이 0)에서 그리지 않으면서도 시계를 계속 돌린다 — 원형은 멈춘다. 끝난 표시를 남겨 두면 waveSpeed = 0.dp",
+                "SplitButtonLayout 은 trailing 을 먼저 재서 폭을 지키고, 좁아지면 leading 이 줄며 두 버튼 높이는 큰 쪽으로 맞춘다",
+                "FloatingToolbar exitAlways 는 부모 밖으로 완전히 나간다 — 카드 같은 작은 상자 안이면 clipToBounds",
+                "Hero 캐러셀 칸은 모두 큰 칸 폭으로 배치되고 작은 칸은 잘려 보인다 — carouselItemDrawInfo 는 그리기에서 읽는다",
+                "LoadingIndicator · MaterialShapes 는 1.5.0 에서도 @ExperimentalMaterial3ExpressiveApi"
             )
             bullets.forEach { bullet ->
                 Row(modifier = Modifier.padding(vertical = 3.dp)) {

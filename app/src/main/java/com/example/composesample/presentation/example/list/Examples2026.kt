@@ -299,9 +299,9 @@ val examples2026 = listOf(
         exampleType = ConstValue.FoundationStyleApiExample
     ),
     ExampleObject(
-        lastUpdate = "26. 10. 07",
-        title = "Material 3 Expressive (1.4.0 신규)",
-        description = "SecureTextField 난독화 모드와 1.12 System 모드·비밀번호 표시 설정",
+        lastUpdate = "26. 11. 26",
+        title = "Material 3 Expressive (1.4 · 1.5)",
+        description = "M3 1.5.0 정식 Wavy 진행 표시 · SplitButton · FloatingToolbar · Hero 캐러셀 실측과 SecureTextField 난독화 모드",
         blogUrl = "",
         exampleType = ConstValue.Material3ExpressiveExample
     ),
