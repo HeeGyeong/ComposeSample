@@ -257,6 +257,12 @@ dependencies {
     implementation(libs.photopickerEmbedded)
     implementation(libs.photopickerEmbeddedCompose)
 
+    // AppState(alpha02) — StateStore · DataStore 동기화 · transform 헤드리스 컴포지션(#163 AppState 예제). 테스트는 transformTest
+    implementation(libs.appstateStatestore)
+    implementation(libs.appstateStatestoreDatastore)
+    implementation(libs.appstateTransform)
+    testImplementation(libs.appstateTransformTesting)
+
     // Unit Test
     testImplementation(libs.bundles.unitTest)
 

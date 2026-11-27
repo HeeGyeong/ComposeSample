@@ -1074,5 +1074,12 @@ val examples2026 = listOf(
         description = "자리마다 반경이 다른 블러와 satin glass 헤더 · 공유 요소 함정",
         blogUrl = "",
         exampleType = ConstValue.ProgressiveBlurExample
+    ),
+    ExampleObject(
+        lastUpdate = "26. 11. 27",
+        title = "AppState — StateStore · Transform (alpha)",
+        description = "UI 밖에서 도는 Compose runtime 상태 계층 — 키 · 자동 정리 · 분기 수집 · DataStore 함정",
+        blogUrl = "",
+        exampleType = ConstValue.AppStateExample
     )
 )

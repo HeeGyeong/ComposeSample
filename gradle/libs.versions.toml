@@ -310,6 +310,14 @@ moleculeRuntime = "2.2.0"
 # 같은 그룹의 photopicker-activity(PickVisualMedia 이관)는 activity 1.14.0-alpha03 을 요구해 넣지 않았다(앱 전체 activity 를 알파로 끌어올림).
 photopicker = "1.0.0-alpha03"
 
+# AppState(#163, 2026-11-27 신규 — 사용자 승인) — Compose runtime 을 UI 밖 상태 계층으로: StateStore(타입 키 저장소) · statestore-datastore
+# (PersistToDataStore 키를 파일에 동기화) · transform(헤드리스 컴포지션으로 파생 State) · transform-testing(transformTest).
+# alpha02 로 둔다(사용자 결정 2026-11-27): alpha03(2026-11-18)은 transform 이 compose runtime-saveable 1.14.0-alpha01 · savedstate 1.6.0-alpha05 를
+# 요구해, 넣으면 앱 전체 해석이 Compose runtime 묶음 9좌표 1.13.0 → 1.14.0-alpha01 · savedstate 5좌표 1.5.0 → 1.6.0-alpha06 · collection 1.6.0 → 1.7.0
+# 으로 끌어올려졌다(실측). alpha02 는 compose runtime 1.11.2 · coroutines 1.9.0 · serialization 1.7.3 만 요구.
+# aar-metadata minCompileSdk 37 · minAGP 9.1.0(충족). statestore-datastore alpha02 는 값 타입을 kotlin-reflect(allSupertypes)로 찾는다.
+appstate = "1.0.0-alpha02"
+
 [plugins]
 android-application = { id = "com.android.application", version.ref = "applicationVersion" }
 android-library = { id = "com.android.library", version.ref = "libraryVersion" }
@@ -484,6 +492,12 @@ moleculeRuntime = { module = "app.cash.molecule:molecule-runtime", version.ref =
 photopickerEmbedded = { module = "androidx.photopicker:photopicker-embedded", version.ref = "photopicker" }
 photopickerEmbeddedCompose = { module = "androidx.photopicker:photopicker-embedded-compose", version.ref = "photopicker" }
 photopickerEmbeddedTesting = { module = "androidx.photopicker:photopicker-embedded-testing", version.ref = "photopicker" }
+
+# AppState(#163) — 같은 version.ref
+appstateStatestore = { module = "androidx.appstate.statestore:statestore", version.ref = "appstate" }
+appstateStatestoreDatastore = { module = "androidx.appstate.statestore:statestore-datastore", version.ref = "appstate" }
+appstateTransform = { module = "androidx.appstate.transform:transform", version.ref = "appstate" }
+appstateTransformTesting = { module = "androidx.appstate.transform:transform-testing", version.ref = "appstate" }
 
 [bundles]
 retrofit = [

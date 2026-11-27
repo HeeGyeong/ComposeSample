@@ -8,4 +8,12 @@
     <issue id="GifUsage">
         <ignore path="src/main/res/drawable-nodpi/gif_lottie_sample.gif" />
     </issue>
+    <!--
+        GradleDependency(androidx.appstate 만): AppState 예제(#163)는 1.0.0-alpha02 에 일부러 묶어 두었다(사용자 결정 2026-11-27).
+        alpha03 은 transform 이 compose runtime-saveable 1.14.0-alpha01 · savedstate 1.6.0-alpha05 를 요구해 앱 전체 Compose runtime 을
+        1.14.0-alpha01 로 끌어올린다(해석 diff 실측, gradle/libs.versions.toml 주석). AppState 가 정식 Compose 를 따라오면 이 줄을 지우고 올린다.
+    -->
+    <issue id="GradleDependency">
+        <ignore regexp="androidx\.appstate" />
+    </issue>
 </lint>
